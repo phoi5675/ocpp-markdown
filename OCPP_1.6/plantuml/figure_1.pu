@@ -1,0 +1,50 @@
+@startuml figure_1
+!include style.puml
+
+participant "Charge Point" as ChargePoint
+participant "Central System" as CentralSystem
+
+ChargePoint -> CentralSystem: Authorize.req(idTag)
+activate ChargePoint
+activate CentralSystem
+CentralSystem -> ChargePoint : Authorize.conf(idTagInfo)
+deactivate ChargePoint
+deactivate CentralSystem
+
+note over ChargePoint
+Start Charging
+end note
+
+ChargePoint -[hidden]-> CentralSystem
+
+ChargePoint -> CentralSystem : StartTransaction.req(connectorId, idTag, meterStart, timestamp, [reservationId])
+activate ChargePoint
+activate CentralSystem
+CentralSystem  -> ChargePoint : StartTransaction.conf(idTagInfo, transactionId)
+deactivate ChargePoint
+deactivate CentralSystem
+
+note over ChargePoint
+Charging...
+end note
+ChargePoint -[hidden]-> CentralSystem
+
+ChargePoint -> CentralSystem : Authorize.req(idTag)
+activate ChargePoint
+activate CentralSystem
+CentralSystem  -> ChargePoint : Authorize.conf(idTagInfo)
+deactivate ChargePoint
+deactivate CentralSystem
+
+note over ChargePoint
+Stop Charging
+end note
+ChargePoint -[hidden]-> CentralSystem
+
+ChargePoint -> CentralSystem :StopTransaction.req(meterStop, timestamp, transactionId, [reason], [idTag], [transactionData])
+activate ChargePoint
+activate CentralSystem
+CentralSystem  -> ChargePoint : StopTransaction.conf(idTagInfo)
+deactivate ChargePoint
+deactivate CentralSystem
+@enduml
