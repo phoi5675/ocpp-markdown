@@ -1,0 +1,7 @@
+{
+  "markdownlint.config": {
+    "MD033": false
+  },
+  "editor.formatOnSave": false,
+  "asciidoc.preview.style": "./OCPP_1.6/ocpp_styles.css"
+}
