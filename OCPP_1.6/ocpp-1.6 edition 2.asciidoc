@@ -286,26 +286,27 @@ This section contains the terminology that is used throughout this document.
 
 [cols="2,10"]
 |===
-|**Central System** |Charge Point Management System: the central system that manages Charge Points and has the information for authorizing users for using its Charge Points.
-|**CiString** |Case Insensitive String. Only printable ASCII allowed.
-|**Charge Point** |The Charge Point is the physical system where an electric vehicle can be charged. A Charge Point has one or more connectors.
-|**Charging Profile** |Generic Charging Profile, used for different types of Profiles. Contains information about the Profile and holds the Charging Schedule. In future versions of OCPP it might hold more than 1 Charging Schedule.
-|**Charging Schedule** |Part of a Charging Profile. Defines a block of charging Power or Current limits. Can contain a start time and length.
-|**Charging Session** |A Charging Session is started when first interaction with user or EV occurs. This can be a card swipe, remote start of transaction, connection of cable and/or EV, parking bay occupancy detector, etc.
-|**Composite Charging Schedule** |The charging schedule as calculated by the Charge Point. It is the result of the calculation of all active schedules and possible local limits present in the Charge Point. Local Limits might be taken into account.
-|**Connector** |The term “Connector”, as used in this specification, refers to an independently operated and managed electrical outlet on a Charge Point. This usually corresponds to a single physical connector, but in some cases a single outlet may have multiple physical socket types and/or tethered cable/connector arrangements to facilitate different vehicle types (e.g. four-wheeled EVs and electric scooters).
-|**Control Pilot signal** |Signal used by a Charge Point to inform EV of maximum Charging power or current limit, as defined by <<iec61851_1,[IEC61851-1]>>.
-|**Energy Offer Period** |Energy Offer Period starts when the EVSE is ready and willing to supply energy.
-|**Energy Offer SuspendPeriod** |During a transaction, there may be periods the EnergyOffer to EV is suspended by the EVSE, for instance due to Smart Charging or local balancing.
-|**Energy Transfer Period** |Time during which an EV chooses to take offered energy, or return it. Multiple Energy Transfer Periods are possible during a Transaction.
-|**Local Controller** |Optional device in a smart charging infrastructure. Located on the premises with a number of Charge Points connected to it. Sits between the Charge Points and Central System. Understands and speaks OCPP messages. Controls the Power or Current in other Charge Point by using OCPP smart charging messages. Can be a Charge Point itself.
-|**OCPP-J** |OCPP via JSON over WebSocket
-|**OCPP-S** |OCPP via SOAP
-|**Phase Rotation** |Defines the wiring order of the phases between the electrical meter (or if absent, the grid connection), and the Charge Point connector.
-|**Transaction** |The part of the charging process that starts when all relevant preconditions (e.g. authorization, plug inserted) are met, and ends at the moment when the Charge Point irrevocably leaves this state.
-|**String** |Case Sensitive String. Only printable ASCII allowed. All strings in messages and enumerations are case sensitive, unless explicitly stated otherwise.
+|[[central_system]]**Central System** |Charge Point Management System: the central system that manages Charge Points and has the information for authorizing users for using its Charge Points.
+|[[cistring]]**CiString** |Case Insensitive String. Only printable ASCII allowed.
+|[[charge_point]]**Charge Point** |The Charge Point is the physical system where an electric vehicle can be charged. A Charge Point has one or more connectors.
+|[[charging_profile]]**Charging Profile** |Generic Charging Profile, used for different types of Profiles. Contains information about the Profile and holds the Charging Schedule. In future versions of OCPP it might hold more than 1 Charging Schedule.
+|[[charging_schedule]]**Charging Schedule** |Part of a Charging Profile. Defines a block of charging Power or Current limits. Can contain a start time and length.
+|[[charging_session]]**Charging Session** |A Charging Session is started when first interaction with user or EV occurs. This can be a card swipe, remote start of transaction, connection of cable and/or EV, parking bay occupancy detector, etc.
+|[[composite_charging_schedule]]**Composite Charging Schedule** |The charging schedule as calculated by the Charge Point. It is the result of the calculation of all active schedules and possible local limits present in the Charge Point. Local Limits might be taken into account.
+|[[connector]]**Connector** |The term “Connector”, as used in this specification, refers to an independently operated and managed electrical outlet on a Charge Point. This usually corresponds to a single physical connector, but in some cases a single outlet may have multiple physical socket types and/or tethered cable/connector arrangements to facilitate different vehicle types (e.g. four-wheeled EVs and electric scooters).
+|[[control_pilot_signal]]**Control Pilot signal** |Signal used by a Charge Point to inform EV of maximum Charging power or current limit, as defined by <<iec61851_1,[IEC61851-1]>>.
+|[[energy_offer_period]]**Energy Offer Period** |Energy Offer Period starts when the EVSE is ready and willing to supply energy.
+|[[energy_offer_suspendperiod]]**Energy Offer SuspendPeriod** |During a transaction, there may be periods the EnergyOffer to EV is suspended by the EVSE, for instance due to Smart Charging or local balancing.
+|[[energy_transfer_period]]**Energy Transfer Period** |Time during which an EV chooses to take offered energy, or return it. Multiple Energy Transfer Periods are possible during a Transaction.
+|[[local_controller]]**Local Controller** |Optional device in a smart charging infrastructure. Located on the premises with a number of Charge Points connected to it. Sits between the Charge Points and Central System. Understands and speaks OCPP messages. Controls the Power or Current in other Charge Point by using OCPP smart charging messages. Can be a Charge Point itself.
+|[[ocpp_j]]**OCPP-J** |OCPP via JSON over WebSocket
+|[[ocpp_s]]**OCPP-S** |OCPP via SOAP
+|[[phase_rotation]]**Phase Rotation** |Defines the wiring order of the phases between the electrical meter (or if absent, the grid connection), and the Charge Point connector.
+|[[transaction]]**Transaction** |The part of the charging process that starts when all relevant preconditions (e.g. authorization, plug inserted) are met, and ends at the moment when the Charge Point irrevocably leaves this state.
+|[[string]]**String** |Case Sensitive String. Only printable ASCII allowed. All strings in messages and enumerations are case sensitive, unless explicitly stated otherwise.
 |===
 
+[[abbreviations]]
 === Abbreviations
 
 [cols="2,10"]
@@ -402,7 +403,7 @@ The grouping of all messages in their profiles can be found in the table below.
 |===
 |MESSAGE |CORE | FIRMWARE MANAGEMENT |LOCAL AUTH LIST MANAGEMENT |REMOTE TRIGGER |RESERVATION | SMART CHARGING
 
-|<<authorize,Authorize>>                                          |X | | | | | 
+|<<authorize_req,Authorize>>                                          |X | | | | | 
 |<<bootnotification,BootNotification>>                            |X | | | | |
 |<<changeavailability,ChangeAvailability>>                        |X | | | | |
 |<<changeconfiguration,ChangeConfiguration>>                      |X | | | | |
@@ -414,9 +415,9 @@ The grouping of all messages in their profiles can be found in the table below.
 |<<remotestarttransaction,RemoteStartTransaction>>                |X | | | | |
 |<<remotestoptransaction,RemoteStopTransaction>>                  |X | | | | |
 |<<reset,Reset>>                                                  |X | | | | |
-|<<starttransaction,StartTransaction>>                            |X | | | | |
+|<<starttransaction_conf,StartTransaction>>                            |X | | | | |
 |<<statusnotification,StatusNotification>>                        |X | | | | |
-|<<stoptransaction,StopTransaction>>                              |X | | | | |
+|<<stoptransaction_req,StopTransaction>>                              |X | | | | |
 |<<unlockconnector,UnlockConnector>>                              |X | | | | |
 |<<getdiagnostics,GetDiagnostics>>                                | |X | | | |
 |<<diagnosticsstatusnotification,DiagnosticsStatusNotification>>  | |X | | | |
@@ -454,198 +455,122 @@ When a user wishes to unplug the electric vehicle from the Charge Point, the Cha
 
 [cols="1,10"]
 |===
-a|image::images/info_icon.png[width=30px] |A Charge Point MUST NOT send an Authorize.req before stopping a transaction if the presented idTag is the same as the idTag presented to start the transaction
+|[.info-icon]#i# |A Charge Point MUST NOT send an Authorize.req before stopping a transaction if the presented idTag is the same as the idTag presented to start the transaction
 |===
 
-Charge Point Central System
-UpdateFirmware.req(location, retrieveDate, [retries], [retryInterval])
-UpdateFirmware.conf()
-Downloading firmware...
-FirmwareStatusNotification.req( status: Downloaded )
-FirmwareStatusNotification.conf()
-Installing...
-FirmwareStatusNotification.req( status: Installed )
-FirmwareStatusNotification.conf()
-Reboot
-BootNotification.req(chargePointModel, chargePointVendor, [chargeBoxSerialNumber],
-[chargePointSerialNumber],[firmwareVersion], [iccid], [imsi],
-[meterSerialNumber], [meterType])
-BootNotification.conf(currentTime, heartbeatInterval, status)
-_Figure 2. Sequence Diagram: Example of a firmware update_
-When a Charge Point needs to be updated with new firmware, the Central System informs the Charge Point of
-the time at which the Charge Point can start downloading the new firmware. The Charge Point SHALL notify the
-Central System after each step as it downloads and installs the new firmware.
+.Sequence Diagram: Example of a firmware update
+image::images/figure_2.svg[Sequence Diagram: Example of a firmware update]
+
+When a Charge Point needs to be updated with new firmware, the Central System informs the Charge Point of the time at which the Charge Point can start downloading the new firmware. The Charge Point SHALL notify the Central System after each step as it downloads and installs the new firmware.
 
 === Local Authorization & Offline Behavior
 
 This section is normative.
-In the event of unavailability of the communications or even of the Central System, the Charge Point is designed
-to operate stand-alone. In that situation, the Charge Point is said to be _offline_.
-To improve the experience for users, a Charge Point MAY support local authorization of identifiers, using an
-Authorization Cache and/or a Local Authorization List.
-This allows (a) authorization of a user when _offline_ , and (b) faster (apparent) authorization response time when
-communication between Charge Point and Central System is slow.
-The LocalAuthorizeOffline configuration key controls whether a Charge Point will authorize a user when
-_offline_ using the Authorization Cache and/or the Local Authorization List.
-The LocalPreAuthorize configuration key controls whether a Charge Point will use the Authorization Cache
-and/or the Local Authorization List to start a transaction without waiting for an authorization response from the
-Central System.
-A Charge Point MAY support the (automatic) authorization of any presented identifier when _offline_ , to avoid
-refusal of charging to bona-fide users that cannot be explicitly authorized by Local Authorization
-List/Authorization Cache entries. This functionality is explained in more detail in Unknown Offline Authorization.
 
-**3.5.1. Authorization Cache**
-A Charge Point MAY implement an _Authorization Cache_ that autonomously maintains a record of previously
-presented identifiers that have been successfully authorized by the Central System. ( _Successfully_ meaning: a
-response received on a message containing an idTag)
+In the event of unavailability of the communications or even of the Central System, the Charge Point is designed to operate stand-alone. In that situation, the Charge Point is said to be _offline_.
+
+To improve the experience for users, a Charge Point MAY support local authorization of identifiers, using an <<authorization_cache,Authorization Cache>> and/or a <<local_authorization_list,Local Authorization List>>.
+
+This allows (a) authorization of a user when _offline_ , and (b) faster (apparent) authorization response time when communication between Charge Point and Central System is slow.
+
+The <<localauthorizeoffline,`LocalAuthorizeOffline`>> configuration key controls whether a Charge Point will authorize a user when _offline_ using the Authorization Cache and/or the Local Authorization List.
+
+The <<localpreauthorize,`LocalPreAuthorize`>> configuration key controls whether a Charge Point will use the Authorization Cache and/or the Local Authorization List to start a transaction without waiting for an authorization response from the
+Central System.
+
+A Charge Point MAY support the (automatic) authorization of any presented identifier when _offline_ , to avoid refusal of charging to bona-fide users that cannot be explicitly authorized by Local Authorization List/Authorization Cache entries. This functionality is explained in more detail in <<unknown_offline_authorization,Unknown Offline Authorization>>.
+
+[[authorization_cache]]
+==== Authorization Cache
+
+A Charge Point MAY implement an _Authorization Cache_ that autonomously maintains a record of previously presented identifiers that have been successfully authorized by the Central System. ( _Successfully_ meaning: a response received on a message containing an idTag)
+
 If implemented, the Authorization Cache SHOULD conform to the following semantics:
 
-- The Cache contains all the latest received identifiers (i.e. valid and NOT-valid).
-- The Cache is updated using all received IdTagInfo (from Authorize.conf, StartTransaction.conf and
-  StopTransaction.conf)
-- When the validity of a Cache entry expires, it SHALL be changed to expired in the Cache.
-- When an IdTagInfo is received for an identifier in the Cache, it SHALL be updated.
-- If new identifier authorization data is received and the Authorization Cache is full, the Charge Point SHALL
-  remove any NOT-valid entries, and then, if necessary, the oldest valid entries to make space for the new
-  entry.
-- Cache values SHOULD be stored in non-volatile memory, and SHOULD be persisted across reboots and
-  power outages.
-- When an identifier is presented that is stored in the cache as NOT-valid, and the Charge Point is _online_ : an
-  Authorize.req SHOULD be sent to the central System to check the current state of the identifier.
-  Operation of the Authorization Cache, when present, is reported (and controlled, where possible) by the
-  AuthorizationCacheEnabled configuration key.
-  **3.5.2. Local Authorization List**
-  The Local Authorization List is a list of identifiers that can be synchronized with the Central System.
-  The list contains the authorization status of all (or a selection of) identifiers and the authorization
-  status/expiration date.
-  Identifiers in the Local Authorization list can be marked as **valid** , **expired** , **(temporarily) blocked** , or
-  **blacklisted** , corresponding to IdTagInfo _status_ values _Accepted_ / _ConcurrentTx_ , _Expired_ , _Blocked_ , and _Invalid_ ,
-  respectively.
-  These values may be used to provide more fine grained information to users (e.g. by display message) during
-  local authorization.
-  The Local Authorization List SHOULD be maintained by the Charge Point in non-volatile memory, and SHOULD
-  be persisted across reboots and power outages.
-  A Charge Point that supports Local Authorization List SHOULD implement the configuration key:
-  LocalAuthListMaxLength This gives the Central System a way to known the the maximum possible number
-  of Local Authorization List elements in a Charge Point
-  The Charge Point indicates whether the Local Authorization List is supported by the presence or absence of the
-  LocalAuthListManagement element in the value of the SupportedFeatureProfiles configuration key.
+* The Cache contains all the latest received identifiers (i.e. valid and NOT-valid).
+* The Cache is updated using all received <<idtaginfo,IdTagInfo>> (from <<authorize_conf,Authorize.conf>>, <<starttransaction_conf,StartTransaction.conf>> and <<stoptransaction_conf,StopTransaction.conf>>)
+* When the validity of a Cache entry expires, it SHALL be changed to expired in the Cache.
+* When an <<idtaginfo,IdTagInfo>> is received for an identifier in the Cache, it SHALL be updated.
+* If new identifier authorization data is received and the Authorization Cache is full, the Charge Point SHALL remove any NOT-valid entries, and then, if necessary, the oldest valid entries to make space for the new entry.
+* Cache values SHOULD be stored in non-volatile memory, and SHOULD be persisted across reboots and power outages.
+* When an identifier is presented that is stored in the cache as NOT-valid, and the Charge Point is _online_ : an <<authorize_req,Authorize.req>> SHOULD be sent to the central System to check the current state of the identifier.
 
-== Whether the Local Authorization List is enabled is reported and controlled by the LocalAuthListEnabled
+Operation of the Authorization Cache, when present, is reported (and controlled, where possible) by the <<authorizationcacheenabled,`AuthorizationCacheEnabled`>> configuration key.
 
-== configuration key
+[[local_authorization_list]]
+==== Local Authorization List
 
-== The Central System can synchronize this list by either (1) sending a complete list of identifiers to replace the
+The Local Authorization List is a list of identifiers that can be synchronized with the Central System.
 
-== Local Authorization List or (2) by sending a list of changes (add, update, delete) to apply to the Local
+The list contains the authorization status of all (or a selection of) identifiers and the authorization status/expiration date.
 
-== Authorization List. The operations to support this are Get Local List Version and Send Local List
+Identifiers in the Local Authorization list can be marked as **valid** , **expired** , **(temporarily) blocked** , or **blacklisted** , corresponding to <<idtaginfo,IdTagInfo>> _status_ values _Accepted_ / _ConcurrentTx_ , _Expired_ , _Blocked_ , and _Invalid_, respectively.
 
-== Charge Point Central System
+These values may be used to provide more fine grained information to users (e.g. by display message) during local authorization.
 
-== SendLocalList.req( listVersion: 234 , updateType: Full , [localAuthorizationList])
+The Local Authorization List SHOULD be maintained by the Charge Point in non-volatile memory, and SHOULD be persisted across reboots and power outages.
 
-== SendLocalList.conf( status: Accepted )
+A Charge Point that supports Local Authorization List SHOULD implement the configuration key: <<localauthlistmaxlength,LocalAuthListMaxLength>> This gives the Central System a way to known the the maximum possible number of Local Authorization List elements in a Charge Point
 
-== Figure 3. Sequence Diagram: Example of a full local authorization list update
+The Charge Point indicates whether the Local Authorization List is supported by the presence or absence of the `LocalAuthListManagement` element in the value of the <<supportedfeatureprofiles,`SupportedFeatureProfiles`>> configuration key.
 
-== Charge Point Central System
+Whether the Local Authorization List is enabled is reported and controlled by the <<localauthlistenabled,LocalAuthListEnabled>> configuration key.
 
-== GetLocalListVersion.req()
+The Central System can synchronize this list by either (1) sending a complete list of identifiers to replace the Local Authorization List or (2) by sending a list of changes (add, update, delete) to apply to the Local Authorization List. The operations to support this are <<get_local_list_version,Get Local List Version>> and <<send_local_list,Send Local List>>.
 
-== GetLocalListVersion.conf( listVersion: 234 )
+.Sequence Diagram: Example of a full local authorization list update
+image::images/figure_3.svg[Sequence Diagram: Example of a full local authorization list update]
 
-== SendLocalList.req( listVersion: 239 , updateType: Differential , [AuthorisationData])
+.Sequence Diagram: Example of a differential local authorization list update
+image::images/figure_4.svg[Sequence Diagram: Example of a differential local authorization list update]
 
-== SendLocalList.conf( status: Accepted )
+The Charge Point SHALL NOT modify the contents of the Authorization List by any other means than upon a the receipt of a SendLocalList PDU from the Central System.
 
-== Figure 4. Sequence Diagram: Example of a differential local authorization list update
+[cols="1,10"]
+|===
+|[.info-icon]#i# |Conflicts between the local authorization list and the validity reported in, for instance, a <<starttransaction_conf,StartTransaction.conf>> message might occur. When this happens the Charge Point SHALL inform the Central System by sending a <<status_notification,StatusNotification>> with ConnectorId set to 0, and ErrorCode set to 'LocalListConflict'.
+|===
 
-== The Charge Point SHALL NOT modify the contents of the Authorization List by any other means than upon a the
+==== Relation between Authorization Cache and Local Authorization List
 
-== receipt of a SendLocalList PDU from the Central System
+The Authorization Cache and Local Authorization List are distinct logical data structures. Identifiers known in the Local Authorization List SHALL NOT be added to the Authorization Cache.
 
+Where both Authorization Cache and Local Authorization List are supported, a Charge Point SHALL treat Local Authorization List entries as having priority over Authorization Cache entries for the same identifiers.
 
-== Conflicts between the local authorization list and the validity reported in, for instance, a
+[[unknown_offline_authorization]]
+==== Unknown Offline Authorization
 
-== StartTransaction.conf message might occur. When this happens the Charge Point SHALL
+When _offline_, a Charge Point MAY allow automatic authorization of any "unknown" identifiers that cannot be explicitly authorized by Local Authorization List or Authorization Cache entries. Identifiers that are present in a Local Authorization List that have a status other than “Accepted” (Invalid, Blocked, Expired) MUST be rejected. +
+Identifiers that were valid but are apparently expired due to passage of time MUST also be rejected
 
-== inform the Central System by sending a StatusNotification with ConnectorId set to 0, and
+Operation of the Unknown Offline Authorization capability, when supported, is reported (and controlled, where possible) by the <<allowofflinetxforunknownid,`AllowOfflineTxForUnknownId`>> configuration key.
 
-== ErrorCode set to 'LocalListConflict'
+When connection to the Central Server is restored, the Charge Point SHALL send a <<start_transaction,Start Transaction>> request for any transaction that was authorized offline , as required by <<transaction_related_messages,transaction-related message handling>>. When the authorization status in the <<starttransaction_conf,StartTransaction.conf>> is not _Accepted_, and the transaction is still ongoing, the Charge Point SHOULD:
 
-==3. Relation between Authorization Cache and Local Authorization List
+* when <<stoptransactiononinvalidid,`StopTransactionOnInvalidId`>> is set to _true_: stop the transaction normally as stated in <<stop_transaction,Stop Transaction>>. The Reason field in the Stop Transaction request should be set to DeAuthorized. If the Charge Point has the possibility to lock the Charging Cable, it SHOULD keep the Charging Cable locked until the owner presents his identifier.
+* when <<stoptransactiononinvalidid,StopTransactionOnInvalidId>> is set to _false_: only stop energy delivery to the vehicle.
 
-== The Authorization Cache and Local Authorization List are distinct logical data structures. Identifiers known in the
-
-== Local Authorization List SHALL NOT be added to the Authorization Cache
-
-== Where both Authorization Cache and Local Authorization List are supported, a Charge Point SHALL treat Local
-
-== Authorization List entries as having priority over Authorization Cache entries for the same identifiers
-
-==4. Unknown Offline Authorization
-
-== When offline , a Charge Point MAY allow automatic authorization of any "unknown" identifiers that cannot be
-
-== explicitly authorized by Local Authorization List or Authorization Cache entries. Identifiers that are present in a
-
-== Local Authorization List that have a status other than “Accepted” (Invalid, Blocked, Expired) MUST be rejected
-
-== Identifiers that were valid but are apparently expired due to passage of time MUST also be rejected
-
-== Operation of the Unknown Offline Authorization capability, when supported, is reported (and controlled, where
-
-== possible) by the AllowOfflineTxForUnknownId configuration key
-
-== When connection to the Central Server is restored, the Charge Point SHALL send a Start Transaction request for
-
-== any transaction that was authorized offline , as required by transaction-related message handling. When the
-
-== authorization status in the StartTransaction.conf is not Accepted , and the transaction is still ongoing, the Charge
-
-== Point SHOULD
-
-== • when StopTransactionOnInvalidId is set to true : stop the transaction normally as stated in Stop
-
-== Transaction. The Reason field in the Stop Transaction request should be set to DeAuthorized. If the Charge
-
-== Point has the possibility to lock the Charging Cable, it SHOULD keep the Charging Cable locked until the
-
-== owner presents his identifier
-
-== • when StopTransactionOnInvalidId is set to false : only stop energy delivery to the vehicle
-
-== In the case of an invalid identifier, an operator MAY choose to charge the EV with a minimum
-
-== amount of energy so the EV is able to drive away. This amount is controlled by the optional
-
-== configuration key: MaxEnergyOnInvalidId
+[cols="1,10"]
+|===
+|[.info-icon]#i# |In the case of an invalid identifier, an operator MAY choose to charge the EV with a minimum amount of energy so the EV is able to drive away. This amount is controlled by the optional configuration key: <<maxenergyoninvalidid,MaxEnergyOnInvalidId>>.
+|===
 
 === Transaction in relation to Energy Transfer Period
 
-== This section is informative
+This section is informative.
 
-== The Energy Transfer Period is a period of time during wich energy is transferred between the EV and the EVSE
+The <<energy_transfer_period,Energy Transfer Period>> is a period of time during wich energy is transferred between the EV and the EVSE. +
+There MAY be multiple Energy Transfer Periods during a <<transaction,Transaction>>
 
-== There MAY be multiple Energy Transfer Periods during a Transaction
+Multiple Energy Transfer Periods can be separated by either:
+* an EVSE-initiated supense of transfer during which de EVSE does not offer energy transfer
+* an EV-initiated suspense of transfer during which the EV remains electrically connected to the EVSE
+* an EV-initiated suspense of transfer during which the EV is not electrically connected to the EVSE.
 
-== Multiple Energy Transfer Periods can be separated by either
+A Central System MAY deduce the start and end of an Energy Transfer Period from: the MeterValues that are sent during the Transaction, the status notifications: Charging, SuspendedEV and/or SuspendedEVSE. etc. +
+Central System implementations need to take into account factors such as: Some EVs don’t go to state SuspendedEV: they might continue to trickle charge. Some Charge Point don’t even have a electrical meter.
 
-== • an EVSE-initiated supense of transfer during which de EVSE does not offer energy transfer
-
-== • an EV-initiated suspense of transfer during which the EV remains electrically connected to the EVSE
-
-== • an EV-initiated suspense of transfer during which the EV is not electrically connected to the EVSE
-
-== A Central System MAY deduce the start and end of an Energy Transfer Period from: the MeterValues that are
-
-== sent during the Transaction, the status notifications: Charging, SuspendedEV and/or SuspendedEVSE. etc
-
-== Central System implementations need to take into account factors such as: Some EVs don’t go to state
-
-== SuspendedEV: they might continue to trickle charge. Some Charge Point don’t even have a electrical meter
-
+// TODO:
 Session Transaction Energy Offer Energy Flow
 Charging Session
 Charging Session is started when first interaction
@@ -687,6 +612,7 @@ is available again. No cable plugged,
 parking bay free.
 _Figure 5. OCPP Charging Session and transaction definition_
 
+[[transaction_related_messages]]
 === Transaction-related messages
 
 This section is normative.
@@ -1650,6 +1576,7 @@ The outcome of such sanity checks SHOULD NOT ever cause the Central System to no
 MeterValues.conf. Failing to respond with a MeterValues.conf will only cause the Charge Point to try the same
 message again as specified in Error responses to transaction-related messages.
 
+[[start_transaction]]
 === Start Transaction
 
 Charge Point Central System
@@ -1672,6 +1599,7 @@ received. The outcome of such sanity checks SHOULD NOT ever cause the Central Sy
 StartTransaction.conf. Failing to respond with a StartTransaction.conf will only cause the Charge Point to try the
 same message again as specified in Error responses to transaction-related messages.
 
+[[status_notification]]
 === Status Notification
 
 == Charge Point Central System
@@ -1907,6 +1835,7 @@ its status according to the following rules:
    Upon receipt of a StatusNotification.req PDU, the Central System SHALL respond with a StatusNotification.conf
    PDU.
 
+[[stop_transaction]]
 === Stop Transaction
 
 Charge Point Central System
@@ -2242,6 +2171,7 @@ diagnostics file is available, then GetDiagnostics.conf SHALL NOT contain a file
 During uploading of a diagnostics file, the Charge Point MUST send DiagnosticsStatusNotification.req PDUs to
 keep the Central System updated with the status of the upload process.
 
+[[get_local_list_version]]
 === Get Local List Version
 
 Charge Point Central System
@@ -2443,6 +2373,7 @@ Unavailable.
 
  Persistent states: for example: Connector set to Unavailable shall persist
 
+[[send_local_list]]
 === Send Local List
 
 Charge Point Central System
@@ -2757,7 +2688,7 @@ PDU. The Charge Point SHOULD start retrieving the firmware as soon as possible a
 [[messages]]
 == Messages
 
-[[authorize]]
+[[authorize_req]]
 === Authorize.req
 
 This contains the field definition of the Authorize.req PDU sent by the Charge Point to the Central System. See
@@ -2765,6 +2696,7 @@ also Authorize
 **FIELD NAME FIELD TYPE CARD. DESCRIPTION
 idTag** IdToken 1..1 Required. This contains the identifier that needs to be authorized.
 
+[[authorize_conf]]
 === Authorize.conf
 
 This contains the field definition of the Authorize.conf PDU sent by the Central System to the Charge Point in
@@ -3208,6 +3140,7 @@ message successfully. This does not guarantee the schedule will be followed to
 the letter. There might be other constraints the Charge Point may need to take
 into account.
 
+[[starttransaction_req]]
 === StartTransaction.req
 
 This section contains the field definition of the StartTransaction.req PDU sent by the Charge Point to the Central
@@ -3223,7 +3156,7 @@ transaction.
 this transaction.
 **timestamp** dateTime 1..1 Required. This contains the date and time on which the transaction is started.
 
-[[starttransaction]]
+[[starttransaction_conf]]
 === StartTransaction.conf
 
 This contains the field definition of the StartTransaction.conf PDU sent by the Central System to the Charge Point
@@ -3261,7 +3194,7 @@ This contains the field definition of the StatusNotification.conf PDU sent by th
 Point in response to an StatusNotification.req PDU. See also Status Notification
 No fields are defined.
 
-[[stoptransaction]]
+[[stoptransaction_req]]
 === StopTransaction.req
 
 This contains the field definition of the StopTransaction.req PDU sent by the Charge Point to the Central System.
@@ -3279,6 +3212,7 @@ StartTransaction.conf.
 be omitted when the Reason is "Local".
 **transactionData** MeterValue 0..\* Optional. This contains transaction usage details relevant for billing purposes.
 
+[[stoptransaction_conf]]
 === StopTransaction.conf
 
 This contains the field definition of the StopTransaction.conf PDU sent by the Central System to the Charge Point
@@ -3721,6 +3655,7 @@ Status returned in response to GetCompositeSchedule.req.
 Accepted** Request has been accepted and will be executed.
 **Rejected** Request has not been accepted and will not be executed.
 
+[[idtaginfo]]
 === IdTagInfo
 
 _Class_
@@ -4149,13 +4084,16 @@ response to a GetConfiguration.req without a list of keys:
 
 === Core Profile
 
-**9.1.1.** AllowOfflineTxForUnknownId
+[[allowofflinetxforunknownid]]
+==== AllowOfflineTxForUnknownId
 **Required/optional** optional
 **Accessibility** RW
 **Type** boolean
 **Description** If this key exists, the Charge Point supports Unknown Offline Authorization. If this key reports a value of _true_ , Unknown Offline
 Authorization is enabled.
-**9.1.2.** AuthorizationCacheEnabled
+
+[[authorizationcacheenabled]]
+==== AuthorizationCacheEnabled
 **Required/optional** optional
 **Accessibility** RW
 **Type** boolean
@@ -4238,18 +4176,24 @@ Values are reported in CSL, formatted: 0.RST, 1.RST, 2.RTS
 **Type** integer
 **Unit** %
 **Description** Percentage of maximum intensity at which to illuminate Charge Point lighting
-**9.1.12.** LocalAuthorizeOffline
+
+[[localauthorizeoffline]]
+==== LocalAuthorizeOffline
 **Required/optional** required
 **Accessibility** RW
 **Type** boolean
 **Description** whether the Charge Point, when _offline_ , will start a transaction for locally-authorized identifiers.
-**9.1.13.** LocalPreAuthorize
+
+[[localpreauthorize]]
+==== LocalPreAuthorize
 **Required/optional** required
 **Accessibility** RW
 **Type** boolean
 **Description** whether the Charge Point, when online, will start a transaction for locally-authorized identifiers without waiting for or
 requesting an Authorize.conf from the Central System
-**9.1.14.** MaxEnergyOnInvalidId
+
+[[maxenergyoninvalidid]]
+==== MaxEnergyOnInvalidId
 **Required/optional** optional
 
 **Accessibility** RW
@@ -4312,7 +4256,9 @@ Central System.
 **Accessibility** RW
 **Type** boolean
 **Description** When set to _true_ , the Charge Point SHALL administratively stop the transaction when the cable is unplugged from the EV.
-**9.1.24.** StopTransactionOnInvalidId
+
+[[stoptransactiononinvalidid]]
+==== StopTransactionOnInvalidId
 **Required/optional** required
 **Accessibility** RW
 **Type** boolean
@@ -4385,12 +4331,15 @@ between pings. Negative values are not allowed. ChangeConfiguration is expected 
 
 === Local Auth List Management Profile
 
-**9.2.1.** LocalAuthListEnabled
+[[localauthlistenabled]]
+==== LocalAuthListEnabled
 **Required/optional** required
 **Accessibility** RW
 **Type** boolean
 **Description** whether the Local Authorization List is enabled
-**9.2.2.** LocalAuthListMaxLength
+
+[[localauthlistmaxlength]]
+==== LocalAuthListMaxLength
 **Required/optional** required
 **Accessibility** R
 **Type** integer

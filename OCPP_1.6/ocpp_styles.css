@@ -51,11 +51,24 @@ div {
     }
   }
 
+  .info-icon {
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 10px 5px 0px 5px;
+
+    background-color: #323f77;
+    color: #ffffff;
+
+    font-size: 32px;
+    font-weight: bold;
+    font-family: Rockwell;
+    text-align:center;
+  }
 }
 
-.info-icon {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 40px;
-}

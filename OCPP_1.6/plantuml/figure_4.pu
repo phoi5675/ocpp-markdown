@@ -1,0 +1,23 @@
+@startuml figure_4
+!include style.puml
+
+participant "Charge Point" as ChargePoint
+participant "Central System" as CentralSystem
+
+ChargePoint -> CentralSystem: GetLocalListVersion.req()
+activate ChargePoint
+activate CentralSystem
+CentralSystem -> ChargePoint : GetLocalListVersion.conf( **listVersion: 234** )
+deactivate ChargePoint
+deactivate CentralSystem
+
+ChargePoint -[hidden]-> CentralSystem
+
+ChargePoint -> CentralSystem : SendLocalList.req( **listVersion: 239**  , **updateType: Differential**  , [AuthorisationData])
+activate ChargePoint
+activate CentralSystem
+CentralSystem  -> ChargePoint : SendLocalList.conf( **status: Accepted** )
+deactivate ChargePoint
+deactivate CentralSystem
+
+@enduml
