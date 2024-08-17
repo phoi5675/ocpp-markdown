@@ -8,14 +8,16 @@ div {
     display: block;
     margin-left: auto;
     margin-right: auto;
-    width: 40%;
+    width: 300px;
   }
+
   .cover-title {
     margin-top: 400px;
     font-size: 40px;
     font-weight: bold;
     text-align: right;
   }
+  
   .cover-edition {
     text-align: right;
   }
@@ -48,4 +50,12 @@ div {
       content: counters(item, ".") " ";
     }
   }
+
+}
+
+.info-icon {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 40px;
 }
