@@ -60,6 +60,7 @@ div {
     justify-content: center;
     align-items: center;
 
+    margin: 0 5px 0 15px;
     padding: 10px 5px 0px 5px;
 
     background-color: #323f77;
@@ -80,10 +81,23 @@ div {
     justify-content: center;
     align-items: center;
 
+    margin: 0 5px 0 15px;
     padding: 10px 5px 0px 5px;
 
     background-color: #9b3517;
     color: #ffffff;
+
+    font-size: 32px;
+    font-weight: bold;
+    font-family: Rockwell;
+    text-align:center;
+  }
+
+  .bulb-icon {
+    display: flex;
+
+    margin: 0 5px 0 15px;
+    padding: 10px 5px 0px 5px;
 
     font-size: 32px;
     font-weight: bold;

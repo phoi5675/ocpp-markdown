@@ -409,7 +409,7 @@ The grouping of all messages in their profiles can be found in the table below.
 |<<changeconfiguration,ChangeConfiguration>>                      |X | | | | |
 |<<clearcache,ClearCache>>                                        |X | | | | |
 |<<datatransfer,DataTransfer>>                                    |X | | | | |
-|<<getconfiguration,GetConfiguration>>                            |X | | | | |
+|<<getconfiguration_req,GetConfiguration>>                            |X | | | | |
 |<<heartbeat,Heartbeat>>                                          |X | | | | |
 |<<metervalues_req,MeterValues>>                                      |X | | | | |
 |<<remotestarttransaction,RemoteStartTransaction>>                |X | | | | |
@@ -725,6 +725,7 @@ In the case an updated charging profile (with the same stackLevel and purpose) i
 If you use Stacking without a duration, on the highest stack level, the Charge Point will never fall back to a lower stack level profile.
 |===
 
+[[combining_charging_profile_purposes]]
 ==== Combining charging profile purposes
 
 The Composite Schedule that will guide the charging level is a combination of the prevailing Charging Profiles of the different <<charging_profile_purposes,chargingProfilePurposes>>.
@@ -805,218 +806,158 @@ The optional charging schedule field <<minchargingrate,minChargingRate>> may be 
 
 The following diagram illustrates the sequence of messages to set charging limits on Charge Points in a Local Smart Charging group. These limits can either be pre-configured in the Local Controller in one way or another, or they can be set by the Central System. The Local Controller contains the logic to distribute this capacity among the connected connectors by adjusting their limits as needed.
 
-Charge Point Local Controller CSO Central System
-opt Set local group limits
-SetChargingProfile.req( connectorId: 0 ,
-chargingprofilePurpose: ChargepointMaxProfile ,
-chargingProfileKind: absolute , validFrom, validTo)
-Limits for local
-controller's group may
-be preconfigured in
-controller or set
-dynamically by CSO
-SetChargingProfile.conf(Accepted)
-SetChargingProfile.req( connectorId: 0 ,
-chargingprofilePurpose: ChargepointMaxProfile ,
-chargingProfileKind: absolute , validFrom, validTo)
-Local Controller assigns
-limits to Charge Point
-SetChargingProfile.conf(Accepted)
-_Figure 10. Presetting Local Group Limits_
-The next diagram describe the sequence of messages for a typical case of Local Smart Charging. For simplicity’s
-sake, this case only involves one connector.
+.Presetting Local Group Limits
+image::images/figure_10.svg[Presetting Local Group Limits]
 
-User
-EV Charge Point Local Controller Central System
-RFID or other Authorization
-set max current(limit)
-switch power on()
-start charging()
-StartTransaction.req(connectorId, idTag, meterStart,
-timestamp, [reservationId])
-StartTransaction.req(connectorId, idTag, meterStart,
-timestamp, [reservationId])
-StartTransaction.conf(idTagInfo, transactionId)
-StartTransaction.conf(idTagInfo, transactionId)
-loop Change according to charging profile
-[for each interval period in charging profile]
-get limit from charging profile():limit
-Charge Point implements charging
-profile via the Control Pilot
-signal whenever maximum current
-needs changing.
-set max current(limit)
-opt [Change of limits by controller]
-SetChargingProfile.req(connectorId, csChargingProfiles) Local Controller decides to change the charging profile.
-SetChargingProfile.conf(Accepted)
-RFID or other Authorization
-end charging()
-switch power off()
-StopTransaction.req(meterStop, timestamp,
-transactionId, reason, [idTag], [transactionData])
-StopTransaction.req(meterStop, timestamp,
-transactionId, reason, [idTag], [transactionData])
-StopTransaction.conf([idTagInfo])
-StopTransaction.conf([idTagInfo])
-_Figure 11. Sequence Diagram: Local Smart Charging_
+The next diagram describe the sequence of messages for a typical case of Local Smart Charging. For simplicity’s sake, this case only involves one connector.
+
+.Sequence Diagram: Local Smart Charging
+image::images/figure_11.svg[Sequence Diagram: Local Smart Charging]
+
 Explanation for the above figure:
 
-- After authorization the connector will set a maximum current to use, via the Control Pilot signal. This limit
-  is based on a (default) charging profile that the connector had previously received from the Local
-  Controller. The EV starts charging and sends a StartTransaction.req.
-- The StartTransaction.req is sent to the Central System via the Local Controller, so that also the Local
-  Controller knows a transaction has started. The Local Controller just passes on the messages between
-  Charge Point and Central System, so that the Central System can address all the Local Smart Charging
-  group members individually.
-- While charging is in progress the connector will continuously adapt the maximum current according to the
-  charging profile.
-  Optionally, at any point in time the Local Controller may send a new charging profile to the connector that
-  shall be used as a limit schedule for the EV.
-  **3.13.5. Discovery of Charge Point Capabilities**
-  This section is normative.
+* After authorization the connector will set a maximum current to use, via the Control Pilot signal. This limit is based on a (default) charging profile that the connector had previously received from the Local Controller. The EV starts charging and sends a <<starttransaction_req,StartTransaction.req>>.
+* The <<starttransaction_req,StartTransaction.req>> is sent to the Central System via the Local Controller, so that also the Local Controller knows a transaction has started. The Local Controller just passes on the messages between Charge Point and Central System, so that the Central System can address all the Local Smart Charging group members individually.
+* While charging is in progress the connector will continuously adapt the maximum current according to the charging profile. +
+Optionally, at any point in time the Local Controller may send a new charging profile to the connector that shall be used as a limit schedule for the EV.
 
-The smart charging options defined can be used in extensive ways. Because of the possible limitations and
-differences in capabilities between Charge Points, the Central System needs to be able to discover the Charge
-Point specific capabilities. This is ensured by the standardized configuration keys as defined in this chapter. A
-Smart Charging enabled Charge Point SHALL implement, and support reporting of, the following configuration
-keys through the GetConfiguration.req PDU
-**SMART CHARGING CONFIGURATION KEYS**
-ChargeProfileMaxStackLevel
-ChargingScheduleAllowedChargingRateUnit
-ChargingScheduleMaxPeriods
-MaxChargingProfilesInstalled
-A full list of all standardized configuration keys can be found in chapter Standard Configuration Key Names &
-Values.
-**3.13.6. Offline behavior of smart charging**
+==== Discovery of Charge Point Capabilities
+
 This section is normative.
-If a Charge Point goes _offline_ after having received a transaction-specific charging profile with purpose TxProfile,
-then it SHALL continue to use this profile for the duration of the transaction.
-If a Charge Point goes _offline_ before a transaction is started or before a transaction-specific charging profile with
-purpose TxProfile was received, then it SHALL use the charging profiles that are available. Zero or more of the
-following charging profile purposes MAY have been previously received from the Central System:
 
-- _ChargePointMaxProfile_
-- _TxDefaultProfile_
-  See section Combining Charging Profile Purposes for a description on how to combine charging profiles with
-  different purposes.
-  If a Charge Point goes _offline_ , without having any charging profiles, then it SHALL execute a transaction as if no
-  constraints apply.
-  **3.13.7. Example data structure for smart charging**
-  This section is informative
-  The following data structure describes a daily default profile that limits the power to 6 kW between 08:00h and
-  20:00h.
+The smart charging options defined can be used in extensive ways. Because of the possible limitations and differences in capabilities between Charge Points, the Central System needs to be able to discover the Charge Point specific capabilities. This is ensured by the standardized configuration keys as defined in this chapter. A Smart Charging enabled Charge Point SHALL implement, and support reporting of, the following configuration keys through the <<getconfiguration_req,GetConfiguration.req>> PDU
 
-**CHARGINGPROFILE**
-chargingProfileId **100**
-stackLevel **0**
-chargingProfilePurpose **TxDefaultProfile**
-chargingProfileKind **Recurring**
-recurrencyKind **Daily**
-chargingSchedule (List of 1 ChargingSchedule
-elements)
-**ChargingSchedule**
-duration **86400 (= 24 hours)**
-startSchedule **2013-01-01T00:00Z**
-chargingRateUnit **W**
-chargingSchedulePeriod (List of 3
-ChargingSchedulePeriod
-elements)
-**ChargingSchedulePeriod**
-startPeriod **0 (=00:00)**
-limit **11000**
-numberPhases 3
-startPeriod **28800 (=08:00)**
-limit **6000**
-numberPhases 3
-startPeriod **72000 (=20:00)**
-limit **11000**
-numberPhases 3
+[cols="1",options="header"]
+|===
+|SMART CHARGING CONFIGURATION KEYS
 
-== The amount of phases used during charging is limited by the capabilities of: The Charge Point
+|<<chargeprofilemaxstacklevel,ChargeProfileMaxStackLevel>>
+|<<chargingscheduleallowedchargingrateunit,ChargingScheduleAllowedChargingRateUnit>>
+|<<chargingschedulemaxperiods,ChargingScheduleMaxPeriods>>
+|<<maxchargingprofilesinstalled,MaxChargingProfilesInstalled>>
+|===
 
-== EV and Cable between CP and EV. If any of these 3 is not capable of 3 phase charging, the EV
+A full list of all standardized configuration keys can be found in chapter <<standard_configuration_key_names_and_values,Standard Configuration Key Names & Values>>.
 
-== will be charged using 1 phase only
+[[offline_behavior_of_smart_charging]]
+==== Offline behavior of smart charging
 
-== Switching the number of used phases during a schedule or charging session should be done
+This section is normative.
 
-== with care. Some EVs may not support this and changing the amount of phases may result in
+If a Charge Point goes _offline_ after having received a transaction-specific charging profile with purpose <<txprofile,TxProfile>>, then it SHALL continue to use this profile for the duration of the transaction.
 
-== physical damage. With the configuration key: ConnectorSwitch3to1PhaseSupported The
+If a Charge Point goes _offline_ before a transaction is started or before a transaction-specific charging profile with purpose TxProfile was received, then it SHALL use the charging profiles that are available. Zero or more of the following charging profile purposes MAY have been previously received from the Central System:
 
-== Charge Point can tell if it supports switching the amount of phases during a transaction
+* _ChargePointMaxProfile_
+* _TxDefaultProfile_
 
-== On days on which DST goes into or out of effect, a special profile might be needed (e.g. for
+See section <<combining_charging_profile_purposes,Combining Charging Profile Purposes>> for a description on how to combine charging profiles with different purposes.
 
-== relative profiles)
+If a Charge Point goes _offline_ , without having any charging profiles, then it SHALL execute a transaction as if no constraints apply.
+
+[[example_data_structure_for_smart_charging]]
+==== Example data structure for smart charging
+
+This section is informative.
+
+The following data structure describes a daily default profile that limits the power to 6 kW between 08:00h and 20:00h.
+
+[cols="1,1,1,1",options="header"]
+|===
+|CHARGINGPROFILE        |              |               |
+
+|chargingProfileId      |**100**        |               |
+|stackLevel             |**0**          |               |
+|chargingProfilePurpose |**TxDefaultProfile** |         |
+|chargingProfileKind    |**Recurring**  |               |
+|recurrencyKind         |**Daily**      |               |
+|chargingSchedule       |<<chargingschedule,(List of 1 ChargingSchedule 
+                        elements)>>     |               |
+|                 |**ChargingSchedule** |               |
+|                 |duration             |**86400 (= 24 hours)** |
+|                 |startSchedule        |**2013-01-01T00:00Z**  |
+|                 |chargingRateUnit     |**W**                  |
+|                 |chargingSchedulePeriod |(List of 3 
+<<chargingscheduleperiod,ChargingSchedulePeriod>> elements)     |
+|     |     |**ChargingSchedulePeriod** |
+|     |     |startPeriod                |**0 (=00:00)**
+|     |     |limit                      |**11000**
+|     |     |numberPhases               |3
+|     |     |                           |ﾠ
+|     |     |startPeriod                |**28800 (=08:00)**
+|     |     |limit                      |**6000**
+|     |     |numberPhases               |3
+|     |     |                           |ﾠ
+|     |     |startPeriod                |**72000 (=20:00)**
+|     |     |limit                      |**11000**
+|     |     |numberPhases               |3
+|===
+
+[cols="1,10"]
+|===
+|[.warning-icon]#!# |
+The amount of phases used during charging is limited by the capabilities of: The Charge Point EV and Cable between CP and EV. If any of these 3 is not capable of 3 phase charging, the EV will be charged using 1 phase only.
+|===
+
+[cols="1,10"]
+|===
+|[.warning-icon]#!# |
+Switching the number of used phases during a schedule or charging session should be done with care. Some EVs may not support this and changing the amount of phases may result in physical damage. With the configuration key: <<connectorswitch3to1phasesupported,ConnectorSwitch3to1PhaseSupported>> The Charge Point can tell if it supports switching the amount of phases during a transaction.
+|===
+
+[cols="1,10"]
+|===
+|[.bulb-icon]#💡# |
+On days on which DST goes into or out of effect, a special profile might be needed (e.g. for relative profiles)
+|===
 
 === Time zones
 
-== This section is informative
+This section is informative.
 
-== OCPP does not prescribe the use of a specific time zone for time values. However, it is strongly recommended to
-
-== use UTC for all time values to improve interoperability between Central Systems and Charge Points
+OCPP does not prescribe the use of a specific time zone for time values. However, it is strongly recommended to use UTC for all time values to improve interoperability between Central Systems and Charge Points.
 
 === Time notations
 
-== This section is normative
+This section is normative.
 
-== Implementations MUST use ISO 8601 date time notation. Message receivers must be able to handle fractional
-
-== seconds and time zone offsets (another implementation might use them). Message senders MAY save data
-
-== usage by omitting insignificant fractions of seconds
+Implementations MUST use ISO 8601 date time notation. Message receivers must be able to handle fractional seconds and time zone offsets (another implementation might use them). Message senders MAY save data usage by omitting insignificant fractions of seconds.
 
 === Metering Data
 
-== This section is normative
+This section is normative.
 
-== Extensive metering data relating to charging sessions can be recorded and transmitted in different ways
+Extensive metering data relating to charging sessions can be recorded and transmitted in different ways depending on its intended purpose. There are two obvious use cases (but the use of meter values is not limited to these two):
 
-== depending on its intended purpose. There are two obvious use cases (but the use of meter values is not limited
+* <<charging_session_meter_values,Charging Session Meter Values>>
 
-== to these two)
+* <<,Clock-Aligned Meter Values>>
 
-== • Charging Session Meter Values
+Both types of meter readings MAY be reported in standalone <<metervalues_req,MeterValues.req>> messages (during a transaction) and/or as part of the transactionData element of the <<stoptransaction_req,StopTransaction.req>> PDU.
 
-== • Clock-Aligned Meter Values
+[[charging_session_meter_values]]
+==== Charging Session Meter Values
 
-== Both types of meter readings MAY be reported in standalone MeterValues.req messages (during a transaction)
+Frequent (e.g. 1-5 minute interval) meter readings taken and transmitted (usually in "real time") to the Central System, to allow it to provide information updates to the EV user (who is usually not at the charge point), via web, app, SMS, etc., as to the progress of the charging session. In OCPP, this is called "sampled meter data", as the exact frequency and time of readings is not very significant, as long as it is "frequent enough". "Sampled meter data" can be configured with the following configuration keys:
 
-== and/or as part of the transactionData element of the StopTransaction.req PDU
+* <<metervaluessampleddata,MeterValuesSampledData>>
+* <<metervaluessampleddatamaxlength,MeterValuesSampledDataMaxLength>>
+* <<metervaluesampleinterval,MeterValueSampleInterval>>
+* <<stoptxnsampleddata,StopTxnSampledData>>
+* <<stoptxnsampleddatamaxlength,StopTxnSampledDataMaxLength>>
 
-==.1. Charging Session Meter Values
+<<metervaluesampleinterval,MeterValueSampleInterval>> is the time (in seconds) between sampling of metering (or other) data, intended to be transmitted by "MeterValues" PDUs. Samples are acquired and transmitted periodically at this interval from the start of the charging transaction.
 
-== Frequent (e.g. 1-5 minute interval) meter readings taken and transmitted (usually in "real time") to the Central
+A value of "0" (numeric zero), by convention, is to be interpreted to mean that no sampled data should be transmitted.
 
-== System, to allow it to provide information updates to the EV user (who is usually not at the charge point), via
+<<metervaluessampleddata,MeterValuesSampledData>> is a comma separated list that prescribes the set of measurands to be included in a MeterValues.req PDU, every <<metervaluesampleinterval,MeterValueSampleInterval>> seconds. The maximum amount of elements in the <<metervaluessampleddata,MeterValuesSampledData>> list can be reported by the Charge Point via: <<metervaluessampleddatamaxlength,MeterValuesSampledDataMaxLength>>
 
-== web, app, SMS, etc., as to the progress of the charging session. In OCPP, this is called "sampled meter data", as
+<<stoptxnsampleddata,StopTxnSampledData>> is a comma separated list that prescribes the sampled measurands to be included in the TransactionData element of StopTransaction.req PDU, every <<metervaluesampleinterval,MeterValueSampleInterval>> seconds from the start of the Transaction. The maximum amount of elements in the <<stoptxnsampleddata,StopTxnSampledData>> list can be reported by the Charge Point via: <<stoptxnsampleddatamaxlength,StopTxnSampledDataMaxLength>>.
 
-== the exact frequency and time of readings is not very significant, as long as it is "frequent enough". "Sampled
+// TODO:
+[[clock_aligned_meter_values]]
+==== Clock-Aligned Meter Values
 
-== meter data" can be configured with the following configuration keys
-
-- MeterValuesSampledData
-- MeterValuesSampledDataMaxLength
-- MeterValueSampleInterval
-- StopTxnSampledData
-- StopTxnSampledDataMaxLength
-  MeterValueSampleInterval is the time (in seconds) between sampling of metering (or other) data, intended
-  to be transmitted by "MeterValues" PDUs. Samples are acquired and transmitted periodically at this interval
-  from the start of the charging transaction.
-  A value of "0" (numeric zero), by convention, is to be interpreted to mean that no sampled data should be
-  transmitted.
-  MeterValuesSampledData is a comma separated list that prescribes the set of measurands to be included in a
-  MeterValues.req PDU, every MeterValueSampleInterval seconds. The maximum amount of elements in the
-  MeterValuesSampledData list can be reported by the Charge Point via:
-  MeterValuesSampledDataMaxLength
-  StopTxnSampledData is a comma separated list that prescribes the sampled measurands to be included in the
-  TransactionData element of StopTransaction.req PDU, every MeterValueSampleInterval seconds from the
-  start of the Transaction. The maximum amount of elements in the StopTxnSampledData list can be reported
-  by the Charge Point via: StopTxnSampledDataMaxLength
-  **3.16.2. Clock-Aligned Meter Values**
   Grid Operator might require meter readings to be taken from fiscally certified energy meters, at specific Clock
   aligned times (usually every quarter hour, or half hour).
   "Clock-Aligned Billing Data" can be configured with the following configuration keys:
@@ -2674,7 +2615,7 @@ If status is "Rejected", this field may be absent.
 consumption over time. Always relative to ScheduleStart.
 If status is "Rejected", this field may be absent.
 
-[[getconfiguration]]
+[[getconfiguration_req]]
 === GetConfiguration.req
 
 This contains the field definition of the GetConfiguration.req PDU sent by the Central System to the Charge
@@ -2682,6 +2623,7 @@ Point. See also Get Configuration
 **FIELD NAME FIELD TYPE CARD. DESCRIPTION
 key** CiString50Type 0..\* Optional. List of keys for which the configuration value is requested.
 
+[[getconfiguration_conf]]
 === GetConfiguration.conf
 
 This contains the field definition of the GetConfiguration.conf PDU sent by Charge Point the to the Central
@@ -3260,6 +3202,7 @@ Note that if numberPhases in a ChargingSchedulePeriod is absent, 3 SHALL be assu
 The amount of Ampere per phase, not the sum of all phases.
 It is usually more convenient to use this for AC charging.
 
+[[chargingschedule]]
 === ChargingSchedule
 
 _Class_
@@ -3284,6 +3227,7 @@ algorithm to optimize the power allocation for in the case a
 charging process is inefficient at lower charging rates. Accepts at
 most one digit fraction (e.g. 8.1)
 
+[[chargingscheduleperiod]]
 === ChargingSchedulePeriod
 
 _Class_
@@ -3965,20 +3909,26 @@ requesting an Authorize.conf from the Central System
 **Accessibility** R
 **Type** integer
 **Description** Maximum number of items in a MeterValuesAlignedData Configuration Key.
-**9.1.17.** MeterValuesSampledData
+
+[[metervaluessampleddata]]
+==== MeterValuesSampledData
 **Required/optional** required
 **Accessibility** RW
 **Type** CSL
 **Description** Sampled measurands to be included in a MeterValues.req PDU, every MeterValueSampleInterval seconds. Where
 applicable, the Measurand is combined with the optional phase; for instance: Voltage.L1
 Default: "Energy.Active.Import.Register"
-**9.1.18.** MeterValuesSampledDataMaxLength
+
+[[metervaluessampleddatamaxlength]]
+==== MeterValuesSampledDataMaxLength
 **Required/optional** optional
 **Accessibility** R
 
 **Type** integer
 **Description** Maximum number of items in a MeterValuesSampledData Configuration Key.
-**9.1.19.** MeterValueSampleInterval
+
+[[metervaluesampleinterval]]
+==== MeterValueSampleInterval
 **Required/optional** required
 **Accessibility** RW
 **Type** integer
@@ -4031,13 +3981,17 @@ PDU for every ClockAlignedDataInterval of the Transaction
 
 **Type** integer
 **Description** Maximum number of items in a StopTxnAlignedData Configuration Key.
-**9.1.27.** StopTxnSampledData
+
+[[stoptxnsampleddata]]
+==== StopTxnSampledData
 **Required/optional** required
 **Accessibility** RW
 **Type** CSL
 **Description** Sampled measurands to be included in the TransactionData element of StopTransaction.req PDU, every
 MeterValueSampleInterval seconds from the start of the charging session
-**9.1.28.** StopTxnSampledDataMaxLength
+
+[[stoptxnsampleddatamaxlength]]
+==== StopTxnSampledDataMaxLength
 **Required/optional** optional
 **Accessibility** R
 **Type** integer
@@ -4119,29 +4073,35 @@ between pings. Negative values are not allowed. ChangeConfiguration is expected 
 
 === Smart Charging Profile
 
-**9.4.1.** ChargeProfileMaxStackLevel
+[[chargeprofilemaxstacklevel]]
+==== ChargeProfileMaxStackLevel
 **Required/optional** required
 **Accessibility** R
 **Type** integer
 **Description** Max StackLevel of a ChargingProfile. The number defined also indicates the max allowed number of installed charging
 schedules per Charging Profile Purposes.
-**9.4.2.** ChargingScheduleAllowedChargingRateUnit
+[[chargingscheduleallowedchargingrateunit]]
+==== ChargingScheduleAllowedChargingRateUnit
 **Required/optional** required
 **Accessibility** R
 **Type** CSL
 **Description** A list of supported quantities for use in a ChargingSchedule. Allowed values: 'Current' and 'Power'
-**9.4.3.** ChargingScheduleMaxPeriods
+[[chargingschedulemaxperiods]]
+==== ChargingScheduleMaxPeriods
 **Required/optional** required
 **Accessibility** R
 **Type** integer
 **Description** Maximum number of periods that may be defined per ChargingSchedule.
-**9.4.4.** ConnectorSwitch3to1PhaseSupported
+
+[[connectorswitch3to1phasesupported]]
+==== ConnectorSwitch3to1PhaseSupported
 **Required/optional** optional
 **Accessibility** R
 **Type** boolean
 **Description** If defined and true, this Charge Point support switching from 3 to 1 phase during a Transaction.
 
-**9.4.5.** MaxChargingProfilesInstalled
+[[maxchargingprofilesinstalled]]
+==== MaxChargingProfilesInstalled
 **Required/optional** required
 **Accessibility** R
 **Type** integer
