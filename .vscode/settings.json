@@ -1,8 +1,10 @@
 {
+  "asciidoc.antora.enableAntoraSupport": false,
+  "asciidoc.preview.style": "./OCPP_1.6/ocpp_styles.css",
+  "editor.formatOnSave": false,
   "markdownlint.config": {
     "MD033": false
   },
-  "editor.formatOnSave": false,
-  "asciidoc.preview.style": "./OCPP_1.6/ocpp_styles.css",
-  "asciidoc.antora.enableAntoraSupport": false
+  "plantuml.exportConcurrency": 5,
+  "plantuml.exportIncludeFolderHeirarchy": false
 }

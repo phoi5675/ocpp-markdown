@@ -780,94 +780,31 @@ The Central System imposes charging limits on connectors. In response to a <<sta
 
 Central Smart Charging can be done with a Control Pilot signal, albeit with some limitations, because an EV cannot communicate its charging via the Control Pilot signal. In analogy to the <<local_smart_charging,Local Smart Charging>> use case, a connector can execute a charging schedule by the Control Pilot signal. This is illustrated in the Figure below:
 
-User
-EV Charge Point Central System
-RFID or other Authorization
-set max current(limit)
-switch power on()
-start charging()
-StartTransaction.req(connectorId, idTag, meterStart, timestamp, [reservationId])
-StartTransaction.conf(idTagInfo, transactionId)
-loop Change according to charging profile
-[for each interval period in charging profile]
-get limit from charging profile():limit
-Charge Point implements charging
-profile via the Control Pilot
-signal whenever maximum current
-needs changing.
-set max current(limit)
-opt [Change of limits by Central System]
-SetChargingProfile.req(ConnectorId, ChargingProfileId, [transactionId],
-ChargingProfilePurpose: TxProfile , ChargingProfileType, recurrencyKind, ValidFrom,
-ValidTo, ChargingSchedule)
-Central System decides to
-change the charging profile.
-SetChargingProfile.conf(Accepted)
-RFID or other Authorization
-end charging()
-switch power off()
-StopTransaction.req(meterStop, timestamp,
-transactionId, reason, [idTag], [transactionData])
-StopTransaction.conf([idTagInfo])
-_Figure 8. Sequence Diagram: Central Smart Charging_
+.Sequence Diagram: Central Smart Charging
+image::images/figure_8.svg[Sequence Diagram: Central Smart Charging]
+
 Explanation for the above figure:
 
-- After authorization the connector will set a maximum current to use via the Control Pilot signal. This limit
-  is based on a (default) charging profile that the connector had previously received from the Central
-  System. The EV starts charging and a StartTransaction.req is sent to the Central System.
-- While charging is in progress the connector will continuously adapt the maximum current or power
-  according to the charging profile. Optionally, at any point in time the Central System may send a new
-  charging profile for the connector that shall be used as a limit schedule for the EV.
+* After authorization the connector will set a maximum current to use via the Control Pilot signal. This limit is based on a (default) charging profile that the connector had previously received from the Central System. The EV starts charging and a <<starttransaction_req,StartTransaction.req>> is sent to the Central System.
+* While charging is in progress the connector will continuously adapt the maximum current or power according to the charging profile. Optionally, at any point in time the Central System may send a new charging profile for the connector that shall be used as a limit schedule for the EV.
 
 [[local_smart_charging]]
 [discrete]
 ==== Local Smart Charging
 
-The Local Smart Charging use case describes a use case in which smart charging enabled Charge Points have
-charging limits controlled locally by a Local Controller, not the Central System. The use case for local smart
-charging is about limiting the amount of power that can be used by a group of Charge Points, to a certain
-maximum. A typical use would be a number of Charge Points in a parking garage where the rating of the
-connection to the grid is less than the sum the ratings of the Charge Points. Another application might be that
-the Local Controller receives information about the availability of power from a DSO or a local smart grid node.
+The Local Smart Charging use case describes a use case in which smart charging enabled Charge Points have charging limits controlled locally by a Local Controller, not the Central System. The use case for local smart charging is about limiting the amount of power that can be used by a group of Charge Points, to a certain maximum. A typical use would be a number of Charge Points in a parking garage where the rating of the connection to the grid is less than the sum the ratings of the Charge Points. Another application might be that the Local Controller receives information about the availability of power from a DSO or a local smart grid node.
 
-Local group
-Local Controller
-CP00
-Local Controller limits
-power usage of total
-group to pre-configured
-maximum capacity.
-Charge Point
-CP01
-Charge Point
-CP02
-Charge Point
-CP03
-EV1
-EV2
-Central System
-OCPP charging profile
-OCPP charging profile
-Control Pilot signal
-Control Pilot signal
-OCPP ChargePointMaxProfile
-_Figure 9. Local Smart Charging topology_
-Local smart charging assumes the existence of a Local Controller to control a group of Charge Points. The Local
-Controller is a logical component. It may be implemented either as a separate physical component or as part of
-a ‘master’ Charge Point controlling a number of other Charge Points. The Local Control implements the OCPP
-protocol and is a proxy for the group members' OCPP messages, and may or may not have any connectors of its
-own.
-In the case of local smart charging the Local Controller imposes charging limits on a Charge Point. These limits
-may be changed dynamically during the charging process in order to keep the power consumption of the group
-of Charge Points within the group limits. The group limits may be pre-configured in the Local Controller or may
-have been configured by the Central System.
-The optional charging schedule field minChargingRate may be used by the Local Controller to optimize the
-power distribution between the connectors. The parameter informs the Local Controller that charging below
-minChargingRate is inefficient, giving the possibility to select another balancing strategy.
-The following diagram illustrates the sequence of messages to set charging limits on Charge Points in a Local
-Smart Charging group. These limits can either be pre-configured in the Local Controller in one way or another, or
-they can be set by the Central System. The Local Controller contains the logic to distribute this capacity among
-the connected connectors by adjusting their limits as needed.
+.Local Smart Charging topology
+image::images/figure_9.svg[Local Smart Charging topology]
+
+Local smart charging assumes the existence of a Local Controller to control a group of Charge Points. The Local Controller is a logical component. It may be implemented either as a separate physical component or as part of a ‘master’ Charge Point controlling a number of other Charge Points. The Local Control implements the OCPP protocol and is a proxy for the group members' OCPP messages, and may or may not have any connectors of its own.
+
+In the case of local smart charging the Local Controller imposes charging limits on a Charge Point. These limits may be changed dynamically during the charging process in order to keep the power consumption of the group of Charge Points within the group limits. The group limits may be pre-configured in the Local Controller or may have been configured by the Central System.
+
+The optional charging schedule field <<minchargingrate,minChargingRate>> may be used by the Local Controller to optimize the power distribution between the connectors. The parameter informs the Local Controller that charging below <<minchargingrate,minChargingRate>> is inefficient, giving the possibility to select another balancing strategy.
+
+The following diagram illustrates the sequence of messages to set charging limits on Charge Points in a Local Smart Charging group. These limits can either be pre-configured in the Local Controller in one way or another, or they can be set by the Central System. The Local Controller contains the logic to distribute this capacity among the connected connectors by adjusting their limits as needed.
+
 Charge Point Local Controller CSO Central System
 opt Set local group limits
 SetChargingProfile.req( connectorId: 0 ,
