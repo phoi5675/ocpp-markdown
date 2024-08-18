@@ -675,12 +675,14 @@ This section is normative.
 
 With Smart Charging a Central System gains the ability to influence the charging power or current of a specific EV, or the total allowed energy consumption on an entire Charge Point / a group of Charge Points, for instance based on a grid connection, energy availability on the gird or the wiring of a building. Influencing the charge power or current is based on energy transfer limits at specific points in time. Those limits are combined in a Charging Profile.
 
+[[charging_profile_purposes]]
 ==== Charging profile purposes
 
 A charging profile consists of a charging schedule, which is basically a list of time intervals with their maximum charge power or current, and some values to specify the time period and recurrence of the schedule.
 
 There are three different types of charging profiles, depending on their purpose:
 
+[[chargepointmaxprofile]]
 * _ChargePointMaxProfile_
 
 In load balancing scenarios, the Charge Point has one or more local charging profiles that limit the power or current to be shared by all connectors of the Charge Point. The Central System SHALL configure such a profile with ChargingProfilePurpose set to _"ChargePointMaxProfile"_. _ChargePointMaxProfile_ can only be set at Charge Point ConnectorId 0.
@@ -696,6 +698,7 @@ _If ConnectorId is set >0, it only applies to that specific connector._
 
 _In the event a TxDefaultProfile for connector 0 is installed, and the Central System sends a new profile with ConnectorId >0, the TxDefaultProfile SHALL be replaced only for that specific connector._
 
+[[txprofile]]
 * _TxProfile_
 
 If a transaction-specific profile with purpose _TxProfile_ is present, it SHALL overrule the default charging profile with purpose <<txdefaultprofile,TxDefaultProfile>> for the duration of the current transaction only. After the transaction is stopped the profile SHOULD be deleted. If there is no transaction active on the connector specified in a charging profile of type _TxProfile_, then the Charge Point SHALL discard it and return an error status in <<setchargingprofile_conf,SetChargingProfile.conf>>.
@@ -704,142 +707,78 @@ The final schedule constraints that apply to a transaction are determined by mer
 
 ==== Stacking charging profiles
 
-== It is allowed to stack charging profiles of the same charging profile purpose in order to describe complex
+It is allowed to stack charging profiles of the same charging profile purpose in order to describe complex calendars. For example, one can define a charging profile of purpose <<txdefaultprofile,TxDefaultProfile>> with a duration and recurrence of one week that allows full power or current charging on weekdays from 23:00h to 06:00h and from 00:00h to 24:00h in weekends and reduced power or current charging at other times. On top of that, one can define other <<txdefaultprofile,TxDefaultProfiles>> that define exception to this rule, for example for holidays.
 
-== calendars. For example, one can define a charging profile of purpose TxDefaultProfile with a duration and
+Precedence of charging profiles is determined by the value of their StackLevel parameter. At any point in time the prevailing charging profile SHALL be the charging profile with the highest stackLevel among the profiles that are valid at that point in time, as determined by their validFrom and validTo parameters.
 
-== recurrence of one week that allows full power or current charging on weekdays from 23:00h to 06:00h and from
+To avoid conflicts, the existence of multiple Charging Profiles with the same <<stacklevel,stackLevel>> and Purposes in a Charge Point is not allowed. Whenever a Charge Point receives a Charging Profile with a stackLevel and Purpose that already exists in the Charge Point, the Charge Point SHALL replace the existing profile.
 
-== 00:00h to 24:00h in weekends and reduced power or current charging at other times. On top of that, one can
+[cols="1,10"]
+|===
+|[.info-icon]#i# |
+In the case an updated charging profile (with the same stackLevel and purpose) is sent with a validFrom dateTime in the future, the Charge Point SHALL replace the installed profile and SHALL revert to default behavior until validFrom is reached. It is RECOMMENDED to provide a start time in the past to prevent gaps.
+|===
 
-== define other TxDefaultProfiles that define exception to this rule, for example for holidays
+[cols="1,10"]
+|===
+|[.info-icon]#i# |
+If you use Stacking without a duration, on the highest stack level, the Charge Point will never fall back to a lower stack level profile.
+|===
 
-== Precedence of charging profiles is determined by the value of their StackLevel parameter. At any point in time
+==== Combining charging profile purposes
 
-== the prevailing charging profile SHALL be the charging profile with the highest stackLevel among the profiles that
+The Composite Schedule that will guide the charging level is a combination of the prevailing Charging Profiles of the different <<charging_profile_purposes,chargingProfilePurposes>>.
 
-== are valid at that point in time, as determined by their validFrom and validTo parameters
+This Composite Schedule is calculated by taking the minimum value for each time interval. Note that time intervals do not have to be of fixed length, nor do they have to be the same for every charging profile purpose. +
+This means that a resulting Composite Schedule MAY contain intervals of different lengths.
 
-== To avoid conflicts, the existence of multiple Charging Profiles with the same stackLevel and Purposes in a Charge
+At any point in time, the available power or current in the Composite Schedule, which is the result of merging the schedules of charging profiles <<chargepointmaxprofile,ChargePointMaxProfile>> and <<txdefaultprofile,TxDefaultProfile>> (or <<txprofile,TxProfile>>), SHALL be less than or equal to lowest value of available power or current in any of the merged schedules.
 
-== Point is not allowed. Whenever a Charge Point receives a Charging Profile with a stackLevel and Purpose that
+In the case the Charge Point is equipped with more than one Connector, the limit value of ChargePointMaxProfile is the limit for all connectors combined. The combined energy flow of all connectors SHALL NOT be greater then the limit set by ChargePointMaxProfile.
 
-== already exists in the Charge Point, the Charge Point SHALL replace the existing profile
-
-== In the case an updated charging profile (with the same stackLevel and purpose) is sent with a
-
-== validFrom dateTime in the future, the Charge Point SHALL replace the installed profile and
-
-== SHALL revert to default behavior until validFrom is reached. It is RECOMMENDED to provide a
-
-== start time in the past to prevent gaps
-
-== If you use Stacking without a duration, on the highest stack level, the Charge Point will never
-
-== fall back to a lower stack level profile
-
-==.3. Combining charging profile purposes
-
-== The Composite Schedule that will guide the charging level is a combination of the prevailing Charging Profiles of
-
-== the different chargingProfilePurposes
-
-== This Composite Schedule is calculated by taking the minimum value for each time interval. Note that time
-
-== intervals do not have to be of fixed length, nor do they have to be the same for every charging profile purpose
-
-== This means that a resulting Composite Schedule MAY contain intervals of different lengths
-
-== At any point in time, the available power or current in the Composite Schedule, which is the result of merging the
-
-== schedules of charging profiles ChargePointMaxProfile and TxDefaultProfile (or TxProfile), SHALL be less than or
-
-== equal to lowest value of available power or current in any of the merged schedules
-
-== In the case the Charge Point is equipped with more than one Connector, the limit value of
-
-== ChargePointMaxProfile is the limit for all connectors combined. The combined energy flow of all connectors
-
-== SHALL NOT be greater then the limit set by ChargePointMaxProfile
-
-**3.13.4. Smart Charging Use Cases**
-This section is informative.
-There may be many different uses for smart charging. The following three typical kinds of smart charging will be
-used to illustrate the possible behavior of smart charging:
-
-- Load balancing
-- Central smart charging
-- Local smart charging
-  There are more complex use cases possible in which two or more of the above use cases are combined into one
-  more complex system.
-
-=== Load Balancing
+==== Smart Charging Use Cases
 
 This section is informative.
-The Load Balancing use case is about internal load balancing within the Charge Point, the Charge Point controls
-the charging schedule per connector. The Charge Point is configured with a fixed limit, for example the
-maximum current of the connection to the grid.
-The optional charging schedule field minChargingRate may be used by the Charge Point to optimize the power
-distribution between the connectors. The parameter informs the Charge Point that charging below
-minChargingRate is inefficient, giving the possibility to select another balancing strategy.
-Charge Point: CP10
-Charge Point: CP11
-Charge Point
-CP10
-Connector
-1
-Connector
-2
-Charge Point
-CP11
-Connector
-2
-Connector
-1
-Central System
-CS sets known physical
-grid connections limits.
-EV1
-EV2
-OCPP charging profile
-OCPP charging profile
-Control Pilot signal
-Control Pilot signal
-_Figure 6. Load balancing Smart Charging topology_
 
-=== Central Smart Charging
+There may be many different uses for smart charging. The following three typical kinds of smart charging will be used to illustrate the possible behavior of smart charging:
+
+* <<load_balancing,Load balancing>>
+* <<central_smart_charging,Central smart charging>>
+* <<local_smart_charging,Local smart charging>>
+
+There are more complex use cases possible in which two or more of the above use cases are combined into one more complex system.
+
+[[load_balancing]]
+[discrete]
+==== Load Balancing
 
 This section is informative.
-With Central smart charging the constraints on the charging schedule, per transaction, are determined by the
-Central System. The Central System uses these schedules to stay within limits imposed by any external system.
+
+The Load Balancing use case is about internal load balancing within the Charge Point, the Charge Point controls the charging schedule per connector. The Charge Point is configured with a fixed limit, for example the maximum current of the connection to the grid.
+
+The optional charging schedule field <<minchargingrate,minChargingRate>> may be used by the Charge Point to optimize the power distribution between the connectors. The parameter informs the Charge Point that charging below <<minchargingrate,minChargingRate>> is inefficient, giving the possibility to select another balancing strategy.
+
+.Load balancing Smart Charging topology
+image::images/figure_6.svg[Load balancing Smart Charging topology]
+
+[[central_smart_charging]]
+[discrete]
+==== Central Smart Charging
+
+This section is informative.
+
+With Central smart charging the constraints on the charging schedule, per transaction, are determined by the Central System. The Central System uses these schedules to stay within limits imposed by any external system.
 
 The Central System directly controls the limits on the connectors of the Charge Points.
-Central System
-CS receives a capacity
-forecast from an external
 
-party (e.g. DSO). (^) Charge Point
-CP10
-Charge Point
-CP11
-Charge Point
-CP12
-EV1
-EV2
-OCPP charging profile
-OCPP charging profile
-Control Pilot signal
-Control Pilot signal
-_Figure 7. Central Smart Charging topology_
-Central smart charging assumes that charge limits are controlled by the Central System. The Central System
-receives a capacity forecast from the grid operator (DSO) or another source in one form or another and
-calculates charging schedules for some or all charging transactions, details of which are out of scope of this
-specification.
-The Central System imposes charging limits on connectors. In response to a StartTransaction.req PDU The
-Central System may choose to set charging limits to the transaction using the TxProfile
-Central Smart Charging can be done with a Control Pilot signal, albeit with some limitations, because an EV
-cannot communicate its charging via the Control Pilot signal. In analogy to the Local Smart Charging use case, a
-connector can execute a charging schedule by the Control Pilot signal. This is illustrated in the Figure below:
+.Central Smart Charging topology
+image::images/figure_7.svg[Central Smart Charging topology]
+
+Central smart charging assumes that charge limits are controlled by the Central System. The Central System receives a capacity forecast from the grid operator (DSO) or another source in one form or another and calculates charging schedules for some or all charging transactions, details of which are out of scope of this specification.
+
+The Central System imposes charging limits on connectors. In response to a <<starttransaction_req,StartTransaction.req>> PDU The Central System may choose to set charging limits to the transaction using the TxProfile.
+
+Central Smart Charging can be done with a Control Pilot signal, albeit with some limitations, because an EV cannot communicate its charging via the Control Pilot signal. In analogy to the <<local_smart_charging,Local Smart Charging>> use case, a connector can execute a charging schedule by the Control Pilot signal. This is illustrated in the Figure below:
 
 User
 EV Charge Point Central System
@@ -880,7 +819,9 @@ Explanation for the above figure:
   according to the charging profile. Optionally, at any point in time the Central System may send a new
   charging profile for the connector that shall be used as a limit schedule for the EV.
 
-=== Local Smart Charging
+[[local_smart_charging]]
+[discrete]
+==== Local Smart Charging
 
 The Local Smart Charging use case describes a use case in which smart charging enabled Charge Points have
 charging limits controlled locally by a Local Controller, not the Central System. The use case for local smart
@@ -3317,6 +3258,7 @@ Weekly
   transaction.
 
 FIELD NAME FIELD TYPE CARD. DESCRIPTION
+[[stacklevel]]
 stackLevel integer >=0 1..1 Required. Value determining level in hierarchy stack of profiles.
 Higher values have precedence over lower values. Lowest level is 0.
 chargingProfilePurpose ChargingProfilePurposeType 1..1 Required. Defines the purpose of the schedule transferred by this
@@ -3397,6 +3339,7 @@ chargingRateUnit ChargingRateUnitType 1..1 Required. The unit of measure Limit i
 chargingSchedulePeriod ChargingSchedulePeriod 1..\* Required. List of ChargingSchedulePeriod elements defining
 maximum power or current usage over time. The startSchedule of
 the first ChargingSchedulePeriod SHALL always be 0.
+[[minchargingrate]]
 minChargingRate decimal 0..1 Optional. Minimum charging rate supported by the electric
 vehicle. The unit of measure is defined by the chargingRateUnit.
 This parameter is intended to be used by a local smart charging

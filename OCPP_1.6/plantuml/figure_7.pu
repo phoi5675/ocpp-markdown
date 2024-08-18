@@ -1,0 +1,28 @@
+@startuml figure_7
+!include component_diagram_style.puml
+
+left to right direction
+
+node "Central System" as CentralSystem
+
+node "Charge Point\nCP10" as CP10
+node "Charge Point\nCP11" as CP11
+node "Charge Point\nCP12" as CP12
+
+actor "EV1" as EV1
+actor "EV2" as EV2
+
+note top of CentralSystem
+  CS receives a capacity
+  forecast from an external
+  party (e.g. DSO).
+end note
+
+CentralSystem -down- CP10
+CentralSystem -down-> CP11 : OCPP charging profile
+CentralSystem -down-> CP12 : OCPP charging profile
+
+CP11 -down[dotted]-> EV1 : Control Pilot signal
+CP12 -down[dotted]-> EV2 : Control Pilot signal
+
+@enduml
