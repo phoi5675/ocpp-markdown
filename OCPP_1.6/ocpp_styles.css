@@ -70,5 +70,25 @@ div {
     font-family: Rockwell;
     text-align:center;
   }
+
+  .warning-icon {
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 10px 5px 0px 5px;
+
+    background-color: #9b3517;
+    color: #ffffff;
+
+    font-size: 32px;
+    font-weight: bold;
+    font-family: Rockwell;
+    text-align:center;
+  }
 }
 

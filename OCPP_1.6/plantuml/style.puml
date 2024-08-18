@@ -22,4 +22,7 @@ skinparam note {
   FontName FONT_NAME
 }
 
+skinparam SequenceGroupFontName FONT_NAME
+skinparam SequenceGroupHeaderFontName FONT_NAME
+
 skinparam ArrowFontName FONT_NAME

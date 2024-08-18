@@ -411,7 +411,7 @@ The grouping of all messages in their profiles can be found in the table below.
 |<<datatransfer,DataTransfer>>                                    |X | | | | |
 |<<getconfiguration,GetConfiguration>>                            |X | | | | |
 |<<heartbeat,Heartbeat>>                                          |X | | | | |
-|<<metervalues,MeterValues>>                                      |X | | | | |
+|<<metervalues_req,MeterValues>>                                      |X | | | | |
 |<<remotestarttransaction,RemoteStartTransaction>>                |X | | | | |
 |<<remotestoptransaction,RemoteStopTransaction>>                  |X | | | | |
 |<<reset,Reset>>                                                  |X | | | | |
@@ -570,267 +570,139 @@ Multiple Energy Transfer Periods can be separated by either:
 A Central System MAY deduce the start and end of an Energy Transfer Period from: the MeterValues that are sent during the Transaction, the status notifications: Charging, SuspendedEV and/or SuspendedEVSE. etc. +
 Central System implementations need to take into account factors such as: Some EVs don’t go to state SuspendedEV: they might continue to trickle charge. Some Charge Point don’t even have a electrical meter.
 
-// TODO:
-Session Transaction Energy Offer Energy Flow
-Charging Session
-Charging Session is started when first interaction
-with user or EV occurs. This can be a
-card swipe, remote start of transaction,
-connection of cable and/or EV,
-parking bay occupancy detector, etc.
-Transaction
-Transaction starts at the point that all
-conditions for charging are met, for
-instance, EV is connected to Charge Point
-and user has been authorized.
-EnergyOfferPeriod
-Energy Offer Period starts when
-the EVSE is ready and willing to
-supply energy.
-EnergyTransferPeriod
-Energy is transferred.
-During an EnergyOfferPeriod there may
-be periods the EV is not charging due to
-for instance, warm/full battery or EV
-internal smart charging.
-EnergyTransferPeriod
-Energy is transferred.
-EnergyOfferSuspendPeriod
-During a transaction, there may be periods
-the EnergyOffer to EV is suspended by the
-EVSE, for instance due to Smart Charging
-or local balancing.
-EnergyOfferPeriod
-EnergyTransferPeriod
-Energy is transferred.
-Transaction ends at the point where one of the
-preconditions for charging irrevocably becomes
-false, for instance when a user swipes to stop
-the transaction and the stop is authorized.
-Session ends at the point that the station
-is available again. No cable plugged,
-parking bay free.
-_Figure 5. OCPP Charging Session and transaction definition_
+.OCPP Charging Session and transaction definition
+image::images/figure_5.svg[OCPP Charging Session and transaction definition]
 
 [[transaction_related_messages]]
 === Transaction-related messages
 
 This section is normative.
-The Charge Point SHOULD deliver transaction-related messages to the Central System in chronological order as
-soon as possible. Transaction-related messages are StartTransaction.req, StopTransaction.req and periodic or
-clock-aligned MeterValues.req messages.
-When _offline_ , the Charge Point MUST queue any transaction-related messages that it would have sent to the
-Central System if the Charge Point had been online.
-In the event that a Charge Point has transaction-related messages queued to be sent to the Central System, new
-messages that are not transaction-related MAY be delivered immediately without waiting for the queue to be
-emptied. It is therefore allowed to send, for example, an Authorize request or a Notifications request before the
-transaction-related message queue has been emptied, so that customers are not kept waiting and urgent
-notifications are not delayed.
-The delivery of new transaction-related messages SHALL wait until the queue has been emptied. This is to
-ensure that transaction-related messages are always delivered in chronological order.
-When the Central System receives a transaction-related message that was queued on the Charge Point for some
-time, the Central System will not be aware that this is a historical message, other than by inference given that
-the various timestamps are significantly in the past. It SHOULD process such a message as any other.
-**3.7.1. Error responses to transaction-related messages**
-It is permissible for the Charge Point to skip a transaction-related message if and only if the Central System
-repeatedly reports a `failure to process the message'. Such a stipulation is necessary, because otherwise the
-requirement to deliver every transaction-related message in chronological order would entail that the Charge
-Point cannot deliver any transaction-related messages to the Central System after a software bug causes the
-Central System not to acknowledge one of the Charge Point’s transaction-related messages.
-What kind of response, or failure to respond, constitutes a`failure to process the message' is defined in the
-documents OCPP JSON Specification and OCPP SOAP Specification.
-The number of times and the interval with which the Charge Point should retry such failed transaction-related
-messages MAY be configured using the TransactionMessageAttempts and
-TransactionMessageRetryInterval configuration keys.
-When the Charge Point encounters a first failure to deliver a certain transaction-related message, it SHOULD
-send this message again as long as it keeps resulting in a failure to process the message and it has not yet
-encountered as many failures to process the message for this message as specified in its
-TransactionMessageAttempts configuration key. Before every retransmission, it SHOULD wait as many
-seconds as specified in its TransactionMessageRetryInterval key, multiplied by the number of preceding
-transmissions of this same message.
-As an example, consider a Charge Point that has the value "3" for the TransactionMessageAttempts
-configuration key and the value "60" for the TransactionMessageRetryInterval configuration key. It sends a
-StopTransaction message and detects a failure to process the message in the Central System. The Charge Point
 
-SHALL wait for 60 seconds, and resend the message. In the case when there is a second failure, the Charge Point
-SHALL wait for 120 seconds, before resending the message. If this final attempt fails, the Charge Point SHOULD
-discard the message and continue with the next transaction-related message, if there is any.
+The Charge Point SHOULD deliver transaction-related messages to the Central System in chronological order as soon as possible. Transaction-related messages are <<starttransaction_req,StartTransaction.req>>, <<stoptransaction_req,StopTransaction.req>> and periodic or clock-aligned <<metervalues_req,MeterValues.req>> messages.
+
+When _offline_ , the Charge Point MUST queue any transaction-related messages that it would have sent to the Central System if the Charge Point had been online.
+
+In the event that a Charge Point has transaction-related messages queued to be sent to the Central System, new messages that are not transaction-related MAY be delivered immediately without waiting for the queue to be emptied. It is therefore allowed to send, for example, an Authorize request or a Notifications request before the transaction-related message queue has been emptied, so that customers are not kept waiting and urgent notifications are not delayed.
+
+The delivery of new transaction-related messages SHALL wait until the queue has been emptied. This is to ensure that transaction-related messages are always delivered in chronological order.
+
+When the Central System receives a transaction-related message that was queued on the Charge Point for some time, the Central System will not be aware that this is a historical message, other than by inference given that the various timestamps are significantly in the past. It SHOULD process such a message as any other.
+
+==== Error responses to transaction-related messages
+
+It is permissible for the Charge Point to skip a transaction-related message if and only if the Central System repeatedly reports a 'failure to process the message'. Such a stipulation is necessary, because otherwise the requirement to deliver every transaction-related message in chronological order would entail that the Charge Point cannot deliver any transaction-related messages to the Central System after a software bug causes the Central System not to acknowledge one of the Charge Point’s transaction-related messages.
+
+What kind of response, or failure to respond, constitutes a 'failure to process the message' is defined in the documents <<ocpp_imp_j,OCPP JSON Specification>> and <<ocpp_imp_s,OCPP SOAP Specification>>.
+
+The number of times and the interval with which the Charge Point should retry such failed transaction-related messages MAY be configured using the <<transactionmessageattempts,TransactionMessageAttempts>> and <<transactionmessageretryinterval,TransactionMessageRetryInterval>> configuration keys.
+
+When the Charge Point encounters a first failure to deliver a certain transaction-related message, it SHOULD send this message again as long as it keeps resulting in a failure to process the message and it has not yet encountered as many failures to process the message for this message as specified in its <<transactionmessageattempts,TransactionMessageAttempts>> configuration key. Before every retransmission, it SHOULD wait as many seconds as specified in its <<transactionmessageretryinterval,TransactionMessageRetryInterval>> key, multiplied by the number of preceding transmissions of this same message.
+
+As an example, consider a Charge Point that has the value "3" for the <<transactionmessageattempts,TransactionMessageAttempts>> configuration key and the value "60" for the <<transactionmessageretryinterval,TransactionMessageRetryInterval>> configuration key. It sends a StopTransaction message and detects a failure to process the message in the Central System. The Charge Point SHALL wait for 60 seconds, and resend the message. In the case when there is a second failure, the Charge Point SHALL wait for 120 seconds, before resending the message. If this final attempt fails, the Charge Point SHOULD discard the message and continue with the next transaction-related message, if there is any.
 
 === Connector numbering
 
 This section is normative.
-To enable Central System to be able to address all the connectors of a Charge Point, ConnectorIds MUST always
-be numbered in the same way.
+
+To enable Central System to be able to address all the connectors of a Charge Point, ConnectorIds MUST always be numbered in the same way.
+
 Connectors numbering (ConnectorIds) MUST be as follows:
 
-- ID of the first connector MUST be 1
-- Additional connectors MUST be sequentially numbered (no numbers may be skipped)
-- ConnectorIds MUST never be higher than the total number of connectors of a Charge Point
-- For operations intiated by the Central System, ConnectorId 0 is reserved for addressing the entire Charge
-  Point.
-- For operations initiated by the Charge Point (when reporting), ConnectorId 0 is reserved for the Charge
-  Point main controller.
-  Example: A Charge Point with 3 connectors: All connectors MUST be numbered with the IDs: 1, 2 and 3. It is
-  advisable to number the connectors of a Charge Point in a logical way: from left to right, top to bottom
-  incrementing.
+* ID of the first connector MUST be 1
+* Additional connectors MUST be sequentially numbered (no numbers may be skipped)
+* ConnectorIds MUST never be higher than the total number of connectors of a Charge Point
+* For operations intiated by the Central System, ConnectorId 0 is reserved for addressing the entire Charge Point.
+* For operations initiated by the Charge Point (when reporting), ConnectorId 0 is reserved for the Charge Point main controller.
+
+Example: A Charge Point with 3 connectors: All connectors MUST be numbered with the IDs: 1, 2 and 3. It is advisable to number the connectors of a Charge Point in a logical way: from left to right, top to bottom incrementing.
 
 === ID Tokens
 
 This section is normative.
-In most cases, IdToken data acquired via local token reader hardware is usually a (4 or 7 byte) UID value of a
-physical RFID card, typically represented as 8/14 hexadecimal digit characters.
-However, IdTokens sent to Charge Points by Central Systems for remotely initiated charging sessions may
-commonly be (single use) virtual transaction authorization codes, or virtual RFID tokens that deliberately use a
-non-standard UID format to avoid possible conflict with real UID values.
-Also, IdToken data used as ParentIds may often use a shared central account identifier for the ParentId, instead
-of a UID of the first/master RFID card of an account.
-Therefore, message data elements of the IdToken class (including ParentId) MAY contain any data, subject to the
-constraints of the data-type (CiString20Type), that is meaningful to a Central System (e.g. for the purpose of
-identifying the initiator of charging activity), and Charge Points MUST NOT make any presumptions as to the
-format or content of such data (e.g. by assuming that it is a UID-like value that must be hex characters only
-and/or an even number of digits).
 
-== To promote interoperability, based on common practice to date in the case of IdToken data
+In most cases, <<idtoken,IdToken>> data acquired via local token reader hardware is usually a (4 or 7 byte) UID value of a physical RFID card, typically represented as 8/14 hexadecimal digit characters.
 
-== representing physical ISO 14443 compatible RFID card UIDs, it is RECOMMENDED that such
+However, <<idtoken,IdTokens>> sent to Charge Points by Central Systems for remotely initiated charging sessions may commonly be (single use) virtual transaction authorization codes, or virtual RFID tokens that deliberately use a non-standard UID format to avoid possible conflict with real UID values.
 
-== UIDs be represented as hex representations of the UID bytes. According to ISO14443-3, byte 0
+Also, <<idtoken,IdToken>> data used as <<parent_idtag,ParentIds>> may often use a shared central account identifier for the ParentId, instead of a UID of the first/master RFID card of an account.
 
-== should come first in the hex string
+Therefore, message data elements of the <<idtoken,IdToken>> class (including ParentId) MAY contain any data, subject to the constraints of the data-type (CiString20Type), that is meaningful to a Central System (e.g. for the purpose of identifying the initiator of charging activity), and Charge Points MUST NOT make any presumptions as to the format or content of such data (e.g. by assuming that it is a UID-like value that must be hex characters only and/or an even number of digits).
 
+[cols="1,10"]
+|===
+|[.info-icon]#i# |
+To promote interoperability, based on common practice to date in the case of <<idtoken,IdToken>> data representing physical ISO 14443 compatible RFID card UIDs, it is RECOMMENDED that such UIDs be represented as hex representations of the UID bytes. According to ISO14443-3, byte 0 should come first in the hex string.
+|===
+
+[[parent_idtag]]
 === Parent idTag
 
-== This section is normative
+This section is normative.
 
-== A Central System has the ability to treat a set of identity tokens as a “group”, thereby allowing any one token in
+A Central System has the ability to treat a set of identity tokens as a “group”, thereby allowing any one token in the group to start a transaction and for the same token, or another token in the same group, to stop the transaction. This supports the common use-cases of families or businesses with multiple drivers using one or more shared electric vehicles on a single recharging contract account.
 
-== the group to start a transaction and for the same token, or another token in the same group, to stop the
+Tokens (idTags) are grouped for authorization purposes by specifying a common group identifier in the optional ParentId element in <<idtaginfo,IdTagInfo>>: two idTags are considered to be in the same group if their ParentId Tags match.
 
-== transaction. This supports the common use-cases of families or businesses with multiple drivers using one or
-
-== more shared electric vehicles on a single recharging contract account
-
-== Tokens (idTags) are grouped for authorization purposes by specifying a common group identifier in the optional
-
-== ParentId element in IdTagInfo: two idTags are considered to be in the same group if their ParentId Tags match
-
-== Even though the ParentId has the same nominal data type (IdToken) as an idTag, the value of
-
-== this element may not be in the common format of IdTokens and/or may not represent an
-
-== actual valid IdToken (e.g. it may be a common shared "account number"): therefore, the
-
-== ParentId value SHOULD NOT be used for comparison against a presented Token value (unless
-
-== it also occurs as an idTag value)
+[cols="1,10"]
+|===
+|[.info-icon]#i# |
+Even though the ParentId has the same nominal data type (<<idtoken,IdToken>>) as an idTag, the value of this element may not be in the common format of <<idtoken,IdTokens>> and/or may not represent an actual valid <<idtoken,IdToken>> (e.g. it may be a common shared "account number"): therefore, the ParentId value SHOULD NOT be used for comparison against a presented Token value (unless it also occurs as an idTag value).
+|===
 
 === Reservations
 
-== This section is informative
+This section is informative.
 
-== Reservation of a Charge Point is possible using the Reserve Now operation. This operation reserves the Charge
-
-== Point until a certain expiry time for a specific idTag. A parent idTag may be included in the reservation to support
-
-== ‘group’ reservations. It is possible to reserve a specific connector on a Charge Point or to reserve any connector
-
-== on a Charge Point. A reservation is released when the reserved idTag is used on the reserved connector (when
-
-== specified) or on any connector (when unspecified) or when the expiry time is reached or when the reservation is
-
-== explicitly canceled
+Reservation of a Charge Point is possible using the <<reserve_now,Reserve Now>> operation. This operation reserves the Charge Point until a certain expiry time for a specific idTag. A parent idTag may be included in the reservation to support ‘group’ reservations. It is possible to reserve a specific connector on a Charge Point or to reserve any connector on a Charge Point. A reservation is released when the reserved idTag is used on the reserved connector (when specified) or on any connector (when unspecified) or when the expiry time is reached or when the reservation is explicitly canceled.
 
 === Vendor-specific data transfer
 
-== This section is informative
+This section is informative.
 
-== The mechanism of vendor-specific data transfer allows for the exchange of data or messages not standardized
+The mechanism of vendor-specific data transfer allows for the exchange of data or messages not standardized in OCPP. As such, it offers a framework within OCPP for experimental functionality that may find its way into future OCPP versions. Experimenting can be done without creating new (possibly incompatible) OCPP dialects Secondly, it offers a possibility to implement additional functionality agreed upon between specific Central System and Charge Point vendors.
 
-== in OCPP. As such, it offers a framework within OCPP for experimental functionality that may find its way into
+The operation Vendor Specific Data MAY be initiated either by the Central System or by the Charge Point.
 
-== future OCPP versions. Experimenting can be done without creating new (possibly incompatible) OCPP dialects
-
-== Secondly, it offers a possibility to implement additional functionality agreed upon between specific Central
-
-== System and Charge Point vendors
-
-== The operation Vendor Specific Data MAY be initiated either by the Central System or by the Charge Point
-
-== Please use with extreme caution and only for optional functionality, since it will impact your
-
-== compatibility with other systems that do not make use of this option. We recommend
-
-== mentioning the usage explicitly in your documentation and/or communication. Please
-
-== consider consulting the Open Charge Alliance before turning to this option to add
-
-== functionality
+[cols="1,10"]
+|===
+|[.warning-icon]#!# |
+Please use with extreme caution and only for optional functionality, since it will impact your compatibility with other systems that do not make use of this option. We recommend mentioning the usage explicitly in your documentation and/or communication. Please consider consulting the Open Charge Alliance before turning to this option to add functionality.
+|===
 
 === Smart Charging
 
-== This section is normative
+This section is normative.
 
-== With Smart Charging a Central System gains the ability to influence the charging power or current of a specific
+With Smart Charging a Central System gains the ability to influence the charging power or current of a specific EV, or the total allowed energy consumption on an entire Charge Point / a group of Charge Points, for instance based on a grid connection, energy availability on the gird or the wiring of a building. Influencing the charge power or current is based on energy transfer limits at specific points in time. Those limits are combined in a Charging Profile.
 
-== EV, or the total allowed energy consumption on an entire Charge Point / a group of Charge Points, for instance
+==== Charging profile purposes
 
-== based on a grid connection, energy availability on the gird or the wiring of a building. Influencing the charge
+A charging profile consists of a charging schedule, which is basically a list of time intervals with their maximum charge power or current, and some values to specify the time period and recurrence of the schedule.
 
-== power or current is based on energy transfer limits at specific points in time. Those limits are combined in a
+There are three different types of charging profiles, depending on their purpose:
 
-== Charging Profile
+* _ChargePointMaxProfile_
 
-==.1. Charging profile purposes
+In load balancing scenarios, the Charge Point has one or more local charging profiles that limit the power or current to be shared by all connectors of the Charge Point. The Central System SHALL configure such a profile with ChargingProfilePurpose set to _"ChargePointMaxProfile"_. _ChargePointMaxProfile_ can only be set at Charge Point ConnectorId 0.
 
-== A charging profile consists of a charging schedule, which is basically a list of time intervals with their maximum
+[[txdefaultprofile]]
+* _TxDefaultProfile_
 
-== charge power or current, and some values to specify the time period and recurrence of the schedule
+Default schedules for new transactions MAY be used to impose charging policies. An example could be a policy that prevents charging during the day. For schedules of this purpose, ChargingProfilePurpose SHALL be set to _TxDefaultProfile_.
 
-== There are three different types of charging profiles, depending on their purpose
+_If TxDefaultProfile is set to ConnectorId 0, the TxDefaultProfile is applicable to all Connectors._
 
-== • ChargePointMaxProfile
+_If ConnectorId is set >0, it only applies to that specific connector._
 
-== In load balancing scenarios, the Charge Point has one or more local charging profiles that limit the power or
+_In the event a TxDefaultProfile for connector 0 is installed, and the Central System sends a new profile with ConnectorId >0, the TxDefaultProfile SHALL be replaced only for that specific connector._
 
-== current to be shared by all connectors of the Charge Point. The Central System SHALL configure such a profile
+* _TxProfile_
 
-== with ChargingProfilePurpose set to “ ChargePointMaxProfile ”. ChargePointMaxProfile can only be set at Charge
+If a transaction-specific profile with purpose _TxProfile_ is present, it SHALL overrule the default charging profile with purpose <<txdefaultprofile,TxDefaultProfile>> for the duration of the current transaction only. After the transaction is stopped the profile SHOULD be deleted. If there is no transaction active on the connector specified in a charging profile of type _TxProfile_, then the Charge Point SHALL discard it and return an error status in <<setchargingprofile_conf,SetChargingProfile.conf>>.
 
-== Point ConnectorId 0
+The final schedule constraints that apply to a transaction are determined by merging the profiles with purposes _ChargePointMaxProfile_ with the profile _TxProfile_ or the <<txdefaultprofile,TxDefaultProfile>> in case no profile of purpose _TxProfile_ is provided. _TxProfile SHALL only be set at Charge Point ConnectorId >0_.
 
-== • TxDefaultProfile
-
-== Default schedules for new transactions MAY be used to impose charging policies. An example could be a policy
-
-== that prevents charging during the day. For schedules of this purpose, ChargingProfilePurpose SHALL be set to
-
-== TxDefaultProfile
-
-== If TxDefaultProfile is set to ConnectorId 0, the TxDefaultProfile is applicable to all Connectors
-
-== If ConnectorId is set >0, it only applies to that specific connector
-
-== In the event a TxDefaultProfile for connector 0 is installed, and the Central System sends a new profile with ConnectorId
-
-== >0, the TxDefaultProfile SHALL be replaced only for that specific connector
-
-== • TxProfile
-
-== If a transaction-specific profile with purpose TxProfile is present, it SHALL overrule the default charging profile
-
-== with purpose TxDefaultProfile for the duration of the current transaction only. After the transaction is stopped
-
-== the profile SHOULD be deleted. If there is no transaction active on the connector specified in a charging profile
-
-== of type TxProfile , then the Charge Point SHALL discard it and return an error status in SetChargingProfile.conf
-
-== The final schedule constraints that apply to a transaction are determined by merging the profiles with purposes
-
-== ChargePointMaxProfile with the profile TxProfile or the TxDefaultProfile in case no profile of purpose TxProfile is
-
-== provided. TxProfile SHALL only be set at Charge Point ConnectorId >0
-
-==.2. Stacking charging profiles
+==== Stacking charging profiles
 
 == It is allowed to stack charging profiles of the same charging profile purpose in order to describe complex
 
@@ -2273,6 +2145,7 @@ AuthorizeRemoteTxRequests configuration key in the Charge Point.
 
 == • Enable mobile apps to control charging transactions via the Central System
 
+[[reserve_now]]
 === Reserve Now
 
 Charge Point Central System
@@ -2996,7 +2869,7 @@ response to a Heartbeat.req PDU. See also Heartbeat
 **FIELD NAME FIELD TYPE CARD. DESCRIPTION
 currentTime** dateTime 1..1 Required. This contains the current time of the Central System.
 
-[[metervalues]]
+[[metervalues_req]]
 === MeterValues.req
 
 This contains the field definition of the MeterValues.req PDU sent by the Charge Point to the Central System. See
@@ -3130,6 +3003,7 @@ connectorId** integer 1..1 Required. The connector to which the charging profile
 the message contains an overall limit for the Charge Point.
 **csChargingProfiles** ChargingProfile 1..1 Required. The charging profile to be set at the Charge Point.
 
+[[setchargingprofile_conf]]
 === SetChargingProfile.conf
 
 This contains the field definition of the SetChargingProfile.conf PDU sent by the Charge Point to the Central
@@ -3669,6 +3543,7 @@ Authorization Cache.
 **status** AuthorizationStatus 1..1 Required. This contains whether the idTag has been accepted or not by the
 Central System.
 
+[[idtoken]]
 === IdToken
 
 _Type_
@@ -4301,13 +4176,16 @@ Reservation, SmartCharging and RemoteTrigger.
 **Type** integer
 **Description** Maximum number of items in a SupportedFeatureProfiles Configuration Key.
 
-**9.1.31.** TransactionMessageAttempts
+[[transactionmessageattempts]]
+==== TransactionMessageAttempts
 **Required/optional** required
 **Accessibility** RW
 **Type** integer
 **Unit** times
 **Description** How often the Charge Point should try to submit a transaction-related message when the Central System fails to process it.
-**9.1.32.** TransactionMessageRetryInterval
+
+[[transactionmessageretryinterval]]
+==== TransactionMessageRetryInterval
 **Required/optional** required
 **Accessibility** RW
 **Type** integer
