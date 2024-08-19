@@ -406,7 +406,7 @@ The grouping of all messages in their profiles can be found in the table below.
 |<<authorize_req,Authorize>>                                          |X | | | | | 
 |<<bootnotification,BootNotification>>                            |X | | | | |
 |<<changeavailability,ChangeAvailability>>                        |X | | | | |
-|<<changeconfiguration,ChangeConfiguration>>                      |X | | | | |
+|<<changeconfiguration_req,ChangeConfiguration>>                      |X | | | | |
 |<<clearcache,ClearCache>>                                        |X | | | | |
 |<<datatransfer,DataTransfer>>                                    |X | | | | |
 |<<getconfiguration_req,GetConfiguration>>                            |X | | | | |
@@ -954,57 +954,56 @@ A value of "0" (numeric zero), by convention, is to be interpreted to mean that 
 
 <<stoptxnsampleddata,StopTxnSampledData>> is a comma separated list that prescribes the sampled measurands to be included in the TransactionData element of StopTransaction.req PDU, every <<metervaluesampleinterval,MeterValueSampleInterval>> seconds from the start of the Transaction. The maximum amount of elements in the <<stoptxnsampleddata,StopTxnSampledData>> list can be reported by the Charge Point via: <<stoptxnsampleddatamaxlength,StopTxnSampledDataMaxLength>>.
 
-// TODO:
 [[clock_aligned_meter_values]]
 ==== Clock-Aligned Meter Values
 
-  Grid Operator might require meter readings to be taken from fiscally certified energy meters, at specific Clock
-  aligned times (usually every quarter hour, or half hour).
-  "Clock-Aligned Billing Data" can be configured with the following configuration keys:
-- ClockAlignedDataInterval
-- MeterValuesAlignedData
-- MeterValuesAlignedDataMaxLength
-- StopTxnAlignedData
-- StopTxnAlignedDataMaxLength
-  ClockAlignedDataInterval is the size of the clock-aligned data interval (in seconds). This defines the set of
-  evenly spaced meter data aggregation intervals per day, starting at 00:00:00 (midnight).
-  For example, a value of 900 (15 minutes) indicates that every day should be broken into 96 15-minute intervals.
-  A value of "0" (numeric zero), by convention, is to be interpreted to mean that no clock-aligned data should be
-  transmitted.
-  MeterValuesAlignedData is a comma separated list that prescribes the set of measurands to be included in a
-  MeterValues.req PDU, every ClockAlignedDataInterval seconds. The maximum amount of elements in the
-  MeterValuesAlignedData list can be reported by the Charge Point via:
+Grid Operator might require meter readings to be taken from fiscally certified energy meters, at specific Clock aligned times (usually every quarter hour, or half hour).
 
-MeterValuesAlignedDataMaxLength
-StopTxnAlignedData is a comma separated list that prescribes the set of clock-aligned periodic measurands
-to be included in the TransactionData element of StopTransaction.req PDU for every
-ClockAlignedDataInterval of the Transaction. The maximum amount of elements in the
-StopTxnAlignedData list can be reported by the Charge Point via: StopTxnAlignedDataMaxLength
-**3.16.3. Multiple Locations/Phases**
-When a Charge Point can measure the same measurand on multiple locations or phases, all possible locations
-and/or phases SHALL be reported when configured in one of the relevant configuration keys.
-For example: A Charge Point capable of measuring _Current.Import_ on _Inlet_ (all 3 phases) (grid connection) and
-_Outlet_ (3 phases per connector on both its connectors). _Current.Import_ is set in MeterValuesSampledData.
-MeterValueSampleInterval is set to 300 (seconds). Then the Charge Point should send:
+"Clock-Aligned Billing Data" can be configured with the following configuration keys:
 
-- a MeterValues.req with: _connectorId_ = 0; with 3 _SampledValue_ elements, one per phase with _location_ = _Inlet_.
-- a MeterValues.req with: _connectorId_ = 1; with 3 _SampledValue_ elements, one per phase with _location_ =
-  _Outlet_.
-- a MeterValues.req with: _connectorId_ = 2; with 3 _SampledValue_ elements, one per phase with _location_ =
-  _Outlet_.
-  **3.16.4. Unsupported measurands**
-  When a Central System sends a ChangeConfiguration.req to a Charge Point with one of the following
-  configuration keys:
-- MeterValuesAlignedData
-- MeterValuesSampledData
-- StopTxnAlignedData
-- StopTxnSampledData
-  If the comma separated list contains one or more measurands that are not supported by this Charge Point, the
-  Charge Point SHALL respond with: ChangeConfiguration.conf with: _status_ = _Rejected_. No changes SHALL be made
-  to the currently configuration.
-  **3.16.5. No metering data in a Stop Transaction**
-  When the configuration keys: StopTxnAlignedData and StopTxnSampledData are set to an empty string, the
-  Charge Point SHALL not put meter values in a StopTransaction.req PDU.
+* <<clockaligneddatainterval,ClockAlignedDataInterval>>
+* <<metervaluesaligneddata,MeterValuesAlignedData>>
+* <<metervaluesaligneddatamaxlength,MeterValuesAlignedDataMaxLength>>
+* <<stoptxnaligneddata,StopTxnAlignedData>>
+* <<stoptxnaligneddatamaxlength,StopTxnAlignedDataMaxLength>>
+
+<<clockaligneddatainterval,ClockAlignedDataInterval>> is the size of the clock-aligned data interval (in seconds). This defines the set of evenly spaced meter data aggregation intervals per day, starting at 00:00:00 (midnight).
+
+For example, a value of 900 (15 minutes) indicates that every day should be broken into 96 15-minute intervals.
+
+A value of "0" (numeric zero), by convention, is to be interpreted to mean that no clock-aligned data should be transmitted.
+
+<<metervaluesaligneddata,MeterValuesAlignedData>> is a comma separated list that prescribes the set of measurands to be included in a MeterValues.req PDU, every <<clockaligneddatainterval,ClockAlignedDataInterval>> seconds. The maximum amount of elements in the <<metervaluesaligneddata,MeterValuesAlignedData>> list can be reported by the Charge Point via:
+
+<<metervaluesaligneddatamaxlength,MeterValuesAlignedDataMaxLength>>
+
+<<stoptxnaligneddata,StopTxnAlignedData>> is a comma separated list that prescribes the set of clock-aligned periodic measurands to be included in the TransactionData element of StopTransaction.req PDU for every <<clockaligneddatainterval,ClockAlignedDataInterval>> of the Transaction. The maximum amount of elements in the <<stoptxnaligneddata,StopTxnAlignedData>> list can be reported by the Charge Point via: <<stoptxnaligneddatamaxlength,StopTxnAlignedDataMaxLength>>
+
+[[multiple_locations_phases]]
+==== Multiple Locations/Phases
+
+When a Charge Point can measure the same measurand on multiple locations or phases, all possible locations and/or phases SHALL be reported when configured in one of the relevant configuration keys.
+
+For example: A Charge Point capable of measuring _Current.Import_ on _Inlet_ (all 3 phases) (grid connection) and _Outlet_ (3 phases per connector on both its connectors). _Current.Import_ is set in MeterValuesSampledData. MeterValueSampleInterval is set to 300 (seconds). Then the Charge Point should send:
+
+* a <<metervalues_req,MeterValues.req>> with: _connectorId_ = 0; with 3 _SampledValue_ elements, one per phase with _location_ = _Inlet_.
+* a <<metervalues_req,MeterValues.req>> with: _connectorId_ = 1; with 3 _SampledValue_ elements, one per phase with _location_ = _Outlet_.
+* a <<metervalues_req,MeterValues.req>> with: _connectorId_ = 2; with 3 _SampledValue_ elements, one per phase with _location_ = _Outlet_.
+
+[[unsupported_measurands]]
+==== Unsupported measurands
+When a Central System sends a ChangeConfiguration.req to a Charge Point with one of the following configuration keys:
+
+* <<metervaluesaligneddata,MeterValuesAlignedData>>
+* <<metervaluessampleddata,MeterValuesSampledData>>
+* <<stoptxnaligneddata,StopTxnAlignedData>>
+* <<stoptxnsampleddata,StopTxnSampledData>>
+
+If the comma separated list contains one or more measurands that are not supported by this Charge Point, the Charge Point SHALL respond with: <<changeconfiguration_conf,ChangeConfiguration.conf>> with: _status_ = _Rejected_. No changes SHALL be made to the currently configuration.
+
+[[no_metering_data_in_a_stop_transaction]]
+==== No metering data in a Stop Transaction
+When the configuration keys: <<stoptxnaligneddata,StopTxnAlignedData>> and <<stoptxnsampleddata,StopTxnSampledData>> are set to an empty string, the Charge Point SHALL not put meter values in a StopTransaction.req PDU.
 
 [[operations_initiated_by_charge_point]]
 == Operations Initiated by Charge Point
@@ -2474,7 +2473,7 @@ See also Change Availability
 status** AvailabilityStatus 1..1 Required. This indicates whether the Charge Point is able to perform the
 availability change.
 
-[[changeconfiguration]]
+[[changeconfiguration_req]]
 === ChangeConfiguration.req
 
 This contains the field definition of the ChangeConfiguration.req PDU sent by Central System to Charge Point. It
@@ -2486,6 +2485,7 @@ See for standard configuration key names and associated values
 **value** CiString500Type 1..1 Required. The new value as string for the setting.
 See for standard configuration key names and associated values
 
+[[changeconfiguration_conf]]
 === ChangeConfiguration.conf
 
 This contains the field definition of the ChangeConfiguration.conf PDU returned from Charge Point to Central
@@ -3811,7 +3811,9 @@ beforehand like a local action to start a transaction.
 **Type** integer
 **Unit** times
 **Description** Number of times to blink Charge Point lighting when signalling
-**9.1.5.** ClockAlignedDataInterval
+
+[[clockaligneddatainterval]]
+==== ClockAlignedDataInterval
 **Required/optional** required
 **Accessibility** RW
 **Type** integer
@@ -3899,12 +3901,16 @@ requesting an Authorize.conf from the Central System
 **Type** integer
 **Unit** Wh
 **Description** Maximum energy in Wh delivered when an identifier is invalidated by the Central System after start of a transaction.
-**9.1.15.** MeterValuesAlignedData
+
+[[metervaluesaligneddata]]
+==== MeterValuesAlignedData
 **Required/optional** required
 **Accessibility** RW
 **Type** CSL
 **Description** Clock-aligned measurand(s) to be included in a MeterValues.req PDU, every ClockAlignedDataInterval seconds
-**9.1.16.** MeterValuesAlignedDataMaxLength
+
+[[metervaluesaligneddatamaxlength]]
+==== MeterValuesAlignedDataMaxLength
 **Required/optional** optional
 **Accessibility** R
 **Type** integer
@@ -3969,13 +3975,17 @@ Central System.
 **Type** boolean
 **Description** whether the Charge Point will stop an ongoing transaction when it receives a non- _Accepted_ authorization status in a
 StartTransaction.conf for this transaction
-**9.1.25.** StopTxnAlignedData
+
+[[stoptxnaligneddata]]
+==== StopTxnAlignedData
 **Required/optional** required
 **Accessibility** RW
 **Type** CSL
 **Description** Clock-aligned periodic measurand(s) to be included in the TransactionData element of StopTransaction.req MeterValues.req
 PDU for every ClockAlignedDataInterval of the Transaction
-**9.1.26.** StopTxnAlignedDataMaxLength
+
+[[stoptxnaligneddatamaxlength]]
+==== StopTxnAlignedDataMaxLength
 **Required/optional** optional
 **Accessibility** R
 
