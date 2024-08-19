@@ -1,0 +1,16 @@
+@startuml figure_14
+!include style.puml
+
+participant "Charge Point" as ChargePoint
+participant "Central System" as CentralSystem
+
+ChargePoint -> CentralSystem : DataTransfer.req(vendorId, [messageId], [data])
+activate ChargePoint
+activate CentralSystem
+
+CentralSystem -> ChargePoint : DataTransfer.conf(status, [data])
+
+deactivate CentralSystem
+deactivate ChargePoint
+
+@enduml
