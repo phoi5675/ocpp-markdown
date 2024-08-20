@@ -409,26 +409,26 @@ The grouping of all messages in their profiles can be found in the table below.
 |<<changeconfiguration_req,ChangeConfiguration>>                      |X | | | | |
 |<<clearcache,ClearCache>>                                        |X | | | | |
 |<<datatransfer_req,DataTransfer>>                                    |X | | | | |
-|<<getconfiguration_req,GetConfiguration>>                            |X | | | | |
+|<<get_configuration_req,GetConfiguration>>                            |X | | | | |
 |<<heartbeat_req,Heartbeat>>                                          |X | | | | |
 |<<metervalues_req,MeterValues>>                                      |X | | | | |
-|<<remotestarttransaction_req,RemoteStartTransaction>>                |X | | | | |
-|<<remotestoptransaction_req,RemoteStopTransaction>>                  |X | | | | |
-|<<reset,Reset>>                                                  |X | | | | |
-|<<starttransaction_conf,StartTransaction>>                            |X | | | | |
-|<<statusnotification,StatusNotification>>                        |X | | | | |
+|<<remote_start_transaction_req,RemoteStartTransaction>>                |X | | | | |
+|<<remote_stop_transaction_req,RemoteStopTransaction>>                  |X | | | | |
+|<<reset_req,Reset>>                                                  |X | | | | |
+|<<start_transaction_conf,StartTransaction>>                            |X | | | | |
+|<<status_notification_req,StatusNotification>>                        |X | | | | |
 |<<stoptransaction_req,StopTransaction>>                              |X | | | | |
 |<<unlockconnector,UnlockConnector>>                              |X | | | | |
-|<<getdiagnostics,GetDiagnostics>>                                | |X | | | |
-|<<diagnosticsstatusnotification_req,DiagnosticsStatusNotification>>  | |X | | | |
-|<<firmwarestatusnotification_req,FirmwareStatusNotification>>        | |X | | | |
+|<<get_diagnostics_req,GetDiagnostics>>                                | |X | | | |
+|<<diagnostics_status_notification_req,DiagnosticsStatusNotification>>  | |X | | | |
+|<<firmware_status_notification_req,FirmwareStatusNotification>>        | |X | | | |
 |<<updatefirmware,UpdateFirmware>>                                | |X | | | |
-|<<getlocallistversion_req,GetLocalListVersion>>                      | | |X | | |
+|<<get_local_list_version_req,GetLocalListVersion>>                      | | |X | | |
 |<<sendlocallist,SendLocalList>>                                  | | |X | | |
 |<<cancelreservation,CancelReservation>>                          | | | |X | |
-|<<reservenow,ReserveNow>>                                        | | | |X | |
+|<<reserve_now_req,ReserveNow>>                                        | | | |X | |
 |<<clearchargingprofile,ClearChargingProfile>>                    | | | | |X |
-|<<getcompositeschedule,GetCompositeSchedule>>                    | | | | |X |
+|<<get_composite_schedule_req_req,GetCompositeSchedule>>                    | | | | |X |
 |<<setchargingprofile,SetChargingProfile>>                        | | | | |X |
 |<<triggermessage_req,TriggerMessage>>                                | | | | | | X
 |===
@@ -463,6 +463,7 @@ image::images/figure_2.svg[Sequence Diagram: Example of a firmware update]
 
 When a Charge Point needs to be updated with new firmware, the Central System informs the Charge Point of the time at which the Charge Point can start downloading the new firmware. The Charge Point SHALL notify the Central System after each step as it downloads and installs the new firmware.
 
+[[local_authorization_and_offline_behavior]]
 === Local Authorization & Offline Behavior
 
 This section is normative.
@@ -488,7 +489,7 @@ A Charge Point MAY implement an _Authorization Cache_ that autonomously maintain
 If implemented, the Authorization Cache SHOULD conform to the following semantics:
 
 * The Cache contains all the latest received identifiers (i.e. valid and NOT-valid).
-* The Cache is updated using all received <<idtaginfo,IdTagInfo>> (from <<authorize_conf,Authorize.conf>>, <<starttransaction_conf,StartTransaction.conf>> and <<stoptransaction_conf,StopTransaction.conf>>)
+* The Cache is updated using all received <<idtaginfo,IdTagInfo>> (from <<authorize_conf,Authorize.conf>>, <<start_transaction_conf,StartTransaction.conf>> and <<stoptransaction_conf,StopTransaction.conf>>)
 * When the validity of a Cache entry expires, it SHALL be changed to expired in the Cache.
 * When an <<idtaginfo,IdTagInfo>> is received for an identifier in the Cache, it SHALL be updated.
 * If new identifier authorization data is received and the Authorization Cache is full, the Charge Point SHALL remove any NOT-valid entries, and then, if necessary, the oldest valid entries to make space for the new entry.
@@ -528,7 +529,7 @@ The Charge Point SHALL NOT modify the contents of the Authorization List by any 
 
 [cols="1,10"]
 |===
-|[.info-icon]#i# |Conflicts between the local authorization list and the validity reported in, for instance, a <<starttransaction_conf,StartTransaction.conf>> message might occur. When this happens the Charge Point SHALL inform the Central System by sending a <<status_notification,StatusNotification>> with ConnectorId set to 0, and ErrorCode set to 'LocalListConflict'.
+|[.info-icon]#i# |Conflicts between the local authorization list and the validity reported in, for instance, a <<start_transaction_conf,StartTransaction.conf>> message might occur. When this happens the Charge Point SHALL inform the Central System by sending a <<status_notification,StatusNotification>> with ConnectorId set to 0, and ErrorCode set to 'LocalListConflict'.
 |===
 
 ==== Relation between Authorization Cache and Local Authorization List
@@ -545,7 +546,7 @@ Identifiers that were valid but are apparently expired due to passage of time MU
 
 Operation of the Unknown Offline Authorization capability, when supported, is reported (and controlled, where possible) by the <<allowofflinetxforunknownid,`AllowOfflineTxForUnknownId`>> configuration key.
 
-When connection to the Central Server is restored, the Charge Point SHALL send a <<start_transaction,Start Transaction>> request for any transaction that was authorized offline , as required by <<transaction_related_messages,transaction-related message handling>>. When the authorization status in the <<starttransaction_conf,StartTransaction.conf>> is not _Accepted_, and the transaction is still ongoing, the Charge Point SHOULD:
+When connection to the Central Server is restored, the Charge Point SHALL send a <<start_transaction,Start Transaction>> request for any transaction that was authorized offline , as required by <<transaction_related_messages,transaction-related message handling>>. When the authorization status in the <<start_transaction_conf,StartTransaction.conf>> is not _Accepted_, and the transaction is still ongoing, the Charge Point SHOULD:
 
 * when <<stoptransactiononinvalidid,`StopTransactionOnInvalidId`>> is set to _true_: stop the transaction normally as stated in <<stop_transaction,Stop Transaction>>. The Reason field in the Stop Transaction request should be set to DeAuthorized. If the Charge Point has the possibility to lock the Charging Cable, it SHOULD keep the Charging Cable locked until the owner presents his identifier.
 * when <<stoptransactiononinvalidid,StopTransactionOnInvalidId>> is set to _false_: only stop energy delivery to the vehicle.
@@ -578,7 +579,7 @@ image::images/figure_5.svg[OCPP Charging Session and transaction definition]
 
 This section is normative.
 
-The Charge Point SHOULD deliver transaction-related messages to the Central System in chronological order as soon as possible. Transaction-related messages are <<starttransaction_req,StartTransaction.req>>, <<stoptransaction_req,StopTransaction.req>> and periodic or clock-aligned <<metervalues_req,MeterValues.req>> messages.
+The Charge Point SHOULD deliver transaction-related messages to the Central System in chronological order as soon as possible. Transaction-related messages are <<start_transaction_req,StartTransaction.req>>, <<stoptransaction_req,StopTransaction.req>> and periodic or clock-aligned <<metervalues_req,MeterValues.req>> messages.
 
 When _offline_ , the Charge Point MUST queue any transaction-related messages that it would have sent to the Central System if the Charge Point had been online.
 
@@ -588,6 +589,7 @@ The delivery of new transaction-related messages SHALL wait until the queue has 
 
 When the Central System receives a transaction-related message that was queued on the Charge Point for some time, the Central System will not be aware that this is a historical message, other than by inference given that the various timestamps are significantly in the past. It SHOULD process such a message as any other.
 
+[[error_responses_to_transaction_related_messages]]
 ==== Error responses to transaction-related messages
 
 It is permissible for the Charge Point to skip a transaction-related message if and only if the Central System repeatedly reports a 'failure to process the message'. Such a stipulation is necessary, because otherwise the requirement to deliver every transaction-related message in chronological order would entail that the Charge Point cannot deliver any transaction-related messages to the Central System after a software bug causes the Central System not to acknowledge one of the Charge Point's transaction-related messages.
@@ -777,7 +779,7 @@ image::images/figure_7.svg[Central Smart Charging topology]
 
 Central smart charging assumes that charge limits are controlled by the Central System. The Central System receives a capacity forecast from the grid operator (DSO) or another source in one form or another and calculates charging schedules for some or all charging transactions, details of which are out of scope of this specification.
 
-The Central System imposes charging limits on connectors. In response to a <<starttransaction_req,StartTransaction.req>> PDU The Central System may choose to set charging limits to the transaction using the TxProfile.
+The Central System imposes charging limits on connectors. In response to a <<start_transaction_req,StartTransaction.req>> PDU The Central System may choose to set charging limits to the transaction using the TxProfile.
 
 Central Smart Charging can be done with a Control Pilot signal, albeit with some limitations, because an EV cannot communicate its charging via the Control Pilot signal. In analogy to the <<local_smart_charging,Local Smart Charging>> use case, a connector can execute a charging schedule by the Control Pilot signal. This is illustrated in the Figure below:
 
@@ -786,7 +788,7 @@ image::images/figure_8.svg[Sequence Diagram: Central Smart Charging]
 
 Explanation for the above figure:
 
-* After authorization the connector will set a maximum current to use via the Control Pilot signal. This limit is based on a (default) charging profile that the connector had previously received from the Central System. The EV starts charging and a <<starttransaction_req,StartTransaction.req>> is sent to the Central System.
+* After authorization the connector will set a maximum current to use via the Control Pilot signal. This limit is based on a (default) charging profile that the connector had previously received from the Central System. The EV starts charging and a <<start_transaction_req,StartTransaction.req>> is sent to the Central System.
 * While charging is in progress the connector will continuously adapt the maximum current or power according to the charging profile. Optionally, at any point in time the Central System may send a new charging profile for the connector that shall be used as a limit schedule for the EV.
 
 [[local_smart_charging]]
@@ -816,8 +818,8 @@ image::images/figure_11.svg[Sequence Diagram: Local Smart Charging]
 
 Explanation for the above figure:
 
-* After authorization the connector will set a maximum current to use, via the Control Pilot signal. This limit is based on a (default) charging profile that the connector had previously received from the Local Controller. The EV starts charging and sends a <<starttransaction_req,StartTransaction.req>>.
-* The <<starttransaction_req,StartTransaction.req>> is sent to the Central System via the Local Controller, so that also the Local Controller knows a transaction has started. The Local Controller just passes on the messages between Charge Point and Central System, so that the Central System can address all the Local Smart Charging group members individually.
+* After authorization the connector will set a maximum current to use, via the Control Pilot signal. This limit is based on a (default) charging profile that the connector had previously received from the Local Controller. The EV starts charging and sends a <<start_transaction_req,StartTransaction.req>>.
+* The <<start_transaction_req,StartTransaction.req>> is sent to the Central System via the Local Controller, so that also the Local Controller knows a transaction has started. The Local Controller just passes on the messages between Charge Point and Central System, so that the Central System can address all the Local Smart Charging group members individually.
 * While charging is in progress the connector will continuously adapt the maximum current according to the charging profile. +
 Optionally, at any point in time the Local Controller may send a new charging profile to the connector that shall be used as a limit schedule for the EV.
 
@@ -825,7 +827,7 @@ Optionally, at any point in time the Local Controller may send a new charging pr
 
 This section is normative.
 
-The smart charging options defined can be used in extensive ways. Because of the possible limitations and differences in capabilities between Charge Points, the Central System needs to be able to discover the Charge Point specific capabilities. This is ensured by the standardized configuration keys as defined in this chapter. A Smart Charging enabled Charge Point SHALL implement, and support reporting of, the following configuration keys through the <<getconfiguration_req,GetConfiguration.req>> PDU
+The smart charging options defined can be used in extensive ways. Because of the possible limitations and differences in capabilities between Charge Points, the Central System needs to be able to discover the Charge Point specific capabilities. This is ensured by the standardized configuration keys as defined in this chapter. A Smart Charging enabled Charge Point SHALL implement, and support reporting of, the following configuration keys through the <<get_configuration_req,GetConfiguration.req>> PDU
 
 [cols="1",options="header"]
 |===
@@ -1038,7 +1040,7 @@ If the Central System returns the status _Rejected_ , the Charge Point SHALL NOT
 
 The Central System MAY also return a _Pending_ registration status to indicate that it wants to retrieve or set certain information on the Charge Point before the Central System will accept the Charge Point. If the Central System returns the _Pending_ status, the communication channel SHOULD NOT be closed by either the Charge Point or the Central System. The Central System MAY send request messages to retrieve information from the Charge Point or change its configuration. The Charge Point SHOULD respond to these messages. The Charge Point SHALL NOT send request messages to the Central System unless it has been instructed by the Central System to do so with a <<triggermessage_req,TriggerMessage.req>> request.
 
-While in _pending_ state, the following Central System initiated messages are not allowed: <<remotestarttransaction_req,RemoteStartTransaction.req>> and <<remotestoptransaction_req,RemoteStopTransaction.req>>
+While in _pending_ state, the following Central System initiated messages are not allowed: <<remote_start_transaction_req,RemoteStartTransaction.req>> and <<remote_stop_transaction_req,RemoteStopTransaction.req>>
 
 ==== Transactions before being accepted by a Central System
 
@@ -1070,18 +1072,18 @@ If the recipient of the request has no implementation for the specific vendorId 
 .Sequence Diagram: Diagnostics Status Notification
 image::images/figure_15.svg[Sequence Diagram: Diagnostics Status Notification]
 
-Charge Point sends a notification to inform the Central System about the status of a diagnostics upload. The Charge Point SHALL send a <<diagnosticsstatusnotification_req,DiagnosticsStatusNotification.req>> PDU to inform the Central System that the upload of diagnostics is busy or has finished successfully or failed. The Charge Point SHALL only send the status Idle after receipt of a TriggerMessage for a Diagnostics Status Notification, when it is not busy uploading diagnostics.
+Charge Point sends a notification to inform the Central System about the status of a diagnostics upload. The Charge Point SHALL send a <<diagnostics_status_notification_req,DiagnosticsStatusNotification.req>> PDU to inform the Central System that the upload of diagnostics is busy or has finished successfully or failed. The Charge Point SHALL only send the status Idle after receipt of a TriggerMessage for a Diagnostics Status Notification, when it is not busy uploading diagnostics.
 
-Upon receipt of a <<diagnosticsstatusnotification_req,DiagnosticsStatusNotification.req>> PDU, the Central System SHALL respond with a <<diagnosticsstatusnotification_conf,DiagnosticsStatusNotification.conf>>.
+Upon receipt of a <<diagnostics_status_notification_req,DiagnosticsStatusNotification.req>> PDU, the Central System SHALL respond with a <<diagnostics_status_notification_conf,DiagnosticsStatusNotification.conf>>.
 
 === Firmware Status Notification
 
 .Sequence Diagram: Firmware Status Notification
 image::images/figure_16.svg[Sequence Diagram: Firmware Status Notification]
 
-A Charge Point sends notifications to inform the Central System about the progress of the firmware update. The Charge Point SHALL send a <<firmwarestatusnotification_req,FirmwareStatusNotification.req>> PDU for informing the Central System about the progress of the downloading and installation of a firmware update. The Charge Point SHALL only send the status Idle after receipt of a TriggerMessage for a Firmware Status Notification, when it is not busy downloading/installing firmware.
+A Charge Point sends notifications to inform the Central System about the progress of the firmware update. The Charge Point SHALL send a <<firmware_status_notification_req,FirmwareStatusNotification.req>> PDU for informing the Central System about the progress of the downloading and installation of a firmware update. The Charge Point SHALL only send the status Idle after receipt of a TriggerMessage for a Firmware Status Notification, when it is not busy downloading/installing firmware.
 
-Upon receipt of a <<firmwarestatusnotification_req,FirmwareStatusNotification.req>> PDU, the Central System SHALL respond with a <<firmwarestatusnotification_conf,FirmwareStatusNotification.conf>>.
+Upon receipt of a <<firmware_status_notification_req,FirmwareStatusNotification.req>> PDU, the Central System SHALL respond with a <<firmware_status_notification_conf,FirmwareStatusNotification.conf>>.
 
 The FirmwareStatusNotification.req PDUs SHALL be sent to keep the Central System updated with the status of the update process, started by the Central System with a FirmwareUpdate.req PDU.
 
@@ -1107,347 +1109,246 @@ With JSON over WebSocket, sending heartbeats is not mandatory. However, for time
 // TODO:
 === Meter Values
 
-== Charge Point Central System
+.Sequence Diagram: Meter Values
+image::images/figure_18.svg[Sequence Diagram: Meter Values]
 
-== MeterValues.req(connectorId, meterValue, [transactionId])
+A Charge Point MAY sample the electrical meter or other sensor/transducer hardware to provide extra information about its meter values. It is up to the Charge Point to decide when it will send meter values. This can be configured using the <<changeconfiguration_req,ChangeConfiguration.req>> message to data acquisition intervals and specify data to be acquired & reported.
 
-== MeterValues.conf()
+The Charge Point SHALL send a <<metervalues_req,MeterValues.req>> PDU for offloading meter values. The request PDU SHALL contain for each sample:
 
-== Figure 18. Sequence Diagram: Meter Values
+. The id of the Connector from which samples were taken. If the connectorId is 0, it is associated with the entire Charge Point. If the connectorId is 0 and the <<measurand,Measurand>> is energy related, the sample SHOULD be taken from the main energy meter.
 
-== A Charge Point MAY sample the electrical meter or other sensor/transducer hardware to provide extra
+. The transactionId of the transaction to which these values are related, if applicable. If there is no transaction in progress or if the values are taken from the main meter, then transaction id may be omitted.
 
-== information about its meter values. It is up to the Charge Point to decide when it will send meter values. This can
+. One or more **meterValue** elements, of type <<metervalue,MeterValue>>, each representing a set of one or more data values taken at a particular point in time.
 
-== be configured using the ChangeConfiguration.req message to data acquisition intervals and specify data to be
+Each <<metervalue,MeterValue>> element contains a timestamp and a set of one or more individual <<sampled_value,sampledvalue>> elements, all captured at the same point in time. Each sampledValue element contains a single value datum. The nature of each sampledValue is determined by the optional <<mesurand,measurand>>, <<reading_context,context>>, <<location,location>>, <<unit_of_measure,unit>>, <<phase,phase>>, and <<value_format,format>> fields.
 
-== acquired & reported
+The optional <<measurand,measurand>> field specifies the type of value being measured/reported.
 
-== The Charge Point SHALL send a MeterValues.req PDU for offloading meter values. The request PDU SHALL
+The optional <<reading_context,context>> field specifies the reason/event triggering the reading.
 
-== contain for each sample
+The optional <<location,location>> field specifies where the measurement is taken (e.g. Inlet, Outlet).
 
-== 1. The id of the Connector from which samples were taken. If the connectorId is 0, it is associated with the
+The optional <<phase,phase>> field specifies to which phase or phases of the electric installation the value applies. The Charging Point SHALL report all phase number dependent values from the electrical meter (or grid connection when absent) point of view.
 
-== entire Charge Point. If the connectorId is 0 and the Measurand is energy related, the sample SHOULD be
+[cols="1,10"]
+|===
+|[.info-icon]#i# |
+The phase field is not applicable to all <<measurand,Measurands>>.
+|===
 
-== taken from the main energy meter
+[cols="1,10"]
+|===
+|[.info-icon]#i# |
+Two measurands (_Current.Offered_ and _Power.Offered_) are available that are strictly speaking no measured values. They indicate the maximum amount of current/power that is being offered to the EV and are intended for use in smart charging applications.
+|===
 
-== 2. The transactionId of the transaction to which these values are related, if applicable. If there is no
+For individual connector phase rotation information, the Central System MAY query the <<connector_phase_rotation,ConnectorPhaseRotation>> configuration key on the Charging Point via <<get_configuration,GetConfiguration>>. The Charge Point SHALL report the phase rotation in respect to the grid connection. Possible values per connector are NotApplicable, Unknown, RST, RTS, SRT, STR, TRS and TSR. see section <<standard_configuration_key_names_and_values,Standard Configuration Key Names & Values>> for more information.
 
-== transaction in progress or if the values are taken from the main meter, then transaction id may be
+The **EXPERIMENTAL** optional <<value_format,format>> field specifies whether the data is represented in the normal (default) form as a simple numeric value ("**Raw**"), or as "**SignedData**", an opaque digitally signed binary data block, represented as hex data. This experimental field may be deprecated and subsequently removed in later versions, when a more mature solution alternative is provided.
 
-== omitted
+To retain backward compatibility, the default values of all of the optional fields on a <<sampled_value,sampledValue>> element are such that a **value** without any additional fields will be interpreted, as a register reading of active import energy in Wh (Watt-hour) units.
 
-== 3. One or more meterValue elements, of type MeterValue, each representing a set of one or more data
+Upon receipt of a <<metervalues_req,MeterValues.req>> PDU, the Central System SHALL respond with a <<metervalues_conf,MeterValues.conf>>.
 
-== values taken at a particular point in time
-
-== Each MeterValue element contains a timestamp and a set of one or more individual sampledvalue elements, all
-
-== captured at the same point in time. Each sampledValue element contains a single value datum. The nature of
-
-== each sampledValue is determined by the optional measurand, context, location, unit, phase, and format fields
-
-== The optional measurand field specifies the type of value being measured/reported
-
-== The optional context field specifies the reason/event triggering the reading
-
-== The optional location field specifies where the measurement is taken (e.g. Inlet, Outlet)
-
-== The optional phase field specifies to which phase or phases of the electric installation the value applies. The
-
-== Charging Point SHALL report all phase number dependent values from the electrical meter (or grid connection
-
-== when absent) point of view
-
-== The phase field is not applicable to all Measurands
-
-== Two measurands ( Current.Offered and Power.Offered ) are available that are strictly speaking no
-
-== measured values. They indicate the maximum amount of current/power that is being offered
-
-== to the EV and are intended for use in smart charging applications
-
-== For individual connector phase rotation information, the Central System MAY query the
-
-== ConnectorPhaseRotation configuration key on the Charging Point via GetConfiguration. The Charge Point
-
-== SHALL report the phase rotation in respect to the grid connection. Possible values per connector are
-
-NotApplicable, Unknown, RST, RTS, SRT, STR, TRS and TSR. see section Standard Configuration Key Names &
-Values for more information.
-The **EXPERIMENTAL** optional format field specifies whether the data is represented in the normal (default) form
-as a simple numeric value (" **Raw** "), or as “ **SignedData** ”, an opaque digitally signed binary data block,
-represented as hex data. This experimental field may be deprecated and subsequently removed in later
-versions, when a more mature solution alternative is provided.
-To retain backward compatibility, the default values of all of the optional fields on a sampledValue element are
-such that a **value** without any additional fields will be interpreted, as a register reading of active import energy
-in Wh (Watt-hour) units.
-Upon receipt of a MeterValues.req PDU, the Central System SHALL respond with a MeterValues.conf.
-It is likely that The Central System applies sanity checks to the data contained in a MeterValues.req it received.
-The outcome of such sanity checks SHOULD NOT ever cause the Central System to not respond with a
-MeterValues.conf. Failing to respond with a MeterValues.conf will only cause the Charge Point to try the same
-message again as specified in Error responses to transaction-related messages.
+It is likely that The Central System applies sanity checks to the data contained in a <<metervalues_req,MeterValues.req>> it received. The outcome of such sanity checks SHOULD NOT ever cause the Central System to not respond with a <<metervalues_conf,MeterValues.conf>>. Failing to respond with a <<metervalues_conf,MeterValues.conf>> will only cause the Charge Point to try the same message again as specified in <<error_responses_to_transaction_related_messages,Error responses to transaction-related messages>>.
 
 [[start_transaction]]
 === Start Transaction
 
-Charge Point Central System
-StartTransaction.req(connectorId, idTag, meterStart, timestamp, [reservationId])
-StartTransaction.conf(idTagInfo, transactionId)
-_Figure 19. Sequence Diagram: Start Transaction_
-The Charge Point SHALL send a StartTransaction.req PDU to the Central System to inform about a transaction
-that has been started. If this transaction ends a reservation (see Reserve Now operation), then the
-StartTransaction.req MUST contain the reservationId.
-Upon receipt of a StartTransaction.req PDU, the Central System SHOULD respond with a StartTransaction.conf
-PDU. This response PDU MUST include a transaction id and an authorization status value.
-The Central System MUST verify validity of the identifier in the StartTransaction.req PDU, because the identifier
-might have been authorized locally by the Charge Point using outdated information. The identifier, for instance,
-may have been blocked since it was added to the Charge Point's Authorization Cache.
-If Charge Point has implemented an Authorization Cache, then upon receipt of a StartTransaction.conf PDU the
-Charge Point SHALL update the cache entry, if the idTag is not in the Local Authorization List, with the IdTagInfo
-value from the response as described under Authorization Cache.
-It is likely that The Central System applies sanity checks to the data contained in a StartTransaction.req it
-received. The outcome of such sanity checks SHOULD NOT ever cause the Central System to not respond with a
-StartTransaction.conf. Failing to respond with a StartTransaction.conf will only cause the Charge Point to try the
-same message again as specified in Error responses to transaction-related messages.
+.Sequence Diagram: Start Transaction
+image::images/figure_19.svg[Sequence Diagram: Start Transaction]
+
+The Charge Point SHALL send a <<start_transaction_req,StartTransaction.req>> PDU to the Central System to inform about a transaction that has been started. If this transaction ends a reservation (see <<reserve_now,Reserve Now>> operation), then the <<start_transaction_req,StartTransaction.req>> MUST contain the reservationId.
+
+Upon receipt of a StartTransaction.req PDU, the Central System SHOULD respond with a <<start_transaction_conf,StartTransaction.conf>> PDU. This response PDU MUST include a transaction id and an authorization status value.
+
+The Central System MUST verify validity of the identifier in the <<start_transaction_req,StartTransaction.req>> PDU, because the identifier might have been authorized locally by the Charge Point using outdated information. The identifier, for instance, may have been blocked since it was added to the Charge Point's <<authorization_cache,Authorization Cache>>.
+
+If Charge Point has implemented an Authorization Cache, then upon receipt of a <<start_transaction_conf,StartTransaction.conf>> PDU the Charge Point SHALL update the cache entry, if the idTag is not in the Local Authorization List, with the <<idtaginfo,IdTagInfo>> value from the response as described under Authorization Cache.
+
+It is likely that The Central System applies sanity checks to the data contained in a <<start_transaction_req,StartTransaction.req>> it received. The outcome of such sanity checks SHOULD NOT ever cause the Central System to not respond with a <<start_transaction_conf,StartTransaction.conf>>. Failing to respond with a <<start_transaction_conf,StartTransaction.conf>> will only cause the Charge Point to try the same message again as specified in <<error_responses_to_transaction_related_messages,Error responses to transaction-related messages>>.
 
 [[status_notification]]
 === Status Notification
 
-== Charge Point Central System
+.Sequence Diagram: Status Notification
+image::images/figure_20.svg[Sequence Diagram: Status Notification]
 
-== StatusNotification.req(connectorId, errorCode, status, [timestamp], [info], [vendorId], [vendorErrorCode])
+A Charge Point sends a notification to the Central System to inform the Central System about a status change or an error within the Charge Point. The following table depicts changes from a previous status (left column) to a new status (upper row) upon which a Charge Point MAY send a <<status_notification_req,StatusNotification.req>> PDU to the Central System.
 
-== StatusNotification.conf()
+[cols="1,10"]
+|===
+|[.warning-icon]#i# |
+The Occupied state as defined in previous OCPP versions is no longer relevant. The Occupied state is split into five new statuses: _Preparing_, _Charging_, _SuspendedEV_, _SuspendedEVSE_ and _Finishing_.
+|===
 
-== Figure 20. Sequence Diagram: Status Notification
+[cols="1,10"]
+|===
+|[.info-icon]#i# |
+EVSE is used in Status Notification instead of Socket or Charge Point for future compatibility.
+|===
 
-== A Charge Point sends a notification to the Central System to inform the Central System about a status change or
+The following table describes which status transitions are possible:
 
-== an error within the Charge Point. The following table depicts changes from a previous status (left column) to a
+[cols="^1,^2,10*^",options="header",hrows=2]
+|===
+|ﾠ |ﾠ                   |**1** |**2** |**3** |**4** |**5** |**6** |ﾠﾠﾠ|**7** |**8** |**9**
+|  |  State From \ To: 
+|[.rotated-90]#Available# 
+|[.rotated-90]#Preparing#
+|[.rotated-90]#Charging# |[.rotated-90]#SuspendedEV# |[.rotated-90]#SuspendedEVSE# 
+|[.rotated-90]#Finishing# | 
+|[.rotated-90]#Reserved# |[.rotated-90]#Unavailable# |[.rotated-90]#Faulted#
 
-== new status (upper row) upon which a Charge Point MAY send a StatusNotification.req PDU to the Central System
+// TODO: 가운데 정렬하기
+|**A** |Available |ﾠ |<<a2,**A2**>> |<<a3,**A3**>> 
+|<<a4,**A4**>> |<<a5,**A5**>> |ﾠ |ﾠ |<<a7,**A7**>> |<<a8,**A8**>> |<<a9,**A9**>>
+|**B** |Preparing |<<b1,**B1**>> |ﾠ |<<b3,**B3**>> |<<b4,**B4**>> 
+|<<b5,**B5**>> |<<b6,**B6**>> |ﾠ |ﾠ |ﾠ |<<b9,**B9**>>
+|**C** |Charging |<<c1,**C1**>> |ﾠ |ﾠ |<<c4,**C4**>> |<<c5,**C5**>>
+|<<c6,**C6**>> |ﾠ |ﾠ |<<c8,**C8**>> |<<c9,**C9**>>
+|**D** |SuspendedEV |<<d1,**D1**>> |ﾠ |<<d3,**D3**>> |ﾠ 
+|<<d5,**D5**>> |<<d6,**D6**>> |ﾠ |ﾠ |<<d8,**D8**>> |<<d9,**D9**>>
+|**E** |SuspendedEVSE |<<e1,**E1**>> |ﾠ |<<e3,**E3**>> |<<e4,**E4**>>
+|ﾠ |<<e6,**E6**>> |ﾠ |ﾠ |<<e8,**E8**>> |<<e9,**E9**>>
+|**F** |Finishing |<<f1,**F1**>> |<<f2,**F2**>> |ﾠ |ﾠ |ﾠ |ﾠ |ﾠ |ﾠ 
+|<<f8,**F8**>> |<<f9,**F9**>>
+|ﾠ |ﾠ |ﾠ |ﾠ |ﾠ |ﾠ |ﾠ |ﾠ |ﾠ |ﾠ |ﾠ |ﾠ 
+|**G** |Reserved |<<g1,**G1**>> |<<g2,**G2>> |ﾠ |ﾠ |ﾠ |ﾠ |ﾠ |ﾠ 
+|<<g8,**G8**>> |<<g9,**G9**>>
+|**H** |Unavailable |<<h1,**H1**>> |<<h2,**H2**>> |<<h3,**H3**>>
+|<<h4,**H4**>> |<<h5,**H5**>> |ﾠ |ﾠ |ﾠ |ﾠ |<<h9,**H9**>>
+|**I** |Faulted |<<i1,**I1**>> |<<i2,**I2**>> |<<i3,**I3**>> |<<i4,**I4**>>
+|<<i5,**I5**>> |<<i6,**I6**>> |ﾠ |<<i7,**I7**>> |<<i8,**I8**>> |ﾠ 
+|===
 
-== The Occupied state as defined in previous OCPP versions is no longer relevant. The Occupied
+[cols="1,10"]
+|===
+|[.info-icon]#i# |
+The table above is only applicable to ConnectorId > 0. For ConnectorId 0, only a limited set is applicable, namely: Available, Unavailable and Faulted.
+|===
 
-== state is split into five new statuses: Preparing, Charging, SuspendedEV, SuspendedEVSE and
+The next table describes events that may lead to a status change:
 
-== Finishing
+[cols="2,10",options="headers"]
+|===
+| |DESCRIPTION
+|[[a2]]**A2** |Usage is initiated (e.g. insert plug, bay occupancy detection, present idTag, push start button, receipt of a <<remote_start_transaction_req,RemoteStartTransaction.req>>)
+|[[a3]]**A3** |Can be possible in a Charge Point without an authorization means
+|[[a4]]**A4** |Similar to <<a3,A3>> but the EV does not start charging
+|[[a5]]**A5** |Similar to <<a3,A3>> but the EVSE does not allow charging
+|[[a7]]**A7** |A <<reserve_now,Reserve Now>> message is received that reserves the connector
+|[[a8]]**A8** |A <<change_availability,Change Availability>> message is received that sets the connector to Unavailable
+|[[a9]]**A9** |A fault is detected that prevents further charging operations
 
-== EVSE is used in Status Notification instead of Socket or Charge Point for future compatibility
+|[[b1]]**B1** |Intended usage is ended (e.g. plug removed, bay no longer occupied, second presentation of idTag, time out (configured by the configuration key: <<connection_timeout,`ConnectionTimeOut`>>) on expected user action)
+|ﾠ |ﾠ 
+|[[b3]]**B3** |All prerequisites for charging are met and charging process starts
+|[[b4]]**B4** |All prerequisites for charging are met but EV does not start charging
+|[[b5]]**B5** |All prerequisites for charging are met but EVSE does not allow charging
+|[[b6]]**B6** |Timed out. Usage was initiated (e.g. insert plug, bay occupancy detection), but idTag not presented within timeout.
+|[[b9]]**B9** |A fault is detected that prevents further charging operations
+|ﾠ |ﾠ 
 
-== The following table describes which status transitions are possible
-
-== State From \ To
-
-== 1
-
-== Available
-
-== 2
-
-== Prepairing
-
-== 3
-
-== Charging
-
-== 4
-
-== SuspendedEV
-
-(^5) SuspendedEVSE **6**
-
-== Finishing
-
-== 7
-
-== Reserved
-
-== 8
-
-== Unavailable
-
-== 9
-
-== Faulted
-
-== A Available A2 A3 A4 A5 A7 A8 A9
-
-== B Preparing B1 B3 B4 B5 B6 B9
-
-== C Charging C1 C4 C5 C6 C8 C9
-
-== D SuspendedEV D1 D3 D5 D6 D8 D9
-
-== E SuspendedEVSE E1 E3 E4 E6 E8 E9
-
-== F Finishing F1 F2 F8 F9
-
-== G Reserved G1 G2 G8 G9
-
-== H Unavailable H1 H2 H3 H4 H5 H9
-
-== I Faulted I1 I2 I3 I4 I5 I6 I7 I8
-
-== The table above is only applicable to ConnectorId > 0. For ConnectorId 0, only a limited set is
-
-== applicable, namely: Available, Unavailable and Faulted
-
-== The next table describes events that may lead to a status change
-
-== DESCRIPTION
-
-== A2 Usage is initiated (e.g. insert plug, bay occupancy detection, present idTag, push start button, receipt of a RemoteStartTransaction.req)
-
-== A3 Can be possible in a Charge Point without an authorization means
-
-== A4 Similar to A3 but the EV does not start charging
-
-== A5 Similar to A3 but the EVSE does not allow charging
-
-== A7 A Reserve Now message is received that reserves the connector
-
-== A8 A Change Availability message is received that sets the connector to Unavailable
-
-**DESCRIPTION
-A9** A fault is detected that prevents further charging operations
-**B1** Intended usage is ended (e.g. plug removed, bay no longer occupied, second presentation of idTag, time out (configured by the configuration
-key: ConnectionTimeOut) on expected user action)
-**B3** All prerequisites for charging are met and charging process starts
-**B4** All prerequisites for charging are met but EV does not start charging
-**B5** All prerequisites for charging are met but EVSE does not allow charging
-**B6** Timed out. Usage was initiated (e.g. insert plug, bay occupancy detection), but idTag not presented within timeout.
-**B9** A fault is detected that prevents further charging operations
-**C1** Charging session ends while no user action is required (e.g. fixed cable was removed on EV side)
-**C4** Charging stops upon EV request (e.g. S2 is opened)
-**C5** Charging stops upon EVSE request (e.g. smart charging restriction, transaction is invalidated by the AuthorizationStatus in a
-StartTransaction.conf)
-**C6** Transaction is stopped by user or a Remote Stop Transaction message and further user action is required (e.g. remove cable, leave parking
+|[[c1]]**C1** |Charging session ends while no user action is required (e.g. fixed cable was removed on EV side)
+|[[c4]]**C4** |Charging stops upon EV request (e.g. S2 is opened)
+|[[c5]]**C5** |Charging stops upon EVSE request (e.g. smart charging restriction, transaction is invalidated by the <<authorization_status,AuthorizationStatus>> in a <<start_transaction_conf,StartTransaction.conf>>)
+|[[c6]]**C6** |Transaction is stopped by user or a <<remote_stop_transaction_req,Remote Stop Transaction>> message and further user action is required (e.g. remove cable, leave parking
 bay)
-**C8** Charging session ends, no user action is required and the connector is scheduled to become _Unavailable_
-**C9** A fault is detected that prevents further charging operations
-**D1** Charging session ends while no user action is required
-**D3** Charging resumes upon request of the EV (e.g. S2 is closed)
-**D5** Charging is suspended by EVSE (e.g. due to a smart charging restriction)
-**D6** Transaction is stopped and further user action is required
-**D8** Charging session ends, no user action is required and the connector is scheduled to become _Unavailable_
-**D9** A fault is detected that prevents further charging operations
+|[[c8]]**C8** |Charging session ends, no user action is required and the connector is scheduled to become _Unavailable_
+|[[c9]]**C9** |A fault is detected that prevents further charging operations
+|ﾠ |ﾠ 
 
-**DESCRIPTION
-E1** Charging session ends while no user action is required
-**E3** Charging resumes because the EVSE restriction is lifted
-**E4** The EVSE restriction is lifted but the EV does not start charging
-**E6** Transaction is stopped and further user action is required
-**E8** Charging session ends, no user action is required and the connector is scheduled to become _Unavailable_
-**E9** A fault is detected that prevents further charging operations
-**F1** All user actions completed
-**F2** User restart charging session (e.g. reconnects cable, presents idTag again), thereby creating a new Transaction
-**F8** All user actions completed and the connector is scheduled to become _Unavailable_
-**F9** A fault is detected that prevents further charging operations
-**G1** Reservation expires or a Cancel Reservation message is received
-**G2** Reservation identity is presented
-**G8** Reservation expires or a Cancel Reservation message is received and the connector is scheduled to become _Unavailable_
-**G9** A fault is detected that prevents further charging operations
-**H1** Connector is set _Available_ by a Change Availability message
-**H2** Connector is set _Available_ after a user had interacted with the Charge Point
-**H3** Connector is set _Available_ and no user action is required to start charging
-**H4** Similar to H3 but the EV does not start charging
-**H5** Similar to H3 but the EVSE does not allow charging
-**H9** A fault is detected that prevents further charging operations
+|[[d1]]**D1** |Charging session ends while no user action is required
+|[[d3]]**D3** |Charging resumes upon request of the EV (e.g. S2 is closed)
+|[[d5]]**D5** |Charging is suspended by EVSE (e.g. due to a smart charging restriction)
+|[[d6]]**D6** |Transaction is stopped and further user action is required
+|[[d8]]**D8** |Charging session ends, no user action is required and the connector is scheduled to become _Unavailable_
+|[[d9]]**D9** |A fault is detected that prevents further charging operations
 
-== DESCRIPTION
+|[[e1]]**E1** |Charging session ends while no user action is required
+|[[e3]]**E3** |Charging resumes because the EVSE restriction is lifted
+|[[e4]]**E4** |The EVSE restriction is lifted but the EV does not start charging
+|[[e6]]**E6** |Transaction is stopped and further user action is required
+|[[e8]]**E8** |Charging session ends, no user action is required and the connector is scheduled to become _Unavailable_
+|[[e9]]**E9** |A fault is detected that prevents further charging operations
 
-== I1-I8 Fault is resolved and status returns to the pre-fault state
+|[[f1]]**F1** |All user actions completed
+|[[f2]]**F2** |User restart charging session (e.g. reconnects cable, presents idTag again), thereby creating a new Transaction
+|[[f8]]**F8** |All user actions completed and the connector is scheduled to become _Unavailable_
+|[[f9]]**F9** |A fault is detected that prevents further charging operations
 
-== A Charge Point Connector MAY have any of the 9 statuses as shown in the table above. For
+|[[g1]]**G1** |Reservation expires or a <<cancel_reservation,Cancel Reservation>> message is received
+|[[g2]]**G2** |Reservation identity is presented
+|[[g8]]**G8** |Reservation expires or a <<cancel_reservation,Cancel Reservation>> message is received and the connector is scheduled to become _Unavailable_
+|[[g9]]**G9** |A fault is detected that prevents further charging operations
 
-== ConnectorId 0, only a limited set is applicable, namely: Available, Unavailable and Faulted. The
+|[[h1]]**H1** |Connector is set _Available_ by a <<change_availability,Change Availability>> message
+|[[h2]]**H2** |Connector is set _Available_ after a user had interacted with the Charge Point
+|[[h3]]**H3** |Connector is set _Available_ and no user action is required to start charging
+|[[h4]]**H4** |Similar to <<h3,H3>> but the EV does not start charging
+|[[h5]]**H5** |Similar to <<h3,H3>> but the EVSE does not allow charging
+|[[h9]]**H9** |A fault is detected that prevents further charging operations
 
-== status of ConnectorId 0 has no direct connection to the status of the individual Connectors
+|[[i1_i8]]**I1-I8** |Fault is resolved and status returns to the pre-fault state
+|===
 
-== (>0)
+[cols="1,10"]
+|===
+|[.warning-icon]#i# |
+A Charge Point Connector MAY have any of the 9 statuses as shown in the table above. For ConnectorId 0, only a limited set is applicable, namely: Available, Unavailable and Faulted. The status of ConnectorId 0 has no direct connection to the status of the individual Connectors (>0).
+|===
 
-== If charging is suspended both by the EV and the EVSE, status SuspendedEVSE SHALL have
+[cols="1,10"]
+|===
+|[.warning-icon]#i# |
+If charging is suspended both by the EV and the EVSE, status _SuspendedEVSE_ SHALL have precedence over status _SuspendedEV_.
+|===
 
-== precedence over status SuspendedEV
+[cols="1,10"]
+|===
+|[.warning-icon]#i# |
+When a Charge Point or a Connector is set to status Unavailable by a <<change_availability,Change Availability>> command, the 'Unavailable' status MUST be persistent across reboots. The Charge Point MAY use the _Unavailable_ status internally for other purposes (e.g. while updating firmware or waiting for an initial _Accepted_ <<registration_status,RegistrationStatus>>)
+|===
 
-== When a Charge Point or a Connector is set to status Unavailable by a Change Availability
+As the status _Occupied_ has been split into five new statuses (_Preparing_, _Charging_, _SuspendedEV_, _SuspendedEVSE_ and _Finishing_), more <<status_notification_req,StatusNotification.req>> PDUs will be sent from Charge Point to the Central System. For instance, when a transaction is started, the Connector status would successively change from _Preparing_ to _Charging_ with a short _SuspendedEV_ and/or _SuspendedEVSE_ inbetween, possibly within a couple of seconds.
 
-== command, the 'Unavailable' status MUST be persistent across reboots. The Charge Point MAY
+To limit the number of transitions, the Charge Point MAY omit sending a <<status_notification_req,StatusNotification.req>> if it was active for less time than defined in the optional configuration key <<minimum_status_duration,`MinimumStatusDuration`>>. This way, a Charge Point MAY choose not to send certain <<status_notification_req,StatusNotification.req>> PDUs.
 
-== use the Unavailable status internally for other purposes (e.g. while updating firmware or
+[cols="1,10"]
+|===
+|[.info-icon]#i# |
+A Charge Point manufacturer MAY have implemented a minimal status duration for certain status transitions separate of the <<minimum_status_duration,`MinimumStatusDuration`>> setting. The time set in <<minimum_status_duration,`MinimumStatusDuration`>> will be added to this default delay. Setting <<minimum_status_duration,`MinimumStatusDuration`>> to zero SHALL NOT override the default manufacturer's minimal status duration.
+|===
 
-== waiting for an initial Accepted RegistrationStatus)
+[cols="1,10"]
+|===
+|[.warning-icon]#i# |
+Setting a high <<minimum_status_duration,`MinimumStatusDuration`>> time may result in the delayed sending of all StatusNotifications, since the Charge Point will only send the <<status_notification_req,StatusNotification.req>> once the <<minimum_status_duration,`MinimumStatusDuration`>> time is passed.
+|===
 
-== As the status Occupied has been split into five new statuses ( Preparing, Charging, SuspendedEV, SuspendedEVSE
+The Charge Point MAY send a <<status_notification_req,StatusNotification.req>> PDU to inform the Central System of fault conditions. When the 'status' field is not _Faulted_, the condition should be considered a warning since charging operations are still possible.
 
-== and Finishing ), more StatusNotification.req PDUs will be sent from Charge Point to the Central System. For
+[cols="1,10"]
+|===
+|[.warning-icon]#i# |
+<<chargepoint_errorcode,ChargePointErrorCode>> _EVCommunicationError_ SHALL only be used with status Preparing, SuspendedEV, SuspendedEVSE and Finishing and be treated as warning.
+|===
 
-== instance, when a transaction is started, the Connector status would successively change from Preparing to
+When a Charge Point is configured with <<stop_transaction_on_evside_disconnect,StopTransactionOnEVSideDisconnect>> set to _false_, a transaction is running and the EV becomes disconnected on EV side, then a <<status_notification_req,StatusNotification.req>> with the state: _SuspendedEV_ SHOULD be send to the Central System, with the 'errorCode' field set to: 'NoError'. The Charge Point SHOULD add additional information in the 'info' field, Notifying the Central System with the reason of suspension: 'EV side disconnected'. The current transaction is not stopped.
 
-== Charging with a short SuspendedEV and/or SuspendedEVSE inbetween, possibly within a couple of seconds
+When a Charge Point is configured with <<stop_transaction_on_evside_disconnect,StopTransactionOnEVSideDisconnect>> set to _true_, a transaction is running and the EV becomes disconnected on EV side, then a <<status_notification_req,StatusNotification.req>> with the state: 'Finishing' SHOULD be send to the Central System, with the 'errorCode' field set to: 'NoError'. The Charge Point SHOULD add additional information in the 'info' field, Notifying the Central System with the reason of stopping: 'EV side disconnected'. The current transaction is stopped.
 
-== To limit the number of transitions, the Charge Point MAY omit sending a StatusNotification.req if it was active for
+When a Charge Point connects to a Central System after having been <<local_authorization_and_offline_behavior,offline>>, it updates the Central System about its status according to the following rules:
 
-== less time than defined in the optional configuration key MinimumStatusDuration. This way, a Charge Point
+. The Charge Point SHOULD send a <<status_notification_req,StatusNotification.req>> PDU with its current status if the status changed while the Charge Point was _offline_.
+. The Charge Point MAY send a <<status_notification_req,StatusNotification.req>> PDU to report an error that occurred while the Charge Point was _offline_.
+. The Charge Point SHOULD NOT send <<status_notification_req,StatusNotification.req>> PDUs for historical status change events that happened while the Charge Point was offline and that do not inform the Central System of Charge Point errors or the Charge Point's current status.
+. The <<status_notification_req,StatusNotification.req>> messages MUST be sent in the order in which the events that they describe occurred.
 
-== MAY choose not to send certain StatusNotification.req PDUs
-
-== A Charge Point manufacturer MAY have implemented a minimal status duration for certain
-
-== status transitions separate of the MinimumStatusDuration setting. The time set in
-
-== MinimumStatusDuration will be added to this default delay. Setting
-
-== MinimumStatusDuration to zero SHALL NOT override the default manufacturer's minimal
-
-== status duration
-
-== Setting a high MinimumStatusDuration time may result in the delayed sending of all
-
-== StatusNotifications, since the Charge Point will only send the StatusNotification.req once the
-
-== MinimumStatusDuration time is passed
-
-== The Charge Point MAY send a StatusNotification.req PDU to inform the Central System of fault conditions. When
-
-== the 'status' field is not Faulted , the condition should be considered a warning since charging operations are still
-
-== possible
-
-== ChargePointErrorCode EVCommunicationError SHALL only be used with status Preparing
-
-== SuspendedEV, SuspendedEVSE and Finishing and be treated as warning
-
-== When a Charge Point is configured with StopTransactionOnEVSideDisconnect set to false , a transaction is
-
-== running and the EV becomes disconnected on EV side, then a StatusNotification.req with the state: SuspendedEV
-
-SHOULD be send to the Central System, with the 'errorCode' field set to: 'NoError'. The Charge Point SHOULD
-add additional information in the 'info' field, Notifying the Central System with the reason of suspension: 'EV side
-disconnected'. The current transaction is not stopped.
-When a Charge Point is configured with StopTransactionOnEVSideDisconnect set to _true_ , a transaction is
-running and the EV becomes disconnected on EV side, then a StatusNotification.req with the state: 'Finishing'
-SHOULD be send to the Central System, with the 'errorCode' field set to: 'NoError'. The Charge Point SHOULD
-add additional information in the 'info' field, Notifying the Central System with the reason of stopping: 'EV side
-disconnected'. The current transaction is stopped.
-When a Charge Point connects to a Central System after having been offline, it updates the Central System about
-its status according to the following rules:
-
-1. The Charge Point SHOULD send a StatusNotification.req PDU with its current status if the status changed
-   while the Charge Point was _offline_.
-2. The Charge Point MAY send a StatusNotification.req PDU to report an error that occurred while the
-   Charge Point was _offline_.
-3. The Charge Point SHOULD NOT send StatusNotification.req PDUs for historical status change events that
-   happened while the Charge Point was offline and that do not inform the Central System of Charge Point
-   errors or the Charge Point's current status.
-4. The StatusNotification.req messages MUST be sent in the order in which the events that they describe
-   occurred.
-   Upon receipt of a StatusNotification.req PDU, the Central System SHALL respond with a StatusNotification.conf
-   PDU.
+Upon receipt of a <<status_notification_req,StatusNotification.req>> PDU, the Central System SHALL respond with a StatusNotification.conf PDU.
 
 [[stop_transaction]]
 === Stop Transaction
@@ -1543,6 +1444,7 @@ Upon receipt of a StopTransaction.req PDU, the Central System SHALL respond with
 [[operations_initiated_by_central_system]]
 == Operations Initiated by Central System
 
+[[cancel_reservation]]
 === Cancel Reservation
 
 == Charge Point Central System
@@ -1559,6 +1461,7 @@ Upon receipt of a StopTransaction.req PDU, the Central System SHALL respond with
 
 == 'Accepted'. Otherwise it SHALL return 'Rejected'
 
+[[change_availability]]
 === Change Availability
 
 == Charge Point Central System
@@ -1721,6 +1624,7 @@ the Charge Point expects to consume from the grid during the requested time peri
 
 == SHALL respond with a status Rejected
 
+[[get_configuration]]
 === Get Configuration
 
 == Charge Point Central System
@@ -2485,7 +2389,7 @@ status** DataTransferStatus 1..1 Required. This indicates the success or failure
 Length undefined
 0..1 Optional. Data in response to request.
 
-[[diagnosticsstatusnotification_req]]
+[[diagnostics_status_notification_req]]
 === DiagnosticsStatusNotification.req
 
 This contains the field definition of the DiagnosticsStatusNotification.req PDU sent by the Charge Point to the
@@ -2493,14 +2397,14 @@ Central System. See also Diagnostics Status Notification
 **FIELD NAME FIELD TYPE CARD. DESCRIPTION
 status** DiagnosticsStatus 1..1 Required. This contains the status of the diagnostics upload.
 
-[[diagnosticsstatusnotification_conf]]
+[[diagnostics_status_notification_conf]]
 === DiagnosticsStatusNotification.conf
 
 This contains the field definition of the DiagnosticsStatusNotification.conf PDU sent by the Central System to the
 Charge Point in response to a DiagnosticsStatusNotification.req PDU. See also Diagnostics Status Notification
 No fields are defined.
 
-[[firmwarestatusnotification_req]]
+[[firmware_status_notification_req]]
 === FirmwareStatusNotification.req
 
 This contains the field definition of the FirmwareStatusNotifitacion.req PDU sent by the Charge Point to the
@@ -2508,14 +2412,14 @@ Central System. See also Firmware Status Notification
 **FIELD NAME FIELD TYPE CARD. DESCRIPTION
 status** FirmwareStatus 1..1 Required. This contains the progress status of the firmware installation.
 
-[[firmwarestatusnotification_conf]]
+[[firmware_status_notification_conf]]
 === FirmwareStatusNotification.conf
 
 This contains the field definition of the FirmwareStatusNotification.conf PDU sent by the Central System to the
 Charge Point in response to a FirmwareStatusNotification.req PDU. See also Firmware Status Notification
 No fields are defined.
 
-[[getcompositeschedule]]
+[[get_composite_schedule_req]]
 === GetCompositeSchedule.req
 
 This contains the field definition of the GetCompositeSchedule.req PDU sent by the Central System to the
@@ -2527,6 +2431,7 @@ the expected consumption for the grid connection.
 **duration** integer 1..1 Required. Time in seconds. length of requested schedule
 **chargingRateUnit** ChargingRateUnitType 0..1 Optional. Can be used to force a power or current profile
 
+[[get_composite_schedule_conf]]
 === GetCompositeSchedule.conf
 
 This contains the field definition of the GetCompositeSchedule.conf PDU sent by the Charge Point to the Central
@@ -2543,7 +2448,7 @@ If status is "Rejected", this field may be absent.
 consumption over time. Always relative to ScheduleStart.
 If status is "Rejected", this field may be absent.
 
-[[getconfiguration_req]]
+[[get_configuration_req]]
 === GetConfiguration.req
 
 This contains the field definition of the GetConfiguration.req PDU sent by the Central System to the Charge
@@ -2551,7 +2456,7 @@ Point. See also Get Configuration
 **FIELD NAME FIELD TYPE CARD. DESCRIPTION
 key** CiString50Type 0..\* Optional. List of keys for which the configuration value is requested.
 
-[[getconfiguration_conf]]
+[[get_configuration_conf]]
 === GetConfiguration.conf
 
 This contains the field definition of the GetConfiguration.conf PDU sent by Charge Point the to the Central
@@ -2560,7 +2465,7 @@ System in response to a GetConfiguration.req. See also Get Configuration
 configurationKey** KeyValue 0.._Optional. List of requested or known keys
 **unknownKey** CiString50Type 0.._ Optional. Requested keys that are unknown
 
-[[getdiagnostics]]
+[[get_diagnostics_req]]
 === GetDiagnostics.req
 
 This contains the field definition of the GetDiagnostics.req PDU sent by the Central System to the Charge Point.
@@ -2588,14 +2493,14 @@ fileName** CiString255Type 0..1 Optional. This contains the name of the file wit
 be uploaded. This field is not present when no diagnostic information is
 available.
 
-[[getlocallistversion_req]]
+[[get_local_list_version_req]]
 === GetLocalListVersion.req
 
 This contains the field definition of the GetLocalListVersion.req PDU sent by the Central System to the Charge
 Point. See also Get Local List Version
 No fields are defined.
 
-[[getlocallistversion_conf]]
+[[get_local_list_version_conf]]
 === GetLocalListVersion.conf
 
 This contains the field definition of the GetLocalListVersion.conf PDU sent by the Charge Point to Central System
@@ -2632,13 +2537,14 @@ Point.'0' (zero) is used to designate the main powermeter.
 **transactionId** integer 0..1 Optional. The transaction to which these meter samples are related.
 **meterValue** MeterValue 1..\* Required. The sampled meter values with timestamps.
 
+[[metervalues_conf]]
 === MeterValues.conf
 
 This contains the field definition of the MeterValues.conf PDU sent by the Central System to the Charge Point in
 response to a MeterValues.req PDU. See also Meter Values
 No fields are defined.
 
-[[remotestarttransaction_req]]
+[[remote_start_transaction_req]]
 === RemoteStartTransaction.req
 
 This contains the field definitions of the RemoteStartTransaction.req PDU sent to Charge Point by Central
@@ -2650,7 +2556,7 @@ connectorId SHALL be > 0
 **chargingProfile** ChargingProfile 0..1 Optional. Charging Profile to be used by the Charge Point for the requested
 transaction. ChargingProfilePurpose MUST be set to TxProfile
 
-[[remotestarttransaction_conf]]
+[[remote_start_transaction_conf]]
 === RemoteStartTransaction.conf
 
 This contains the field definitions of the RemoteStartTransaction.conf PDU sent from Charge Point to Central
@@ -2659,7 +2565,7 @@ System. See also Remote Start Transaction
 status** RemoteStartStopStatus 1..1 Required. Status indicating whether Charge Point accepts the
 request to start a transaction.
 
-[[remotestoptransaction_req]]
+[[remote_stop_transaction_req]]
 === RemoteStopTransaction.req
 
 This contains the field definitions of the RemoteStopTransaction.req PDU sent to Charge Point by Central
@@ -2668,7 +2574,7 @@ System. See also Remote Stop Transaction
 transactionId** integer 1..1 Required. The identifier of the transaction which Charge Point is requested to
 stop.
 
-[[remotestoptransaction_conf]]
+[[remote_stop_transaction_conf]]
 === RemoteStopTransaction.conf
 
 This contains the field definitions of the RemoteStopTransaction.conf PDU sent from Charge Point to Central
@@ -2677,7 +2583,7 @@ System. See also Remote Stop Transaction
 status** RemoteStartStopStatus 1..1 Required. Status indicating whether Charge Point accepts the
 request to stop a transaction.
 
-[[reservenow]]
+[[reserve_now_req]]
 === ReserveNow.req
 
 This contains the field definition of the ReserveNow.req PDU sent by the Central System to the Charge Point. See
@@ -2693,6 +2599,7 @@ idTag IdToken 1..1 Required. The identifier for which the Charge Point has to re
 parentIdTag IdToken 0..1 Optional. The parent idTag.
 reservationId integer 1..1 Required. Unique id for this reservation.
 
+[[reserve_now_conf]]
 === ReserveNow.conf
 
 This contains the field definition of the ReserveNow.conf PDU sent by the Charge Point to the Central System in
@@ -2700,7 +2607,7 @@ response to a ReserveNow.req PDU. See also Reserve Now
 **FIELD NAME FIELD TYPE CARD. DESCRIPTION
 status** ReservationStatus 1..1 Required. This indicates the success or failure of the reservation.
 
-[[reset]]
+[[reset_req]]
 === Reset.req
 
 This contains the field definition of the Reset.req PDU sent by the Central System to the Charge Point. See also
@@ -2708,6 +2615,7 @@ Reset
 **FIELD NAME FIELD TYPE CARD. DESCRIPTION
 type** ResetType 1..1 Required. This contains the type of reset that the Charge Point should perform.
 
+[[reset_conf]]
 === Reset.conf
 
 This contains the field definition of the Reset.conf PDU sent by the Charge Point to the Central System in
@@ -2766,7 +2674,7 @@ message successfully. This does not guarantee the schedule will be followed to
 the letter. There might be other constraints the Charge Point may need to take
 into account.
 
-[[starttransaction_req]]
+[[start_transaction_req]]
 === StartTransaction.req
 
 This section contains the field definition of the StartTransaction.req PDU sent by the Charge Point to the Central
@@ -2782,7 +2690,7 @@ transaction.
 this transaction.
 **timestamp** dateTime 1..1 Required. This contains the date and time on which the transaction is started.
 
-[[starttransaction_conf]]
+[[start_transaction_conf]]
 === StartTransaction.conf
 
 This contains the field definition of the StartTransaction.conf PDU sent by the Central System to the Charge Point
@@ -2792,7 +2700,7 @@ idTagInfo** IdTagInfo 1..1 Required. This contains information about authorizati
 parent id.
 **transactionId** integer 1..1 Required. This contains the transaction id supplied by the Central System.
 
-[[statusnotification]]
+[[status_notification_req]]
 === StatusNotification.req
 
 This contains the field definition of the StatusNotification.req PDU sent by the Charge Point to the Central
@@ -2814,6 +2722,7 @@ of receipt of the message will be assumed.
 vendorId CiString255Type 0..1 Optional. This identifies the vendor-specific implementation.
 vendorErrorCode CiString50Type 0..1 Optional. This contains the vendor-specific error code.
 
+[[status_notification_conf]]
 === StatusNotification.conf
 
 This contains the field definition of the StatusNotification.conf PDU sent by the Central System to the Charge
@@ -2924,6 +2833,7 @@ applies: If this element is present, then this entry SHALL be added or updated i
 the Local Authorization List. If this element is absent, than the entry for this
 idtag in the Local Authorization List SHALL be deleted.
 
+[[authorization_status]]
 === AuthorizationStatus
 
 _Enumeration_
@@ -2961,6 +2871,7 @@ Status in CancelReservation.conf.
 Accepted** Reservation for the identifier has been cancelled.
 **Rejected** Reservation could not be cancelled, because there is no reservation active for the identifier.
 
+[[chargepoint_errorcode]]
 === ChargePointErrorCode
 
 _Enumeration_
@@ -3322,6 +3233,7 @@ key** CiString50Type 1..1 Required.
 
 == value CiString500Type 0..1 Optional. If key is known but not set, this field may be absent
 
+[[location]]
 === Location
 
 == Enumeration
@@ -3340,6 +3252,7 @@ key** CiString50Type 1..1 Required.
 
 == Outlet Measurement at a Connector. Default value
 
+[[measurand]]
 === Measurand
 
 == Enumeration
@@ -3446,6 +3359,7 @@ frequency, the UnitOfMeasure for any SampledValue with measurand: Frequency is H
 
 == StatusNotification To trigger a StatusNotification request
 
+[[metervalue]]
 === MeterValue
 
 == Class
@@ -3460,6 +3374,7 @@ frequency, the UnitOfMeasure for any SampledValue with measurand: Frequency is H
 
 == sampledValue SampledValue 1..\* Required. One or more measured values
 
+[[phase]]
 === Phase
 
 _Enumeration_
@@ -3477,6 +3392,7 @@ L1** Measured on L1
 **L2-L3** Measured between L2 and L3
 **L3-L1** Measured between L3 and L1
 
+[[reading_context]]
 === ReadingContext
 
 _Enumeration_
@@ -3523,6 +3439,7 @@ Daily** The schedule restarts every 24 hours, at the same time as in the startSc
 VALUE DESCRIPTION
 Weekly The schedule restarts every 7 days, at the same time and day-of-the-week as in the startSchedule.
 
+[[registration_status]]
 === RegistrationStatus
 
 _Enumeration_
@@ -3574,6 +3491,7 @@ a "hard" reset, (queued) information might get lost.
 **Soft** Stop ongoing transactions gracefully and sending StopTransaction.req for every ongoing transaction. It should then restart the
 application software (if possible, otherwise restart the processor/controller).
 
+[[sampled_value]]
 === SampledValue
 
 _Class_
@@ -3605,6 +3523,7 @@ Accepted** Requested notification will be sent.
 **Rejected** Requested notification will not be sent.
 **NotImplemented** Requested notification cannot be sent because it is either not implemented or unknown.
 
+[[unit_of_measure]]
 === UnitOfMeasure
 
 _Enumeration_
@@ -3660,6 +3579,7 @@ Type of update for a SendLocalList.req.
 Differential** Indicates that the current Local Authorization List must be updated with the values in this message.
 **Full** Indicates that the current Local Authorization List must be replaced by the values in this message.
 
+[[value_format]]
 === ValueFormat
 
 _Enumeration_
@@ -3760,7 +3680,9 @@ accumulated (for "flow" type measurands such as energy), or averaged (for other 
 interval, at the beginning or end of a Transaction), and transmitted (if so enabled) at the end of each interval, bearing the
 interval start time timestamp.
 A value of "0" (numeric zero), by convention, is to be interpreted to mean that no clock-aligned data should be transmitted.
-**9.1.6.** ConnectionTimeOut
+
+[[connection_timeout]]
+==== ConnectionTimeOut
 **Required/optional** required
 **Accessibility** RW
 **Type** integer
@@ -3769,7 +3691,9 @@ A value of "0" (numeric zero), by convention, is to be interpreted to mean that 
 **Description** Interval \*from beginning of status: 'Preparing' until incipient Transaction is automatically canceled, due to failure of EV driver to
 (correctly) insert the charging cable connector(s) into the appropriate socket(s). The Charge Point SHALL go back to the original
 state, probably: 'Available'.
-**9.1.7.** ConnectorPhaseRotation
+
+[[connector_phase_rotation]]
+==== ConnectorPhaseRotation
 **Required/optional** required
 **Accessibility** RW
 **Type** CSL
@@ -3876,7 +3800,9 @@ Default: "Energy.Active.Import.Register"
 session data (ConnectorId>0), samples are acquired and transmitted periodically at this interval from the start of the charging
 transaction.
 A value of "0" (numeric zero), by convention, is to be interpreted to mean that no sampled data should be transmitted.
-**9.1.20.** MinimumStatusDuration
+
+[[minimum_status_duration]]
+==== MinimumStatusDuration
 **Required/optional** optional
 **Accessibility** RW
 **Type** integer
@@ -3895,7 +3821,9 @@ Central System.
 **Type** integer
 **Unit** times
 **Description** Number of times to retry an unsuccessful reset of the Charge Point.
-**9.1.23.** StopTransactionOnEVSideDisconnect
+
+[[stop_transaction_on_evside_disconnect]]
+==== StopTransactionOnEVSideDisconnect
 **Required/optional** required
 **Accessibility** RW
 **Type** boolean

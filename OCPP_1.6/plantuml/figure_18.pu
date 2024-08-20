@@ -1,0 +1,17 @@
+@startuml figure_18
+!include style.puml
+
+participant "Charge Point" as ChargePoint
+participant "Central System" as CentralSystem
+
+ChargePoint -> CentralSystem : MeterValues.req(connectorId, meterValue, [transactionId])
+
+activate ChargePoint
+activate CentralSystem
+
+CentralSystem -> ChargePoint : MeterValues.conf()
+
+deactivate CentralSystem
+deactivate ChargePoint
+
+@enduml

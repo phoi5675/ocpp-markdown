@@ -104,5 +104,11 @@ div {
     font-family: Rockwell;
     text-align:center;
   }
+
+  .rotated-90 {
+    display: flex;
+    transform: rotate(90deg);
+    margin: 50px 0px 50px 0px;
+  }
 }
 

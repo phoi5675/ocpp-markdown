@@ -1,0 +1,17 @@
+@startuml figure_20
+!include style.puml
+
+participant "Charge Point" as ChargePoint
+participant "Central System" as CentralSystem
+
+ChargePoint -> CentralSystem : StatusNotification.req(connectorId, errorCode, status, [timestamp], [info], [vendorId], [vendorErrorCode])
+
+activate ChargePoint
+activate CentralSystem
+
+CentralSystem -> ChargePoint : StatusNotification.conf()
+
+deactivate CentralSystem
+deactivate ChargePoint
+
+@enduml

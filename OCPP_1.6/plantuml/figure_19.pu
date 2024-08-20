@@ -1,0 +1,17 @@
+@startuml figure_19
+!include style.puml
+
+participant "Charge Point" as ChargePoint
+participant "Central System" as CentralSystem
+
+ChargePoint -> CentralSystem : StartTransaction.req(connectorId, idTag, meterStart, timestamp, [reservationId])
+
+activate ChargePoint
+activate CentralSystem
+
+CentralSystem -> ChargePoint : StartTransaction.conf(idTagInfo, transactionId)
+
+deactivate CentralSystem
+deactivate ChargePoint
+
+@enduml
