@@ -1,0 +1,17 @@
+@startuml figure_22
+!include style.puml
+
+participant "Charge Point" as ChargePoint
+participant "Central System" as CentralSystem
+
+ChargePoint -> CentralSystem : CancelReservation.req(reservationId)
+
+activate ChargePoint
+activate CentralSystem
+
+CentralSystem -> ChargePoint : CancelReservation.conf(status)
+
+deactivate CentralSystem
+deactivate ChargePoint
+
+@enduml

@@ -405,8 +405,8 @@ The grouping of all messages in their profiles can be found in the table below.
 
 |<<authorize_req,Authorize>>                                          |X | | | | | 
 |<<bootnotification_req,BootNotification>>                            |X | | | | |
-|<<changeavailability,ChangeAvailability>>                        |X | | | | |
-|<<changeconfiguration_req,ChangeConfiguration>>                      |X | | | | |
+|<<change_availability_req,ChangeAvailability>>                        |X | | | | |
+|<<change_configuration_req,ChangeConfiguration>>                      |X | | | | |
 |<<clearcache,ClearCache>>                                        |X | | | | |
 |<<datatransfer_req,DataTransfer>>                                    |X | | | | |
 |<<get_configuration_req,GetConfiguration>>                            |X | | | | |
@@ -425,7 +425,7 @@ The grouping of all messages in their profiles can be found in the table below.
 |<<updatefirmware,UpdateFirmware>>                                | |X | | | |
 |<<get_local_list_version_req,GetLocalListVersion>>                      | | |X | | |
 |<<sendlocallist,SendLocalList>>                                  | | |X | | |
-|<<cancelreservation,CancelReservation>>                          | | | |X | |
+|<<cancel_reservation_req,CancelReservation>>                          | | | |X | |
 |<<reserve_now_req,ReserveNow>>                                        | | | |X | |
 |<<clearchargingprofile,ClearChargingProfile>>                    | | | | |X |
 |<<get_composite_schedule_req_req,GetCompositeSchedule>>                    | | | | |X |
@@ -1001,7 +1001,7 @@ When a Central System sends a ChangeConfiguration.req to a Charge Point with one
 * <<stoptxnaligneddata,StopTxnAlignedData>>
 * <<stoptxnsampleddata,StopTxnSampledData>>
 
-If the comma separated list contains one or more measurands that are not supported by this Charge Point, the Charge Point SHALL respond with: <<changeconfiguration_conf,ChangeConfiguration.conf>> with: _status_ = _Rejected_. No changes SHALL be made to the currently configuration.
+If the comma separated list contains one or more measurands that are not supported by this Charge Point, the Charge Point SHALL respond with: <<change_configuration_conf,ChangeConfiguration.conf>> with: _status_ = _Rejected_. No changes SHALL be made to the currently configuration.
 
 [[no_metering_data_in_a_stop_transaction]]
 ==== No metering data in a Stop Transaction
@@ -1112,7 +1112,7 @@ With JSON over WebSocket, sending heartbeats is not mandatory. However, for time
 .Sequence Diagram: Meter Values
 image::images/figure_18.svg[Sequence Diagram: Meter Values]
 
-A Charge Point MAY sample the electrical meter or other sensor/transducer hardware to provide extra information about its meter values. It is up to the Charge Point to decide when it will send meter values. This can be configured using the <<changeconfiguration_req,ChangeConfiguration.req>> message to data acquisition intervals and specify data to be acquired & reported.
+A Charge Point MAY sample the electrical meter or other sensor/transducer hardware to provide extra information about its meter values. It is up to the Charge Point to decide when it will send meter values. This can be configured using the <<change_configuration_req,ChangeConfiguration.req>> message to data acquisition intervals and specify data to be acquired & reported.
 
 The Charge Point SHALL send a <<metervalues_req,MeterValues.req>> PDU for offloading meter values. The request PDU SHALL contain for each sample:
 
@@ -1398,120 +1398,68 @@ It is likely that The Central System applies sanity checks to the data contained
 
 If Charge Point has implemented an Authorization Cache, then upon receipt of a <<stop_transaction_conf,StopTransaction.conf>> PDU the Charge Point SHALL update the cache entry, if the idTag is not in the <<local_authorization_list,Local Authorization List>>, with the <<id_tag_info,IdTagInfo>> value from the response as described under <<authorization_cache,Authorization Cache>>.
 
+<<<
+
 [[operations_initiated_by_central_system]]
 == Operations Initiated by Central System
 
 [[cancel_reservation]]
 === Cancel Reservation
 
-== Charge Point Central System
+.Sequence Diagram: Cancel Reservation
+image::images/figure_22.svg[Sequence Diagram: Cancel Reservation]
 
-== CancelReservation.req(reservationId)
+To cancel a reservation the Central System SHALL send an <<cancel_reservation_req,CancelReservation.req>> PDU to the Charge Point.
 
-== CancelReservation.conf(status)
-
-== Figure 22. Sequence Diagram: Cancel Reservation
-
-== To cancel a reservation the Central System SHALL send an CancelReservation.req PDU to the Charge Point
-
-== If the Charge Point has a reservation matching the reservationId in the request PDU, it SHALL return status
-
-== 'Accepted'. Otherwise it SHALL return 'Rejected'
+If the Charge Point has a reservation matching the reservationId in the request PDU, it SHALL return status 'Accepted'. Otherwise it SHALL return 'Rejected'
 
 [[change_availability]]
 === Change Availability
 
-== Charge Point Central System
+.Sequence Diagram: Change Availability
+image::images/figure_23.svg[Sequence Diagram: Change Availability]
 
-== ChangeAvailability.req(connectorId, type)
+Central System can request a Charge Point to change its availability. A Charge Point is considered available (“operative”) when it is charging or ready for charging. A Charge Point is considered unavailable when it does not allow any charging. The Central System SHALL send a <<change_availability_req,ChangeAvailability.req>> PDU for requesting a Charge Point to change its availability. The Central System can change the availability to available or unavailable.
 
-== ChangeAvailability.conf(status)
+Upon receipt of a <<change_availability_req,ChangeAvailability.req>> PDU, the Charge Point SHALL respond with a <<change_availability_conf,ChangeAvailability.conf>> PDU. The response PDU SHALL indicate whether the Charge Point is able to change to the requested availability or not. When a transaction is in progress Charge Point SHALL respond with availability status 'Scheduled' to indicate that it is scheduled to occur after the transaction has finished.
 
-== Figure 23. Sequence Diagram: Change Availability
+In the event that Central System requests Charge Point to change to a status it is already in, Charge Point SHALL respond with availability status 'Accepted'.
 
-== Central System can request a Charge Point to change its availability. A Charge Point is considered available
+When an availability change requested with a <<change_availability_req,ChangeAvailability.req>> PDU has happened, the Charge Point SHALL inform Central System of its new availability status with a StatusNotification.req as described there.
 
-== (“operative”) when it is charging or ready for charging. A Charge Point is considered unavailable when it does not
+[cols="1,10"]
+|===
+|[.info-icon]#i# |
+In the case the <<change_availability_req,ChangeAvailability.req>> contains ConnectorId = 0, the status change applies to the Charge Point and all Connectors.
+|===
 
-== allow any charging. The Central System SHALL send a ChangeAvailability.req PDU for requesting a Charge Point
-
-== to change its availability. The Central System can change the availability to available or unavailable
-
-== Upon receipt of a ChangeAvailability.req PDU, the Charge Point SHALL respond with a ChangeAvailability.conf
-
-== PDU. The response PDU SHALL indicate whether the Charge Point is able to change to the requested availability
-
-== or not. When a transaction is in progress Charge Point SHALL respond with availability status 'Scheduled' to
-
-== indicate that it is scheduled to occur after the transaction has finished
-
-== In the event that Central System requests Charge Point to change to a status it is already in, Charge Point SHALL
-
-== respond with availability status 'Accepted'
-
-== When an availability change requested with a ChangeAvailability.req PDU has happened, the Charge Point SHALL
-
-== inform Central System of its new availability status with a StatusNotification.req as described there
-
-
-
-== In the case the ChangeAvailability.req contains ConnectorId = 0, the status change applies to
-
-== the Charge Point and all Connectors
-
- Persistent states: for example: Connector set to Unavailable shall persist a reboot
+[cols="1,10"]
+|===
+|[.info-icon]#i# |
+Persistent states: for example: Connector set to Unavailable shall persist a reboot.
+|===
 
 === Change Configuration
 
-== Charge Point Central System
+.Sequence Diagram: Change Configuration
+image::images/figure_24.svg[Sequence Diagram: Change Configuration]
 
-== ChangeConfiguration.req(key, value)
+Central System can request a Charge Point to change configuration parameters. To achieve this, Central System SHALL send a <<change_configuration_req,ChangeConfiguration.req>>. This request contains a key-value pair, where "key" is the name of the configuration setting to change and "value" contains the new setting for the configuration setting.
 
-== ChangeConfiguration.conf(status)
+Upon receipt of a <<change_configuration_req,ChangeConfiguration.req>> Charge Point SHALL reply with a <<change_configuration_conf,ChangeConfiguration.conf>> indicating whether it was able to apply the change to its configuration. Content of "key" and "value" is not prescribed. The Charge Point SHALL set the status field in the ChangeConfiguration.conf according to the following rules:
 
-== Figure 24. Sequence Diagram: Change Configuration
+* If the change was applied successfully, and the change if effective immediately, the Charge Point SHALL respond with a status 'Accepted'.
+* If the change was applied successfully, but a reboot is needed to make it effective, the Charge Point SHALL respond with status 'RebootRequired'.
+* If "key" does not correspond to a configuration setting supported by Charge Point, it SHALL respond with a status 'NotSupported'.
+* If the Charge Point did not set the configuration, and none of the previous statuses applies, the Charge Point SHALL respond with status 'Rejected'.
 
-== Central System can request a Charge Point to change configuration parameters. To achieve this, Central System
+[cols="1,10"]
+|===
+|[.info-icon]#i# |
+Examples of Change Configuration requests to which a Charge Point responds with a ChangeConfiguration.conf with a status of 'Rejected' are requests with out-of-range values and requests with values that do not conform to an expected format.
+|===
 
-== SHALL send a ChangeConfiguration.req. This request contains a key-value pair, where "key" is the name of the
-
-== configuration setting to change and "value" contains the new setting for the configuration setting
-
-== Upon receipt of a ChangeConfiguration.req Charge Point SHALL reply with a ChangeConfiguration.conf
-
-== indicating whether it was able to apply the change to its configuration. Content of "key" and "value" is not
-
-== prescribed. The Charge Point SHALL set the status field in the ChangeConfiguration.conf according to the
-
-== following rules
-
-== • If the change was applied successfully, and the change if effective immediately, the Charge Point SHALL
-
-== respond with a status 'Accepted'
-
-== • If the change was applied successfully, but a reboot is needed to make it effective, the Charge Point SHALL
-
-== respond with status 'RebootRequired'
-
-== • If "key" does not correspond to a configuration setting supported by Charge Point, it SHALL respond with
-
-== a status 'NotSupported'
-
-== • If the Charge Point did not set the configuration, and none of the previous statuses applies, the Charge
-
-== Point SHALL respond with status 'Rejected'
-
-
-
-== Examples of Change Configuration requests to which a Charge Point responds with a
-
-== ChangeConfiguration.conf with a status of 'Rejected' are requests with out-of-range values and
-
-== requests with values that do not conform to an expected format
-
-== If a key value is defined as a CSL, it MAY be accompanied with a [KeyName]MaxLength key, indicating the max
-
-== length of the CSL in items. If this key is not set, a safe value of 1 (one) item SHOULD be assumed
+If a key value is defined as a CSL, it MAY be accompanied with a `[KeyName]MaxLength` key, indicating the max length of the CSL in items. If this key is not set, a safe value of 1 (one) item SHOULD be assumed.
 
 === Clear Cache
 
@@ -2220,7 +2168,7 @@ sending a next BootNotification request.
 **status** RegistrationStatus 1..1 Required. This contains whether the Charge Point has been registered within the
 System Central.
 
-[[cancelreservation]]
+[[cancel_reservation_req]]
 === CancelReservation.req
 
 This contains the field definition of the CancelReservation.req PDU sent by the Central System to the Charge
@@ -2228,6 +2176,7 @@ Point. See also Cancel Reservation
 **FIELD NAME FIELD TYPE CARD. DESCRIPTION
 reservationId** integer 1..1 Required. Id of the reservation to cancel.
 
+[[cancel_reservation_conf]]
 === CancelReservation.conf
 
 This contains the field definition of the CancelReservation.conf PDU sent by the Charge Point to the Central
@@ -2236,7 +2185,7 @@ System in response to a CancelReservation.req PDU. See also Cancel Reservation
 status** CancelReservationStatus 1..1 Required. This indicates the success or failure of the cancelling of
 a reservation by Central System.
 
-[[changeavailability]]
+[[change_availability_req]]
 === ChangeAvailability.req
 
 This contains the field definition of the ChangeAvailability.req PDU sent by the Central System to the Charge
@@ -2251,6 +2200,7 @@ to change.
 type AvailabilityType 1..1 Required. This contains the type of availability change that the Charge Point
 should perform.
 
+[[change_availability_conf]]
 === ChangeAvailability.conf
 
 This contains the field definition of the ChangeAvailability.conf PDU return by Charge Point to Central System.
@@ -2259,7 +2209,7 @@ See also Change Availability
 status** AvailabilityStatus 1..1 Required. This indicates whether the Charge Point is able to perform the
 availability change.
 
-[[changeconfiguration_req]]
+[[change_configuration_req]]
 === ChangeConfiguration.req
 
 This contains the field definition of the ChangeConfiguration.req PDU sent by Central System to Charge Point. It
@@ -2271,7 +2221,7 @@ See for standard configuration key names and associated values
 **value** CiString500Type 1..1 Required. The new value as string for the setting.
 See for standard configuration key names and associated values
 
-[[changeconfiguration_conf]]
+[[change_configuration_conf]]
 === ChangeConfiguration.conf
 
 This contains the field definition of the ChangeConfiguration.conf PDU returned from Charge Point to Central
