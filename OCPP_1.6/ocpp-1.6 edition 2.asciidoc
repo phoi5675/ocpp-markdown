@@ -417,7 +417,7 @@ The grouping of all messages in their profiles can be found in the table below.
 |<<reset_req,Reset>>                                                  |X | | | | |
 |<<start_transaction_conf,StartTransaction>>                            |X | | | | |
 |<<status_notification_req,StatusNotification>>                        |X | | | | |
-|<<stoptransaction_req,StopTransaction>>                              |X | | | | |
+|<<stop_transaction_req,StopTransaction>>                              |X | | | | |
 |<<unlockconnector,UnlockConnector>>                              |X | | | | |
 |<<get_diagnostics_req,GetDiagnostics>>                                | |X | | | |
 |<<diagnostics_status_notification_req,DiagnosticsStatusNotification>>  | |X | | | |
@@ -430,7 +430,7 @@ The grouping of all messages in their profiles can be found in the table below.
 |<<clearchargingprofile,ClearChargingProfile>>                    | | | | |X |
 |<<get_composite_schedule_req_req,GetCompositeSchedule>>                    | | | | |X |
 |<<setchargingprofile,SetChargingProfile>>                        | | | | |X |
-|<<triggermessage_req,TriggerMessage>>                                | | | | | | X
+|<<trigger_message_req,TriggerMessage>>                                | | | | | | X
 |===
 
 The support for the specific feature profiles is reported by the <<supportedfeatureprofiles,`SupportedFeatureProfiles`>> configuration key.
@@ -489,9 +489,9 @@ A Charge Point MAY implement an _Authorization Cache_ that autonomously maintain
 If implemented, the Authorization Cache SHOULD conform to the following semantics:
 
 * The Cache contains all the latest received identifiers (i.e. valid and NOT-valid).
-* The Cache is updated using all received <<idtaginfo,IdTagInfo>> (from <<authorize_conf,Authorize.conf>>, <<start_transaction_conf,StartTransaction.conf>> and <<stoptransaction_conf,StopTransaction.conf>>)
+* The Cache is updated using all received <<id_tag_info,IdTagInfo>> (from <<authorize_conf,Authorize.conf>>, <<start_transaction_conf,StartTransaction.conf>> and <<stop_transaction_conf,StopTransaction.conf>>)
 * When the validity of a Cache entry expires, it SHALL be changed to expired in the Cache.
-* When an <<idtaginfo,IdTagInfo>> is received for an identifier in the Cache, it SHALL be updated.
+* When an <<id_tag_info,IdTagInfo>> is received for an identifier in the Cache, it SHALL be updated.
 * If new identifier authorization data is received and the Authorization Cache is full, the Charge Point SHALL remove any NOT-valid entries, and then, if necessary, the oldest valid entries to make space for the new entry.
 * Cache values SHOULD be stored in non-volatile memory, and SHOULD be persisted across reboots and power outages.
 * When an identifier is presented that is stored in the cache as NOT-valid, and the Charge Point is _online_ : an <<authorize_req,Authorize.req>> SHOULD be sent to the central System to check the current state of the identifier.
@@ -505,7 +505,7 @@ The Local Authorization List is a list of identifiers that can be synchronized w
 
 The list contains the authorization status of all (or a selection of) identifiers and the authorization status/expiration date.
 
-Identifiers in the Local Authorization list can be marked as **valid** , **expired** , **(temporarily) blocked** , or **blacklisted** , corresponding to <<idtaginfo,IdTagInfo>> _status_ values _Accepted_ / _ConcurrentTx_ , _Expired_ , _Blocked_ , and _Invalid_, respectively.
+Identifiers in the Local Authorization list can be marked as **valid** , **expired** , **(temporarily) blocked** , or **blacklisted** , corresponding to <<id_tag_info,IdTagInfo>> _status_ values _Accepted_ / _ConcurrentTx_ , _Expired_ , _Blocked_ , and _Invalid_, respectively.
 
 These values may be used to provide more fine grained information to users (e.g. by display message) during local authorization.
 
@@ -548,8 +548,8 @@ Operation of the Unknown Offline Authorization capability, when supported, is re
 
 When connection to the Central Server is restored, the Charge Point SHALL send a <<start_transaction,Start Transaction>> request for any transaction that was authorized offline , as required by <<transaction_related_messages,transaction-related message handling>>. When the authorization status in the <<start_transaction_conf,StartTransaction.conf>> is not _Accepted_, and the transaction is still ongoing, the Charge Point SHOULD:
 
-* when <<stoptransactiononinvalidid,`StopTransactionOnInvalidId`>> is set to _true_: stop the transaction normally as stated in <<stop_transaction,Stop Transaction>>. The Reason field in the Stop Transaction request should be set to DeAuthorized. If the Charge Point has the possibility to lock the Charging Cable, it SHOULD keep the Charging Cable locked until the owner presents his identifier.
-* when <<stoptransactiononinvalidid,StopTransactionOnInvalidId>> is set to _false_: only stop energy delivery to the vehicle.
+* when <<stop_transactiononinvalidid,`StopTransactionOnInvalidId`>> is set to _true_: stop the transaction normally as stated in <<stop_transaction,Stop Transaction>>. The Reason field in the Stop Transaction request should be set to DeAuthorized. If the Charge Point has the possibility to lock the Charging Cable, it SHOULD keep the Charging Cable locked until the owner presents his identifier.
+* when <<stop_transactiononinvalidid,StopTransactionOnInvalidId>> is set to _false_: only stop energy delivery to the vehicle.
 
 [cols="1,10"]
 |===
@@ -579,7 +579,7 @@ image::images/figure_5.svg[OCPP Charging Session and transaction definition]
 
 This section is normative.
 
-The Charge Point SHOULD deliver transaction-related messages to the Central System in chronological order as soon as possible. Transaction-related messages are <<start_transaction_req,StartTransaction.req>>, <<stoptransaction_req,StopTransaction.req>> and periodic or clock-aligned <<metervalues_req,MeterValues.req>> messages.
+The Charge Point SHOULD deliver transaction-related messages to the Central System in chronological order as soon as possible. Transaction-related messages are <<start_transaction_req,StartTransaction.req>>, <<stop_transaction_req,StopTransaction.req>> and periodic or clock-aligned <<metervalues_req,MeterValues.req>> messages.
 
 When _offline_ , the Charge Point MUST queue any transaction-related messages that it would have sent to the Central System if the Charge Point had been online.
 
@@ -643,7 +643,7 @@ This section is normative.
 
 A Central System has the ability to treat a set of identity tokens as a “group”, thereby allowing any one token in the group to start a transaction and for the same token, or another token in the same group, to stop the transaction. This supports the common use-cases of families or businesses with multiple drivers using one or more shared electric vehicles on a single recharging contract account.
 
-Tokens (idTags) are grouped for authorization purposes by specifying a common group identifier in the optional ParentId element in <<idtaginfo,IdTagInfo>>: two idTags are considered to be in the same group if their ParentId Tags match.
+Tokens (idTags) are grouped for authorization purposes by specifying a common group identifier in the optional ParentId element in <<id_tag_info,IdTagInfo>>: two idTags are considered to be in the same group if their ParentId Tags match.
 
 [cols="1,10"]
 |===
@@ -935,7 +935,7 @@ Extensive metering data relating to charging sessions can be recorded and transm
 
 * <<,Clock-Aligned Meter Values>>
 
-Both types of meter readings MAY be reported in standalone <<metervalues_req,MeterValues.req>> messages (during a transaction) and/or as part of the transactionData element of the <<stoptransaction_req,StopTransaction.req>> PDU.
+Both types of meter readings MAY be reported in standalone <<metervalues_req,MeterValues.req>> messages (during a transaction) and/or as part of the transactionData element of the <<stop_transaction_req,StopTransaction.req>> PDU.
 
 [[charging_session_meter_values]]
 ==== Charging Session Meter Values
@@ -1021,9 +1021,9 @@ Before the owner of an electric vehicle can start or stop charging, the Charge P
 
 A Charge Point MAY authorize identifier locally without involving the Central System, as described in Local Authorization List. If an idTag presented by the user is not present in the <<local_authorization_list,Local Authorization List>> or Authorization Cache, then the Charge Point SHALL send an <<authorize_req,Authorize.req>> PDU to the Central System to request authorization. If the idTag is present in the Local Authorization List or Authorization Cache, then the Charge Point MAY send an Authorize.req PDU to the Central System.
 
-Upon receipt of an <<authorize_req,Authorize.req>> PDU, the Central System SHALL respond with an <<authorize_conf,Authorize.conf>> PDU. This response PDU SHALL indicate whether or not the idTag is accepted by the Central System. If the Central System accepts the idTag then the response PDU MAY include a <<idtaginfo,**parentIdTag**>> and MUST include an authorization status value indicating acceptance or a reason for rejection.
+Upon receipt of an <<authorize_req,Authorize.req>> PDU, the Central System SHALL respond with an <<authorize_conf,Authorize.conf>> PDU. This response PDU SHALL indicate whether or not the idTag is accepted by the Central System. If the Central System accepts the idTag then the response PDU MAY include a <<id_tag_info,**parentIdTag**>> and MUST include an authorization status value indicating acceptance or a reason for rejection.
 
-If Charge Point has implemented an Authorization Cache, then upon receipt of an <<authorize_conf,Authorize.conf>> PDU the Charge Point SHALL update the cache entry, if the idTag is not in the <<local_authorization_list,Local Authorization List>>, with the <<idtaginfo,IdTagInfo>> value from the response as described under Authorization Cache.
+If Charge Point has implemented an Authorization Cache, then upon receipt of an <<authorize_conf,Authorize.conf>> PDU the Charge Point SHALL update the cache entry, if the idTag is not in the <<local_authorization_list,Local Authorization List>>, with the <<id_tag_info,IdTagInfo>> value from the response as described under Authorization Cache.
 
 === Boot Notification
 
@@ -1034,11 +1034,11 @@ After start-up, a Charge Point SHALL send a request to the Central System with i
 
 The Charge Point SHALL send a <<bootnotification_req,BootNotification.req>> PDU each time it boots or reboots. Between the physical power-on/reboot and the successful completion of a BootNotification, where Central System returns _Accepted_ or _Pending_ , the Charge Point SHALL NOT send any other request to the Central System. This includes cached messages that are still present in the Charge Point from before.
 
-When the Central System responds with a <<bootnotification_conf,BootNotification.conf>> with a status _Accepted_ , the Charge Point will adjust the heartbeat interval in accordance with the interval from the response PDU and it is RECOMMENDED to synchronize its internal clock with the supplied Central System's current time. If the Central System returns something other than _Accepted_ , the value of the interval field indicates the minimum wait time before sending a next BootNotification request. If that interval value is zero, the Charge Point chooses a waiting interval on its own, in a way that avoids flooding the Central System with requests. A Charge Point SHOULD NOT send a <<bootnotification_req,BootNotification.req>> earlier, unless requested to do so with a <<triggermessage_req,TriggerMessage.req>>.
+When the Central System responds with a <<bootnotification_conf,BootNotification.conf>> with a status _Accepted_ , the Charge Point will adjust the heartbeat interval in accordance with the interval from the response PDU and it is RECOMMENDED to synchronize its internal clock with the supplied Central System's current time. If the Central System returns something other than _Accepted_ , the value of the interval field indicates the minimum wait time before sending a next BootNotification request. If that interval value is zero, the Charge Point chooses a waiting interval on its own, in a way that avoids flooding the Central System with requests. A Charge Point SHOULD NOT send a <<bootnotification_req,BootNotification.req>> earlier, unless requested to do so with a <<trigger_message_req,TriggerMessage.req>>.
 
 If the Central System returns the status _Rejected_ , the Charge Point SHALL NOT send any OCPP message to the Central System until the aforementioned retry interval has expired. During this interval the Charge Point may no longer be reachable from the Central System. It MAY for instance close its communication channel or shut down its communication hardware. Also the Central System MAY close the communication channel, for instance to free up system resources. While _Rejected_ , the Charge Point SHALL NOT respond to any Central System initiated message. the Central System SHOULD NOT initiate any.
 
-The Central System MAY also return a _Pending_ registration status to indicate that it wants to retrieve or set certain information on the Charge Point before the Central System will accept the Charge Point. If the Central System returns the _Pending_ status, the communication channel SHOULD NOT be closed by either the Charge Point or the Central System. The Central System MAY send request messages to retrieve information from the Charge Point or change its configuration. The Charge Point SHOULD respond to these messages. The Charge Point SHALL NOT send request messages to the Central System unless it has been instructed by the Central System to do so with a <<triggermessage_req,TriggerMessage.req>> request.
+The Central System MAY also return a _Pending_ registration status to indicate that it wants to retrieve or set certain information on the Charge Point before the Central System will accept the Charge Point. If the Central System returns the _Pending_ status, the communication channel SHOULD NOT be closed by either the Charge Point or the Central System. The Central System MAY send request messages to retrieve information from the Charge Point or change its configuration. The Charge Point SHOULD respond to these messages. The Charge Point SHALL NOT send request messages to the Central System unless it has been instructed by the Central System to do so with a <<trigger_message_req,TriggerMessage.req>> request.
 
 While in _pending_ state, the following Central System initiated messages are not allowed: <<remote_start_transaction_req,RemoteStartTransaction.req>> and <<remote_stop_transaction_req,RemoteStopTransaction.req>>
 
@@ -1166,9 +1166,9 @@ Upon receipt of a StartTransaction.req PDU, the Central System SHOULD respond wi
 
 The Central System MUST verify validity of the identifier in the <<start_transaction_req,StartTransaction.req>> PDU, because the identifier might have been authorized locally by the Charge Point using outdated information. The identifier, for instance, may have been blocked since it was added to the Charge Point's <<authorization_cache,Authorization Cache>>.
 
-If Charge Point has implemented an Authorization Cache, then upon receipt of a <<start_transaction_conf,StartTransaction.conf>> PDU the Charge Point SHALL update the cache entry, if the idTag is not in the Local Authorization List, with the <<idtaginfo,IdTagInfo>> value from the response as described under Authorization Cache.
+If Charge Point has implemented an Authorization Cache, then upon receipt of a <<start_transaction_conf,StartTransaction.conf>> PDU the Charge Point SHALL update the cache entry, if the idTag is not in the Local Authorization List, with the <<id_tag_info,IdTagInfo>> value from the response as described under Authorization Cache.
 
-It is likely that The Central System applies sanity checks to the data contained in a <<start_transaction_req,StartTransaction.req>> it received. The outcome of such sanity checks SHOULD NOT ever cause the Central System to not respond with a <<start_transaction_conf,StartTransaction.conf>>. Failing to respond with a <<start_transaction_conf,StartTransaction.conf>> will only cause the Charge Point to try the same message again as specified in <<error_responses_to_transaction_related_messages,Error responses to transaction-related messages>>.
+It is likely that The Central System applies sanity checks to the data contained in a <<start_transaction_req,StartTransaction.req>> it received. The outcome of such sanity checks SHOULD NOT ever cause the Central System to not respond with a <<start_transaction_conf,StartTransaction.conf>>. Failing to respond with a <<start_transaction_conf,StartTransaction.conf>> will only cause the Charge Point to try the same message again as specified in <<error_responses_to_transaction_wrelated_messages,Error responses to transaction-related messages>>.
 
 [[status_notification]]
 === Status Notification
@@ -1353,93 +1353,50 @@ Upon receipt of a <<status_notification_req,StatusNotification.req>> PDU, the Ce
 [[stop_transaction]]
 === Stop Transaction
 
-Charge Point Central System
-StopTransaction.req(meterStop, timestamp,
-transactionId, reason, [idTag], [transactionData])
-StopTransaction.conf([idTagInfo])
-_Figure 21. Sequence Diagram: Stop Transaction_
-When a transaction is stopped, the Charge Point SHALL send a StopTransaction.req PDU, notifying to the Central
-System that the transaction has stopped.
-A StopTransaction.req PDU MAY contain an optional TransactionData element to provide more details about
-transaction usage. The optional TransactionData element is a container for any number of MeterValues, using
-the same data structure as the **meterValue** elements of the MeterValues.req PDU (See section MeterValues)
-Upon receipt of a StopTransaction.req PDU, the Central System SHALL respond with a StopTransaction.conf PDU.
+.Sequence Diagram: Stop Transaction
+image::images/figure_21.svg[Sequence Diagram: Stop Transaction]
 
-== The Central System cannot prevent a transaction from stopping. It MAY only inform the Charge
+When a transaction is stopped, the Charge Point SHALL send a <<stop_transaction_req,StopTransaction.req>> PDU, notifying to the Central System that the transaction has stopped.
 
-== Point it has received the StopTransaction.req and MAY send information about the idTag used
+A <<stop_transaction_req,StopTransaction.req>> PDU MAY contain an optional <<stop_transaction_conf,TransactionData>> element to provide more details about transaction usage. The optional <<stop_transaction_conf,TransactionData>> element is a container for any number of <<metervalue,MeterValues>>, using the same data structure as the **meterValue** elements of the <<metervalues_req,MeterValues.req>> PDU (See section <<metervalue,MeterValues>>)
 
-== to stop the transaction. This information SHOULD be used to update the Authorization Cache
+Upon receipt of a <<stop_transaction_req,StopTransaction.req>> PDU, the Central System SHALL respond with a <<stop_transaction_conf,StopTransaction.conf>> PDU.
 
-== if implemented
+[cols="1,10"]
+|===
+|[.info-icon]#i# |
+<<chargepoint_errorcode,ChargePointErrorCode>> _EVCommunicationError_ SHALL only be used with status Preparing, SuspendedEV, SuspendedEVSE and Finishing and be treated as warning.
+|===
 
-== The idTag in the request PDU MAY be omitted when the Charge Point itself needs to stop the transaction. For
+The Central System cannot prevent a transaction from stopping. It MAY only inform the Charge Point it has received the <<stop_transaction_req,StopTransaction.req>> and MAY send information about the idTag used to stop the transaction. This information SHOULD be used to update the <<authorization_cache,Authorization Cache>> if implemented.
 
-== instance, when the Charge Point is requested to reset
+The idTag in the request PDU MAY be omitted when the Charge Point itself needs to stop the transaction. For instance, when the Charge Point is requested to reset.
 
-== If a transaction is ended in a normal way (e.g. EV-driver presented his identification to stop the transaction), the
+If a transaction is ended in a normal way (e.g. EV-driver presented his identification to stop the transaction), the <<reason,Reason>> element MAY be omitted and the <<reason,Reason>> SHOULD be assumed 'Local'. If the transaction is not ended normally, the <<reason,Reason>> SHOULD be set to a correct value. As part of the normal transaction termination, the Charge Point SHALL unlock the cable (if not permanently attached).
 
-== Reason element MAY be omitted and the Reason SHOULD be assumed 'Local'. If the transaction is not ended
+The Charge Point MAY unlock the cable (if not permanently attached) when the cable is disconnected at the EV. If supported, this functionality is reported and controlled by the configuration key <<unlock_connector_on_evside_disconnect,`UnlockConnectorOnEVSideDisconnect`>>
 
-== normally, the Reason SHOULD be set to a correct value. As part of the normal transaction termination, the
+The Charge Point MAY stop a running transaction when the cable is disconnected at the EV. If supported, this functionality is reported and controlled by the configuration key <<stop_transaction_on_evside_disconnect,`StopTransactionOnEVSideDisconnect`>>.
 
-== Charge Point SHALL unlock the cable (if not permanently attached)
+If <<stop_transaction_on_evside_disconnect,`StopTransactionOnEVSideDisconnect`>> is set to _false_, the transaction SHALL not be stopped when the cable is disconnected from the EV. If the EV is reconnected, energy transfer is allowed again. In this case there is no mechanism to prevent other EVs from charging and disconnecting during that same ongoing transaction. With <<unlock_connector_on_evside_disconnect,`UnlockConnectorOnEVSideDisconnect`>> set to _false_, the Connector SHALL remain locked at the Charge Point until the user presents the identifier.
 
-== The Charge Point MAY unlock the cable (if not permanently attached) when the cable is disconnected at the EV. If
+By setting <<stop_transaction_on_evside_disconnect,`StopTransactionOnEVSideDisconnect`>> to _true_, the transaction SHALL be stopped when the cable is disconnected from the EV. If the EV is reconnected, energy transfer is not allowed until the transaction is stopped and a new transaction is started. If <<unlock_connector_on_evside_disconnect,`UnlockConnectorOnEVSideDisconnect`>> is set to _true_, also the Connector on the Charge Point will be unlocked.
 
-== supported, this functionality is reported and controlled by the configuration key
+[cols="1,10"]
+|===
+|[.info-icon]#i# |
+If <<stop_transaction_on_evside_disconnect,`StopTransactionOnEVSideDisconnect`>> is set to _false_, this SHALL have priority over <<unlock_connector_on_evside_disconnect,`UnlockConnectorOnEVSideDisconnect`>>. In other words: cables always remain locked when the cable is disconnected at EV side when <<stop_transaction_on_evside_disconnect,`StopTransactionOnEVSideDisconnect`>> is _false_.
+|===
 
-== UnlockConnectorOnEVSideDisconnect
+[cols="1,10"]
+|===
+|[.info-icon]#i# |
+Setting <<stop_transaction_on_evside_disconnect,`StopTransactionOnEVSideDisconnect`>> to _true_ will prevent sabotage acts to stop the energy flow by unplugging not locked cables on EV side.
+|===
 
-== The Charge Point MAY stop a running transaction when the cable is disconnected at the EV. If supported, this
+It is likely that The Central System applies sanity checks to the data contained in a <<stop_transaction_req,StopTransaction.req>> it received. The outcome of such sanity checks SHOULD NOT ever cause the Central System to not respond with a <<stop_transaction_conf,StopTransaction.conf>>. Failing to respond with a <<stop_transaction_conf,StopTransaction.conf>> will only cause the Charge Point to try the same message again as specified in <<error_responses_to_transaction_wrelated_messages,Error responses to transaction-related messages>>.
 
-== functionality is reported and controlled by the configuration key StopTransactionOnEVSideDisconnect
-
-== If StopTransactionOnEVSideDisconnect is set to false , the transaction SHALL not be stopped when the cable
-
-== is disconnected from the EV. If the EV is reconnected, energy transfer is allowed again. In this case there is no
-
-== mechanism to prevent other EVs from charging and disconnecting during that same ongoing transaction. With
-
-== UnlockConnectorOnEVSideDisconnect set to false , the Connector SHALL remain locked at the Charge Point
-
-== until the user presents the identifier
-
-== By setting StopTransactionOnEVSideDisconnect to true , the transaction SHALL be stopped when the cable
-
-== is disconnected from the EV. If the EV is reconnected, energy transfer is not allowed until the transaction is
-
-== stopped and a new transaction is started. If UnlockConnectorOnEVSideDisconnect is set to true , also the
-
-== Connector on the Charge Point will be unlocked
-
-
-
-== If StopTransactionOnEVSideDisconnect is set to false , this SHALL have priority over
-
-== UnlockConnectorOnEVSideDisconnect. In other words: cables always remain locked when
-
-== the cable is disconnected at EV side when StopTransactionOnEVSideDisconnect is false
-
-
-
-== Setting StopTransactionOnEVSideDisconnect to true will prevent sabotage acts to stop
-
-== the energy flow by unplugging not locked cables on EV side
-
-== It is likely that The Central System applies sanity checks to the data contained in a StopTransaction.req it
-
-== received. The outcome of such sanity checks SHOULD NOT ever cause the Central System to not respond with a
-
-== StopTransaction.conf. Failing to respond with a StopTransaction.conf will only cause the Charge Point to try the
-
-== same message again as specified in Error responses to transaction-related messages
-
-== If Charge Point has implemented an Authorization Cache, then upon receipt of a StopTransaction.conf PDU the
-
-== Charge Point SHALL update the cache entry, if the idTag is not in the Local Authorization List, with the IdTagInfo
-
-== value from the response as described under Authorization Cache
+If Charge Point has implemented an Authorization Cache, then upon receipt of a <<stop_transaction_conf,StopTransaction.conf>> PDU the Charge Point SHALL update the cache entry, if the idTag is not in the <<local_authorization_list,Local Authorization List>>, with the <<id_tag_info,IdTagInfo>> value from the response as described under <<authorization_cache,Authorization Cache>>.
 
 [[operations_initiated_by_central_system]]
 == Operations Initiated by Central System
@@ -2729,7 +2686,7 @@ This contains the field definition of the StatusNotification.conf PDU sent by th
 Point in response to an StatusNotification.req PDU. See also Status Notification
 No fields are defined.
 
-[[stoptransaction_req]]
+[[stop_transaction_req]]
 === StopTransaction.req
 
 This contains the field definition of the StopTransaction.req PDU sent by the Charge Point to the Central System.
@@ -2747,7 +2704,7 @@ StartTransaction.conf.
 be omitted when the Reason is "Local".
 **transactionData** MeterValue 0..\* Optional. This contains transaction usage details relevant for billing purposes.
 
-[[stoptransaction_conf]]
+[[stop_transaction_conf]]
 === StopTransaction.conf
 
 This contains the field definition of the StopTransaction.conf PDU sent by the Central System to the Charge Point
@@ -2757,7 +2714,7 @@ idTagInfo** IdTagInfo 0..1 Optional. This contains information about authorizati
 parent id. It is optional, because a transaction may have been stopped without
 an identifier.
 
-[[triggermessage_req]]
+[[trigger_message_req]]
 === TriggerMessage.req
 
 This contains the field definition of the TriggerMessage.req PDU sent by the Central System to the Charge Point.
@@ -2768,7 +2725,7 @@ requestedMessage** MessageTrigger 1..1 Required.
 connectorId > 0
 0..1 Optional. Only filled in when request applies to a specific connector.
 
-[[triggermessage_conf]]
+[[trigger_message_conf]]
 === TriggerMessage.conf
 
 This contains the field definition of the TriggerMessage.conf PDU sent by the Charge Point to the Central System
@@ -3197,7 +3154,7 @@ Status returned in response to GetCompositeSchedule.req.
 Accepted** Request has been accepted and will be executed.
 **Rejected** Request has not been accepted and will not be executed.
 
-[[idtaginfo]]
+[[id_tag_info]]
 === IdTagInfo
 
 _Class_
@@ -3829,7 +3786,7 @@ Central System.
 **Type** boolean
 **Description** When set to _true_ , the Charge Point SHALL administratively stop the transaction when the cable is unplugged from the EV.
 
-[[stoptransactiononinvalidid]]
+[[stop_transactiononinvalidid]]
 ==== StopTransactionOnInvalidId
 **Required/optional** required
 **Accessibility** RW
@@ -3897,7 +3854,9 @@ Reservation, SmartCharging and RemoteTrigger.
 **Unit** seconds
 **Description** How long the Charge Point should wait before resubmitting a transaction-related message that the Central System failed to
 process.
-**9.1.33.** UnlockConnectorOnEVSideDisconnect
+
+[[unlock_connector_on_evside_disconnect]]
+==== UnlockConnectorOnEVSideDisconnect
 **Required/optional** required
 **Accessibility** RW
 **Type** boolean

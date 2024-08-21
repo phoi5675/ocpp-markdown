@@ -1,0 +1,19 @@
+@startuml figure_21
+!include style.puml
+
+participant "Charge Point" as ChargePoint
+participant "Central System" as CentralSystem
+
+ChargePoint -> CentralSystem : \
+StopTransaction.req(meterStop, timestamp,\n\
+transactionId, reason, [idTag], [transactionData])
+
+activate ChargePoint
+activate CentralSystem
+
+CentralSystem -> ChargePoint : StopTransaction.conf([idTagInfo])
+
+deactivate CentralSystem
+deactivate ChargePoint
+
+@enduml
