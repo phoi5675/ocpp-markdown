@@ -4,12 +4,12 @@
 participant "Charge Point" as ChargePoint
 participant "Central System" as CentralSystem
 
-ChargePoint -> CentralSystem : ChangeConfiguration.req(key, value)
+CentralSystem -> ChargePoint : ChangeConfiguration.req(key, value)
 
 activate ChargePoint
 activate CentralSystem
 
-CentralSystem -> ChargePoint : ChangeConfiguration.conf(status)
+ChargePoint -> CentralSystem : ChangeConfiguration.conf(status)
 
 deactivate CentralSystem
 deactivate ChargePoint

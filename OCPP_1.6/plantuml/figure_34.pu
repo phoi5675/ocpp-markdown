@@ -1,15 +1,15 @@
-@startuml figure_23
+@startuml figure_34
 !include style.puml
 
 participant "Charge Point" as ChargePoint
 participant "Central System" as CentralSystem
 
-CentralSystem -> ChargePoint : ChangeAvailability.req(connectorId, type)
+CentralSystem -> ChargePoint : ReserveNow.req(connectorId, expiryDate, idTag, reservationId, [parentIdTag])
 
 activate ChargePoint
 activate CentralSystem
 
-ChargePoint -> CentralSystem : ChangeAvailability.conf(status)
+ChargePoint -> CentralSystem : ReserveNow.conf(status)
 
 deactivate CentralSystem
 deactivate ChargePoint

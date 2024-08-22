@@ -1,0 +1,45 @@
+@startuml figure_30
+!include style.puml
+
+participant "Charge Point" as ChargePoint
+participant "Central System" as CentralSystem
+
+CentralSystem -> ChargePoint : GetDiagnostics.req(location, [retries]. [retryInterval], [startTime], [stopTime])
+
+activate ChargePoint
+activate CentralSystem
+
+ChargePoint -> CentralSystem : GetDiagnostics.conf([fileName])
+
+deactivate CentralSystem
+deactivate ChargePoint
+
+note over ChargePoint
+  Uploading diagnostics file...
+end note
+
+ChargePoint -> CentralSystem : DiagnosticsStatusNotification.req( **status: Uploading** )
+
+activate ChargePoint
+activate CentralSystem
+
+CentralSystem -> ChargePoint : DiagnosticsStatusNotification.conf()
+
+deactivate CentralSystem
+deactivate ChargePoint
+
+note over ChargePoint
+  Uploading diagnostics file...
+end note
+
+ChargePoint -> CentralSystem : DiagnosticsStatusNotification.req( **status: Uploaded** )
+
+activate ChargePoint
+activate CentralSystem
+
+CentralSystem -> ChargePoint : DiagnosticsStatusNotification.conf()
+
+deactivate CentralSystem
+deactivate ChargePoint
+
+@enduml

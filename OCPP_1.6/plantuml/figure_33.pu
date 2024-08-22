@@ -1,15 +1,15 @@
-@startuml figure_23
+@startuml figure_33
 !include style.puml
 
 participant "Charge Point" as ChargePoint
 participant "Central System" as CentralSystem
 
-CentralSystem -> ChargePoint : ChangeAvailability.req(connectorId, type)
+CentralSystem -> ChargePoint : RemoteStopTransaction.req(transactionId)
 
 activate ChargePoint
 activate CentralSystem
 
-ChargePoint -> CentralSystem : ChangeAvailability.conf(status)
+ChargePoint -> CentralSystem : RemoteStopTransaction.conf(status)
 
 deactivate CentralSystem
 deactivate ChargePoint

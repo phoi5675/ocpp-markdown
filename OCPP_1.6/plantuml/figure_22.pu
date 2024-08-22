@@ -4,12 +4,12 @@
 participant "Charge Point" as ChargePoint
 participant "Central System" as CentralSystem
 
-ChargePoint -> CentralSystem : CancelReservation.req(reservationId)
+CentralSystem -> ChargePoint : CancelReservation.req(reservationId)
 
 activate ChargePoint
 activate CentralSystem
 
-CentralSystem -> ChargePoint : CancelReservation.conf(status)
+ChargePoint -> CentralSystem : CancelReservation.conf(status)
 
 deactivate CentralSystem
 deactivate ChargePoint
