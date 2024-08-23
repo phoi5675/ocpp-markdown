@@ -1774,7 +1774,7 @@ If there was a transaction in progress on the specific connector, then Charge Po
 
 [cols="1,10"]
 |===
-|[.info-icon]#i# |
+|[.warning-icon]#i# |
 <<unlock_connector_req,UnlockConnector.req>> is intented only for unlocking the cable retention lock on the Connector not for unlocking a connector access door.
 |===
 
