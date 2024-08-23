@@ -1010,6 +1010,7 @@ When the configuration keys: <<stoptxnaligneddata,StopTxnAlignedData>> and <<sto
 [[operations_initiated_by_charge_point]]
 == Operations Initiated by Charge Point
 
+[[authorize]]
 === Authorize
 
 .Sequence Diagram: Authorize
@@ -1025,6 +1026,7 @@ Upon receipt of an <<authorize_req,Authorize.req>> PDU, the Central System SHALL
 
 If Charge Point has implemented an Authorization Cache, then upon receipt of an <<authorize_conf,Authorize.conf>> PDU the Charge Point SHALL update the cache entry, if the idTag is not in the <<local_authorization_list,Local Authorization List>>, with the <<id_tag_info,IdTagInfo>> value from the response as described under Authorization Cache.
 
+[[boot_notification]]
 === Boot Notification
 
 .Sequence Diagram: Boot Notification
@@ -1808,99 +1810,112 @@ The sequence diagram above is an example. It is good practice to first reboot th
 [[authorize_req]]
 === Authorize.req
 
-This contains the field definition of the Authorize.req PDU sent by the Charge Point to the Central System. See
-also Authorize
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-idTag** IdToken 1..1 Required. This contains the identifier that needs to be authorized.
+This contains the field definition of the Authorize.req PDU sent by the Charge Point to the Central System. See also <<authorize,Authorize>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**idTag**  |<<idtoken,IdToken>>    |1..1  |Required. This contains the identifier that needs to be authorized.
+|===
 
 [[authorize_conf]]
 === Authorize.conf
 
-This contains the field definition of the Authorize.conf PDU sent by the Central System to the Charge Point in
-response to a Authorize.req PDU. See also Authorize
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-idTagInfo** IdTagInfo 1..1 Required. This contains information about authorization status, expiry and
-parent id.
+This contains the field definition of the Authorize.conf PDU sent by the Central System to the Charge Point in response to a <<authorize_req,Authorize.req>> PDU. See also <<authorize,Authorize>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**idTagInfo** |<<id_tag_info,IdTagInfo>> |1..1 |Required. This contains information about authorization status, expiry and parent id.
+|===
 
 [[boot_notification_req]]
 === BootNotification.req
 
-This contains the field definition of the BootNotification.req PDU sent by the Charge Point to the Central System.
-See also Boot Notification
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-chargeBoxSerialNumber** CiString25Type 0..1 Optional. This contains a value that identifies the serial number of
-the Charge Box inside the Charge Point. Deprecated, will be
-removed in future version
-**chargePointModel** CiString20Type 1..1 Required. This contains a value that identifies the model of the
-ChargePoint.
-**chargePointSerialNumber** CiString25Type 0..1 Optional. This contains a value that identifies the serial number of
-the Charge Point.
-**chargePointVendor** CiString20Type 1..1 Required. This contains a value that identifies the vendor of the
-ChargePoint.
-**firmwareVersion** CiString50Type 0..1 Optional. This contains the firmware version of the Charge Point.
-**iccid** CiString20Type 0..1 Optional. This contains the ICCID of the modem's SIM card.
-**imsi** CiString20Type 0..1 Optional. This contains the IMSI of the modem's SIM card.
-**meterSerialNumber** CiString25Type 0..1 Optional. This contains the serial number of the main electrical
-meter of the Charge Point.
+This contains the field definition of the BootNotification.req PDU sent by the Charge Point to the Central System. See also <<boot_notification,Boot Notification>>.
 
-FIELD NAME FIELD TYPE CARD. DESCRIPTION
-meterType CiString25Type 0..1 Optional. This contains the type of the main electrical meter of
-the Charge Point.
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**chargeBoxSerialNumber** |<<cistring25type,CiString25Type>> |0..1 |Optional. This contains a value that identifies the serial number of the Charge Box inside the Charge Point. Deprecated, will be removed in future version
+|**chargePointModel** |<<cistring20type,CiString20Type>> |1..1 |Required. This contains a value that identifies the model of the ChargePoint.
+|**chargePointSerialNumber** |<<cistring25type,CiString25Type>> |0..1 |Optional. This contains a value that identifies the serial number of the Charge Point.
+|**chargePointVendor** |<<cistring20type,CiString20Type>> |1..1 |Required. This contains a value that identifies the vendor of the ChargePoint.
+|**firmwareVersion** |<<cistring50type,CiString50Type>> |0..1 |Optional. This contains the firmware version of the Charge Point.
+|**iccid** |<<cistring20type,CiString20Type>> |0..1 |Optional. This contains the ICCID of the modem's SIM card.
+|**imsi** |<<cistring20type,CiString20Type>> |0..1 |Optional. This contains the IMSI of the modem's SIM card.
+|**meterSerialNumber** |<<cistring25type,CiString25Type>> |0..1 |Optional. This contains the serial number of the main electrical meter of the Charge Point.
+|**meterType** |<<cistring25type,CiString25Type>> |0..1 |Optional. This contains the type of the main electrical meter of the Charge Point.
+|===
 
 [[boot_notification_conf]]
 === BootNotification.conf
 
-This contains the field definition of the BootNotification.conf PDU sent by the Central System to the Charge Point
-in response to a BootNotification.req PDU. See also Boot Notification
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-currentTime** dateTime 1..1 Required. This contains the Central System's current time.
-**interval** integer 1..1 Required. When RegistrationStatus is _Accepted_ , this contains the heartbeat
-interval in seconds. If the Central System returns something other than
-Accepted, the value of the interval field indicates the minimum wait time before
-sending a next BootNotification request.
-**status** RegistrationStatus 1..1 Required. This contains whether the Charge Point has been registered within the
-System Central.
+This contains the field definition of the BootNotification.conf PDU sent by the Central System to the Charge Point in response to a <<boot_notification_req,BootNotification.req>> PDU. See also Boot Notification
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**currentTime** |dateTime |1..1 |Required. This contains the Central System's current time.
+|**interval** |integer |1..1 |Required. When <<registration_status,RegistrationStatus>> is _Accepted_, this contains the heartbeat interval in seconds. If the Central System returns something other than Accepted, the value of the interval field indicates the minimum wait time before sending a next BootNotification request.
+|**status** |<<registration_status,RegistrationStatus>> |1..1 |Required. This contains whether the Charge Point has been registered within the System Central.
+|===
 
 [[cancel_reservation_req]]
 === CancelReservation.req
 
-This contains the field definition of the CancelReservation.req PDU sent by the Central System to the Charge
-Point. See also Cancel Reservation
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-reservationId** integer 1..1 Required. Id of the reservation to cancel.
+This contains the field definition of the CancelReservation.req PDU sent by the Central System to the Charge Point. See also <<cancel_reservation_by_central_system,Cancel Reservation>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**reservationId** |integer |1..1 |Required. Id of the reservation to cancel.
+|===
 
 [[cancel_reservation_conf]]
 === CancelReservation.conf
 
-This contains the field definition of the CancelReservation.conf PDU sent by the Charge Point to the Central
-System in response to a CancelReservation.req PDU. See also Cancel Reservation
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-status** CancelReservationStatus 1..1 Required. This indicates the success or failure of the cancelling of
-a reservation by Central System.
+This contains the field definition of the CancelReservation.conf PDU sent by the Charge Point to the Central System in response to a <<cancel_reservation_req,CancelReservation.req>> PDU. See also <<cancel_reservation_by_central_system,Cancel Reservation>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**status** |<<cancel_reservation_status,CancelReservationStatus>> |1..1 |Required. This indicates the success or failure of the cancelling of a reservation by Central System.
+|===
 
 [[change_availability_req]]
 === ChangeAvailability.req
 
-This contains the field definition of the ChangeAvailability.req PDU sent by the Central System to the Charge
-Point. See also Change Availability
+This contains the field definition of the ChangeAvailability.req PDU sent by the Central System to the Charge Point. See also <<change_availability_by_central_system,Change Availability>>.
 
-FIELD NAME FIELD TYPE CARD. DESCRIPTION
-connectorId integer
-connectorId >= 0
-1..1 Required. The id of the connector for which availability needs to change. Id '0'
-(zero) is used if the availability of the Charge Point and all its connectors needs
-to change.
-type AvailabilityType 1..1 Required. This contains the type of availability change that the Charge Point
-should perform.
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**connectorId** |integer +
+                  connectorId >= 0 |1..1 
+                  |Required. The id of the connector for which availability needs to change. Id '0' (zero) is used if the availability of the Charge Point and all its connectors needs to change.
+|**type** |<<availability_type,AvailabilityType>> |1..1 |Required. This contains the type of availability change that the Charge Point should perform.
+|===
 
 [[change_availability_conf]]
 === ChangeAvailability.conf
 
-This contains the field definition of the ChangeAvailability.conf PDU return by Charge Point to Central System.
-See also Change Availability
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-status** AvailabilityStatus 1..1 Required. This indicates whether the Charge Point is able to perform the
-availability change.
+This contains the field definition of the ChangeAvailability.conf PDU return by Charge Point to Central System. See also <<change_availability_by_central_system,Change Availability>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**status** |<<availability_status,AvailabilityStatus>> |1..1 
+            |Required. This indicates whether the Charge Point is able to perform the availability change.
+|===
 
 [[change_configuration_req]]
 === ChangeConfiguration.req
@@ -2451,6 +2466,7 @@ Accepted** Identifier is allowed for charging.
 **ConcurrentTx** Identifier is already involved in another transaction and multiple transactions are not allowed. (Only relevant for a
 StartTransaction.req.)
 
+[[availability_status]]
 === AvailabilityStatus
 
 _Enumeration_
@@ -2460,6 +2476,7 @@ Accepted** Request has been accepted and will be executed.
 **Rejected** Request has not been accepted and will not be executed.
 **Scheduled** Request has been accepted and will be executed when transaction(s) in progress have finished.
 
+[[availability_type]]
 === AvailabilityType
 
 _Enumeration_
@@ -2468,6 +2485,7 @@ Requested availability change in ChangeAvailability.req.
 Inoperative** Charge point is not available for charging.
 **Operative** Charge point is available for charging.
 
+[[cancel_reservation_status]]
 === CancelReservationStatus
 
 _Enumeration_
@@ -2691,6 +2709,7 @@ fraction (e.g. 8.1).
 phases is needed, numberPhases=3 will be assumed unless another number is
 given.
 
+[[cistring20type]]
 === CiString20Type
 
 _Type_
@@ -2698,6 +2717,7 @@ Generic used case insensitive string of 20 characters.
 **FIELD TYPE DESCRIPTION**
 CiString[20] String is case insensitive.
 
+[[cistring25type]]
 === CiString25Type
 
 _Type_
@@ -2706,6 +2726,7 @@ Generic used case insensitive string of 25 characters.
 **FIELD TYPE DESCRIPTION**
 CiString[25] String is case insensitive.
 
+[[cistring50type]]
 === CiString50Type
 
 _Type_
