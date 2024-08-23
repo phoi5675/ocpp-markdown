@@ -1,0 +1,103 @@
+@startuml figure_41
+!include style.puml
+
+participant "Charge Point" as ChargePoint
+participant "Central System" as CentralSystem
+
+CentralSystem -> ChargePoint : UpdateFirmware.req(location, retrieveDate, [retries], [retryInterval])
+
+activate ChargePoint
+activate CentralSystem
+
+ChargePoint --> CentralSystem : UpdateFirmware.conf()
+
+deactivate CentralSystem
+
+note over ChargePoint
+  Waiting for retrieveDate...
+end note
+
+ChargePoint -> CentralSystem : FirmwareStatusNotification.req( **status: Downloading** )
+activate CentralSystem
+
+CentralSystem --> ChargePoint : FirmwareStatusNotification.conf()
+deactivate CentralSystem
+
+note over ChargePoint
+  Downloading...
+end note
+
+ChargePoint -> CentralSystem : FirmwareStatusNotification.req( **status: Downloaded ** )
+activate CentralSystem
+
+CentralSystem --> ChargePoint : FirmwareStatusNotification.conf()
+deactivate CentralSystem
+
+note over ChargePoint
+  Waiting for transactions to finish...
+end note
+
+ChargePoint -> CentralSystem : FirmwareStatusNotification.req( **status: Installing ** )
+activate CentralSystem
+
+CentralSystem --> ChargePoint : FirmwareStatusNotification.conf()
+deactivate CentralSystem
+deactivate ChargePoint
+
+note over ChargePoint
+  Installing...
+end note
+
+alt automatic reboot after firmware update
+  note over ChargePoint
+    Reboot
+  end note
+  
+  ChargePoint -> CentralSystem : \
+  BootNotification.req(chargePointModel, chargePointVendor, [chargeBoxSerialNumber],\n\
+  \t[chargePointSerialNumber], [firmwareVersion], [iccid], [imsi], [meterSerialNumber],\n\
+  \t[meterType])
+  activate ChargePoint
+  activate CentralSystem
+
+  CentralSystem --> ChargePoint : BootNotification.conf(currentTime, heartbeatInterval, status)
+  deactivate CentralSystem
+
+  ChargePoint -> CentralSystem : FirmwareStatusNotification.req( status: **Installed** )
+  activate CentralSystem
+
+  CentralSystem --> ChargePoint : FirmwareStatusNotification.conf()
+  deactivate CentralSystem
+  deactivate ChargePoint
+else manual reboot after firmware update
+  ChargePoint -> CentralSystem : FirmwareStatusNotification.req( status: **Installed** )
+  activate ChargePoint
+  activate CentralSystem
+
+  CentralSystem --> ChargePoint : FirmwareStatusNotification.conf()
+  deactivate ChargePoint
+
+  CentralSystem -> ChargePoint : Reset.req(Hard)
+  activate ChargePoint
+
+  ChargePoint --> CentralSystem : Reset.conf()
+  deactivate ChargePoint
+  deactivate CentralSystem
+
+  note over ChargePoint
+    Reboot
+  end note
+
+  ChargePoint -> CentralSystem : \
+    BootNotification.req(chargePointModel, chargePointVendor, [chargeBoxSerialNumber],\n\
+    \t[chargePointSerialNumber], [firmwareVersion], [iccid], [imsi], [meterSerialNumber],\n\
+    \t[meterType])
+  activate ChargePoint
+  activate CentralSystem
+
+  CentralSystem --> ChargePoint : BootNotification.conf(currentTime, heartbeatInterval, status)
+  deactivate ChargePoint
+  deactivate CentralSystem
+end
+
+@enduml

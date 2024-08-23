@@ -1780,64 +1780,27 @@ If there was a transaction in progress on the specific connector, then Charge Po
 
 === Update Firmware
 
-Charge Point Central System
-UpdateFirmware.req(location, retrieveDate, [retries], [retryInterval])
-UpdateFirmware.conf()
-Waiting for retrieveDate...
-FirmwareStatusNotification.req( status: Downloading )
-FirmwareStatusNotification.conf()
-Downloading...
-FirmwareStatusNotification.req( status: Downloaded )
-FirmwareStatusNotification.conf()
-Waiting for transactions to finish...
-FirmwareStatusNotification.req( status: Installing )
-FirmwareStatusNotification.conf()
-Installing...
-alt [automatic reboot after firmware update]
-Reboot
-BootNotification.req(chargePointModel, chargePointVendor, [chargeBoxSerialNumber],
-[chargePointSerialNumber], [firmwareVersion], [iccid], [imsi], [meterSerialNumber],
-[meterType])
-BootNotification.conf(currentTime, heartbeatInterval, status)
-FirmwareStatusNotification.req( status: Installed )
-FirmwareStatusNotification.conf()
-[manual reboot after firmware update]
-FirmwareStatusNotification.req( status: Installed )
-FirmwareStatusNotification.conf()
-Reset.req(Hard)
-Reset.conf()
-Reboot
-BootNotification.req(chargePointModel, chargePointVendor, [chargeBoxSerialNumber],
-[chargePointSerialNumber], [firmwareVersion], [iccid], [imsi], [meterSerialNumber],
-[meterType])
-BootNotification.conf(currentTime, heartbeatInterval, status)
-_Figure 41. Sequence Diagram: Update Firmware_
-Central System can notify a Charge Point that it needs to update its firmware. The Central System SHALL send an
-UpdateFirmware.req PDU to instruct the Charge Point to install new firmware. The PDU SHALL contain a date
-and time after which the Charge Point is allowed to retrieve the new firmware and the location from which the
-firmware can be downloaded.
-Upon receipt of an UpdateFirmware.req PDU, the Charge Point SHALL respond with a UpdateFirmware.conf
-PDU. The Charge Point SHOULD start retrieving the firmware as soon as possible after retrieve-date.
+.Sequence Diagram: Update Firmware
+image::images/figure_41.svg[Sequence Diagram: Update Firmware]
 
-== During downloading and installation of the firmware, the Charge Point MUST send
+Central System can notify a Charge Point that it needs to update its firmware. The Central System SHALL send an <<update_firmware_req,UpdateFirmware.req>> PDU to instruct the Charge Point to install new firmware. The PDU SHALL contain a date and time after which the Charge Point is allowed to retrieve the new firmware and the location from which the firmware can be downloaded.
 
-== FirmwareStatusNotification.req PDUs to keep the Central System updated with the status of the update process
+Upon receipt of an <<update_firmware_req,UpdateFirmware.req>> PDU, the Charge Point SHALL respond with a <<update_firmware_conf,UpdateFirmware.conf>> PDU. The Charge Point SHOULD start retrieving the firmware as soon as possible after retrieve-date.
 
-== The Charge Point SHALL, if the new firmware image is "valid", install the new firmware as soon as it is able to
+During downloading and installation of the firmware, the Charge Point MUST send
+<<firmware_status_notification_req,FirmwareStatusNotification.req>> PDUs to keep the Central System updated with the status of the update process.
 
-== If it is not possible to continue charging during installation of firmware, it is RECOMMENDED to wait until
+The Charge Point SHALL, if the new firmware image is "valid", install the new firmware as soon as it is able to.
 
-== Charging Session has ended (Charge Point idle) before commencing installation. It is RECOMMENDED to set
+If it is not possible to continue charging during installation of firmware, it is RECOMMENDED to wait until Charging Session has ended (Charge Point idle) before commencing installation. It is RECOMMENDED to set connectors that are not in use to UNAVAILABLE while the Charge Point waits for the Session to end.
 
-== connectors that are not in use to UNAVAILABLE while the Charge Point waits for the Session to end
+[cols="1,10"]
+|===
+|[.info-icon]#i# |
+The sequence diagram above is an example. It is good practice to first reboot the Charge Point to check the new firmware is booting and able to connect to the Central System, before sending the status: _Installed_. This is not a requirement.
+|===
 
-
-
-== The sequence diagram above is an example. It is good practice to first reboot the Charge Point
-
-== to check the new firmware is booting and able to connect to the Central System, before
-
-== sending the status: Installed. This is not a requirement
+<<<
 
 [[messages]]
 == Messages
