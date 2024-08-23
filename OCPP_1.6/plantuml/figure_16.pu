@@ -5,12 +5,10 @@ participant "Charge Point" as ChargePoint
 participant "Central System" as CentralSystem
 
 ChargePoint -> CentralSystem : FirmwareStatusNotification.req(status)
-
 activate ChargePoint
 activate CentralSystem
 
-CentralSystem -> ChargePoint : FirmwareStatusNotification.conf()
-
+CentralSystem --> ChargePoint : FirmwareStatusNotification.conf()
 deactivate CentralSystem
 deactivate ChargePoint
 

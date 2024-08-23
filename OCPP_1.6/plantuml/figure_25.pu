@@ -5,12 +5,10 @@ participant "Charge Point" as ChargePoint
 participant "Central System" as CentralSystem
 
 CentralSystem -> ChargePoint : ClearCache.req()
-
 activate ChargePoint
 activate CentralSystem
 
-ChargePoint -> CentralSystem : ClearCache.conf(status)
-
+ChargePoint --> CentralSystem : ClearCache.conf(status)
 deactivate CentralSystem
 deactivate ChargePoint
 

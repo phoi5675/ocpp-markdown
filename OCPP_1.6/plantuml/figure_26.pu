@@ -5,12 +5,10 @@ participant "Charge Point" as ChargePoint
 participant "Central System" as CentralSystem
 
 CentralSystem -> ChargePoint : ClearChargingProfile.req([id], [connectorId], [chargingProfilePurpose], [stackLevel])
-
 activate ChargePoint
 activate CentralSystem
 
-ChargePoint -> CentralSystem : ClearChargingProfile.conf(status)
-
+ChargePoint --> CentralSystem : ClearChargingProfile.conf(status)
 deactivate CentralSystem
 deactivate ChargePoint
 

@@ -7,7 +7,8 @@ participant "Central System" as CentralSystem
 ChargePoint -> CentralSystem: SendLocalList.req( **listVersion: 234**  ,  **updateType: Full**  , [localAuthorizationList])
 activate ChargePoint
 activate CentralSystem
-CentralSystem -> ChargePoint : SendLocalList.conf( **status: Accepted** )
+
+CentralSystem --> ChargePoint : SendLocalList.conf( **status: Accepted** )
 deactivate ChargePoint
 deactivate CentralSystem
 

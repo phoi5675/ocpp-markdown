@@ -5,12 +5,10 @@ participant "Charge Point" as ChargePoint
 participant "Central System" as CentralSystem
 
 ChargePoint -> CentralSystem : MeterValues.req(connectorId, meterValue, [transactionId])
-
 activate ChargePoint
 activate CentralSystem
 
-CentralSystem -> ChargePoint : MeterValues.conf()
-
+CentralSystem --> ChargePoint : MeterValues.conf()
 deactivate CentralSystem
 deactivate ChargePoint
 

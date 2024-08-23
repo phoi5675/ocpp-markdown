@@ -5,12 +5,10 @@ participant "Charge Point" as ChargePoint
 participant "Central System" as CentralSystem
 
 CentralSystem -> ChargePoint : UnlockConnector.req(connectorId)
-
 activate ChargePoint
 activate CentralSystem
 
-ChargePoint -> CentralSystem : UnlockConnector.conf(status)
-
+ChargePoint --> CentralSystem : UnlockConnector.conf(status)
 deactivate CentralSystem
 deactivate ChargePoint
 

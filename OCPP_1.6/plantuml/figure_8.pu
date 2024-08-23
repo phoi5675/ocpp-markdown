@@ -26,7 +26,7 @@ StartTransaction.req(connectorId, idTag, meterStart, timestamp, [reservationId])
 activate ChargePoint
 
 activate CentralSystem
-CentralSystem -> ChargePoint : \
+CentralSystem --> ChargePoint : \
 StartTransaction.conf(idTagInfo, transactionId)
 deactivate CentralSystem
 
@@ -57,7 +57,7 @@ else for each interval period in charging profile
       change the charging profile.
     end note
 
-    ChargePoint -> CentralSystem : SetChargingProfile.conf(Accepted)
+    ChargePoint --> CentralSystem : SetChargingProfile.conf(Accepted)
     deactivate ChargePoint
     deactivate CentralSystem
   end
@@ -67,7 +67,7 @@ note over User, CentralSystem
   RFID or other Authorization
 end note
 
-ChargePoint -> EV : end charging()
+ChargePoint --> EV : end charging()
 
 ChargePoint -> ChargePoint : switch power off()
 
@@ -77,7 +77,7 @@ ChargePoint -> CentralSystem : \
 activate ChargePoint
 activate CentralSystem
 
-CentralSystem -> ChargePoint : StopTransaction.conf([idTagInfo])
+CentralSystem --> ChargePoint : StopTransaction.conf([idTagInfo])
 deactivate CentralSystem
 deactivate ChargePoint
 deactivate EV

@@ -10,7 +10,7 @@ ChargePoint -> CentralSystem : \
 activate ChargePoint
 activate CentralSystem
 
-CentralSystem -> ChargePoint : BootNotification.conf(currentTime, interval, status)
+CentralSystem --> ChargePoint : BootNotification.conf(currentTime, interval, status)
 
 deactivate CentralSystem
 deactivate ChargePoint

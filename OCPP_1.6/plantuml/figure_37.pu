@@ -5,26 +5,25 @@ participant "Charge Point" as ChargePoint
 participant "Central System" as CentralSystem
 
 alt at start of transaction
-  ChargePoint -> CentralSystem : StartTransaction.req(connectorId, idTag, meterStart, timestamp [reservationId])
-
+  ChargePoint --> CentralSystem : StartTransaction.req(connectorId, idTag, meterStart, timestamp [reservationId])
   activate ChargePoint
   activate CentralSystem
 
-  CentralSystem -> ChargePoint : StartTransaction.conf(idTagInfo, transactionId)
+  CentralSystem --> ChargePoint : StartTransaction.conf(idTagInfo, transactionId)
 
-  CentralSystem -> ChargePoint : SetChargingProfile.req(ConnectorId, csChargingProfiles)
+  CentralSystem --> ChargePoint : SetChargingProfile.req(ConnectorId, csChargingProfiles)
 
-  ChargePoint -> CentralSystem : SetChargingProfile.conf(status)
+  ChargePoint --> CentralSystem : SetChargingProfile.conf(status)
 
   deactivate CentralSystem
   deactivate ChargePoint
 else otherwise
-  CentralSystem -> ChargePoint : SetChargingProfile.req(ConnectorId, csChargingProfiles)
+  CentralSystem --> ChargePoint : SetChargingProfile.req(ConnectorId, csChargingProfiles)
 
   activate ChargePoint
   activate CentralSystem
 
-  ChargePoint -> CentralSystem : SetChargingProfile.conf(status)
+  ChargePoint --> CentralSystem : SetChargingProfile.conf(status)
 
   deactivate CentralSystem
   deactivate ChargePoint

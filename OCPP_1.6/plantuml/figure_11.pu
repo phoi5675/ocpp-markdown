@@ -19,12 +19,12 @@ ChargePoint -> ChargePoint : switch power on()
 EV -> ChargePoint : start charging
 activate EV
 
-ChargePoint -> CentralSystem : \
+ChargePoint -> LocalController : \
   StartTransaction.req(connectorId, idTag, meterStart, timestamp,\
   \n[reservationId])
 
 activate LocalController
-LocalController -> CentralSystem : \
+LocalController --> CentralSystem : \
   StartTransaction.req(connectorId, idTag, meterStart, timestamp,\
   \n[reservationId])
 activate CentralSystem
@@ -32,7 +32,7 @@ activate CentralSystem
 CentralSystem -> LocalController : StartTransaction.conf(idTagInfo, transactionId)
 deactivate CentralSystem
 
-LocalController -> ChargePoint : StartTransaction.conf(idTagInfo, transactionId)
+LocalController --> ChargePoint : StartTransaction.conf(idTagInfo, transactionId)
 deactivate LocalController
 
 group loop Change according to charging profile 
@@ -60,7 +60,7 @@ else for each interval period in charging profile
       change the charging profile.
     end note
 
-    ChargePoint -> LocalController : SetChargingProfile.conf(Accepted)
+    ChargePoint --> LocalController : SetChargingProfile.conf(Accepted)
     deactivate ChargePoint
     deactivate LocalController
   end
@@ -85,10 +85,10 @@ LocalController -> CentralSystem : \
   \ntransactionId, reason, [idTag], [transactionData])
 activate CentralSystem
 
-CentralSystem -> LocalController : StopTransaction.conf([idTagInfo])
+CentralSystem --> LocalController : StopTransaction.conf([idTagInfo])
 deactivate CentralSystem
 
-LocalController -> ChargePoint : StopTransaction.conf([idTagInfo])
+LocalController --> ChargePoint : StopTransaction.conf([idTagInfo])
 deactivate LocalController
 deactivate ChargePoint
 deactivate EV

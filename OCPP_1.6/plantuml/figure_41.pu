@@ -5,12 +5,10 @@ participant "Charge Point" as ChargePoint
 participant "Central System" as CentralSystem
 
 CentralSystem -> ChargePoint : UpdateFirmware.req(location, retrieveDate, [retries], [retryInterval])
-
 activate ChargePoint
 activate CentralSystem
 
 ChargePoint --> CentralSystem : UpdateFirmware.conf()
-
 deactivate CentralSystem
 
 note over ChargePoint

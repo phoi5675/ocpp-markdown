@@ -5,12 +5,10 @@ participant "Charge Point" as ChargePoint
 participant "Central System" as CentralSystem
 
 CentralSystem -> ChargePoint : RemoteStopTransaction.req(transactionId)
-
 activate ChargePoint
 activate CentralSystem
 
-ChargePoint -> CentralSystem : RemoteStopTransaction.conf(status)
-
+ChargePoint --> CentralSystem : RemoteStopTransaction.conf(status)
 deactivate CentralSystem
 deactivate ChargePoint
 

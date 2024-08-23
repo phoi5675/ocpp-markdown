@@ -7,7 +7,8 @@ participant "Central System" as CentralSystem
 ChargePoint -> CentralSystem: UpdateFirmware.req(location, retrieveDate, [retries], [retryInterval])
 activate ChargePoint
 activate CentralSystem
-CentralSystem -> ChargePoint : UpdateFirmware.conf()
+
+CentralSystem --> ChargePoint : UpdateFirmware.conf()
 deactivate ChargePoint
 deactivate CentralSystem
 
@@ -15,32 +16,28 @@ note over ChargePoint
 Downloading firmware...
 end note
 
-ChargePoint -[hidden]-> CentralSystem
-
 ChargePoint -> CentralSystem : FirmwareStatusNotification.req( **status: Downloaded** )
 activate ChargePoint
 activate CentralSystem
-CentralSystem  -> ChargePoint : FirmwareStatusNotification.conf()
+
+CentralSystem  --> ChargePoint : FirmwareStatusNotification.conf()
 deactivate ChargePoint
 deactivate CentralSystem
 
 note over ChargePoint
 Installing...
 end note
-ChargePoint -[hidden]-> CentralSystem
-
 ChargePoint -> CentralSystem : FirmwareStatusNotification.req( **status: Installed** )
 activate ChargePoint
 activate CentralSystem
-CentralSystem  -> ChargePoint : FirmwareStatusNotification.conf()
+
+CentralSystem  --> ChargePoint : FirmwareStatusNotification.conf()
 deactivate ChargePoint
 deactivate CentralSystem
 
 note over ChargePoint
 Stop Charging
 end note
-ChargePoint -[hidden]-> CentralSystem
-
 ChargePoint -> CentralSystem :\
 BootNotification.req(chargePointModel, chargePointVendor, [chargeBoxSerialNumber],\n\
 \t\t\t\t[chargePointSerialNumber],[firmwareVersion], [iccid], [imsi],\n\
@@ -48,7 +45,8 @@ BootNotification.req(chargePointModel, chargePointVendor, [chargeBoxSerialNumber
 
 activate ChargePoint
 activate CentralSystem
-CentralSystem  -> ChargePoint : BootNotification.conf(currentTime, heartbeatInterval, status)
+CentralSystem  --> ChargePoint : BootNotification.conf(currentTime, heartbeatInterval, status)
+
 deactivate ChargePoint
 deactivate CentralSystem
 @enduml

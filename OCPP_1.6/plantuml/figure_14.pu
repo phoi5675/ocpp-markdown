@@ -8,7 +8,7 @@ ChargePoint -> CentralSystem : DataTransfer.req(vendorId, [messageId], [data])
 activate ChargePoint
 activate CentralSystem
 
-CentralSystem -> ChargePoint : DataTransfer.conf(status, [data])
+CentralSystem --> ChargePoint : DataTransfer.conf(status, [data])
 
 deactivate CentralSystem
 deactivate ChargePoint

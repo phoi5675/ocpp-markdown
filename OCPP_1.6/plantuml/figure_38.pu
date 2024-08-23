@@ -5,12 +5,10 @@ participant "Charge Point" as ChargePoint
 participant "Central System" as CentralSystem
 
 CentralSystem -> ChargePoint : TriggerMessage.req(requestedMessage, [connectorId])
-
 activate ChargePoint
 activate CentralSystem
 
-ChargePoint -> CentralSystem : TriggerMessage.conf(status)
-
+ChargePoint --> CentralSystem : TriggerMessage.conf(status)
 deactivate CentralSystem
 deactivate ChargePoint
 

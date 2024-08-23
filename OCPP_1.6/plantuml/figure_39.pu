@@ -5,22 +5,18 @@ participant "Charge Point" as ChargePoint
 participant "Central System" as CentralSystem
 
 CentralSystem -> ChargePoint : TriggerMessage.req( **RequestedMessage: StatusNotification** , **ConnectorId: 1** )
-
 activate ChargePoint
 activate CentralSystem
 
-ChargePoint -> CentralSystem : TriggerMessage.conf(Status: Accepted)
-
+ChargePoint --> CentralSystem : TriggerMessage.conf(Status: Accepted)
 deactivate CentralSystem
 deactivate ChargePoint
 
 ChargePoint -> CentralSystem : StatusNotification.req(ConnectorId: 1, errorCode: NoError, Status: Charging)
-
 activate ChargePoint
 activate CentralSystem
 
-CentralSystem -> ChargePoint : StatusNotification.conf()
-
+CentralSystem --> ChargePoint : StatusNotification.conf()
 deactivate CentralSystem
 deactivate ChargePoint
 @enduml

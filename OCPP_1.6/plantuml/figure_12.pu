@@ -8,7 +8,7 @@ ChargePoint -> CentralSystem : Authorize.req(idTag)
 activate ChargePoint
 activate CentralSystem
 
-CentralSystem -> ChargePoint : Authorize.conf(idTagInfo)
+CentralSystem --> ChargePoint : Authorize.conf(idTagInfo)
 deactivate CentralSystem
 deactivate ChargePoint
 

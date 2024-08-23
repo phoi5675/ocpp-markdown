@@ -5,12 +5,10 @@ participant "Charge Point" as ChargePoint
 participant "Central System" as CentralSystem
 
 CentralSystem -> ChargePoint : RemoteStartTransaction.req(idTag, [connectorId], [chargingProfile])
-
 activate ChargePoint
 activate CentralSystem
 
-ChargePoint -> CentralSystem : RemoteStartTransaction.conf(status)
-
+ChargePoint --> CentralSystem : RemoteStartTransaction.conf(status)
 deactivate CentralSystem
 deactivate ChargePoint
 

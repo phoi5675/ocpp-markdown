@@ -5,12 +5,10 @@ participant "Charge Point" as ChargePoint
 participant "Central System" as CentralSystem
 
 CentralSystem -> ChargePoint : ReserveNow.req(connectorId, expiryDate, idTag, reservationId, [parentIdTag])
-
 activate ChargePoint
 activate CentralSystem
 
-ChargePoint -> CentralSystem : ReserveNow.conf(status)
-
+ChargePoint --> CentralSystem : ReserveNow.conf(status)
 deactivate CentralSystem
 deactivate ChargePoint
 
