@@ -1,0 +1,17 @@
+@startuml figure_35
+!include style.puml
+
+participant "Charge Point" as ChargePoint
+participant "Central System" as CentralSystem
+
+CentralSystem -> ChargePoint : Reset.req(type)
+
+activate ChargePoint
+activate CentralSystem
+
+ChargePoint -> CentralSystem : Reset.conf(status)
+
+deactivate CentralSystem
+deactivate ChargePoint
+
+@enduml

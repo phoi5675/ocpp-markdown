@@ -404,7 +404,7 @@ The grouping of all messages in their profiles can be found in the table below.
 |MESSAGE |CORE | FIRMWARE MANAGEMENT |LOCAL AUTH LIST MANAGEMENT |REMOTE TRIGGER |RESERVATION | SMART CHARGING
 
 |<<authorize_req,Authorize>>                                          |X | | | | | 
-|<<bootnotification_req,BootNotification>>                            |X | | | | |
+|<<boot_notification_req,BootNotification>>                            |X | | | | |
 |<<change_availability_req,ChangeAvailability>>                        |X | | | | |
 |<<change_configuration_req,ChangeConfiguration>>                      |X | | | | |
 |<<clear_cache_req,ClearCache>>                                        |X | | | | |
@@ -418,18 +418,18 @@ The grouping of all messages in their profiles can be found in the table below.
 |<<start_transaction_conf,StartTransaction>>                            |X | | | | |
 |<<status_notification_req,StatusNotification>>                        |X | | | | |
 |<<stop_transaction_req,StopTransaction>>                              |X | | | | |
-|<<unlockconnector,UnlockConnector>>                              |X | | | | |
+|<<unlock_connector_req,UnlockConnector>>                              |X | | | | |
 |<<get_diagnostics_req,GetDiagnostics>>                                | |X | | | |
 |<<diagnostics_status_notification_req,DiagnosticsStatusNotification>>  | |X | | | |
 |<<firmware_status_notification_req,FirmwareStatusNotification>>        | |X | | | |
-|<<updatefirmware,UpdateFirmware>>                                | |X | | | |
+|<<update_firmware_req,UpdateFirmware>>                                | |X | | | |
 |<<get_local_list_version_req,GetLocalListVersion>>                      | | |X | | |
-|<<sendlocallist,SendLocalList>>                                  | | |X | | |
+|<<send_local_list_req,SendLocalList>>                                  | | |X | | |
 |<<cancel_reservation_req,CancelReservation>>                          | | | |X | |
 |<<reserve_now_req,ReserveNow>>                                        | | | |X | |
 |<<clear_charging_profile_req,ClearChargingProfile>>                    | | | | |X |
 |<<get_composite_schedule_req_req,GetCompositeSchedule>>                    | | | | |X |
-|<<setchargingprofile,SetChargingProfile>>                        | | | | |X |
+|<<set_charging_profile_req,SetChargingProfile>>                        | | | | |X |
 |<<trigger_message_req,TriggerMessage>>                                | | | | | | X
 |===
 
@@ -474,9 +474,9 @@ To improve the experience for users, a Charge Point MAY support local authorizat
 
 This allows (a) authorization of a user when _offline_ , and (b) faster (apparent) authorization response time when communication between Charge Point and Central System is slow.
 
-The <<localauthorizeoffline,`LocalAuthorizeOffline`>> configuration key controls whether a Charge Point will authorize a user when _offline_ using the Authorization Cache and/or the Local Authorization List.
+The <<local_authorize_offline,`LocalAuthorizeOffline`>> configuration key controls whether a Charge Point will authorize a user when _offline_ using the Authorization Cache and/or the Local Authorization List.
 
-The <<localpreauthorize,`LocalPreAuthorize`>> configuration key controls whether a Charge Point will use the Authorization Cache and/or the Local Authorization List to start a transaction without waiting for an authorization response from the
+The <<local_pre_authorize,`LocalPreAuthorize`>> configuration key controls whether a Charge Point will use the Authorization Cache and/or the Local Authorization List to start a transaction without waiting for an authorization response from the
 Central System.
 
 A Charge Point MAY support the (automatic) authorization of any presented identifier when _offline_ , to avoid refusal of charging to bona-fide users that cannot be explicitly authorized by Local Authorization List/Authorization Cache entries. This functionality is explained in more detail in <<unknown_offline_authorization,Unknown Offline Authorization>>.
@@ -517,7 +517,7 @@ The Charge Point indicates whether the Local Authorization List is supported by 
 
 Whether the Local Authorization List is enabled is reported and controlled by the <<localauthlistenabled,LocalAuthListEnabled>> configuration key.
 
-The Central System can synchronize this list by either (1) sending a complete list of identifiers to replace the Local Authorization List or (2) by sending a list of changes (add, update, delete) to apply to the Local Authorization List. The operations to support this are <<get_local_list_version,Get Local List Version>> and <<send_local_list,Send Local List>>.
+The Central System can synchronize this list by either (1) sending a complete list of identifiers to replace the Local Authorization List or (2) by sending a list of changes (add, update, delete) to apply to the Local Authorization List. The operations to support this are <<get_local_list_version,Get Local List Version>> and <<send_local_list_by_central_system,Send Local List>>.
 
 .Sequence Diagram: Example of a full local authorization list update
 image::images/figure_3.svg[Sequence Diagram: Example of a full local authorization list update]
@@ -553,7 +553,7 @@ When connection to the Central Server is restored, the Charge Point SHALL send a
 
 [cols="1,10"]
 |===
-|[.info-icon]#i# |In the case of an invalid identifier, an operator MAY choose to charge the EV with a minimum amount of energy so the EV is able to drive away. This amount is controlled by the optional configuration key: <<maxenergyoninvalidid,MaxEnergyOnInvalidId>>.
+|[.info-icon]#i# |In the case of an invalid identifier, an operator MAY choose to charge the EV with a minimum amount of energy so the EV is able to drive away. This amount is controlled by the optional configuration key: <<max_energy_on_invalid_id,MaxEnergyOnInvalidId>>.
 |===
 
 === Transaction in relation to Energy Transfer Period
@@ -684,7 +684,7 @@ A charging profile consists of a charging schedule, which is basically a list of
 
 There are three different types of charging profiles, depending on their purpose:
 
-[[chargepointmaxprofile]]
+[[charge_point_max_profile]]
 * _ChargePointMaxProfile_
 
 In load balancing scenarios, the Charge Point has one or more local charging profiles that limit the power or current to be shared by all connectors of the Charge Point. The Central System SHALL configure such a profile with ChargingProfilePurpose set to _"ChargePointMaxProfile"_. _ChargePointMaxProfile_ can only be set at Charge Point ConnectorId 0.
@@ -703,7 +703,7 @@ _In the event a TxDefaultProfile for connector 0 is installed, and the Central S
 [[tx_profile]]
 * _TxProfile_
 
-If a transaction-specific profile with purpose _TxProfile_ is present, it SHALL overrule the default charging profile with purpose <<tx_default_profile,TxDefaultProfile>> for the duration of the current transaction only. After the transaction is stopped the profile SHOULD be deleted. If there is no transaction active on the connector specified in a charging profile of type _TxProfile_, then the Charge Point SHALL discard it and return an error status in <<setchargingprofile_conf,SetChargingProfile.conf>>.
+If a transaction-specific profile with purpose _TxProfile_ is present, it SHALL overrule the default charging profile with purpose <<tx_default_profile,TxDefaultProfile>> for the duration of the current transaction only. After the transaction is stopped the profile SHOULD be deleted. If there is no transaction active on the connector specified in a charging profile of type _TxProfile_, then the Charge Point SHALL discard it and return an error status in <<set_charging_profile_conf,SetChargingProfile.conf>>.
 
 The final schedule constraints that apply to a transaction are determined by merging the profiles with purposes _ChargePointMaxProfile_ with the profile _TxProfile_ or the <<tx_default_profile,TxDefaultProfile>> in case no profile of purpose _TxProfile_ is provided. _TxProfile SHALL only be set at Charge Point ConnectorId >0_.
 
@@ -713,7 +713,7 @@ It is allowed to stack charging profiles of the same charging profile purpose in
 
 Precedence of charging profiles is determined by the value of their StackLevel parameter. At any point in time the prevailing charging profile SHALL be the charging profile with the highest stackLevel among the profiles that are valid at that point in time, as determined by their validFrom and validTo parameters.
 
-To avoid conflicts, the existence of multiple Charging Profiles with the same <<stacklevel,stackLevel>> and Purposes in a Charge Point is not allowed. Whenever a Charge Point receives a Charging Profile with a stackLevel and Purpose that already exists in the Charge Point, the Charge Point SHALL replace the existing profile.
+To avoid conflicts, the existence of multiple Charging Profiles with the same <<stack_level,stackLevel>> and Purposes in a Charge Point is not allowed. Whenever a Charge Point receives a Charging Profile with a stackLevel and Purpose that already exists in the Charge Point, the Charge Point SHALL replace the existing profile.
 
 [cols="1,10"]
 |===
@@ -735,7 +735,7 @@ The Composite Schedule that will guide the charging level is a combination of th
 This Composite Schedule is calculated by taking the minimum value for each time interval. Note that time intervals do not have to be of fixed length, nor do they have to be the same for every charging profile purpose. +
 This means that a resulting Composite Schedule MAY contain intervals of different lengths.
 
-At any point in time, the available power or current in the Composite Schedule, which is the result of merging the schedules of charging profiles <<chargepointmaxprofile,ChargePointMaxProfile>> and <<tx_default_profile,TxDefaultProfile>> (or <<tx_profile,TxProfile>>), SHALL be less than or equal to lowest value of available power or current in any of the merged schedules.
+At any point in time, the available power or current in the Composite Schedule, which is the result of merging the schedules of charging profiles <<charge_point_max_profile,ChargePointMaxProfile>> and <<tx_default_profile,TxDefaultProfile>> (or <<tx_profile,TxProfile>>), SHALL be less than or equal to lowest value of available power or current in any of the merged schedules.
 
 In the case the Charge Point is equipped with more than one Connector, the limit value of ChargePointMaxProfile is the limit for all connectors combined. The combined energy flow of all connectors SHALL NOT be greater then the limit set by ChargePointMaxProfile.
 
@@ -873,14 +873,14 @@ The following data structure describes a daily default profile that limits the p
 |chargingProfilePurpose |**TxDefaultProfile** |         |
 |chargingProfileKind    |**Recurring**  |               |
 |recurrencyKind         |**Daily**      |               |
-|chargingSchedule       |<<chargingschedule,(List of 1 ChargingSchedule 
+|chargingSchedule       |<<charging_schedule_type,(List of 1 ChargingSchedule 
                         elements)>>     |               |
 |                 |**ChargingSchedule** |               |
 |                 |duration             |**86400 (= 24 hours)** |
 |                 |startSchedule        |**2013-01-01T00:00Z**  |
 |                 |chargingRateUnit     |**W**                  |
 |                 |chargingSchedulePeriod |(List of 3 
-<<chargingscheduleperiod,ChargingSchedulePeriod>> elements)     |
+<<charging_schedule_period,ChargingSchedulePeriod>> elements)     |
 |     |     |**ChargingSchedulePeriod** |
 |     |     |startPeriod                |**0 (=00:00)**
 |     |     |limit                      |**11000**
@@ -942,19 +942,19 @@ Both types of meter readings MAY be reported in standalone <<metervalues_req,Met
 
 Frequent (e.g. 1-5 minute interval) meter readings taken and transmitted (usually in "real time") to the Central System, to allow it to provide information updates to the EV user (who is usually not at the charge point), via web, app, SMS, etc., as to the progress of the charging session. In OCPP, this is called "sampled meter data", as the exact frequency and time of readings is not very significant, as long as it is "frequent enough". "Sampled meter data" can be configured with the following configuration keys:
 
-* <<metervaluessampleddata,MeterValuesSampledData>>
-* <<metervaluessampleddatamaxlength,MeterValuesSampledDataMaxLength>>
-* <<metervaluesampleinterval,MeterValueSampleInterval>>
+* <<meter_values_sampled_data,MeterValuesSampledData>>
+* <<meter_values_sampled_data_max_length,MeterValuesSampledDataMaxLength>>
+* <<meter_value_sample_interval,MeterValueSampleInterval>>
 * <<stoptxnsampleddata,StopTxnSampledData>>
 * <<stoptxnsampleddatamaxlength,StopTxnSampledDataMaxLength>>
 
-<<metervaluesampleinterval,MeterValueSampleInterval>> is the time (in seconds) between sampling of metering (or other) data, intended to be transmitted by "MeterValues" PDUs. Samples are acquired and transmitted periodically at this interval from the start of the charging transaction.
+<<meter_value_sample_interval,MeterValueSampleInterval>> is the time (in seconds) between sampling of metering (or other) data, intended to be transmitted by "MeterValues" PDUs. Samples are acquired and transmitted periodically at this interval from the start of the charging transaction.
 
 A value of "0" (numeric zero), by convention, is to be interpreted to mean that no sampled data should be transmitted.
 
-<<metervaluessampleddata,MeterValuesSampledData>> is a comma separated list that prescribes the set of measurands to be included in a MeterValues.req PDU, every <<metervaluesampleinterval,MeterValueSampleInterval>> seconds. The maximum amount of elements in the <<metervaluessampleddata,MeterValuesSampledData>> list can be reported by the Charge Point via: <<metervaluessampleddatamaxlength,MeterValuesSampledDataMaxLength>>
+<<meter_values_sampled_data,MeterValuesSampledData>> is a comma separated list that prescribes the set of measurands to be included in a MeterValues.req PDU, every <<meter_value_sample_interval,MeterValueSampleInterval>> seconds. The maximum amount of elements in the <<meter_values_sampled_data,MeterValuesSampledData>> list can be reported by the Charge Point via: <<meter_values_sampled_data_max_length,MeterValuesSampledDataMaxLength>>
 
-<<stoptxnsampleddata,StopTxnSampledData>> is a comma separated list that prescribes the sampled measurands to be included in the TransactionData element of StopTransaction.req PDU, every <<metervaluesampleinterval,MeterValueSampleInterval>> seconds from the start of the Transaction. The maximum amount of elements in the <<stoptxnsampleddata,StopTxnSampledData>> list can be reported by the Charge Point via: <<stoptxnsampleddatamaxlength,StopTxnSampledDataMaxLength>>.
+<<stoptxnsampleddata,StopTxnSampledData>> is a comma separated list that prescribes the sampled measurands to be included in the TransactionData element of StopTransaction.req PDU, every <<meter_value_sample_interval,MeterValueSampleInterval>> seconds from the start of the Transaction. The maximum amount of elements in the <<stoptxnsampleddata,StopTxnSampledData>> list can be reported by the Charge Point via: <<stoptxnsampleddatamaxlength,StopTxnSampledDataMaxLength>>.
 
 [[clock_aligned_meter_values]]
 ==== Clock-Aligned Meter Values
@@ -964,8 +964,8 @@ Grid Operator might require meter readings to be taken from fiscally certified e
 "Clock-Aligned Billing Data" can be configured with the following configuration keys:
 
 * <<clockaligneddatainterval,ClockAlignedDataInterval>>
-* <<metervaluesaligneddata,MeterValuesAlignedData>>
-* <<metervaluesaligneddatamaxlength,MeterValuesAlignedDataMaxLength>>
+* <<meter_values_aligned_data,MeterValuesAlignedData>>
+* <<meter_values_aligned_data_max_length,MeterValuesAlignedDataMaxLength>>
 * <<stoptxnaligneddata,StopTxnAlignedData>>
 * <<stoptxnaligneddatamaxlength,StopTxnAlignedDataMaxLength>>
 
@@ -975,9 +975,9 @@ For example, a value of 900 (15 minutes) indicates that every day should be brok
 
 A value of "0" (numeric zero), by convention, is to be interpreted to mean that no clock-aligned data should be transmitted.
 
-<<metervaluesaligneddata,MeterValuesAlignedData>> is a comma separated list that prescribes the set of measurands to be included in a MeterValues.req PDU, every <<clockaligneddatainterval,ClockAlignedDataInterval>> seconds. The maximum amount of elements in the <<metervaluesaligneddata,MeterValuesAlignedData>> list can be reported by the Charge Point via:
+<<meter_values_aligned_data,MeterValuesAlignedData>> is a comma separated list that prescribes the set of measurands to be included in a MeterValues.req PDU, every <<clockaligneddatainterval,ClockAlignedDataInterval>> seconds. The maximum amount of elements in the <<meter_values_aligned_data,MeterValuesAlignedData>> list can be reported by the Charge Point via:
 
-<<metervaluesaligneddatamaxlength,MeterValuesAlignedDataMaxLength>>
+<<meter_values_aligned_data_max_length,MeterValuesAlignedDataMaxLength>>
 
 <<stoptxnaligneddata,StopTxnAlignedData>> is a comma separated list that prescribes the set of clock-aligned periodic measurands to be included in the TransactionData element of StopTransaction.req PDU for every <<clockaligneddatainterval,ClockAlignedDataInterval>> of the Transaction. The maximum amount of elements in the <<stoptxnaligneddata,StopTxnAlignedData>> list can be reported by the Charge Point via: <<stoptxnaligneddatamaxlength,StopTxnAlignedDataMaxLength>>
 
@@ -996,8 +996,8 @@ For example: A Charge Point capable of measuring _Current.Import_ on _Inlet_ (al
 ==== Unsupported measurands
 When a Central System sends a ChangeConfiguration.req to a Charge Point with one of the following configuration keys:
 
-* <<metervaluesaligneddata,MeterValuesAlignedData>>
-* <<metervaluessampleddata,MeterValuesSampledData>>
+* <<meter_values_aligned_data,MeterValuesAlignedData>>
+* <<meter_values_sampled_data,MeterValuesSampledData>>
 * <<stoptxnaligneddata,StopTxnAlignedData>>
 * <<stoptxnsampleddata,StopTxnSampledData>>
 
@@ -1032,9 +1032,9 @@ image::images/figure_13.svg[Sequence Diagram: Boot Notification]
 
 After start-up, a Charge Point SHALL send a request to the Central System with information about its configuration (e.g. version, vendor, etc.). The Central System SHALL respond to indicate whether it will accept the Charge Point.
 
-The Charge Point SHALL send a <<bootnotification_req,BootNotification.req>> PDU each time it boots or reboots. Between the physical power-on/reboot and the successful completion of a BootNotification, where Central System returns _Accepted_ or _Pending_ , the Charge Point SHALL NOT send any other request to the Central System. This includes cached messages that are still present in the Charge Point from before.
+The Charge Point SHALL send a <<boot_notification_req,BootNotification.req>> PDU each time it boots or reboots. Between the physical power-on/reboot and the successful completion of a BootNotification, where Central System returns _Accepted_ or _Pending_ , the Charge Point SHALL NOT send any other request to the Central System. This includes cached messages that are still present in the Charge Point from before.
 
-When the Central System responds with a <<bootnotification_conf,BootNotification.conf>> with a status _Accepted_ , the Charge Point will adjust the heartbeat interval in accordance with the interval from the response PDU and it is RECOMMENDED to synchronize its internal clock with the supplied Central System's current time. If the Central System returns something other than _Accepted_ , the value of the interval field indicates the minimum wait time before sending a next BootNotification request. If that interval value is zero, the Charge Point chooses a waiting interval on its own, in a way that avoids flooding the Central System with requests. A Charge Point SHOULD NOT send a <<bootnotification_req,BootNotification.req>> earlier, unless requested to do so with a <<trigger_message_req,TriggerMessage.req>>.
+When the Central System responds with a <<boot_notification_conf,BootNotification.conf>> with a status _Accepted_ , the Charge Point will adjust the heartbeat interval in accordance with the interval from the response PDU and it is RECOMMENDED to synchronize its internal clock with the supplied Central System's current time. If the Central System returns something other than _Accepted_ , the value of the interval field indicates the minimum wait time before sending a next BootNotification request. If that interval value is zero, the Charge Point chooses a waiting interval on its own, in a way that avoids flooding the Central System with requests. A Charge Point SHOULD NOT send a <<boot_notification_req,BootNotification.req>> earlier, unless requested to do so with a <<trigger_message_req,TriggerMessage.req>>.
 
 If the Central System returns the status _Rejected_ , the Charge Point SHALL NOT send any OCPP message to the Central System until the aforementioned retry interval has expired. During this interval the Charge Point may no longer be reachable from the Central System. It MAY for instance close its communication channel or shut down its communication hardware. Also the Central System MAY close the communication channel, for instance to free up system resources. While _Rejected_ , the Charge Point SHALL NOT respond to any Central System initiated message. the Central System SHOULD NOT initiate any.
 
@@ -1623,294 +1623,160 @@ It is RECOMMENDED to validate the Identifier with an authorize.req after recepti
 
 === Reset
 
-== Charge Point Central System
+.Sequence Diagram: Reset
+image::images/figure_35.svg[Sequence Diagram: Reset]
 
-== Reset.req(type)
+The Central System SHALL send a <<reset_req,Reset.req>> PDU for requesting a Charge Point to reset itself. The Central System can request a hard or a soft reset. Upon receipt of a <<reset_req,Reset.req>> PDU, the Charge Point SHALL respond with a <<reset_conf,Reset.conf>> PDU. The response PDU SHALL include whether the Charge Point will attempt to reset itself.
 
-== Reset.conf(status)
+After receipt of a Reset.req, The Charge Point SHALL send a <<stop_transaction_req,StopTransaction.req>> for any ongoing transaction before performing the reset. If the Charge Point fails to receive a <<stop_transaction_conf,StopTransaction.conf>> form the Central System, it shall queue the <<stop_transaction_req,StopTransaction.req>>
 
-== Figure 35. Sequence Diagram: Reset
+At receipt of a soft reset, the Charge Point SHALL stop ongoing transactions gracefully and send <<stop_transaction_req,StopTransaction.req>> for every ongoing transaction. It should then restart the application software (if possible otherwise restart the processor/controller).
 
-== The Central System SHALL send a Reset.req PDU for requesting a Charge Point to reset itself. The Central System
+At receipt of a hard reset the Charge Point SHALL restart (all) the hardware, it is not required to gracefully stop ongoing transaction. If possible the Charge Point sends a <<stop_transaction_req,StopTransaction.req>> for previously ongoing transactions after having restarted and having been accepted by the Central System via a <<boot_notification_conf,BootNotification.conf>>. This is a last resort solution for a not correctly functioning Charge Points, by sending a "hard" reset, (queued) information might get lost
 
-== can request a hard or a soft reset. Upon receipt of a Reset.req PDU, the Charge Point SHALL respond with a
+[cols="1,10"]
+|===
+|[.info-icon]#i# |
+Persistent states: for example: Connector set to Unavailable shall persist
+|===
 
-== Reset.conf PDU. The response PDU SHALL include whether the Charge Point will attempt to reset itself
-
-== After receipt of a Reset.req, The Charge Point SHALL send a StopTransaction.req for any ongoing transaction
-
-== before performing the reset. If the Charge Point fails to receive a StopTransaction.conf form the Central System
-
-== it shall queue the StopTransaction.req
-
-== At receipt of a soft reset, the Charge Point SHALL stop ongoing transactions gracefully and send
-
-== StopTransaction.req for every ongoing transaction. It should then restart the application software (if possible
-
-== otherwise restart the processor/controller)
-
-== At receipt of a hard reset the Charge Point SHALL restart (all) the hardware, it is not required to gracefully stop
-
-== ongoing transaction. If possible the Charge Point sends a StopTransaction.req for previously ongoing
-
-== transactions after having restarted and having been accepted by the Central System via a BootNotification.conf
-
-== This is a last resort solution for a not correctly functioning Charge Points, by sending a "hard" reset, (queued)
-
-== information might get lost
-
- Persistent states: for example: Connector set to Unavailable shall persist
-
-[[send_local_list]]
+[[send_local_list_by_central_system]]
 === Send Local List
 
-Charge Point Central System
-SendLocalList.req(listVersion, updateType, [localAuthorisationList])
-SendLocalList.conf(status)
-_Figure 36. Sequence Diagram: Send Local List_
-Central System can send a Local Authorization List that a Charge Point can use for authorization of idTags. The
-list MAY be either a full list to replace the current list in the Charge Point or it MAY be a differential list with
-updates to be applied to the current list in the Charge Point.
-The Central System SHALL send a SendLocalList.req PDU to send the list to a Charge Point. The
-SendLocalList.req PDU SHALL contain the type of update (full or differential) and the version number that the
-Charge Point MUST associate with the local authorization list after it has been updated.
-Upon receipt of a SendLocalList.req PDU, the Charge Point SHALL respond with a SendLocalList.conf PDU. The
-response PDU SHALL indicate whether the Charge Point has accepted the update of the local authorization list. If
-the status is Failed or VersionMismatch and the updateType was Differential, then Central System SHOULD retry
-sending the full local authorization list with updateType Full.
+.Sequence Diagram: Send Local List
+image::images/figure_36.svg[Sequence Diagram: Send Local List]
+
+Central System can send a <<local_authorization_list,Local Authorization List>> that a Charge Point can use for authorization of idTags. The list MAY be either a full list to replace the current list in the Charge Point or it MAY be a differential list with updates to be applied to the current list in the Charge Point.
+
+The Central System SHALL send a <<send_local_list_req,SendLocalList.req>> PDU to send the list to a Charge Point. The <<send_local_list_req,SendLocalList.req>> PDU SHALL contain the type of update (full or differential) and the version number that the Charge Point MUST associate with the local authorization list after it has been updated.
+
+Upon receipt of a <<send_local_list_req,SendLocalList.req>> PDU, the Charge Point SHALL respond with a <<send_local_list_conf,SendLocalList.conf>> PDU. The response PDU SHALL indicate whether the Charge Point has accepted the update of the local authorization list. If the status is Failed or VersionMismatch and the updateType was Differential, then Central System SHOULD retry sending the full local authorization list with updateType Full.
 
 === Set Charging Profile
 
-Charge Point Central System
-alt [at start of transaction]
-StartTransaction.req(connectorId, idTag, meterStart, timestamp [reservationId])
-StartTransaction.conf(idTagInfo, transactionId)
-SetChargingProfile.req(ConnectorId, csChargingProfiles)
-SetChargingProfile.conf(status)
-[otherwise]
-SetChargingProfile.req(ConnectorId, csChargingProfiles)
-SetChargingProfile.conf(status)
-_Figure 37. Sequence Diagram: Set Charging Profile_
-A Central System can send a SetChargingProfile.req to a Charge Point, to set a charging profile, in the following
-situations:
+.Sequence Diagram: Set Charging Profile
+image::images/figure_37.svg[Sequence Diagram: Set Charging Profile]
 
-- At the start of a transaction to set the charging profile for the transaction;
-- In a RemoteStartTransaction.req sent to a Charge Point
-- During a transaction to change the active profile for the transaction;
-- Outside the context of a transaction as a separate message to set a charging profile to a local controller,
-  Charge Point, or a default charging profile to a connector.
+A Central System can send a <<set_charging_profile_req,SetChargingProfile.req>> to a Charge Point, to set a charging profile, in the following situations:
 
-== To prevent mismatch between transactions and a TxProfile, The Central System SHALL include
+* At the start of a transaction to set the charging profile for the transaction;
+* In a <<remote_start_transaction_req,RemoteStartTransaction.req>> sent to a Charge Point
+* During a transaction to change the active profile for the transaction;
+* Outside the context of a transaction as a separate message to set a charging profile to a local controller, Charge Point, or a default charging profile to a connector.
 
-== the transactionId in a SetChargingProfile.req if the profile applies to a specific transaction
+[cols="1,10"]
+|===
+|[.warning-icon]#i# |
+To prevent mismatch between transactions and a TxProfile, The Central System SHALL include the transactionId in a <<set_charging_profile_req,SetChargingProfile.req>> if the profile applies to a specific transaction.
+|===
 
-== These situations are described below
+These situations are described below.
 
-==.1. Setting a charging profile at start of transaction
+==== Setting a charging profile at start of transaction
 
-== If the Central System receives a StartTransaction.req the Central System SHALL respond with a
+If the Central System receives a <<start_transaction_req,StartTransaction.req>> the Central System SHALL respond with a <<start_transaction_conf,StartTransaction.conf>>. If there is a need for a charging profile, The Central System MAY choose to send a <<set_charging_profile_req,SetChargingProfile.req>> to the Charge Point.
 
-== StartTransaction.conf. If there is a need for a charging profile, The Central System MAY choose to send a
+It is RECOMMENDED to check the timestamp in the <<start_transaction_req,StartTransaction.req>> PDU prior to sending a charging profile to check if the transaction is likely to be still ongoing. The <<start_transaction_req,StartTransaction.req>> might have been cached during an offline period.
 
-== SetChargingProfile.req to the Charge Point
+==== Setting a charge profile in a RemoteStartTransaction request
 
-== It is RECOMMENDED to check the timestamp in the StartTransaction.req PDU prior to sending a charging profile
+The Central System MAY include a charging profile in a <<remote_start_transaction_req,RemoteStartTransaction>> request.
 
-== to check if the transaction is likely to be still ongoing. The StartTransaction.req might have been cached during
+If the Central System includes a <<charging_profile_type,ChargingProfile>>, the ChargingProfilePurpose MUST be set to TxProfile and the transactionId SHALL NOT be set.
 
-== an offline period
+[cols="1,10"]
+|===
+|[.info-icon]#i# |
+The Charge Point SHALL apply the given profile to the newly started transaction. This transaction will get a transactionId assigned by Central System via a <<start_transaction_conf,StartTransaction.conf>>. When the Charge Point receives a <<set_charging_profile_req,SetChargingProfile.req>>, with the _transactionId_ for this transaction, with the same StackLevel as the profile given in the <<remote_start_transaction_req,RemoteStartTransaction.req>>, the Charge Point SHALL replace the existing charging profile, otherwise it SHALL install/stack the profile next to the already existing profile(s).
+|===
 
-==.2. Setting a charge profile in a RemoteStartTransaction request
+==== Setting a charging profile during a transaction
 
-== The Central System MAY include a charging profile in a RemoteStartTransaction request
+The Central System MAY send a charging profile to a Charge Point to update the charging profile for that transaction. The Central System SHALL use the <<set_charging_profile_req,SetChargingProfile.req>> PDU for that purpose. If a charging profile with the same <<charging_profile_id,chargingProfileId>>, or the same combination of <<stack_level,stackLevel>> / <<charging_profile_purpose,ChargingProfilePurpose>>, exists on the Charge Point, the new charging profile SHALL replace the existing charging profile, otherwise it SHALL be added. The Charge Point SHALL then re-evaluate its collection of charge profiles to determine which charging profile will become active. In order to ensure that the updated charging profile applies only to the current transaction, the <<charging_profile_purpose,chargingProfilePurpose>> of the <<charging_profile_type,ChargingProfile>> MUST be set to TxProfile. (See section: <<charging_profile_purpose,Charging Profile Purposes>>)
 
-== If the Central System includes a ChargingProfile, the ChargingProfilePurpose MUST be set to TxProfile and the
+==== Setting a charging profile outside of a transaction
 
-== transactionId SHALL NOT be set
+The Central System MAY send charging profiles to a Charge Point that are to be used as default charging profiles The Central System SHALL use the <<set_charging_profile_req,SetChargingProfile.req>> PDU for that purpose. Such charging profiles MAY be sent at any time. If a charging profile with the same <<charging_profile_id,chargingProfileId>>, or the same combination of <<stack_level,stackLevel>> / <<charging_profile_purpose,ChargingProfilePurpose>>, exists on the Charge Point, the new charging profile SHALL replace the existing charging profile, otherwise it SHALL be added. The Charge Point SHALL then re-evaluate its collection of charge profiles to determine which charging profile will become active.
 
+[cols="1,10"]
+|===
+|[.info-icon]#i# |
+It is not possible to set a <<charging_profile_type,ChargingProfile>> with purpose set to <<tx_profile,TxProfile>> without presence of an active transaction, or in advance of a transaction.
+|===
 
+[cols="1,10"]
+|===
+|[.info-icon]#i# |
+When a <<charging_profile_type,ChargingProfile>> is refreshed during execution, it is advised to put the startSchedule of the new <<charging_profile_type,ChargingProfile>> in the past, so there is no period of default charging behaviour inbetween the ChargingProfiles. The Charge Point SHALL continue to execute the existing <<charging_profile_type,ChargingProfile>> until the new <<charging_profile_type,ChargingProfile>> is installed.
+|===
 
-== The Charge Point SHALL apply the given profile to the newly started transaction. This
+[cols="1,10"]
+|===
+|[.info-icon]#i# |
+If the <<charging_schedule_period,chargingSchedulePeriod>> is longer than duration , the remainder periods SHALL not be executed. If duration is longer than the <<charging_schedule_period,chargingSchedulePeriod>>, the Charge Point SHALL keep the value of the last <<charging_schedule_period,chargingSchedulePeriod>> until _duration_ has ended.
+|===
 
-== transaction will get a transactionId assigned by Central System via a StartTransaction.conf
+[cols="1,10"]
+|===
+|[.info-icon]#i# |
+When <<recurrency_kind_type,recurrencyKind>> is used in combination with a <<charging_schedule_period,chargingSchedulePeriod>> and/or duration that is longer then the recurrence period duration, the remainder periods SHALL not be executed.
+|===
 
-== When the Charge Point receives a SetChargingProfile.req, with the transactionId for this
+[cols="1,10"]
+|===
+|[.info-icon]#i# |
+The StartSchedule of the first <<charging_schedule_period,chargingSchedulePeriod>> in a <<charging_schedule_type,chargingSchedule>> SHALL always be 0.
+|===
 
-== transaction, with the same StackLevel as the profile given in the RemoteStartTransaction.req
-
-== the Charge Point SHALL replace the existing charging profile, otherwise it SHALL install/stack
-
-== the profile next to the already existing profile(s)
-
-==.3. Setting a charging profile during a transaction
-
-== The Central System MAY send a charging profile to a Charge Point to update the charging profile for that
-
-== transaction. The Central System SHALL use the SetChargingProfile.req PDU for that purpose. If a charging profile
-
-== with the same chargingProfileId, or the same combination of stackLevel / ChargingProfilePurpose, exists on the
-
-== Charge Point, the new charging profile SHALL replace the existing charging profile, otherwise it SHALL be added
-
-== The Charge Point SHALL then re-evaluate its collection of charge profiles to determine which charging profile will
-
-== become active. In order to ensure that the updated charging profile applies only to the current transaction, the
-
-== chargingProfilePurpose of the ChargingProfile MUST be set to TxProfile. (See section: Charging Profile Purposes)
-
-==.4. Setting a charging profile outside of a transaction
-
-== The Central System MAY send charging profiles to a Charge Point that are to be used as default charging profiles
-
-== The Central System SHALL use the SetChargingProfile.req PDU for that purpose. Such charging profiles MAY be
-
-== sent at any time. If a charging profile with the same chargingProfileId, or the same combination of stackLevel /
-
-== ChargingProfilePurpose, exists on the Charge Point, the new charging profile SHALL replace the existing charging
-
-== profile, otherwise it SHALL be added. The Charge Point SHALL then re-evaluate its collection of charge profiles to
-
-== determine which charging profile will become active
-
-
-
-== It is not possible to set a ChargingProfile with purpose set to TxProfile without presence of an
-
-== active transaction, or in advance of a transaction
-
-
-
-== When a ChargingProfile is refreshed during execution, it is advised to put the startSchedule of
-
-== the new ChargingProfile in the past, so there is no period of default charging behaviour
-
-== inbetween the ChargingProfiles. The Charge Point SHALL continue to execute the existing
-
-== ChargingProfile until the new ChargingProfile is installed
-
-
-
-== If the chargingSchedulePeriod is longer than duration , the remainder periods SHALL not be
-
-== executed. If duration is longer than the chargingSchedulePeriod, the Charge Point SHALL keep
-
-== the value of the last chargingSchedulePeriod until duration has ended
-
-
-
-== When recurrencyKind is used in combination with a chargingSchedulePeriod and/or duration
-
-== that is longer then the recurrence period duration, the remainder periods SHALL not be
-
-== executed
-
-
-
-== The StartSchedule of the first chargingSchedulePeriod in a chargingSchedule SHALL always be
-
-== 0
-
-
-
-== When recurrencyKind is used in combination with a chargingSchedule duration shorter than
-
-== the recurrencyKind period, the Charge Point SHALL fall back to default behaviour after the
-
-== chargingSchedule duration ends. This fall back means that the Charge Point SHALL use a
-
-== ChargingProfile with a lower stackLevel if available. If no other ChargingProfile is available, the
-
-== Charge Point SHALL allow charging as if no ChargingProfile is installed. If the
-
-== chargingSchedulePeriod and/or duration is longer then the recurrence period duration, the
-
-== remainder periods SHALL not be executed
+[cols="1,10"]
+|===
+|[.info-icon]#i# |
+When <<recurrency_kind_type,recurrencyKind>> is used in combination with a <<charging_schedule_type,chargingSchedule>> _duration_ shorter than the <<recurrency_kind_type,recurrencyKind>> period, the Charge Point SHALL fall back to default behaviour after the <<charging_schedule_type,chargingSchedule>> _duration_ ends. This fall back means that the Charge Point SHALL use a <<charging_profile_type,ChargingProfile>> with a lower stackLevel if available. If no other <<charging_profile_type,ChargingProfile>> is available, the Charge Point SHALL allow charging as if no <<charging_profile_type,ChargingProfile>> is installed. If the <<charging_schedule_period,chargingSchedulePeriod>> and/or duration is longer then the recurrence period duration, the remainder periods SHALL not be executed.
+|===
 
 [[trigger_message]]
 === Trigger Message
 
-== Charge Point Central System
+.Sequence Diagram: Trigger Message
+image::images/figure_38.svg[Sequence Diagram: Trigger Message]
 
-== TriggerMessage.req(requestedMessage, [connectorId])
+During normal operation, the Charge Point informs the Central System of its state and any relevant occurrences. If there is nothing to report the Charge Point will send at least a heartBeat at a predefined interval. Under normal circumstances this is just fine, but what if the Central System has (whatever) reason to doubt the last known state? What can a Central System do if a firmware update is in progress and the last status notification it received about it was much longer ago than could reasonably be expected? The same can be asked for the progress of a diagnostics request. The problem in these situations is not that the information needed isn't covered by existing messages, the problem is strictly a timing issue. The Charge Point has the information, but has no way of knowing that the Central System would like an update.
 
-== TriggerMessage.conf(status)
+The <<trigger_message_req,TriggerMessage.req>> makes it possible for the Central System, to request the Charge Point, to send Charge Point-initiated messages. In the request the Central System indicates which message it wishes to receive. For every such requested message the Central System MAY optionally indicate to which connector this request applies. The requested message is leading: if the specified connectorId is not relevant to the message, it should be ignored. In such cases the requested message should still be sent.
 
-== Figure 38. Sequence Diagram: Trigger Message
-
-== During normal operation, the Charge Point informs the Central System of its state and any relevant occurrences
-
-== If there is nothing to report the Charge Point will send at least a heartBeat at a predefined interval. Under
-
-== normal circumstances this is just fine, but what if the Central System has (whatever) reason to doubt the last
-
-== known state? What can a Central System do if a firmware update is in progress and the last status notification it
-
-== received about it was much longer ago than could reasonably be expected? The same can be asked for the
-
-== progress of a diagnostics request. The problem in these situations is not that the information needed isn't
-
-== covered by existing messages, the problem is strictly a timing issue. The Charge Point has the information, but
-
-== has no way of knowing that the Central System would like an update
-
-== The TriggerMessage.req makes it possible for the Central System, to request the Charge Point, to send Charge
-
-Point-initiated messages. In the request the Central System indicates which message it wishes to receive. For
-every such requested message the Central System MAY optionally indicate to which connector this request
-applies. The requested message is leading: if the specified connectorId is not relevant to the message, it should
-be ignored. In such cases the requested message should still be sent.
-Inversely, if the connectorId is relevant but absent, this should be interpreted as “for all allowed connectorId
-values”. For example, a request for a statusNotification for connectorId 0 is a request for the status of the
-Charge Point. A request for a statusNotification without connectorId is a request for multiple statusNotifications:
-the notification for the Charge Point itself and a notification for each of its connectors.
+Inversely, if the connectorId is relevant but absent, this should be interpreted as “for all allowed connectorId values”. For example, a request for a statusNotification for connectorId 0 is a request for the status of the Charge Point. A request for a statusNotification without connectorId is a request for multiple statusNotifications: the notification for the Charge Point itself and a notification for each of its connectors.
 Charge Point Central System
-TriggerMessage.req( RequestedMessage: StatusNotification , ConnectorId: 1 )
-TriggerMessage.conf(Status: Accepted)
-StatusNotification.req(ConnectorId: 1, errorCode: NoError, Status: Charging)
-StatusNotification.conf()
-_Figure 39. Sequence Diagram: Trigger Message StatusNotification Example_
-The Charge Point SHALL first send the TriggerMessage response, before sending the requested message. In the
-TriggerMessage.conf the Charge Point SHALL indicate whether it will send it or not, by returning ACCEPTED or
-REJECTED. It is up to the Charge Point if it accepts or rejects the request to send. If the requested message is
-unknown or not implemented the Charge Point SHALL return NOT_IMPLEMENTED.
-Messages that the Charge Point marks as accepted SHOULD be sent. The situation could occur that, between
-accepting the request and actually sending the requested message, that same message gets sent because of
-normal operations. In such cases the message just sent MAY be considered as complying with the request.
-The TriggerMessage mechanism is not intended to retrieve historic data. The messages it triggers should only
-give current information. A MeterValues.req message triggered in this way for instance SHALL return the most
-recent measurements for all measurands configured in configuration key MeterValuesSampledData.
-StartTransaction and StopTransaction have been left out of this mechanism because they are not state related,
-but by their nature describe a transition.
+
+.Sequence Diagram: Trigger Message StatusNotification Example
+image::images/figure_39.svg[Sequence Diagram: Trigger Message StatusNotification Example]
+
+The Charge Point SHALL first send the TriggerMessage response, before sending the requested message. In the <<trigger_message_conf,TriggerMessage.conf>> the Charge Point SHALL indicate whether it will send it or not, by returning ACCEPTED or REJECTED. It is up to the Charge Point if it accepts or rejects the request to send. If the requested message is unknown or not implemented the Charge Point SHALL return NOT_IMPLEMENTED.
+
+Messages that the Charge Point marks as accepted SHOULD be sent. The situation could occur that, between accepting the request and actually sending the requested message, that same message gets sent because of normal operations. In such cases the message just sent MAY be considered as complying with the request.
+
+The TriggerMessage mechanism is not intended to retrieve historic data. The messages it triggers should only give current information. A <<metervalues_req,MeterValues.req>> message triggered in this way for instance SHALL return the most recent measurements for all measurands configured in configuration key <<meter_values_sampled_data,`MeterValuesSampledData`>>. <<start_transaction_req,StartTransaction>> and <<stop_transaction_req,StopTransaction>> have been left out of this mechanism because they are not state related, but by their nature describe a transition.
 
 === Unlock Connector
 
-Charge Point Central System
-UnlockConnector.req(connectorId)
-UnlockConnector.conf(status)
-_Figure 40. Sequence Diagram: Unlock Connector_
-Central System can request a Charge Point to unlock a connector. To do so, the Central System SHALL send an
-UnlockConnector.req PDU.
+.Sequence Diagram: Unlock Connector
+image::images/figure_40.svg[Sequence Diagram: Unlock Connector]
+
+Central System can request a Charge Point to unlock a connector. To do so, the Central System SHALL send an <<unlock_connector_req,UnlockConnector.req>> PDU.
 The purpose of this message: Help EV drivers that have problems unplugging their cable from the Charge Point
-in case of malfunction of the Connector cable retention. When a EV driver calls the CPO help-desk, an operator
-could manually trigger the sending of an UnlockConnector.req to the Charge Point, forcing a new attempt to
-unlock the connector. Hopefully this time the connector unlocks and the EV driver can unplug the cable and
-drive away.
 
-== The UnlockConnector.req SHOULD NOT be used to remotely stop a running transaction, use the Remote Stop
+in case of malfunction of the Connector cable retention. When a EV driver calls the CPO help-desk, an operator could manually trigger the sending of an <<unlock_connector_req,UnlockConnector.req>> to the Charge Point, forcing a new attempt to unlock the connector. Hopefully this time the connector unlocks and the EV driver can unplug the cable and drive away.
 
-== Transaction instead
+The <<unlock_connector_req,UnlockConnector.req>> SHOULD NOT be used to remotely stop a running transaction, use the <<remote_stop_transaction_by_central_system,Remote Stop Transaction>> instead.
 
-== Upon receipt of an UnlockConnector.req PDU, the Charge Point SHALL respond with a UnlockConnector.conf
+Upon receipt of an <<unlock_connector_req,UnlockConnector.req>> PDU, the Charge Point SHALL respond with a <<unlock_connector_conf,UnlockConnector.conf>> PDU. The response PDU SHALL indicate whether the Charge Point was able to unlock its connector.
 
-== PDU. The response PDU SHALL indicate whether the Charge Point was able to unlock its connector
+If there was a transaction in progress on the specific connector, then Charge Point SHALL finish the transaction first as described in <<stop_transaction,Stop Transaction>>.
 
-== If there was a transaction in progress on the specific connector, then Charge Point SHALL finish the transaction
-
-== first as described in Stop Transaction
-
-== UnlockConnector.req is intented only for unlocking the cable retention lock on the Connector
-
-== not for unlocking a connector access door
+[cols="1,10"]
+|===
+|[.info-icon]#i# |
+<<unlock_connector_req,UnlockConnector.req>> is intented only for unlocking the cable retention lock on the Connector not for unlocking a connector access door.
+|===
 
 === Update Firmware
 
@@ -1993,7 +1859,7 @@ response to a Authorize.req PDU. See also Authorize
 idTagInfo** IdTagInfo 1..1 Required. This contains information about authorization status, expiry and
 parent id.
 
-[[bootnotification_req]]
+[[boot_notification_req]]
 === BootNotification.req
 
 This contains the field definition of the BootNotification.req PDU sent by the Charge Point to the Central System.
@@ -2018,7 +1884,7 @@ FIELD NAME FIELD TYPE CARD. DESCRIPTION
 meterType CiString25Type 0..1 Optional. This contains the type of the main electrical meter of
 the Charge Point.
 
-[[bootnotification_conf]]
+[[boot_notification_conf]]
 === BootNotification.conf
 
 This contains the field definition of the BootNotification.conf PDU sent by the Central System to the Charge Point
@@ -2396,7 +2262,7 @@ response to a Reset.req PDU. See also Reset
 **FIELD NAME FIELD TYPE CARD. DESCRIPTION
 status** ResetStatus 1..1 Required. This indicates whether the Charge Point is able to perform the reset.
 
-[[sendlocallist]]
+[[send_local_list_req]]
 === SendLocalList.req
 
 This contains the field definition of the SendLocalList.req PDU sent by the Central System to the Charge Point.
@@ -2417,6 +2283,7 @@ SendLocalListMaxLength
 updateType UpdateType 1..1 Required. This contains the type of update (full or differential) of
 this request.
 
+[[send_local_list_conf]]
 === SendLocalList.conf
 
 This contains the field definition of the SendLocalList.conf PDU sent by the Charge Point to the Central System in
@@ -2425,7 +2292,7 @@ response to a SendLocalList.req PDU. See also Send Local List
 status** UpdateStatus 1..1 Required. This indicates whether the Charge Point has successfully received and
 applied the update of the local authorization list.
 
-[[setchargingprofile]]
+[[set_charging_profile_req]]
 === SetChargingProfile.req
 
 This contains the field definition of the SetChargingProfile.req PDU sent by the Central System to the Charge
@@ -2436,7 +2303,7 @@ connectorId** integer 1..1 Required. The connector to which the charging profile
 the message contains an overall limit for the Charge Point.
 **csChargingProfiles** ChargingProfile 1..1 Required. The charging profile to be set at the Charge Point.
 
-[[setchargingprofile_conf]]
+[[set_charging_profile_conf]]
 === SetChargingProfile.conf
 
 This contains the field definition of the SetChargingProfile.conf PDU sent by the Charge Point to the Central
@@ -2550,7 +2417,7 @@ in response to a TriggerMessage.req PDU. See also Trigger Message
 status** TriggerMessageStatus 1..1 Required. Indicates whether the Charge Point will send the requested
 notification or not.
 
-[[unlockconnector]]
+[[unlock_connector_req]]
 === UnlockConnector.req
 
 This contains the field definition of the UnlockConnector.req PDU sent by the Central System to the Charge
@@ -2560,6 +2427,7 @@ connectorId** integer
 connectorId > 0
 1..1 Required. This contains the identifier of the connector to be unlocked.
 
+[[unlock_connector_conf]]
 === UnlockConnector.conf
 
 This contains the field definition of the UnlockConnector.conf PDU sent by the Charge Point to the Central
@@ -2567,7 +2435,7 @@ System in response to an UnlockConnector.req PDU. See also Unlock Connector
 **FIELD NAME FIELD TYPE CARD. DESCRIPTION
 status** UnlockStatus 1..1 Required. This indicates whether the Charge Point has unlocked the connector.
 
-[[updatefirmware]]
+[[update_firmware_req]]
 === UpdateFirmware.req
 
 This contains the field definition of the UpdateFirmware.req PDU sent by the Central System to the Charge Point.
@@ -2585,6 +2453,7 @@ retryInterval integer 0..1 Optional. The interval in seconds after which a retry
 field is not present, it is left to Charge Point to decide how long to wait between
 attempts.
 
+[[update_firmware_conf]]
 === UpdateFirmware.conf
 
 This contains the field definition of the UpdateFirmware.conf PDU sent by the Charge Point to the Central
@@ -2748,15 +2617,14 @@ Weekly
 1
 
 - _Figure 42. Class Diagram: ChargingProfile_
-  **FIELD NAME FIELD TYPE CARD. DESCRIPTION
-  chargingProfileId** integer 1..1 Required. Unique identifier for this profile.
-  **transactionId** integer 0..1 Optional. Only valid if ChargingProfilePurpose is set to TxProfile,
-  the transactionId MAY be used to match the profile to a specific
-  transaction.
+**FIELD NAME FIELD TYPE CARD. DESCRIPTION
+[[charging_profile_id]]**chargingProfileId** integer 1..1 Required. Unique identifier for this profile.
+**transactionId** integer 0..1 Optional. Only valid if ChargingProfilePurpose is set to TxProfile,
+the transactionId MAY be used to match the profile to a specific
+transaction.
 
 FIELD NAME FIELD TYPE CARD. DESCRIPTION
-[[stacklevel]]
-stackLevel integer >=0 1..1 Required. Value determining level in hierarchy stack of profiles.
+[[stack_level]]stackLevel integer >=0 1..1 Required. Value determining level in hierarchy stack of profiles.
 Higher values have precedence over lower values. Lowest level is 0.
 chargingProfilePurpose ChargingProfilePurposeType 1..1 Required. Defines the purpose of the schedule transferred by this
 message.
@@ -2820,7 +2688,7 @@ Note that if numberPhases in a ChargingSchedulePeriod is absent, 3 SHALL be assu
 The amount of Ampere per phase, not the sum of all phases.
 It is usually more convenient to use this for AC charging.
 
-[[chargingschedule]]
+[[charging_schedule_type]]
 === ChargingSchedule
 
 _Class_
@@ -2845,7 +2713,7 @@ algorithm to optimize the power allocation for in the case a
 charging process is inefficient at lower charging rates. Accepts at
 most one digit fraction (e.g. 8.1)
 
-[[chargingscheduleperiod]]
+[[charging_schedule_period]]
 === ChargingSchedulePeriod
 
 _Class_
@@ -3203,6 +3071,7 @@ smartphone app, exceeding a (non local) prepaid credit.
 **SoftReset** A soft reset command was received.
 **UnlockCommand** Central System sent an Unlock Connector command.
 
+[[recurrency_kind_type]]
 === RecurrencyKindType
 
 _Enumeration_
@@ -3513,14 +3382,14 @@ Values are reported in CSL, formatted: 0.RST, 1.RST, 2.RTS
 **Unit** %
 **Description** Percentage of maximum intensity at which to illuminate Charge Point lighting
 
-[[localauthorizeoffline]]
+[[local_authorize_offline]]
 ==== LocalAuthorizeOffline
 **Required/optional** required
 **Accessibility** RW
 **Type** boolean
 **Description** whether the Charge Point, when _offline_ , will start a transaction for locally-authorized identifiers.
 
-[[localpreauthorize]]
+[[local_pre_authorize]]
 ==== LocalPreAuthorize
 **Required/optional** required
 **Accessibility** RW
@@ -3528,7 +3397,7 @@ Values are reported in CSL, formatted: 0.RST, 1.RST, 2.RTS
 **Description** whether the Charge Point, when online, will start a transaction for locally-authorized identifiers without waiting for or
 requesting an Authorize.conf from the Central System
 
-[[maxenergyoninvalidid]]
+[[max_energy_on_invalid_id]]
 ==== MaxEnergyOnInvalidId
 **Required/optional** optional
 
@@ -3537,21 +3406,21 @@ requesting an Authorize.conf from the Central System
 **Unit** Wh
 **Description** Maximum energy in Wh delivered when an identifier is invalidated by the Central System after start of a transaction.
 
-[[metervaluesaligneddata]]
+[[meter_values_aligned_data]]
 ==== MeterValuesAlignedData
 **Required/optional** required
 **Accessibility** RW
 **Type** CSL
 **Description** Clock-aligned measurand(s) to be included in a MeterValues.req PDU, every ClockAlignedDataInterval seconds
 
-[[metervaluesaligneddatamaxlength]]
+[[meter_values_aligned_data_max_length]]
 ==== MeterValuesAlignedDataMaxLength
 **Required/optional** optional
 **Accessibility** R
 **Type** integer
 **Description** Maximum number of items in a MeterValuesAlignedData Configuration Key.
 
-[[metervaluessampleddata]]
+[[meter_values_sampled_data]]
 ==== MeterValuesSampledData
 **Required/optional** required
 **Accessibility** RW
@@ -3560,7 +3429,7 @@ requesting an Authorize.conf from the Central System
 applicable, the Measurand is combined with the optional phase; for instance: Voltage.L1
 Default: "Energy.Active.Import.Register"
 
-[[metervaluessampleddatamaxlength]]
+[[meter_values_sampled_data_max_length]]
 ==== MeterValuesSampledDataMaxLength
 **Required/optional** optional
 **Accessibility** R
@@ -3568,7 +3437,7 @@ Default: "Energy.Active.Import.Register"
 **Type** integer
 **Description** Maximum number of items in a MeterValuesSampledData Configuration Key.
 
-[[metervaluesampleinterval]]
+[[meter_value_sample_interval]]
 ==== MeterValueSampleInterval
 **Required/optional** required
 **Accessibility** RW
