@@ -373,6 +373,7 @@ To support the different flavours, the OCPP standard is divided in multiple docu
 
 For improved interoperabillity between the Central Systems and Charge Points, it is adviced to meet the requirements stated in the <<ocpp_1.6ct,OCPP 1.6 Compliance>> testing documentation.
 
+[[feature_profiles]]
 === Feature Profiles
 
 This section is normative.
@@ -433,7 +434,7 @@ The grouping of all messages in their profiles can be found in the table below.
 |<<trigger_message_req,TriggerMessage>>                                | | | | | | X
 |===
 
-The support for the specific feature profiles is reported by the <<supportedfeatureprofiles,`SupportedFeatureProfiles`>> configuration key.
+The support for the specific feature profiles is reported by the <<supported_feature_profiles,`SupportedFeatureProfiles`>> configuration key.
 
 === General views of operation
 
@@ -496,7 +497,7 @@ If implemented, the Authorization Cache SHOULD conform to the following semantic
 * Cache values SHOULD be stored in non-volatile memory, and SHOULD be persisted across reboots and power outages.
 * When an identifier is presented that is stored in the cache as NOT-valid, and the Charge Point is _online_ : an <<authorize_req,Authorize.req>> SHOULD be sent to the central System to check the current state of the identifier.
 
-Operation of the Authorization Cache, when present, is reported (and controlled, where possible) by the <<authorizationcacheenabled,`AuthorizationCacheEnabled`>> configuration key.
+Operation of the Authorization Cache, when present, is reported (and controlled, where possible) by the <<authorization_cache_enabled,`AuthorizationCacheEnabled`>> configuration key.
 
 [[local_authorization_list]]
 ==== Local Authorization List
@@ -511,11 +512,11 @@ These values may be used to provide more fine grained information to users (e.g.
 
 The Local Authorization List SHOULD be maintained by the Charge Point in non-volatile memory, and SHOULD be persisted across reboots and power outages.
 
-A Charge Point that supports Local Authorization List SHOULD implement the configuration key: <<localauthlistmaxlength,LocalAuthListMaxLength>> This gives the Central System a way to known the the maximum possible number of Local Authorization List elements in a Charge Point
+A Charge Point that supports Local Authorization List SHOULD implement the configuration key: <<local_auth_list_max_length,LocalAuthListMaxLength>> This gives the Central System a way to known the the maximum possible number of Local Authorization List elements in a Charge Point
 
-The Charge Point indicates whether the Local Authorization List is supported by the presence or absence of the `LocalAuthListManagement` element in the value of the <<supportedfeatureprofiles,`SupportedFeatureProfiles`>> configuration key.
+The Charge Point indicates whether the Local Authorization List is supported by the presence or absence of the `LocalAuthListManagement` element in the value of the <<supported_feature_profiles,`SupportedFeatureProfiles`>> configuration key.
 
-Whether the Local Authorization List is enabled is reported and controlled by the <<localauthlistenabled,LocalAuthListEnabled>> configuration key.
+Whether the Local Authorization List is enabled is reported and controlled by the <<local_auth_list_enabled,LocalAuthListEnabled>> configuration key.
 
 The Central System can synchronize this list by either (1) sending a complete list of identifiers to replace the Local Authorization List or (2) by sending a list of changes (add, update, delete) to apply to the Local Authorization List. The operations to support this are <<get_local_list_version_by_central_system,Get Local List Version>> and <<send_local_list_by_central_system,Send Local List>>.
 
@@ -544,12 +545,12 @@ Where both Authorization Cache and Local Authorization List are supported, a Cha
 When _offline_, a Charge Point MAY allow automatic authorization of any "unknown" identifiers that cannot be explicitly authorized by Local Authorization List or Authorization Cache entries. Identifiers that are present in a Local Authorization List that have a status other than “Accepted” (Invalid, Blocked, Expired) MUST be rejected. +
 Identifiers that were valid but are apparently expired due to passage of time MUST also be rejected
 
-Operation of the Unknown Offline Authorization capability, when supported, is reported (and controlled, where possible) by the <<allowofflinetxforunknownid,`AllowOfflineTxForUnknownId`>> configuration key.
+Operation of the Unknown Offline Authorization capability, when supported, is reported (and controlled, where possible) by the <<allow_offline_tx_for_unknown_id,`AllowOfflineTxForUnknownId`>> configuration key.
 
 When connection to the Central Server is restored, the Charge Point SHALL send a <<start_transaction_by_charge_point,Start Transaction>> request for any transaction that was authorized offline , as required by <<transaction_related_messages,transaction-related message handling>>. When the authorization status in the <<start_transaction_conf,StartTransaction.conf>> is not _Accepted_, and the transaction is still ongoing, the Charge Point SHOULD:
 
-* when <<stop_transactiononinvalidid,`StopTransactionOnInvalidId`>> is set to _true_: stop the transaction normally as stated in <<stop_transaction_by_central_system,Stop Transaction>>. The Reason field in the Stop Transaction request should be set to DeAuthorized. If the Charge Point has the possibility to lock the Charging Cable, it SHOULD keep the Charging Cable locked until the owner presents his identifier.
-* when <<stop_transactiononinvalidid,StopTransactionOnInvalidId>> is set to _false_: only stop energy delivery to the vehicle.
+* when <<stop_transaction_on_invalid_id,`StopTransactionOnInvalidId`>> is set to _true_: stop the transaction normally as stated in <<stop_transaction_by_central_system,Stop Transaction>>. The Reason field in the Stop Transaction request should be set to DeAuthorized. If the Charge Point has the possibility to lock the Charging Cable, it SHOULD keep the Charging Cable locked until the owner presents his identifier.
+* when <<stop_transaction_on_invalid_id,StopTransactionOnInvalidId>> is set to _false_: only stop energy delivery to the vehicle.
 
 [cols="1,10"]
 |===
@@ -596,11 +597,11 @@ It is permissible for the Charge Point to skip a transaction-related message if 
 
 What kind of response, or failure to respond, constitutes a 'failure to process the message' is defined in the documents <<ocpp_imp_j,OCPP JSON Specification>> and <<ocpp_imp_s,OCPP SOAP Specification>>.
 
-The number of times and the interval with which the Charge Point should retry such failed transaction-related messages MAY be configured using the <<transactionmessageattempts,TransactionMessageAttempts>> and <<transactionmessageretryinterval,TransactionMessageRetryInterval>> configuration keys.
+The number of times and the interval with which the Charge Point should retry such failed transaction-related messages MAY be configured using the <<transaction_message_attempts,TransactionMessageAttempts>> and <<transaction_message_retry_interval,TransactionMessageRetryInterval>> configuration keys.
 
-When the Charge Point encounters a first failure to deliver a certain transaction-related message, it SHOULD send this message again as long as it keeps resulting in a failure to process the message and it has not yet encountered as many failures to process the message for this message as specified in its <<transactionmessageattempts,TransactionMessageAttempts>> configuration key. Before every retransmission, it SHOULD wait as many seconds as specified in its <<transactionmessageretryinterval,TransactionMessageRetryInterval>> key, multiplied by the number of preceding transmissions of this same message.
+When the Charge Point encounters a first failure to deliver a certain transaction-related message, it SHOULD send this message again as long as it keeps resulting in a failure to process the message and it has not yet encountered as many failures to process the message for this message as specified in its <<transaction_message_attempts,TransactionMessageAttempts>> configuration key. Before every retransmission, it SHOULD wait as many seconds as specified in its <<transaction_message_retry_interval,TransactionMessageRetryInterval>> key, multiplied by the number of preceding transmissions of this same message.
 
-As an example, consider a Charge Point that has the value "3" for the <<transactionmessageattempts,TransactionMessageAttempts>> configuration key and the value "60" for the <<transactionmessageretryinterval,TransactionMessageRetryInterval>> configuration key. It sends a StopTransaction message and detects a failure to process the message in the Central System. The Charge Point SHALL wait for 60 seconds, and resend the message. In the case when there is a second failure, the Charge Point SHALL wait for 120 seconds, before resending the message. If this final attempt fails, the Charge Point SHOULD discard the message and continue with the next transaction-related message, if there is any.
+As an example, consider a Charge Point that has the value "3" for the <<transaction_message_attempts,TransactionMessageAttempts>> configuration key and the value "60" for the <<transaction_message_retry_interval,TransactionMessageRetryInterval>> configuration key. It sends a StopTransaction message and detects a failure to process the message in the Central System. The Charge Point SHALL wait for 60 seconds, and resend the message. In the case when there is a second failure, the Charge Point SHALL wait for 120 seconds, before resending the message. If this final attempt fails, the Charge Point SHOULD discard the message and continue with the next transaction-related message, if there is any.
 
 === Connector numbering
 
@@ -651,12 +652,14 @@ Tokens (idTags) are grouped for authorization purposes by specifying a common gr
 Even though the ParentId has the same nominal data type (<<idtoken,IdToken>>) as an idTag, the value of this element may not be in the common format of <<idtoken,IdTokens>> and/or may not represent an actual valid <<idtoken,IdToken>> (e.g. it may be a common shared "account number"): therefore, the ParentId value SHOULD NOT be used for comparison against a presented Token value (unless it also occurs as an idTag value).
 |===
 
+[[reservations]]
 === Reservations
 
 This section is informative.
 
 Reservation of a Charge Point is possible using the <<reserve_now_by_central_system,Reserve Now>> operation. This operation reserves the Charge Point until a certain expiry time for a specific idTag. A parent idTag may be included in the reservation to support 'group' reservations. It is possible to reserve a specific connector on a Charge Point or to reserve any connector on a Charge Point. A reservation is released when the reserved idTag is used on the reserved connector (when specified) or on any connector (when unspecified) or when the expiry time is reached or when the reservation is explicitly canceled.
 
+[[vendor_specific_data_transfer]]
 === Vendor-specific data transfer
 
 This section is informative.
@@ -833,10 +836,10 @@ The smart charging options defined can be used in extensive ways. Because of the
 |===
 |SMART CHARGING CONFIGURATION KEYS
 
-|<<chargeprofilemaxstacklevel,ChargeProfileMaxStackLevel>>
-|<<chargingscheduleallowedchargingrateunit,ChargingScheduleAllowedChargingRateUnit>>
-|<<chargingschedulemaxperiods,ChargingScheduleMaxPeriods>>
-|<<maxchargingprofilesinstalled,MaxChargingProfilesInstalled>>
+|<<charge_profile_max_stack_level,ChargeProfileMaxStackLevel>>
+|<<charging_schedule_allowed_charging_rate_unit,ChargingScheduleAllowedChargingRateUnit>>
+|<<charging_schedule_max_periods,ChargingScheduleMaxPeriods>>
+|<<max_charging_profiles_installed,MaxChargingProfilesInstalled>>
 |===
 
 A full list of all standardized configuration keys can be found in chapter <<standard_configuration_key_names_and_values,Standard Configuration Key Names & Values>>.
@@ -904,7 +907,7 @@ The amount of phases used during charging is limited by the capabilities of: The
 [cols="1,10"]
 |===
 |[.warning-icon]#!# |
-Switching the number of used phases during a schedule or charging session should be done with care. Some EVs may not support this and changing the amount of phases may result in physical damage. With the configuration key: <<connectorswitch3to1phasesupported,ConnectorSwitch3to1PhaseSupported>> The Charge Point can tell if it supports switching the amount of phases during a transaction.
+Switching the number of used phases during a schedule or charging session should be done with care. Some EVs may not support this and changing the amount of phases may result in physical damage. With the configuration key: <<connector_switch_3to1_phase_supported,ConnectorSwitch3to1PhaseSupported>> The Charge Point can tell if it supports switching the amount of phases during a transaction.
 |===
 
 [cols="1,10"]
@@ -945,8 +948,8 @@ Frequent (e.g. 1-5 minute interval) meter readings taken and transmitted (usuall
 * <<meter_values_sampled_data,MeterValuesSampledData>>
 * <<meter_values_sampled_data_max_length,MeterValuesSampledDataMaxLength>>
 * <<meter_value_sample_interval,MeterValueSampleInterval>>
-* <<stoptxnsampleddata,StopTxnSampledData>>
-* <<stoptxnsampleddatamaxlength,StopTxnSampledDataMaxLength>>
+* <<stop_txn_sampled_data,StopTxnSampledData>>
+* <<stop_txn_sampled_data_max_length,StopTxnSampledDataMaxLength>>
 
 <<meter_value_sample_interval,MeterValueSampleInterval>> is the time (in seconds) between sampling of metering (or other) data, intended to be transmitted by "MeterValues" PDUs. Samples are acquired and transmitted periodically at this interval from the start of the charging transaction.
 
@@ -954,7 +957,7 @@ A value of "0" (numeric zero), by convention, is to be interpreted to mean that 
 
 <<meter_values_sampled_data,MeterValuesSampledData>> is a comma separated list that prescribes the set of measurands to be included in a MeterValues.req PDU, every <<meter_value_sample_interval,MeterValueSampleInterval>> seconds. The maximum amount of elements in the <<meter_values_sampled_data,MeterValuesSampledData>> list can be reported by the Charge Point via: <<meter_values_sampled_data_max_length,MeterValuesSampledDataMaxLength>>
 
-<<stoptxnsampleddata,StopTxnSampledData>> is a comma separated list that prescribes the sampled measurands to be included in the TransactionData element of StopTransaction.req PDU, every <<meter_value_sample_interval,MeterValueSampleInterval>> seconds from the start of the Transaction. The maximum amount of elements in the <<stoptxnsampleddata,StopTxnSampledData>> list can be reported by the Charge Point via: <<stoptxnsampleddatamaxlength,StopTxnSampledDataMaxLength>>.
+<<stop_txn_sampled_data,StopTxnSampledData>> is a comma separated list that prescribes the sampled measurands to be included in the TransactionData element of StopTransaction.req PDU, every <<meter_value_sample_interval,MeterValueSampleInterval>> seconds from the start of the Transaction. The maximum amount of elements in the <<stop_txn_sampled_data,StopTxnSampledData>> list can be reported by the Charge Point via: <<stop_txn_sampled_data_max_length,StopTxnSampledDataMaxLength>>.
 
 [[clock_aligned_meter_values]]
 ==== Clock-Aligned Meter Values
@@ -963,23 +966,23 @@ Grid Operator might require meter readings to be taken from fiscally certified e
 
 "Clock-Aligned Billing Data" can be configured with the following configuration keys:
 
-* <<clockaligneddatainterval,ClockAlignedDataInterval>>
+* <<clock_aligned_data_interval,ClockAlignedDataInterval>>
 * <<meter_values_aligned_data,MeterValuesAlignedData>>
 * <<meter_values_aligned_data_max_length,MeterValuesAlignedDataMaxLength>>
-* <<stoptxnaligneddata,StopTxnAlignedData>>
-* <<stoptxnaligneddatamaxlength,StopTxnAlignedDataMaxLength>>
+* <<stop_txn_aligned_data,StopTxnAlignedData>>
+* <<stop_txn_aligned_data_max_length,StopTxnAlignedDataMaxLength>>
 
-<<clockaligneddatainterval,ClockAlignedDataInterval>> is the size of the clock-aligned data interval (in seconds). This defines the set of evenly spaced meter data aggregation intervals per day, starting at 00:00:00 (midnight).
+<<clock_aligned_data_interval,ClockAlignedDataInterval>> is the size of the clock-aligned data interval (in seconds). This defines the set of evenly spaced meter data aggregation intervals per day, starting at 00:00:00 (midnight).
 
 For example, a value of 900 (15 minutes) indicates that every day should be broken into 96 15-minute intervals.
 
 A value of "0" (numeric zero), by convention, is to be interpreted to mean that no clock-aligned data should be transmitted.
 
-<<meter_values_aligned_data,MeterValuesAlignedData>> is a comma separated list that prescribes the set of measurands to be included in a MeterValues.req PDU, every <<clockaligneddatainterval,ClockAlignedDataInterval>> seconds. The maximum amount of elements in the <<meter_values_aligned_data,MeterValuesAlignedData>> list can be reported by the Charge Point via:
+<<meter_values_aligned_data,MeterValuesAlignedData>> is a comma separated list that prescribes the set of measurands to be included in a MeterValues.req PDU, every <<clock_aligned_data_interval,ClockAlignedDataInterval>> seconds. The maximum amount of elements in the <<meter_values_aligned_data,MeterValuesAlignedData>> list can be reported by the Charge Point via:
 
 <<meter_values_aligned_data_max_length,MeterValuesAlignedDataMaxLength>>
 
-<<stoptxnaligneddata,StopTxnAlignedData>> is a comma separated list that prescribes the set of clock-aligned periodic measurands to be included in the TransactionData element of StopTransaction.req PDU for every <<clockaligneddatainterval,ClockAlignedDataInterval>> of the Transaction. The maximum amount of elements in the <<stoptxnaligneddata,StopTxnAlignedData>> list can be reported by the Charge Point via: <<stoptxnaligneddatamaxlength,StopTxnAlignedDataMaxLength>>
+<<stop_txn_aligned_data,StopTxnAlignedData>> is a comma separated list that prescribes the set of clock-aligned periodic measurands to be included in the TransactionData element of StopTransaction.req PDU for every <<clock_aligned_data_interval,ClockAlignedDataInterval>> of the Transaction. The maximum amount of elements in the <<stop_txn_aligned_data,StopTxnAlignedData>> list can be reported by the Charge Point via: <<stop_txn_aligned_data_max_length,StopTxnAlignedDataMaxLength>>
 
 [[multiple_locations_phases]]
 ==== Multiple Locations/Phases
@@ -998,14 +1001,14 @@ When a Central System sends a ChangeConfiguration.req to a Charge Point with one
 
 * <<meter_values_aligned_data,MeterValuesAlignedData>>
 * <<meter_values_sampled_data,MeterValuesSampledData>>
-* <<stoptxnaligneddata,StopTxnAlignedData>>
-* <<stoptxnsampleddata,StopTxnSampledData>>
+* <<stop_txn_aligned_data,StopTxnAlignedData>>
+* <<stop_txn_sampled_data,StopTxnSampledData>>
 
 If the comma separated list contains one or more measurands that are not supported by this Charge Point, the Charge Point SHALL respond with: <<change_configuration_conf,ChangeConfiguration.conf>> with: _status_ = _Rejected_. No changes SHALL be made to the currently configuration.
 
 [[no_metering_data_in_a_stop_transaction]]
 ==== No metering data in a Stop Transaction
-When the configuration keys: <<stoptxnaligneddata,StopTxnAlignedData>> and <<stoptxnsampleddata,StopTxnSampledData>> are set to an empty string, the Charge Point SHALL not put meter values in a StopTransaction.req PDU.
+When the configuration keys: <<stop_txn_aligned_data,StopTxnAlignedData>> and <<stop_txn_sampled_data,StopTxnSampledData>> are set to an empty string, the Charge Point SHALL not put meter values in a StopTransaction.req PDU.
 
 [[operations_initiated_by_charge_point]]
 == Operations Initiated by Charge Point
@@ -3428,396 +3431,548 @@ The supported transfer protocols are controlled by the configuration key _Suppor
 
 === Download Firmware
 
-When a Charge Point is notified about new firmware, it needs to be able to download this firmware. The Central
-System supplies in the request an URL where the firmware can be downloaded. The URL also contains the
-protocol which must be used to download the firmware.
-It is recommended that the firmware is downloaded via FTP or FTPS. FTP(S) is better optimized for large binary
-data than HTTP. Also FTP(S) has the ability to resume downloads. In case a download is interrupted, the Charge
-Point can resume downloading after the part it already has downloaded. The FTP URL is of format: _ftp:_ // _user_
-: _password_ @ _host_ : _port_ / _path_ in which the parts _user_ : _password_ @, : _password_ or : _port_ may be excluded.
-To ensure that the correct firmware is downloaded, it is RECOMMENDED that the firmware is also digitally
-signed.
+When a Charge Point is notified about new firmware, it needs to be able to download this firmware. The Central System supplies in the request an URL where the firmware can be downloaded. The URL also contains the protocol which must be used to download the firmware.
+
+It is recommended that the firmware is downloaded via FTP or FTPS. FTP(S) is better optimized for large binary data than HTTP. Also FTP(S) has the ability to resume downloads. In case a download is interrupted, the Charge Point can resume downloading after the part it already has downloaded. The FTP URL is of format: _ftp://user:password@host:port/path_ in which the parts _user:password@_, _:password_ or _:port_ may be excluded.
+
+To ensure that the correct firmware is downloaded, it is RECOMMENDED that the firmware is also digitally signed.
 
 === Upload Diagnostics
 
-When a Charge Point is requested to upload a diagnostics file, the Central System supplies in the request an URL
-where the Charge Point should upload the file. The URL also contains the protocol which must be used to upload
-the file.
-It is recommended that the diagnostics file is downloaded via FTP or FTPS. FTP(S) is better optimized for large
-binary data than HTTP. Also FTP(S) has the ability to resume uploads. In case an upload is interrupted, the
-Charge Point can resume uploading after the part it already has uploaded. The FTP URL is of format: _ftp:_ // _user_
-: _password_ @ _host_ : _port_ / _path_ in which the parts _user_ : _password_ @, : _password_ or : _port_ may be excluded.
+When a Charge Point is requested to upload a diagnostics file, the Central System supplies in the request an URL where the Charge Point should upload the file. The URL also contains the protocol which must be used to upload the file.
+
+It is recommended that the diagnostics file is downloaded via FTP or FTPS. FTP(S) is better optimized for large binary data than HTTP. Also FTP(S) has the ability to resume uploads. In case an upload is interrupted, the Charge Point can resume uploading after the part it already has uploaded. The FTP URL is of format: _ftp://user:password@host:port/path_ in which the parts _user:password@_, _:password_ or _:port_ may be excluded.
+
+<<<
 
 [[standard_configuration_key_names_and_values]]
 == Standard Configuration Key Names & Values
 
-Below follows a list of all configuration keys with a role standardized in this specification. The list is separated by
-Feature Profiles. A required configuration key mentioned under a particular profile only has to be supported by
-the Charge Point if it supports that profile.
-For optional Configuration Keys with a boolean type, the following rules apply for the configuration key in the
-response to a GetConfiguration.req without a list of keys:
+Below follows a list of all configuration keys with a role standardized in this specification. The list is separated by <<feature_profiles,Feature Profiles>>. A required configuration key mentioned under a particular profile only has to be supported by the Charge Point if it supports that profile.
 
-- If the key is present, the Charge Point provides the functionality that is configured by the key, and it can be
-  enabled or disabled by setting the value for the key.
-- If the key is not present, the Charge Point does not provide the functionality that can be configured by the
-  key.
-  The "Accessibility" property shows if the value for a certain configuration key is read-only ("R") or read-write
-  ("RW"). In case the key is read-only, the Central System can read the value for the key using GetConfiguration, but
-  not write it. In case the accessibility is read-write, the Central System can also write the value for the key using
-  ChangeConfiguration.
+For optional Configuration Keys with a boolean type, the following rules apply for the configuration key in the response to a <<get_configuration_req,GetConfiguration.req>> without a list of keys:
+
+* If the key is present, the Charge Point provides the functionality that is configured by the key, and it can be enabled or disabled by setting the value for the key.
+* If the key is not present, the Charge Point does not provide the functionality that can be configured by the key.
+
+The "Accessibility" property shows if the value for a certain configuration key is read-only ("R") or read-write ("RW"). In case the key is read-only, the Central System can read the value for the key using <<get_configuration_by_central_system,GetConfiguration>>, but not write it. In case the accessibility is read-write, the Central System can also write the value for the key using <<change_configuration_by_central_system,ChangeConfiguration>>.
 
 === Core Profile
 
-[[allowofflinetxforunknownid]]
-==== AllowOfflineTxForUnknownId
-**Required/optional** optional
-**Accessibility** RW
-**Type** boolean
-**Description** If this key exists, the Charge Point supports Unknown Offline Authorization. If this key reports a value of _true_ , Unknown Offline
-Authorization is enabled.
+[[allow_offline_tx_for_unknown_id]]
+==== `AllowOfflineTxForUnknownId`
 
-[[authorizationcacheenabled]]
-==== AuthorizationCacheEnabled
-**Required/optional** optional
-**Accessibility** RW
-**Type** boolean
-**Description** If this key exists, the Charge Point supports an Authorization Cache. If this key reports a value of _true_ , the Authorization Cache
-is enabled.
+[cols="2,8"]
+|===
+|**Required/optional** |optional
+|**Accessibility** |RW
+|**Type** |boolean
+|**Description** |If this key exists, the Charge Point supports <<unknown_offline_authorization,Unknown Offline Authorization>>. If this key reports a value of _true_, <<unknown_offline_authorization,Unknown Offline Authorization>> is enabled.
+|===
+
+[[authorization_cache_enabled]]
+==== `AuthorizationCacheEnabled`
+
+[cols="2,8"]
+|===
+|**Required/optional** |optional
+|**Accessibility** |RW
+|**Type** |boolean
+|**Description** |If this key exists, the Charge Point supports an <<authorization_cache,Authorization Cache>>. If this key reports a value of _true_ , the <<authorization_cache,Authorization Cache>> is enabled.
+|===
 
 [[authorize_remote_tx_requests]]
-==== AuthorizeRemoteTxRequests
-**Required/optional** required
+==== `AuthorizeRemoteTxRequests`
 
-**Accessibility** R or RW. Choice is up to Charge Point implementation.
-**Type** boolean
-**Description** Whether a remote request to start a transaction in the form of a RemoteStartTransaction.req message should be authorized
-beforehand like a local action to start a transaction.
-**9.1.4.** BlinkRepeat
-**Required/optional** optional
-**Accessibility** RW
-**Type** integer
-**Unit** times
-**Description** Number of times to blink Charge Point lighting when signalling
+[cols="2,8"]
+|===
+|**Required/optional** |required
+|**Accessibility** |R or RW. Choice is up to Charge Point implementation.
+|**Type** |boolean
+|**Description** |Whether a remote request to start a transaction in the form of a <<remote_start_transaction_req,RemoteStartTransaction.req>> message should be authorized beforehand like a local action to start a transaction.
+|===
 
-[[clockaligneddatainterval]]
-==== ClockAlignedDataInterval
-**Required/optional** required
-**Accessibility** RW
-**Type** integer
-**Unit** seconds
-**Description** Size (in seconds) of the clock-aligned data interval. This is the size (in seconds) of the set of evenly spaced aggregation intervals
-per day, starting at 00:00:00 (midnight). For example, a value of 900 (15 minutes) indicates that every day should be broken into
-96 15-minute intervals.
-When clock aligned data is being transmitted, the interval in question is identified by the start time and (optional) duration
-interval value, represented according to the ISO8601 standard. All "per-period" data (e.g. energy readings) should be
-accumulated (for "flow" type measurands such as energy), or averaged (for other values) across the entire interval (or partial
-interval, at the beginning or end of a Transaction), and transmitted (if so enabled) at the end of each interval, bearing the
-interval start time timestamp.
+[[blink_repeat]]
+==== `BlinkRepeat`
+
+[cols="2,8"]
+|===
+|**Required/optional** |optional
+|**Accessibility** |RW
+|**Type** |integer
+|**Unit** |times
+|**Description** |Number of times to blink Charge Point lighting when signalling
+|===
+
+[[clock_aligned_data_interval]]
+==== `ClockAlignedDataInterval`
+
+[cols="2,8"]
+|===
+|**Required/optional** |required
+|**Accessibility** |RW
+|**Type** |integer
+|**Unit** |seconds
+|**Description** |Size (in seconds) of the clock-aligned data interval. This is the size (in seconds) of the set of evenly spaced aggregation intervals per day, starting at 00:00:00 (midnight). For example, a value of 900 (15 minutes) indicates that every day should be broken into 96 15-minute intervals. + 
+When clock aligned data is being transmitted, the interval in question is identified by the start time and (optional) duration interval value, represented according to the ISO8601 standard. All "per-period" data (e.g. energy readings) should be accumulated (for "flow" type measurands such as energy), or averaged (for other values) across the entire interval (or partial interval, at the beginning or end of a Transaction), and transmitted (if so enabled) at the end of each interval, bearing the interval start time timestamp. + 
 A value of "0" (numeric zero), by convention, is to be interpreted to mean that no clock-aligned data should be transmitted.
+|===
 
 [[connection_timeout]]
-==== ConnectionTimeOut
-**Required/optional** required
-**Accessibility** RW
-**Type** integer
-**Unit** seconds
+==== `ConnectionTimeOut`
 
-**Description** Interval *from beginning of status: 'Preparing' until incipient Transaction is automatically canceled, due to failure of EV driver to
-(correctly) insert the charging cable connector(s) into the appropriate socket(s). The Charge Point SHALL go back to the original
-state, probably: 'Available'.
+[cols="2,8"]
+|===
+|**Required/optional** |required
+|**Accessibility** |RW
+|**Type** |integer
+|**Unit** |seconds
+|**Description** |Interval *from beginning of status: 'Preparing' until incipient Transaction is automatically canceled, due to failure of EV driver to (correctly) insert the charging cable connector(s) into the appropriate socket(s). The Charge Point SHALL go back to the original state, probably: 'Available'.
+|===
 
 [[connector_phase_rotation]]
-==== ConnectorPhaseRotation
-**Required/optional** required
-**Accessibility** RW
-**Type** CSL
-**Description** The phase rotation per connector in respect to the connector's electrical meter (or if absent, the grid connection). Possible
-values per connector are:
-NotApplicable (for Single phase or DC Charge Points)
-Unknown (not (yet) known)
-RST (Standard Reference Phasing)
-RTS (Reversed Reference Phasing)
-SRT (Reversed 240 degree rotation)
-STR (Standard 120 degree rotation)
-TRS (Standard 240 degree rotation)
-TSR (Reversed 120 degree rotation)
-R can be identified as phase 1 (L1), S as phase 2 (L2), T as phase 3 (L3).
-If known, the Charge Point MAY also report the phase rotation between the grid connection and the main energymeter by
-using index number Zero (0).
-Values are reported in CSL, formatted: 0.RST, 1.RST, 2.RTS
-**9.1.8.** ConnectorPhaseRotationMaxLength
-**Required/optional** optional
-**Accessibility** R
-**Type** integer
-**Description** Maximum number of items in a ConnectorPhaseRotation Configuration Key.
+==== `ConnectorPhaseRotation`
+
+[cols="2,8"]
+|===
+|**Required/optional** |required
+|**Accessibility** |RW
+|**Type** |CSL
+|**Description** 
+        |The phase rotation per connector in respect to the connector's electrical meter (or if absent, the grid connection). Possible values per connector are: + 
+        `NotApplicable` (for Single phase or DC Charge Points) +
+        `Unknown` (not (yet) known) +
+        `RST` (Standard Reference Phasing) +
+        `RTS` (Reversed Reference Phasing) +
+        `SRT` (Reversed 240 degree rotation) +
+        `STR` (Standard 120 degree rotation) +
+        `TRS` (Standard 240 degree rotation) +
+        `TSR` (Reversed 120 degree rotation)
+
+        R can be identified as phase 1 (L1), S as phase 2 (L2), T as phase 3 (L3).
+
+        If known, the Charge Point MAY also report the phase rotation between the grid connection and the main energymeter by using index number Zero (0).
+
+        Values are reported in CSL, formatted: 0.RST, 1.RST, 2.RTS
+|===
+
+[[connector_phase_rotation_max_length]]
+==== `ConnectorPhaseRotationMaxLength`
+
+[cols="2,8"]
+|===
+|**Required/optional** |optional
+|**Accessibility** |R
+|**Type** |integer
+|**Description** |Maximum number of items in a <<connector_phase_rotation,`ConnectorPhaseRotation`>> Configuration Key.
+|===
 
 [[get_configuration_max_keys]]
-==== GetConfigurationMaxKeys
-**Required/optional** required
-**Accessibility** R
-**Type** integer
-**Description** Maximum number of requested configuration keys in a GetConfiguration.req PDU.
-**9.1.10.** HeartbeatInterval
-**Required/optional** required
+==== `GetConfigurationMaxKeys`
 
-**Accessibility** RW
-**Type** integer
-**Unit** seconds
-**Description** Interval of inactivity (no OCPP exchanges) with central system after which the Charge Point should send a Heartbeat.req PDU
-**9.1.11.** LightIntensity
-**Required/optional** optional
-**Accessibility** RW
-**Type** integer
-**Unit** %
-**Description** Percentage of maximum intensity at which to illuminate Charge Point lighting
+[cols="2,8"]
+|===
+|**Required/optional** |required
+|**Accessibility** |R
+|**Type** |integer
+|**Description** |Maximum number of requested configuration keys in a <<get_configuration_req,GetConfiguration.req>> PDU.
+|===
+
+[[heartbeat_interval]]
+==== `HeartbeatInterval`
+
+[cols="2,8"]
+|===
+|**Required/optional** |required
+|**Accessibility** |RW
+|**Type** |integer
+|**Unit** |seconds
+|**Description** |Interval of inactivity (no OCPP exchanges) with central system after which the Charge Point should send a <<heartbeat_req,Heartbeat.req>> PDU
+|===
+
+[[light_intensity]]
+==== `LightIntensity`
+
+[cols="2,8"]
+|===
+|**Required/optional** |optional
+|**Accessibility** |RW
+|**Type** |integer
+|**Unit** |%
+|**Description** |Percentage of maximum intensity at which to illuminate Charge Point lighting
+|===
 
 [[local_authorize_offline]]
-==== LocalAuthorizeOffline
-**Required/optional** required
-**Accessibility** RW
-**Type** boolean
-**Description** whether the Charge Point, when _offline_ , will start a transaction for locally-authorized identifiers.
+==== `LocalAuthorizeOffline`
+
+[cols="2,8"]
+|===
+|**Required/optional** |required
+|**Accessibility** |RW
+|**Type** |boolean
+|**Description** |whether the Charge Point, when _offline_, will start a transaction for locally-authorized identifiers.
+|===
 
 [[local_pre_authorize]]
-==== LocalPreAuthorize
-**Required/optional** required
-**Accessibility** RW
-**Type** boolean
-**Description** whether the Charge Point, when online, will start a transaction for locally-authorized identifiers without waiting for or
-requesting an Authorize.conf from the Central System
+==== `LocalPreAuthorize`
+
+[cols="2,8"]
+|===
+|**Required/optional** |required
+|**Accessibility** |RW
+|**Type** |boolean
+|**Description** |whether the Charge Point, when online, will start a transaction for locally-authorized identifiers without waiting for or requesting an <<authorize_conf,Authorize.conf>> from the Central System
+|===
 
 [[max_energy_on_invalid_id]]
-==== MaxEnergyOnInvalidId
-**Required/optional** optional
+==== `MaxEnergyOnInvalidId`
 
-**Accessibility** RW
-**Type** integer
-**Unit** Wh
-**Description** Maximum energy in Wh delivered when an identifier is invalidated by the Central System after start of a transaction.
+[cols="2,8"]
+|===
+|**Required/optional** |optional
+|**Accessibility** |RW
+|**Type** |integer
+|**Unit** |Wh
+|**Description** |Maximum energy in Wh delivered when an identifier is invalidated by the Central System after start of a transaction.
+|===
 
 [[meter_values_aligned_data]]
-==== MeterValuesAlignedData
-**Required/optional** required
-**Accessibility** RW
-**Type** CSL
-**Description** Clock-aligned measurand(s) to be included in a MeterValues.req PDU, every ClockAlignedDataInterval seconds
+==== `MeterValuesAlignedData`
+
+[cols="2,8"]
+|===
+|**Required/optional** |required
+|**Accessibility** |RW
+|**Type** |CSL
+|**Description** |Clock-aligned measurand(s) to be included in a <<metervalues_req,MeterValues.req>> PDU, every <<clock_aligned_data_interval,ClockAlignedDataInterval>> seconds
+|===
 
 [[meter_values_aligned_data_max_length]]
-==== MeterValuesAlignedDataMaxLength
-**Required/optional** optional
-**Accessibility** R
-**Type** integer
-**Description** Maximum number of items in a MeterValuesAlignedData Configuration Key.
+==== `MeterValuesAlignedDataMaxLength`
+
+[cols="2,8"]
+|===
+|**Required/optional** |optional
+|**Accessibility** |R
+|**Type** |integer
+|**Description** |Maximum number of items in a <<meter_values_aligned_data,MeterValuesAlignedData>> Configuration Key.
+|===
 
 [[meter_values_sampled_data]]
-==== MeterValuesSampledData
-**Required/optional** required
-**Accessibility** RW
-**Type** CSL
-**Description** Sampled measurands to be included in a MeterValues.req PDU, every MeterValueSampleInterval seconds. Where
-applicable, the Measurand is combined with the optional phase; for instance: Voltage.L1
+==== `MeterValuesSampledData`
+
+[cols="2,8"]
+|===
+|**Required/optional** |required
+|**Accessibility** |RW
+|**Type** |CSL
+|**Description** |Sampled measurands to be included in a <<metervalues_req,MeterValues.req>> PDU, every <<meter_value_sample_interval,MeterValueSampleInterval>> seconds. Where applicable, the Measurand is combined with the optional phase; for instance: Voltage.L1
+
 Default: "Energy.Active.Import.Register"
+|===
 
 [[meter_values_sampled_data_max_length]]
-==== MeterValuesSampledDataMaxLength
-**Required/optional** optional
-**Accessibility** R
+==== `MeterValuesSampledDataMaxLength`
 
-**Type** integer
-**Description** Maximum number of items in a MeterValuesSampledData Configuration Key.
+[cols="2,8"]
+|===
+|**Required/optional** |optional
+|**Accessibility** |R
+|**Type** |integer
+|**Description** |Maximum number of items in a MeterValuesSampledData Configuration Key.
+|===
 
 [[meter_value_sample_interval]]
-==== MeterValueSampleInterval
-**Required/optional** required
-**Accessibility** RW
-**Type** integer
-**Unit** seconds
-**Description** Interval between sampling of metering (or other) data, intended to be transmitted by "MeterValues" PDUs. For charging
-session data (ConnectorId>0), samples are acquired and transmitted periodically at this interval from the start of the charging
-transaction.
+==== `MeterValueSampleInterval`
+
+[cols="2,8"]
+|===
+|**Required/optional** |required
+|**Accessibility** |RW
+|**Type** |integer
+|**Unit** |seconds
+|**Description** |Interval between sampling of metering (or other) data, intended to be transmitted by "MeterValues" PDUs. For charging session data (ConnectorId>0), samples are acquired and transmitted periodically at this interval from the start of the charging transaction.
+
 A value of "0" (numeric zero), by convention, is to be interpreted to mean that no sampled data should be transmitted.
+|===
 
 [[minimum_status_duration]]
-==== MinimumStatusDuration
-**Required/optional** optional
-**Accessibility** RW
-**Type** integer
-**Unit** seconds
-**Description** The minimum duration that a Charge Point or Connector status is stable before a StatusNotification.req PDU is sent to the
-Central System.
-**9.1.21.** NumberOfConnectors
-**Required/optional** required
-**Accessibility** R
-**Type** integer
-**Description** The number of physical charging connectors of this Charge Point.
-**9.1.22.** ResetRetries
-**Required/optional** required
+==== `MinimumStatusDuration`
 
-**Accessibility** RW
-**Type** integer
-**Unit** times
-**Description** Number of times to retry an unsuccessful reset of the Charge Point.
+[cols="2,8"]
+|===
+|**Required/optional** |optional
+|**Accessibility** |RW
+|**Type** |integer
+|**Unit** |seconds
+|**Description** |The minimum duration that a Charge Point or Connector status is stable before a <<status_notification_req,StatusNotification.req>> PDU is sent to the Central System.
+|===
+
+[[number_of_connectors]]
+==== `NumberOfConnectors`
+
+[cols="2,8"]
+|===
+|**Required/optional** |required
+|**Accessibility** |R
+|**Type** |integer
+|**Description** |The number of physical charging connectors of this Charge Point.
+|===
+
+[[reset_retries]]
+==== `ResetRetries`
+
+[cols="2,8"]
+|===
+|**Required/optional** |required
+|**Accessibility** |RW
+|**Type** |integer
+|**Unit** |times
+|**Description** |Number of times to retry an unsuccessful reset of the Charge Point.
+|===
 
 [[stop_transaction_on_evside_disconnect]]
-==== StopTransactionOnEVSideDisconnect
-**Required/optional** required
-**Accessibility** RW
-**Type** boolean
-**Description** When set to _true_ , the Charge Point SHALL administratively stop the transaction when the cable is unplugged from the EV.
+==== `StopTransactionOnEVSideDisconnect`
 
-[[stop_transactiononinvalidid]]
-==== StopTransactionOnInvalidId
-**Required/optional** required
-**Accessibility** RW
-**Type** boolean
-**Description** whether the Charge Point will stop an ongoing transaction when it receives a non- _Accepted_ authorization status in a
-StartTransaction.conf for this transaction
+[cols="2,8"]
+|===
+|**Required/optional** |required
+|**Accessibility** |RW
+|**Type** |boolean
+|**Description** |When set to _true_, the Charge Point SHALL administratively stop the transaction when the cable is unplugged from the EV.
+|===
 
-[[stoptxnaligneddata]]
-==== StopTxnAlignedData
-**Required/optional** required
-**Accessibility** RW
-**Type** CSL
-**Description** Clock-aligned periodic measurand(s) to be included in the TransactionData element of StopTransaction.req MeterValues.req
-PDU for every ClockAlignedDataInterval of the Transaction
+[[stop_transaction_on_invalid_id]]
+==== `StopTransactionOnInvalidId`
 
-[[stoptxnaligneddatamaxlength]]
-==== StopTxnAlignedDataMaxLength
-**Required/optional** optional
-**Accessibility** R
+[cols="2,8"]
+|===
+|**Required/optional** |required
+|**Accessibility** |RW
+|**Type** |boolean
+|**Description** |whether the Charge Point will stop an ongoing transaction when it receives a non- _Accepted_ authorization status in a <<start_transaction_conf,StartTransaction.conf>> for this transaction
+|===
 
-**Type** integer
-**Description** Maximum number of items in a StopTxnAlignedData Configuration Key.
+[[stop_txn_aligned_data]]
+==== `StopTxnAlignedData`
 
-[[stoptxnsampleddata]]
-==== StopTxnSampledData
-**Required/optional** required
-**Accessibility** RW
-**Type** CSL
-**Description** Sampled measurands to be included in the TransactionData element of StopTransaction.req PDU, every
-MeterValueSampleInterval seconds from the start of the charging session
+[cols="2,8"]
+|===
+|**Required/optional** |required
+|**Accessibility** |RW
+|**Type** |CSL
+|**Description** |Clock-aligned periodic measurand(s) to be included in the TransactionData element of <<stop_transaction_req,StopTransaction.req>> <<metervalues_req,MeterValues.req>> PDU for every `ClockAlignedDataInterval` of the Transaction
+|===
 
-[[stoptxnsampleddatamaxlength]]
-==== StopTxnSampledDataMaxLength
-**Required/optional** optional
-**Accessibility** R
-**Type** integer
-**Description** Maximum number of items in a StopTxnSampledData Configuration Key.
+[[stop_txn_aligned_data_max_length]]
+==== `StopTxnAlignedDataMaxLength`
 
-[[supportedfeatureprofiles]]
-==== SupportedFeatureProfiles
-**Required/optional** required
-**Accessibility** R
-**Type** CSL
-**Description** A list of supported Feature Profiles. Possible profile identifiers: Core, FirmwareManagement, LocalAuthListManagement,
-Reservation, SmartCharging and RemoteTrigger.
-**9.1.30.** SupportedFeatureProfilesMaxLength
-**Required/optional** optional
-**Accessibility** R
-**Type** integer
-**Description** Maximum number of items in a SupportedFeatureProfiles Configuration Key.
+[cols="2,8"]
+|===
+|**Required/optional** |optional
+|**Accessibility** |R
+|**Type** |integer
+|**Description** |Maximum number of items in a <<stop_txn_aligned_data,`StopTxnAlignedData`>> Configuration Key.
+|===
 
-[[transactionmessageattempts]]
-==== TransactionMessageAttempts
-**Required/optional** required
-**Accessibility** RW
-**Type** integer
-**Unit** times
-**Description** How often the Charge Point should try to submit a transaction-related message when the Central System fails to process it.
+[[stop_txn_sampled_data]]
+==== `StopTxnSampledData`
 
-[[transactionmessageretryinterval]]
-==== TransactionMessageRetryInterval
-**Required/optional** required
-**Accessibility** RW
-**Type** integer
-**Unit** seconds
-**Description** How long the Charge Point should wait before resubmitting a transaction-related message that the Central System failed to
-process.
+[cols="2,8"]
+|===
+|**Required/optional** |required
+|**Accessibility** |RW
+|**Type** |CSL
+|**Description** |Sampled measurands to be included in the TransactionData element of <<stop_transaction_req,StopTransaction.req>> PDU, every <<meter_value_sample_interval,`MeterValueSampleInterval`>> seconds from the start of the charging session
+|===
+
+[[stop_txn_sampled_data_max_length]]
+==== `StopTxnSampledDataMaxLength`
+
+[cols="2,8"]
+|===
+|**Required/optional** |optional
+|**Accessibility** |R
+|**Type** |integer
+|**Description** |Maximum number of items in a <<stop_txn_sampled_data,`StopTxnSampledData`>> Configuration Key.
+|===
+
+[[supported_feature_profiles]]
+==== `SupportedFeatureProfiles`
+
+[cols="2,8"]
+|===
+|**Required/optional** |required
+|**Accessibility** |R
+|**Type** |CSL
+|**Description** |A list of supported <<feature_profiles,Feature Profiles>>. Possible profile identifiers: Core, FirmwareManagement, LocalAuthListManagement, Reservation, SmartCharging and RemoteTrigger.
+|===
+
+==== `SupportedFeatureProfilesMaxLength`
+
+[cols="2,8"]
+|===
+|**Required/optional** |optional
+|**Accessibility** |R
+|**Type** |integer
+|**Description** |Maximum number of items in a <<supported_feature_profiles,`SupportedFeatureProfiles`>> Configuration Key.
+|===
+
+[[transaction_message_attempts]]
+==== `TransactionMessageAttempts`
+
+[cols="2,8"]
+|===
+|**Required/optional** |required
+|**Accessibility** |RW
+|**Type** |integer
+|**Unit** |times
+|**Description** |How often the Charge Point should try to submit a transaction-related message when the Central System fails to process it.
+|===
+
+[[transaction_message_retry_interval]]
+==== `TransactionMessageRetryInterval`
+
+[cols="2,8"]
+|===
+|**Required/optional** |required
+|**Accessibility** |RW
+|**Type** |integer
+|**Unit** |seconds
+|**Description** |How long the Charge Point should wait before resubmitting a transaction-related message that the Central System failed to process.
+|===
 
 [[unlock_connector_on_evside_disconnect]]
-==== UnlockConnectorOnEVSideDisconnect
-**Required/optional** required
-**Accessibility** RW
-**Type** boolean
-**Description** When set to _true_ , the Charge Point SHALL unlock the cable on Charge Point side when the cable is unplugged at the EV.
-**9.1.34.** WebSocketPingInterval
-**Required/optional** optional
-**Accessibility** RW
-**Type** integer
-**Unit** seconds
+==== `UnlockConnectorOnEVSideDisconnect`
 
-Description Only relevant for websocket implementations. 0 disables client side websocket Ping/Pong. In this case there is either no
-ping/pong or the server initiates the ping and client responds with Pong. Positive values are interpreted as number of seconds
-between pings. Negative values are not allowed. ChangeConfiguration is expected to return a REJECTED result.
+[cols="2,8"]
+|===
+|**Required/optional** |required
+|**Accessibility** |RW
+|**Type** |boolean
+|**Description** |When set to _true_ , the Charge Point SHALL unlock the cable on Charge Point side when the cable is unplugged at the EV.
+|===
+
+[[websocket_ping_interval]]
+==== `WebSocketPingInterval`
+
+[cols="2,8"]
+|===
+|**Required/optional** |optional
+|**Accessibility** |RW
+|**Type** |integer
+|**Unit** |seconds
+|**Description** |Only relevant for websocket implementations. 0 disables client side websocket Ping/Pong. In this case there is either no ping/pong or the server initiates the ping and client responds with Pong. Positive values are interpreted as number of seconds between pings. Negative values are not allowed. ChangeConfiguration is expected to return a REJECTED result.
+|===
 
 === Local Auth List Management Profile
 
-[[localauthlistenabled]]
-==== LocalAuthListEnabled
-**Required/optional** required
-**Accessibility** RW
-**Type** boolean
-**Description** whether the Local Authorization List is enabled
+[[local_auth_list_enabled]]
+==== `LocalAuthListEnabled`
 
-[[localauthlistmaxlength]]
-==== LocalAuthListMaxLength
-**Required/optional** required
-**Accessibility** R
-**Type** integer
-**Description** Maximum number of identifications that can be stored in the Local Authorization List
+[cols="2,8"]
+|===
+|**Required/optional** |required
+|**Accessibility** |RW
+|**Type** |boolean
+|**Description** |whether the <<local_authorization_list,Local Authorization List>> is enabled
+|===
+
+[[local_auth_list_max_length]]
+==== `LocalAuthListMaxLength`
+
+[cols="2,8"]
+|===
+|**Required/optional** |required
+|**Accessibility** |R
+|**Type** |integer
+|**Description** |Maximum number of identifications that can be stored in the <<local_authorization_list,Local Authorization List>>
+|===
 
 [[send_local_list_max_length]]
-==== SendLocalListMaxLength
-**Required/optional** required
-**Accessibility** R
-**Type** integer
-**Description** Maximum number of identifications that can be send in a single SendLocalList.req
+==== `SendLocalListMaxLength`
 
+[cols="2,8"]
+|===
+|**Required/optional** |required
+|**Accessibility** |R
+|**Type** |integer
+|**Description** |Maximum number of identifications that can be send in a single <<send_local_list_req,SendLocalList.req>>
+|===
+
+[[reservation_profile]]
 === Reservation Profile
 
 [[reserve_connector_zero_supported]]
-==== ReserveConnectorZeroSupported
-**Required/optional** optional
-**Accessibility** R
-**Type** boolean
+==== `ReserveConnectorZeroSupported`
 
-**Description** If this configuration key is present and set to _true_ : Charge Point support reservations on connector 0.
+[cols="2,8"]
+|===
+|**Required/optional** |optional
+|**Accessibility** |R
+|**Type** |boolean
+|**Description** |If this configuration key is present and set to _true_: Charge Point support <<reservations,reservations>> on connector 0.
+|===
 
+[[smart_charging_profile]]
 === Smart Charging Profile
 
-[[chargeprofilemaxstacklevel]]
-==== ChargeProfileMaxStackLevel
-**Required/optional** required
-**Accessibility** R
-**Type** integer
-**Description** Max StackLevel of a ChargingProfile. The number defined also indicates the max allowed number of installed charging
-schedules per Charging Profile Purposes.
-[[chargingscheduleallowedchargingrateunit]]
-==== ChargingScheduleAllowedChargingRateUnit
-**Required/optional** required
-**Accessibility** R
-**Type** CSL
-**Description** A list of supported quantities for use in a ChargingSchedule. Allowed values: 'Current' and 'Power'
-[[chargingschedulemaxperiods]]
-==== ChargingScheduleMaxPeriods
-**Required/optional** required
-**Accessibility** R
-**Type** integer
-**Description** Maximum number of periods that may be defined per ChargingSchedule.
+[[charge_profile_max_stack_level]]
+==== `ChargeProfileMaxStackLevel`
 
-[[connectorswitch3to1phasesupported]]
-==== ConnectorSwitch3to1PhaseSupported
-**Required/optional** optional
-**Accessibility** R
-**Type** boolean
-**Description** If defined and true, this Charge Point support switching from 3 to 1 phase during a Transaction.
+[cols="2,8"]
+|===
+|**Required/optional** |required
+|**Accessibility** |R
+|**Type** |integer
+|**Description** |Max StackLevel of a ChargingProfile. The number defined also indicates the max allowed number of installed charging schedules per <<charging_profile_purposes,Charging Profile Purposes>>.
+|===
 
-[[maxchargingprofilesinstalled]]
-==== MaxChargingProfilesInstalled
-**Required/optional** required
-**Accessibility** R
-**Type** integer
-**Description** Maximum number of Charging profiles installed at a time
+[[charging_schedule_allowed_charging_rate_unit]]
+==== `ChargingScheduleAllowedChargingRateUnit`
+
+[cols="2,8"]
+|===
+|**Required/optional** |required
+|**Accessibility** |R
+|**Type** |CSL
+|**Description** |A list of supported quantities for use in a <<charging_schedule_type,ChargingSchedule>>. Allowed values: 'Current' and 'Power'
+|===
+
+[[charging_schedule_max_periods]]
+==== `ChargingScheduleMaxPeriods`
+
+[cols="2,8"]
+|===
+|**Required/optional** |required
+|**Accessibility** |R
+|**Type** |integer
+|**Description** |Maximum number of periods that may be defined per <<charging_schedule_type,ChargingSchedule>>.
+|===
+
+[[connector_switch_3to1_phase_supported]]
+==== `ConnectorSwitch3to1PhaseSupported`
+
+[cols="2,8"]
+|===
+|**Required/optional** |optional
+|**Accessibility** |R
+|**Type** |boolean
+|**Description** |If defined and true, this Charge Point support switching from 3 to 1 phase during a Transaction.
+|===
+
+[[max_charging_profiles_installed]]
+==== `MaxChargingProfilesInstalled`
+
+[cols="2,8"]
+|===
+|**Required/optional** |required
+|**Accessibility** |R
+|**Type** |integer
+|**Description** |Maximum number of Charging profiles installed at a time
+|===
+
+<<<
 
 [[appendix_a_new_in_ocpp_1_6]]
 == Appendix A: New in OCPP 1.6
