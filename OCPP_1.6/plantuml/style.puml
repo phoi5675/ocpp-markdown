@@ -5,6 +5,7 @@
 hide footbox
 
 <style>
+' Sequence diagram
 participant {
   BackgroundColor BASE_COLOR
   BorderColor #000000
@@ -30,3 +31,24 @@ skinparam SequenceGroupFontName FONT_NAME
 skinparam SequenceGroupHeaderFontName FONT_NAME
 
 skinparam ArrowFontName FONT_NAME
+
+' Class diagram
+hide empty members
+skinparam class {
+  BackgroundColor white
+  AttributeFontColor black
+  AttributeFontName FONT_NAME
+
+  FontName FONT_NAME
+
+  HeaderBackgroundColor BASE_COLOR
+  FontColor white
+
+  BorderColor BASE_COLOR
+  BorderThickness 1.5px
+}
+
+skinparam circle {
+  BorderColor BASE_COLOR
+  BackgroundColor white
+}

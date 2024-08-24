@@ -1186,7 +1186,7 @@ A Charge Point sends a notification to the Central System to inform the Central 
 
 [cols="1,10"]
 |===
-|[.warning-icon]#i# |
+|[.warning-icon]#!# |
 The Occupied state as defined in previous OCPP versions is no longer relevant. The Occupied state is split into five new statuses: _Preparing_, _Charging_, _SuspendedEV_, _SuspendedEVSE_ and _Finishing_.
 |===
 
@@ -1246,7 +1246,7 @@ The next table describes events that may lead to a status change:
 |[[a4]]**A4** |Similar to <<a3,A3>> but the EV does not start charging
 |[[a5]]**A5** |Similar to <<a3,A3>> but the EVSE does not allow charging
 |[[a7]]**A7** |A <<reserve_now_by_central_system,Reserve Now>> message is received that reserves the connector
-|[[a8]]**A8** |A <<change_availability,Change Availability>> message is received that sets the connector to Unavailable
+|[[a8]]**A8** |A <<change_availability_by_central_system,Change Availability>> message is received that sets the connector to Unavailable
 |[[a9]]**A9** |A fault is detected that prevents further charging operations
 
 |[[b1]]**B1** |Intended usage is ended (e.g. plug removed, bay no longer occupied, second presentation of idTag, time out (configured by the configuration key: <<connection_timeout,`ConnectionTimeOut`>>) on expected user action)
@@ -1291,7 +1291,7 @@ bay)
 |[[g8]]**G8** |Reservation expires or a <<cancel_reservation,Cancel Reservation>> message is received and the connector is scheduled to become _Unavailable_
 |[[g9]]**G9** |A fault is detected that prevents further charging operations
 
-|[[h1]]**H1** |Connector is set _Available_ by a <<change_availability,Change Availability>> message
+|[[h1]]**H1** |Connector is set _Available_ by a <<change_availability_by_central_system,Change Availability>> message
 |[[h2]]**H2** |Connector is set _Available_ after a user had interacted with the Charge Point
 |[[h3]]**H3** |Connector is set _Available_ and no user action is required to start charging
 |[[h4]]**H4** |Similar to <<h3,H3>> but the EV does not start charging
@@ -1303,20 +1303,20 @@ bay)
 
 [cols="1,10"]
 |===
-|[.warning-icon]#i# |
+|[.warning-icon]#!# |
 A Charge Point Connector MAY have any of the 9 statuses as shown in the table above. For ConnectorId 0, only a limited set is applicable, namely: Available, Unavailable and Faulted. The status of ConnectorId 0 has no direct connection to the status of the individual Connectors (>0).
 |===
 
 [cols="1,10"]
 |===
-|[.warning-icon]#i# |
+|[.warning-icon]#!# |
 If charging is suspended both by the EV and the EVSE, status _SuspendedEVSE_ SHALL have precedence over status _SuspendedEV_.
 |===
 
 [cols="1,10"]
 |===
-|[.warning-icon]#i# |
-When a Charge Point or a Connector is set to status Unavailable by a <<change_availability,Change Availability>> command, the 'Unavailable' status MUST be persistent across reboots. The Charge Point MAY use the _Unavailable_ status internally for other purposes (e.g. while updating firmware or waiting for an initial _Accepted_ <<registration_status,RegistrationStatus>>)
+|[.warning-icon]#!# |
+When a Charge Point or a Connector is set to status Unavailable by a <<change_availability_by_central_system,Change Availability>> command, the 'Unavailable' status MUST be persistent across reboots. The Charge Point MAY use the _Unavailable_ status internally for other purposes (e.g. while updating firmware or waiting for an initial _Accepted_ <<registration_status,RegistrationStatus>>)
 |===
 
 As the status _Occupied_ has been split into five new statuses (_Preparing_, _Charging_, _SuspendedEV_, _SuspendedEVSE_ and _Finishing_), more <<status_notification_req,StatusNotification.req>> PDUs will be sent from Charge Point to the Central System. For instance, when a transaction is started, the Connector status would successively change from _Preparing_ to _Charging_ with a short _SuspendedEV_ and/or _SuspendedEVSE_ inbetween, possibly within a couple of seconds.
@@ -1331,7 +1331,7 @@ A Charge Point manufacturer MAY have implemented a minimal status duration for c
 
 [cols="1,10"]
 |===
-|[.warning-icon]#i# |
+|[.warning-icon]#!# |
 Setting a high <<minimum_status_duration,`MinimumStatusDuration`>> time may result in the delayed sending of all StatusNotifications, since the Charge Point will only send the <<status_notification_req,StatusNotification.req>> once the <<minimum_status_duration,`MinimumStatusDuration`>> time is passed.
 |===
 
@@ -1339,7 +1339,7 @@ The Charge Point MAY send a <<status_notification_req,StatusNotification.req>> P
 
 [cols="1,10"]
 |===
-|[.warning-icon]#i# |
+|[.warning-icon]#!# |
 <<chargepoint_errorcode,ChargePointErrorCode>> _EVCommunicationError_ SHALL only be used with status Preparing, SuspendedEV, SuspendedEVSE and Finishing and be treated as warning.
 |===
 
@@ -1677,7 +1677,7 @@ A Central System can send a <<set_charging_profile_req,SetChargingProfile.req>> 
 
 [cols="1,10"]
 |===
-|[.warning-icon]#i# |
+|[.warning-icon]#!# |
 To prevent mismatch between transactions and a TxProfile, The Central System SHALL include the transactionId in a <<set_charging_profile_req,SetChargingProfile.req>> if the profile applies to a specific transaction.
 |===
 
@@ -1786,7 +1786,7 @@ If there was a transaction in progress on the specific connector, then Charge Po
 
 [cols="1,10"]
 |===
-|[.warning-icon]#i# |
+|[.warning-icon]#!# |
 <<unlock_connector_req,UnlockConnector.req>> is intented only for unlocking the cable retention lock on the Connector not for unlocking a connector access door.
 |===
 
@@ -2527,287 +2527,285 @@ This contains the field definition of the UpdateFirmware.conf PDU sent by the Ch
 No fields are defined.
 
 [[types]]
-==  Types
+== Types
 
 [[authorization_data]]
 === AuthorizationData
 
 _Class_
+
 Elements that constitute an entry of a Local Authorization List update.
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-idTag** IdToken 1..1 Required. The identifier to which this authorization applies.
-**idTagInfo** IdTagInfo 0..1 Optional. (Required when UpdateType is Full) This contains information about
-authorization status, expiry and parent id. For a Differential update the following
-applies: If this element is present, then this entry SHALL be added or updated in
-the Local Authorization List. If this element is absent, than the entry for this
-idtag in the Local Authorization List SHALL be deleted.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**idTag** |<<idtoken,IdToken>> |1..1 |Required. The identifier to which this authorization applies.
+|**idTagInfo** |<<id_tag_info,IdTagInfo>> |0..1 |Optional. (Required when UpdateType is Full) This contains information about authorization status, expiry and parent id. For a Differential update the following applies: If this element is present, then this entry SHALL be added or updated in the Local Authorization List. If this element is absent, than the entry for this idtag in the Local Authorization List SHALL be deleted.
+|===
 
 [[authorization_status]]
 === AuthorizationStatus
 
 _Enumeration_
-Status in a response to an Authorize.req.
-**VALUE DESCRIPTION
-Accepted** Identifier is allowed for charging.
-**Blocked** Identifier has been blocked. Not allowed for charging.
-**Expired** Identifier has expired. Not allowed for charging.
-**Invalid** Identifier is unknown. Not allowed for charging.
-**ConcurrentTx** Identifier is already involved in another transaction and multiple transactions are not allowed. (Only relevant for a
-StartTransaction.req.)
+
+Status in a response to an <<authorize_req,Authorize.req>>.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**Accepted** |Identifier is allowed for charging.
+|**Blocked** |Identifier has been blocked. Not allowed for charging.
+|**Expired** |Identifier has expired. Not allowed for charging.
+|**Invalid** |Identifier is unknown. Not allowed for charging.
+|**ConcurrentTx** |Identifier is already involved in another transaction and multiple transactions are not allowed. (Only relevant for a <<start_transaction_req,StartTransaction.req>>.)
+|===
 
 [[availability_status]]
 === AvailabilityStatus
 
 _Enumeration_
-Status returned in response to ChangeAvailability.req.
-**VALUE DESCRIPTION
-Accepted** Request has been accepted and will be executed.
-**Rejected** Request has not been accepted and will not be executed.
-**Scheduled** Request has been accepted and will be executed when transaction(s) in progress have finished.
+
+Status returned in response to <<change_availability_req,ChangeAvailability.req>>.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**Accepted** |Request has been accepted and will be executed.
+|**Rejected** |Request has not been accepted and will not be executed.
+|**Scheduled** |Request has been accepted and will be executed when transaction(s) in progress have finished.
+|===
 
 [[availability_type]]
 === AvailabilityType
 
 _Enumeration_
-Requested availability change in ChangeAvailability.req.
-**VALUE DESCRIPTION
-Inoperative** Charge point is not available for charging.
-**Operative** Charge point is available for charging.
+
+Requested availability change in <<change_availability_req,ChangeAvailability.req>>.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**Inoperative** |Charge point is not available for charging.
+|**Operative** |Charge point is available for charging.
+|===
 
 [[cancel_reservation_status]]
 === CancelReservationStatus
 
 _Enumeration_
-Status in CancelReservation.conf.
-**VALUE DESCRIPTION
-Accepted** Reservation for the identifier has been cancelled.
-**Rejected** Reservation could not be cancelled, because there is no reservation active for the identifier.
+
+Status in <<cancel_reservation_conf,CancelReservation.conf>>.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**Accepted** |Reservation for the identifier has been cancelled.
+|**Rejected** |Reservation could not be cancelled, because there is no reservation active for the identifier.
+|===
 
 [[chargepoint_errorcode]]
 === ChargePointErrorCode
 
 _Enumeration_
-Charge Point status reported in StatusNotification.req.
-**VALUE DESCRIPTION
-ConnectorLockFailure** Failure to lock or unlock connector.
-**EVCommunicationError** Communication failure with the vehicle, might be Mode 3 or other communication protocol problem. This is
-not a real error in the sense that the Charge Point doesn't need to go to the faulted state. Instead, it should go
-to the SuspendedEVSE state.
-**GroundFailure** Ground fault circuit interrupter has been activated.
-**HighTemperature** Temperature inside Charge Point is too high.
-**InternalError** Error in internal hard- or software component.
-**LocalListConflict** The authorization information received from the Central System is in conflict with the LocalAuthorizationList.
-**NoError** No error to report.
 
-VALUE DESCRIPTION
-OtherError Other type of error. More information in vendorErrorCode.
-OverCurrentFailure Over current protection device has tripped.
-OverVoltage Voltage has risen above an acceptable level.
-PowerMeterFailure Failure to read electrical/energy/power meter.
-PowerSwitchFailure Failure to control power switch.
-ReaderFailure Failure with idTag reader.
-ResetFailure Unable to perform a reset.
-UnderVoltage Voltage has dropped below an acceptable level.
-WeakSignal Wireless communication device reports a weak signal.
+Charge Point status reported in <<status_notification_req,StatusNotification.req>>.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**ConnectorLockFailure** |Failure to lock or unlock connector.
+|**EVCommunicationError** |Communication failure with the vehicle, might be Mode 3 or other communication protocol problem. This is not a real error in the sense that the Charge Point doesn't need to go to the faulted state. Instead, it should go to the SuspendedEVSE state.
+|**GroundFailure** |Ground fault circuit interrupter has been activated.
+|**HighTemperature** |Temperature inside Charge Point is too high.
+|**InternalError** |Error in internal hard- or software component.
+|**LocalListConflict** |The authorization information received from the Central System is in conflict with the LocalAuthorizationList.
+|**NoError** |No error to report.
+|**OtherError** |Other type of error. More information in vendorErrorCode.
+|**OverCurrentFailure** |Over current protection device has tripped.
+|**OverVoltage** |Voltage has risen above an acceptable level.
+|**PowerMeterFailure** |Failure to read electrical/energy/power meter.
+|**PowerSwitchFailure** |Failure to control power switch.
+|**ReaderFailure** |Failure with idTag reader.
+|**ResetFailure** |Unable to perform a reset.
+|**UnderVoltage** |Voltage has dropped below an acceptable level.
+|**WeakSignal** |Wireless communication device reports a weak signal.
+|===
 
 [[charge_point_status]]
 === ChargePointStatus
 
 _Enumeration_
-Status reported in StatusNotification.req. A status can be reported for the Charge Point main controller
-(connectorId = 0) or for a specific connector. Status for the Charge Point main controller is a subset of the
-enumeration: _Available_ , _Unavailable_ or _Faulted_.
-States considered Operative are: _Available_ , _Preparing_ , _Charging_ , _SuspendedEVSE_ , _SuspendedEV_ , _Finishing_ , _Reserved_.
-States considered Inoperative are: _Unavailable_ , _Faulted_.
-**STATUS CONDITION
-Available** When a Connector becomes available for a new user (Operative)
-**Preparing** When a Connector becomes no longer available for a new user but there is no ongoing Transaction (yet). Typically a Connector
-is in preparing state when a user presents a tag, inserts a cable or a vehicle occupies the parking bay
-(Operative)
-**Charging** When the contactor of a Connector closes, allowing the vehicle to charge
-(Operative)
-**SuspendedEVSE** When the EV is connected to the EVSE but the EVSE is not offering energy to the EV, e.g. due to a smart charging restriction,
-local supply power constraints, or as the result of StartTransaction.conf indicating that charging is not allowed etc.
-(Operative)
-**SuspendedEV** When the EV is connected to the EVSE and the EVSE is offering energy but the EV is not taking any energy.
-(Operative)
 
-STATUS CONDITION
-Finishing When a Transaction has stopped at a Connector, but the Connector is not yet available for a new user, e.g. the cable has not
-been removed or the vehicle has not left the parking bay
-(Operative)
-Reserved When a Connector becomes reserved as a result of a Reserve Now command
-(Operative)
-Unavailable When a Connector becomes unavailable as the result of a Change Availability command or an event upon which the Charge
-Point transitions to unavailable at its discretion. Upon receipt of a Change Availability command, the status MAY change
-immediately or the change MAY be scheduled. When scheduled, the Status Notification shall be send when the availability
-change becomes effective
-(Inoperative)
-Faulted When a Charge Point or connector has reported an error and is not available for energy delivery. (Inoperative).
+Status reported in <<status_notification_req,StatusNotification.req>>. A status can be reported for the Charge Point main controller (connectorId = 0) or for a specific connector. Status for the Charge Point main controller is a subset of the enumeration: _Available_, _Unavailable_ or _Faulted_.
+
+States considered Operative are: _Available_, _Preparing_, _Charging_, _SuspendedEVSE_, _SuspendedEV_, _Finishing_, _Reserved_. +
+States considered Inoperative are: _Unavailable_, _Faulted_.
+
+[cols="2,8",options="headers"]
+|===
+|STATUS       |CONDITION
+
+|**Available** |When a Connector becomes available for a new user (Operative)
+|**Preparing** |When a Connector becomes no longer available for a new user but there is no ongoing Transaction (yet). Typically a Connector is in preparing state when a user presents a tag, inserts a cable or a vehicle occupies the parking bay (Operative)
+|**Charging** |When the contactor of a Connector closes, allowing the vehicle to charge (Operative)
+|**SuspendedEVSE** |When the EV is connected to the EVSE but the EVSE is not offering energy to the EV, e.g. due to a smart charging restriction, local supply power constraints, or as the result of <<start_transaction_conf,StartTransaction.conf>> indicating that charging is not allowed etc. (Operative)
+|**SuspendedEV** |When the EV is connected to the EVSE and the EVSE is offering energy but the EV is not taking any energy. (Operative)
+|**Finishing** |When a Transaction has stopped at a Connector, but the Connector is not yet available for a new user, e.g. the cable has not been removed or the vehicle has not left the parking bay (Operative)
+|**Reserved** |When a Connector becomes reserved as a result of a <<reserve_now_by_central_system,Reserve Now>> command (Operative)
+|**Unavailable** |When a Connector becomes unavailable as the result of a Change Availability command or an event upon which the Charge Point transitions to unavailable at its discretion. Upon receipt of a <<change_availability_by_central_system,Change Availability>> command, the status MAY change immediately or the change MAY be scheduled. When scheduled, the <<status_notification,Status Notification>> shall be send when the availability change becomes effective (Inoperative)
+|**Faulted** |When a Charge Point or connector has reported an error and is not available for energy delivery. (Inoperative).
+|===
 
 [[charging_profile_type]]
 === ChargingProfile
 
 _Class_
-A ChargingProfile consists of a ChargingSchedule, describing the amount of power or current that can be
-delivered per time interval.
-ChargingProfile
-chargingProfileId: int [1..1]
-transactionId: int [0..1]
-stackLevel: int [1..1]
-chargingProfilePurpose: ChargingProfilePurposeType 1..1
-chargingProfileKind: ChargingProfileKindType [1..1]
-recurrencyKind: RecurrencyKindType [0..1]
-validFrom: DateTime [0..1]
-validTo: DateTime [0..1]
-chargingSchedule: ChargingSchedule [1..1]
-ChargingSchedule
-duration: int [0..1]
-startSchedule: DateTime [0..1]
-schedulingUnit: SchedulingUnitType [1..1]
-chargingSchedulePeriod: ChargingSchedulepPeriod [1..*]
-minChargingRate: decimal [0..1]
-ChargingSchedulePeriod
-startPeriod: int [1..1]
-limit: int [1..1]
-numberPhases: int [0..1]
-ChargingProfilePurposeType
-ChargePointMaxProfile
-TxDefaultProfile
-TxProfile
-ChargingProfileKindType
-Absolute
-Recurring
-Relative
-RecurrencyKindType
-Daily
-Weekly
-1
-1
-1
 
-- _Figure 42. Class Diagram: ChargingProfile_
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-[[charging_profile_id]]**chargingProfileId** integer 1..1 Required. Unique identifier for this profile.
-**transactionId** integer 0..1 Optional. Only valid if ChargingProfilePurpose is set to TxProfile,
-the transactionId MAY be used to match the profile to a specific
-transaction.
+A ChargingProfile consists of a <<charging_schedule_type,ChargingSchedule>>, describing the amount of power or current that can be delivered per time interval.
 
-FIELD NAME FIELD TYPE CARD. DESCRIPTION
-[[stack_level]]stackLevel integer >=0 1..1 Required. Value determining level in hierarchy stack of profiles.
-Higher values have precedence over lower values. Lowest level is 0.
-chargingProfilePurpose ChargingProfilePurposeType 1..1 Required. Defines the purpose of the schedule transferred by this
-message.
-chargingProfileKind ChargingProfileKindType 1..1 Required. Indicates the kind of schedule.
-recurrencyKind RecurrencyKindType 0..1 Optional. Indicates the start point of a recurrence.
-validFrom dateTime 0..1 Optional. Point in time at which the profile starts to be valid. If
-absent, the profile is valid as soon as it is received by the Charge
-Point.
-validTo dateTime 0..1 Optional. Point in time at which the profile stops to be valid. If
-absent, the profile is valid until it is replaced by another profile.
-chargingSchedule ChargingSchedule 1..1 Required. Contains limits for the available power or current over
-time.
+.Class Diagram: ChargingProfile
+image::images/figure_42.svg[Class Diagram: ChargingProfile]
 
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|[[charging_profile_id]]**chargingProfileId** |integer |1..1 |Required. Unique identifier for this profile.
+|**transactionId** |integer |0..1 |Optional. Only valid if ChargingProfilePurpose is set to <<tx_profile,TxProfile>>, the transactionId MAY be used to match the profile to a specific transaction.
+|[[stack_level]]stackLevel |integer >=0 |1..1 |Required. Value determining level in hierarchy stack of profiles. Higher values have precedence over lower values. Lowest level is 0.
+|**chargingProfilePurpose** |<<charging_profile_purpose_type,ChargingProfilePurposeType>> |1..1 |Required. Defines the purpose of the schedule transferred by this message.
+|**chargingProfileKind** |<<charging_profile_kind_type,ChargingProfileKindType>> |1..1 |Required. Indicates the kind of schedule.
+|**recurrencyKind** |<<recurrency_kind_type,RecurrencyKindType>> |0..1 |Optional. Indicates the start point of a recurrence.
+|**validFrom** |dateTime |0..1 |Optional. Point in time at which the profile starts to be valid. If absent, the profile is valid as soon as it is received by the Charge Point.
+|validTo |dateTime |0..1 |Optional. Point in time at which the profile stops to be valid. If absent, the profile is valid until it is replaced by another profile.
+|chargingSchedule |<<charging_schedule_type,ChargingSchedule>> |1..1 |Required. Contains limits for the available power or current over time.
+|===
+
+[[charging_profile_kind_type]]
 === ChargingProfileKindType
 
 _Enumeration_
-Kind of charging profile, as used in: ChargingProfile.
-**VALUE DESCRIPTION
-Absolute** Schedule periods are relative to a fixed point in time defined in the schedule.
-**Recurring** The schedule restarts periodically at the first schedule period.
-**Relative** Schedule periods are relative to a situation-specific start point (such as the start of a Transaction) that is determined by the
-charge point.
+
+Kind of charging profile, as used in: <<charging_profile_type,ChargingProfile>>.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**Absolute** |Schedule periods are relative to a fixed point in time defined in the schedule.
+|**Recurring** |The schedule restarts periodically at the first schedule period.
+|**Relative** |Schedule periods are relative to a situation-specific start point (such as the start of a Transaction) that is determined by the charge point.
+|===
 
 [[charging_profile_purpose_type]]
 === ChargingProfilePurposeType
 
 _Enumeration_
-Purpose of the charging profile, as used in: ChargingProfile.
-**VALUE DESCRIPTION
-ChargePointMaxProfile** Configuration for the maximum power or current available for an entire Charge Point.
-**TxDefaultProfile** Default profile \*that can be configured in the Charge Point. When a new transaction is started, this profile
-SHALL be used, unless it was a transaction that was started by a RemoteStartTransaction.req with a
-ChargeProfile that is accepted by the Charge Point.
 
-VALUE DESCRIPTION
-TxProfile Profile with constraints to be imposed by the Charge Point on the current transaction, or on a new transaction
-when this is started via a RemoteStartTransaction.req with a ChargeProfile. A profile with this purpose SHALL
-cease to be valid when the transaction terminates.
+Purpose of the charging profile, as used in: <<charging_profile_type,ChargingProfile>>.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**<<charge_point_max_profile,ChargePointMaxProfile>>** |Configuration for the maximum power or current available for an entire Charge Point.
+|**<<tx_default_profile,TxDefaultProfile>>** |Default profile *that can be configured in the Charge Point. When a new transaction is started, this profile SHALL be used, unless it was a transaction that was started by a <<remote_start_transaction_req,RemoteStartTransaction.req>> with a ChargeProfile that is accepted by the Charge Point.
+|**<<tx_profile,TxProfile>>** |Profile with constraints to be imposed by the Charge Point on the current transaction, or on a new transaction when this is started via a <<remote_start_transaction_req,RemoteStartTransaction.req>> with a ChargeProfile. A profile with this purpose SHALL cease to be valid when the transaction terminates.
+|===
 
 [[charging_profile_status]]
 === ChargingProfileStatus
 
 _Enumeration_
-Status returned in response to SetChargingProfile.req.
-**VALUE DESCRIPTION
-Accepted** Request has been accepted and will be executed.
-**Rejected** Request has not been accepted and will not be executed.
-**NotSupported** Charge Point indicates that the request is not supported.
+
+Status returned in response to <<set_charging_profile_req,SetChargingProfile.req>>.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**Accepted** |Request has been accepted and will be executed.
+|**Rejected** |Request has not been accepted and will not be executed.
+|**NotSupported** |Charge Point indicates that the request is not supported.
+|===
 
 [[charging_rate_unit_type]]
 === ChargingRateUnitType
 
 _Enumeration_
-Unit in which a charging schedule is defined, as used in: GetCompositeSchedule.req and ChargingSchedule
-**VALUE DESCRIPTION
-W** Watts (power).
-This is the TOTAL allowed charging power.
-If used for AC Charging, the phase current should be calculated via: Current per phase = Power / (Line Voltage \* Number of
-Phases). The "Line Voltage" used in the calculation is not the measured voltage, but the set voltage for the area (hence, 230 of
-110 volt). The "Number of Phases" is the numberPhases from the ChargingSchedulePeriod.
+
+Unit in which a charging schedule is defined, as used in: <<get_composite_schedule_req,GetCompositeSchedule.req>> and <<charging_schedule_type,ChargingSchedule>>.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**W** |Watts (power). +
+This is the TOTAL allowed charging power. +
+If used for AC Charging, the phase current should be calculated via: Current per phase = Power / (Line Voltage * Number of Phases). The "Line Voltage" used in the calculation is not the measured voltage, but the set voltage for the area (hence, 230 of 110 volt). The "Number of Phases" is the numberPhases from the <<charging_schedule_period,ChargingSchedulePeriod>>.
+
 It is usually more convenient to use this for DC charging.
-Note that if numberPhases in a ChargingSchedulePeriod is absent, 3 SHALL be assumed.
-**A** Amperes (current).
+
+Note that if numberPhases in a <<charging_schedule_period,ChargingSchedulePeriod>> is absent, 3 SHALL be assumed.
+|**A** |Amperes (current). +
 The amount of Ampere per phase, not the sum of all phases.
+
 It is usually more convenient to use this for AC charging.
+|===
 
 [[charging_schedule_type]]
 === ChargingSchedule
 
 _Class_
-Charging schedule structure defines a list of charging periods, as used in: GetCompositeSchedule.conf and
-ChargingProfile.
 
-FIELD NAME FIELD TYPE CARD. DESCRIPTION
-duration integer 0..1 Optional. Duration of the charging schedule in seconds. If the
-duration is left empty, the last period will continue indefinitely or
-until end of the transaction in case startSchedule is absent.
-startSchedule dateTime 0..1 Optional. Starting point of an absolute schedule. If absent the
-schedule will be relative to start of charging.
-chargingRateUnit ChargingRateUnitType 1..1 Required. The unit of measure Limit is expressed in.
-chargingSchedulePeriod ChargingSchedulePeriod 1..\* Required. List of ChargingSchedulePeriod elements defining
-maximum power or current usage over time. The startSchedule of
-the first ChargingSchedulePeriod SHALL always be 0.
-[[minchargingrate]]
-minChargingRate decimal 0..1 Optional. Minimum charging rate supported by the electric
-vehicle. The unit of measure is defined by the chargingRateUnit.
-This parameter is intended to be used by a local smart charging
-algorithm to optimize the power allocation for in the case a
-charging process is inefficient at lower charging rates. Accepts at
-most one digit fraction (e.g. 8.1)
+Charging schedule structure defines a list of charging periods, as used in: <<get_composite_schedule_conf,GetCompositeSchedule.conf>> and <<charging_profile_type,ChargingProfile>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|duration |integer |0..1 |Optional. Duration of the charging schedule in seconds. If the duration is left empty, the last period will continue indefinitely or until end of the transaction in case startSchedule is absent.
+|startSchedule |dateTime |0..1 |Optional. Starting point of an absolute schedule. If absent the schedule will be relative to start of charging.
+|chargingRateUnit |<<charging_rate_unit_type,ChargingRateUnitType>> |1..1 |Required. The unit of measure Limit is expressed in.
+|chargingSchedulePeriod |<<charging_schedule_period,ChargingSchedulePeriod>> |1..* |Required. List of <<charging_schedule_period,ChargingSchedulePeriod>> elements defining maximum power or current usage over time. The startSchedule of the first <<charging_schedule_period,ChargingSchedulePeriod>> SHALL always be 0.
+|[[minchargingrate]]minChargingRate |decimal |0..1 |Optional. Minimum charging rate supported by the electric vehicle. The unit of measure is defined by the chargingRateUnit. This parameter is intended to be used by a local smart charging algorithm to optimize the power allocation for in the case a charging process is inefficient at lower charging rates. Accepts at most one digit fraction (e.g. 8.1).
+|===
 
 [[charging_schedule_period]]
 === ChargingSchedulePeriod
 
 _Class_
-Charging schedule period structure defines a time period in a charging schedule, as used in: ChargingSchedule.
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-startPeriod** integer 1..1 Required. Start of the period, in seconds from the start of schedule. The value of
-StartPeriod also defines the stop time of the previous period.
-**limit** decimal 1..1 Required. Charging rate limit during the schedule period, in the applicable
-chargingRateUnit, for example in Amperes or Watts. Accepts at most one digit
-fraction (e.g. 8.1).
-**numberPhases** integer 0..1 Optional. The number of phases that can be used for charging. If a number of
-phases is needed, numberPhases=3 will be assumed unless another number is
-given.
+
+Charging schedule period structure defines a time period in a charging schedule, as used in: <<charging_schedule_type,ChargingSchedule>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**startPeriod** |integer |1..1 |Required. Start of the period, in seconds from the start of schedule. The value of StartPeriod also defines the stop time of the previous period.
+|**limit** |decimal |1..1 |Required. Charging rate limit during the schedule period, in the applicable chargingRateUnit, for example in Amperes or Watts. Accepts at most one digit fraction (e.g. 8.1).
+|**numberPhases** |integer |0..1 |Optional. The number of phases that can be used for charging. If a number of phases is needed, numberPhases=3 will be assumed unless another number is given.
+|===
 
 [[cistring20type]]
 === CiString20Type
 
 _Type_
+
 Generic used case insensitive string of 20 characters.
-**FIELD TYPE DESCRIPTION**
-CiString[20] String is case insensitive.
+
+[cols="2,8",options="headers"]
+|===
+|FIELD TYPE     |DESCRIPTION
+
+|CiString[20]   |String is case insensitive.
+|===
 
 [[cistring25type]]
 === CiString25Type
@@ -2815,522 +2813,618 @@ CiString[20] String is case insensitive.
 _Type_
 
 Generic used case insensitive string of 25 characters.
-**FIELD TYPE DESCRIPTION**
-CiString[25] String is case insensitive.
+
+[cols="2,8",options="headers"]
+|===
+|FIELD TYPE    |DESCRIPTION
+
+|CiString[25]  |String is case insensitive.
+|===
 
 [[cistring50type]]
 === CiString50Type
 
 _Type_
+
 Generic used case insensitive string of 50 characters.
-**FIELD TYPE DESCRIPTION**
-CiString[50] String is case insensitive.
+
+[cols="2,8",options="headers"]
+|===
+|FIELD TYPE    |DESCRIPTION
+
+|CiString[50]  |String is case insensitive.
+|===
 
 [[cistring255type]]
 === CiString255Type
 
 _Type_
+
 Generic used case insensitive string of 255 characters.
-**FIELD TYPE DESCRIPTION**
-CiString[255] String is case insensitive.
+
+[cols="2,8",options="headers"]
+|===
+|FIELD TYPE     |DESCRIPTION
+
+|CiString[255]  |String is case insensitive.
+|===
 
 [[cistring500type]]
 === CiString500Type
 
 _Type_
+
 Generic used case insensitive string of 500 characters.
-**FIELD TYPE DESCRIPTION**
-CiString[500] String is case insensitive.
+
+[cols="2,8",options="headers"]
+|===
+|FIELD TYPE     |DESCRIPTION
+
+|CiString[500]  |String is case insensitive.
+|===
 
 [[clear_cache_status]]
 === ClearCacheStatus
 
 _Enumeration_
-Status returned in response to ClearCache.req.
-**VALUE DESCRIPTION
-Accepted** Command has been executed.
 
-VALUE DESCRIPTION
-Rejected Command has not been executed.
+Status returned in response to <<clear_cache_req,ClearCache.req>>.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**Accepted** |Command has been executed.
+|**Rejected** |Command has not been executed.
+|===
 
 [[clear_charging_profile_status]]
 === ClearChargingProfileStatus
 
 _Enumeration_
-Status returned in response to ClearChargingProfile.req.
-**VALUE DESCRIPTION
-Accepted** Request has been accepted and will be executed.
-**Unknown** No Charging Profile(s) were found matching the request.
+
+Status returned in response to <<clear_charging_profile_req,ClearChargingProfile.req>>.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**Accepted** |Request has been accepted and will be executed.
+|**Unknown** |No Charging Profile(s) were found matching the request.
+|===
 
 [[configuration_status]]
 === ConfigurationStatus
 
 _Enumeration_
-Status in ChangeConfiguration.conf.
-**VALUE DESCRIPTION
-Accepted** Configuration key is supported and setting has been changed.
-**Rejected** Configuration key is supported, but setting could not be changed.
-**RebootRequired** Configuration key is supported and setting has been changed, but change will be available after reboot (Charge Point will not
-reboot itself)
-**NotSupported** Configuration key is not supported.
+
+Status in <<change_configuration_conf,ChangeConfiguration.conf>>.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**Accepted** |Configuration key is supported and setting has been changed.
+|**Rejected** |Configuration key is supported, but setting could not be changed.
+|**RebootRequired** |Configuration key is supported and setting has been changed, but change will be available after reboot (Charge Point will not reboot itself).
+|**NotSupported** |Configuration key is not supported.
+|===
 
 [[data_transfer_status]]
 === DataTransferStatus
 
 _Enumeration_
-Status in DataTransfer.conf.
-**VALUE DESCRIPTION
-Accepted** Message has been accepted and the contained request is accepted.
-**Rejected** Message has been accepted but the contained request is rejected.
-**UnknownMessageId** Message could not be interpreted due to unknown messageId string.
 
-VALUE DESCRIPTION
-UnknownVendorId Message could not be interpreted due to unknown vendorId string.
+Status in <<data_transfer_conf,DataTransfer.conf>>.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**Accepted** |Message has been accepted and the contained request is accepted.
+|**Rejected** |Message has been accepted but the contained request is rejected.
+|**UnknownMessageId** |Message could not be interpreted due to unknown messageId string.
+|**UnknownVendorId** |Message could not be interpreted due to unknown vendorId string.
+|===
 
 [[diagnostics_status]]
 === DiagnosticsStatus
 
 _Enumeration_
-Status in DiagnosticsStatusNotification.req.
-**VALUE DESCRIPTION
-Idle** Charge Point is not performing diagnostics related tasks. Status Idle SHALL only be used as in a
-DiagnosticsStatusNotification.req that was triggered by a TriggerMessage.req
-**Uploaded** Diagnostics information has been uploaded.
-**UploadFailed** Uploading of diagnostics failed.
-**Uploading** File is being uploaded.
+
+Status in <<diagnostics_status_notification_req,DiagnosticsStatusNotification.req>>.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**Idle** |Charge Point is not performing diagnostics related tasks. Status Idle SHALL only be used as in a <<diagnostics_status_notification_req,DiagnosticsStatusNotification.req>> that was triggered by a <<trigger_message_req,TriggerMessage.req>>.
+|**Uploaded** |Diagnostics information has been uploaded.
+|**UploadFailed** |Uploading of diagnostics failed.
+|**Uploading** |File is being uploaded.
+|===
 
 [[firmware_status]]
 === FirmwareStatus
 
 _Enumeration_
-Status of a firmware download as reported in FirmwareStatusNotification.req.
-**VALUE DESCRIPTION
-Downloaded** New firmware has been downloaded by Charge Point.
-**DownloadFailed** Charge point failed to download firmware.
-**Downloading** Firmware is being downloaded.
-**Idle** Charge Point is not performing firmware update related tasks. Status Idle SHALL only be used as in a
-FirmwareStatusNotification.req that was triggered by a TriggerMessage.req
-**InstallationFailed** Installation of new firmware has failed.
-**Installing** Firmware is being installed.
-**Installed** New firmware has successfully been installed in charge point.
+
+Status of a firmware download as reported in <<firmware_status_notification_req,FirmwareStatusNotification.req>>.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**Downloaded** |New firmware has been downloaded by Charge Point.
+|**DownloadFailed** |Charge point failed to download firmware.
+|**Downloading** |Firmware is being downloaded.
+|**Idle** |Charge Point is not performing firmware update related tasks. Status Idle SHALL only be used as in a <<firmware_status_notification_req,FirmwareStatusNotification.req>> that was triggered by a <<trigger_message_req,TriggerMessage.req>>.
+|**InstallationFailed** |Installation of new firmware has failed.
+|**Installing** |Firmware is being installed.
+|**Installed** |New firmware has successfully been installed in charge point.
+|===
 
 [[get_composite_schedule_status]]
 === GetCompositeScheduleStatus
 
 _Enumeration_
 
-Status returned in response to GetCompositeSchedule.req.
-**VALUE DESCRIPTION
-Accepted** Request has been accepted and will be executed.
-**Rejected** Request has not been accepted and will not be executed.
+Status returned in response to <<get_composite_schedule_req,GetCompositeSchedule.req>>.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**Accepted** |Request has been accepted and will be executed.
+|**Rejected** |Request has not been accepted and will not be executed.
+|===
 
 [[id_tag_info]]
 === IdTagInfo
 
 _Class_
-Contains status information about an identifier. It is returned in Authorize, Start Transaction and Stop
-Transaction responses.
+
+Contains status information about an identifier. It is returned in Authorize, Start Transaction and Stop Transaction responses.
+
 If expiryDate is not given, the status has no end date.
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-expiryDate** dateTime 0..1 Optional. This contains the date at which idTag should be removed from the
-Authorization Cache.
-**parentIdTag** IdToken 0..1 Optional. This contains the parent-identifier.
-**status** AuthorizationStatus 1..1 Required. This contains whether the idTag has been accepted or not by the
-Central System.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**expiryDate** |dateTime |0..1 |Optional. This contains the date at which idTag should be removed from the Authorization Cache.
+|**parentIdTag** |<<idtoken,IdToken>> |0..1 |Optional. This contains the parent-identifier.
+|**status** |<<authorization_status,AuthorizationStatus>> |1..1 |Required. This contains whether the idTag has been accepted or not by the Central System.
+|===
 
 [[idtoken]]
 === IdToken
 
 _Type_
-Contains the identifier to use for authorization. It is a case insensitive string. In future releases this may become
-a complex type to support multiple forms of identifiers.
-**FIELD TYPE DESCRIPTION**
-CiString20Type IdToken is case insensitive.
+
+Contains the identifier to use for authorization. It is a case insensitive string. In future releases this may become a complex type to support multiple forms of identifiers.
+
+[cols="2,8",options="headers"]
+|===
+|FIELD TYPE     |DESCRIPTION
+
+|CiString20Type |IdToken is case insensitive.
+|===
 
 [[keyvalue]]
 === KeyValue
 
 _Class_
-Contains information about a specific configuration key. It is returned in GetConfiguration.conf.
-**NAME FIELD TYPE CARD. DESCRIPTION
-key** CiString50Type 1..1 Required.
 
-== NAME FIELD TYPE CARD. DESCRIPTION
+Contains information about a specific configuration key. It is returned in <<get_configuration_conf,GetConfiguration.conf>>.
 
-== readonly boolean 1..1 Required. False if the value can be set with the ChangeConfiguration message
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
-== value CiString500Type 0..1 Optional. If key is known but not set, this field may be absent
+|**key** |<<cistring50type,CiString50Type>> |1..1 |Required.
+|**readonly** |boolean |1..1 |Required. False if the value can be set with the ChangeConfiguration message
+|**value** |<<cistring500type,CiString500Type>> |0..1 |Optional. If key is known but not set, this field may be absent
+|===
 
 [[location]]
 === Location
 
-== Enumeration
+_Enumeration_
 
-== Allowable values of the optional "location" field of a value element in SampledValue
+Allowable values of the optional "location" field of a value element in <<sampled_value,SampledValue>>.
 
-== VALUE DESCRIPTION
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
 
-== Body Measurement inside body of Charge Point (e.g. Temperature)
-
-== Cable Measurement taken from cable between EV and Charge Point
-
-== EV Measurement taken by EV
-
-== Inlet Measurement at network (“grid”) inlet connection
-
-== Outlet Measurement at a Connector. Default value
+|**Body** |Measurement inside body of Charge Point (e.g. Temperature)
+|**Cable** |Measurement taken from cable between EV and Charge Point
+|**EV** |Measurement taken by EV
+|**Inlet** |Measurement at network (“grid”) inlet connection
+|**Outlet** |Measurement at a Connector. Default value
+|===
 
 [[measurand]]
 === Measurand
 
-== Enumeration
+_Enumeration_
 
-== Allowable values of the optional "measurand" field of a Value element, as used in MeterValues.req and
+Allowable values of the optional "measurand" field of a Value element, as used in <<metervalues_req,MeterValues.req>> and <<stop_transaction_req,StopTransaction.req>> messages. Default value of "<<measurand,measurand>>" is always "Energy.Active.Import.Register".
 
-== StopTransaction.req messages. Default value of "measurand" is always "Energy.Active.Import.Register"
+[cols="1,10"]
+|===
+|[.info-icon]#i# |
+Import is energy flow from the Grid to the Charge Point, EV or other load. Export is energy flow from the EV to the Charge Point and/or from the Charge Point to the Grid.
+|===
 
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
 
+|**Current.Export** |Instantaneous current flow from EV
+|**Current.Import** |Instantaneous current flow to EV
+|**Current.Offered** |Maximum current offered to EV
+|**Energy.Active.Export.Register** |Numerical value read from the "active electrical energy" (Wh or kWh) register of the (most authoritative) electrical meter measuring energy exported (to the grid).
+|**Energy.Active.Import.Register** |Numerical value read from the "active electrical energy" (Wh or kWh) register of the (most authoritative) electrical meter measuring energy imported (from the grid supply).
+|**Energy.Reactive.Export.Register** |Numerical value read from the "reactive electrical energy" (VARh or kVARh) register of the (most authoritative) electrical meter measuring energy exported (to the grid).
+|**Energy.Reactive.Import.Register** |Numerical value read from the "reactive electrical energy" (VARh or kVARh) register of the (most authoritative) electrical meter measuring energy imported (from the grid supply).
+|**Energy.Active.Export.Interval** |Absolute amount of "active electrical energy" (Wh or kWh) exported (to the grid) during an associated time "interval", specified by a Metervalues ReadingContext, and applicable interval duration configuration values (in seconds) for "ClockAlignedDataInterval" and "MeterValueSampleInterval".
+|**Energy.Active.Import.Interval** |Absolute amount of "active electrical energy" (Wh or kWh) imported (from the grid supply) during an associated time "interval", specified by a Metervalues ReadingContext, and applicable interval duration configuration values (in seconds) for "ClockAlignedDataInterval" and "MeterValueSampleInterval".
+|**Energy.Reactive.Export.Interval** |Absolute amount of "reactive electrical energy" (VARh or kVARh) exported (to the grid) during an associated time "interval", specified by a Metervalues ReadingContext, and applicable interval duration configuration values (in seconds) for "ClockAlignedDataInterval" and "MeterValueSampleInterval".
+|**Energy.Reactive.Import.Interval** |Absolute amount of "reactive electrical energy" (VARh or kVARh) imported (from the grid supply) during an associated time "interval", specified by a Metervalues ReadingContext, and applicable interval duration configuration values (in seconds) for "ClockAlignedDataInterval" and "MeterValueSampleInterval".
+|**Frequency** |Instantaneous reading of powerline frequency. NOTE: OCPP 1.6 does not have a UnitOfMeasure for frequency, the UnitOfMeasure for any SampledValue with measurand: Frequency is Hertz.
+|**Power.Active.Export** |Instantaneous active power exported by EV. (W or kW)
+|**Power.Active.Import** |Instantaneous active power imported by EV. (W or kW)
+|**Power.Factor** |Instantaneous power factor of total energy flow
+|**Power.Offered** |Maximum power offered to EV
+|**Power.Reactive.Export** |Instantaneous reactive power exported by EV. (var or kvar)
+|**Power.Reactive.Import** |Instantaneous reactive power imported by EV. (var or kvar)
+|**RPM** |Fan speed in RPM
+|**SoC** |State of charge of charging vehicle in percentage
+|**Temperature** |Temperature reading inside Charge Point.
+|**Voltage** |Instantaneous AC RMS supply voltage
+|===
 
-== Import is energy flow from the Grid to the Charge Point, EV or other load. Export is energy flow
+[cols="1,10"]
+|===
+|[.info-icon]#i# |
+All "Register" values relating to a single charging transaction, or a non-transactional consumer (e.g. charge point internal power supply, overall supply) MUST be monotonically increasing in time.
 
-== from the EV to the Charge Point and/or from the Charge Point to the Grid
-
-== VALUE DESCRIPTION
-
-== Current.Export Instantaneous current flow from EV
-
-== Current.Import Instantaneous current flow to EV
-
-== Current.Offered Maximum current offered to EV
-
-== Energy.Active.Export.Register Numerical value read from the "active electrical energy" (Wh or kWh) register of the (most authoritative)
-
-== electrical meter measuring energy exported (to the grid)
-
-== Energy.Active.Import.Register Numerical value read from the "active electrical energy" (Wh or kWh) register of the (most authoritative)
-
-== electrical meter measuring energy imported (from the grid supply)
-
-**VALUE DESCRIPTION
-Energy.Reactive.Export.Register** Numerical value read from the "reactive electrical energy" (VARh or kVARh) register of the (most
-authoritative) electrical meter measuring energy exported (to the grid).
-**Energy.Reactive.Import.Register** Numerical value read from the "reactive electrical energy" (VARh or kVARh) register of the (most
-authoritative) electrical meter measuring energy imported (from the grid supply).
-**Energy.Active.Export.Interval** Absolute amount of "active electrical energy" (Wh or kWh) exported (to the grid) during an associated time
-"interval", specified by a Metervalues ReadingContext, and applicable interval duration configuration values
-(in seconds) for "ClockAlignedDataInterval" and "MeterValueSampleInterval".
-**Energy.Active.Import.Interval** Absolute amount of "active electrical energy" (Wh or kWh) imported (from the grid supply) during an
-associated time "interval", specified by a Metervalues ReadingContext, and applicable interval duration
-configuration values (in seconds) for "ClockAlignedDataInterval" and "MeterValueSampleInterval".
-**Energy.Reactive.Export.Interval** Absolute amount of "reactive electrical energy" (VARh or kVARh) exported (to the grid) during an associated
-time "interval", specified by a Metervalues ReadingContext, and applicable interval duration configuration
-values (in seconds) for "ClockAlignedDataInterval" and "MeterValueSampleInterval".
-**Energy.Reactive.Import.Interval** Absolute amount of "reactive electrical energy" (VARh or kVARh) imported (from the grid supply) during an
-associated time "interval", specified by a Metervalues ReadingContext, and applicable interval duration
-configuration values (in seconds) for "ClockAlignedDataInterval" and "MeterValueSampleInterval".
-**Frequency** Instantaneous reading of powerline frequency. NOTE: OCPP 1.6 does not have a UnitOfMeasure for
-frequency, the UnitOfMeasure for any SampledValue with measurand: Frequency is Hertz.
-**Power.Active.Export** Instantaneous active power exported by EV. (W or kW)
-**Power.Active.Import** Instantaneous active power imported by EV. (W or kW)
-**Power.Factor** Instantaneous power factor of total energy flow
-**Power.Offered** Maximum power offered to EV
-**Power.Reactive.Export** Instantaneous reactive power exported by EV. (var or kvar)
-**Power.Reactive.Import** Instantaneous reactive power imported by EV. (var or kvar)
-**RPM** Fan speed in RPM
-**SoC** State of charge of charging vehicle in percentage
-**Temperature** Temperature reading inside Charge Point.
-**Voltage** Instantaneous AC RMS supply voltage
-
-
-
-All "Register" values relating to a single charging transaction, or a non-transactional consumer
-
-(e.g. charge point internal power supply, overall supply) MUST be monotonically increasing in
-
-time
-
-The actual quantity of energy corresponding to a reported ".Register" value is computed as
-
-the register value in question minus the register value recorded/reported at the start of the
-
-transaction or other relevant starting reference point in time. For improved auditability
-
-".Register" values SHOULD reported exactly as they are directly read from a non-volatile
-
-register in the electrical metering hardware, and SHOULD NOT be re-based to zero at the start
-
-of transactions. This allows any "missing energy" between sequential transactions, due to
-
-hardware fault, mis-wiring, fraud, etc. to be identified, by allowing the Central System to
-
-confirm that the starting register value of any transaction is identical to the finishing register
-
-value of the preceding transaction on the same connector
+The actual quantity of energy corresponding to a reported ".Register" value is computed as the register value in question minus the register value recorded/reported at the start of the transaction or other relevant starting reference point in time. For improved auditability ".Register" values SHOULD reported exactly as they are directly read from a non-volatile register in the electrical metering hardware, and SHOULD NOT be re-based to zero at the start of transactions. This allows any "missing energy" between sequential transactions, due to hardware fault, mis-wiring, fraud, etc. to be identified, by allowing the Central System to confirm that the starting register value of any transaction is identical to the finishing register value of the preceding transaction on the same connector.
+|===
 
 [[message_trigger]]
 === MessageTrigger
 
-Enumeration
+_Enumeration_
 
-Type of request to be triggered in a TriggerMessage.req
+Type of request to be triggered in a <<trigger_message_req,TriggerMessage.req>>
 
-VALUE DESCRIPTION
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
 
-BootNotification To trigger a BootNotification request
-
-DiagnosticsStatusNotification To trigger a DiagnosticsStatusNotification request
-
-FirmwareStatusNotification To trigger a FirmwareStatusNotification request
-
-Heartbeat To trigger a Heartbeat request
-
-MeterValues To trigger a MeterValues request
-
-StatusNotification To trigger a StatusNotification request
+|BootNotification |To trigger a <<boot_notification_req,BootNotification>> request
+|DiagnosticsStatusNotification |To trigger a <<diagnostics_status_notification_req,DiagnosticsStatusNotification>> request
+|FirmwareStatusNotification |To trigger a <<firmware_status_notification_req,FirmwareStatusNotification>> request
+|Heartbeat |To trigger a <<heartbeat_req,Heartbeat>> request
+|MeterValues |To trigger a MeterValues request
+|StatusNotification |To trigger a <<status_notification_req,StatusNotification>> request
+|===
 
 [[metervalue]]
 === MeterValue
 
-== Class
+_Class_
 
-== Collection of one or more sampled values in MeterValues.req and StopTransaction.req. All sampled values in a
+Collection of one or more sampled values in <<metervalues_req,MeterValues.req>> and <<stop_transaction_req,StopTransaction.req>>. All sampled values in a MeterValue are sampled at the same point in time.
 
-== MeterValue are sampled at the same point in time
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
-== FIELD NAME FIELD TYPE CARD. DESCRIPTION
-
-== timestamp dateTime 1..1 Required. Timestamp for measured value(s)
-
-== sampledValue SampledValue 1..\* Required. One or more measured values
+|**timestamp** |dateTime |1..1 |Required. Timestamp for measured value(s)
+|**sampledValue** |<<sampled_value,SampledValue>> |1..* |Required. One or more measured values
+|===
 
 [[phase]]
 === Phase
 
 _Enumeration_
-Phase as used in SampledValue. Phase specifies how a measured value is to be interpreted. Please note that not
-all values of Phase are applicable to all Measurands.
-**VALUE DESCRIPTION
-L1** Measured on L1
-**L2** Measured on L2
-**L3** Measured on L3
-**N** Measured on Neutral
-**L1-N** Measured on L1 with respect to Neutral conductor
-**L2-N** Measured on L2 with respect to Neutral conductor
-**L3-N** Measured on L3 with respect to Neutral conductor
-**L1-L2** Measured between L1 and L2
-**L2-L3** Measured between L2 and L3
-**L3-L1** Measured between L3 and L1
+
+Phase as used in <<sampled_value,SampledValue>>. Phase specifies how a measured value is to be interpreted. Please note that not all values of Phase are applicable to all <<measurand,Measurands>>.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**L1** |Measured on L1
+|**L2** |Measured on L2
+|**L3** |Measured on L3
+|**N** |Measured on Neutral
+|**L1-N** |Measured on L1 with respect to Neutral conductor
+|**L2-N** |Measured on L2 with respect to Neutral conductor
+|**L3-N** |Measured on L3 with respect to Neutral conductor
+|**L1-L2** |Measured between L1 and L2
+|**L2-L3** |Measured between L2 and L3
+|**L3-L1** |Measured between L3 and L1
+|===
 
 [[reading_context]]
 === ReadingContext
 
 _Enumeration_
-Values of the context field of a value in SampledValue.
-**VALUE DESCRIPTION
-Interruption.Begin** Value taken at start of interruption.
-**Interruption.End** Value taken when resuming after interruption.
-**Other** Value for any other situations.
-**Sample.Clock** Value taken at clock aligned interval.
-**Sample.Periodic** Value taken as periodic sample relative to start time of transaction.
-**Transaction.Begin** Value taken at start of transaction.
 
-VALUE DESCRIPTION
-Transaction.End Value taken at end of transaction.
-Trigger Value taken in response to a TriggerMessage.req
+Values of the context field of a value in <<sampled_value,SampledValue>>.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**Interruption.Begin** |Value taken at start of interruption.
+|**Interruption.End** |Value taken when resuming after interruption.
+|**Other** |Value for any other situations.
+|**Sample.Clock** |Value taken at clock aligned interval.
+|**Sample.Periodic** |Value taken as periodic sample relative to start time of transaction.
+|**Transaction.Begin** |Value taken at start of transaction.
+|**Transaction.End** |Value taken at end of transaction.
+|**Trigger** |Value taken in response to a <<trigger_message_req,TriggerMessage.req>>.
+|===
 
 [[reason]]
 === Reason
 
 _Enumeration_
-Reason for stopping a transaction in StopTransaction.req.
-**VALUE DESCRIPTION
-DeAuthorized** The transaction was stopped because of the authorization status in a StartTransaction.conf
-**EmergencyStop** Emergency stop button was used.
-**EVDisconnected** disconnecting of cable, vehicle moved away from inductive charge unit.
-**HardReset** A hard reset command was received.
-**Local** Stopped locally on request of the user at the Charge Point. This is a regular termination of a transaction. Examples: presenting
-an RFID tag, pressing a button to stop.
-**Other** Any other reason.
-**PowerLoss** Complete loss of power.
-**Reboot** A locally initiated reset/reboot occurred. (for instance watchdog kicked in)
-**Remote** Stopped remotely on request of the user. This is a regular termination of a transaction. Examples: termination using a
-smartphone app, exceeding a (non local) prepaid credit.
-**SoftReset** A soft reset command was received.
-**UnlockCommand** Central System sent an Unlock Connector command.
+
+Reason for stopping a transaction in <<stop_transaction_req,StopTransaction.req>>.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**DeAuthorized** |The transaction was stopped because of the authorization status in a <<start_transaction_conf,StartTransaction.conf>>.
+|**EmergencyStop** |Emergency stop button was used.
+|**EVDisconnected** |disconnecting of cable, vehicle moved away from inductive charge unit.
+|**HardReset** |A hard reset command was received.
+|**Local** |Stopped locally on request of the user at the Charge Point. This is a regular termination of a transaction. Examples: presenting an RFID tag, pressing a button to stop.
+|**Other** |Any other reason.
+|**PowerLoss** |Complete loss of power.
+|**Reboot** |A locally initiated reset/reboot occurred. (for instance watchdog kicked in)
+|**Remote** |Stopped remotely on request of the user. This is a regular termination of a transaction. Examples: termination using a smartphone app, exceeding a (non local) prepaid credit.
+|**SoftReset** |A soft reset command was received.
+|**UnlockCommand** |Central System sent an Unlock Connector command.
+|===
 
 [[recurrency_kind_type]]
 === RecurrencyKindType
 
 _Enumeration_
-Type of recurrence of a charging profile, as used in ChargingProfile.
-**VALUE DESCRIPTION
-Daily** The schedule restarts every 24 hours, at the same time as in the startSchedule.
 
-VALUE DESCRIPTION
-Weekly The schedule restarts every 7 days, at the same time and day-of-the-week as in the startSchedule.
+Type of recurrence of a charging profile, as used in <<charging_profile_type,ChargingProfile>>.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**Daily** |The schedule restarts every 24 hours, at the same time as in the startSchedule.
+|**Weekly** |The schedule restarts every 7 days, at the same time and day-of-the-week as in the startSchedule.
+|===
 
 [[registration_status]]
 === RegistrationStatus
 
 _Enumeration_
-Result of registration in response to BootNotification.req.
-**VALUE DESCRIPTION
-Accepted** Charge point is accepted by Central System.
-**Pending** Central System is not yet ready to accept the Charge Point. Central System may send messages to retrieve information or
-prepare the Charge Point.
-**Rejected** Charge point is not accepted by Central System. This may happen when the Charge Point id is not known by Central System.
+
+Result of registration in response to <<boot_notification_req,BootNotification.req>>.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**Accepted** |Charge point is accepted by Central System.
+|**Pending** |Central System is not yet ready to accept the Charge Point. Central System may send messages to retrieve information or prepare the Charge Point.
+|**Rejected** |Charge point is not accepted by Central System. This may happen when the Charge Point id is not known by Central System.
+|===
 
 [[remote_start_stop_status]]
 === RemoteStartStopStatus
 
 _Enumeration_
-The result of a RemoteStartTransaction.req or RemoteStopTransaction.req request.
-**VALUE DESCRIPTION
-Accepted** Command will be executed.
-**Rejected** Command will not be executed.
+
+The result of a <<remote_start_transaction_req,RemoteStartTransaction.req>> or <<remote_stop_transaction_req,RemoteStopTransaction.req>> request.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**Accepted** |Command will be executed.
+|**Rejected** |Command will not be executed.
+|===
 
 [[reservation_status]]
 === ReservationStatus
 
 _Enumeration_
-Status in ReserveNow.conf.
-**VALUE DESCRIPTION
-Accepted** Reservation has been made.
-**Faulted** Reservation has not been made, because connectors or specified connector are in a faulted state.
-**Occupied** Reservation has not been made. All connectors or the specified connector are occupied.
-**Rejected** Reservation has not been made. Charge Point is not configured to accept reservations.
 
-VALUE DESCRIPTION
-Unavailable Reservation has not been made, because connectors or specified connector are in an unavailable state.
+Status in <<reserve_now_conf,ReserveNow.conf>>.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**Accepted** |Reservation has been made.
+|**Faulted** |Reservation has not been made, because connectors or specified connector are in a faulted state.
+|**Occupied** |Reservation has not been made. All connectors or the specified connector are occupied.
+|**Rejected** |Reservation has not been made. Charge Point is not configured to accept reservations.
+|**Unavailable** |Reservation has not been made, because connectors or specified connector are in an unavailable state.
+|===
 
 [[reset_status]]
 === ResetStatus
 
 _Enumeration_
-Result of Reset.req.
-**VALUE DESCRIPTION
-Accepted** Command will be executed.
-**Rejected** Command will not be executed.
+
+Result of <<reset_req,Reset.req>>.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**Accepted** |Command will be executed.
+|**Rejected** |Command will not be executed.
+|===
 
 [[reset_type]]
 === ResetType
 
 _Enumeration_
-Type of reset requested by Reset.req.
-**VALUE DESCRIPTION
-Hard** Restart (all) the hardware, the Charge Point is not required to gracefully stop ongoing transaction. If possible the Charge Point
-sends a StopTransaction.req for previously ongoing transactions after having restarted and having been accepted by the
-Central System via a BootNotification.conf. This is a last resort solution for a not correctly functioning Charge Point, by sending
-a "hard" reset, (queued) information might get lost.
-**Soft** Stop ongoing transactions gracefully and sending StopTransaction.req for every ongoing transaction. It should then restart the
-application software (if possible, otherwise restart the processor/controller).
+
+Type of reset requested by <<reset_req,Reset.req>>.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**Hard** |Restart (all) the hardware, the Charge Point is not required to gracefully stop ongoing transaction. If possible the Charge Point sends a <<stop_transaction_req,StopTransaction.req>> for previously ongoing transactions after having restarted and having been accepted by the Central System via a <<boot_notification_conf,BootNotification.conf>>. This is a last resort solution for a not correctly functioning Charge Point, by sending a "hard" reset, (queued) information might get lost.
+|**Soft** |Stop ongoing transactions gracefully and sending <<stop_transaction_req,StopTransaction.req>> for every ongoing transaction. It should then restart the application software (if possible, otherwise restart the processor/controller).
+|===
 
 [[sampled_value]]
 === SampledValue
 
 _Class_
-Single sampled value in MeterValues. Each value can be accompanied by optional fields.
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-value** String 1..1 Required. Value as a “Raw” (decimal) number or “SignedData”. Field Type is
-“string” to allow for digitally signed data readings. Decimal numeric values are
-also acceptable to allow fractional values for measurands such as Temperature
-and Current.
-**context** ReadingContext 0..1 Optional. Type of detail value: start, end or sample. Default = “Sample.Periodic”
-**format** ValueFormat 0..1 Optional. Raw or signed data. Default = “Raw”
-**measurand** Measurand 0..1 Optional. Type of measurement. Default = “Energy.Active.Import.Register”
 
-FIELD NAME FIELD TYPE CARD. DESCRIPTION
-phase Phase 0..1 Optional. indicates how the measured value is to be interpreted. For instance
-between L1 and neutral (L1-N) Please note that not all values of phase are
-applicable to all Measurands. When phase is absent, the measured value is
-interpreted as an overall value.
-location Location 0..1 Optional. Location of measurement. Default=”Outlet”
-unit UnitOfMeasure 0..1 Optional. Unit of the value. Default = “Wh” if the (default) measurand is an
-“Energy” type.
+Single sampled value in <<metervalue,MeterValues>>. Each value can be accompanied by optional fields.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**value** |String |1..1 |Required. Value as a “Raw” (decimal) number or “SignedData”. Field Type is “string” to allow for digitally signed data readings. Decimal numeric values are also acceptable to allow fractional values for measurands such as Temperature and Current.
+|**context** |<<reading_context,ReadingContext>> |0..1 |Optional. Type of detail value: start, end or sample. Default = “Sample.Periodic”
+|**format** |<<value_format,ValueFormat>> |0..1 |Optional. Raw or signed data. Default = “Raw”
+|**measurand** |<<measurand,Measurand>> |0..1 |Optional. Type of measurement. Default = “Energy.Active.Import.Register”
+|**phase** |<<phase,Phase>> |0..1 |Optional. indicates how the measured value is to be interpreted. For instance between L1 and neutral (L1-N) Please note that not all values of phase are applicable to all <<measurand,Measurands>>. When phase is absent, the measured value is interpreted as an overall value.
+|**location** |<<location,Location>> |0..1 |Optional. Location of measurement. Default=”Outlet”
+|**unit** |<<unit_of_measure,UnitOfMeasure>> |0..1 |Optional. Unit of the value. Default = “Wh” if the (default) measurand is an “Energy” type.
+|===
 
 [[trigger_message_status]]
 === TriggerMessageStatus
 
 _Enumeration_
-Status in TriggerMessage.conf.
-**VALUE DESCRIPTION
-Accepted** Requested notification will be sent.
-**Rejected** Requested notification will not be sent.
-**NotImplemented** Requested notification cannot be sent because it is either not implemented or unknown.
+
+Status in <<trigger_message_conf,TriggerMessage.conf>>.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**Accepted** |Requested notification will be sent.
+|**Rejected** |Requested notification will not be sent.
+|**NotImplemented** |Requested notification cannot be sent because it is either not implemented or unknown.
+|===
 
 [[unit_of_measure]]
 === UnitOfMeasure
 
 _Enumeration_
-Allowable values of the optional "unit" field of a Value element, as used in SampledValue. Default value of "unit"
-is always "Wh".
-**VALUE DESCRIPTION
-Wh** Watt-hours (energy). Default.
-**kWh** kiloWatt-hours (energy).
-**varh** Var-hours (reactive energy).
-**kvarh** kilovar-hours (reactive energy).
-**W** Watts (power).
-**kW** kilowatts (power).
-**VA** VoltAmpere (apparent power).
 
-VALUE DESCRIPTION
-kVA kiloVolt Ampere (apparent power).
-var Vars (reactive power).
-kvar kilovars (reactive power).
-A Amperes (current).
-V Voltage (r.m.s. AC).
-Celsius Degrees (temperature).
-Fahrenheit Degrees (temperature).
-K Degrees Kelvin (temperature).
-Percent Percentage.
+Allowable values of the optional "unit" field of a Value element, as used in <<sampled_value,SampledValue>>. Default value of "unit" is always "Wh".
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**Wh** |Watt-hours (energy). Default.
+|**kWh** |kiloWatt-hours (energy).
+|**varh** |Var-hours (reactive energy).
+|**kvarh** |kilovar-hours (reactive energy).
+|**W** |Watts (power).
+|**kW** |kilowatts (power).
+|**VA** |VoltAmpere (apparent power).
+|**kVA** |kiloVolt Ampere (apparent power).
+|**var** |Vars (reactive power).
+|**kvar** |kilovars (reactive power).
+|**A** |Amperes (current).
+|**V** |Voltage (r.m.s. AC).
+|**Celsius** |Degrees (temperature).
+|**Fahrenheit** |Degrees (temperature).
+|**K** |Degrees Kelvin (temperature).
+|**Percent** |Percentage.
+|===
 
 [[unlock_status]]
 === UnlockStatus
 
 _Enumeration_
-Status in response to UnlockConnector.req.
-**VALUE DESCRIPTION
-Unlocked** Connector has successfully been unlocked.
-**UnlockFailed** Failed to unlock the connector: The Charge Point has tried to unlock the connector and has detected that the connector is still
-locked or the unlock mechanism failed.
-**NotSupported** Charge Point has no connector lock, or ConnectorId is unknown.
+
+Status in response to <<unlock_connector_req,UnlockConnector.req>>.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**Unlocked** |Connector has successfully been unlocked.
+|**UnlockFailed** |Failed to unlock the connector: The Charge Point has tried to unlock the connector and has detected that the connector is still locked or the unlock mechanism failed.
+|**NotSupported** |Charge Point has no connector lock, or ConnectorId is unknown.
+|===
 
 [[update_status]]
 === UpdateStatus
 
 _Enumeration_
-Type of update for a SendLocalList.req.
-**VALUE DESCRIPTION
-Accepted** Local Authorization List successfully updated.
-**Failed** Failed to update the Local Authorization List.
 
-VALUE DESCRIPTION
-NotSupported Update of Local Authorization List is not supported by Charge Point.
-VersionMismatch Version number in the request for a differential update is less or equal then version number of current list.
+Type of update for a <<send_local_list_req,SendLocalList.req>>.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**Accepted** |Local Authorization List successfully updated.
+|**Failed** |Failed to update the Local Authorization List.
+|**NotSupported** |Update of Local Authorization List is not supported by Charge Point.
+|**VersionMismatch** |Version number in the request for a differential update is less or equal then version number of current list.
+|===
 
 [[update_type]]
 === UpdateType
 
 _Enumeration_
-Type of update for a SendLocalList.req.
-**VALUE DESCRIPTION
-Differential** Indicates that the current Local Authorization List must be updated with the values in this message.
-**Full** Indicates that the current Local Authorization List must be replaced by the values in this message.
+
+Type of update for a <<send_local_list_req,SendLocalList.req>>.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**Differential** |Indicates that the current Local Authorization List must be updated with the values in this message.
+|**Full** |Indicates that the current Local Authorization List must be replaced by the values in this message.
+|===
 
 [[value_format]]
 === ValueFormat
 
 _Enumeration_
-Format that specifies how the value element in SampledValue is to be interpreted.
-**VALUE DESCRIPTION
-Raw** Data is to be interpreted as integer/decimal numeric data.
-**SignedData** Data is represented as a signed binary data block, encoded as hex data.
 
-== 8. Firmware and Diagnostics File Transfer
+Format that specifies how the value element in <<sampled_value,SampledValue>> is to be interpreted.
+
+[cols="2,8",options="headers"]
+|===
+|VALUE    |DESCRIPTION
+
+|**Raw** |Data is to be interpreted as integer/decimal numeric data.
+|**SignedData** |Data is represented as a signed binary data block, encoded as hex data.
+|===
+
+<<<
+
+== Firmware and Diagnostics File Transfer
 
 This section is normative.
-The supported transfer protocols are controlled by the configuration key _SupportedFileTransferProtocols_. FTP,
-FTPS, HTTP, HTTPS (CSL)
+
+The supported transfer protocols are controlled by the configuration key _SupportedFileTransferProtocols_. FTP, FTPS, HTTP, HTTPS (CSL)
 
 === Download Firmware
 
@@ -3428,7 +3522,7 @@ A value of "0" (numeric zero), by convention, is to be interpreted to mean that 
 **Type** integer
 **Unit** seconds
 
-**Description** Interval \*from beginning of status: 'Preparing' until incipient Transaction is automatically canceled, due to failure of EV driver to
+**Description** Interval *from beginning of status: 'Preparing' until incipient Transaction is automatically canceled, due to failure of EV driver to
 (correctly) insert the charging cable connector(s) into the appropriate socket(s). The Charge Point SHALL go back to the original
 state, probably: 'Available'.
 
