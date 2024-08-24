@@ -4,6 +4,32 @@
 /* https://opensource.org/licenses/MIT */
 
 div {
+  font-family: MalgunGothic;
+
+  h1 {
+    font-family: MalgunGothicBold;
+    font-size: 40px;
+    font-weight: bolder; 
+  }
+  
+  h2 {
+    font-family: MalgunGothicBold;
+    font-size: 32px;
+    font-weight: bolder;
+  }
+
+  h3 {
+    font-family: MalgunGothicBold;
+    font-size: 24px;
+    font-weight: bolder;
+  }
+
+  h4 {
+    font-family: MalgunGothicBold;
+    font-size: 20px;
+    font-weight: bolder;
+  }
+
   .cover-image {
     display: block;
     margin-left: auto;
@@ -14,7 +40,7 @@ div {
   .cover-title {
     margin-top: 400px;
     font-size: 40px;
-    font-weight: bold;
+    font-weight: bolder;
     text-align: right;
   }
   
