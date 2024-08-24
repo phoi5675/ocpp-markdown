@@ -517,7 +517,7 @@ The Charge Point indicates whether the Local Authorization List is supported by 
 
 Whether the Local Authorization List is enabled is reported and controlled by the <<localauthlistenabled,LocalAuthListEnabled>> configuration key.
 
-The Central System can synchronize this list by either (1) sending a complete list of identifiers to replace the Local Authorization List or (2) by sending a list of changes (add, update, delete) to apply to the Local Authorization List. The operations to support this are <<get_local_list_version,Get Local List Version>> and <<send_local_list_by_central_system,Send Local List>>.
+The Central System can synchronize this list by either (1) sending a complete list of identifiers to replace the Local Authorization List or (2) by sending a list of changes (add, update, delete) to apply to the Local Authorization List. The operations to support this are <<get_local_list_version_by_central_system,Get Local List Version>> and <<send_local_list_by_central_system,Send Local List>>.
 
 .Sequence Diagram: Example of a full local authorization list update
 image::images/figure_3.svg[Sequence Diagram: Example of a full local authorization list update]
@@ -548,7 +548,7 @@ Operation of the Unknown Offline Authorization capability, when supported, is re
 
 When connection to the Central Server is restored, the Charge Point SHALL send a <<start_transaction_by_charge_point,Start Transaction>> request for any transaction that was authorized offline , as required by <<transaction_related_messages,transaction-related message handling>>. When the authorization status in the <<start_transaction_conf,StartTransaction.conf>> is not _Accepted_, and the transaction is still ongoing, the Charge Point SHOULD:
 
-* when <<stop_transactiononinvalidid,`StopTransactionOnInvalidId`>> is set to _true_: stop the transaction normally as stated in <<stop_transaction,Stop Transaction>>. The Reason field in the Stop Transaction request should be set to DeAuthorized. If the Charge Point has the possibility to lock the Charging Cable, it SHOULD keep the Charging Cable locked until the owner presents his identifier.
+* when <<stop_transactiononinvalidid,`StopTransactionOnInvalidId`>> is set to _true_: stop the transaction normally as stated in <<stop_transaction_by_central_system,Stop Transaction>>. The Reason field in the Stop Transaction request should be set to DeAuthorized. If the Charge Point has the possibility to lock the Charging Cable, it SHOULD keep the Charging Cable locked until the owner presents his identifier.
 * when <<stop_transactiononinvalidid,StopTransactionOnInvalidId>> is set to _false_: only stop energy delivery to the vehicle.
 
 [cols="1,10"]
@@ -700,8 +700,8 @@ _If ConnectorId is set >0, it only applies to that specific connector._
 
 _In the event a TxDefaultProfile for connector 0 is installed, and the Central System sends a new profile with ConnectorId >0, the TxDefaultProfile SHALL be replaced only for that specific connector._
 
-[[tx_profile]]
-* _TxProfile_
+
+* [[tx_profile]]_TxProfile_
 
 If a transaction-specific profile with purpose _TxProfile_ is present, it SHALL overrule the default charging profile with purpose <<tx_default_profile,TxDefaultProfile>> for the duration of the current transaction only. After the transaction is stopped the profile SHOULD be deleted. If there is no transaction active on the connector specified in a charging profile of type _TxProfile_, then the Charge Point SHALL discard it and return an error status in <<set_charging_profile_conf,SetChargingProfile.conf>>.
 
@@ -1070,6 +1070,7 @@ The length of data in both the request and response PDU is undefined and should 
 
 If the recipient of the request has no implementation for the specific vendorId it SHALL return a status 'UnknownVendor' and the data element SHALL not be present. In case of a messageId mismatch (if used) the recipient SHALL return status 'UnknownMessageId'. In all other cases the usage of status 'Accepted' or 'Rejected' and the data element is part of the vendor-specific agreement between the parties involved.
 
+[[diagnostics_status_notification_by_charge_point]]
 === Diagnostics Status Notification
 
 .Sequence Diagram: Diagnostics Status Notification
@@ -1079,6 +1080,7 @@ Charge Point sends a notification to inform the Central System about the status 
 
 Upon receipt of a <<diagnostics_status_notification_req,DiagnosticsStatusNotification.req>> PDU, the Central System SHALL respond with a <<diagnostics_status_notification_conf,DiagnosticsStatusNotification.conf>>.
 
+[[firmware_status_notification_charge_point]]
 === Firmware Status Notification
 
 .Sequence Diagram: Firmware Status Notification
@@ -1090,6 +1092,7 @@ Upon receipt of a <<firmware_status_notification_req,FirmwareStatusNotification.
 
 The FirmwareStatusNotification.req PDUs SHALL be sent to keep the Central System updated with the status of the update process, started by the Central System with a FirmwareUpdate.req PDU.
 
+[[heartbeat_by_charge_point]]
 === Heartbeat
 
 .Sequence Diagram: Heartbeat
@@ -1109,6 +1112,7 @@ The Charge Point MAY skip sending a <<heartbeat_req,Heartbeat.req>> PDU when ano
 With JSON over WebSocket, sending heartbeats is not mandatory. However, for time synchronization it is advised to at least send one heartbeat per 24 hour.
 |===
 
+[[meter_values_by_charge_point]]
 === Meter Values
 
 .Sequence Diagram: Meter Values
@@ -1156,7 +1160,7 @@ Upon receipt of a <<metervalues_req,MeterValues.req>> PDU, the Central System SH
 
 It is likely that The Central System applies sanity checks to the data contained in a <<metervalues_req,MeterValues.req>> it received. The outcome of such sanity checks SHOULD NOT ever cause the Central System to not respond with a <<metervalues_conf,MeterValues.conf>>. Failing to respond with a <<metervalues_conf,MeterValues.conf>> will only cause the Charge Point to try the same message again as specified in <<error_responses_to_transaction_related_messages,Error responses to transaction-related messages>>.
 
-[[start_transaction_by_charge_point,]]
+[[start_transaction_by_charge_point]]
 === Start Transaction
 
 .Sequence Diagram: Start Transaction
@@ -1352,7 +1356,7 @@ When a Charge Point connects to a Central System after having been <<local_autho
 
 Upon receipt of a <<status_notification_req,StatusNotification.req>> PDU, the Central System SHALL respond with a StatusNotification.conf PDU.
 
-[[stop_transaction]]
+[[stop_transaction_by_central_system]]
 === Stop Transaction
 
 .Sequence Diagram: Stop Transaction
@@ -1441,6 +1445,7 @@ In the case the <<change_availability_req,ChangeAvailability.req>> contains Conn
 Persistent states: for example: Connector set to Unavailable shall persist a reboot.
 |===
 
+[[change_configuration_by_central_system]]
 === Change Configuration
 
 .Sequence Diagram: Change Configuration
@@ -1493,6 +1498,7 @@ If the Central System needs to send information to a Charge Point for a function
 
 Behaviour of this operation is identical to the Data Transfer operation initiated by the Charge Point. See <<data_transfer_by_chargepoint,Data Transfer>> for details.
 
+[[get_composite_schedule_by_central_system]]
 === Get Composite Schedule
 
 .Sequence Diagram: Get Composite Schedule
@@ -1524,6 +1530,7 @@ If the list of keys in the request PDU is empty or missing (it is optional), the
 
 The number of configuration keys requested in a single PDU MAY be limited by the Charge Point. This maximum can be retrieved by reading the configuration key <<get_configuration_max_keys,GetConfigurationMaxKeys>>.
 
+[[get_diagnostics_by_central_system]]
 === Get Diagnostics
 
 .Sequence Diagram: Get Diagnostics
@@ -1535,7 +1542,7 @@ Upon receipt of a <<get_diagnostics_req,GetDiagnostics.req>> PDU, and if diagnos
 
 During uploading of a diagnostics file, the Charge Point MUST send <<diagnostics_status_notification_req,DiagnosticsStatusNotification.req>> PDUs to keep the Central System updated with the status of the upload process.
 
-[[get_local_list_version]]
+[[get_local_list_version_by_central_system]]
 === Get Local List Version
 
 .Sequence Diagram: Get Local List Version
@@ -1623,6 +1630,7 @@ If Charge Point has implemented an Authorization Cache, then upon receipt of a <
 It is RECOMMENDED to validate the Identifier with an authorize.req after reception of a <<reserve_now_req,ReserveNow.req>> and before the start of the transaction.
 |===
 
+[[reset_by_central_system]]
 === Reset
 
 .Sequence Diagram: Reset
@@ -1654,6 +1662,7 @@ The Central System SHALL send a <<send_local_list_req,SendLocalList.req>> PDU to
 
 Upon receipt of a <<send_local_list_req,SendLocalList.req>> PDU, the Charge Point SHALL respond with a <<send_local_list_conf,SendLocalList.conf>> PDU. The response PDU SHALL indicate whether the Charge Point has accepted the update of the local authorization list. If the status is Failed or VersionMismatch and the updateType was Differential, then Central System SHOULD retry sending the full local authorization list with updateType Full.
 
+[[set_charging_profile_by_central_system]]
 === Set Charging Profile
 
 .Sequence Diagram: Set Charging Profile
@@ -1758,6 +1767,7 @@ Messages that the Charge Point marks as accepted SHOULD be sent. The situation c
 
 The TriggerMessage mechanism is not intended to retrieve historic data. The messages it triggers should only give current information. A <<metervalues_req,MeterValues.req>> message triggered in this way for instance SHALL return the most recent measurements for all measurands configured in configuration key <<meter_values_sampled_data,`MeterValuesSampledData`>>. <<start_transaction_req,StartTransaction>> and <<stop_transaction_req,StopTransaction>> have been left out of this mechanism because they are not state related, but by their nature describe a transition.
 
+[[unlock_connector_by_central_system]]
 === Unlock Connector
 
 .Sequence Diagram: Unlock Connector
@@ -1772,7 +1782,7 @@ The <<unlock_connector_req,UnlockConnector.req>> SHOULD NOT be used to remotely 
 
 Upon receipt of an <<unlock_connector_req,UnlockConnector.req>> PDU, the Charge Point SHALL respond with a <<unlock_connector_conf,UnlockConnector.conf>> PDU. The response PDU SHALL indicate whether the Charge Point was able to unlock its connector.
 
-If there was a transaction in progress on the specific connector, then Charge Point SHALL finish the transaction first as described in <<stop_transaction,Stop Transaction>>.
+If there was a transaction in progress on the specific connector, then Charge Point SHALL finish the transaction first as described in <<stop_transaction_by_central_system,Stop Transaction>>.
 
 [cols="1,10"]
 |===
@@ -1780,6 +1790,7 @@ If there was a transaction in progress on the specific connector, then Charge Po
 <<unlock_connector_req,UnlockConnector.req>> is intented only for unlocking the cable retention lock on the Connector not for unlocking a connector access door.
 |===
 
+[[update_firmware_by_central_system]]
 === Update Firmware
 
 .Sequence Diagram: Update Firmware
@@ -1920,527 +1931,605 @@ This contains the field definition of the ChangeAvailability.conf PDU return by 
 [[change_configuration_req]]
 === ChangeConfiguration.req
 
-This contains the field definition of the ChangeConfiguration.req PDU sent by Central System to Charge Point. It
-is RECOMMENDED that the content and meaning of the 'key' and 'value' fields is agreed upon between Charge
-Point and Central System. See also Change Configuration
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-key** CiString50Type 1..1 Required. The name of the configuration setting to change.
+This contains the field definition of the ChangeConfiguration.req PDU sent by Central System to Charge Point. It is RECOMMENDED that the content and meaning of the 'key' and 'value' fields is agreed upon between Charge Point and Central System. See also <<change_configuration_by_central_system,Change Configuration>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**key** |<<cistring50type,CiString50Type>> |1..1 |Required. The name of the configuration setting to change. +
+See for standard configuration key names and associated values.
+|**value** |<<cistring500type,CiString500Type>> |1..1 |Required. The new value as string for the setting. +
 See for standard configuration key names and associated values
-**value** CiString500Type 1..1 Required. The new value as string for the setting.
-See for standard configuration key names and associated values
+|===
 
 [[change_configuration_conf]]
 === ChangeConfiguration.conf
 
-This contains the field definition of the ChangeConfiguration.conf PDU returned from Charge Point to Central
-System. See also Change Configuration
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-status** ConfigurationStatus 1..1 Required. Returns whether configuration change has been accepted.
+This contains the field definition of the ChangeConfiguration.conf PDU returned from Charge Point to Central System. See also <<change_configuration_by_central_system,Change Configuration>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**status** |<<configuration_status,ConfigurationStatus>> |1..1 |Required. Returns whether configuration change has been accepted.
+|===
 
 [[clear_cache_req]]
 === ClearCache.req
 
-This contains the field definition of the ClearCache.req PDU sent by the Central System to the Charge Point. See
-also Clear Cache
+This contains the field definition of the ClearCache.req PDU sent by the Central System to the Charge Point. See also <<clear_cache_by_central_system,Clear Cache>>.
+
 No fields are defined.
 
 [[clear_cache_conf]]
 === ClearCache.conf
 
-This contains the field definition of the ClearCache.conf PDU sent by the Charge Point to the Central System in
-response to a ClearCache.req PDU. See also Clear Cache
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-status** ClearCacheStatus 1..1 Required. Accepted if the Charge Point has executed the request, otherwise
-rejected.
+This contains the field definition of the ClearCache.conf PDU sent by the Charge Point to the Central System in response to a <<clear_cache_req,ClearCache.req>> PDU. See also <<clear_cache_by_central_system,Clear Cache>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**status** |<<clear_cache_status,ClearCacheStatus>> |1..1 |Required. Accepted if the Charge Point has executed the request, otherwise rejected.
+|===
 
 [[clear_charging_profile_req]]
 === ClearChargingProfile.req
 
-This contains the field definition of the ClearChargingProfile.req PDU sent by the Central System to the Charge
-Point.
-The Central System can use this message to clear (remove) either a specific charging profile (denoted by id) or a
-selection of charging profiles that match with the values of the optional connectorId, stackLevel and
-chargingProfilePurpose fields. See also Clear Charging Profile
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-id** integer 0..1 Optional. The ID of the charging profile to clear.
-**connectorId** integer 0..1 Optional. Specifies the ID of the connector for which to clear
-charging profiles. A connectorId of zero (0) specifies the charging
-profile for the overall Charge Point. Absence of this parameter
-means the clearing applies to all charging profiles that match the
-other criteria in the request.
-**chargingProfilePurpose** ChargingProfilePurposeType 0..1 Optional. Specifies to purpose of the charging profiles that will be
-cleared, if they meet the other criteria in the request.
-**stackLevel** integer 0..1 Optional. specifies the stackLevel for which charging profiles will
-be cleared, if they meet the other criteria in the request
+This contains the field definition of the ClearChargingProfile.req PDU sent by the Central System to the Charge Point.
+
+The Central System can use this message to clear (remove) either a specific charging profile (denoted by id) or a selection of charging profiles that match with the values of the optional connectorId, stackLevel and <<charging_profile_purposes,chargingProfilePurpose>> fields. See also <<clear_charging_profile_by_central_system,Clear Charging Profile>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**id** |integer |0..1 |Optional. The ID of the charging profile to clear.
+|**connectorId** |integer |0..1 |Optional. Specifies the ID of the connector for which to clear charging profiles. A connectorId of zero (0) specifies the charging profile for the overall Charge Point. Absence of this parameter means the clearing applies to all charging profiles that match the other criteria in the request.
+|**chargingProfilePurpose** |<<charging_profile_purpose_type,ChargingProfilePurposeType>> |0..1 |Optional. Specifies to purpose of the charging profiles that will be cleared, if they meet the other criteria in the request.
+|**stackLevel** |integer |0..1 |Optional. specifies the stackLevel for which charging profiles will be cleared, if they meet the other criteria in the request.
+|===
 
 [[clear_charging_profile_conf]]
 === ClearChargingProfile.conf
 
-This contains the field definition of the ClearChargingProfile.conf PDU sent by the Charge Point to the Central
-System in response to a ClearChargingProfile.req PDU. See also Clear Charging Profile
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-status** ClearChargingProfileStatus 1..1 Required. Indicates if the Charge Point was able to execute the
-request.
+This contains the field definition of the ClearChargingProfile.conf PDU sent by the Charge Point to the Central System in response to a <<clear_charging_profile_req,ClearChargingProfile.req>> PDU. See also <<clear_charging_profile_by_central_system,Clear Charging Profile>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**status** |<<charging_profile_status,ClearChargingProfileStatus>> |1..1 |Required. Indicates if the Charge Point was able to execute the request.
+|===
 
 [[data_transfer_req]]
 === DataTransfer.req
 
-This contains the field definition of the DataTransfer.req PDU sent either by the Central System to the Charge
-Point or vice versa. See also Data Transfer
+This contains the field definition of the DataTransfer.req PDU sent either by the Central System to the Charge Point or vice versa. See also <<data_transfer_by_chargepoint,Data Transfer>>.
 
-FIELD NAME FIELD TYPE CARD. DESCRIPTION
-vendorId CiString255Type 1..1 Required. This identifies the Vendor specific implementation
-messageId CiString50Type 0..1 Optional. Additional identification field
-data Text
-Length undefined
-0..1 Optional. Data without specified length or format.
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**vendorId** |CiString255Type |1..1 |Required. This identifies the Vendor specific implementation
+|**messageId** |CiString50Type |0..1 |Optional. Additional identification field
+|**data** |Text + 
+Length undefined |0..1 |Optional. Data without specified length or format.
+|===
 
 [[data_transfer_conf]]
 === DataTransfer.conf
 
-This contains the field definition of the DataTransfer.conf PDU sent by the Charge Point to the Central System or
-vice versa in response to a DataTransfer.req PDU. See also Data Transfer
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-status** DataTransferStatus 1..1 Required. This indicates the success or failure of the data transfer.
-**data** Text
-Length undefined
-0..1 Optional. Data in response to request.
+This contains the field definition of the DataTransfer.conf PDU sent by the Charge Point to the Central System or vice versa in response to a <<data_transfer_req,DataTransfer.req>> PDU. See also <<data_transfer_by_chargepoint,Data Transfer>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**status** |<<data_transfer_status,DataTransferStatus>> |1..1 |Required. This indicates the success or failure of the data transfer.
+|**data** |Text +
+Length undefined |0..1 |Optional. Data in response to request.
+|===
 
 [[diagnostics_status_notification_req]]
 === DiagnosticsStatusNotification.req
 
-This contains the field definition of the DiagnosticsStatusNotification.req PDU sent by the Charge Point to the
-Central System. See also Diagnostics Status Notification
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-status** DiagnosticsStatus 1..1 Required. This contains the status of the diagnostics upload.
+This contains the field definition of the DiagnosticsStatusNotification.req PDU sent by the Charge Point to the Central System. See also <<diagnostics_status_notification_by_charge_point,Diagnostics Status Notification>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**status** |<<diagnostics_status,DiagnosticsStatus>> |1..1 |Required. This contains the status of the diagnostics upload.
+|===
 
 [[diagnostics_status_notification_conf]]
 === DiagnosticsStatusNotification.conf
 
-This contains the field definition of the DiagnosticsStatusNotification.conf PDU sent by the Central System to the
-Charge Point in response to a DiagnosticsStatusNotification.req PDU. See also Diagnostics Status Notification
+This contains the field definition of the DiagnosticsStatusNotification.conf PDU sent by the Central System to the Charge Point in response to a <<diagnostics_status_notification_req,DiagnosticsStatusNotification.req>> PDU. See also <<diagnostics_status_notification_by_charge_point,Diagnostics Status Notification>>.
+
 No fields are defined.
 
 [[firmware_status_notification_req]]
 === FirmwareStatusNotification.req
 
-This contains the field definition of the FirmwareStatusNotifitacion.req PDU sent by the Charge Point to the
-Central System. See also Firmware Status Notification
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-status** FirmwareStatus 1..1 Required. This contains the progress status of the firmware installation.
+This contains the field definition of the FirmwareStatusNotifitacion.req PDU sent by the Charge Point to the Central System. See also <<firmware_status_notification_charge_point,Firmware Status Notification>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**status** |<<firmware_status,FirmwareStatus>> |1..1 |Required. This contains the progress status of the firmware installation.
+|===
 
 [[firmware_status_notification_conf]]
 === FirmwareStatusNotification.conf
 
-This contains the field definition of the FirmwareStatusNotification.conf PDU sent by the Central System to the
-Charge Point in response to a FirmwareStatusNotification.req PDU. See also Firmware Status Notification
+This contains the field definition of the FirmwareStatusNotification.conf PDU sent by the Central System to the Charge Point in response to a <<firmware_status_notification_req,FirmwareStatusNotification.req>> PDU. See also <<firmware_status_notification_charge_point,Firmware Status Notification>>.
+
 No fields are defined.
 
 [[get_composite_schedule_req]]
 === GetCompositeSchedule.req
 
-This contains the field definition of the GetCompositeSchedule.req PDU sent by the Central System to the
-Charge Point. See also Get Composite Schedule
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-connectorId** integer 1..1 Required. The ID of the Connector for which the schedule is
-requested. When ConnectorId=0, the Charge Point will calculate
-the expected consumption for the grid connection.
-**duration** integer 1..1 Required. Time in seconds. length of requested schedule
-**chargingRateUnit** ChargingRateUnitType 0..1 Optional. Can be used to force a power or current profile
+This contains the field definition of the GetCompositeSchedule.req PDU sent by the Central System to the Charge Point. See also <<get_composite_schedule_by_central_system,Get Composite Schedule>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**connectorId** |integer |1..1 |Required. The ID of the Connector for which the schedule is requested. When ConnectorId=0, the Charge Point will calculate the expected consumption for the grid connection.
+|**duration** |integer |1..1 |Required. Time in seconds. length of requested schedule
+|**chargingRateUnit** |<<charging_rate_unit_type,ChargingRateUnitType>> |0..1 |Optional. Can be used to force a power or current profile
+|===
 
 [[get_composite_schedule_conf]]
 === GetCompositeSchedule.conf
 
 This contains the field definition of the GetCompositeSchedule.conf PDU sent by the Charge Point to the Central
 System in response to a GetCompositeSchedule.req PDU. See also Get Composite Schedule
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-status** GetCompositeScheduleStatus 1..1 Required. Status of the request. The Charge Point will indicate if it
-was able to process the request
-**connectorId** integer 0..1 Optional. The charging schedule contained in this notification
-applies to a Connector.
-**scheduleStart** dateTime 0..1 Optional. Time. Periods contained in the charging profile are
-relative to this point in time.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**status** |<<get_composite_schedule_status,GetCompositeScheduleStatus>> |1..1 |Required. Status of the request. The Charge Point will indicate if it was able to process the request.
+|**connectorId** |integer |0..1 |Optional. The charging schedule contained in this notification applies to a Connector.
+|**scheduleStart** |dateTime |0..1 |Optional. Time. Periods contained in the charging profile are relative to this point in time. + 
 If status is "Rejected", this field may be absent.
-**chargingSchedule** ChargingSchedule 0..1 Optional. Planned Composite Charging Schedule, the energy
-consumption over time. Always relative to ScheduleStart.
-If status is "Rejected", this field may be absent.
+|**chargingSchedule** |<<charging_schedule_type,ChargingSchedule>> |0..1 |Optional. Planned Composite Charging Schedule, the energy consumption over time. Always relative to ScheduleStart. If status is "Rejected", this field may be absent.
+|===
 
 [[get_configuration_req]]
 === GetConfiguration.req
 
-This contains the field definition of the GetConfiguration.req PDU sent by the Central System to the Charge
-Point. See also Get Configuration
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-key** CiString50Type 0..\* Optional. List of keys for which the configuration value is requested.
+This contains the field definition of the GetConfiguration.req PDU sent by the Central System to the Charge Point. See also <<get_configuration_by_central_system,Get Configuration>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**key** |<<cistring50type,CiString50Type>> |0..* |Optional. List of keys for which the configuration value is requested.
+|===
 
 [[get_configuration_conf]]
 === GetConfiguration.conf
 
-This contains the field definition of the GetConfiguration.conf PDU sent by Charge Point the to the Central
-System in response to a GetConfiguration.req. See also Get Configuration
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-configurationKey** KeyValue 0.._Optional. List of requested or known keys
-**unknownKey** CiString50Type 0.._ Optional. Requested keys that are unknown
+This contains the field definition of the GetConfiguration.conf PDU sent by Charge Point the to the Central System in response to a <<get_configuration_req,GetConfiguration.req>>. See also <<get_configuration_by_central_system,Get Configuration>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**configurationKey** |<<keyvalue,KeyValue>> |0..* |Optional. List of requested or known keys
+|**unknownKey** |<<cistring50type,CiString50Type>> |0..* |Optional. Requested keys that are unknown
+|===
 
 [[get_diagnostics_req]]
 === GetDiagnostics.req
 
-This contains the field definition of the GetDiagnostics.req PDU sent by the Central System to the Charge Point.
-See also Get Diagnostics
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-location** anyURI 1..1 Required. This contains the location (directory) where the diagnostics file shall
-be uploaded to.
-**retries** integer 0..1 Optional. This specifies how many times Charge Point must try to upload the
-diagnostics before giving up. If this field is not present, it is left to Charge Point
-to decide how many times it wants to retry.
-**retryInterval** integer 0..1 Optional. The interval in seconds after which a retry may be attempted. If this
-field is not present, it is left to Charge Point to decide how long to wait between
-attempts.
-**startTime** dateTime 0..1 Optional. This contains the date and time of the oldest logging information to
-include in the diagnostics.
-**stopTime** dateTime 0..1 Optional. This contains the date and time of the latest logging information to
-include in the diagnostics.
+This contains the field definition of the GetDiagnostics.req PDU sent by the Central System to the Charge Point. See also <<get_diagnostics_by_central_system,Get Diagnostics>>.
 
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**location** |anyURI |1..1 |Required. This contains the location (directory) where the diagnostics file shall be uploaded to.
+|**retries** |integer |0..1 |Optional. This specifies how many times Charge Point must try to upload the diagnostics before giving up. If this field is not present, it is left to Charge Point to decide how many times it wants to retry.
+|**retryInterval** |integer |0..1 |Optional. The interval in seconds after which a retry may be attempted. If this field is not present, it is left to Charge Point to decide how long to wait between attempts.
+|**startTime** |dateTime |0..1 |Optional. This contains the date and time of the oldest logging information to include in the diagnostics.
+|**stopTime** |dateTime |0..1 |Optional. This contains the date and time of the latest logging information to include in the diagnostics.
+|===
+
+[[get_diagnostics_conf]]
 === GetDiagnostics.conf
 
-This contains the field definition of the GetDiagnostics.conf PDU sent by the Charge Point to the Central System
-in response to a GetDiagnostics.req PDU. See also Get Diagnostics
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-fileName** CiString255Type 0..1 Optional. This contains the name of the file with diagnostic information that will
-be uploaded. This field is not present when no diagnostic information is
-available.
+This contains the field definition of the GetDiagnostics.conf PDU sent by the Charge Point to the Central System in response to a <<get_diagnostics_req,GetDiagnostics.req>> PDU. See also Get Diagnostics.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**fileName** |<<cistring255type,CiString255Type>> |0..1 |Optional. This contains the name of the file with diagnostic information that will be uploaded. This field is not present when no diagnostic information is available.
+|===
 
 [[get_local_list_version_req]]
 === GetLocalListVersion.req
 
-This contains the field definition of the GetLocalListVersion.req PDU sent by the Central System to the Charge
-Point. See also Get Local List Version
+This contains the field definition of the GetLocalListVersion.req PDU sent by the Central System to the Charge Point. See also <<get_local_list_version_by_central_system,Get Local List Version>>.
+
 No fields are defined.
 
 [[get_local_list_version_conf]]
 === GetLocalListVersion.conf
 
-This contains the field definition of the GetLocalListVersion.conf PDU sent by the Charge Point to Central System
-in response to a GetLocalListVersion.req PDU. See also Get Local List Version
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-listVersion** integer 1..1 Required. This contains the current version number of the local authorization list
-in the Charge Point.
+This contains the field definition of the GetLocalListVersion.conf PDU sent by the Charge Point to Central System in response to a <<get_local_list_version_req,GetLocalListVersion.req>> PDU. See also <<get_local_list_version_by_central_system,Get Local List Version>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**listVersion** |integer |1..1 |Required. This contains the current version number of the local authorization list in the Charge Point.
+|===
 
 [[heartbeat_req]]
 === Heartbeat.req
 
-This contains the field definition of the Heartbeat.req PDU sent by the Charge Point to the Central System. See
-also Heartbeat
+This contains the field definition of the Heartbeat.req PDU sent by the Charge Point to the Central System. See also <<heartbeat_by_charge_point,Heartbeat>>.
+
 No fields are defined.
 
 [[heartbeat_conf]]
 === Heartbeat.conf
 
-This contains the field definition of the Heartbeat.conf PDU sent by the Central System to the Charge Point in
-response to a Heartbeat.req PDU. See also Heartbeat
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-currentTime** dateTime 1..1 Required. This contains the current time of the Central System.
+This contains the field definition of the Heartbeat.conf PDU sent by the Central System to the Charge Point in response to a <<heartbeat_req,Heartbeat.req>> PDU. See also <<heartbeat_by_charge_point,Heartbeat>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**currentTime** |dateTime |1..1 |Required. This contains the current time of the Central System.
+|===
 
 [[metervalues_req]]
 === MeterValues.req
 
-This contains the field definition of the MeterValues.req PDU sent by the Charge Point to the Central System. See
-also Meter Values
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-connectorId** integer
-connectorId >= 0
-1..1 Required. This contains a number (>0) designating a connector of the Charge
-Point.'0' (zero) is used to designate the main powermeter.
-**transactionId** integer 0..1 Optional. The transaction to which these meter samples are related.
-**meterValue** MeterValue 1..\* Required. The sampled meter values with timestamps.
+This contains the field definition of the MeterValues.req PDU sent by the Charge Point to the Central System. See also <<meter_values_by_charge_point,Meter Values>>.
+[cols="1,1,1,5",options="headers"] |=== |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION |**connectorId** |integer + connectorId >= 0 |1..1 |Required. This contains a number (>0) designating a connector of the Charge Point.'0' (zero) is used to designate the main powermeter.  |**transactionId** |integer |0..1 |Optional. The transaction to which these meter samples are related.  |**meterValue** |<<metervalue,MeterValue>> |1..* |Required. The sampled meter values with timestamps.  |===
 
 [[metervalues_conf]]
 === MeterValues.conf
 
-This contains the field definition of the MeterValues.conf PDU sent by the Central System to the Charge Point in
-response to a MeterValues.req PDU. See also Meter Values
+This contains the field definition of the MeterValues.conf PDU sent by the Central System to the Charge Point in response to a <<metervalues_req,MeterValues.req>> PDU. See also <<meter_values_by_charge_point,Meter Values>>.
+
 No fields are defined.
 
 [[remote_start_transaction_req]]
 === RemoteStartTransaction.req
 
-This contains the field definitions of the RemoteStartTransaction.req PDU sent to Charge Point by Central
-System. See also Remote Start Transaction
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-connectorId** integer 0..1 Optional. Number of the connector on which to start the transaction.
-connectorId SHALL be > 0
-**idTag** IdToken 1..1 Required. The identifier that Charge Point must use to start a transaction.
-**chargingProfile** ChargingProfile 0..1 Optional. Charging Profile to be used by the Charge Point for the requested
-transaction. ChargingProfilePurpose MUST be set to TxProfile
+This contains the field definitions of the RemoteStartTransaction.req PDU sent to Charge Point by Central System. See also <<remote_start_transaction_by_central_system,Remote Start Transaction>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**connectorId** |integer |0..1 |Optional. Number of the connector on which to start the transaction. connectorId SHALL be > 0.
+|**idTag** |<<idtoken,IdToken>> |1..1 |Required. The identifier that Charge Point must use to start a transaction.
+|**chargingProfile** |<<charging_profile_type,ChargingProfile>> |0..1 |Optional. Charging Profile to be used by the Charge Point for the requested transaction. <<charging_profile_purpose_type,ChargingProfilePurpose>> MUST be set to <<tx_profile,TxProfile>>.
+|===
 
 [[remote_start_transaction_conf]]
 === RemoteStartTransaction.conf
 
-This contains the field definitions of the RemoteStartTransaction.conf PDU sent from Charge Point to Central
-System. See also Remote Start Transaction
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-status** RemoteStartStopStatus 1..1 Required. Status indicating whether Charge Point accepts the
-request to start a transaction.
+This contains the field definitions of the RemoteStartTransaction.conf PDU sent from Charge Point to Central System. See also <<remote_start_transaction_by_central_system,Remote Start Transaction>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**status** |<<remote_start_stop_status,RemoteStartStopStatus>> |1..1 |Required. Status indicating whether Charge Point accepts the request to start a transaction.
+|===
 
 [[remote_stop_transaction_req]]
 === RemoteStopTransaction.req
 
-This contains the field definitions of the RemoteStopTransaction.req PDU sent to Charge Point by Central
-System. See also Remote Stop Transaction
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-transactionId** integer 1..1 Required. The identifier of the transaction which Charge Point is requested to
-stop.
+This contains the field definitions of the RemoteStopTransaction.req PDU sent to Charge Point by Central System. See also <<remote_stop_transaction_by_central_system,Remote Stop Transaction>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**transactionId** |integer |1..1 |Required. The identifier of the transaction which Charge Point is requested to stop.
+|===
 
 [[remote_stop_transaction_conf]]
 === RemoteStopTransaction.conf
 
-This contains the field definitions of the RemoteStopTransaction.conf PDU sent from Charge Point to Central
-System. See also Remote Stop Transaction
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-status** RemoteStartStopStatus 1..1 Required. Status indicating whether Charge Point accepts the
-request to stop a transaction.
+This contains the field definitions of the RemoteStopTransaction.conf PDU sent from Charge Point to Central System. See also <<remote_stop_transaction_by_central_system,Remote Stop Transaction>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**status** |<<remote_start_stop_status,RemoteStartStopStatus>> |1..1 |Required. Status indicating whether Charge Point accepts the request to stop a transaction.
+|===
 
 [[reserve_now_req]]
 === ReserveNow.req
 
-This contains the field definition of the ReserveNow.req PDU sent by the Central System to the Charge Point. See
-also Reserve Now
+This contains the field definition of the ReserveNow.req PDU sent by the Central System to the Charge Point. See also <<reserve_now_by_central_system,Reserve Now>>.
 
-FIELD NAME FIELD TYPE CARD. DESCRIPTION
-connectorId integer
-connectorId >= 0
-1..1 Required. This contains the id of the connector to be reserved. A value of 0
-means that the reservation is not for a specific connector.
-expiryDate dateTime 1..1 Required. This contains the date and time when the reservation ends.
-idTag IdToken 1..1 Required. The identifier for which the Charge Point has to reserve a connector.
-parentIdTag IdToken 0..1 Optional. The parent idTag.
-reservationId integer 1..1 Required. Unique id for this reservation.
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**connectorId** |integer +
+connectorId >= 0 |1..1 |Required. This contains the id of the connector to be reserved. A value of 0 means that the reservation is not for a specific connector.
+|**expiryDate** |dateTime |1..1 |Required. This contains the date and time when the reservation ends.
+|**idTag** |<<idtoken,IdToken>> |1..1 |Required. The identifier for which the Charge Point has to reserve a connector.
+|**parentIdTag** |<<idtoken,IdToken>> |0..1 |Optional. The parent idTag.
+|**reservationId** |integer |1..1 |Required. Unique id for this reservation.
+|===
 
 [[reserve_now_conf]]
 === ReserveNow.conf
 
-This contains the field definition of the ReserveNow.conf PDU sent by the Charge Point to the Central System in
-response to a ReserveNow.req PDU. See also Reserve Now
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-status** ReservationStatus 1..1 Required. This indicates the success or failure of the reservation.
+This contains the field definition of the ReserveNow.conf PDU sent by the Charge Point to the Central System in response to a <<reserve_now_req,ReserveNow.req>> PDU. See also <<reserve_now_by_central_system,Reserve Now>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**status** |<<reservation_status,ReservationStatus>> |1..1 |Required. This indicates the success or failure of the reservation.
+|===
 
 [[reset_req]]
 === Reset.req
 
-This contains the field definition of the Reset.req PDU sent by the Central System to the Charge Point. See also
-Reset
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-type** ResetType 1..1 Required. This contains the type of reset that the Charge Point should perform.
+This contains the field definition of the Reset.req PDU sent by the Central System to the Charge Point. See also <<reset_by_central_system,Reset>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**type** |<<reset_type,ResetType>> |1..1 |Required. This contains the type of reset that the Charge Point should perform.
+|===
 
 [[reset_conf]]
 === Reset.conf
 
-This contains the field definition of the Reset.conf PDU sent by the Charge Point to the Central System in
-response to a Reset.req PDU. See also Reset
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-status** ResetStatus 1..1 Required. This indicates whether the Charge Point is able to perform the reset.
+This contains the field definition of the Reset.conf PDU sent by the Charge Point to the Central System in response to a <<reset_req,Reset.req>> PDU. See also <<reset_by_central_system,Reset>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**status** |<<reset_status,ResetStatus>> |1..1 |Required. This indicates whether the Charge Point is able to perform the reset.
+|===
 
 [[send_local_list_req]]
 === SendLocalList.req
 
 This contains the field definition of the SendLocalList.req PDU sent by the Central System to the Charge Point.
-If no (empty) localAuthorizationList is given and the updateType is Full, all identifications are removed from the
-list. Requesting a Differential update without (empty) localAuthorizationList will have no effect on the list. All
-idTags in the localAuthorizationList MUST be unique, no duplicate values are allowed. See also Send Local List
 
-FIELD NAME FIELD TYPE CARD. DESCRIPTION
-listVersion integer 1..1 Required. In case of a full update this is the version number of the
-full list. In case of a differential update it is the version number of
-the list after the update has been applied.
-localAuthorizationList AuthorizationData 0..\* Optional. In case of a full update this contains the list of values
-that form the new local authorization list. In case of a differential
-update it contains the changes to be applied to the local
-authorization list in the Charge Point. Maximum number of
-AuthorizationData elements is available in the configuration key:
-SendLocalListMaxLength
-updateType UpdateType 1..1 Required. This contains the type of update (full or differential) of
-this request.
+If no (empty) localAuthorizationList is given and the updateType is Full, all identifications are removed from the list. Requesting a Differential update without (empty) localAuthorizationList will have no effect on the list. All idTags in the localAuthorizationList MUST be unique, no duplicate values are allowed. See also <<send_local_list_by_central_system,Send Local List>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|listVersion |integer |1..1 
+|Required. In case of a full update this is the version number of the full list. In case of a differential update it is the version number of the list after the update has been applied.
+
+|localAuthorizationList |<<authorization_data,AuthorizationData>> |0..* 
+|Optional. In case of a full update this contains the list of values that form the new local authorization list. In case of a differential update it contains the changes to be applied to the local authorization list in the Charge Point. Maximum number of <<authorization_data,AuthorizationData>> elements is available in the configuration key: <<send_local_list_max_length,`SendLocalListMaxLength`>>.
+
+|updateType |<<update_type,UpdateType>> |1..1 
+|Required. This contains the type of update (full or differential) of this request.
+|===
 
 [[send_local_list_conf]]
 === SendLocalList.conf
 
-This contains the field definition of the SendLocalList.conf PDU sent by the Charge Point to the Central System in
-response to a SendLocalList.req PDU. See also Send Local List
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-status** UpdateStatus 1..1 Required. This indicates whether the Charge Point has successfully received and
-applied the update of the local authorization list.
+This contains the field definition of the SendLocalList.conf PDU sent by the Charge Point to the Central System in response to a <<send_local_list_req,SendLocalList.req>> PDU. See also <<send_local_list_by_central_system,Send Local List>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**status** |<<update_status,UpdateStatus>> |1..1 |Required. This indicates whether the Charge Point has successfully received and applied the update of the local authorization list.
+|===
 
 [[set_charging_profile_req]]
 === SetChargingProfile.req
 
-This contains the field definition of the SetChargingProfile.req PDU sent by the Central System to the Charge
-Point.
-The Central System uses this message to send charging profiles to a Charge Point. See also Set Charging Profile
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-connectorId** integer 1..1 Required. The connector to which the charging profile applies. If connectorId = 0,
-the message contains an overall limit for the Charge Point.
-**csChargingProfiles** ChargingProfile 1..1 Required. The charging profile to be set at the Charge Point.
+This contains the field definition of the SetChargingProfile.req PDU sent by the Central System to the Charge Point.
+
+The Central System uses this message to send charging profiles to a Charge Point. See also <<set_charging_profile_by_central_system,Set Charging Profile>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**connectorId** |integer |1..1 |Required. The connector to which the charging profile applies. If connectorId = 0, the message contains an overall limit for the Charge Point.
+|**csChargingProfiles** |<<charging_profile_type,ChargingProfile>> |1..1 |Required. The charging profile to be set at the Charge Point.
+|===
 
 [[set_charging_profile_conf]]
 === SetChargingProfile.conf
 
-This contains the field definition of the SetChargingProfile.conf PDU sent by the Charge Point to the Central
-System in response to a SetChargingProfile.req PDU. See also Set Charging Profile
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-status** ChargingProfileStatus 1..1 Required. Returns whether the Charge Point has been able to process the
-message successfully. This does not guarantee the schedule will be followed to
-the letter. There might be other constraints the Charge Point may need to take
-into account.
+This contains the field definition of the SetChargingProfile.conf PDU sent by the Charge Point to the Central System in response to a <<set_charging_profile_req,SetChargingProfile.req>> PDU. See also <<set_charging_profile_by_central_system,Set Charging Profile>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**status** |<<charging_profile_status,ChargingProfileStatus>> |1..1 |Required. Returns whether the Charge Point has been able to process the message successfully. This does not guarantee the schedule will be followed to the letter. There might be other constraints the Charge Point may need to take into account.
+|===
 
 [[start_transaction_req]]
 === StartTransaction.req
 
-This section contains the field definition of the StartTransaction.req PDU sent by the Charge Point to the Central
-System. See also Start Transaction
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-connectorId** integer
-connectorId > 0
-1..1 Required. This identifies which connector of the Charge Point is used.
-**idTag** IdToken 1..1 Required. This contains the identifier for which a transaction has to be started.
-**meterStart** integer 1..1 Required. This contains the meter value in Wh for the connector at start of the
-transaction.
-**reservationId** integer 0..1 Optional. This contains the id of the reservation that terminates as a result of
-this transaction.
-**timestamp** dateTime 1..1 Required. This contains the date and time on which the transaction is started.
+This section contains the field definition of the StartTransaction.req PDU sent by the Charge Point to the Central System. See also <<start_transaction_by_charge_point,Start Transaction>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**connectorId** |integer + 
+connectorId > 0 |1..1 |Required. This identifies which connector of the Charge Point is used.
+|**idTag** |<<idtoken,IdToken>> |1..1 |Required. This contains the identifier for which a transaction has to be started.
+|**meterStart** |integer |1..1 |Required. This contains the meter value in Wh for the connector at start of the transaction.
+|**reservationId** |integer |0..1 |Optional. This contains the id of the reservation that terminates as a result of this transaction.
+|**timestamp** |dateTime |1..1 |Required. This contains the date and time on which the transaction is started.
+|===
 
 [[start_transaction_conf]]
 === StartTransaction.conf
 
-This contains the field definition of the StartTransaction.conf PDU sent by the Central System to the Charge Point
-in response to a StartTransaction.req PDU. See also Start Transaction
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-idTagInfo** IdTagInfo 1..1 Required. This contains information about authorization status, expiry and
-parent id.
-**transactionId** integer 1..1 Required. This contains the transaction id supplied by the Central System.
+This contains the field definition of the StartTransaction.conf PDU sent by the Central System to the Charge Point in response to a <<start_transaction_req,StartTransaction.req>> PDU. See also <<start_transaction_by_charge_point,Start Transaction>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**idTagInfo** |<<id_tag_info,IdTagInfo>> |1..1 |Required. This contains information about authorization status, expiry and parent id.
+|**transactionId** |integer |1..1 |Required. This contains the transaction id supplied by the Central System.
+|===
 
 [[status_notification_req]]
 === StatusNotification.req
 
-This contains the field definition of the StatusNotification.req PDU sent by the Charge Point to the Central
-System. See also Status Notification
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-connectorId** integer
-connectorId >= 0
-1..1 Required. The id of the connector for which the status is reported.
-Id '0' (zero) is used if the status is for the Charge Point main
-controller.
-**errorCode** ChargePointErrorCode 1..1 Required. This contains the error code reported by the Charge
-Point.
-**info** CiString50Type 0..1 Optional. Additional free format information related to the error.
-**status** ChargePointStatus 1..1 Required. This contains the current status of the Charge Point.
+This contains the field definition of the StatusNotification.req PDU sent by the Charge Point to the Central System. See also <<status_notification,Status Notification>>.
 
-FIELD NAME FIELD TYPE CARD. DESCRIPTION
-timestamp dateTime 0..1 Optional. The time for which the status is reported. If absent time
-of receipt of the message will be assumed.
-vendorId CiString255Type 0..1 Optional. This identifies the vendor-specific implementation.
-vendorErrorCode CiString50Type 0..1 Optional. This contains the vendor-specific error code.
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**connectorId** |integer + 
+connectorId >= 0 |1..1 |Required. The id of the connector for which the status is reported. Id '0' (zero) is used if the status is for the Charge Point main controller.
+|**errorCode** |<<chargepoint_errorcode,ChargePointErrorCode>> |1..1 |Required. This contains the error code reported by the Charge Point.
+|**info** |<<cistring50type,CiString50Type>> |0..1 |Optional. Additional free format information related to the error.
+|**status** |<<charge_point_status,ChargePointStatus>> |1..1 |Required. This contains the current status of the Charge Point.
+|**timestamp** |dateTime |0..1 |Optional. The time for which the status is reported. If absent time of receipt of the message will be assumed.
+|**vendorId** |<<cistring255type,CiString255Type>> |0..1 |Optional. This identifies the vendor-specific implementation.
+|**vendorErrorCode** |<<cistring50type,CiString50Type>> |0..1 |Optional. This contains the vendor-specific error code.
+|===
 
 [[status_notification_conf]]
 === StatusNotification.conf
 
-This contains the field definition of the StatusNotification.conf PDU sent by the Central System to the Charge
-Point in response to an StatusNotification.req PDU. See also Status Notification
+This contains the field definition of the StatusNotification.conf PDU sent by the Central System to the Charge Point in response to an <<status_notification_req,StatusNotification.req>> PDU. See also <<status_notification,Status Notification>>.
+
 No fields are defined.
 
 [[stop_transaction_req]]
 === StopTransaction.req
 
-This contains the field definition of the StopTransaction.req PDU sent by the Charge Point to the Central System.
-See also Stop Transaction
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-idTag** IdToken 0..1 Optional. This contains the identifier which requested to stop the charging. It is
-optional because a Charge Point may terminate charging without the presence
-of an idTag, e.g. in case of a reset. A Charge Point SHALL send the idTag if known.
-**meterStop** integer 1..1 Required. This contains the meter value in Wh for the connector at end of the
-transaction.
-**timestamp** dateTime 1..1 Required. This contains the date and time on which the transaction is stopped.
-**transactionId** integer 1..1 Required. This contains the transaction-id as received by the
-StartTransaction.conf.
-**reason** Reason 0..1 Optional. This contains the reason why the transaction was stopped. MAY only
-be omitted when the Reason is "Local".
-**transactionData** MeterValue 0..\* Optional. This contains transaction usage details relevant for billing purposes.
+This contains the field definition of the StopTransaction.req PDU sent by the Charge Point to the Central System. See also <<stop_transaction_by_central_system,Stop Transaction>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**idTag** |<<idtoken,IdToken>> |0..1 |Optional. This contains the identifier which requested to stop the charging. It is optional because a Charge Point may terminate charging without the presence of an idTag, e.g. in case of a reset. A Charge Point SHALL send the idTag if known.
+|**meterStop** |integer |1..1 |Required. This contains the meter value in Wh for the connector at end of the transaction.
+|**timestamp** |dateTime |1..1 |Required. This contains the date and time on which the transaction is stopped.
+|**transactionId** |integer |1..1 |Required. This contains the transaction-id as received by the <<start_transaction_conf,StartTransaction.conf>>.
+|**reason** |<<reason,Reason>> |0..1 |Optional. This contains the reason why the transaction was stopped. MAY only be omitted when the <<reason,Reason>> is "Local".
+|**transactionData** |<<metervalue,MeterValue>> |0..* |Optional. This contains transaction usage details relevant for billing purposes.
+|===
 
 [[stop_transaction_conf]]
 === StopTransaction.conf
 
-This contains the field definition of the StopTransaction.conf PDU sent by the Central System to the Charge Point
-in response to a StopTransaction.req PDU. See also Stop Transaction
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-idTagInfo** IdTagInfo 0..1 Optional. This contains information about authorization status, expiry and
-parent id. It is optional, because a transaction may have been stopped without
-an identifier.
+This contains the field definition of the StopTransaction.conf PDU sent by the Central System to the Charge Point in response to a <<stop_transaction_req,StopTransaction.req>> PDU. See also <<stop_transaction_by_central_system,Stop Transaction>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**idTagInfo** |<<id_tag_info,IdTagInfo>> |0..1 |Optional. This contains information about authorization status, expiry and parent id. It is optional, because a transaction may have been stopped without an identifier.
+|===
 
 [[trigger_message_req]]
 === TriggerMessage.req
 
-This contains the field definition of the TriggerMessage.req PDU sent by the Central System to the Charge Point.
-See also Trigger Message
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-requestedMessage** MessageTrigger 1..1 Required.
-**connectorId** integer
-connectorId > 0
-0..1 Optional. Only filled in when request applies to a specific connector.
+This contains the field definition of the TriggerMessage.req PDU sent by the Central System to the Charge Point. See also <<trigger_message,Trigger Message>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**requestedMessage** |<<message_trigger,MessageTrigger>> |1..1 |Required.
+|**connectorId** |integer +
+connectorId > 0 |0..1 |Optional. Only filled in when request applies to a specific connector.
+|===
 
 [[trigger_message_conf]]
 === TriggerMessage.conf
 
-This contains the field definition of the TriggerMessage.conf PDU sent by the Charge Point to the Central System
-in response to a TriggerMessage.req PDU. See also Trigger Message
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-status** TriggerMessageStatus 1..1 Required. Indicates whether the Charge Point will send the requested
-notification or not.
+This contains the field definition of the TriggerMessage.conf PDU sent by the Charge Point to the Central System in response to a <<trigger_message_req,TriggerMessage.req>> PDU. See also <<trigger_message,Trigger Message>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**status** |<<trigger_message_status,TriggerMessageStatus>> |1..1 |Required. Indicates whether the Charge Point will send the requested notification or not.
+|===
 
 [[unlock_connector_req]]
 === UnlockConnector.req
 
-This contains the field definition of the UnlockConnector.req PDU sent by the Central System to the Charge
-Point. See also Unlock Connector
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-connectorId** integer
-connectorId > 0
-1..1 Required. This contains the identifier of the connector to be unlocked.
+This contains the field definition of the UnlockConnector.req PDU sent by the Central System to the Charge Point. See also <<unlock_connector_by_central_system,Unlock Connector>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**connectorId** |integer +
+connectorId > 0 |1..1 |Required. This contains the identifier of the connector to be unlocked.
+|===
 
 [[unlock_connector_conf]]
 === UnlockConnector.conf
 
-This contains the field definition of the UnlockConnector.conf PDU sent by the Charge Point to the Central
-System in response to an UnlockConnector.req PDU. See also Unlock Connector
-**FIELD NAME FIELD TYPE CARD. DESCRIPTION
-status** UnlockStatus 1..1 Required. This indicates whether the Charge Point has unlocked the connector.
+This contains the field definition of the UnlockConnector.conf PDU sent by the Charge Point to the Central System in response to an <<unlock_connector_req,UnlockConnector.req>> PDU. See also <<unlock_connector_by_central_system,Unlock Connector>>.
+
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**status** |<<unlock_status,UnlockStatus>> |1..1 |Required. This indicates whether the Charge Point has unlocked the connector.
+|===
 
 [[update_firmware_req]]
 === UpdateFirmware.req
 
-This contains the field definition of the UpdateFirmware.req PDU sent by the Central System to the Charge Point.
-See also Update Firmware
+This contains the field definition of the UpdateFirmware.req PDU sent by the Central System to the Charge Point. See also <<update_firmware_by_central_system,Update Firmware>>.
 
-FIELD NAME FIELD TYPE CARD. DESCRIPTION
-location anyURI 1..1 Required. This contains a string containing a URI pointing to a location from
-which to retrieve the firmware.
-retries integer 0..1 Optional. This specifies how many times Charge Point must try to download the
-firmware before giving up. If this field is not present, it is left to Charge Point to
-decide how many times it wants to retry.
-retrieveDate dateTime 1..1 Required. This contains the date and time after which the Charge Point is
-allowed to retrieve the (new) firmware.
-retryInterval integer 0..1 Optional. The interval in seconds after which a retry may be attempted. If this
-field is not present, it is left to Charge Point to decide how long to wait between
-attempts.
+[cols="1,1,1,5",options="headers"]
+|===
+|FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
+
+|**location** |anyURI |1..1 |Required. This contains a string containing a URI pointing to a location from which to retrieve the firmware.
+|**retries** |integer |0..1 |Optional. This specifies how many times Charge Point must try to download the firmware before giving up. If this field is not present, it is left to Charge Point to decide how many times it wants to retry.
+|**retrieveDate** |dateTime |1..1 |Required. This contains the date and time after which the Charge Point is allowed to retrieve the (new) firmware.
+|**retryInterval** |integer |0..1 |Optional. The interval in seconds after which a retry may be attempted. If this field is not present, it is left to Charge Point to decide how long to wait between attempts.
+|===
 
 [[update_firmware_conf]]
 === UpdateFirmware.conf
 
-This contains the field definition of the UpdateFirmware.conf PDU sent by the Charge Point to the Central
-System in response to a UpdateFirmware.req PDU. See also Update Firmware
+This contains the field definition of the UpdateFirmware.conf PDU sent by the Charge Point to the Central System in response to a <<update_firmware_req,UpdateFirmware.req>> PDU. See also <<update_firmware_by_central_system,Update Firmware>>.
+
 No fields are defined.
 
 [[types]]
 ==  Types
 
+[[authorization_data]]
 === AuthorizationData
 
 _Class_
@@ -2629,6 +2718,7 @@ Absolute** Schedule periods are relative to a fixed point in time defined in the
 **Relative** Schedule periods are relative to a situation-specific start point (such as the start of a Transaction) that is determined by the
 charge point.
 
+[[charging_profile_purpose_type]]
 === ChargingProfilePurposeType
 
 _Enumeration_
@@ -2644,6 +2734,7 @@ TxProfile Profile with constraints to be imposed by the Charge Point on the curr
 when this is started via a RemoteStartTransaction.req with a ChargeProfile. A profile with this purpose SHALL
 cease to be valid when the transaction terminates.
 
+[[charging_profile_status]]
 === ChargingProfileStatus
 
 _Enumeration_
@@ -2653,6 +2744,7 @@ Accepted** Request has been accepted and will be executed.
 **Rejected** Request has not been accepted and will not be executed.
 **NotSupported** Charge Point indicates that the request is not supported.
 
+[[charging_rate_unit_type]]
 === ChargingRateUnitType
 
 _Enumeration_
@@ -2734,6 +2826,7 @@ Generic used case insensitive string of 50 characters.
 **FIELD TYPE DESCRIPTION**
 CiString[50] String is case insensitive.
 
+[[cistring255type]]
 === CiString255Type
 
 _Type_
@@ -2741,6 +2834,7 @@ Generic used case insensitive string of 255 characters.
 **FIELD TYPE DESCRIPTION**
 CiString[255] String is case insensitive.
 
+[[cistring500type]]
 === CiString500Type
 
 _Type_
@@ -2748,6 +2842,7 @@ Generic used case insensitive string of 500 characters.
 **FIELD TYPE DESCRIPTION**
 CiString[500] String is case insensitive.
 
+[[clear_cache_status]]
 === ClearCacheStatus
 
 _Enumeration_
@@ -2758,6 +2853,7 @@ Accepted** Command has been executed.
 VALUE DESCRIPTION
 Rejected Command has not been executed.
 
+[[clear_charging_profile_status]]
 === ClearChargingProfileStatus
 
 _Enumeration_
@@ -2766,6 +2862,7 @@ Status returned in response to ClearChargingProfile.req.
 Accepted** Request has been accepted and will be executed.
 **Unknown** No Charging Profile(s) were found matching the request.
 
+[[configuration_status]]
 === ConfigurationStatus
 
 _Enumeration_
@@ -2777,6 +2874,7 @@ Accepted** Configuration key is supported and setting has been changed.
 reboot itself)
 **NotSupported** Configuration key is not supported.
 
+[[data_transfer_status]]
 === DataTransferStatus
 
 _Enumeration_
@@ -2789,6 +2887,7 @@ Accepted** Message has been accepted and the contained request is accepted.
 VALUE DESCRIPTION
 UnknownVendorId Message could not be interpreted due to unknown vendorId string.
 
+[[diagnostics_status]]
 === DiagnosticsStatus
 
 _Enumeration_
@@ -2800,6 +2899,7 @@ DiagnosticsStatusNotification.req that was triggered by a TriggerMessage.req
 **UploadFailed** Uploading of diagnostics failed.
 **Uploading** File is being uploaded.
 
+[[firmware_status]]
 === FirmwareStatus
 
 _Enumeration_
@@ -2814,6 +2914,7 @@ FirmwareStatusNotification.req that was triggered by a TriggerMessage.req
 **Installing** Firmware is being installed.
 **Installed** New firmware has successfully been installed in charge point.
 
+[[get_composite_schedule_status]]
 === GetCompositeScheduleStatus
 
 _Enumeration_
@@ -2846,6 +2947,7 @@ a complex type to support multiple forms of identifiers.
 **FIELD TYPE DESCRIPTION**
 CiString20Type IdToken is case insensitive.
 
+[[keyvalue]]
 === KeyValue
 
 _Class_
@@ -2941,49 +3043,50 @@ frequency, the UnitOfMeasure for any SampledValue with measurand: Frequency is H
 
 
 
-== All "Register" values relating to a single charging transaction, or a non-transactional consumer
+All "Register" values relating to a single charging transaction, or a non-transactional consumer
 
-== (e.g. charge point internal power supply, overall supply) MUST be monotonically increasing in
+(e.g. charge point internal power supply, overall supply) MUST be monotonically increasing in
 
-== time
+time
 
-== The actual quantity of energy corresponding to a reported ".Register" value is computed as
+The actual quantity of energy corresponding to a reported ".Register" value is computed as
 
-== the register value in question minus the register value recorded/reported at the start of the
+the register value in question minus the register value recorded/reported at the start of the
 
-== transaction or other relevant starting reference point in time. For improved auditability
+transaction or other relevant starting reference point in time. For improved auditability
 
-== ".Register" values SHOULD reported exactly as they are directly read from a non-volatile
+".Register" values SHOULD reported exactly as they are directly read from a non-volatile
 
-== register in the electrical metering hardware, and SHOULD NOT be re-based to zero at the start
+register in the electrical metering hardware, and SHOULD NOT be re-based to zero at the start
 
-== of transactions. This allows any "missing energy" between sequential transactions, due to
+of transactions. This allows any "missing energy" between sequential transactions, due to
 
-== hardware fault, mis-wiring, fraud, etc. to be identified, by allowing the Central System to
+hardware fault, mis-wiring, fraud, etc. to be identified, by allowing the Central System to
 
-== confirm that the starting register value of any transaction is identical to the finishing register
+confirm that the starting register value of any transaction is identical to the finishing register
 
-== value of the preceding transaction on the same connector
+value of the preceding transaction on the same connector
 
+[[message_trigger]]
 === MessageTrigger
 
-== Enumeration
+Enumeration
 
-== Type of request to be triggered in a TriggerMessage.req
+Type of request to be triggered in a TriggerMessage.req
 
-== VALUE DESCRIPTION
+VALUE DESCRIPTION
 
-== BootNotification To trigger a BootNotification request
+BootNotification To trigger a BootNotification request
 
-== DiagnosticsStatusNotification To trigger a DiagnosticsStatusNotification request
+DiagnosticsStatusNotification To trigger a DiagnosticsStatusNotification request
 
-== FirmwareStatusNotification To trigger a FirmwareStatusNotification request
+FirmwareStatusNotification To trigger a FirmwareStatusNotification request
 
-== Heartbeat To trigger a Heartbeat request
+Heartbeat To trigger a Heartbeat request
 
-== MeterValues To trigger a MeterValues request
+MeterValues To trigger a MeterValues request
 
-== StatusNotification To trigger a StatusNotification request
+StatusNotification To trigger a StatusNotification request
 
 [[metervalue]]
 === MeterValue
@@ -3077,6 +3180,7 @@ Accepted** Charge point is accepted by Central System.
 prepare the Charge Point.
 **Rejected** Charge point is not accepted by Central System. This may happen when the Charge Point id is not known by Central System.
 
+[[remote_start_stop_status]]
 === RemoteStartStopStatus
 
 _Enumeration_
@@ -3085,6 +3189,7 @@ The result of a RemoteStartTransaction.req or RemoteStopTransaction.req request.
 Accepted** Command will be executed.
 **Rejected** Command will not be executed.
 
+[[reservation_status]]
 === ReservationStatus
 
 _Enumeration_
@@ -3098,6 +3203,7 @@ Accepted** Reservation has been made.
 VALUE DESCRIPTION
 Unavailable Reservation has not been made, because connectors or specified connector are in an unavailable state.
 
+[[reset_status]]
 === ResetStatus
 
 _Enumeration_
@@ -3106,6 +3212,7 @@ Result of Reset.req.
 Accepted** Command will be executed.
 **Rejected** Command will not be executed.
 
+[[reset_type]]
 === ResetType
 
 _Enumeration_
@@ -3141,6 +3248,7 @@ location Location 0..1 Optional. Location of measurement. Default=”Outlet”
 unit UnitOfMeasure 0..1 Optional. Unit of the value. Default = “Wh” if the (default) measurand is an
 “Energy” type.
 
+[[trigger_message_status]]
 === TriggerMessageStatus
 
 _Enumeration_
@@ -3176,6 +3284,7 @@ Fahrenheit Degrees (temperature).
 K Degrees Kelvin (temperature).
 Percent Percentage.
 
+[[unlock_status]]
 === UnlockStatus
 
 _Enumeration_
@@ -3186,6 +3295,7 @@ Unlocked** Connector has successfully been unlocked.
 locked or the unlock mechanism failed.
 **NotSupported** Charge Point has no connector lock, or ConnectorId is unknown.
 
+[[update_status]]
 === UpdateStatus
 
 _Enumeration_
@@ -3198,6 +3308,7 @@ VALUE DESCRIPTION
 NotSupported Update of Local Authorization List is not supported by Charge Point.
 VersionMismatch Version number in the request for a differential update is less or equal then version number of current list.
 
+[[update_type]]
 === UpdateType
 
 _Enumeration_
@@ -3560,7 +3671,9 @@ between pings. Negative values are not allowed. ChangeConfiguration is expected 
 **Accessibility** R
 **Type** integer
 **Description** Maximum number of identifications that can be stored in the Local Authorization List
-**9.2.3.** SendLocalListMaxLength
+
+[[send_local_list_max_length]]
+==== SendLocalListMaxLength
 **Required/optional** required
 **Accessibility** R
 **Type** integer
