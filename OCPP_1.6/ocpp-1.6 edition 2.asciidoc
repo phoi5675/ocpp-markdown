@@ -3974,95 +3974,83 @@ A value of "0" (numeric zero), by convention, is to be interpreted to mean that 
 
 <<<
 
+:sectnums!:
+
 [[appendix_a_new_in_ocpp_1_6]]
 == Appendix A: New in OCPP 1.6
 
 The following changes are made in OCPP 1.6 compared to OCPP 1.5 [OCPP1.5]:
 
-- Smart Charging is added
-- A binding to JSON over WebSocket as a transport protocol is added, reducing data usage and enabling
-  OCPP communication through NAT routers, see: OCPP JSON Specification
-- Extra statuses are added to the ChargePointStatus enumeration, giving the CPO and ultimately end-users
-  more information about the current status of a Charge Point
-- Structure of MeterValues.req is changed to eliminate use of XML Attributes, this is needed for support of
-  JSON (no attribute support in JSON).
-- Extra values are added to the Measurand enumeration, giving Charge Point manufacturers the possibility
-  to send new information to a Central System, such as the State of Charge of an EV
-- The TriggerMessage message is added, giving the Central System the possibility to request information
-  from the Charge Point
-- A new _Pending_ member is added to the RegistrationStatus enumeration used in BootNotification.conf
-- More and clearer configuration keys are added, making it clearer to the CPO how to configure the
-  different business cases in a Charge Point
-- The messages and configuration keys are split into profiles, making it easier to implement OCPP gradually
-  or only in part
-- Known ambiguities are removed (e.g. when to use UnlockConnector.req, how to respond to RemoteStart
-  /Stop, Connector numbering)
+* Smart Charging is added
+* A binding to JSON over WebSocket as a transport protocol is added, reducing data usage and enabling OCPP communication through NAT routers, see: <<ocpp_imp_j,OCPP JSON Specification>>
+* Extra statuses are added to the <<charge_point_status,ChargePointStatus>> enumeration, giving the CPO and ultimately end-users more information about the current status of a Charge Point
+* Structure of MeterValues.req is changed to eliminate use of XML Attributes, this is needed for support of JSON (no attribute support in JSON).
+* Extra values are added to the <<measurand,Measurand>> enumeration, giving Charge Point manufacturers the possibility to send new information to a Central System, such as the State of Charge of an EV
+* The <<trigger_message_req,TriggerMessage>> message is added, giving the Central System the possibility to request information from the Charge Point
+* A new _Pending_ member is added to the <<registration_status,RegistrationStatus>> enumeration used in <<boot_notification_conf,BootNotification.conf>>
+* More and clearer configuration keys are added, making it clearer to the CPO how to configure the different business cases in a Charge Point
+* The messages and configuration keys are split into profiles, making it easier to implement OCPP gradually or only in part
+* Known ambiguities are removed (e.g. when to use <<unlock_connector_req,UnlockConnector.req>>, how to respond to <<remote_start_transaction_req,RemoteStart>>/<<remote_stop_transaction_req,Stop>>, Connector numbering)
 
 === A.1. Updated/New Messages
 
-- BootNotification.req
-  - Change IccId and Imsi to CiString[] to enforce maximum lengths.
-- BootNotification.conf
-  - heartbeatInterval to interval, interval now also used for other purposes than heartbeat, need to fix
-    in spec
-  - Added status Pending
-- ChargePointErrorCode
-  - Added enumvalues: InternalError, LocalListConfict and UnderVoltage
-  - Renamed enum value Mode3Error to EVCommunicationError
-- ChargePointStatus
-  - Replaced enum value Occupied with the more detailed values: Preparing, Charging,
-    SuspendedEVSE, SuspendedEV and Finishing
-- ChargingRateUnitType
-
-  - New
-
-- ConfigurationStatus
-  - Added enum RebootRequired
-- ClearChargingProfile.req
-  - New
-- ClearChargingProfile.conf
-  - New
-- DiagnosticsStatus
-  - Added enum Uploading and Idle
-- FirmwareStatus
-  - Added enum Downloading, Installing and Idle
-- GetCompositeSchedule.req
-  - New
-- GetCompositeSchedule.conf
-  - New
-- Location
-  - Added enum Cable and EV
-- Measurand
-  - Added enum Current.Offered, Frequency, Power.Factor, Power.Offered, RPM and SoC
-- MeterValues.req
-  - overhaul of complex data structures
-  - Added 'phase' field
-- ReadingContext
-  - Added enum Trigger and Other
-- RemoteStartTransaction.req
-  - Added ChargingProfile optional
-- SendLocalList.req
-  - removed hash
-- SendLocalList.conf
-  - removed hash
-- SetChargingProfile.req
-  - New
-- SetChargingProfile.conf
-
-  - New
-
-- StatusNotification.req
-  - Overhaul of states
-  - New error codes
-  - Connector id 0 can only have status: Available, Unavailable and Faulted.
-- StopTransaction.req
-  - added explicit and required stop reason
-- TriggerMessage.req
-  - New
-- TriggerMessage.conf
-  - New
-- UnlockConnector.conf
-  - overhaul of UnlockStatus enum
-- UnitOfMeasure
-  - Added Fahrenheit, K, Percent, VA, kVA
-  - Rename Volt to V, Amp to A
+* <<boot_notification_req,BootNotification.req>>
+  ** Change IccId and Imsi to CiString[] to enforce maximum lengths.
+* <<boot_notification_conf,BootNotification.conf>>
+  ** heartbeatInterval to interval, interval now also used for other purposes than heartbeat, need to fix in spec
+  ** Added status Pending
+* <<chargepoint_errorcode,ChargePointErrorCode>>
+  ** Added enumvalues: `InternalError`, `LocalListConfict` and UnderVoltage
+  ** Renamed enum value `Mode3Error` to `EVCommunicationError`
+* <<charge_point_status,ChargePointStatus>>
+  ** Replaced enum value Occupied with the more detailed values: `Preparing`, `Charging`, `SuspendedEVSE`, `SuspendedEV` and `Finishing`
+* <<charging_rate_unit_type,ChargingRateUnitType>>
+  ** New
+* <<configuration_status,ConfigurationStatus>>
+  ** Added enum RebootRequired
+* <<clear_charging_profile_req,ClearChargingProfile.req>>
+  ** New
+* <<clear_charging_profile_conf,ClearChargingProfile.conf>>
+  ** New
+* <<diagnostics_status,DiagnosticsStatus>>
+  ** Added enum Uploading and Idle
+* <<firmware_status,FirmwareStatus>>
+  ** Added enum Downloading, Installing and Idle
+* <<get_composite_schedule_req,GetCompositeSchedule.req>>
+  ** New
+* <<get_composite_schedule_conf,GetCompositeSchedule.conf>>
+  ** New
+* <<location,Location>>
+  ** Added enum Cable and EV
+* <<measurand,Measurand>>
+  ** Added enum `Current.Offered`, `Frequency`, `Power.Factor`, `Power.Offered`, `RPM` and `SoC`
+* <<metervalues_req,MeterValues.req>>
+  ** overhaul of complex data structures
+  ** Added 'phase' field
+* <<reading_context,ReadingContext>>
+  ** Added enum `Trigger` and `Other`
+* <<remote_start_transaction_req,RemoteStartTransaction.req>>
+  ** Added <<charging_profile_type,ChargingProfile>> optional
+* <<send_local_list_req,SendLocalList.req>>
+  ** removed hash
+* <<send_local_list_conf,SendLocalList.conf>>
+  ** removed hash
+* <<set_charging_profile_req,SetChargingProfile.req>>
+  ** New
+* <<set_charging_profile_conf,SetChargingProfile.conf>>
+  ** New
+* <<status_notification_req,StatusNotification.req>>
+  ** Overhaul of states
+  ** New error codes
+  ** Connector id 0 can only have status: Available, Unavailable and Faulted.
+* <<stop_transaction_req,StopTransaction.req>>
+  ** added explicit and required stop reason
+* <<trigger_message_req,TriggerMessage.req>>
+  ** New
+* <<trigger_message_conf,TriggerMessage.conf>>
+  ** New
+* <<unlock_connector_conf,UnlockConnector.conf>>
+  ** overhaul of UnlockStatus enum
+* <<unit_of_measure,UnitOfMeasure>>
+  ** Added Fahrenheit, K, Percent, VA, kVA
+  ** Rename Volt to V, Amp to A
