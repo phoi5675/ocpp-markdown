@@ -6,35 +6,33 @@
 div {
   font-family: MalgunGothic;
 
-  h1 {
+  h1, h2, h3, h4 {
     font-family: MalgunGothicBold;
     font-size: 40px;
     font-weight: bolder; 
   }
   
   h2 {
-    font-family: MalgunGothicBold;
     font-size: 32px;
-    font-weight: bolder;
   }
 
   h3 {
-    font-family: MalgunGothicBold;
     font-size: 24px;
-    font-weight: bolder;
   }
 
   h4 {
-    font-family: MalgunGothicBold;
     font-size: 20px;
-    font-weight: bolder;
   }
 
   .cover-image {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 300px;
+    .content {
+      img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 300px;
+      }
+    }
   }
 
   .cover-title {
