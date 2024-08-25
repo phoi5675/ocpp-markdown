@@ -1,11 +1,10 @@
 :doctype: book
-:stylesheet: ocpp_styles.css
 
 [.cover-image]
 image::images/logo.png[logo.png]
 
 [.cover-title]
-Open Charge Point Protocol 1.6
+= Open Charge Point Protocol 1.6
 
 [.cover-edition]
 edition 2 FINAL, 2017-09-28

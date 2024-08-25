@@ -1,0 +1,138 @@
+/* Copyright (c) 2024 phoi5675 */
+
+/* This software is released under the MIT License. */
+/* https://opensource.org/licenses/MIT */
+
+div {
+  font-family: MalgunGothic;
+
+  h1, h2, h3, h4 {
+    font-family: MalgunGothicBold;
+    font-size: 40px;
+    font-weight: bolder; 
+  }
+  
+  h2 {
+    font-size: 32px;
+  }
+
+  h3 {
+    font-size: 24px;
+  }
+
+  h4 {
+    font-size: 20px;
+  }
+
+  .cover-image {
+    .content {
+      img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 300px;
+      }
+    }
+  }
+
+  .cover-title {
+    margin-top: 400px;
+    font-size: 40px;
+    font-weight: bolder;
+    text-align: right;
+  }
+  
+  .cover-edition {
+    text-align: right;
+  }
+
+  .toc {
+    ol {
+      list-style-type: none;
+      counter-reset: item;
+      margin: 0;
+      padding: 0;
+    }
+
+    ol > li {
+      display: table;
+      counter-increment: item;
+      margin-bottom: 0.6em;
+    }
+
+    ol > li:before {
+      content: counters(item, ".") ". ";
+      display: table-cell;
+      padding-right: 0.6em;
+    }
+
+    li ol > li {
+      margin: 0;
+    }
+
+    li ol > li:before {
+      content: counters(item, ".") " ";
+    }
+  }
+
+  .info-icon {
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin: 0 5px 0 15px;
+    padding: 10px 5px 0px 5px;
+
+    background-color: #323f77;
+    color: #ffffff;
+
+    font-size: 32px;
+    font-weight: bold;
+    font-family: Rockwell;
+    text-align:center;
+  }
+
+  .warning-icon {
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin: 0 5px 0 15px;
+    padding: 10px 5px 0px 5px;
+
+    background-color: #9b3517;
+    color: #ffffff;
+
+    font-size: 32px;
+    font-weight: bold;
+    font-family: Rockwell;
+    text-align:center;
+  }
+
+  .bulb-icon {
+    display: flex;
+
+    margin: 0 5px 0 15px;
+    padding: 10px 5px 0px 5px;
+
+    font-size: 32px;
+    font-weight: bold;
+    font-family: Rockwell;
+    text-align:center;
+  }
+
+  .rotated-90 {
+    display: flex;
+    transform: rotate(90deg);
+    margin: 50px 0px 50px 0px;
+  }
+}
+

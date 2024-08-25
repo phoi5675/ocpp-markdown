@@ -1,0 +1,26 @@
+# Copyright (c) 2024 phoi5675
+# 
+# This software is released under the MIT License.
+# https://opensource.org/licenses/MIT
+
+extends: default
+
+font:
+  catalog:
+    MalgunGothic:
+      normal: MalgunGothicRegular.ttf
+      bold: MalgunGothicBold.ttf
+      italic: MalgunGothicRegular.ttf
+      bold_italic: MalgunGothicBold.ttf
+    M+ 1mn:
+      normal: mplus1mn-regular-subset.ttf
+      bold: mplus1mn-bold-subset.ttf
+      italic: mplus1mn-italic-subset.ttf
+      bold_italic: mplus1mn-bold_italic-subset.ttf
+
+base:
+  font-color: #000000
+  font-family: MalgunGothic
+heading:
+  font-color: #7d5393
+  font-weight: bold
