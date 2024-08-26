@@ -7,22 +7,23 @@ extends: default
 
 font:
   catalog:
-    MalgunGothic:
+    merge: true
+    NotoSans:
       normal: MalgunGothicRegular.ttf
       bold: MalgunGothicBold.ttf
-      italic: MalgunGothicRegular.ttf
-      bold_italic: MalgunGothicBold.ttf
+      italic: NotoSans-Italic.ttf
+      bold_italic: NotoSans-BoldItalic.ttf
     M+ 1mn:
-      normal: mplus1mn-regular-subset.ttf
-      bold: mplus1mn-bold-subset.ttf
-      italic: mplus1mn-italic-subset.ttf
-      bold_italic: mplus1mn-bold_italic-subset.ttf
+      normal: SpaceMono-Regular.ttf
+      bold: SpaceMono-Bold.ttf
+      italic: SpaceMono-Italic.ttf
+      bold_italic: SpaceMono-BoldItalic.ttf
 
 # default components
 base:
   font-color: #000000
-  font-size: 9.5
-  font-family: MalgunGothic
+  font-size: 9
+  font-family: NotoSans
   line-height: 1.5
 footer:
   border-color: #7D5393
@@ -37,12 +38,12 @@ heading:
 link:
   font-color: #7D5393
 page:
-  margin: [0.5in, 0.5in, 0.5in, 0.5in]
+  margin: [0.3in, 0.25in, 0.5in, 0.25in]
 table:
-  font-size: 7
+  font-size: 8
   header-cell: 
     font-style: bold
   cell:
-    padding: 9
+    padding: 8
   grid-width: [0.5, 0]
   border-width: [0.5, 0]

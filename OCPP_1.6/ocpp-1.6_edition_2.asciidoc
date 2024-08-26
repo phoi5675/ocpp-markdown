@@ -1,4 +1,4 @@
-= Open Charge Point Protocol 1.6x
+= Open Charge Point Protocol 1.6
 edition 2 FINAL, 2017-09-28
 :doctype: book
 :toc: 
@@ -392,6 +392,7 @@ The <<energy_transfer_period,Energy Transfer Period>> is a period of time during
 There MAY be multiple Energy Transfer Periods during a <<transaction,Transaction>>
 
 Multiple Energy Transfer Periods can be separated by either:
+
 * an EVSE-initiated supense of transfer during which de EVSE does not offer energy transfer
 * an EV-initiated suspense of transfer during which the EV remains electrically connected to the EVSE
 * an EV-initiated suspense of transfer during which the EV is not electrically connected to the EVSE.
