@@ -32,7 +32,7 @@ License*_ (<https://creativecommons.org/licenses/by-nd/4.0/legalcode>).
 [discrete]
 == Version History
 
-[cols="2,2,3,10",options="header"]
+[cols="2,2,3,10",options="headers"]
 |===
 |VERSION |DATE |AUTHOR |DESCRIPTION
 
@@ -655,7 +655,7 @@ This section is normative.
 
 The smart charging options defined can be used in extensive ways. Because of the possible limitations and differences in capabilities between Charge Points, the Central System needs to be able to discover the Charge Point specific capabilities. This is ensured by the standardized configuration keys as defined in this chapter. A Smart Charging enabled Charge Point SHALL implement, and support reporting of, the following configuration keys through the <<get_configuration_req,GetConfiguration.req>> PDU
 
-[cols="1",options="header"]
+[cols="1",options="headers"]
 |===
 |SMART CHARGING CONFIGURATION KEYS
 
@@ -690,7 +690,7 @@ This section is informative.
 
 The following data structure describes a daily default profile that limits the power to 6 kW between 08:00h and 20:00h.
 
-[cols="1,1,1,1",options="header"]
+[cols="1,1,1,1",options="headers"]
 |===
 |CHARGINGPROFILE        |              |               |
 
@@ -1024,7 +1024,7 @@ EVSE is used in Status Notification instead of Socket or Charge Point for future
 
 The following table describes which status transitions are possible:
 
-[cols="^1,^2,10*^",options="header",hrows=2]
+[cols="^1,^2,10*^",options="headers",hrows=2]
 |===
 |ﾠ |ﾠ                   |**1** |**2** |**3** |**4** |**5** |**6** |ﾠﾠﾠ|**7** |**8** |**9**
 |  |  State From \ To: 
