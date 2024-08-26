@@ -18,9 +18,31 @@ font:
       italic: mplus1mn-italic-subset.ttf
       bold_italic: mplus1mn-bold_italic-subset.ttf
 
+# default components
 base:
   font-color: #000000
+  font-size: 9.5
   font-family: MalgunGothic
+  line-height: 1.5
+footer:
+  border-color: #7D5393
+  border-width: 1.25
+  font-color: #7D5393
+  font-style: bold
+  font-size: 10
 heading:
-  font-color: #7d5393
+  font-color: #7D5393
   font-weight: bold
+  line-height: 1
+link:
+  font-color: #7D5393
+page:
+  margin: [0.5in, 0.5in, 0.5in, 0.5in]
+table:
+  font-size: 7
+  header-cell: 
+    font-style: bold
+  cell:
+    padding: 9
+  grid-width: [0.5, 0]
+  border-width: [0.5, 0]

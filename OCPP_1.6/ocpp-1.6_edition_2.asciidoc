@@ -4,16 +4,15 @@ edition 2 FINAL, 2017-09-28
 :toc: 
 :toclevels: 2
 :toc-title: Table of Contents
-
-// [.cover-image]
-// image::images/logo.png[logo.png]
+:icons: font
+:icon-set: far
 
 <<<
 
 [discrete]
 == Interface description between Charge Point and Central System
 
-[cols="1, 1"]
+[width=100%,options="autowidth"]
 |===
 |Document Version |1.6 edition 2
 |Document Status |FINAL
@@ -32,7 +31,7 @@ License*_ (<https://creativecommons.org/licenses/by-nd/4.0/legalcode>).
 [discrete]
 == Version History
 
-[cols="2,2,3,10",options="headers"]
+[options="header,autowidth"]
 |===
 |VERSION |DATE |AUTHOR |DESCRIPTION
 
@@ -66,7 +65,7 @@ License*_ (<https://creativecommons.org/licenses/by-nd/4.0/legalcode>).
 
                   Klaas van Zuuren +
                   _ElaadNL_           |1.6 Final Release. +
-                                      For changes relative to 1.5, see appendix New in OCPP 1.6.
+                                      For changes relative to 1.5, see appendix <<appendix_a_new_in_ocpp_1_6,New in OCPP 1.6>>.
 |1.5 |2012-06-01 |Franc Buve |Specification ready for release. Includes: +
                               CR-01 Authentication/authorization lists +
                               CR-02 Interval meter readings +
@@ -75,8 +74,7 @@ License*_ (<https://creativecommons.org/licenses/by-nd/4.0/legalcode>).
                               CR-05 More detailed status notifications +
                               CR-06 Query configuration parameters +
                               CR-07 Timestamp in BootNotification mandatory +
-                              CR-08 Response to StartTransaction.req with status other than Accepted is not +
-                              clearly defined +
+                              CR-08 Response to <<start_transaction_req,StartTransaction.req>> with status other than Accepted is not clearly defined +
                               CR-09 Increase size of firmwareVersion in BootNotification
 |1.2 |2011-02-21 |Franc Buve | 
 |1.0 |2010-10-19 |Franc Buve |Final version approved by e-laad.nl. Identical to version 0.12.
@@ -97,42 +95,42 @@ The specification does not define the communication technology. Any technology w
 
 === Conventions
 
-The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL” in this document are to be interpreted as described in <<rfc2119,[RFC2119]>>, subject to the following additional clarification clause:
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <<rfc2119,[RFC2119]>>, subject to the following additional clarification clause:
 
-The phrase “valid reasons in particular circumstances” relating to the usage of the terms “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, and “NOT RECOMMENDED” is to be taken to mean technically valid reasons, such as the absence of necessary hardware to support a function from a charge point design: for the purposes of this specification it specifically excludes decisions made on commercial, or other non-technical grounds, such as cost of implementation, or likelihood of use.
+The phrase "valid reasons in particular circumstances" relating to the usage of the terms "SHOULD", "SHOULD NOT", "RECOMMENDED", and "NOT RECOMMENDED" is to be taken to mean technically valid reasons, such as the absence of necessary hardware to support a function from a charge point design: for the purposes of this specification it specifically excludes decisions made on commercial, or other non-technical grounds, such as cost of implementation, or likelihood of use.
 
-All sections and appendixes, except “Scope” and “Terminology and Conventions”, are normative, unless they are explicitly indicated to be informative.
+All sections and appendixes, except "Scope" and "Terminology and Conventions", are normative, unless they are explicitly indicated to be informative.
 
 === Definitions
 
 This section contains the terminology that is used throughout this document.
 
-[cols="2,10"]
+[cols="s,d",options="autowidth"]
 |===
-|[[central_system]]**Central System** |Charge Point Management System: the central system that manages Charge Points and has the information for authorizing users for using its Charge Points.
-|[[cistring]]**CiString** |Case Insensitive String. Only printable ASCII allowed.
-|[[charge_point]]**Charge Point** |The Charge Point is the physical system where an electric vehicle can be charged. A Charge Point has one or more connectors.
-|[[charging_profile]]**Charging Profile** |Generic Charging Profile, used for different types of Profiles. Contains information about the Profile and holds the Charging Schedule. In future versions of OCPP it might hold more than 1 Charging Schedule.
-|[[charging_schedule]]**Charging Schedule** |Part of a Charging Profile. Defines a block of charging Power or Current limits. Can contain a start time and length.
-|[[charging_session]]**Charging Session** |A Charging Session is started when first interaction with user or EV occurs. This can be a card swipe, remote start of transaction, connection of cable and/or EV, parking bay occupancy detector, etc.
-|[[composite_charging_schedule]]**Composite Charging Schedule** |The charging schedule as calculated by the Charge Point. It is the result of the calculation of all active schedules and possible local limits present in the Charge Point. Local Limits might be taken into account.
-|[[connector]]**Connector** |The term “Connector”, as used in this specification, refers to an independently operated and managed electrical outlet on a Charge Point. This usually corresponds to a single physical connector, but in some cases a single outlet may have multiple physical socket types and/or tethered cable/connector arrangements to facilitate different vehicle types (e.g. four-wheeled EVs and electric scooters).
-|[[control_pilot_signal]]**Control Pilot signal** |Signal used by a Charge Point to inform EV of maximum Charging power or current limit, as defined by <<iec61851_1,[IEC61851-1]>>.
-|[[energy_offer_period]]**Energy Offer Period** |Energy Offer Period starts when the EVSE is ready and willing to supply energy.
-|[[energy_offer_suspendperiod]]**Energy Offer SuspendPeriod** |During a transaction, there may be periods the EnergyOffer to EV is suspended by the EVSE, for instance due to Smart Charging or local balancing.
-|[[energy_transfer_period]]**Energy Transfer Period** |Time during which an EV chooses to take offered energy, or return it. Multiple Energy Transfer Periods are possible during a Transaction.
-|[[local_controller]]**Local Controller** |Optional device in a smart charging infrastructure. Located on the premises with a number of Charge Points connected to it. Sits between the Charge Points and Central System. Understands and speaks OCPP messages. Controls the Power or Current in other Charge Point by using OCPP smart charging messages. Can be a Charge Point itself.
-|[[ocpp_j]]**OCPP-J** |OCPP via JSON over WebSocket
-|[[ocpp_s]]**OCPP-S** |OCPP via SOAP
-|[[phase_rotation]]**Phase Rotation** |Defines the wiring order of the phases between the electrical meter (or if absent, the grid connection), and the Charge Point connector.
-|[[transaction]]**Transaction** |The part of the charging process that starts when all relevant preconditions (e.g. authorization, plug inserted) are met, and ends at the moment when the Charge Point irrevocably leaves this state.
-|[[string]]**String** |Case Sensitive String. Only printable ASCII allowed. All strings in messages and enumerations are case sensitive, unless explicitly stated otherwise.
+|[[central_system]]Central System |Charge Point Management System: the central system that manages Charge Points and has the information for authorizing users for using its Charge Points.
+|[[cistring]]CiString |Case Insensitive String. Only printable ASCII allowed.
+|[[charge_point]]Charge Point |The Charge Point is the physical system where an electric vehicle can be charged. A Charge Point has one or more connectors.
+|[[charging_profile]]Charging Profile |Generic Charging Profile, used for different types of Profiles. Contains information about the Profile and holds the Charging Schedule. In future versions of OCPP it might hold more than 1 Charging Schedule.
+|[[charging_schedule]]Charging Schedule |Part of a Charging Profile. Defines a block of charging Power or Current limits. Can contain a start time and length.
+|[[charging_session]]Charging Session |A Charging Session is started when first interaction with user or EV occurs. This can be a card swipe, remote start of transaction, connection of cable and/or EV, parking bay occupancy detector, etc.
+|[[composite_charging_schedule]]Composite Charging Schedule |The charging schedule as calculated by the Charge Point. It is the result of the calculation of all active schedules and possible local limits present in the Charge Point. Local Limits might be taken into account.
+|[[connector]]Connector |The term "Connector", as used in this specification, refers to an independently operated and managed electrical outlet on a Charge Point. This usually corresponds to a single physical connector, but in some cases a single outlet may have multiple physical socket types and/or tethered cable/connector arrangements to facilitate different vehicle types (e.g. four-wheeled EVs and electric scooters).
+|[[control_pilot_signal]]Control Pilot signal |Signal used by a Charge Point to inform EV of maximum Charging power or current limit, as defined by <<iec61851_1,[IEC61851-1]>>.
+|[[energy_offer_period]]Energy Offer Period |Energy Offer Period starts when the EVSE is ready and willing to supply energy.
+|[[energy_offer_suspendperiod]]Energy Offer SuspendPeriod |During a transaction, there may be periods the EnergyOffer to EV is suspended by the EVSE, for instance due to Smart Charging or local balancing.
+|[[energy_transfer_period]]Energy Transfer Period |Time during which an EV chooses to take offered energy, or return it. Multiple Energy Transfer Periods are possible during a Transaction.
+|[[local_controller]]Local Controller |Optional device in a smart charging infrastructure. Located on the premises with a number of Charge Points connected to it. Sits between the Charge Points and Central System. Understands and speaks OCPP messages. Controls the Power or Current in other Charge Point by using OCPP smart charging messages. Can be a Charge Point itself.
+|[[ocpp_j]]OCPP-J |OCPP via JSON over WebSocket
+|[[ocpp_s]]OCPP-S |OCPP via SOAP
+|[[phase_rotation]]Phase Rotation |Defines the wiring order of the phases between the electrical meter (or if absent, the grid connection), and the Charge Point connector.
+|[[transaction]]Transaction |The part of the charging process that starts when all relevant preconditions (e.g. authorization, plug inserted) are met, and ends at the moment when the Charge Point irrevocably leaves this state.
+|[[string]]String |Case Sensitive String. Only printable ASCII allowed. All strings in messages and enumerations are case sensitive, unless explicitly stated otherwise.
 |===
 
 [[abbreviations]]
 === Abbreviations
 
-[cols="2,10"]
+[cols="s,d",options="autowidth"]
 |===
 |CSL |Comma Separated List
 |CPO |Charge Point Operator
@@ -161,7 +159,7 @@ This section contains the terminology that is used throughout this document.
 
 === References
 
-[cols="2,10"]
+[cols="s,d",options="autowidth"]
 |===
 |[[iec61851_1]][IEC61851-1] |"IEC 61851-1 2010: Electric vehicle conductive charging system - Part 1: General requirements"
 <https://webstore.iec.ch/publication/>
@@ -169,7 +167,7 @@ This section contains the terminology that is used throughout this document.
 |[[ocpp_1.6ct]][OCPP_1.6CT] |"OCPP 1.6 Compliance testing" <http://www.openchargealliance.org/downloads/>
 |[[ocpp_imp_j]][OCPP_IMP_J] |"OCPP JSON Specification" <http://www.openchargealliance.org/downloads/>
 |[[ocpp_imp_s]][OCPP_IMP_S] |"OCPP SOAP Specification" <http://www.openchargealliance.org/downloads/>
-|[[rfc2119]][RFC2119] |"Key words for use in RFCs to Indicate Requirement Levels”. S. Bradner. March 1997. <http://www.ietf.org/rfc/rfc2119.txt>
+|[[rfc2119]][RFC2119] |"Key words for use in RFCs to Indicate Requirement Levels". S. Bradner. March 1997. <http://www.ietf.org/rfc/rfc2119.txt>
 |===
 
 == Introduction
@@ -203,16 +201,16 @@ This section is normative.
 
 In OCPP 1.6 features and associated messages are grouped in _profiles_. Depending on the required functionality, implementers can choose to implement one or more of the following profiles.
 
-[cols="3,10",options="headers"]
+[cols="3s,10",options="header,autowidth"]
 |===
 |PROFILE NAME |DESCRIPTION
 
-|**Core** |Basic Charge Point functionality comparable with OCPP 1.5 <<ocpp1.5,[OCPP1.5]>> without support for firmware updates, local authorization list management and reservations.
-|**Firmware Management** |Support for firmware update management and diagnostic log file download.
-|**Local Auth List Management** |Features to manage the local authorization list in Charge Points.
-|**Reservation** |Support for reservation of a Charge Point.
-|**Smart Charging** |Support for basic Smart Charging, for instance using control pilot.
-|**Remote Trigger** |Support for remote triggering of Charge Point initiated messages
+|Core |Basic Charge Point functionality comparable with OCPP 1.5 <<ocpp1.5,[OCPP1.5]>> without support for firmware updates, local authorization list management and reservations.
+|Firmware Management |Support for firmware update management and diagnostic log file download.
+|Local Auth List Management |Features to manage the local authorization list in Charge Points.
+|Reservation |Support for reservation of a Charge Point.
+|Smart Charging |Support for basic Smart Charging, for instance using control pilot.
+|Remote Trigger |Support for remote triggering of Charge Point initiated messages
 |===
 
 These profiles can be used by a customer to determine if a OCPP 1.6 product has the required functionality for their business case. Compliance testing will test per profile if a product is compliant with the OCPP 1.6 specification.
@@ -223,9 +221,15 @@ When the profiles **Core** , **Firmware Management** , **Local Auth List Managem
 
 The grouping of all messages in their profiles can be found in the table below.
 
-[cols="5,1,1,1,1,1,1",options="headers"]
+
+[%autowidth,cols=".^,6*^.^",options="header,autowidth"]
 |===
-|MESSAGE |CORE | FIRMWARE MANAGEMENT |LOCAL AUTH LIST MANAGEMENT |REMOTE TRIGGER |RESERVATION | SMART CHARGING
+|MESSAGE |CORE |FIRMWARE +
+                MANAGEMENT |LOCAL AUTH +
+                            LIST +
+                            MANAGEMENT |REMOTE +
+                            TRIGGER           |RESERVATION |SMART +
+                                                            CHARGING
 
 |<<authorize_req,Authorize>>                                          |X | | | | | 
 |<<boot_notification_req,BootNotification>>                            |X | | | | |
@@ -277,9 +281,9 @@ When a Charge Point needs to charge an electric vehicle, it needs to authenticat
 
 When a user wishes to unplug the electric vehicle from the Charge Point, the Charge Point needs to verify that the user is either the one that initiated the charging or that the user is in the same group and thus allowed to terminate the charging. Once authorized, the Charge Point informs the Central System that the charging has been stopped.
 
-[cols="1,10"]
+[cols="^.^1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |A Charge Point MUST NOT send an Authorize.req before stopping a transaction if the presented idTag is the same as the idTag presented to start the transaction
+a|image::asset/info-icon.svg[info-icon,32,32] |A Charge Point MUST NOT send an Authorize.req before stopping a transaction if the presented idTag is the same as the idTag presented to start the transaction.
 |===
 
 .Sequence Diagram: Example of a firmware update
@@ -351,9 +355,9 @@ image::images/figure_4.svg[Sequence Diagram: Example of a differential local aut
 
 The Charge Point SHALL NOT modify the contents of the Authorization List by any other means than upon a the receipt of a SendLocalList PDU from the Central System.
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |Conflicts between the local authorization list and the validity reported in, for instance, a <<start_transaction_conf,StartTransaction.conf>> message might occur. When this happens the Charge Point SHALL inform the Central System by sending a <<status_notification,StatusNotification>> with ConnectorId set to 0, and ErrorCode set to 'LocalListConflict'.
+a|image::asset/info-icon.svg[info-icon,32,32] |Conflicts between the local authorization list and the validity reported in, for instance, a <<start_transaction_conf,StartTransaction.conf>> message might occur. When this happens the Charge Point SHALL inform the Central System by sending a <<status_notification,StatusNotification>> with ConnectorId set to 0, and ErrorCode set to 'LocalListConflict'.
 |===
 
 ==== Relation between Authorization Cache and Local Authorization List
@@ -365,7 +369,7 @@ Where both Authorization Cache and Local Authorization List are supported, a Cha
 [[unknown_offline_authorization]]
 ==== Unknown Offline Authorization
 
-When _offline_, a Charge Point MAY allow automatic authorization of any "unknown" identifiers that cannot be explicitly authorized by Local Authorization List or Authorization Cache entries. Identifiers that are present in a Local Authorization List that have a status other than “Accepted” (Invalid, Blocked, Expired) MUST be rejected. +
+When _offline_, a Charge Point MAY allow automatic authorization of any "unknown" identifiers that cannot be explicitly authorized by Local Authorization List or Authorization Cache entries. Identifiers that are present in a Local Authorization List that have a status other than "Accepted" (Invalid, Blocked, Expired) MUST be rejected. +
 Identifiers that were valid but are apparently expired due to passage of time MUST also be rejected
 
 Operation of the Unknown Offline Authorization capability, when supported, is reported (and controlled, where possible) by the <<allow_offline_tx_for_unknown_id,`AllowOfflineTxForUnknownId`>> configuration key.
@@ -375,9 +379,9 @@ When connection to the Central Server is restored, the Charge Point SHALL send a
 * when <<stop_transaction_on_invalid_id,`StopTransactionOnInvalidId`>> is set to _true_: stop the transaction normally as stated in <<stop_transaction_by_central_system,Stop Transaction>>. The Reason field in the Stop Transaction request should be set to DeAuthorized. If the Charge Point has the possibility to lock the Charging Cable, it SHOULD keep the Charging Cable locked until the owner presents his identifier.
 * when <<stop_transaction_on_invalid_id,StopTransactionOnInvalidId>> is set to _false_: only stop energy delivery to the vehicle.
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |In the case of an invalid identifier, an operator MAY choose to charge the EV with a minimum amount of energy so the EV is able to drive away. This amount is controlled by the optional configuration key: <<max_energy_on_invalid_id,MaxEnergyOnInvalidId>>.
+a|image::asset/info-icon.svg[info-icon,32,32] |In the case of an invalid identifier, an operator MAY choose to charge the EV with a minimum amount of energy so the EV is able to drive away. This amount is controlled by the optional configuration key: <<max_energy_on_invalid_id,MaxEnergyOnInvalidId>>.
 |===
 
 === Transaction in relation to Energy Transfer Period
@@ -454,9 +458,9 @@ Also, <<idtoken,IdToken>> data used as <<parent_idtag,ParentIds>> may often use 
 
 Therefore, message data elements of the <<idtoken,IdToken>> class (including ParentId) MAY contain any data, subject to the constraints of the data-type (CiString20Type), that is meaningful to a Central System (e.g. for the purpose of identifying the initiator of charging activity), and Charge Points MUST NOT make any presumptions as to the format or content of such data (e.g. by assuming that it is a UID-like value that must be hex characters only and/or an even number of digits).
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 To promote interoperability, based on common practice to date in the case of <<idtoken,IdToken>> data representing physical ISO 14443 compatible RFID card UIDs, it is RECOMMENDED that such UIDs be represented as hex representations of the UID bytes. According to ISO14443-3, byte 0 should come first in the hex string.
 |===
 
@@ -465,13 +469,13 @@ To promote interoperability, based on common practice to date in the case of <<i
 
 This section is normative.
 
-A Central System has the ability to treat a set of identity tokens as a “group”, thereby allowing any one token in the group to start a transaction and for the same token, or another token in the same group, to stop the transaction. This supports the common use-cases of families or businesses with multiple drivers using one or more shared electric vehicles on a single recharging contract account.
+A Central System has the ability to treat a set of identity tokens as a "group", thereby allowing any one token in the group to start a transaction and for the same token, or another token in the same group, to stop the transaction. This supports the common use-cases of families or businesses with multiple drivers using one or more shared electric vehicles on a single recharging contract account.
 
 Tokens (idTags) are grouped for authorization purposes by specifying a common group identifier in the optional ParentId element in <<id_tag_info,IdTagInfo>>: two idTags are considered to be in the same group if their ParentId Tags match.
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 Even though the ParentId has the same nominal data type (<<idtoken,IdToken>>) as an idTag, the value of this element may not be in the common format of <<idtoken,IdTokens>> and/or may not represent an actual valid <<idtoken,IdToken>> (e.g. it may be a common shared "account number"): therefore, the ParentId value SHOULD NOT be used for comparison against a presented Token value (unless it also occurs as an idTag value).
 |===
 
@@ -491,9 +495,9 @@ The mechanism of vendor-specific data transfer allows for the exchange of data o
 
 The operation Vendor Specific Data MAY be initiated either by the Central System or by the Charge Point.
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.warning-icon]#!# |
+a|image::asset/warning-icon.svg[warning-icon,32,32] |
 Please use with extreme caution and only for optional functionality, since it will impact your compatibility with other systems that do not make use of this option. We recommend mentioning the usage explicitly in your documentation and/or communication. Please consider consulting the Open Charge Alliance before turning to this option to add functionality.
 |===
 
@@ -541,15 +545,15 @@ Precedence of charging profiles is determined by the value of their StackLevel p
 
 To avoid conflicts, the existence of multiple Charging Profiles with the same <<stack_level,stackLevel>> and Purposes in a Charge Point is not allowed. Whenever a Charge Point receives a Charging Profile with a stackLevel and Purpose that already exists in the Charge Point, the Charge Point SHALL replace the existing profile.
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 In the case an updated charging profile (with the same stackLevel and purpose) is sent with a validFrom dateTime in the future, the Charge Point SHALL replace the installed profile and SHALL revert to default behavior until validFrom is reached. It is RECOMMENDED to provide a start time in the past to prevent gaps.
 |===
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 If you use Stacking without a duration, on the highest stack level, the Charge Point will never fall back to a lower stack level profile.
 |===
 
@@ -655,7 +659,7 @@ This section is normative.
 
 The smart charging options defined can be used in extensive ways. Because of the possible limitations and differences in capabilities between Charge Points, the Central System needs to be able to discover the Charge Point specific capabilities. This is ensured by the standardized configuration keys as defined in this chapter. A Smart Charging enabled Charge Point SHALL implement, and support reporting of, the following configuration keys through the <<get_configuration_req,GetConfiguration.req>> PDU
 
-[cols="1",options="headers"]
+[cols="1m",options="header"]
 |===
 |SMART CHARGING CONFIGURATION KEYS
 
@@ -690,7 +694,7 @@ This section is informative.
 
 The following data structure describes a daily default profile that limits the power to 6 kW between 08:00h and 20:00h.
 
-[cols="1,1,1,1",options="headers"]
+[options="header,autowidth"]
 |===
 |CHARGINGPROFILE        |              |               |
 
@@ -711,31 +715,31 @@ The following data structure describes a daily default profile that limits the p
 |     |     |startPeriod                |**0 (=00:00)**
 |     |     |limit                      |**11000**
 |     |     |numberPhases               |3
-|     |     |                           |ﾠ
+|     |     |                           |{nbsp}
 |     |     |startPeriod                |**28800 (=08:00)**
 |     |     |limit                      |**6000**
 |     |     |numberPhases               |3
-|     |     |                           |ﾠ
+|     |     |                           |{nbsp}
 |     |     |startPeriod                |**72000 (=20:00)**
 |     |     |limit                      |**11000**
 |     |     |numberPhases               |3
 |===
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.warning-icon]#!# |
+a|image::asset/warning-icon.svg[warning-icon,32,32] |
 The amount of phases used during charging is limited by the capabilities of: The Charge Point EV and Cable between CP and EV. If any of these 3 is not capable of 3 phase charging, the EV will be charged using 1 phase only.
 |===
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.warning-icon]#!# |
+a|image::asset/warning-icon.svg[warning-icon,32,32] |
 Switching the number of used phases during a schedule or charging session should be done with care. Some EVs may not support this and changing the amount of phases may result in physical damage. With the configuration key: <<connector_switch_3to1_phase_supported,ConnectorSwitch3to1PhaseSupported>> The Charge Point can tell if it supports switching the amount of phases during a transaction.
 |===
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.bulb-icon]#💡# |
+a|image::asset/bulb-icon.svg[bulb-icon,32,32]|
 On days on which DST goes into or out of effect, a special profile might be needed (e.g. for relative profiles)
 |===
 
@@ -758,8 +762,7 @@ This section is normative.
 Extensive metering data relating to charging sessions can be recorded and transmitted in different ways depending on its intended purpose. There are two obvious use cases (but the use of meter values is not limited to these two):
 
 * <<charging_session_meter_values,Charging Session Meter Values>>
-
-* <<,Clock-Aligned Meter Values>>
+* <<clock_aligned_meter_values,Clock-Aligned Meter Values>>
 
 Both types of meter readings MAY be reported in standalone <<metervalues_req,MeterValues.req>> messages (during a transaction) and/or as part of the transactionData element of the <<stop_transaction_req,StopTransaction.req>> PDU.
 
@@ -768,19 +771,19 @@ Both types of meter readings MAY be reported in standalone <<metervalues_req,Met
 
 Frequent (e.g. 1-5 minute interval) meter readings taken and transmitted (usually in "real time") to the Central System, to allow it to provide information updates to the EV user (who is usually not at the charge point), via web, app, SMS, etc., as to the progress of the charging session. In OCPP, this is called "sampled meter data", as the exact frequency and time of readings is not very significant, as long as it is "frequent enough". "Sampled meter data" can be configured with the following configuration keys:
 
-* <<meter_values_sampled_data,MeterValuesSampledData>>
-* <<meter_values_sampled_data_max_length,MeterValuesSampledDataMaxLength>>
-* <<meter_value_sample_interval,MeterValueSampleInterval>>
-* <<stop_txn_sampled_data,StopTxnSampledData>>
-* <<stop_txn_sampled_data_max_length,StopTxnSampledDataMaxLength>>
+* <<meter_values_sampled_data,`MeterValuesSampledData`>>
+* <<meter_values_sampled_data_max_length,`MeterValuesSampledDataMaxLength`>>
+* <<meter_value_sample_interval,`MeterValueSampleInterval`>>
+* <<stop_txn_sampled_data,`StopTxnSampledData`>>
+* <<stop_txn_sampled_data_max_length,`StopTxnSampledDataMaxLength`>>
 
-<<meter_value_sample_interval,MeterValueSampleInterval>> is the time (in seconds) between sampling of metering (or other) data, intended to be transmitted by "MeterValues" PDUs. Samples are acquired and transmitted periodically at this interval from the start of the charging transaction.
+<<meter_value_sample_interval,`MeterValueSampleInterval`>> is the time (in seconds) between sampling of metering (or other) data, intended to be transmitted by "MeterValues" PDUs. Samples are acquired and transmitted periodically at this interval from the start of the charging transaction.
 
 A value of "0" (numeric zero), by convention, is to be interpreted to mean that no sampled data should be transmitted.
 
-<<meter_values_sampled_data,MeterValuesSampledData>> is a comma separated list that prescribes the set of measurands to be included in a MeterValues.req PDU, every <<meter_value_sample_interval,MeterValueSampleInterval>> seconds. The maximum amount of elements in the <<meter_values_sampled_data,MeterValuesSampledData>> list can be reported by the Charge Point via: <<meter_values_sampled_data_max_length,MeterValuesSampledDataMaxLength>>
+<<meter_values_sampled_data,`MeterValuesSampledData`>> is a comma separated list that prescribes the set of measurands to be included in a MeterValues.req PDU, every <<meter_value_sample_interval,`MeterValueSampleInterval`>> seconds. The maximum amount of elements in the <<meter_values_sampled_data,`MeterValuesSampledData`>> list can be reported by the Charge Point via: <<meter_values_sampled_data_max_length,`MeterValuesSampledDataMaxLength`>>
 
-<<stop_txn_sampled_data,StopTxnSampledData>> is a comma separated list that prescribes the sampled measurands to be included in the TransactionData element of StopTransaction.req PDU, every <<meter_value_sample_interval,MeterValueSampleInterval>> seconds from the start of the Transaction. The maximum amount of elements in the <<stop_txn_sampled_data,StopTxnSampledData>> list can be reported by the Charge Point via: <<stop_txn_sampled_data_max_length,StopTxnSampledDataMaxLength>>.
+<<stop_txn_sampled_data,`StopTxnSampledData`>> is a comma separated list that prescribes the sampled measurands to be included in the TransactionData element of StopTransaction.req PDU, every <<meter_value_sample_interval,`MeterValueSampleInterval`>> seconds from the start of the Transaction. The maximum amount of elements in the <<stop_txn_sampled_data,`StopTxnSampledData`>> list can be reported by the Charge Point via: <<stop_txn_sampled_data_max_length,`StopTxnSampledDataMaxLength`>>.
 
 [[clock_aligned_meter_values]]
 ==== Clock-Aligned Meter Values
@@ -789,23 +792,23 @@ Grid Operator might require meter readings to be taken from fiscally certified e
 
 "Clock-Aligned Billing Data" can be configured with the following configuration keys:
 
-* <<clock_aligned_data_interval,ClockAlignedDataInterval>>
-* <<meter_values_aligned_data,MeterValuesAlignedData>>
-* <<meter_values_aligned_data_max_length,MeterValuesAlignedDataMaxLength>>
-* <<stop_txn_aligned_data,StopTxnAlignedData>>
-* <<stop_txn_aligned_data_max_length,StopTxnAlignedDataMaxLength>>
+* <<clock_aligned_data_interval,`ClockAlignedDataInterval`>>
+* <<meter_values_aligned_data,`MeterValuesAlignedData`>>
+* <<meter_values_aligned_data_max_length,`MeterValuesAlignedDataMaxLength`>>
+* <<stop_txn_aligned_data,`StopTxnAlignedData`>>
+* <<stop_txn_aligned_data_max_length,`StopTxnAlignedDataMaxLength`>>
 
-<<clock_aligned_data_interval,ClockAlignedDataInterval>> is the size of the clock-aligned data interval (in seconds). This defines the set of evenly spaced meter data aggregation intervals per day, starting at 00:00:00 (midnight).
+<<clock_aligned_data_interval,`ClockAlignedDataInterval`>> is the size of the clock-aligned data interval (in seconds). This defines the set of evenly spaced meter data aggregation intervals per day, starting at 00:00:00 (midnight).
 
 For example, a value of 900 (15 minutes) indicates that every day should be broken into 96 15-minute intervals.
 
 A value of "0" (numeric zero), by convention, is to be interpreted to mean that no clock-aligned data should be transmitted.
 
-<<meter_values_aligned_data,MeterValuesAlignedData>> is a comma separated list that prescribes the set of measurands to be included in a MeterValues.req PDU, every <<clock_aligned_data_interval,ClockAlignedDataInterval>> seconds. The maximum amount of elements in the <<meter_values_aligned_data,MeterValuesAlignedData>> list can be reported by the Charge Point via:
+<<meter_values_aligned_data,`MeterValuesAlignedData`>> is a comma separated list that prescribes the set of measurands to be included in a MeterValues.req PDU, every <<clock_aligned_data_interval,`ClockAlignedDataInterval`>> seconds. The maximum amount of elements in the <<meter_values_aligned_data,`MeterValuesAlignedData>>` list can be reported by the Charge Point via:
 
-<<meter_values_aligned_data_max_length,MeterValuesAlignedDataMaxLength>>
+<<meter_values_aligned_data_max_length,`MeterValuesAlignedDataMaxLength`>>
 
-<<stop_txn_aligned_data,StopTxnAlignedData>> is a comma separated list that prescribes the set of clock-aligned periodic measurands to be included in the TransactionData element of StopTransaction.req PDU for every <<clock_aligned_data_interval,ClockAlignedDataInterval>> of the Transaction. The maximum amount of elements in the <<stop_txn_aligned_data,StopTxnAlignedData>> list can be reported by the Charge Point via: <<stop_txn_aligned_data_max_length,StopTxnAlignedDataMaxLength>>
+<<stop_txn_aligned_data,`StopTxnAlignedData`>> is a comma separated list that prescribes the set of clock-aligned periodic measurands to be included in the TransactionData element of StopTransaction.req PDU for every <<clock_aligned_data_interval,`ClockAlignedDataInterval`>> of the Transaction. The maximum amount of elements in the <<stop_txn_aligned_data,`StopTxnAlignedData`>> list can be reported by the Charge Point via: <<stop_txn_aligned_data_max_length,`StopTxnAlignedDataMaxLength`>>
 
 [[multiple_locations_phases]]
 ==== Multiple Locations/Phases
@@ -822,10 +825,10 @@ For example: A Charge Point capable of measuring _Current.Import_ on _Inlet_ (al
 ==== Unsupported measurands
 When a Central System sends a ChangeConfiguration.req to a Charge Point with one of the following configuration keys:
 
-* <<meter_values_aligned_data,MeterValuesAlignedData>>
-* <<meter_values_sampled_data,MeterValuesSampledData>>
-* <<stop_txn_aligned_data,StopTxnAlignedData>>
-* <<stop_txn_sampled_data,StopTxnSampledData>>
+* <<meter_values_aligned_data,`MeterValuesAlignedData`>>
+* <<meter_values_sampled_data,`MeterValuesSampledData`>>
+* <<stop_txn_aligned_data,`StopTxnAlignedData`>>
+* <<stop_txn_sampled_data,`StopTxnSampledData`>>
 
 If the comma separated list contains one or more measurands that are not supported by this Charge Point, the Charge Point SHALL respond with: <<change_configuration_conf,ChangeConfiguration.conf>> with: _status_ = _Rejected_. No changes SHALL be made to the currently configuration.
 
@@ -932,9 +935,9 @@ Upon receipt of a <<heartbeat_req,Heartbeat.req>> PDU, the Central System SHALL 
 
 The Charge Point MAY skip sending a <<heartbeat_req,Heartbeat.req>> PDU when another PDU has been sent to the Central System within the configured heartbeat interval. This implies that a Central System SHOULD assume availability of a Charge Point whenever a PDU has been received, the same way as it would have, when it received a <<heartbeat_req,Heartbeat.req>> PDU.
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 With JSON over WebSocket, sending heartbeats is not mandatory. However, for time synchronization it is advised to at least send one heartbeat per 24 hour.
 |===
 
@@ -964,15 +967,15 @@ The optional <<location,location>> field specifies where the measurement is take
 
 The optional <<phase,phase>> field specifies to which phase or phases of the electric installation the value applies. The Charging Point SHALL report all phase number dependent values from the electrical meter (or grid connection when absent) point of view.
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 The phase field is not applicable to all <<measurand,Measurands>>.
 |===
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 Two measurands (_Current.Offered_ and _Power.Offered_) are available that are strictly speaking no measured values. They indicate the maximum amount of current/power that is being offered to the EV and are intended for use in smart charging applications.
 |===
 
@@ -1010,61 +1013,68 @@ image::images/figure_20.svg[Sequence Diagram: Status Notification]
 
 A Charge Point sends a notification to the Central System to inform the Central System about a status change or an error within the Charge Point. The following table depicts changes from a previous status (left column) to a new status (upper row) upon which a Charge Point MAY send a <<status_notification_req,StatusNotification.req>> PDU to the Central System.
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.warning-icon]#!# |
+a|image::asset/warning-icon.svg[warning-icon,32,32] |
 The Occupied state as defined in previous OCPP versions is no longer relevant. The Occupied state is split into five new statuses: _Preparing_, _Charging_, _SuspendedEV_, _SuspendedEVSE_ and _Finishing_.
 |===
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 EVSE is used in Status Notification instead of Socket or Charge Point for future compatibility.
 |===
 
 The following table describes which status transitions are possible:
 
-[cols="^1,^2,10*^",options="headers",hrows=2]
+[cols="^.^1,.^2,10*^"]
 |===
-|ﾠ |ﾠ                   |**1** |**2** |**3** |**4** |**5** |**6** |ﾠﾠﾠ|**7** |**8** |**9**
-|  |  State From \ To: 
-|[.rotated-90]#Available# 
-|[.rotated-90]#Preparing#
-|[.rotated-90]#Charging# |[.rotated-90]#SuspendedEV# |[.rotated-90]#SuspendedEVSE# 
-|[.rotated-90]#Finishing# | 
-|[.rotated-90]#Reserved# |[.rotated-90]#Unavailable# |[.rotated-90]#Faulted#
+|{nbsp} |{nbsp} + 
+State From / To: 
+                   |**1** +
+                   Available |**2** +
+                              Preparing
+                  |**3** +
+                  Charging |**4** +
+                            SuspendedEV |**5** +
+                                        SuspendedEVSE
+                  |**6** +
+                  Finishing |{nbsp}{nbsp}{nbsp}
+                  |**7** +
+                  Reserved |**8** +
+                  Unavailable |**9** +
+                  Faulted
 
-// TODO: 가운데 정렬하기
-|**A** |Available |ﾠ |<<a2,**A2**>> |<<a3,**A3**>> 
-|<<a4,**A4**>> |<<a5,**A5**>> |ﾠ |ﾠ |<<a7,**A7**>> |<<a8,**A8**>> |<<a9,**A9**>>
-|**B** |Preparing |<<b1,**B1**>> |ﾠ |<<b3,**B3**>> |<<b4,**B4**>> 
-|<<b5,**B5**>> |<<b6,**B6**>> |ﾠ |ﾠ |ﾠ |<<b9,**B9**>>
-|**C** |Charging |<<c1,**C1**>> |ﾠ |ﾠ |<<c4,**C4**>> |<<c5,**C5**>>
-|<<c6,**C6**>> |ﾠ |ﾠ |<<c8,**C8**>> |<<c9,**C9**>>
-|**D** |SuspendedEV |<<d1,**D1**>> |ﾠ |<<d3,**D3**>> |ﾠ 
-|<<d5,**D5**>> |<<d6,**D6**>> |ﾠ |ﾠ |<<d8,**D8**>> |<<d9,**D9**>>
-|**E** |SuspendedEVSE |<<e1,**E1**>> |ﾠ |<<e3,**E3**>> |<<e4,**E4**>>
-|ﾠ |<<e6,**E6**>> |ﾠ |ﾠ |<<e8,**E8**>> |<<e9,**E9**>>
-|**F** |Finishing |<<f1,**F1**>> |<<f2,**F2**>> |ﾠ |ﾠ |ﾠ |ﾠ |ﾠ |ﾠ 
+|**A** |Available |{nbsp} |<<a2,**A2**>> |<<a3,**A3**>> 
+|<<a4,**A4**>> |<<a5,**A5**>> |{nbsp} |{nbsp} |<<a7,**A7**>> |<<a8,**A8**>> |<<a9,**A9**>>
+|**B** |Preparing |<<b1,**B1**>> |{nbsp} |<<b3,**B3**>> |<<b4,**B4**>> 
+|<<b5,**B5**>> |<<b6,**B6**>> |{nbsp} |{nbsp} |{nbsp} |<<b9,**B9**>>
+|**C** |Charging |<<c1,**C1**>> |{nbsp} |{nbsp} |<<c4,**C4**>> |<<c5,**C5**>>
+|<<c6,**C6**>> |{nbsp} |{nbsp} |<<c8,**C8**>> |<<c9,**C9**>>
+|**D** |SuspendedEV |<<d1,**D1**>> |{nbsp} |<<d3,**D3**>> |{nbsp} 
+|<<d5,**D5**>> |<<d6,**D6**>> |{nbsp} |{nbsp} |<<d8,**D8**>> |<<d9,**D9**>>
+|**E** |SuspendedEVSE |<<e1,**E1**>> |{nbsp} |<<e3,**E3**>> |<<e4,**E4**>>
+|{nbsp} |<<e6,**E6**>> |{nbsp} |{nbsp} |<<e8,**E8**>> |<<e9,**E9**>>
+|**F** |Finishing |<<f1,**F1**>> |<<f2,**F2**>> |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} 
 |<<f8,**F8**>> |<<f9,**F9**>>
-|ﾠ |ﾠ |ﾠ |ﾠ |ﾠ |ﾠ |ﾠ |ﾠ |ﾠ |ﾠ |ﾠ |ﾠ 
-|**G** |Reserved |<<g1,**G1**>> |<<g2,**G2**>> |ﾠ |ﾠ |ﾠ |ﾠ |ﾠ |ﾠ 
+|{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} 
+|**G** |Reserved |<<g1,**G1**>> |<<g2,**G2**>> |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} 
 |<<g8,**G8**>> |<<g9,**G9**>>
 |**H** |Unavailable |<<h1,**H1**>> |<<h2,**H2**>> |<<h3,**H3**>>
-|<<h4,**H4**>> |<<h5,**H5**>> |ﾠ |ﾠ |ﾠ |ﾠ |<<h9,**H9**>>
+|<<h4,**H4**>> |<<h5,**H5**>> |{nbsp} |{nbsp} |{nbsp} |{nbsp} |<<h9,**H9**>>
 |**I** |Faulted |<<i1,**I1**>> |<<i2,**I2**>> |<<i3,**I3**>> |<<i4,**I4**>>
-|<<i5,**I5**>> |<<i6,**I6**>> |ﾠ |<<i7,**I7**>> |<<i8,**I8**>> |ﾠ 
+|<<i5,**I5**>> |<<i6,**I6**>> |{nbsp} |<<i7,**I7**>> |<<i8,**I8**>> |{nbsp} 
 |===
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 The table above is only applicable to ConnectorId > 0. For ConnectorId 0, only a limited set is applicable, namely: Available, Unavailable and Faulted.
 |===
 
 The next table describes events that may lead to a status change:
 
-[cols="2,10",options="headers"]
+[cols="2,10",options="header"]
 |===
 | |DESCRIPTION
 |[[a2]]**A2** |Usage is initiated (e.g. insert plug, bay occupancy detection, present idTag, push start button, receipt of a <<remote_start_transaction_req,RemoteStartTransaction.req>>)
@@ -1076,13 +1086,13 @@ The next table describes events that may lead to a status change:
 |[[a9]]**A9** |A fault is detected that prevents further charging operations
 
 |[[b1]]**B1** |Intended usage is ended (e.g. plug removed, bay no longer occupied, second presentation of idTag, time out (configured by the configuration key: <<connection_timeout,`ConnectionTimeOut`>>) on expected user action)
-|ﾠ |ﾠ 
+|{nbsp} |{nbsp} 
 |[[b3]]**B3** |All prerequisites for charging are met and charging process starts
 |[[b4]]**B4** |All prerequisites for charging are met but EV does not start charging
 |[[b5]]**B5** |All prerequisites for charging are met but EVSE does not allow charging
 |[[b6]]**B6** |Timed out. Usage was initiated (e.g. insert plug, bay occupancy detection), but idTag not presented within timeout.
 |[[b9]]**B9** |A fault is detected that prevents further charging operations
-|ﾠ |ﾠ 
+|{nbsp} |{nbsp} 
 
 |[[c1]]**C1** |Charging session ends while no user action is required (e.g. fixed cable was removed on EV side)
 |[[c4]]**C4** |Charging stops upon EV request (e.g. S2 is opened)
@@ -1091,7 +1101,7 @@ The next table describes events that may lead to a status change:
 bay)
 |[[c8]]**C8** |Charging session ends, no user action is required and the connector is scheduled to become _Unavailable_
 |[[c9]]**C9** |A fault is detected that prevents further charging operations
-|ﾠ |ﾠ 
+|{nbsp} |{nbsp} 
 
 |[[d1]]**D1** |Charging session ends while no user action is required
 |[[d3]]**D3** |Charging resumes upon request of the EV (e.g. S2 is closed)
@@ -1127,21 +1137,21 @@ bay)
 |[[i1_i8]]**I1-I8** |Fault is resolved and status returns to the pre-fault state
 |===
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.warning-icon]#!# |
+a|image::asset/warning-icon.svg[warning-icon,32,32] |
 A Charge Point Connector MAY have any of the 9 statuses as shown in the table above. For ConnectorId 0, only a limited set is applicable, namely: Available, Unavailable and Faulted. The status of ConnectorId 0 has no direct connection to the status of the individual Connectors (>0).
 |===
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.warning-icon]#!# |
+a|image::asset/warning-icon.svg[warning-icon,32,32] |
 If charging is suspended both by the EV and the EVSE, status _SuspendedEVSE_ SHALL have precedence over status _SuspendedEV_.
 |===
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.warning-icon]#!# |
+a|image::asset/warning-icon.svg[warning-icon,32,32] |
 When a Charge Point or a Connector is set to status Unavailable by a <<change_availability_by_central_system,Change Availability>> command, the 'Unavailable' status MUST be persistent across reboots. The Charge Point MAY use the _Unavailable_ status internally for other purposes (e.g. while updating firmware or waiting for an initial _Accepted_ <<registration_status,RegistrationStatus>>)
 |===
 
@@ -1149,23 +1159,23 @@ As the status _Occupied_ has been split into five new statuses (_Preparing_, _Ch
 
 To limit the number of transitions, the Charge Point MAY omit sending a <<status_notification_req,StatusNotification.req>> if it was active for less time than defined in the optional configuration key <<minimum_status_duration,`MinimumStatusDuration`>>. This way, a Charge Point MAY choose not to send certain <<status_notification_req,StatusNotification.req>> PDUs.
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 A Charge Point manufacturer MAY have implemented a minimal status duration for certain status transitions separate of the <<minimum_status_duration,`MinimumStatusDuration`>> setting. The time set in <<minimum_status_duration,`MinimumStatusDuration`>> will be added to this default delay. Setting <<minimum_status_duration,`MinimumStatusDuration`>> to zero SHALL NOT override the default manufacturer's minimal status duration.
 |===
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.warning-icon]#!# |
+a|image::asset/warning-icon.svg[warning-icon,32,32] |
 Setting a high <<minimum_status_duration,`MinimumStatusDuration`>> time may result in the delayed sending of all StatusNotifications, since the Charge Point will only send the <<status_notification_req,StatusNotification.req>> once the <<minimum_status_duration,`MinimumStatusDuration`>> time is passed.
 |===
 
 The Charge Point MAY send a <<status_notification_req,StatusNotification.req>> PDU to inform the Central System of fault conditions. When the 'status' field is not _Faulted_, the condition should be considered a warning since charging operations are still possible.
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.warning-icon]#!# |
+a|image::asset/warning-icon.svg[warning-icon,32,32] |
 <<chargepoint_errorcode,ChargePointErrorCode>> _EVCommunicationError_ SHALL only be used with status Preparing, SuspendedEV, SuspendedEVSE and Finishing and be treated as warning.
 |===
 
@@ -1194,9 +1204,9 @@ A <<stop_transaction_req,StopTransaction.req>> PDU MAY contain an optional <<sto
 
 Upon receipt of a <<stop_transaction_req,StopTransaction.req>> PDU, the Central System SHALL respond with a <<stop_transaction_conf,StopTransaction.conf>> PDU.
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 <<chargepoint_errorcode,ChargePointErrorCode>> _EVCommunicationError_ SHALL only be used with status Preparing, SuspendedEV, SuspendedEVSE and Finishing and be treated as warning.
 |===
 
@@ -1214,15 +1224,15 @@ If <<stop_transaction_on_evside_disconnect,`StopTransactionOnEVSideDisconnect`>>
 
 By setting <<stop_transaction_on_evside_disconnect,`StopTransactionOnEVSideDisconnect`>> to _true_, the transaction SHALL be stopped when the cable is disconnected from the EV. If the EV is reconnected, energy transfer is not allowed until the transaction is stopped and a new transaction is started. If <<unlock_connector_on_evside_disconnect,`UnlockConnectorOnEVSideDisconnect`>> is set to _true_, also the Connector on the Charge Point will be unlocked.
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 If <<stop_transaction_on_evside_disconnect,`StopTransactionOnEVSideDisconnect`>> is set to _false_, this SHALL have priority over <<unlock_connector_on_evside_disconnect,`UnlockConnectorOnEVSideDisconnect`>>. In other words: cables always remain locked when the cable is disconnected at EV side when <<stop_transaction_on_evside_disconnect,`StopTransactionOnEVSideDisconnect`>> is _false_.
 |===
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 Setting <<stop_transaction_on_evside_disconnect,`StopTransactionOnEVSideDisconnect`>> to _true_ will prevent sabotage acts to stop the energy flow by unplugging not locked cables on EV side.
 |===
 
@@ -1251,7 +1261,7 @@ If the Charge Point has a reservation matching the reservationId in the request 
 .Sequence Diagram: Change Availability
 image::images/figure_23.svg[Sequence Diagram: Change Availability]
 
-Central System can request a Charge Point to change its availability. A Charge Point is considered available (“operative”) when it is charging or ready for charging. A Charge Point is considered unavailable when it does not allow any charging. The Central System SHALL send a <<change_availability_req,ChangeAvailability.req>> PDU for requesting a Charge Point to change its availability. The Central System can change the availability to available or unavailable.
+Central System can request a Charge Point to change its availability. A Charge Point is considered available ("operative") when it is charging or ready for charging. A Charge Point is considered unavailable when it does not allow any charging. The Central System SHALL send a <<change_availability_req,ChangeAvailability.req>> PDU for requesting a Charge Point to change its availability. The Central System can change the availability to available or unavailable.
 
 Upon receipt of a <<change_availability_req,ChangeAvailability.req>> PDU, the Charge Point SHALL respond with a <<change_availability_conf,ChangeAvailability.conf>> PDU. The response PDU SHALL indicate whether the Charge Point is able to change to the requested availability or not. When a transaction is in progress Charge Point SHALL respond with availability status 'Scheduled' to indicate that it is scheduled to occur after the transaction has finished.
 
@@ -1259,15 +1269,15 @@ In the event that Central System requests Charge Point to change to a status it 
 
 When an availability change requested with a <<change_availability_req,ChangeAvailability.req>> PDU has happened, the Charge Point SHALL inform Central System of its new availability status with a StatusNotification.req as described there.
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 In the case the <<change_availability_req,ChangeAvailability.req>> contains ConnectorId = 0, the status change applies to the Charge Point and all Connectors.
 |===
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 Persistent states: for example: Connector set to Unavailable shall persist a reboot.
 |===
 
@@ -1286,9 +1296,9 @@ Upon receipt of a <<change_configuration_req,ChangeConfiguration.req>> Charge Po
 * If "key" does not correspond to a configuration setting supported by Charge Point, it SHALL respond with a status 'NotSupported'.
 * If the Charge Point did not set the configuration, and none of the previous statuses applies, the Charge Point SHALL respond with status 'Rejected'.
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 Examples of Change Configuration requests to which a Charge Point responds with a ChangeConfiguration.conf with a status of 'Rejected' are requests with out-of-range values and requests with values that do not conform to an expected format.
 |===
 
@@ -1336,9 +1346,9 @@ Upon receipt of a <<get_composite_schedule_req,GetCompositeSchedule.req>>, the C
 
 If the ConnectorId in the request is set to '0', the Charge Point SHALL report the total expected power or current the Charge Point expects to consume from the grid during the requested time period.
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 Please note that the charging schedule sent by the charge point is only indicative for that point in time. this schedule might change over time due to external causes (for instance, local balancing based on grid connection capacity is active and one Connector becomes available).
 |===
 
@@ -1401,9 +1411,9 @@ The <<remote_start_transaction_req,RemoteStartTransaction.req>> SHALL contain an
 
 The Central System MAY include a <<charging_profile_type,ChargingProfile>> in the RemoteStartTransaction request. The purpose of this <<charging_profile_type,ChargingProfile>> SHALL be set to <<tx_profile,TxProfile>>. If accepted, the Charge Point SHALL use this <<charging_profile_type,ChargingProfile>> for the transaction.
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 If a Charge Point without support for Smart Charging receives a <<remote_start_transaction_req,RemoteStartTransaction.req>> with a Charging Profile, this parameter SHOULD be ignored.
 |===
 
@@ -1450,9 +1460,9 @@ When a reservation expires, the Charge Point SHALL terminate the reservation and
 
 If Charge Point has implemented an Authorization Cache, then upon receipt of a <<reserve_now_conf,ReserveNow.conf>> PDU the Charge Point SHALL update the cache entry, if the idTag is not in the <<local_authorization_list,Local Authorization List>>, with the <<id_tag_info,IdTagInfo>> value from the response as described under <<authorization_cache,Authorization Cache>>.
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 It is RECOMMENDED to validate the Identifier with an authorize.req after reception of a <<reserve_now_req,ReserveNow.req>> and before the start of the transaction.
 |===
 
@@ -1470,9 +1480,9 @@ At receipt of a soft reset, the Charge Point SHALL stop ongoing transactions gra
 
 At receipt of a hard reset the Charge Point SHALL restart (all) the hardware, it is not required to gracefully stop ongoing transaction. If possible the Charge Point sends a <<stop_transaction_req,StopTransaction.req>> for previously ongoing transactions after having restarted and having been accepted by the Central System via a <<boot_notification_conf,BootNotification.conf>>. This is a last resort solution for a not correctly functioning Charge Points, by sending a "hard" reset, (queued) information might get lost
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 Persistent states: for example: Connector set to Unavailable shall persist
 |===
 
@@ -1501,9 +1511,9 @@ A Central System can send a <<set_charging_profile_req,SetChargingProfile.req>> 
 * During a transaction to change the active profile for the transaction;
 * Outside the context of a transaction as a separate message to set a charging profile to a local controller, Charge Point, or a default charging profile to a connector.
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.warning-icon]#!# |
+a|image::asset/warning-icon.svg[warning-icon,32,32] |
 To prevent mismatch between transactions and a TxProfile, The Central System SHALL include the transactionId in a <<set_charging_profile_req,SetChargingProfile.req>> if the profile applies to a specific transaction.
 |===
 
@@ -1521,9 +1531,9 @@ The Central System MAY include a charging profile in a <<remote_start_transactio
 
 If the Central System includes a <<charging_profile_type,ChargingProfile>>, the ChargingProfilePurpose MUST be set to TxProfile and the transactionId SHALL NOT be set.
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 The Charge Point SHALL apply the given profile to the newly started transaction. This transaction will get a transactionId assigned by Central System via a <<start_transaction_conf,StartTransaction.conf>>. When the Charge Point receives a <<set_charging_profile_req,SetChargingProfile.req>>, with the _transactionId_ for this transaction, with the same StackLevel as the profile given in the <<remote_start_transaction_req,RemoteStartTransaction.req>>, the Charge Point SHALL replace the existing charging profile, otherwise it SHALL install/stack the profile next to the already existing profile(s).
 |===
 
@@ -1535,39 +1545,39 @@ The Central System MAY send a charging profile to a Charge Point to update the c
 
 The Central System MAY send charging profiles to a Charge Point that are to be used as default charging profiles The Central System SHALL use the <<set_charging_profile_req,SetChargingProfile.req>> PDU for that purpose. Such charging profiles MAY be sent at any time. If a charging profile with the same <<charging_profile_id,chargingProfileId>>, or the same combination of <<stack_level,stackLevel>> / <<charging_profile_purpose,ChargingProfilePurpose>>, exists on the Charge Point, the new charging profile SHALL replace the existing charging profile, otherwise it SHALL be added. The Charge Point SHALL then re-evaluate its collection of charge profiles to determine which charging profile will become active.
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 It is not possible to set a <<charging_profile_type,ChargingProfile>> with purpose set to <<tx_profile,TxProfile>> without presence of an active transaction, or in advance of a transaction.
 |===
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 When a <<charging_profile_type,ChargingProfile>> is refreshed during execution, it is advised to put the startSchedule of the new <<charging_profile_type,ChargingProfile>> in the past, so there is no period of default charging behaviour inbetween the ChargingProfiles. The Charge Point SHALL continue to execute the existing <<charging_profile_type,ChargingProfile>> until the new <<charging_profile_type,ChargingProfile>> is installed.
 |===
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 If the <<charging_schedule_period,chargingSchedulePeriod>> is longer than duration , the remainder periods SHALL not be executed. If duration is longer than the <<charging_schedule_period,chargingSchedulePeriod>>, the Charge Point SHALL keep the value of the last <<charging_schedule_period,chargingSchedulePeriod>> until _duration_ has ended.
 |===
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 When <<recurrency_kind_type,recurrencyKind>> is used in combination with a <<charging_schedule_period,chargingSchedulePeriod>> and/or duration that is longer then the recurrence period duration, the remainder periods SHALL not be executed.
 |===
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 The StartSchedule of the first <<charging_schedule_period,chargingSchedulePeriod>> in a <<charging_schedule_type,chargingSchedule>> SHALL always be 0.
 |===
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 When <<recurrency_kind_type,recurrencyKind>> is used in combination with a <<charging_schedule_type,chargingSchedule>> _duration_ shorter than the <<recurrency_kind_type,recurrencyKind>> period, the Charge Point SHALL fall back to default behaviour after the <<charging_schedule_type,chargingSchedule>> _duration_ ends. This fall back means that the Charge Point SHALL use a <<charging_profile_type,ChargingProfile>> with a lower stackLevel if available. If no other <<charging_profile_type,ChargingProfile>> is available, the Charge Point SHALL allow charging as if no <<charging_profile_type,ChargingProfile>> is installed. If the <<charging_schedule_period,chargingSchedulePeriod>> and/or duration is longer then the recurrence period duration, the remainder periods SHALL not be executed.
 |===
 
@@ -1581,7 +1591,7 @@ During normal operation, the Charge Point informs the Central System of its stat
 
 The <<trigger_message_req,TriggerMessage.req>> makes it possible for the Central System, to request the Charge Point, to send Charge Point-initiated messages. In the request the Central System indicates which message it wishes to receive. For every such requested message the Central System MAY optionally indicate to which connector this request applies. The requested message is leading: if the specified connectorId is not relevant to the message, it should be ignored. In such cases the requested message should still be sent.
 
-Inversely, if the connectorId is relevant but absent, this should be interpreted as “for all allowed connectorId values”. For example, a request for a statusNotification for connectorId 0 is a request for the status of the Charge Point. A request for a statusNotification without connectorId is a request for multiple statusNotifications: the notification for the Charge Point itself and a notification for each of its connectors.
+Inversely, if the connectorId is relevant but absent, this should be interpreted as "for all allowed connectorId values". For example, a request for a statusNotification for connectorId 0 is a request for the status of the Charge Point. A request for a statusNotification without connectorId is a request for multiple statusNotifications: the notification for the Charge Point itself and a notification for each of its connectors.
 Charge Point Central System
 
 .Sequence Diagram: Trigger Message StatusNotification Example
@@ -1610,9 +1620,9 @@ Upon receipt of an <<unlock_connector_req,UnlockConnector.req>> PDU, the Charge 
 
 If there was a transaction in progress on the specific connector, then Charge Point SHALL finish the transaction first as described in <<stop_transaction_by_central_system,Stop Transaction>>.
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.warning-icon]#!# |
+a|image::asset/warning-icon.svg[warning-icon,32,32] |
 <<unlock_connector_req,UnlockConnector.req>> is intented only for unlocking the cable retention lock on the Connector not for unlocking a connector access door.
 |===
 
@@ -1633,9 +1643,9 @@ The Charge Point SHALL, if the new firmware image is "valid", install the new fi
 
 If it is not possible to continue charging during installation of firmware, it is RECOMMENDED to wait until Charging Session has ended (Charge Point idle) before commencing installation. It is RECOMMENDED to set connectors that are not in use to UNAVAILABLE while the Charge Point waits for the Session to end.
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 The sequence diagram above is an example. It is good practice to first reboot the Charge Point to check the new firmware is booting and able to connect to the Central System, before sending the status: _Installed_. This is not a requirement.
 |===
 
@@ -1649,7 +1659,7 @@ The sequence diagram above is an example. It is good practice to first reboot th
 
 This contains the field definition of the Authorize.req PDU sent by the Charge Point to the Central System. See also <<authorize,Authorize>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -1661,7 +1671,7 @@ This contains the field definition of the Authorize.req PDU sent by the Charge P
 
 This contains the field definition of the Authorize.conf PDU sent by the Central System to the Charge Point in response to a <<authorize_req,Authorize.req>> PDU. See also <<authorize,Authorize>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -1673,7 +1683,7 @@ This contains the field definition of the Authorize.conf PDU sent by the Central
 
 This contains the field definition of the BootNotification.req PDU sent by the Charge Point to the Central System. See also <<boot_notification,Boot Notification>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -1693,7 +1703,7 @@ This contains the field definition of the BootNotification.req PDU sent by the C
 
 This contains the field definition of the BootNotification.conf PDU sent by the Central System to the Charge Point in response to a <<boot_notification_req,BootNotification.req>> PDU. See also Boot Notification
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -1707,7 +1717,7 @@ This contains the field definition of the BootNotification.conf PDU sent by the 
 
 This contains the field definition of the CancelReservation.req PDU sent by the Central System to the Charge Point. See also <<cancel_reservation_by_central_system,Cancel Reservation>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -1719,7 +1729,7 @@ This contains the field definition of the CancelReservation.req PDU sent by the 
 
 This contains the field definition of the CancelReservation.conf PDU sent by the Charge Point to the Central System in response to a <<cancel_reservation_req,CancelReservation.req>> PDU. See also <<cancel_reservation_by_central_system,Cancel Reservation>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -1731,7 +1741,7 @@ This contains the field definition of the CancelReservation.conf PDU sent by the
 
 This contains the field definition of the ChangeAvailability.req PDU sent by the Central System to the Charge Point. See also <<change_availability_by_central_system,Change Availability>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -1746,7 +1756,7 @@ This contains the field definition of the ChangeAvailability.req PDU sent by the
 
 This contains the field definition of the ChangeAvailability.conf PDU return by Charge Point to Central System. See also <<change_availability_by_central_system,Change Availability>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -1759,7 +1769,7 @@ This contains the field definition of the ChangeAvailability.conf PDU return by 
 
 This contains the field definition of the ChangeConfiguration.req PDU sent by Central System to Charge Point. It is RECOMMENDED that the content and meaning of the 'key' and 'value' fields is agreed upon between Charge Point and Central System. See also <<change_configuration_by_central_system,Change Configuration>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -1774,7 +1784,7 @@ See for standard configuration key names and associated values
 
 This contains the field definition of the ChangeConfiguration.conf PDU returned from Charge Point to Central System. See also <<change_configuration_by_central_system,Change Configuration>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -1793,7 +1803,7 @@ No fields are defined.
 
 This contains the field definition of the ClearCache.conf PDU sent by the Charge Point to the Central System in response to a <<clear_cache_req,ClearCache.req>> PDU. See also <<clear_cache_by_central_system,Clear Cache>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -1807,7 +1817,7 @@ This contains the field definition of the ClearChargingProfile.req PDU sent by t
 
 The Central System can use this message to clear (remove) either a specific charging profile (denoted by id) or a selection of charging profiles that match with the values of the optional connectorId, stackLevel and <<charging_profile_purposes,chargingProfilePurpose>> fields. See also <<clear_charging_profile_by_central_system,Clear Charging Profile>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -1822,7 +1832,7 @@ The Central System can use this message to clear (remove) either a specific char
 
 This contains the field definition of the ClearChargingProfile.conf PDU sent by the Charge Point to the Central System in response to a <<clear_charging_profile_req,ClearChargingProfile.req>> PDU. See also <<clear_charging_profile_by_central_system,Clear Charging Profile>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -1834,7 +1844,7 @@ This contains the field definition of the ClearChargingProfile.conf PDU sent by 
 
 This contains the field definition of the DataTransfer.req PDU sent either by the Central System to the Charge Point or vice versa. See also <<data_transfer_by_chargepoint,Data Transfer>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -1849,7 +1859,7 @@ Length undefined |0..1 |Optional. Data without specified length or format.
 
 This contains the field definition of the DataTransfer.conf PDU sent by the Charge Point to the Central System or vice versa in response to a <<data_transfer_req,DataTransfer.req>> PDU. See also <<data_transfer_by_chargepoint,Data Transfer>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -1863,7 +1873,7 @@ Length undefined |0..1 |Optional. Data in response to request.
 
 This contains the field definition of the DiagnosticsStatusNotification.req PDU sent by the Charge Point to the Central System. See also <<diagnostics_status_notification_by_charge_point,Diagnostics Status Notification>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -1882,7 +1892,7 @@ No fields are defined.
 
 This contains the field definition of the FirmwareStatusNotifitacion.req PDU sent by the Charge Point to the Central System. See also <<firmware_status_notification_charge_point,Firmware Status Notification>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -1901,7 +1911,7 @@ No fields are defined.
 
 This contains the field definition of the GetCompositeSchedule.req PDU sent by the Central System to the Charge Point. See also <<get_composite_schedule_by_central_system,Get Composite Schedule>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -1916,7 +1926,7 @@ This contains the field definition of the GetCompositeSchedule.req PDU sent by t
 This contains the field definition of the GetCompositeSchedule.conf PDU sent by the Charge Point to the Central
 System in response to a GetCompositeSchedule.req PDU. See also Get Composite Schedule
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -1932,7 +1942,7 @@ If status is "Rejected", this field may be absent.
 
 This contains the field definition of the GetConfiguration.req PDU sent by the Central System to the Charge Point. See also <<get_configuration_by_central_system,Get Configuration>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -1944,7 +1954,7 @@ This contains the field definition of the GetConfiguration.req PDU sent by the C
 
 This contains the field definition of the GetConfiguration.conf PDU sent by Charge Point the to the Central System in response to a <<get_configuration_req,GetConfiguration.req>>. See also <<get_configuration_by_central_system,Get Configuration>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -1957,7 +1967,7 @@ This contains the field definition of the GetConfiguration.conf PDU sent by Char
 
 This contains the field definition of the GetDiagnostics.req PDU sent by the Central System to the Charge Point. See also <<get_diagnostics_by_central_system,Get Diagnostics>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -1973,7 +1983,7 @@ This contains the field definition of the GetDiagnostics.req PDU sent by the Cen
 
 This contains the field definition of the GetDiagnostics.conf PDU sent by the Charge Point to the Central System in response to a <<get_diagnostics_req,GetDiagnostics.req>> PDU. See also Get Diagnostics.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -1992,7 +2002,7 @@ No fields are defined.
 
 This contains the field definition of the GetLocalListVersion.conf PDU sent by the Charge Point to Central System in response to a <<get_local_list_version_req,GetLocalListVersion.req>> PDU. See also <<get_local_list_version_by_central_system,Get Local List Version>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2011,7 +2021,7 @@ No fields are defined.
 
 This contains the field definition of the Heartbeat.conf PDU sent by the Central System to the Charge Point in response to a <<heartbeat_req,Heartbeat.req>> PDU. See also <<heartbeat_by_charge_point,Heartbeat>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2022,7 +2032,7 @@ This contains the field definition of the Heartbeat.conf PDU sent by the Central
 === MeterValues.req
 
 This contains the field definition of the MeterValues.req PDU sent by the Charge Point to the Central System. See also <<meter_values_by_charge_point,Meter Values>>.
-[cols="1,1,1,5",options="headers"] |=== |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION |**connectorId** |integer + connectorId >= 0 |1..1 |Required. This contains a number (>0) designating a connector of the Charge Point.'0' (zero) is used to designate the main powermeter.  |**transactionId** |integer |0..1 |Optional. The transaction to which these meter samples are related.  |**meterValue** |<<metervalue,MeterValue>> |1..* |Required. The sampled meter values with timestamps.  |===
+[cols="1,1,1,5",options="header"] |=== |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION |**connectorId** |integer + connectorId >= 0 |1..1 |Required. This contains a number (>0) designating a connector of the Charge Point.'0' (zero) is used to designate the main powermeter.  |**transactionId** |integer |0..1 |Optional. The transaction to which these meter samples are related.  |**meterValue** |<<metervalue,MeterValue>> |1..* |Required. The sampled meter values with timestamps.  |===
 
 [[metervalues_conf]]
 === MeterValues.conf
@@ -2036,7 +2046,7 @@ No fields are defined.
 
 This contains the field definitions of the RemoteStartTransaction.req PDU sent to Charge Point by Central System. See also <<remote_start_transaction_by_central_system,Remote Start Transaction>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2050,7 +2060,7 @@ This contains the field definitions of the RemoteStartTransaction.req PDU sent t
 
 This contains the field definitions of the RemoteStartTransaction.conf PDU sent from Charge Point to Central System. See also <<remote_start_transaction_by_central_system,Remote Start Transaction>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2062,7 +2072,7 @@ This contains the field definitions of the RemoteStartTransaction.conf PDU sent 
 
 This contains the field definitions of the RemoteStopTransaction.req PDU sent to Charge Point by Central System. See also <<remote_stop_transaction_by_central_system,Remote Stop Transaction>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2074,7 +2084,7 @@ This contains the field definitions of the RemoteStopTransaction.req PDU sent to
 
 This contains the field definitions of the RemoteStopTransaction.conf PDU sent from Charge Point to Central System. See also <<remote_stop_transaction_by_central_system,Remote Stop Transaction>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2086,7 +2096,7 @@ This contains the field definitions of the RemoteStopTransaction.conf PDU sent f
 
 This contains the field definition of the ReserveNow.req PDU sent by the Central System to the Charge Point. See also <<reserve_now_by_central_system,Reserve Now>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2103,7 +2113,7 @@ connectorId >= 0 |1..1 |Required. This contains the id of the connector to be re
 
 This contains the field definition of the ReserveNow.conf PDU sent by the Charge Point to the Central System in response to a <<reserve_now_req,ReserveNow.req>> PDU. See also <<reserve_now_by_central_system,Reserve Now>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2115,7 +2125,7 @@ This contains the field definition of the ReserveNow.conf PDU sent by the Charge
 
 This contains the field definition of the Reset.req PDU sent by the Central System to the Charge Point. See also <<reset_by_central_system,Reset>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2127,7 +2137,7 @@ This contains the field definition of the Reset.req PDU sent by the Central Syst
 
 This contains the field definition of the Reset.conf PDU sent by the Charge Point to the Central System in response to a <<reset_req,Reset.req>> PDU. See also <<reset_by_central_system,Reset>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2141,7 +2151,7 @@ This contains the field definition of the SendLocalList.req PDU sent by the Cent
 
 If no (empty) localAuthorizationList is given and the updateType is Full, all identifications are removed from the list. Requesting a Differential update without (empty) localAuthorizationList will have no effect on the list. All idTags in the localAuthorizationList MUST be unique, no duplicate values are allowed. See also <<send_local_list_by_central_system,Send Local List>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2160,7 +2170,7 @@ If no (empty) localAuthorizationList is given and the updateType is Full, all id
 
 This contains the field definition of the SendLocalList.conf PDU sent by the Charge Point to the Central System in response to a <<send_local_list_req,SendLocalList.req>> PDU. See also <<send_local_list_by_central_system,Send Local List>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2174,7 +2184,7 @@ This contains the field definition of the SetChargingProfile.req PDU sent by the
 
 The Central System uses this message to send charging profiles to a Charge Point. See also <<set_charging_profile_by_central_system,Set Charging Profile>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2187,7 +2197,7 @@ The Central System uses this message to send charging profiles to a Charge Point
 
 This contains the field definition of the SetChargingProfile.conf PDU sent by the Charge Point to the Central System in response to a <<set_charging_profile_req,SetChargingProfile.req>> PDU. See also <<set_charging_profile_by_central_system,Set Charging Profile>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2199,7 +2209,7 @@ This contains the field definition of the SetChargingProfile.conf PDU sent by th
 
 This section contains the field definition of the StartTransaction.req PDU sent by the Charge Point to the Central System. See also <<start_transaction_by_charge_point,Start Transaction>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2216,7 +2226,7 @@ connectorId > 0 |1..1 |Required. This identifies which connector of the Charge P
 
 This contains the field definition of the StartTransaction.conf PDU sent by the Central System to the Charge Point in response to a <<start_transaction_req,StartTransaction.req>> PDU. See also <<start_transaction_by_charge_point,Start Transaction>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2229,7 +2239,7 @@ This contains the field definition of the StartTransaction.conf PDU sent by the 
 
 This contains the field definition of the StatusNotification.req PDU sent by the Charge Point to the Central System. See also <<status_notification,Status Notification>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2255,7 +2265,7 @@ No fields are defined.
 
 This contains the field definition of the StopTransaction.req PDU sent by the Charge Point to the Central System. See also <<stop_transaction_by_central_system,Stop Transaction>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2272,7 +2282,7 @@ This contains the field definition of the StopTransaction.req PDU sent by the Ch
 
 This contains the field definition of the StopTransaction.conf PDU sent by the Central System to the Charge Point in response to a <<stop_transaction_req,StopTransaction.req>> PDU. See also <<stop_transaction_by_central_system,Stop Transaction>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2284,7 +2294,7 @@ This contains the field definition of the StopTransaction.conf PDU sent by the C
 
 This contains the field definition of the TriggerMessage.req PDU sent by the Central System to the Charge Point. See also <<trigger_message,Trigger Message>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2298,7 +2308,7 @@ connectorId > 0 |0..1 |Optional. Only filled in when request applies to a specif
 
 This contains the field definition of the TriggerMessage.conf PDU sent by the Charge Point to the Central System in response to a <<trigger_message_req,TriggerMessage.req>> PDU. See also <<trigger_message,Trigger Message>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2310,7 +2320,7 @@ This contains the field definition of the TriggerMessage.conf PDU sent by the Ch
 
 This contains the field definition of the UnlockConnector.req PDU sent by the Central System to the Charge Point. See also <<unlock_connector_by_central_system,Unlock Connector>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2323,7 +2333,7 @@ connectorId > 0 |1..1 |Required. This contains the identifier of the connector t
 
 This contains the field definition of the UnlockConnector.conf PDU sent by the Charge Point to the Central System in response to an <<unlock_connector_req,UnlockConnector.req>> PDU. See also <<unlock_connector_by_central_system,Unlock Connector>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2335,7 +2345,7 @@ This contains the field definition of the UnlockConnector.conf PDU sent by the C
 
 This contains the field definition of the UpdateFirmware.req PDU sent by the Central System to the Charge Point. See also <<update_firmware_by_central_system,Update Firmware>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2362,7 +2372,7 @@ _Class_
 
 Elements that constitute an entry of a Local Authorization List update.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2377,7 +2387,7 @@ _Enumeration_
 
 Status in a response to an <<authorize_req,Authorize.req>>.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -2395,7 +2405,7 @@ _Enumeration_
 
 Status returned in response to <<change_availability_req,ChangeAvailability.req>>.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -2411,7 +2421,7 @@ _Enumeration_
 
 Requested availability change in <<change_availability_req,ChangeAvailability.req>>.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -2426,7 +2436,7 @@ _Enumeration_
 
 Status in <<cancel_reservation_conf,CancelReservation.conf>>.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -2441,7 +2451,7 @@ _Enumeration_
 
 Charge Point status reported in <<status_notification_req,StatusNotification.req>>.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -2473,7 +2483,7 @@ Status reported in <<status_notification_req,StatusNotification.req>>. A status 
 States considered Operative are: _Available_, _Preparing_, _Charging_, _SuspendedEVSE_, _SuspendedEV_, _Finishing_, _Reserved_. +
 States considered Inoperative are: _Unavailable_, _Faulted_.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |STATUS       |CONDITION
 
@@ -2498,7 +2508,7 @@ A ChargingProfile consists of a <<charging_schedule_type,ChargingSchedule>>, des
 .Class Diagram: ChargingProfile
 image::images/figure_42.svg[Class Diagram: ChargingProfile]
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2520,7 +2530,7 @@ _Enumeration_
 
 Kind of charging profile, as used in: <<charging_profile_type,ChargingProfile>>.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -2536,7 +2546,7 @@ _Enumeration_
 
 Purpose of the charging profile, as used in: <<charging_profile_type,ChargingProfile>>.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -2552,7 +2562,7 @@ _Enumeration_
 
 Status returned in response to <<set_charging_profile_req,SetChargingProfile.req>>.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -2568,7 +2578,7 @@ _Enumeration_
 
 Unit in which a charging schedule is defined, as used in: <<get_composite_schedule_req,GetCompositeSchedule.req>> and <<charging_schedule_type,ChargingSchedule>>.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -2592,7 +2602,7 @@ _Class_
 
 Charging schedule structure defines a list of charging periods, as used in: <<get_composite_schedule_conf,GetCompositeSchedule.conf>> and <<charging_profile_type,ChargingProfile>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2610,7 +2620,7 @@ _Class_
 
 Charging schedule period structure defines a time period in a charging schedule, as used in: <<charging_schedule_type,ChargingSchedule>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2626,7 +2636,7 @@ _Type_
 
 Generic used case insensitive string of 20 characters.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |FIELD TYPE     |DESCRIPTION
 
@@ -2640,7 +2650,7 @@ _Type_
 
 Generic used case insensitive string of 25 characters.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |FIELD TYPE    |DESCRIPTION
 
@@ -2654,7 +2664,7 @@ _Type_
 
 Generic used case insensitive string of 50 characters.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |FIELD TYPE    |DESCRIPTION
 
@@ -2668,7 +2678,7 @@ _Type_
 
 Generic used case insensitive string of 255 characters.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |FIELD TYPE     |DESCRIPTION
 
@@ -2682,7 +2692,7 @@ _Type_
 
 Generic used case insensitive string of 500 characters.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |FIELD TYPE     |DESCRIPTION
 
@@ -2696,7 +2706,7 @@ _Enumeration_
 
 Status returned in response to <<clear_cache_req,ClearCache.req>>.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -2711,7 +2721,7 @@ _Enumeration_
 
 Status returned in response to <<clear_charging_profile_req,ClearChargingProfile.req>>.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -2726,7 +2736,7 @@ _Enumeration_
 
 Status in <<change_configuration_conf,ChangeConfiguration.conf>>.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -2743,7 +2753,7 @@ _Enumeration_
 
 Status in <<data_transfer_conf,DataTransfer.conf>>.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -2760,7 +2770,7 @@ _Enumeration_
 
 Status in <<diagnostics_status_notification_req,DiagnosticsStatusNotification.req>>.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -2777,7 +2787,7 @@ _Enumeration_
 
 Status of a firmware download as reported in <<firmware_status_notification_req,FirmwareStatusNotification.req>>.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -2797,7 +2807,7 @@ _Enumeration_
 
 Status returned in response to <<get_composite_schedule_req,GetCompositeSchedule.req>>.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -2814,7 +2824,7 @@ Contains status information about an identifier. It is returned in Authorize, St
 
 If expiryDate is not given, the status has no end date.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2830,7 +2840,7 @@ _Type_
 
 Contains the identifier to use for authorization. It is a case insensitive string. In future releases this may become a complex type to support multiple forms of identifiers.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |FIELD TYPE     |DESCRIPTION
 
@@ -2844,7 +2854,7 @@ _Class_
 
 Contains information about a specific configuration key. It is returned in <<get_configuration_conf,GetConfiguration.conf>>.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2860,14 +2870,14 @@ _Enumeration_
 
 Allowable values of the optional "location" field of a value element in <<sampled_value,SampledValue>>.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
 |**Body** |Measurement inside body of Charge Point (e.g. Temperature)
 |**Cable** |Measurement taken from cable between EV and Charge Point
 |**EV** |Measurement taken by EV
-|**Inlet** |Measurement at network (“grid”) inlet connection
+|**Inlet** |Measurement at network ("grid") inlet connection
 |**Outlet** |Measurement at a Connector. Default value
 |===
 
@@ -2878,13 +2888,13 @@ _Enumeration_
 
 Allowable values of the optional "measurand" field of a Value element, as used in <<metervalues_req,MeterValues.req>> and <<stop_transaction_req,StopTransaction.req>> messages. Default value of "<<measurand,measurand>>" is always "Energy.Active.Import.Register".
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 Import is energy flow from the Grid to the Charge Point, EV or other load. Export is energy flow from the EV to the Charge Point and/or from the Charge Point to the Grid.
 |===
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -2912,9 +2922,9 @@ Import is energy flow from the Grid to the Charge Point, EV or other load. Expor
 |**Voltage** |Instantaneous AC RMS supply voltage
 |===
 
-[cols="1,10"]
+[cols="1,10",frame="none",grid="cols"]
 |===
-|[.info-icon]#i# |
+a|image::asset/info-icon.svg[info-icon,32,32] |
 All "Register" values relating to a single charging transaction, or a non-transactional consumer (e.g. charge point internal power supply, overall supply) MUST be monotonically increasing in time.
 
 The actual quantity of energy corresponding to a reported ".Register" value is computed as the register value in question minus the register value recorded/reported at the start of the transaction or other relevant starting reference point in time. For improved auditability ".Register" values SHOULD reported exactly as they are directly read from a non-volatile register in the electrical metering hardware, and SHOULD NOT be re-based to zero at the start of transactions. This allows any "missing energy" between sequential transactions, due to hardware fault, mis-wiring, fraud, etc. to be identified, by allowing the Central System to confirm that the starting register value of any transaction is identical to the finishing register value of the preceding transaction on the same connector.
@@ -2927,7 +2937,7 @@ _Enumeration_
 
 Type of request to be triggered in a <<trigger_message_req,TriggerMessage.req>>
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -2946,7 +2956,7 @@ _Class_
 
 Collection of one or more sampled values in <<metervalues_req,MeterValues.req>> and <<stop_transaction_req,StopTransaction.req>>. All sampled values in a MeterValue are sampled at the same point in time.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
@@ -2961,7 +2971,7 @@ _Enumeration_
 
 Phase as used in <<sampled_value,SampledValue>>. Phase specifies how a measured value is to be interpreted. Please note that not all values of Phase are applicable to all <<measurand,Measurands>>.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -2984,7 +2994,7 @@ _Enumeration_
 
 Values of the context field of a value in <<sampled_value,SampledValue>>.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -3005,7 +3015,7 @@ _Enumeration_
 
 Reason for stopping a transaction in <<stop_transaction_req,StopTransaction.req>>.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -3029,7 +3039,7 @@ _Enumeration_
 
 Type of recurrence of a charging profile, as used in <<charging_profile_type,ChargingProfile>>.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -3044,7 +3054,7 @@ _Enumeration_
 
 Result of registration in response to <<boot_notification_req,BootNotification.req>>.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -3060,7 +3070,7 @@ _Enumeration_
 
 The result of a <<remote_start_transaction_req,RemoteStartTransaction.req>> or <<remote_stop_transaction_req,RemoteStopTransaction.req>> request.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -3075,7 +3085,7 @@ _Enumeration_
 
 Status in <<reserve_now_conf,ReserveNow.conf>>.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -3093,7 +3103,7 @@ _Enumeration_
 
 Result of <<reset_req,Reset.req>>.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -3108,7 +3118,7 @@ _Enumeration_
 
 Type of reset requested by <<reset_req,Reset.req>>.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -3123,17 +3133,17 @@ _Class_
 
 Single sampled value in <<metervalue,MeterValues>>. Each value can be accompanied by optional fields.
 
-[cols="1,1,1,5",options="headers"]
+[cols="1,1,1,5",options="header"]
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
-|**value** |String |1..1 |Required. Value as a “Raw” (decimal) number or “SignedData”. Field Type is “string” to allow for digitally signed data readings. Decimal numeric values are also acceptable to allow fractional values for measurands such as Temperature and Current.
-|**context** |<<reading_context,ReadingContext>> |0..1 |Optional. Type of detail value: start, end or sample. Default = “Sample.Periodic”
-|**format** |<<value_format,ValueFormat>> |0..1 |Optional. Raw or signed data. Default = “Raw”
-|**measurand** |<<measurand,Measurand>> |0..1 |Optional. Type of measurement. Default = “Energy.Active.Import.Register”
+|**value** |String |1..1 |Required. Value as a "Raw" (decimal) number or "SignedData". Field Type is "string" to allow for digitally signed data readings. Decimal numeric values are also acceptable to allow fractional values for measurands such as Temperature and Current.
+|**context** |<<reading_context,ReadingContext>> |0..1 |Optional. Type of detail value: start, end or sample. Default = "Sample.Periodic"
+|**format** |<<value_format,ValueFormat>> |0..1 |Optional. Raw or signed data. Default = "Raw"
+|**measurand** |<<measurand,Measurand>> |0..1 |Optional. Type of measurement. Default = "Energy.Active.Import.Register"
 |**phase** |<<phase,Phase>> |0..1 |Optional. indicates how the measured value is to be interpreted. For instance between L1 and neutral (L1-N) Please note that not all values of phase are applicable to all <<measurand,Measurands>>. When phase is absent, the measured value is interpreted as an overall value.
-|**location** |<<location,Location>> |0..1 |Optional. Location of measurement. Default=”Outlet”
-|**unit** |<<unit_of_measure,UnitOfMeasure>> |0..1 |Optional. Unit of the value. Default = “Wh” if the (default) measurand is an “Energy” type.
+|**location** |<<location,Location>> |0..1 |Optional. Location of measurement. Default="Outlet"
+|**unit** |<<unit_of_measure,UnitOfMeasure>> |0..1 |Optional. Unit of the value. Default = "Wh" if the (default) measurand is an "Energy" type.
 |===
 
 [[trigger_message_status]]
@@ -3143,7 +3153,7 @@ _Enumeration_
 
 Status in <<trigger_message_conf,TriggerMessage.conf>>.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -3159,7 +3169,7 @@ _Enumeration_
 
 Allowable values of the optional "unit" field of a Value element, as used in <<sampled_value,SampledValue>>. Default value of "unit" is always "Wh".
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -3188,7 +3198,7 @@ _Enumeration_
 
 Status in response to <<unlock_connector_req,UnlockConnector.req>>.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -3204,7 +3214,7 @@ _Enumeration_
 
 Type of update for a <<send_local_list_req,SendLocalList.req>>.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -3221,7 +3231,7 @@ _Enumeration_
 
 Type of update for a <<send_local_list_req,SendLocalList.req>>.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
@@ -3236,7 +3246,7 @@ _Enumeration_
 
 Format that specifies how the value element in <<sampled_value,SampledValue>> is to be interpreted.
 
-[cols="2,8",options="headers"]
+[cols="2,8",options="header"]
 |===
 |VALUE    |DESCRIPTION
 
