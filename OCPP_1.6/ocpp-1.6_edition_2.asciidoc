@@ -1,199 +1,18 @@
-:doctype: book
-
-[.cover-image]
-image::images/logo.png[logo.png]
-
-[.cover-title]
-= Open Charge Point Protocol 1.6
-
-[.cover-edition]
+= Open Charge Point Protocol 1.6x
 edition 2 FINAL, 2017-09-28
+:doctype: book
+:toc: 
+:toclevels: 2
+:toc-title: Table of Contents
+
+// [.cover-image]
+// image::images/logo.png[logo.png]
 
 <<<
 
-== Table of Contents
-
-:toc: right
-:toclevels: 3
-
-// TODO: Add pages with trailing dots
-// TODO: Show page numbers in footer
-// [.toc]
-// . Scope.
-// . Terminology and Conventions
-// .. Conventions
-// .. Definitions
-// .. Abbreviations
-// .. References.
-// . Introduction
-// .. Edition 2.
-// .. Document structure.
-// .. Feature Profiles
-// .. General views of operation
-// .. Local Authorization & Offline Behavior
-// .. Transaction in relation to Energy Transfer Period
-// .. Transaction-related messages
-// .. Connector numbering
-// .. ID Tokens
-// .. Parent idTag
-// .. Reservations
-// .. Vendor-specific data transfer.
-// .. Smart Charging
-// .. Time zones
-// .. Time notations
-// .. Metering Data.
-// . Operations Initiated by Charge Point.
-// .. Authorize
-// .. Boot Notification
-// .. Data Transfer
-// .. Diagnostics Status Notification
-// .. Firmware Status Notification
-// .. Heartbeat
-// .. Meter Values
-// .. Start Transaction
-// .. Status Notification
-// .. Stop Transaction
-// . Operations Initiated by Central System
-// .. Cancel Reservation
-// .. Change Availability.
-// .. Change Configuration
-// .. Clear Cache
-// .. Clear Charging Profile
-// .. Data Transfer
-// .. Get Composite Schedule.
-// .. Get Configuration.
-// .. Get Diagnostics.
-// .. Get Local List Version
-// .. Remote Start Transaction
-// .. Remote Stop Transaction
-// .. Reserve Now
-// .. Reset
-// .. Send Local List
-// .. Set Charging Profile
-// .. Trigger Message
-// .. Unlock Connector
-// .. Update Firmware
-// . Messages
-// .. Authorize.req
-// .. Authorize.conf
-// .. BootNotification.req
-// .. BootNotification.conf
-// .. CancelReservation.req
-// .. CancelReservation.conf.
-// .. ChangeAvailability.req
-// .. ChangeAvailability.conf
-// .. ChangeConfiguration.req
-// .. ChangeConfiguration.conf
-// .. ClearCache.req
-// .. ClearCache.conf
-// .. ClearChargingProfile.req
-// .. ClearChargingProfile.conf.
-// .. DataTransfer.req
-// .. DataTransfer.conf
-// .. DiagnosticsStatusNotification.req
-// .. DiagnosticsStatusNotification.conf
-// .. FirmwareStatusNotification.req.
-// .. FirmwareStatusNotification.conf
-// .. GetCompositeSchedule.req
-// .. GetCompositeSchedule.conf
-// .. GetConfiguration.req
-// .. GetConfiguration.conf.
-// .. GetDiagnostics.req
-// .. GetDiagnostics.conf.
-// .. GetLocalListVersion.req
-// .. GetLocalListVersion.conf
-// .. Heartbeat.req
-// .. Heartbeat.conf
-// .. MeterValues.req.
-// .. MeterValues.conf
-// .. RemoteStartTransaction.req
-// .. RemoteStartTransaction.conf
-// .. RemoteStopTransaction.req
-// .. RemoteStopTransaction.conf.
-// .. ReserveNow.req
-// .. ReserveNow.conf
-// .. Reset.req
-// .. Reset.conf
-// .. SendLocalList.req.
-// .. SendLocalList.conf
-// .. SetChargingProfile.req
-// .. SetChargingProfile.conf
-// .. StartTransaction.req
-// .. StartTransaction.conf
-// .. StatusNotification.req
-// .. StatusNotification.conf
-// .. StopTransaction.req
-// .. StopTransaction.conf
-// .. TriggerMessage.req
-// .. TriggerMessage.conf
-// .. UnlockConnector.req
-// .. UnlockConnector.conf.
-// .. UpdateFirmware.req
-// .. UpdateFirmware.conf
-// . Types.
-// .. AuthorizationData
-// .. AuthorizationStatus
-// .. AvailabilityStatus
-// .. AvailabilityType.
-// .. CancelReservationStatus
-// .. ChargePointErrorCode
-// .. ChargePointStatus
-// .. ChargingProfile
-// .. ChargingProfileKindType
-// .. ChargingProfilePurposeType
-// .. ChargingProfileStatus
-// .. ChargingRateUnitType
-// .. ChargingSchedule
-// .. ChargingSchedulePeriod
-// .. CiString20Type
-// .. CiString25Type
-// .. CiString50Type
-// .. CiString255Type
-// .. CiString500Type
-// .. ClearCacheStatus
-// .. ClearChargingProfileStatus
-// .. ConfigurationStatus.
-// .. DataTransferStatus
-// .. DiagnosticsStatus.
-// .. FirmwareStatus
-// .. GetCompositeScheduleStatus
-// .. IdTagInfo
-// .. IdToken
-// .. KeyValue
-// .. Location.
-// .. Measurand
-// .. MessageTrigger
-// .. MeterValue
-// .. Phase
-// .. ReadingContext
-// .. Reason
-// .. RecurrencyKindType
-// .. RegistrationStatus
-// .. RemoteStartStopStatus.
-// .. ReservationStatus
-// .. ResetStatus
-// .. ResetType
-// .. SampledValue.
-// .. TriggerMessageStatus
-// .. UnitOfMeasure.
-// .. UnlockStatus.
-// .. UpdateStatus
-// .. UpdateType
-// .. ValueFormat
-// . Firmware and Diagnostics File Transfer
-// .. Download Firmware
-// .. Upload Diagnostics
-// . Standard Configuration Key Names & Values
-// .. Core Profile
-// .. Local Auth List Management Profile
-// .. Reservation Profile.
-// .. Smart Charging Profile
-// . Appendix A: New in OCPP 1.6
-// .. A.1. Updated/New Messages:
-
-<<<
-
+[discrete]
 == Interface description between Charge Point and Central System
+
 [cols="1, 1"]
 |===
 |Document Version |1.6 edition 2
@@ -202,7 +21,7 @@ edition 2 FINAL, 2017-09-28
 |===
 
 <<<
-
+ 
 Copyright © 2010 – 2017 Open Charge Alliance. All rights reserved.
 
 This document is made available under the _*Creative Commons Attribution-NoDerivatives 4.0 International Public
@@ -210,6 +29,7 @@ License*_ (<https://creativecommons.org/licenses/by-nd/4.0/legalcode>).
 
 <<<
 
+[discrete]
 == Version History
 
 [cols="2,2,3,10",options="header"]
