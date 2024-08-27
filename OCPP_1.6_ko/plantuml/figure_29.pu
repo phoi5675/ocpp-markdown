@@ -1,0 +1,17 @@
+@startuml figure_29
+!include style.puml
+
+participant "Charge Point" as ChargePoint
+participant "Central System" as CentralSystem
+
+CentralSystem -> ChargePoint : GetConfiguration.req([key])
+
+activate ChargePoint
+activate CentralSystem
+
+ChargePoint --> CentralSystem : GetConfiguration.conf(configurationKey, [unknownKey])
+
+deactivate CentralSystem
+deactivate ChargePoint
+
+@enduml

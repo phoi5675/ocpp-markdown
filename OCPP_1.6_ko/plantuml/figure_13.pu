@@ -1,0 +1,18 @@
+@startuml figure_13
+!include style.puml
+
+participant "Charge Point" as ChargePoint
+participant "Central System" as CentralSystem
+
+ChargePoint -> CentralSystem : \
+  BootNotification.req(chargePointModel, chargePointVendor, [chargeBoxSerialNumber],[chargePointSerialNumber],\
+  \n[firmwareVersion], [iccid], [imsi], [meterSerialNumber], [meterType])
+activate ChargePoint
+activate CentralSystem
+
+CentralSystem --> ChargePoint : BootNotification.conf(currentTime, interval, status)
+
+deactivate CentralSystem
+deactivate ChargePoint
+
+@enduml

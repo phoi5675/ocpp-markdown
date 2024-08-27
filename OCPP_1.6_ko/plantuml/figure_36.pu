@@ -1,0 +1,15 @@
+@startuml figure_36
+!include style.puml
+
+participant "Charge Point" as ChargePoint
+participant "Central System" as CentralSystem
+
+CentralSystem -> ChargePoint : SendLocalList.req(listVersion, updateType, [localAuthorisationList])
+activate ChargePoint
+activate CentralSystem
+
+ChargePoint --> CentralSystem : SendLocalList.conf(status)
+deactivate CentralSystem
+deactivate ChargePoint
+
+@enduml

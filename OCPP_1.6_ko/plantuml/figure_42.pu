@@ -1,0 +1,55 @@
+@startuml figure_42
+!include style.puml
+
+class ChargingProfile << (C,#ffffff) >> {
+  chargingProfileId: int [1..1]
+  transactionId: int [0..1]
+  stackLevel: int [1..1]
+  chargingProfilePurpose: ChargingProfilePurposeType [1..1]
+  chargingProfileKind: ChargingProfileKindType [1..1]
+  recurrencyKind: RecurrencyKindType [0..1]
+  validFrom: DateTime [0..1]
+  validTo: DateTime [0..1]
+  chargingSchedule: ChargingSchedule [1..1]
+}
+
+class ChargingSchedule << (C,#ffffff) >> {
+  duration: int [0..1]
+  startSchedule: DateTime [0..1]
+  schedulingUnit: SchedulingUnitType [1..1]
+  chargingSchedulePeriod: ChargingSchedulePeriod [1..*]
+  minChargingRate: decimal [0..1]
+}
+
+class ChargingSchedulePeriod << (C,#ffffff) >> {
+  startPeriod: int [1..1]
+  limit: int [0..1]
+  numberPhases: int [0..1]
+}
+
+enum ChargingProfilePurposeType << (E,#ffffff) >> {
+  ChargePointMaxProfile
+  TxDefaultProfile
+  TxProfile
+}
+
+enum ChargingProfileKindType << (E,#ffffff) >> {
+  Absolute
+  Recurring
+  Relative
+}
+
+enum RecurrencyKindType << (E,#ffffff) >> {
+  Daily
+  Weekly
+}
+
+' Define relationships
+ChargingProfile "1" -- "1" ChargingSchedule
+ChargingSchedule "1" *-- "*" ChargingSchedulePeriod
+
+ChargingProfile -right[hidden]- ChargingProfilePurposeType
+ChargingSchedule -right[hidden]- RecurrencyKindType
+
+
+@enduml

@@ -1,0 +1,15 @@
+@startuml figure_12
+!include style.puml
+
+participant "Charge Point" as ChargePoint
+participant "Central System" as CentralSystem
+
+ChargePoint -> CentralSystem : Authorize.req(idTag)
+activate ChargePoint
+activate CentralSystem
+
+CentralSystem --> ChargePoint : Authorize.conf(idTagInfo)
+deactivate CentralSystem
+deactivate ChargePoint
+
+@enduml

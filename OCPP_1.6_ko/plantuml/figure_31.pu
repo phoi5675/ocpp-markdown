@@ -1,0 +1,15 @@
+@startuml figure_31
+!include style.puml
+
+participant "Charge Point" as ChargePoint
+participant "Central System" as CentralSystem
+
+CentralSystem -> ChargePoint : GetLocalListVersion.req()
+activate ChargePoint
+activate CentralSystem
+
+ChargePoint --> CentralSystem : GetLocalListVersion.conf(listVersion)
+deactivate CentralSystem
+deactivate ChargePoint
+
+@enduml

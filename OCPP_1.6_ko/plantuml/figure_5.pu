@@ -1,0 +1,109 @@
+@startuml figure_5
+!include style.puml
+
+participant "Session" as Session
+participant "Transaction" as Transaction
+participant "Energy Offer" as EnergyOffer
+participant "Energy Flow" as EnergyFlow
+
+activate Session
+
+group Charging Session
+
+  note over Session
+    Charging Session is started when first interaction
+    with user or EV occurs. This can be a
+    card swipe, remote start of transaction,
+    connection of cable and/or EV,
+    parking bay occupancy detector, etc.
+  end note
+
+  group Transaction
+    Transaction -[hidden]-> Transaction
+    activate Transaction
+    note over Transaction
+      Transaction starts at the point that all
+      conditions for charging are met, for
+      instance, EV is connected to Charge Point
+      and user has been authorized.
+    end note
+
+    EnergyOffer -[hidden]-> EnergyOffer
+    activate EnergyOffer
+    group EnergyOfferPeriod
+      note over EnergyOffer
+        Energy Offer Period starts when
+        the EVSE is ready and willing to
+        supply energy.
+      end note
+
+    group EnergyTransferPeriod
+      EnergyFlow -[hidden]-> EnergyFlow
+      activate EnergyFlow
+      note right of EnergyFlow
+        Energy is transferred.
+      end note
+      EnergyFlow -[hidden]-> EnergyOffer
+      deactivate EnergyFlow
+    end
+    note right of EnergyOffer
+      During an EnergyOfferPeriod there may
+      be periods the EV is not charging due to
+      for instance, warm/full battery or EV
+      internal smart charging.
+    end note
+    group EnergyTransferPeriod
+      EnergyFlow -[hidden]-> EnergyFlow
+      activate EnergyFlow
+      note right of EnergyFlow
+        Energy is transferred.
+      end note
+      EnergyFlow -[hidden]-> EnergyOffer
+      deactivate EnergyFlow
+    end
+    deactivate EnergyOffer
+  end
+
+    group EnergyOfferSuspendPeriod
+      Transaction -[hidden]-> EnergyOffer
+      note over EnergyOffer
+        During a transaction, there may be periods
+        the EnergyOffer to EV is suspended by the
+        EVSE, for instance due to Smart Charging
+        or local balancing.
+      end note
+    end
+
+    group EnergyOfferPeriod
+      Transaction -[hidden]-> Transaction
+      activate EnergyOffer
+      group EnergyTransferPeriod
+        EnergyFlow -[hidden]-> EnergyFlow
+        activate EnergyFlow
+        note right of EnergyFlow
+          Energy is transferred.
+        end note
+        EnergyFlow -[hidden]-> EnergyOffer
+        deactivate EnergyFlow
+      end
+      deactivate EnergyOffer
+    end
+    deactivate Transaction
+
+    note over Transaction
+      Transaction ends at the point where one of the
+      preconditions for charging irrevocably becomes
+      false, for instance when a user swipes to stop
+      the transaction and the stop is authorized.
+    end note
+  end
+  deactivate Session
+
+  note over Session
+    Session ends at the point that the station
+    is available again. No cable plugged,
+    parking bay free.
+  end note
+end
+
+@enduml

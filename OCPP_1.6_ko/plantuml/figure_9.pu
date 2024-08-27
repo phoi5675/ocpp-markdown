@@ -1,0 +1,38 @@
+@startuml figure_9
+!include component_diagram_style.puml
+
+left to right direction
+
+node "Central System" as CentralSystem
+
+folder "Local group" {
+  node "Local Controller\nCP00" as LocalControllerCP00
+
+  node "Charge Point\nCP03" as CP03
+  node "Charge Point\nCP02" as CP02
+  node "Charge Point\nCP01" as CP01
+
+  actor "EV1" as EV1
+  actor "EV2" as EV2
+
+  note top of LocalControllerCP00
+    Local Controller limits
+    power usage of total
+    group to pre-configured
+    maximum capacity.
+  end note
+}
+
+CentralSystem -down-> LocalControllerCP00 : OCPP ChargePointMaxProfile
+
+LocalControllerCP00 -down-> CP03 : OCPP charging profile
+LocalControllerCP00 -down-> CP02 : OCPP charging profile
+LocalControllerCP00 -down- CP01 
+
+CP03 -down[dotted]-> EV1 : Control Pilot signal
+CP02 -down[dotted]-> EV2 : Control Pilot signal
+
+CP03 -left[hidden]- CP02
+CP02 -left[hidden]- CP01
+
+@enduml

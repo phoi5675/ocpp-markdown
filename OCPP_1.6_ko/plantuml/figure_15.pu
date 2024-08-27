@@ -1,0 +1,15 @@
+@startuml figure_15
+!include style.puml
+
+participant "Charge Point" as ChargePoint
+participant "Central System" as CentralSystem
+
+ChargePoint -> CentralSystem : DiagnosticsStatusNotification.req(status)
+activate ChargePoint
+activate CentralSystem
+
+CentralSystem --> ChargePoint : DiagnosticsStatusNotification.conf()
+deactivate CentralSystem
+deactivate ChargePoint
+
+@enduml

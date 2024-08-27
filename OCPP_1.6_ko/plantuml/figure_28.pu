@@ -1,0 +1,15 @@
+@startuml figure_28
+!include style.puml
+
+participant "Charge Point" as ChargePoint
+participant "Central System" as CentralSystem
+
+CentralSystem -> ChargePoint : GetCompositeSchedule.req(connectorId, duration, [schedulingUnit])
+activate ChargePoint
+activate CentralSystem
+
+ChargePoint --> CentralSystem : GetCompositeSchedule.req(status, [connectorId], [scheduleStart], [chargingSchedule])
+deactivate CentralSystem
+deactivate ChargePoint
+
+@enduml

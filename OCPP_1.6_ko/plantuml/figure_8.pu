@@ -1,0 +1,85 @@
+@startuml figure_8
+!include style.puml
+
+actor "User" as User
+participant "EV" as EV
+participant "Charge Point" as ChargePoint
+participant "Central System" as CentralSystem
+
+note over User, CentralSystem
+  RFID or other Authorization
+end note
+
+ChargePoint -> EV : set max current(limit)
+activate ChargePoint
+
+ChargePoint -> ChargePoint : switch power on()
+
+EV -> ChargePoint : start charging
+activate EV
+deactivate ChargePoint
+
+ChargePoint -[hidden]-> ChargePoint
+
+ChargePoint -> CentralSystem : \
+StartTransaction.req(connectorId, idTag, meterStart, timestamp, [reservationId])
+activate ChargePoint
+
+activate CentralSystem
+CentralSystem --> ChargePoint : \
+StartTransaction.conf(idTagInfo, transactionId)
+deactivate CentralSystem
+
+group loop Change according to charging profile 
+else for each interval period in charging profile
+
+  ChargePoint -> ChargePoint : get limit from charging profile():limit
+  note right
+    Charge Point implements charging
+    profile via the Control Pilot
+    signal whenever maximum current
+    needs changing.
+  end note
+
+  ChargePoint -> EV : set max current(limit)
+  deactivate ChargePoint
+
+  opt Change of limits by Central System
+    CentralSystem -> ChargePoint :\
+      SetChargingProfile.req(ConnectorId, ChargingProfileId, [transactionId],\
+      \n**ChargingProfilePurpose: TxProfile** , ChargingProfileType, recurrencyKind, ValidFrom,\
+      \nValidTo, ChargingSchedule)
+    activate CentralSystem
+    activate ChargePoint
+
+    note right of CentralSystem
+      Central System decides to
+      change the charging profile.
+    end note
+
+    ChargePoint --> CentralSystem : SetChargingProfile.conf(Accepted)
+    deactivate ChargePoint
+    deactivate CentralSystem
+  end
+end
+
+note over User, CentralSystem
+  RFID or other Authorization
+end note
+
+ChargePoint --> EV : end charging()
+
+ChargePoint -> ChargePoint : switch power off()
+
+ChargePoint -> CentralSystem : \
+  StopTransaction.req(meterStop, timestamp,\
+  \ntransactionId, reason, [idTag], [transactionData])
+activate ChargePoint
+activate CentralSystem
+
+CentralSystem --> ChargePoint : StopTransaction.conf([idTagInfo])
+deactivate CentralSystem
+deactivate ChargePoint
+deactivate EV
+
+@enduml

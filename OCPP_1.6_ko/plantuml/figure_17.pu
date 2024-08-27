@@ -1,0 +1,15 @@
+@startuml figure_17
+!include style.puml
+
+participant "Charge Point" as ChargePoint
+participant "Central System" as CentralSystem
+
+ChargePoint -> CentralSystem : Heartbeat.req()
+activate ChargePoint
+activate CentralSystem
+
+CentralSystem --> ChargePoint : Heartbeat.conf(currentTime)
+deactivate CentralSystem
+deactivate ChargePoint
+
+@enduml

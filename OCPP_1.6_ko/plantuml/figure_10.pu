@@ -1,0 +1,41 @@
+@startuml figure_10
+!include style.puml
+
+participant "Charge Point" as ChargePoint
+participant "Local Controller" as LocalController
+participant "CSO Central System" as CentralSystem
+
+group opt Set local group limits
+  CentralSystem -> LocalController : \
+    SetChargingProfile.req( **connectorId: 0** , \
+    \n**chargingprofilePurpose: ChargepointMaxProfile** , \
+    \n**chargingProfileKind: absolute** , validFrom, validTo)
+
+  activate LocalController
+  note right of CentralSystem
+    Limits for local
+    controller's group may
+    be preconfigured in
+    controller or set
+    dynamically by CSO
+  end note
+
+  LocalController -> CentralSystem : SetChargingProfile.conf(Accepted)
+  deactivate LocalController
+end
+
+LocalController -> ChargePoint : \
+  SetChargingProfile.req( **connectorId: 0** ,\
+  \n**chargingprofilePurpose: ChargepointMaxProfile** ,\
+  \n**chargingProfileKind: absolute** , validFrom, validTo)
+
+activate ChargePoint
+note right of LocalController
+  Local Controller assigns
+  limits to Charge Point
+end note
+
+ChargePoint -> LocalController : SetChargingProfile.conf(Accepted)
+deactivate ChargePoint
+
+@enduml

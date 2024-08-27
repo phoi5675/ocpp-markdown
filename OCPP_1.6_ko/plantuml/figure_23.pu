@@ -1,0 +1,15 @@
+@startuml figure_23
+!include style.puml
+
+participant "Charge Point" as ChargePoint
+participant "Central System" as CentralSystem
+
+CentralSystem -> ChargePoint : ChangeAvailability.req(connectorId, type)
+activate ChargePoint
+activate CentralSystem
+
+ChargePoint --> CentralSystem : ChangeAvailability.conf(status)
+deactivate CentralSystem
+deactivate ChargePoint
+
+@enduml
