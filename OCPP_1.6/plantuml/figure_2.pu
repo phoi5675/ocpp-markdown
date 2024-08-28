@@ -36,7 +36,7 @@ deactivate ChargePoint
 deactivate CentralSystem
 
 note over ChargePoint
-Stop Charging
+Reboot
 end note
 ChargePoint -> CentralSystem :\
 BootNotification.req(chargePointModel, chargePointVendor, [chargeBoxSerialNumber],\n\
