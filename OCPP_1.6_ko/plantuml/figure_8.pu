@@ -7,15 +7,15 @@ participant "Charge Point" as ChargePoint
 participant "Central System" as CentralSystem
 
 note over User, CentralSystem
-  RFID or other Authorization
+  RFID 또는 다른 인증 방식의 인증
 end note
 
-ChargePoint -> EV : set max current(limit)
+ChargePoint -> EV : 최대 전류량 제한 설정
 activate ChargePoint
 
-ChargePoint -> ChargePoint : switch power on()
+ChargePoint -> ChargePoint : 전원 켜짐
 
-EV -> ChargePoint : start charging
+EV -> ChargePoint : 충전 시작
 activate EV
 deactivate ChargePoint
 
@@ -30,18 +30,17 @@ CentralSystem --> ChargePoint : \
 StartTransaction.conf(idTagInfo, transactionId)
 deactivate CentralSystem
 
-group loop Change according to charging profile 
-else for each interval period in charging profile
+group 차징 프로파일 기반으로 loop이 변경됨
+else 차징 프로파일에 있는 매 주기 기준
 
-  ChargePoint -> ChargePoint : get limit from charging profile():limit
+  ChargePoint -> ChargePoint : 차징 프로파일 기반으로 전력량 제한 설정
   note right
-    Charge Point implements charging
-    profile via the Control Pilot
-    signal whenever maximum current
-    needs changing.
+    충전기는 최대 전류량 변경이 필요할 때마다
+    CP(Control Pilot) 신호를 이용하여
+    차징 프로파일을 구현합니다.
   end note
 
-  ChargePoint -> EV : set max current(limit)
+  ChargePoint -> EV : 최대 전류량 제한 설정
   deactivate ChargePoint
 
   opt Change of limits by Central System
@@ -53,8 +52,8 @@ else for each interval period in charging profile
     activate ChargePoint
 
     note right of CentralSystem
-      Central System decides to
-      change the charging profile.
+      Central System은 차징 프로파일을
+      변경해야 하는지 결정합니다.
     end note
 
     ChargePoint --> CentralSystem : SetChargingProfile.conf(Accepted)
@@ -64,12 +63,12 @@ else for each interval period in charging profile
 end
 
 note over User, CentralSystem
-  RFID or other Authorization
+  RFID 또는 다른 인증 방식의 인증
 end note
 
-ChargePoint --> EV : end charging()
+ChargePoint --> EV : 충전 종료
 
-ChargePoint -> ChargePoint : switch power off()
+ChargePoint -> ChargePoint : 전원 꺼짐
 
 ChargePoint -> CentralSystem : \
   StopTransaction.req(meterStop, timestamp,\

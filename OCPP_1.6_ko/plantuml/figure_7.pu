@@ -13,16 +13,17 @@ actor "EV1" as EV1
 actor "EV2" as EV2
 
 note top of CentralSystem
-  CS receives a capacity
-  forecast from an external
-  party (e.g. DSO).
+  Central System은 DSO(배전계통 운영자)와 같은
+  외부로부터 전력 수요 예측량을 받습니다.
 end note
 
 CentralSystem -down- CP10
-CentralSystem -down-> CP11 : OCPP charging profile
-CentralSystem -down-> CP12 : OCPP charging profile
+CentralSystem -down-> CP11 : OCPP 차징 프로파일
+CentralSystem -down-> CP12 : OCPP 차징 프로파일
 
-CP11 -down[dotted]-> EV1 : Control Pilot signal
-CP12 -down[dotted]-> EV2 : Control Pilot signal
+CP11 -down[dotted]-> EV1 : CP 신호 \
+\n(Control Pilot Signal)
+CP12 -down[dotted]-> EV2 : CP 신호 \
+\n(Control Pilot Signal)
 
 @enduml

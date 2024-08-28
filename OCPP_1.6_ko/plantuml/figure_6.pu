@@ -23,12 +23,13 @@ actor "EV1" as EV1
 actor "EV2" as EV2
 
 note top of CentralSystem
-  CS sets known physical
-  grid connections limits
+  Central System은 물리적인
+  그리드 연결(grid connection) 제한을
+  설정합니다.
 end note
 
-CentralSystem -down-> CP10 : OCPP charging profile
-CentralSystem -down-> CP11 : OCPP charging profile
+CentralSystem -down-> CP10 : OCPP 차징 프로파일
+CentralSystem -down-> CP11 : OCPP 차징 프로파일
 
 CP10 -down- CP10_C1
 CP10 -down- CP10_C2
@@ -36,7 +37,9 @@ CP10 -down- CP10_C2
 CP11 -down- CP11_C1
 CP11 -down- CP11_C2
 
-CP10_C1 -down[dotted]-> EV1 : Control Pilot signal
-CP10_C2 -down[dotted]-> EV2 : Control Pilot signal
+CP10_C1 -down[dotted]-> EV1 : CP 신호 \
+\n(Control Pilot Signal)
+CP10_C2 -down[dotted]-> EV2 : CP 신호 \
+\n(Control Pilot Signal)
 
 @enduml

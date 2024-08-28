@@ -13,7 +13,7 @@ deactivate ChargePoint
 deactivate CentralSystem
 
 note over ChargePoint
-Downloading firmware...
+펌웨어 다운로드중...
 end note
 
 ChargePoint -> CentralSystem : FirmwareStatusNotification.req( **status: Downloaded** )
@@ -25,7 +25,7 @@ deactivate ChargePoint
 deactivate CentralSystem
 
 note over ChargePoint
-Installing...
+설치중...
 end note
 ChargePoint -> CentralSystem : FirmwareStatusNotification.req( **status: Installed** )
 activate ChargePoint
@@ -36,7 +36,7 @@ deactivate ChargePoint
 deactivate CentralSystem
 
 note over ChargePoint
-Stop Charging
+재부팅
 end note
 ChargePoint -> CentralSystem :\
 BootNotification.req(chargePointModel, chargePointVendor, [chargeBoxSerialNumber],\n\

@@ -12,7 +12,7 @@ deactivate ChargePoint
 deactivate CentralSystem
 
 note over ChargePoint
-Start Charging
+충전 시작
 end note
 
 ChargePoint -> CentralSystem : StartTransaction.req(connectorId, idTag, meterStart, timestamp, [reservationId])
@@ -24,7 +24,7 @@ deactivate ChargePoint
 deactivate CentralSystem
 
 note over ChargePoint
-Charging...
+충전중...
 end note
 ChargePoint -> CentralSystem : Authorize.req(idTag)
 activate ChargePoint
@@ -35,7 +35,7 @@ deactivate ChargePoint
 deactivate CentralSystem
 
 note over ChargePoint
-Stop Charging
+충전 종료
 end note
 ChargePoint -> CentralSystem :StopTransaction.req(meterStop, timestamp, transactionId, [reason], [idTag], [transactionData])
 activate ChargePoint

@@ -11,52 +11,48 @@ activate Session
 group Charging Session
 
   note over Session
-    Charging Session is started when first interaction
-    with user or EV occurs. This can be a
-    card swipe, remote start of transaction,
-    connection of cable and/or EV,
-    parking bay occupancy detector, etc.
+    충전 세션은 사용자 또는 EV와 처음 상호작용을 하는 시점에 시작됩니다.
+    이 상호작용은 카드로 결제를 하거나,
+    원격 시작(remote start of transaction)을 진행,
+    커넥터와 차량을 연결,
+    주차장의 주차감지기를 통해 차량이 주차장에 있는지 확인하는 등의 작업을 수행합니다.
   end note
 
   group Transaction
     Transaction -[hidden]-> Transaction
     activate Transaction
     note over Transaction
-      Transaction starts at the point that all
-      conditions for charging are met, for
-      instance, EV is connected to Charge Point
-      and user has been authorized.
+      Transaction은 충전 조건을 모두 만족하는 시점에 시작됩니다.
+      예를 들어, EV가 충전기에 연결되어 있고, 사용자가 인증을 받은 경우가 이에 해당됩니다.
     end note
 
     EnergyOffer -[hidden]-> EnergyOffer
     activate EnergyOffer
     group EnergyOfferPeriod
       note over EnergyOffer
-        Energy Offer Period starts when
-        the EVSE is ready and willing to
-        supply energy.
+        Energy Offer Period는 충전기(EVSE)가 준비되고,
+        충전기(EVSE)가 충전을 시작할 수 있을 때 시작됩니다.
       end note
 
     group EnergyTransferPeriod
       EnergyFlow -[hidden]-> EnergyFlow
       activate EnergyFlow
       note right of EnergyFlow
-        Energy is transferred.
+        에너지가 전달됩니다.
       end note
       EnergyFlow -[hidden]-> EnergyOffer
       deactivate EnergyFlow
     end
     note right of EnergyOffer
-      During an EnergyOfferPeriod there may
-      be periods the EV is not charging due to
-      for instance, warm/full battery or EV
-      internal smart charging.
+      EnergyOfferPeriod 기간 동안 배터리의 발열/완충,
+      EV 내부 Smart Charging과 같은 원인으로 인해
+      EV가 충전되지 않을 수 있습니다.
     end note
     group EnergyTransferPeriod
       EnergyFlow -[hidden]-> EnergyFlow
       activate EnergyFlow
       note right of EnergyFlow
-        Energy is transferred.
+        에너지가 전달됩니다.
       end note
       EnergyFlow -[hidden]-> EnergyOffer
       deactivate EnergyFlow
@@ -67,10 +63,10 @@ group Charging Session
     group EnergyOfferSuspendPeriod
       Transaction -[hidden]-> EnergyOffer
       note over EnergyOffer
-        During a transaction, there may be periods
-        the EnergyOffer to EV is suspended by the
-        EVSE, for instance due to Smart Charging
-        or local balancing.
+        Transaction 동안, Smart Charging 또는
+        local balancing과 같은 원인으로 인해
+        충전기(EVSE)가 EV로 EnergyOffer를 중단하는
+        기간이 존재할 수 있습니다.
       end note
     end
 
@@ -81,7 +77,7 @@ group Charging Session
         EnergyFlow -[hidden]-> EnergyFlow
         activate EnergyFlow
         note right of EnergyFlow
-          Energy is transferred.
+          에너지가 전달됩니다.
         end note
         EnergyFlow -[hidden]-> EnergyOffer
         deactivate EnergyFlow
@@ -91,18 +87,18 @@ group Charging Session
     deactivate Transaction
 
     note over Transaction
-      Transaction ends at the point where one of the
-      preconditions for charging irrevocably becomes
-      false, for instance when a user swipes to stop
-      the transaction and the stop is authorized.
+      Transaction은 사용자가 transaction 중단을 요청하고,
+      이 요청이 승인되는 경우와 같이
+      충전을 위한 조건(precondition)이 모두 false인
+      시점에 종료됩니다.
     end note
   end
   deactivate Session
 
   note over Session
-    Session ends at the point that the station
-    is available again. No cable plugged,
-    parking bay free.
+    Session은 충전기가 차량에 연결되지 않고,
+    주차 공간이 비어 있을 때와 같이
+    충전소가 다시 사용 가능한(available) 상태일 때 종료됩니다.
   end note
 end
 
