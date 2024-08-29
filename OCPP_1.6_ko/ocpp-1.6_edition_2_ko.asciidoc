@@ -14,69 +14,69 @@ edition 2 FINAL, 2017-09-28
 
 [width=100%,options="autowidth"]
 |===
-|문서 버전 |1.6 edition 2
-|문서 상태 |FINAL
-|문서 릴리스 날짜 |2017-09-28
+|문서 버전           |1.6 edition 2
+|문서 상태           |FINAL
+|문서 릴리스 날짜     |2017-09-28
 |===
 
 <<<
 
 저작권 © 2010 – 2017 Open Charge Alliance. 모든 권리 보유.
 
-이 문서는 _*크리에이티브 커먼즈 저작자표시-변경금지 4.0 국제 공공
-라이선스*_ (<https://creativecommons.org/licenses/by-nd/4.0/legalcode>)에 따라 제공됩니다.
+이 문서는 _*크리에이티브 커먼즈 저작자표시-변경금지 4.0 국제 공공라이선스*_ (<https://creativecommons.org/licenses/by-nd/4.0/legalcode>)에 따라 제공됩니다.
+
 <<<
 
 [discrete]
-== 버전 기록
+== 버전 이력
 
 [options="header,autowidth"]
 |===
 |VERSION |DATE |AUTHOR |DESCRIPTION
 
 |1.6 edition 2 |2017-09-28 |Robert de Leeuw +
-_IHomer_
+                            _IHomer_
 
-Brendan McMahon +
-_ESB ecars_
+                            Brendan McMahon +
+                            _ESB ecars_
 
-Klaas van Zuuren +
-_ElaadNL_
-|OCPP 1.6 edition 2 최종 릴리스. +
-알려진 모든 오류(v3.0 포함)와 개선된 스타일이 포함되어 있습니다.
+                            Klaas van Zuuren +
+                            _ElaadNL_
+                                              |OCPP 1.6 edition 2 최종 릴리스. +
+                                              알려진 모든 오류(v3.0 포함)와 개선된 스타일이 포함되어 있습니다.
 |1.6 |2015-10-08 |Robert de Leeuw +
-_IHomer_
+                  _IHomer_
 
-Reinier Lamers +
-_The New Motion_
+                  Reinier Lamers +
+                  _The New Motion_
 
-Brendan McMahon +
-_ESB ecars_
+                  Brendan McMahon +
+                  _ESB ecars_
 
-Lambert Muhlenberg +
-_Alfen_
+                  Lambert Muhlenberg +
+                  _Alfen_
 
-Patrick Rademakers +
-_IHomer_
+                  Patrick Rademakers +
+                  _IHomer_
 
-Sergiu Tcaciuc +
-_smartlab_
+                  Sergiu Tcaciuc +
+                  _smartlab_
 
-Klaas van Zuuren +
-_ElaadNL_ |1.6 최종 릴리스. +
-1.5와 관련된 변경 사항은 부록 <<appendix_a_new_in_ocpp_1_6, New in OCPP 1.6>>을 참조하세요.
-|1.5 |2012-06-01 |Franc Buve |스펙이 릴리스될 준비가 되었습니다. 포함 내용: +
-CR-01 인증/권한 부여 목록 +
-CR-02 간격 미터 판독값 +
-CR-03 충전소 예약 +
-CR-04 일반 데이터 전송 +
-CR-05 더 자세한 상태 알림 +
-CR-06 쿼리 구성 매개변수 +
-CR-07 BootNotification의 타임스탬프 필수 +
-CR-08 Accepted가 아닌 상태로 <<start_transaction_req,StartTransaction.req>>에 대한 응답이 명확하게 정의되지 않음 +
-CR-09 BootNotification의 펌웨어 버전 크기 증가
+                  Klaas van Zuuren +
+                  _ElaadNL_          |1.6 최종 릴리스. +
+                                      1.5와 관련된 변경 사항은 부록 <<appendix_a_new_in_ocpp_1_6, New in OCPP 1.6>>을 참조하세요.
+|1.5 |2012-06-01 |Franc Buve |배포 가능한 버전의 스펙 문서입니다. 이 문서는 다음을 포함합니다: +
+                              CR-01 Authentication/authorization lists +
+                              CR-02 Interval meter readings +
+                              CR-03 Charge point reservation +
+                              CR-04 Generic data transfer +
+                              CR-05 More detailed status notifications +
+                              CR-06 Query configuration parameters +
+                              CR-07 Timestamp in BootNotification mandatory +
+                              CR-08 Response to <<start_transaction_req,StartTransaction.req>> with status other than Accepted is not clearly defined +
+                              CR-09 Increase size of firmwareVersion in BootNotification
 |1.2 |2011-02-21 |Franc Buve |
-|1.0 |2010-10-19 |Franc Buve |e-laad.nl에서 최종 버전 승인. 버전 0.12와 동일.
+|1.0 |2010-10-19 |Franc Buve |e-laad.nl에서 승인한 최종 버전입니다. 버전 0.12와 동일한 버전입니다.
 |===
 
 <<<
@@ -84,9 +84,9 @@ CR-09 BootNotification의 펌웨어 버전 크기 증가
 :sectnums:
 == 범위
 
-이 문서는 **충전소**와 **중앙 시스템** 간에 사용되는 프로토콜을 정의합니다. 프로토콜이 한쪽 또는 다른 쪽에서 특정 작업이나 응답을 요구하는 경우 이 문서에 명시됩니다.
+이 문서는 **충전소(Charge Point)**와 **중앙 시스템(Central System)** 간에 사용되는 프로토콜을 정의합니다. 프로토콜이 한쪽 또는 다른 쪽에서 특정 작업이나 응답을 요구하는 경우 이 문서에 명시됩니다.
 
-사양은 통신 기술을 정의하지 않습니다. TCP/IP 연결을 지원하는 한 어떤 기술이든 가능합니다.
+본 스펙 문서는 통신 기술을 정의하지 않습니다. TCP/IP 연결을 지원하는 한 어떤 기술이든 가능합니다.
 
 <<<
 
@@ -98,32 +98,35 @@ CR-09 BootNotification의 펌웨어 버전 크기 증가
 
 "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED"라는 용어 사용과 관련된 "특정 상황에서의 타당한 이유"라는 문구는 충전 지점 설계의 기능을 지원하는 데 필요한 하드웨어가 없는 것과 같은 기술적으로 타당한 이유를 의미하는 것으로 간주됩니다. 이 사양의 목적을 위해 구현 비용이나 사용 가능성과 같은 상업적 또는 기타 비기술적 이유로 내린 결정은 구체적으로 제외합니다.
 
+"범위"와 "용어 및 규칙"을 제외한 모든 섹션과 부록은 명확하게 정보 제공 목적(informative)으로 표시된 경우가 아니면 규범적(normative)입니다.
+
 === 정의
 
 이 섹션에는 이 문서 전체에서 사용되는 용어가 포함되어 있습니다.
 
 [cols="s,d",options="autowidth"]
 |===
-|[[central_system]]중앙 시스템 |충전소 관리 시스템: 충전소를 관리하고 사용자에게 충전소 사용을 허가하는 정보를 제공하는 중앙 시스템입니다.
+|[[central_system]]Central System |충전소 관리 시스템(Charge Point Management System, CSMS): 충전소를 관리, 사용자에게 충전기 사용을 허가하는 정보를 제공하는 중앙 시스템입니다.
 |[[cistring]]CiString |대소문자 구분 없는 문자열입니다. 인쇄 가능한 ASCII만 허용됩니다.
-|[[charge_point]]충전소 |충전소는 전기 자동차를 충전할 수 있는 물리적 시스템입니다. 충전소에는 하나 이상의 커넥터가 있습니다.
-|[[charging_profile]]충전 프로필 |다양한 유형의 프로필에 사용되는 일반 충전 프로필입니다. 프로필에 대한 정보를 포함하고 충전 일정을 보관합니다. 향후 버전의 OCPP에서는 2개 이상의 충전 일정을 보관할 수 있습니다.
-|[[charging_schedule]]충전 일정 |충전 프로필의 일부입니다. 충전 전력 또는 전류 제한 블록을 정의합니다. 시작 시간과 길이를 포함할 수 있습니다.
-|[[charging_session]]충전 세션 |충전 세션은 사용자 또는 EV와의 첫 번째 상호 작용이 발생할 때 시작됩니다. 이는 카드 스와이프, 거래 원격 시작, 케이블 및/또는 EV 연결, 주차 베이 점유 감지기 등일 수 있습니다.
-|[[composite_charging_schedule]]복합 충전 일정 |충전 포인트에서 계산한 충전 일정입니다. 이는 충전 포인트에 있는 모든 활성 일정과 가능한 지역 제한을 계산한 결과입니다. 지역 제한이 고려될 수 있습니다.
-|[[connector]]커넥터 |이 사양에서 사용되는 용어 "커넥터"는 충전 포인트에서 독립적으로 작동하고 관리되는 전기 콘센트를 말합니다. 이는 일반적으로 단일 물리적 커넥터에 해당하지만 어떤 경우에는 단일 콘센트에 여러 물리적 소켓 유형 및/또는 고정 케이블/커넥터 배열이 있어 다양한 차량 유형(예: 4륜 EV 및 전기 스쿠터)을 용이하게 할 수 있습니다.
-|[[control_pilot_signal]]제어 파일럿 신호 |충전 포인트에서 EV에 최대 충전 전력 또는 전류 한도를 알리는 데 사용하는 신호로, <<iec61851_1,[IEC61851-1]>>에서 정의합니다.
-|[[energy_offer_period]]에너지 제공 기간 |에너지 제공 기간은 EVSE가 에너지를 공급할 준비가 되고 의향이 있을 때 시작됩니다.
-|[[energy_offer_suspendperiod]]에너지 제공 중단 기간 |거래 중에 EV에 대한 EnergyOffer가 EVSE에 의해 중단되는 기간이 있을 수 있습니다(예: 스마트 충전 또는 로컬 밸런싱).
-|[[energy_transfer_period]]에너지 전송 기간 |EV가 제공된 에너지를 받거나 반환하기로 선택하는 시간입니다. 거래 중에 여러 에너지 전송 기간이 가능합니다.
-|[[local_controller]]로컬 컨트롤러 |스마트 충전 인프라의 옵션 장치입니다. 여러 개의 충전 포인트가 연결된 구내에 위치합니다. 충전 포인트와 중앙 시스템 사이에 위치합니다. OCPP 메시지를 이해하고 말합니다. OCPP 스마트 충전 메시지를 사용하여 다른 충전 포인트의 전력 또는 전류를 제어합니다. 충전 포인트 자체가 될 수 있습니다.
-|[[ocpp_j]]OCPP-J |WebSocket을 통한 JSON을 통한 OCPP
+|[[charge_point]]Charge Point |충전기는 전기 자동차를 충전할 수 있는 물리적 시스템입니다. 충전기에는 하나 이상의 커넥터가 있습니다.
+|[[charging_profile]]Charging Profile |다양한 유형의 프로파일에 사용되는 일반 충전 프로파일입니다. 프로파일에 대한 정보를 포함하고 충전 스케쥴을 보관합니다. 향후 버전의 OCPP에서는 2개 이상의 충전 스케쥴을 보관할 수 있습니다.
+|[[charging_schedule]]Charging Schedule |충전 프로파일의 일부입니다. 충전 전력 또는 전류 제한 블록을 정의합니다. 시작 시간과 길이를 포함할 수 있습니다.
+|[[charging_session]]Charging Session |충전 세션은 사용자 또는 EV와의 첫 번째 상호 작용이 발생할 때 시작됩니다. 이는 카드 스와이프, 원격 충전 시작, 케이블 및/또는 EV 연결, 주차 공간 점유 감지기 등일 수 있습니다.
+|[[composite_charging_schedule]]Composite Charging Schedule |충전기에서 계산한 충전 스케쥴입니다. 이는 충전기에 있는 모든 활성 스케쥴과 가능한 지역 제한을 계산한 결과입니다. 지역 제한(Local Limits)이 고려될 수 있습니다.
+|[[connector]]Connector |이 사양에서 사용되는 용어 "커넥터"는 충전기에서 독립적으로 작동하고 관리되는 전기 콘센트를 말합니다. 이는 일반적으로 단일 물리적 커넥터에 해당하지만, 어떤 경우에는 단일 콘센트에 여러 물리적 소켓 유형 및/또는 고정 케이블/커넥터 배열이 있어 다양한 차량 유형(예: 4륜 EV 및 전기 스쿠터)에 이용할 수 있도록 합니다.
+|[[control_pilot_signal]]Control Pilot signal |충전기에서 EV에 최대 충전 전력 또는 전류 한도를 알리는 데 사용하는 신호로, <<iec61851_1,[IEC61851-1]>>에서 정의합니다.
+|[[energy_offer_period]]Energy Offer Period |에너지 제공 기간은 EVSE가 에너지를 공급할 준비가 되었을 때 시작됩니다.
+|[[energy_offer_suspendperiod]]Energy Offer SuspendPeriod |트랜잭션 중에 EVSE에서 EV로 에너지 전달이 EVSE에 의해 중단되는 기간이 있을 수 있습니다(예: 스마트 충전 또는 로컬 밸런싱).
+|[[energy_transfer_period]]Energy Transfer Period |EV가 제공된 에너지를 받거나 반환하기로 선택하는 시간입니다. 한 트랜잭션 내에 여러 에너지 전송 기간이 존재할 수 있습니다.
+|[[local_controller]]Local Controller |스마트 충전 인프라의 옵션 장치입니다. 여러 개의 충전기가 실제로 연결된 곳에 위치합니다. 충전기와 중앙 시스템 사이에 위치하며, OCPP 메시지를 수신하고 전송합니다. OCPP 스마트 충전 메시지를 사용하여 다른 충전기의 전력 또는 전류를 제어합니다. 충전기 자체가 로컬 컨트롤러가 될 수 있습니다.
+|[[ocpp_j]]OCPP-J |WebSocket을 통한 JSON 형식의 OCPP
 |[[ocpp_s]]OCPP-S |SOAP을 통한 OCPP
-|[[phase_rotation]]위상 회전 |전기 미터(또는 없는 경우 그리드 연결)와 충전 포인트 커넥터 사이의 위상 배선 순서를 정의합니다.
-|[[transaction]]트랜잭션 |모든 관련 전제 조건(예: 승인, 플러그 삽입)이 충족되면 시작되고 충전 포인트가 돌이킬 수 없이 이 상태를 벗어나는 순간에 종료되는 충전 프로세스의 일부입니다.
-|[[string]]문자열 |대소문자 구분 문자열. 인쇄 가능한 ASCII만 허용됩니다. 명시적으로 달리 명시되지 않는 한 메시지와 열거형의 모든 문자열은 대소문자를 구분합니다.
+|[[phase_rotation]]Phase Rotation |계량기(또는 없는 경우 그리드 연결)와 충전기 커넥터 사이의 위상 배선 순서를 정의합니다.
+|[[transaction]]Transaction |모든 관련 전제 조건(예: 인증, 플러그 연결)이 충족되면 시작되고, 전제 조건을 만족하지 못하며, 이전 상태로 돌아가지 못하는 순간에 종료되는 충전 프로세스의 일부입니다.
+|[[string]]String |대소문자를 구분하는 문자열입니다. 인쇄 가능한 ASCII만 허용됩니다. 직접적으로 명시되지 않는 한 메시지와 열거형(Enumeration)의 모든 문자열은 대소문자를 구분합니다.
 |===
 
+// TODO:
 [[abbreviations]]
 === 약어
 
