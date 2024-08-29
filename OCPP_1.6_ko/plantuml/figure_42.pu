@@ -51,5 +51,4 @@ ChargingSchedule "1" *-- "*" ChargingSchedulePeriod
 ChargingProfile -right[hidden]- ChargingProfilePurposeType
 ChargingSchedule -right[hidden]- RecurrencyKindType
 
-
 @enduml

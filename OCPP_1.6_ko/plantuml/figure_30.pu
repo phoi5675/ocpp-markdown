@@ -13,7 +13,7 @@ deactivate CentralSystem
 deactivate ChargePoint
 
 note over ChargePoint
-  Uploading diagnostics file...
+  진단 파일 업로드 진행 중...
 end note
 
 ChargePoint -> CentralSystem : DiagnosticsStatusNotification.req( **status: Uploading** )
@@ -25,7 +25,7 @@ deactivate CentralSystem
 deactivate ChargePoint
 
 note over ChargePoint
-  Uploading diagnostics file...
+  진단 파일 업로드 진행 중...
 end note
 
 ChargePoint -> CentralSystem : DiagnosticsStatusNotification.req( **status: Uploaded** )

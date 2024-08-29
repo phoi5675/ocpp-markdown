@@ -12,7 +12,7 @@ ChargePoint --> CentralSystem : UpdateFirmware.conf()
 deactivate CentralSystem
 
 note over ChargePoint
-  Waiting for retrieveDate...
+  retrieveDate를 기다리는 중...
 end note
 
 ChargePoint -> CentralSystem : FirmwareStatusNotification.req( **status: Downloading** )
@@ -22,7 +22,7 @@ CentralSystem --> ChargePoint : FirmwareStatusNotification.conf()
 deactivate CentralSystem
 
 note over ChargePoint
-  Downloading...
+  다운로드 중...
 end note
 
 ChargePoint -> CentralSystem : FirmwareStatusNotification.req( **status: Downloaded ** )
@@ -32,7 +32,7 @@ CentralSystem --> ChargePoint : FirmwareStatusNotification.conf()
 deactivate CentralSystem
 
 note over ChargePoint
-  Waiting for transactions to finish...
+  transaction이 완료되기를 기다리는 중...
 end note
 
 ChargePoint -> CentralSystem : FirmwareStatusNotification.req( **status: Installing ** )
@@ -43,12 +43,12 @@ deactivate CentralSystem
 deactivate ChargePoint
 
 note over ChargePoint
-  Installing...
+  설치 중...
 end note
 
-alt automatic reboot after firmware update
+alt 펌웨어 업데이트 이후 자동 재부팅
   note over ChargePoint
-    Reboot
+    재부팅
   end note
   
   ChargePoint -> CentralSystem : \
@@ -67,7 +67,7 @@ alt automatic reboot after firmware update
   CentralSystem --> ChargePoint : FirmwareStatusNotification.conf()
   deactivate CentralSystem
   deactivate ChargePoint
-else manual reboot after firmware update
+else 펌웨어 업데이트 이후 수동 재부팅
   ChargePoint -> CentralSystem : FirmwareStatusNotification.req( status: **Installed** )
   activate ChargePoint
   activate CentralSystem
@@ -83,7 +83,7 @@ else manual reboot after firmware update
   deactivate CentralSystem
 
   note over ChargePoint
-    Reboot
+    재부팅
   end note
 
   ChargePoint -> CentralSystem : \
