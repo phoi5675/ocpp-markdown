@@ -126,7 +126,6 @@ edition 2 FINAL, 2017-09-28
 |[[string]]String |대소문자를 구분하는 문자열입니다. 인쇄 가능한 ASCII만 허용됩니다. 직접적으로 명시되지 않는 한 메시지와 열거형(Enumeration)의 모든 문자열은 대소문자를 구분합니다.
 |===
 
-// TODO:
 [[abbreviations]]
 === 약어
 
@@ -137,7 +136,7 @@ edition 2 FINAL, 2017-09-28
 |DNS |도메인 이름 시스템
 |DST |일광 절약 시간제
 |EV |전기 자동차, BEV(배터리 EV) 또는 PHEV(플러그인 하이브리드 EV)일 수 있음
-|EVSE |전기 자동차 공급 장비 <<iec61851_1,[IEC61851-1]>>
+|EVSE |전기 자동차 공급 장비(커넥터) <<iec61851_1,[IEC61851-1]>>
 |FTP(S) |파일 전송 프로토콜(보안)
 |HTTP(S) |하이퍼텍스트 전송 프로토콜(보안)
 |ICCID |집적 회로 카드 식별자
@@ -157,6 +156,7 @@ edition 2 FINAL, 2017-09-28
 |UTC |협정 세계시
 |===
 
+// TODO:
 === 참조
 
 [cols="s,d",options="autowidth"]
