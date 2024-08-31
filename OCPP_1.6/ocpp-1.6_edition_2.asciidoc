@@ -274,7 +274,7 @@ The following figures describe the general views of the operations between Charg
 The arrow labels in the following figures indicate the PDUs exchanged during the invocations of the operations. These PDUs are defined in detail in the <<messages,Messages>> section.
 
 .Sequence Diagram: Example of starting and stopping a transaction
-image::images/figure_1.svg[Figure 1. Sequence Diagram: Example of starting and stopping a transaction]
+image::images/figure_1.svg[Sequence Diagram: Example of starting and stopping a transaction]
 
 When a Charge Point needs to charge an electric vehicle, it needs to authenticate the user first before the charging can be started. If the user is authorized the Charge Point informs the Central System that it has started with charging.
 
