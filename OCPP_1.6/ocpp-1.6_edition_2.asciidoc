@@ -392,7 +392,7 @@ There MAY be multiple Energy Transfer Periods during a <<transaction,Transaction
 
 Multiple Energy Transfer Periods can be separated by either:
 
-* an EVSE-initiated supense of transfer during which de EVSE does not offer energy transfer
+* an EVSE-initiated supense of transfer during which the EVSE does not offer energy transfer
 * an EV-initiated suspense of transfer during which the EV remains electrically connected to the EVSE
 * an EV-initiated suspense of transfer during which the EV is not electrically connected to the EVSE.
 
@@ -491,7 +491,7 @@ Reservation of a Charge Point is possible using the <<reserve_now_by_central_sys
 
 This section is informative.
 
-The mechanism of vendor-specific data transfer allows for the exchange of data or messages not standardized in OCPP. As such, it offers a framework within OCPP for experimental functionality that may find its way into future OCPP versions. Experimenting can be done without creating new (possibly incompatible) OCPP dialects Secondly, it offers a possibility to implement additional functionality agreed upon between specific Central System and Charge Point vendors.
+The mechanism of vendor-specific data transfer allows for the exchange of data or messages not standardized in OCPP. As such, it offers a framework within OCPP for experimental functionality that may find its way into future OCPP versions. Experimenting can be done without creating new (possibly incompatible) OCPP dialects. Secondly, it offers a possibility to implement additional functionality agreed upon between specific Central System and Charge Point vendors.
 
 The operation Vendor Specific Data MAY be initiated either by the Central System or by the Charge Point.
 
@@ -530,7 +530,6 @@ _If ConnectorId is set >0, it only applies to that specific connector._
 
 _In the event a TxDefaultProfile for connector 0 is installed, and the Central System sends a new profile with ConnectorId >0, the TxDefaultProfile SHALL be replaced only for that specific connector._
 
-
 * [[tx_profile]]_TxProfile_
 
 If a transaction-specific profile with purpose _TxProfile_ is present, it SHALL overrule the default charging profile with purpose <<tx_default_profile,TxDefaultProfile>> for the duration of the current transaction only. After the transaction is stopped the profile SHOULD be deleted. If there is no transaction active on the connector specified in a charging profile of type _TxProfile_, then the Charge Point SHALL discard it and return an error status in <<set_charging_profile_conf,SetChargingProfile.conf>>.
@@ -549,8 +548,8 @@ To avoid conflicts, the existence of multiple Charging Profiles with the same <<
 |===
 a|image::asset/info-icon.svg[info-icon,32,32] |
 In the case an updated charging profile (with the same stackLevel and purpose) is sent with a validFrom dateTime in the future, the Charge Point SHALL replace the installed profile and SHALL revert to default behavior until validFrom is reached. It is RECOMMENDED to provide a start time in the past to prevent gaps.
-|===
 
+|===
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/info-icon.svg[info-icon,32,32] |
@@ -728,7 +727,7 @@ The following data structure describes a daily default profile that limits the p
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/warning-icon.svg[warning-icon,32,32] |
-The amount of phases used during charging is limited by the capabilities of: The Charge Point EV and Cable between CP and EV. If any of these 3 is not capable of 3 phase charging, the EV will be charged using 1 phase only.
+The amount of phases used during charging is limited by the capabilities of: The Charge Point, EV and Cable between CP and EV. If any of these 3 is not capable of 3 phase charging, the EV will be charged using 1 phase only.
 |===
 
 [cols="1,10",frame="none",grid="cols"]
@@ -823,6 +822,7 @@ For example: A Charge Point capable of measuring _Current.Import_ on _Inlet_ (al
 
 [[unsupported_measurands]]
 ==== Unsupported measurands
+
 When a Central System sends a ChangeConfiguration.req to a Charge Point with one of the following configuration keys:
 
 * <<meter_values_aligned_data,`MeterValuesAlignedData`>>
@@ -834,6 +834,7 @@ If the comma separated list contains one or more measurands that are not support
 
 [[no_metering_data_in_a_stop_transaction]]
 ==== No metering data in a Stop Transaction
+
 When the configuration keys: <<stop_txn_aligned_data,StopTxnAlignedData>> and <<stop_txn_sampled_data,StopTxnSampledData>> are set to an empty string, the Charge Point SHALL not put meter values in a StopTransaction.req PDU.
 
 [[operations_initiated_by_charge_point]]
