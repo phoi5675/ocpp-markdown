@@ -1077,7 +1077,7 @@ The next table describes events that may lead to a status change:
 
 [cols="2,10",options="header"]
 |===
-| |DESCRIPTION
+|             |DESCRIPTION
 |[[a2]]**A2** |Usage is initiated (e.g. insert plug, bay occupancy detection, present idTag, push start button, receipt of a <<remote_start_transaction_req,RemoteStartTransaction.req>>)
 |[[a3]]**A3** |Can be possible in a Charge Point without an authorization means
 |[[a4]]**A4** |Similar to <<a3,A3>> but the EV does not start charging

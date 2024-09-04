@@ -786,7 +786,7 @@ OCPP는 시간 값에 특정 시간대를 사용하도록 규정하지 않습니
 
 그리드 운영자는 특정 시간 동기화 간격(일반적으로 15분 또는 30분)에 공인 인증된 전력계에서 미터 판독값을 가져오도록 요구할 수 있습니다.
 
-"클럭 정렬 청구 데이터"는 다음 구성 키로 구성할 수 있습니다.
+"Clock-Aligned Billing Data"는 다음 구성 키로 구성할 수 있습니다.
 
 * <<clock_aligned_data_interval,`ClockAlignedDataInterval`>>
 * <<meter_values_aligned_data,`MeterValuesAlignedData`>>
@@ -1002,19 +1002,19 @@ CSMS는 <<start_transaction_req,StartTransaction.req>> PDU에 있는 식별자�
 충전기에서 인증 캐시를 구현한 경우 <<start_transaction_conf,StartTransaction.conf>> PDU를 수신하면 충전소는 로컬 인증 목록에 idTag가 없는 경우 인증 캐시에 설명된 대로 응답의 <<id_tag_info,IdTagInfo>> 값으로 캐시 항목을 업데이트해야 합니다.
 
 CSMS는 수신한 <<start_transaction_req,StartTransaction.req>>에 포함된 데이터에 유효성 검사를 적용할 가능성이 있습니다. 이러한 유효성 검사의 결과는 CSMS가 <<start_transaction_conf,StartTransaction.conf>>로 응답하지 않는 원인이 되어서는 안 됩니다. <<start_transaction_conf,StartTransaction.conf>>로 응답하지 않으면 충전기가 <<error_responses_to_transaction_wrelated_messages,Error responses to transaction-related messages>>에 지정된 대로 메시지 재전송을 시도하게 됩니다.
-/TODO:
+
 [[status_notification]]
 === Status Notification
 
 .시퀀스 다이어그램: 상태 알림
 image::images/figure_20.svg[시퀀스 다이어그램: 상태 알림]
 
-충전소는 CSMS에 알림을 보내 충전소 내의 상태 변경이나 오류에 대해 CSMS에 알립니다. 다음 표는 이전 상태(왼쪽 열)에서 새 상태(위쪽 행)로의 변경 사항을 보여줍니다. 이 변경 사항에 따라 충전소는 <<status_notification_req,StatusNotification.req>> PDU를 CSMS로 보낼 수 있습니다.
+충전기는 CSMS에 알림을 보내 충전기의 상태 변경이나 오류를 CSMS에 알립니다. 다음 표는 이전 상태(왼쪽 열)에서 새 상태(위쪽 행)로의 변경 사항을 보여줍니다. 이 변경 사항에 따라 충전기는 <<status_notification_req,StatusNotification.req>> PDU를 CSMS로 보낼 수 있습니다.
 
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/warning-icon.svg[warning-icon,32,32] |
-이전 OCPP 버전에서 정의한 점유 상태는 더 이상 관련이 없습니다. 점유 상태는 _준비_, _충전_, _중단 EV_, _중단 EVSE_, _완료_의 다섯 가지 새로운 상태로 나뉩니다.
+이전 OCPP 버전에서 정의한 점유 상태는 더 이상 관련이 없습니다. 점유 상태는 _Preparing_, _Charging_, _SuspendedEV_, _SuspendedEVSE_, _Finishing_ 의 다섯 가지 새로운 상태로 나뉩니다.
 |===
 
 [cols="1,10",frame="none",grid="cols"]
@@ -1028,67 +1028,67 @@ EVSE는 향후 호환성을 위해 소켓이나 충전기 대신 상태 알림�
 [cols="^.^1,.^2,10*^"]
 |===
 |{nbsp} |{nbsp} +
-상태 시작/종료:
+상태 시작 / 종료:
 |**1** +
-사용 가능 |**2** +
-준비 중
+                   Available |**2** +
+                              Preparing
 |**3** +
-충전 중 |**4** +
+                  Charging |**4** +
 SuspendedEV |**5** +
 SuspendedEVSE
 |**6** +
-완료 중 |{nbsp}{nbsp}{nbsp}
+                  Finishing |{nbsp}{nbsp}{nbsp}
 |**7** +
-예약됨 |**8** +
-사용할 수 없음 |**9** +
-오류 발생
+                  Reserved |**8** +
+                  Unavailable |**9** +
+                  Faulted
 
-|**A** |사용 가능 |{nbsp} |<<a2,**A2**>> |<<a3,**A3**>>
+|**A** |Available |{nbsp} |<<a2,**A2**>> |<<a3,**A3**>> 
 |<<a4,**A4**>> |<<a5,**A5**>> |{nbsp} |{nbsp} |<<a7,**A7**>> |<<a8,**A8**>> |<<a9,**A9**>>
-|**B** |준비 |<<b1,**B1**>> |{nbsp} |<<b3,**B3**>> |<<b4,**B4**>>
+|**B** |Preparing |<<b1,**B1**>> |{nbsp} |<<b3,**B3**>> |<<b4,**B4**>> 
 |<<b5,**B5**>> |<<b6,**B6**>> |{nbsp} |{nbsp} |{nbsp} |<<b9,**B9**>>
-|**C** |충전 |<<c1,**C1**>> |{nbsp} |{nbsp} |<<c4,**C4**>> |<<c5,**C5**>>
+|**C** |Charging |<<c1,**C1**>> |{nbsp} |{nbsp} |<<c4,**C4**>> |<<c5,**C5**>>
 |<<c6,**C6**>> |{nbsp} |{nbsp} |<<c8,**C8**>> |<<c9,**C9**>>
-|**D** |중단된 EV |<<d1,**D1**>> |{nbsp} |<<d3,**D3**>> |{nbsp}
+|**D** |SuspendedEV |<<d1,**D1**>> |{nbsp} |<<d3,**D3**>> |{nbsp} 
 |<<d5,**D5**>> |<<d6,**D6**>> |{nbsp} |{nbsp} |<<d8,**D8**>> |<<d9,**D9**>>
-|**E** |중단된 EVSE |<<e1,**E1**>> |{nbsp} |<<e3,**E3**>> |<<e4,**E4**>>
+|**E** |SuspendedEVSE |<<e1,**E1**>> |{nbsp} |<<e3,**E3**>> |<<e4,**E4**>>
 |{nbsp} |<<e6,**E6**>> |{nbsp} |{nbsp} |<<e8,**E8**>> |<<e9,**E9**>>
-|**F** |마무리 |<<f1,**F1**>> |<<f2,**F2**>> |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp}
+|**F** |Finishing |<<f1,**F1**>> |<<f2,**F2**>> |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} 
 |<<f8,**F8**>> |<<f9,**F9**>>
-|{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp}
-|**G** |예약됨 |<<g1,**G1**>> |<<g2,**G2**>> |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp}
+|{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} 
+|**G** |Reserved |<<g1,**G1**>> |<<g2,**G2**>> |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp} 
 |<<g8,**G8**>> |<<g9,**G9**>>
-|**H** |사용할 수 없음 |<<h1,**H1**>> |<<h2,**H2**>> |<<h3,**H3**>>
+|**H** |Unavailable |<<h1,**H1**>> |<<h2,**H2**>> |<<h3,**H3**>>
 |<<h4,**H4**>> |<<h5,**H5**>> |{nbsp} |{nbsp} |{nbsp} |{nbsp} |<<h9,**H9**>>
-|**I** |오류 발생 |<<i1,**I1**>> |<<i2,**I2**>> |<<i3,**I3**>> |<<i4,**I4**>>
+|**I** |Faulted |<<i1,**I1**>> |<<i2,**I2**>> |<<i3,**I3**>> |<<i4,**I4**>>
 |<<i5,**I5**>> |<<i6,**I6**>> |{nbsp} |<<i7,**I7**>> |<<i8,**I8**>> |{nbsp}
 |===
 
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/info-icon.svg[info-icon,32,32] |
-위의 표는 ConnectorId > 0에만 적용됩니다. ConnectorId 0의 경우 사용 가능, 사용 불가 및 오류라는 제한된 집합만 적용됩니다.
+위의 표는 ConnectorId > 0에만 적용됩니다. ConnectorId 0의 경우 Available, Unavailable, Faulted라는 제한된 집합만 적용됩니다.
 |===
 
 다음 표는 상태 변경으로 이어질 수 있는 이벤트를 설명합니다.
 
 [cols="2,10",options="header"]
 |===
-| |설명
-|[[a2]]**A2** |사용이 시작됩니다(예: 플러그 삽입, 베이 점유 감지, idTag 제공, 시작 버튼 누르기, <<remote_start_transaction_req,RemoteStartTransaction.req>> 수신)
+|             |설명
+|[[a2]]**A2** |사용이 시작됩니다(예: 플러그 삽입, 충전 공간 점유, idTag 제시, 시작 버튼 누르기, <<remote_start_transaction_req,RemoteStartTransaction.req>> 수신)
 |[[a3]]**A3** |인증 수단 없이도 충전기에서 가능
 |[[a4]]**A4** |<<a3,A3>>과 유사하지만 EV가 충전을 시작하지 않음
 |[[a5]]**A5** |<<a3,A3>>과 유사하지만 EVSE가 충전을 허용하지 않음
 |[[a7]]**A7** |커넥터를 예약하는 <<reserve_now_by_central_system,Reserve Now>> 메시지가 수신됨
-|[[a8]]**A8** |<<change_availability_by_central_system,Change Availability>> 메시지가 수신되어 설정됨 커넥터를 사용할 수 없음으로 전환
+|[[a8]]**A8** |커넥터를 사용할 수 없음(Unavailable)으로 전환하는 <<change_availability_by_central_system,Change Availability>> 메시지가 수신됨 
 |[[a9]]**A9** |추가 충전 작업을 방해하는 오류가 감지됨
 
-|[[b1]]**B1** |예상된 사용이 종료됨(예: 플러그 제거, 베이가 더 이상 사용되지 않음, idTag의 두 번째 제시, 예상된 사용자 작업에서 시간 초과(구성 키 <<connection_timeout,`ConnectionTimeOut`>>에 의해 구성됨)
+|[[b1]]**B1** |예상된 사용이 종료됨(예: 플러그 제거, 충전 공간이 더 이상 사용되지 않음, idTag의 두 번째 제시, 예상된 사용자 작업에서 시간 초과(구성 키 <<connection_timeout,`ConnectionTimeOut`>>에 의해 구성됨)
 |{nbsp} |{nbsp}
 |[[b3]]**B3** |충전을 위한 모든 전제 조건이 충족되고 충전 프로세스가 시작됨
 |[[b4]]**B4** |충전을 위한 모든 전제 조건이 충족되었지만 EV가 충전을 시작하지 않음
 |[[b5]]**B5** |충전을 위한 모든 전제 조건이 충족되었지만 EVSE가 충전을 허용하지 않음
-|[[b6]]**B6** |시간 초과됨. 사용이 시작되었지만(예: 플러그 삽입, 베이 점유 감지) idTag가 시간 초과 내에 제공되지 않았습니다.
+|[[b6]]**B6** |시간 초과됨. 사용이 시작되었지만(예: 플러그 삽입, 충전 공간 점유) idTag가 제한 시간 내에 제공되지 않았습니다.
 |[[b9]]**B9** |추가 충전 작업을 방해하는 오류가 감지됨
 |{nbsp} |{nbsp}
 
@@ -1124,12 +1124,12 @@ a|image::asset/info-icon.svg[info-icon,32,32] |
 |[[g8]]**G8** |예약이 만료되거나 <<cancel_reservation,Cancel Reservation>> 메시지가 수신되고 커넥터 _사용 불가능_이 되도록 예약됨
 |[[g9]]**G9** |추가 충전 작업을 방해하는 오류가 감지됨
 
-|[[h1]]**H1** |커넥터가 <<change_availability_by_central_system,Change Availability>> 메시지에 의해 _사용 가능_으로 설정됨
-|[[h2]]**H2** |사용자가 충전기와 상호 작용한 후 커넥터가 _사용 가능_으로 설정됨
-|[[h3]]**H3** |커넥터가 _사용 가능_으로 설정되었으며 충전을 시작하기 위해 사용자 작업이 필요하지 않음
+|[[h1]]**H1** |커넥터가 <<change_availability_by_central_system,Change Availability>> 메시지에 의해 _사용 가능_ 으로 설정됨
+|[[h2]]**H2** |사용자가 충전기와 상호 작용한 후 커넥터가 _사용 가능_ 으로 설정됨
+|[[h3]]**H3** |커넥터가 _사용 가능_ 으로 설정되었으며 충전을 시작하기 위해 사용자 작업이 필요하지 않음
 |[[h4]]**H4** |<<h3,H3>>와 유사하지만 EV가 충전을 시작하지 않음
 |[[h5]]**H5** |<<h3,H3>>와 유사하지만 EVSE가 충전을 허용하지 않음
-|[[h9]]**H9** |추가 충전을 방해하는 오류가 감지됨 운영
+|[[h9]]**H9** |추가 충전 과정을 방해하는 오류가 감지됨
 
 |[[i1_i8]]**I1-I8** |오류가 해결되고 상태가 오류 전 상태로 돌아갑니다.
 |===
@@ -1137,29 +1137,29 @@ a|image::asset/info-icon.svg[info-icon,32,32] |
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/warning-icon.svg[warning-icon,32,32] |
-충전기 커넥터는 위 표에 표시된 9가지 상태 중 하나를 가질 수 있습니다. ConnectorId 0의 경우 사용 가능, 사용 불가 및 오류라는 제한된 집합만 적용됩니다. ConnectorId 0의 상태는 개별 커넥터의 상태와 직접 관련이 없습니다(>0).
+충전기 커넥터는 위 표에 표시된 9가지 상태 중 하나를 가질 수 있습니다. ConnectorId 0의 경우 Available, Unavailable, Faulted 라는 제한된 집합만 적용됩니다. ConnectorId 0의 상태는 개별 커넥터의 상태와 직접 관련이 없습니다(>0).
 |===
 
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/warning-icon.svg[warning-icon,32,32] |
-EV와 EVSE 모두에서 충전이 중단된 경우 상태 _SuspendedEVSE_가 상태 _SuspendedEV_보다 우선합니다.
+EV와 EVSE 모두에서 충전이 중단된 경우 상태 _SuspendedEVSE_ 가 상태 _SuspendedEV_ 보다 우선합니다.
 |===
 
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/warning-icon.svg[warning-icon,32,32] |
-<<change_availability_by_central_system,Change Availability>> 명령으로 충전기 또는 커넥터가 사용 불가능 상태로 설정된 경우, '사용 불가능' 상태는 재부팅 시에도 지속되어야 합니다. 충전기는 _Unavailable_ 상태를 다른 목적(예: 펌웨어 업데이트 중 또는 초기 _Accepted_ <<registration_status,RegistrationStatus>> 대기 중)으로 내부적으로 사용할 수 있습니다.
+<<change_availability_by_central_system,Change Availability>> 명령으로 충전기 또는 커넥터가 사용 불가능 상태로 설정된 경우, 'Unavailable' 상태는 재부팅 시에도 지속되어야 합니다. 충전기는 _Unavailable_ 상태를 다른 목적(예: 펌웨어 업데이트 중 또는 초기 _Accepted_ <<registration_status,RegistrationStatus>> 대기 중)으로 내부적으로 사용할 수 있습니다.
 |===
 
-_Occupied_ 상태가 5개의 새로운 상태(_Preparing_, _Charging_, _SuspendedEV_, _SuspendedEVSE_ 및 _Finishing_)로 분할되었으므로 더 많은 <<status_notification_req,StatusNotification.req>> PDU가 충전기에서 CSMS로 전송됩니다. 예를 들어, 트랜잭션이 시작되면 커넥터 상태가 _Preparing_에서 _Charging_으로 차례로 변경되고 그 사이에 짧은 _SuspendedEV_ 및/또는 _SuspendedEVSE_가 표시되며 몇 초 이내에 변경됩니다.
+_Occupied_ 상태가 5개의 새로운 상태(_Preparing_, _Charging_, _SuspendedEV_, _SuspendedEVSE_ 및 _Finishing_)로 분할되었으므로 더 많은 <<status_notification_req,StatusNotification.req>> PDU가 충전기에서 CSMS로 전송됩니다. 예를 들어, 트랜잭션이 시작되면 커넥터 상태가 _Preparing_ 에서 _Charging_ 으로 차례로 변경되고 그 사이에 짧은 _SuspendedEV_ 및/또는 _SuspendedEVSE_ 가 표시되며 몇 초 이내에 변경됩니다.
 
-전환 횟수를 제한하기 위해 Charge Point는 선택적 구성 키 <<minimum_status_duration,`MinimumStatusDuration`>>에서 정의된 시간보다 짧은 시간 동안 활성화된 경우 <<status_notification_req,StatusNotification.req>> 전송을 생략할 수 있습니다. 이런 방식으로 Charge Point는 특정 <<status_notification_req,StatusNotification.req>> PDU를 전송하지 않기로 선택할 수 있습니다.
+전환 횟수를 제한하기 위해 충전기는 선택적 구성 키 <<minimum_status_duration,`MinimumStatusDuration`>>에서 정의된 시간보다 짧은 시간 동안 활성화된 경우 <<status_notification_req,StatusNotification.req>> 전송을 생략할 수 있습니다. 이런 방식으로 충전기는 특정 <<status_notification_req,StatusNotification.req>> PDU를 전송하지 않기로 선택할 수 있습니다.
 
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/info-icon.svg[info-icon,32,32] |
-Charge Point 제조업체는 <<minimum_status_duration,`MinimumStatusDuration`>> 설정과 별도로 특정 상태 전환에 대한 최소 상태 기간을 구현했을 수 있습니다. <<minimum_status_duration,`MinimumStatusDuration`>>에 설정된 시간이 이 기본 지연에 추가됩니다. <<minimum_status_duration,`MinimumStatusDuration`>>을 0으로 설정해도 기본 제조업체의 최소 상태 기간이 무시되지 않습니다.
+충전기 제조업체는 <<minimum_status_duration,`MinimumStatusDuration`>> 설정과 별도로 특정 상태 전환에 대한 최소 상태 기간을 구현했을 수 있습니다. <<minimum_status_duration,`MinimumStatusDuration`>>에 설정된 시간이 이 기본 지연에 추가됩니다. <<minimum_status_duration,`MinimumStatusDuration`>>을 0으로 설정해도 기본 제조업체의 최소 상태 기간이 무시되지 않습니다.
 |===
 
 [cols="1,10",frame="none",grid="cols"]
@@ -1168,17 +1168,17 @@ a|image::asset/warning-icon.svg[warning-icon,32,32] |
 <<minimum_status_duration,`MinimumStatusDuration`>> 시간을 높게 설정하면 모든 StatusNotification이 지연되어 전송될 수 있습니다. 충전기는 <<minimum_status_duration,`MinimumStatusDuration`>> 시간이 지난 후에만 <<status_notification_req,StatusNotification.req>>를 전송하기 때문입니다.
 |===
 
-충전기는 <<status_notification_req,StatusNotification.req>> PDU를 보내 CSMS에 오류 상태를 알릴 수 있습니다. '상태' 필드가 _Faulted_가 아닌 경우, 충전 작업이 여전히 가능하므로 해당 상태는 경고로 간주해야 합니다.
+충전기는 <<status_notification_req,StatusNotification.req>> PDU를 보내 CSMS에 오류 상태를 알릴 수 있습니다. 'status' 필드가 _Faulted_ 가 아닌 경우, 충전 작업이 여전히 가능하므로 해당 상태는 경고로 간주해야 합니다.
 
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/warning-icon.svg[warning-icon,32,32] |
-<<chargepoint_errorcode,ChargePointErrorCode>> _EVCommunicationError_는 Preparing, SuspendedEV, SuspendedEVSE 및 Finishing 상태에서만 사용해야 하며 경고로 처리해야 합니다.
+<<chargepoint_errorcode,ChargePointErrorCode>> _EVCommunicationError_ 는 Preparing, SuspendedEV, SuspendedEVSE 및 Finishing 상태에서만 사용해야 하며 경고로 처리해야 합니다.
 |===
 
-충전소가 <<stop_transaction_on_evside_disconnect,StopTransactionOnEVSideDisconnect>>가 _false_로 설정된 상태로 구성되고, 트랜잭션이 실행 중이고 EV가 EV 측에서 연결이 끊어지면, <<status_notification_req,StatusNotification.req>>가 상태가 _SuspendedEV_인 상태로 CSMS로 전송되어야 하며, 'errorCode' 필드는 'NoError'로 설정되어야 합니다. 충전소는 'info' 필드에 추가 정보를 추가해야 하며, CSMS에 중단 사유를 알려야 합니다: 'EV 측 연결 해제'. 현재 트랜잭션는 중단되지 않습니다.
+충전기가 <<stop_transaction_on_evside_disconnect,StopTransactionOnEVSideDisconnect>>가 _false_ 로 설정된 상태로 구성되고, 트랜잭션이 실행 중이고 EV가 EV 측에서 연결이 끊어지면, <<status_notification_req,StatusNotification.req>>가 상태가 _SuspendedEV_ 인 상태로 CSMS로 전송되어야 하며, 'errorCode' 필드는 'NoError'로 설정되어야 합니다. 충전기는 'info' 필드에 추가 정보를 추가해야 하며, CSMS에 중단 사유를 알려야 합니다: 'EV side disconnected'. 현재 트랜잭션는 중단되지 않습니다.
 
-<<stop_transaction_on_evside_disconnect,StopTransactionOnEVSideDisconnect>>가 _true_로 설정된 충전소가 구성되고 트랜잭션이 실행 중이고 EV 측에서 EV 연결이 끊어지면, 상태가 'Finishing'인 <<status_notification_req,StatusNotification.req>>가 CSMS로 전송되어야 하며, 'errorCode' 필드는 'NoError'로 설정되어야 합니다. 충전소는 'info' 필드에 추가 정보를 추가해야 하며, CSMS에 중단 사유를 알려야 합니다: 'EV 측 연결 해제'. 현재 트랜잭션는 중단됩니다.
+<<stop_transaction_on_evside_disconnect,StopTransactionOnEVSideDisconnect>>가 _true_ 로 설정된 충전기가 구성되고 트랜잭션이 실행 중이고 EV 측에서 EV 연결이 끊어지면, 상태가 'Finishing'인 <<status_notification_req,StatusNotification.req>>가 CSMS로 전송되어야 하며, 'errorCode' 필드는 'NoError'로 설정되어야 합니다. 충전기는 'info' 필드에 추가 정보를 추가해야 하며, CSMS에 중단 사유를 알려야 합니다: 'EV side disconnected'. 현재 트랜잭션는 중단됩니다.
 
 충전기가 <<local_authorization_and_offline_behavior,offline>> 상태가 된 후 CSMS에 연결되면 다음 규칙에 따라 CSMS에 상태를 업데이트합니다.
 
@@ -1190,12 +1190,12 @@ a|image::asset/warning-icon.svg[warning-icon,32,32] |
 <<status_notification_req,StatusNotification.req>> PDU를 수신하면 CSMS는 StatusNotification.conf PDU로 응답해야 합니다.
 
 [[stop_transaction_by_central_system]]
-=== 트랜잭션 중지
+=== Stop Transaction
 
 .시퀀스 다이어그램: 트랜잭션 중지
 image::images/figure_21.svg[시퀀스 다이어그램: 트랜잭션 중지]
 
-트랜잭션이 중지되면 충전소는 <<stop_transaction_req,StopTransaction.req>> PDU를 보내 CSMS에 트랜잭션이 중지되었음을 알려야 합니다.
+트랜잭션이 중단되면 충전기는 <<stop_transaction_req,StopTransaction.req>> PDU를 보내 CSMS에 트랜잭션이 중지되었음을 알려야 합니다.
 
 <<stop_transaction_req,StopTransaction.req>> PDU에는 트랜잭션 사용에 대한 자세한 내용을 제공하기 위한 선택적 <<stop_transaction_conf,TransactionData>> 요소가 포함될 수 있습니다. 선택적인 <<stop_transaction_conf,TransactionData>> 요소는 <<metervalue,MeterValues>>의 모든 수에 대한 컨테이너이며, <<metervalues_req,MeterValues.req>> PDU의 **meterValue** 요소와 동일한 데이터 구조를 사용합니다(섹션 <<metervalue,MeterValues>> 참조)
 
@@ -1204,53 +1204,53 @@ image::images/figure_21.svg[시퀀스 다이어그램: 트랜잭션 중지]
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/info-icon.svg[info-icon,32,32] |
-<<chargepoint_errorcode,ChargePointErrorCode>> _EVCommunicationError_는 Preparing, SuspendedEV, SuspendedEVSE 및 Finishing 상태에서만 사용해야 하며 경고로 처리해야 합니다.
+<<chargepoint_errorcode,ChargePointErrorCode>> _EVCommunicationError_ 는 Preparing, SuspendedEV, SuspendedEVSE 및 Finishing 상태에서만 사용해야 하며 경고로 처리해야 합니다.
 |===
 
-CSMS는 트랜잭션이 중단되는 것을 막을 수 없습니다. 충전소에 <<stop_transaction_req,StopTransaction.req>>를 수신했다는 사실만 알리고 트랜잭션를 중단하는 데 사용된 idTag에 대한 정보를 보낼 수 있습니다. 이 정보는 구현된 경우 <<authorization_cache,Authorization Cache>>를 업데이트하는 데 사용해야 합니다.
+CSMS는 트랜잭션이 중단되는 것을 막을 수 없습니다. 충전기에 <<stop_transaction_req,StopTransaction.req>>를 수신했다는 사실만 알리고 트랜잭션를 중단하는 데 사용된 idTag에 대한 정보를 보낼 수 있습니다. 이 정보는 구현된 경우 <<authorization_cache,Authorization Cache>>를 업데이트하는 데 사용해야 합니다.
 
-요청 PDU의 idTag는 충전소 자체가 트랜잭션를 중단해야 하는 경우 생략할 수 있습니다. 예를 들어, 충전소에 재설정을 요청하는 경우입니다.
+요청 PDU의 idTag는 충전기 자체가 트랜잭션를 중단해야 하는 경우 생략할 수 있습니다. 예를 들어, 충전기에 재설정을 요청하는 경우입니다.
 
-트랜잭션이 정상적인 방식으로 종료된 경우(예: EV 운전자가 트랜잭션를 중단하기 위해 신분증을 제시한 경우) <<reason,Reason>> 요소를 생략할 수 있으며 <<reason,Reason>>을 'Local'로 가정해야 합니다. 트랜잭션이 정상적으로 종료되지 않은 경우 <<reason,Reason>>을 올바른 값으로 설정해야 합니다. 정상적인 트랜잭션 종료의 일부로 충전소는 케이블의 잠금을 해제해야 합니다(영구적으로 연결되지 않은 경우).
+트랜잭션이 정상적인 방식으로 종료된 경우(예: EV 운전자가 트랜잭션를 중단하기 위해 식별자를 제시한 경우) <<reason,Reason>> 요소를 생략할 수 있으며 <<reason,Reason>>을 'Local'로 가정해야 합니다. 트랜잭션이 정상적으로 종료되지 않은 경우 <<reason,Reason>>을 올바른 값으로 설정해야 합니다. 정상적인 트랜잭션 종료의 일부로 충전기는 케이블의 잠금을 해제해야 합니다(영구적으로 연결되지 않은 경우).
 
-충전소는 케이블이 EV에서 분리될 때 케이블의 잠금을 해제할 수 있습니다(영구적으로 연결되지 않은 경우). 지원되는 경우 이 기능은 구성 키 <<unlock_connector_on_evside_disconnect,`UnlockConnectorOnEVSideDisconnect`>>에서 보고되고 제어됩니다.
+충전기는 케이블이 EV에서 분리될 때 케이블의 잠금을 해제할 수 있습니다(영구적으로 연결되지 않은 경우). 지원되는 경우 이 기능은 구성 키 <<unlock_connector_on_evside_disconnect,`UnlockConnectorOnEVSideDisconnect`>>에서 보고되고 제어됩니다.
 
-충전소는 케이블이 EV에서 분리될 때 실행 중인 트랜잭션를 중지할 수 있습니다. 지원되는 경우 이 기능은 구성 키 <<stop_transaction_on_evside_disconnect,`StopTransactionOnEVSideDisconnect`>>에 의해 보고되고 제어됩니다.
+충전기는 케이블이 EV에서 분리될 때 실행 중인 트랜잭션를 중지할 수 있습니다. 지원되는 경우 이 기능은 구성 키 <<stop_transaction_on_evside_disconnect,`StopTransactionOnEVSideDisconnect`>>에 의해 보고되고 제어됩니다.
 
-<<stop_transaction_on_evside_disconnect,`StopTransactionOnEVSideDisconnect`>>가 _false_로 설정된 경우 케이블이 EV에서 분리될 때 트랜잭션이 중지되지 않아야 합니다. EV가 다시 연결되면 에너지 전송이 다시 허용됩니다. 이 경우 동일한 진행 중인 트랜잭션 중에 다른 EV가 충전되고 분리되는 것을 방지하는 메커니즘이 없습니다. <<unlock_connector_on_evside_disconnect,`UnlockConnectorOnEVSideDisconnect`>>가 _false_로 설정된 경우 커넥터는 사용자가 식별자를 제시할 때까지 충전기에서 잠긴 상태로 유지되어야 합니다.
+<<stop_transaction_on_evside_disconnect,`StopTransactionOnEVSideDisconnect`>>가 _false_ 로 설정된 경우 케이블이 EV에서 분리될 때 트랜잭션이 중지되지 않아야 합니다. EV가 다시 연결되면 에너지 전송이 다시 허용됩니다. 이 경우 동일한 진행 중인 트랜잭션 중에 다른 EV가 충전되고 분리되는 것을 방지하는 메커니즘이 없습니다. <<unlock_connector_on_evside_disconnect,`UnlockConnectorOnEVSideDisconnect`>>가 _false_ 로 설정된 경우 커넥터는 사용자가 식별자를 제시할 때까지 충전기에서 잠긴 상태로 유지되어야 합니다.
 
-<<stop_transaction_on_evside_disconnect,`StopTransactionOnEVSideDisconnect`>>를 _true_로 설정하면 케이블이 EV에서 분리될 때 트랜잭션이 중지되어야 합니다. EV가 다시 연결되면 트랜잭션이 중지되고 새 트랜잭션이 시작될 때까지 에너지 전송이 허용되지 않습니다. <<unlock_connector_on_evside_disconnect,`UnlockConnectorOnEVSideDisconnect`>>를 _true_로 설정하면 충전기의 커넥터도 잠금 해제됩니다.
+<<stop_transaction_on_evside_disconnect,`StopTransactionOnEVSideDisconnect`>>를 _true_ 로 설정하면 케이블이 EV에서 분리될 때 트랜잭션이 중지되어야 합니다. EV가 다시 연결되면 트랜잭션이 중지되고 새 트랜잭션이 시작될 때까지 에너지 전송이 허용되지 않습니다. <<unlock_connector_on_evside_disconnect,`UnlockConnectorOnEVSideDisconnect`>>를 _true_ 로 설정하면 충전기의 커넥터도 잠금 해제됩니다.
 
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/info-icon.svg[info-icon,32,32] |
-<<stop_transaction_on_evside_disconnect,`StopTransactionOnEVSideDisconnect`>>가 _false_로 설정된 경우, 이는 <<unlock_connector_on_evside_disconnect,`UnlockConnectorOnEVSideDisconnect`>>보다 우선합니다. 즉, <<stop_transaction_on_evside_disconnect,`StopTransactionOnEVSideDisconnect`>>가 _false_일 때 EV 측에서 케이블이 분리되면 케이블은 항상 잠긴 상태로 유지됩니다.
+<<stop_transaction_on_evside_disconnect,`StopTransactionOnEVSideDisconnect`>>가 _false_ 로 설정된 경우, 이는 <<unlock_connector_on_evside_disconnect,`UnlockConnectorOnEVSideDisconnect`>>보다 우선합니다. 즉, <<stop_transaction_on_evside_disconnect,`StopTransactionOnEVSideDisconnect`>>가 _false_ 일 때 EV 측에서 케이블이 분리되면 케이블은 항상 잠긴 상태로 유지됩니다.
 |===
 
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/info-icon.svg[info-icon,32,32] |
-<<stop_transaction_on_evside_disconnect,`StopTransactionOnEVSideDisconnect`>>를 _true_로 설정하면 EV 측에서 잠기지 않은 케이블을 뽑아 에너지 흐름을 중단하는 방해 행위를 방지할 수 있습니다.
+<<stop_transaction_on_evside_disconnect,`StopTransactionOnEVSideDisconnect`>>를 _true_ 로 설정하면 EV 측에서 잠기지 않은 케이블을 뽑아 에너지 흐름을 중단하는 방해 행위를 방지할 수 있습니다.
 |===
 
-CSMS가 수신한 <<stop_transaction_req,StopTransaction.req>>에 포함된 데이터에 대한 건전성 검사를 적용할 가능성이 있습니다. 이러한 건전성 검사의 결과로 인해 CSMS가 <<stop_transaction_conf,StopTransaction.conf>>로 응답하지 않는 일이 발생해서는 안 됩니다. <<stop_transaction_conf,StopTransaction.conf>>로 응답하지 않으면 충전소가 <<error_responses_to_transaction_wrelated_messages,Error responses to transaction-related messages>>에 지정된 대로 동일한 메시지를 다시 시도할 뿐입니다.
+CSMS가 수신한 <<stop_transaction_req,StopTransaction.req>>에 포함된 데이터에 대한 건전성 검사를 적용할 가능성이 있습니다. 이러한 건전성 검사의 결과로 인해 CSMS가 <<stop_transaction_conf,StopTransaction.conf>>로 응답하지 않는 일이 발생해서는 안 됩니다. <<stop_transaction_conf,StopTransaction.conf>>로 응답하지 않으면 충전기가 <<error_responses_to_transaction_wrelated_messages,Error responses to transaction-related messages>>에 지정된 대로 동일한 메시지를 다시 시도할 뿐입니다.
 
-Charge Point에서 권한 부여 캐시를 구현한 경우 <<stop_transaction_conf,StopTransaction.conf>> PDU를 수신하면 Charge Point는 idTag가 <<local_authorization_list,Local Authorization List>>에 없으면 <<authorization_cache,Authorization Cache>>에서 설명한 대로 응답의 <<id_tag_info,IdTagInfo>> 값으로 캐시 항목을 업데이트해야 합니다.
+충전기에서 권한 부여 캐시를 구현한 경우 <<stop_transaction_conf,StopTransaction.conf>> PDU를 수신하면 충전기는 idTag가 <<local_authorization_list,Local Authorization List>>에 없으면 <<authorization_cache,Authorization Cache>>에서 설명한 대로 응답의 <<id_tag_info,IdTagInfo>> 값으로 캐시 항목을 업데이트해야 합니다.
 
 <<<
-
+// TODO:
 [[operations_initiated_by_central_system]]
-== CSMS에서 시작한 작업
+== Operations Initiated by Central System
 
 [[cancel_reservation_by_central_system]]
-=== 예약 취소
+=== Cancel Reservation
 
 .순서 다이어그램: 예약 취소
 image::images/figure_22.svg[순서 다이어그램: 예약 취소]
 
-CSMS는 예약을 취소하기 위해 <<cancel_reservation_req,CancelReservation.req>> PDU를 충전소로 보내야 합니다.
+CSMS는 예약을 취소하기 위해 <<cancel_reservation_req,CancelReservation.req>> PDU를 충전기로 보내야 합니다.
 
-충전소에 요청 PDU의 reservationId와 일치하는 예약이 있는 경우 '승인됨' 상태를 반환해야 합니다. 그렇지 않으면 '거부됨'을 반환해야 합니다.
+충전기에 요청 PDU의 reservationId와 일치하는 예약이 있는 경우 '승인됨' 상태를 반환해야 합니다. 그렇지 않으면 '거부됨'을 반환해야 합니다.
 
 [[change_availability_by_central_system]]
 === 가용성 변경
