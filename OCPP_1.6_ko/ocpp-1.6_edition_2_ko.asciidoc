@@ -1238,38 +1238,38 @@ CSMS가 수신한 <<stop_transaction_req,StopTransaction.req>>에 포함된 데�
 충전기에서 권한 부여 캐시를 구현한 경우 <<stop_transaction_conf,StopTransaction.conf>> PDU를 수신하면 충전기는 idTag가 <<local_authorization_list,Local Authorization List>>에 없으면 <<authorization_cache,Authorization Cache>>에서 설명한 대로 응답의 <<id_tag_info,IdTagInfo>> 값으로 캐시 항목을 업데이트해야 합니다.
 
 <<<
-// TODO:
+
 [[operations_initiated_by_central_system]]
 == Operations Initiated by Central System
 
 [[cancel_reservation_by_central_system]]
 === Cancel Reservation
 
-.순서 다이어그램: 예약 취소
-image::images/figure_22.svg[순서 다이어그램: 예약 취소]
+.시퀀스 다이어그램: 예약 취소
+image::images/figure_22.svg[시퀀스 다이어그램: 예약 취소]
 
 CSMS는 예약을 취소하기 위해 <<cancel_reservation_req,CancelReservation.req>> PDU를 충전기로 보내야 합니다.
 
-충전기에 요청 PDU의 reservationId와 일치하는 예약이 있는 경우 '승인됨' 상태를 반환해야 합니다. 그렇지 않으면 '거부됨'을 반환해야 합니다.
+충전기에 요청 PDU의 reservationId와 일치하는 예약이 있는 경우 'Accepted' 상태를 반환해야 합니다. 그렇지 않으면 'Rejected'을 반환해야 합니다.
 
 [[change_availability_by_central_system]]
-=== 가용성 변경
+=== Change Availability
 
-.순서 다이어그램: 가용성 변경
-image::images/figure_23.svg[순서 다이어그램: 가용성 변경]
+.시퀀스 다이어그램: 가용성 변경
+image::images/figure_23.svg[시퀀스 다이어그램: 가용성 변경]
 
-CSMS는 충전소에 가용성을 변경하도록 요청할 수 있습니다. 충전기는 충전 중이거나 충전 준비가 되면 사용 가능한("작동 중") 것으로 간주됩니다. 충전기는 충전을 허용하지 않으면 사용할 수 없는 것으로 간주됩니다. CSMS는 충전기의 가용성을 변경하도록 요청하기 위해 <<change_availability_req,ChangeAvailability.req>> PDU를 보내야 합니다. CSMS는 가용성을 사용 가능 또는 사용 불가능으로 변경할 수 있습니다.
+CSMS는 충전기에 가용성을 변경하도록 요청할 수 있습니다. 충전기는 충전 중이거나 충전 준비가 되면 사용 가능한("작동 중") 것으로 간주됩니다. 충전기는 충전을 허용하지 않으면 사용할 수 없는 것으로 간주됩니다. CSMS는 충전기의 가용성을 변경하도록 요청하기 위해 <<change_availability_req,ChangeAvailability.req>> PDU를 보내야 합니다. CSMS는 가용성을 사용 가능 또는 사용 불가능으로 변경할 수 있습니다.
 
-<<change_availability_req,ChangeAvailability.req>> PDU를 수신하면 충전기는 <<change_availability_conf,ChangeAvailability.conf>> PDU로 응답해야 합니다. 응답 PDU는 충전기가 요청한 가용성으로 변경할 수 있는지 여부를 나타내야 합니다. 트랜잭션이 진행 중이면 충전기는 트랜잭션이 완료된 후 발생하도록 예약되었음을 나타내기 위해 가용성 상태 '예약됨'으로 응답해야 합니다.
+<<change_availability_req,ChangeAvailability.req>> PDU를 수신하면 충전기는 <<change_availability_conf,ChangeAvailability.conf>> PDU로 응답해야 합니다. 응답 PDU는 충전기가 요청한 가용성으로 변경할 수 있는지 여부를 나타내야 합니다. 트랜잭션이 진행 중이면 충전기는 트랜잭션이 완료된 후 발생하도록 예약되었음을 나타내기 위해 가용성 상태 'Reserved'으로 응답해야 합니다.
 
-CSMS가 충전기에 이미 있는 상태로 변경하도록 요청하는 경우 충전기는 가용성 상태 '수락됨'으로 응답해야 합니다.
+CSMS가 충전기에 이미 있는 상태로 변경하도록 요청하는 경우 충전기는 가용성 상태 'Accepted'으로 응답해야 합니다.
 
-<<change_availability_req,ChangeAvailability.req>> PDU로 요청된 가용성 변경이 발생하면 충전소는 해당 설명에 따라 StatusNotification.req로 CSMS에 새로운 가용성 상태를 알려야 합니다.
+<<change_availability_req,ChangeAvailability.req>> PDU로 요청된 가용성 변경이 발생하면 충전기는 해당 설명에 따라 StatusNotification.req로 CSMS에 새로운 가용성 상태를 알려야 합니다.
 
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/info-icon.svg[info-icon,32,32] |
-<<change_availability_req,ChangeAvailability.req>>에 ConnectorId = 0이 포함된 경우 상태 변경은 충전소와 모든 커넥터에 적용됩니다.
+<<change_availability_req,ChangeAvailability.req>>에 ConnectorId = 0이 포함된 경우 상태 변경은 충전기와 모든 커넥터에 적용됩니다.
 |===
 
 [cols="1,10",frame="none",grid="cols"]
@@ -1279,40 +1279,40 @@ a|image::asset/info-icon.svg[info-icon,32,32] |
 |===
 
 [[change_configuration_by_central_system]]
-=== 구성 변경
+=== Change Configuration
 
 .시퀀스 다이어그램: 구성 변경
 image::images/figure_24.svg[시퀀스 다이어그램: 구성 변경]
 
-Central System은 Charge Point에 구성 매개변수를 변경하도록 요청할 수 있습니다. 이를 위해 Central System은 <<change_configuration_req,ChangeConfiguration.req>>를 보내야 합니다. 이 요청에는 키-값 쌍이 포함되어 있으며, 여기서 "키"는 변경할 구성 설정의 이름이고 "값"은 구성 설정에 대한 새 설정을 포함합니다.
+CSMS는 충전기에 구성 매개변수를 변경하도록 요청할 수 있습니다. 이를 위해 CSMS는 <<change_configuration_req,ChangeConfiguration.req>>를 보내야 합니다. 이 요청에는 키-값 쌍이 포함되어 있으며, 여기서 "키"는 변경할 구성 설정의 이름이고 "값"은 구성 설정에 대한 새 설정을 포함합니다.
 
-<<change_configuration_req,ChangeConfiguration.req>> Charge Point를 수신하면 해당 구성에 변경 사항을 적용할 수 있었는지 여부를 나타내는 <<change_configuration_conf,ChangeConfiguration.conf>>로 응답해야 합니다. "키"와 "값"의 내용은 규정되지 않습니다. Charge Point는 다음 규칙에 따라 ChangeConfiguration.conf의 상태 필드를 설정해야 합니다.
+충전기가 <<change_configuration_req,ChangeConfiguration.req>>를 수신하면 해당 구성에 변경 사항을 적용할 수 있었는지 여부를 나타내는 <<change_configuration_conf,ChangeConfiguration.conf>>로 응답해야 합니다. "키"와 "값"의 내용은 규정되지 않습니다. 충전기는 다음 규칙에 따라 ChangeConfiguration.conf의 상태 필드를 설정해야 합니다.
 
-* 변경 사항이 성공적으로 적용되고 변경 사항이 즉시 적용되는 경우 Charge Point는 '수락됨' 상태로 응답해야 합니다.
-* 변경 사항이 성공적으로 적용되었지만 적용하려면 재부팅이 필요한 경우 Charge Point는 'RebootRequired' 상태로 응답해야 합니다.
-* "key"가 Charge Point에서 지원하는 구성 설정과 일치하지 않는 경우 'NotSupported' 상태로 응답해야 합니다.
-* Charge Point가 구성을 설정하지 않았고 이전 상태 중 어느 것도 적용되지 않는 경우 Charge Point는 'Rejected' 상태로 응답해야 합니다.
+* 변경 사항이 성공적으로 적용되고 변경 사항이 즉시 적용되는 경우 충전기는 'Accepted' 상태로 응답해야 합니다.
+* 변경 사항이 성공적으로 적용되었지만 적용하려면 재부팅이 필요한 경우 충전기는 'RebootRequired' 상태로 응답해야 합니다.
+* "키"가 충전기에서 지원하는 구성 설정과 일치하지 않는 경우 'NotSupported' 상태로 응답해야 합니다.
+* 충전기가 구성을 설정하지 않았고 이전 상태 중 어느 것도 적용되지 않는 경우 충전기는 'Rejected' 상태로 응답해야 합니다.
 
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/info-icon.svg[info-icon,32,32] |
-Charge Point가 'Rejected' 상태의 ChangeConfiguration.conf로 응답하는 변경 구성 요청의 예로는 범위를 벗어난 값이 있는 요청과 예상 형식에 맞지 않는 값이 있는 요청이 있습니다.
+충전기가 'Rejected' 상태의 ChangeConfiguration.conf로 응답하는 변경 구성 요청의 예로는 범위를 벗어난 값이 있는 요청과 예상 형식에 맞지 않는 값이 있는 요청이 있습니다.
 |===
 
 키 값이 CSL로 정의된 경우, 항목에서 CSL의 최대 길이를 나타내는 `[KeyName]MaxLength` 키와 함께 제공될 수 있습니다. 이 키가 설정되지 않은 경우 안전한 값인 1(하나) 항목을 가정해야 합니다.
 
 [[clear_cache_by_central_system]]
-=== 캐시 지우기
+=== Clear Cache
 
 .시퀀스 다이어그램: 캐시 지우기
 image::images/figure_25.svg[시퀀스 다이어그램: 캐시 지우기]
 
-CSMS는 충전기에 <<authorization_cache,Authorization Cache>>를 지우도록 요청할 수 있습니다. CSMS는 충전기의 권한 캐시를 지우기 위해 <<clear_cache_req,ClearCache.req>> PDU를 보내야 합니다.
+CSMS는 충전기에 <<authorization_cache,Authorization Cache>>를 지우도록 요청할 수 있습니다. CSMS는 충전기의 인증 캐시를 지우기 위해 <<clear_cache_req,ClearCache.req>> PDU를 보내야 합니다.
 
-<<clear_cache_req,ClearCache.req>> PDU를 수신하면 충전기는 <<clear_cache_conf,ClearCache.conf>> PDU로 응답해야 합니다. 응답 PDU는 충전기가 권한 캐시를 지울 수 있었는지 여부를 나타냅니다.
+<<clear_cache_req,ClearCache.req>> PDU를 수신하면 충전기는 <<clear_cache_conf,ClearCache.conf>> PDU로 응답해야 합니다. 응답 PDU는 충전기가 인증 캐시를 지울 수 있었는지 여부를 나타냅니다.
 
 [[clear_charging_profile_by_central_system]]
-=== 충전 프로파일 지우기
+=== Clear Charging Profile
 
 .시퀀스 다이어그램: 충전 프로파일 지우기
 image::images/figure_26.svg[시퀀스 다이어그램: 충전 프로파일 지우기]
@@ -1322,89 +1322,89 @@ CSMS가 이전에 충전기에 전송된 일부 또는 모든 충전 프로파�
 충전기는 요청을 처리할 수 있었는지 여부를 지정하는 <<clear_charging_profile_conf,ClearChargingProfile.conf>> PDU로 응답해야 합니다.
 
 [[data_transfer_by_central_system]]
-=== 데이터 전송
+=== Data Transfer
 
 .시퀀스 다이어그램: 데이터 전송
 image::images/figure_27.svg[시퀀스 다이어그램: 데이터 전송]
 
 CSMS가 OCPP에서 지원하지 않는 기능에 대한 정보를 충전소로 보내야 하는 경우, <<data_transfer_req,DataTransfer.req>> PDU를 사용해야 합니다.
 
-이 작업의 동작은 충전소에서 시작한 데이터 전송 작업과 동일합니다. 자세한 내용은 <<data_transfer_by_chargepoint,Data Transfer>>를 참조하세요.
+이 작업의 동작은 충전기에서 시작한 데이터 전송 작업과 동일합니다. 자세한 내용은 <<data_transfer_by_chargepoint,Data Transfer>>를 참조하세요.
 
 [[get_composite_schedule_by_central_system]]
-=== 복합 일정 가져오기
+=== Get Composite Schedule
 
 .시퀀스 다이어그램: 복합 일정 가져오기
 image::images/figure_28.svg[시퀀스 다이어그램: 복합 일정 가져오기]
 
-CSMS는 <<get_composite_schedule_req,GetCompositeSchedule.req>> PDU를 보내 충전소에 복합 충전 일정을 보고하도록 요청할 수 있습니다. <<get_composite_schedule_conf,GetCompositeSchedule.conf>> PDU에 보고된 일정은 충전소에 있는 모든 활성 일정과 가능한 지역 제한을 계산한 결과입니다. 지역 제한이 고려될 수 있습니다.
+CSMS는 <<get_composite_schedule_req,GetCompositeSchedule.req>> PDU를 보내 충전기에 복합 충전 일정을 보고하도록 요청할 수 있습니다. <<get_composite_schedule_conf,GetCompositeSchedule.conf>> PDU에 보고된 일정은 충전기에 있는 모든 활성 일정과 가능한 지역 제한을 계산한 결과입니다. 지역 제한이 고려될 수 있습니다.
 
-<<get_composite_schedule_req,GetCompositeSchedule.req>>를 수신하면 충전소는 요청 PDU를 수신한 순간부터 시간 X에서 X + 기간까지 복합 충전 일정 간격을 계산하여 <<get_composite_schedule_conf,GetCompositeSchedule.conf>> PDU에 넣어 CSMS로 전송해야 합니다.
+<<get_composite_schedule_req,GetCompositeSchedule.req>>를 수신하면 충전기는 요청 PDU를 수신한 순간부터 시간 X에서 X + 기간까지 복합 충전 일정 간격을 계산하여 <<get_composite_schedule_conf,GetCompositeSchedule.conf>> PDU에 넣어 CSMS로 전송해야 합니다.
 
-요청의 ConnectorId가 '0'으로 설정된 경우 충전소는 요청된 기간 동안 충전소가 그리드에서 소비할 것으로 예상하는 총 예상 전력 또는 전류를 보고해야 합니다.
+요청의 ConnectorId가 '0'으로 설정된 경우 충전기는 요청된 기간 동안 충전기가 그리드에서 소비할 것으로 예상하는 총 예상 전력 또는 전류를 보고해야 합니다.
 
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/info-icon.svg[info-icon,32,32] |
-충전소에서 보낸 충전 일정은 해당 시점에만 표시된다는 점에 유의하세요. 이 일정은 외부 원인(예: 그리드 연결 용량에 따른 로컬 밸런싱이 활성화되고 하나의 커넥터를 사용할 수 있게 됨)으로 인해 시간이 지남에 따라 변경될 수 있습니다.
+충전기에서 보낸 충전 일정은 해당 시점에만 표시된다는 점에 유의하세요. 이 일정은 외부 원인(예: 그리드 연결 용량에 따른 로컬 밸런싱이 활성화되고 하나의 커넥터를 사용할 수 있게 됨)으로 인해 시간이 지남에 따라 변경될 수 있습니다.
 |===
 
-충전소에서 요청된 일정을 보고할 수 없는 경우(예: connectorId를 알 수 없는 경우)에는 거부됨 상태로 응답해야 합니다.
+충전기에서 요청된 일정을 보고할 수 없는 경우(예: connectorId를 알 수 없는 경우)에는 거부됨(Rejected) 상태로 응답해야 합니다.
 
 [[get_configuration_by_central_system]]
-=== 구성 가져오기
+=== Get Configuration
 
 .시퀀스 다이어그램: 구성 가져오기
 image::images/figure_29.svg[시퀀스 다이어그램: 구성 가져오기]
 
-구성 설정 값을 검색하기 위해 Central System은 <<get_configuration_req,GetConfiguration.req>> PDU를 Charge Point로 보내야 합니다.
+구성 설정 값을 검색하기 위해 CSMS는 <<get_configuration_req,GetConfiguration.req>> PDU를 충전기로 보내야 합니다.
 
-요청 PDU의 키 목록이 비어 있거나 누락된 경우(선택 사항), Charge Point는 <<get_configuration_conf,GetConfiguration.conf>>에 있는 모든 구성 설정 목록을 반환해야 합니다. 그렇지 않으면 Charge Point는 인식된 키와 해당 값 및 읽기 전용 상태 목록을 반환해야 합니다. 인식되지 않은 키는 <<get_configuration_conf,GetConfiguration.conf>>의 선택적 unknown key list 요소의 일부로 응답 PDU에 배치해야 합니다.
+요청 PDU의 키 목록이 비어 있거나 누락된 경우(선택 사항), 충전기는 <<get_configuration_conf,GetConfiguration.conf>>에 있는 모든 구성 설정 목록을 반환해야 합니다. 그렇지 않으면 충전기는 인식된 키와 해당 값 및 읽기 전용 상태 목록을 반환해야 합니다. 인식되지 않은 키는 <<get_configuration_conf,GetConfiguration.conf>>의 선택적 unknown key list 요소의 일부로 응답 PDU에 배치해야 합니다.
 
-단일 PDU에서 요청된 구성 키 수는 Charge Point에 의해 제한될 수 있습니다. 이 최대값은 구성 키 <<get_configuration_max_keys,GetConfigurationMaxKeys>>를 읽어서 검색할 수 있습니다.
+단일 PDU에서 요청된 구성 키 수는 충전기에 의해 제한될 수 있습니다. 이 최대값은 구성 키 <<get_configuration_max_keys,GetConfigurationMaxKeys>>를 읽어서 검색할 수 있습니다.
 
 [[get_diagnostics_by_central_system]]
-=== 진단 받기
+=== Get Diagnostics
 
 .시퀀스 다이어그램: 진단 받기
 image::images/figure_30.svg[시퀀스 다이어그램: 진단 받기]
 
-CSMS는 진단 정보를 위해 충전기을 요청할 수 있습니다. CSMS는 충전기의 진단 정보를 얻기 위해 <<get_diagnostics_req,GetDiagnostics.req>> PDU를 보내야 하며, 충전기는 진단 데이터를 업로드해야 하는 위치와 요청된 진단 정보의 시작 및 종료 시간을 선택적으로 포함해야 합니다.
+CSMS는 충전기에 진단 정보를 요청할 수 있습니다. CSMS는 충전기의 진단 정보를 얻기 위해 <<get_diagnostics_req,GetDiagnostics.req>> PDU를 보내야 하며, 충전기는 진단 데이터를 업로드해야 하는 위치와 요청된 진단 정보의 시작 및 종료 시간을 선택적으로 포함해야 합니다.
 
 <<get_diagnostics_req,GetDiagnostics.req>> PDU를 수신하고 진단 정보를 사용할 수 있는 경우 충전기는 <<get_diagnostics_conf,GetDiagnostics.conf>> PDU로 응답해야 하며, 여기에는 업로드될 진단 정보가 포함된 파일의 이름이 명시되어야 합니다. 충전기는 단일 파일을 업로드해야 합니다. 진단 파일의 형식은 규정되지 않습니다. 진단 파일을 사용할 수 없는 경우, <<get_diagnostics_conf,GetDiagnostics.conf>>에는 파일 이름이 포함되지 않아야 합니다.
 
 진단 파일을 업로드하는 동안, 충전기는 <<diagnostics_status_notification_req,DiagnosticsStatusNotification.req>> PDU를 보내 CSMS에 업로드 프로세스 상태를 최신 상태로 유지해야 합니다.
 
 [[get_local_list_version_by_central_system]]
-=== 로컬 목록 버전 가져오기
+=== Get Local List Version
 
 .시퀀스 다이어그램: 로컬 목록 버전 가져오기
 image::images/figure_31.svg[시퀀스 다이어그램: 로컬 목록 버전 가져오기]
 
-<<local_authorization_list,Local Authorization List>>의 동기화를 지원하기 위해, CSMS는 로컬 권한 목록의 버전 번호에 대한 충전기를 요청할 수 있습니다. CSMS는 이 값을 요청하기 위해 <<get_local_list_version_req,GetLocalListVersion.req>> PDU를 보내야 합니다.
+<<local_authorization_list,Local Authorization List>>의 동기화를 지원하기 위해, CSMS는 충전기에 로컬 인증 목록 버전 번호를 요청할 수 있습니다. CSMS는 이 값을 요청하기 위해 <<get_local_list_version_req,GetLocalListVersion.req>> PDU를 보내야 합니다.
 
 <<get_local_list_version_req,GetLocalListVersion.req>> PDU를 수신하면 충전소는 로컬 인증 목록의 버전 번호가 포함된 <<get_local_list_version_conf,GetLocalListVersion.conf>> PDU로 응답해야 합니다. 로컬 인증 목록이 비어 있음을 나타내는 버전 번호 0(영)을 사용하고 충전소가 로컬 인증 목록을 지원하지 않음을 나타내는 버전 번호 -1을 사용해야 합니다.
 
 [[remote_start_transaction_by_central_system]]
-=== 원격 시작 트랜잭션
+=== Remote Start Transaction
 
-.순서 다이어그램: 원격 시작 트랜잭션
-image::images/figure_32.svg[순서 다이어그램: 원격 시작 트랜잭션]
+.시퀀스 다이어그램: 원격 트랜잭션 시작
+image::images/figure_32.svg[시퀀스 다이어그램: 원격 트랜잭션 시작]
 
-Central System은 <<remote_start_transaction_req,RemoteStartTransaction.req>>를 보내서 충전소에 트랜잭션을 시작하도록 요청할 수 있습니다. 수신 시, 충전소는 <<remote_start_transaction_conf,RemoteStartTransaction.conf>>와 요청을 수락했는지 여부를 나타내는 상태로 응답해야 하며 트랜잭션을 시작하려고 시도합니다.
+CSMS는 <<remote_start_transaction_req,RemoteStartTransaction.req>>를 보내서 충전기에 트랜잭션을 시작하도록 요청할 수 있습니다. 수신 시, 충전기는 <<remote_start_transaction_conf,RemoteStartTransaction.conf>>와 요청을 수락했는지 여부를 나타내는 상태로 응답해야 하며 트랜잭션을 시작하려고 시도합니다.
 
-RemoteStartTransaction.req 메시지의 효과는 충전소의 <<authorize_remote_tx_requests,AuthorizeRemoteTxRequests>> 구성 키 값에 따라 달라집니다.
+RemoteStartTransaction.req 메시지의 효과는 충전기의 <<authorize_remote_tx_requests,AuthorizeRemoteTxRequests>> 구성 키 값에 따라 달라집니다.
 
-* `AuthorizeRemoteTxRequests`의 값이 _true_이면, 충전소는 RemoteStartTransaction.req 메시지에 제공된 idTag로 트랜잭션를 시작하기 위해 충전소에서 로컬 작업에 대한 응답으로 동작해야 합니다. 즉, 충전소는 먼저 <<local_authorization_list,Local Authorization List>>, <<authorization_cache,Authorization Cache>> 및/또는 <<authorize_req,Authorize.req>> 요청을 사용하여 idTag를 승인하려고 시도합니다. 승인이 획득된 후에만 트랜잭션이 시작됩니다.
-* `AuthorizeRemoteTxRequests`의 값이 _false_이면, 충전소는 RemoteStartTransaction.req 메시지에 제공된 idTag에 대한 트랜잭션를 즉시 시작하려고 시도해야 합니다. 트랜잭션이 시작된 후 충전소는 CSMS에 StartTransaction 요청을 보내고 CSMS는 이 StartTransaction 요청을 처리할 때 idTag의 승인 상태를 확인합니다.
+* `AuthorizeRemoteTxRequests`의 값이 _true_ 이면, 충전기는 RemoteStartTransaction.req 메시지에 제공된 idTag로 트랜잭션를 시작하기 위해 충전기에서 로컬 작업에 대한 응답으로 동작해야 합니다. 즉, 충전기는 먼저 <<local_authorization_list,Local Authorization List>>, <<authorization_cache,Authorization Cache>> 및/또는 <<authorize_req,Authorize.req>> 요청을 사용하여 idTag를 승인하려고 시도합니다. 승인을 획득한 후에만 트랜잭션이 시작됩니다.
+* `AuthorizeRemoteTxRequests`의 값이 _false_ 이면, 충전기는 RemoteStartTransaction.req 메시지에 제공된 idTag에 대한 트랜잭션를 즉시 시작하려고 시도해야 합니다. 트랜잭션이 시작된 후 충전기는 CSMS에 StartTransaction 요청을 보내고 CSMS는 이 StartTransaction 요청을 처리할 때 idTag의 승인 상태를 확인합니다.
 
 다음은 Remote Start Transaction의 일반적인 사용 사례입니다.
 
 * CPO 운영자가 트랜잭션를 시작하는 데 문제가 있는 EV 운전자를 도울 수 있도록 합니다.
-* 모바일 앱이 Central System을 통해 충전 트랜잭션를 제어할 수 있도록 합니다.
-* SMS를 사용하여 Central System을 통해 충전 트랜잭션를 제어할 수 있도록 합니다.
+* 모바일 앱이 CSMS를 통해 충전 트랜잭션를 제어할 수 있도록 합니다.
+* SMS를 사용하여 CSMS를 통해 충전 트랜잭션를 제어할 수 있도록 합니다.
 
-<<remote_start_transaction_req,RemoteStartTransaction.req>>에는 식별자(idTag)가 포함되어야 하며, Charge Point는 트랜잭션를 시작할 수 있는 경우 이를 사용하여 Central System으로 <<start_transaction_req,StartTransaction.req>>를 보냅니다. 트랜잭션는 <<start_transaction_by_charge_point,StartTransaction>>에서 설명한 것과 같은 방식으로 시작됩니다. <<remote_start_transaction_req,RemoteStartTransaction.req>>에는 특정 커넥터에서 트랜잭션를 시작해야 하는 경우 커넥터 ID가 포함될 수 있습니다. 커넥터 ID가 제공되지 않으면 Charge Point가 커넥터 선택을 제어합니다. 충전기는 커넥터 ID가 없는 <<remote_start_transaction_req,RemoteStartTransaction.req>>를 거부할 수 있습니다.
+<<remote_start_transaction_req,RemoteStartTransaction.req>>에는 식별자(idTag)가 포함되어야 하며, 충전기는 트랜잭션를 시작할 수 있는 경우 이를 사용하여 CSMS로 <<start_transaction_req,StartTransaction.req>>를 보냅니다. 트랜잭션은 <<start_transaction_by_charge_point,StartTransaction>>에서 설명한 것과 같은 방식으로 시작됩니다. <<remote_start_transaction_req,RemoteStartTransaction.req>>에는 특정 커넥터에서 트랜잭션을 시작해야 하는 경우 커넥터 ID가 포함될 수 있습니다. 커넥터 ID가 제공되지 않으면 충전기가 커넥터 선택을 제어합니다. 충전기는 커넥터 ID가 없는 <<remote_start_transaction_req,RemoteStartTransaction.req>>를 거부할 수 있습니다.
 
 CSMS는 RemoteStartTransaction 요청에 <<charging_profile_type,ChargingProfile>>을 포함할 수 있습니다. 이 <<charging_profile_type,ChargingProfile>>의 목적은 <<tx_profile,TxProfile>>로 설정해야 합니다. 수락된 경우 충전기는 이 <<charging_profile_type,ChargingProfile>>을 트랜잭션에 사용해야 합니다.
 
@@ -1415,56 +1415,56 @@ a|image::asset/info-icon.svg[info-icon,32,32] |
 |===
 
 [[remote_stop_transaction_by_central_system]]
-=== 원격 중지 트랜잭션
+=== Remote Stop Transaction
 
-.원격 중지 트랜잭션
-image::images/figure_33.svg[원격 중지 트랜잭션]
+.원격 트랜잭션 중지
+image::images/figure_33.svg[원격 트랜잭션 중지]
 
-CSMS는 충전소에 트랜잭션 식별자와 함께 <<remote_stop_transaction_req,RemoteStopTransaction.req>>를 충전소로 보내 트랜잭션를 중지하도록 요청할 수 있습니다. 충전소는 <<remote_stop_transaction_conf,RemoteStopTransaction.conf>>와 요청을 수락했는지 여부와 주어진 transactionId를 가진 트랜잭션이 진행 중이며 중지될 것인지를 나타내는 상태로 응답해야 합니다.
+CSMS는 충전기에 트랜잭션 식별자와 함께 <<remote_stop_transaction_req,RemoteStopTransaction.req>>를 충전기로 보내 트랜잭션를 중지하도록 요청할 수 있습니다. 충전기는 <<remote_stop_transaction_conf,RemoteStopTransaction.conf>>와 요청을 수락했는지 여부와 주어진 transactionId를 가진 트랜잭션이 진행 중이며 중지될 것인지를 나타내는 상태로 응답해야 합니다.
 
-트랜잭션를 중지하라는 이 원격 요청은 트랜잭션를 중지하는 로컬 작업과 동일합니다. 따라서 트랜잭션는 중지되어야 합니다. 충전소는 <<stop_transaction_req,StopTransaction.req>>를 보내고 해당되는 경우 커넥터를 잠금 해제해야 합니다.
+트랜잭션을 중지하라는 이 원격 요청은 트랜잭션을 중지하는 로컬 작업과 동일합니다. 따라서 트랜잭션은 중지되어야 합니다. 충전기는 <<stop_transaction_req,StopTransaction.req>>를 보내고 해당되는 경우 커넥터를 잠금 해제해야 합니다.
 
-다음 두 가지 주요 사용 사례는 원격 정지 트랜잭션의 이유입니다.
+다음 두 가지 예시는 원격 트랜잭선 중지의 주요 사용 사례입니다.
 
 * CPO 운영자가 트랜잭션을 중지하는 데 문제가 있는 EV 운전자를 도울 수 있도록 합니다.
-* 모바일 앱이 CSMS을 통해 충전 트랜잭션을 제어할 수 있도록 합니다.
+* 모바일 앱이 CSMS를 통해 충전 트랜잭션을 제어할 수 있도록 합니다.
 
 [[reserve_now_by_central_system]]
-=== 지금 예약
+=== Reserve Now
 
-.시퀀스 다이어그램: 지금 예약
-image::images/figure_34.svg[시퀀스 다이어그램: 지금 예약]
+.시퀀스 다이어그램: 지금 예약하기
+image::images/figure_34.svg[시퀀스 다이어그램: 지금 예약하기]
 
 CSMS는 특정 idTag에서 사용할 커넥터를 예약하기 위해 충전기에 <<reserve_now_req,ReserveNow.req>>를 발급할 수 있습니다.
 
-예약을 요청하려면 CSMS가 충전기에 <<reserve_now_req,ReserveNow.req>> PDU를 보내야 합니다. CSMS는 예약할 커넥터를 지정할 수 있습니다. <<reserve_now_req,ReserveNow.req>> PDU를 수신하면 충전소는 <<reserve_now_conf,ReserveNow.conf>> PDU로 응답해야 합니다.
+예약을 요청하려면 CSMS가 충전기에 <<reserve_now_req,ReserveNow.req>> PDU를 보내야 합니다. CSMS는 예약할 커넥터를 지정할 수 있습니다. <<reserve_now_req,ReserveNow.req>> PDU를 수신하면 충전기는 <<reserve_now_conf,ReserveNow.conf>> PDU로 응답해야 합니다.
 
-요청의 reservationId가 충전소의 예약과 일치하는 경우 충전소는 해당 예약을 요청의 새 예약으로 대체해야 합니다.
+요청의 reservationId가 충전기의 예약과 일치하는 경우 충전기는 해당 예약을 요청의 새 예약으로 대체해야 합니다.
 
-reservationId가 충전소의 어떤 예약과도 일치하지 않는 경우 충전소는 커넥터를 예약하는 데 성공하면 상태 값 'Accepted'를 반환해야 합니다. 충전소는 충전소 또는 지정된 커넥터가 점유된 경우 'Occupied'를 반환해야 합니다. 충전소는 충전소 또는 커넥터가 동일하거나 다른 idTag에 예약된 경우에도 'Occupied'를 반환해야 합니다. 충전소는 충전소 또는 커넥터가 Faulted 상태인 경우 'Faulted'를 반환해야 합니다. 충전소는 충전소 또는 커넥터가 Unavailable 상태인 경우 'Unavailable'을 반환해야 합니다. 충전소는 예약을 수락하지 않도록 구성된 경우 '거부됨'을 반환해야 합니다.
+reservationId가 충전기의 어떤 예약과도 일치하지 않는 경우 충전기는 커넥터를 예약하는 데 성공하면 상태 값 'Accepted'를 반환해야 합니다. 충전기는 충전기 또는 지정된 커넥터가 점유된 경우 'Occupied'를 반환해야 합니다. 충전기는 충전기 또는 커넥터가 동일하거나 다른 idTag에 예약된 경우에도 'Occupied'를 반환해야 합니다. 충전기는 충전기 또는 커넥터가 Faulted 상태인 경우 'Faulted'를 반환해야 합니다. 충전기는 충전기 또는 커넥터가 Unavailable 상태인 경우 'Unavailable'을 반환해야 합니다. 충전기는 예약을 수락하지 않도록 구성된 경우 'Rejected'을 반환해야 합니다.
 
-충전소가 예약 요청을 수락하면 예약된 커넥터에서 들어오는 모든 idTag에 대한 요금 청구를 거부해야 합니다. 들어오는 idTag 또는 부모 idTag가 예약의 idTag 또는 부모 idTag와 일치하는 경우는 예외입니다.
+충전기가 예약 요청을 수락하면 예약된 커넥터에서 들어오는 모든 idTag에 대한 요금 청구를 거부해야 합니다. 들어오는 idTag 또는 부모 idTag가 예약의 idTag 또는 부모 idTag와 일치하는 경우는 예외입니다.
 
-구성 키: <<reserve_connector_zero_supported,`ReserveConnectorZeroSupported`>>가 _true_로 설정된 경우 충전소는 커넥터 0에서 예약을 지원합니다. 예약 요청의 connectorId가 0인 경우 충전소는 특정 커넥터를 예약하지 않아야 하지만 예약의 유효 기간 동안 언제든지 예약된 idTag에 대해 하나의 커넥터를 사용할 수 있도록 해야 합니다. 구성 키: <<reserve_connector_zero_supported,`ReserveConnectorZeroSupported`>>가 설정되지 않았거나 _false_로 설정된 경우 충전소는 '거부됨'을 반환해야 합니다.
+구성 키: <<reserve_connector_zero_supported,`ReserveConnectorZeroSupported`>>가 _true_ 로 설정된 경우 충전기는 커넥터 0에서 예약을 지원합니다. 예약 요청의 connectorId가 0인 경우 충전기는 특정 커넥터를 예약하지 않아야 하지만, 예약의 유효 기간 동안 언제든지 예약된 idTag에 대해 하나의 커넥터를 사용할 수 있도록 해야 합니다. 구성 키: <<reserve_connector_zero_supported,`ReserveConnectorZeroSupported`>>가 설정되지 않았거나 _false_ 로 설정된 경우 충전기는 'Rejected'를 반환해야 합니다.
 
-예약의 부모 idTag에 값이 있는 경우(선택 사항), 들어오는 idTag와 연관된 부모 idTag를 확인하기 위해 충전소는 로컬 승인 목록 또는 승인 캐시에서 조회할 수 있습니다. 로컬 승인 목록 또는 승인 캐시에서 찾을 수 없는 경우 충전소는 들어오는 idTag에 대한 <<authorize_req,Authorize.req>>를 CSMS로 보내야 합니다. <<authorize_conf,Authorize.conf>> 응답에는 부모 id가 포함될 수 있습니다.
+예약에 부모 idTag에 값이 있는 경우(선택 사항), 들어오는 idTag와 연관된 부모 idTag를 확인하기 위해 충전기는 로컬 인증 목록 또는 인증 캐시에서 조회할 수 있습니다. 로컬 인증 목록 또는 인증 캐시에서 찾을 수 없는 경우 충전기는 들어오는 idTag에 대한 <<authorize_req,Authorize.req>>를 CSMS로 보내야 합니다. <<authorize_conf,Authorize.conf>> 응답에는 부모 id가 포함될 수 있습니다.
 
-예약은 (1) 예약된 idTag 또는 부모 idTag에 대한 트랜잭션이 시작되고 예약된 커넥터 또는 예약된 connectorId가 0인 모든 커넥터에서 시작되거나 (2) expiryDate에 지정된 시간에 도달하거나 (3) 충전소 또는 커넥터가 오류 또는 사용 불가능으로 설정될 때 충전소에서 종료되어야 합니다.
+예약은 (1) 예약된 idTag 또는 부모 idTag에 대한 트랜잭션이 시작되고 예약된 커넥터 또는 예약된 connectorId가 0인 모든 커넥터에서 시작되거나 (2) expiryDate에 지정된 시간에 도달하거나 (3) 충전기 또는 커넥터가 'Faulted' 또는 'Unavailable'으로 설정될 때 충전소에서 종료되어야 합니다.
 
-예약된 idTag에 대한 트랜잭션이 시작되면 Charge Point는 <<start_transaction_req,StartTransaction.req>> PDU(<<start_transaction_by_charge_point,Start Transaction>> 참조)에서 reservationId를 보내 CSMS에 예약이 종료되었음을 알립니다.
+예약된 idTag에 대한 트랜잭션이 시작되면 충전기는 <<start_transaction_req,StartTransaction.req>> PDU(<<start_transaction_by_charge_point,Start Transaction>> 참조)에서 reservationId를 보내 CSMS에 예약이 종료되었음을 알립니다.
 
-예약이 만료되면 Charge Point는 예약을 종료하고 커넥터를 사용 가능하게 합니다. Charge Point는 CSMS에 예약된 커넥터를 사용할 수 있음을 알리는 상태 알림을 보냅니다.
+예약이 만료되면 충전기는 예약을 종료하고 커넥터를 사용 가능하게 합니다. 충전기는 CSMS에 예약된 커넥터를 사용할 수 있음을 알리는 상태 알림을 보냅니다.
 
-Charge Point가 권한 캐시를 구현한 경우 <<reserve_now_conf,ReserveNow.conf>> PDU를 수신하면 Charge Point는 idTag가 <<local_authorization_list,Local Authorization List>>에 없으면 <<id_tag_info,IdTagInfo>> 값을 <<authorization_cache,Authorization Cache>>에 설명된 대로 응답에서 업데이트합니다.
+충전기가 인증 캐시를 구현한 경우 <<reserve_now_conf,ReserveNow.conf>> PDU를 수신하면 충전기는 idTag가 <<local_authorization_list,Local Authorization List>>에 없으면 <<id_tag_info,IdTagInfo>> 값을 <<authorization_cache,Authorization Cache>>에 설명된 대로 응답에서 업데이트합니다.
 
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/info-icon.svg[info-icon,32,32] |
 <<reserve_now_req,ReserveNow.req>>를 수신한 후와 트랜잭션 시작 전에 authorize.req로 식별자를 검증하는 것이 좋습니다.
 |===
-
+// TODO:
 [[reset_by_central_system]]
-=== 재설정
+=== Reset
 
 .시퀀스 다이어그램: 재설정
 image::images/figure_35.svg[시퀀스 다이어그램: 재설정]
