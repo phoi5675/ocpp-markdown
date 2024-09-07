@@ -1462,41 +1462,41 @@ reservationId가 충전기의 어떤 예약과도 일치하지 않는 경우 충
 a|image::asset/info-icon.svg[info-icon,32,32] |
 <<reserve_now_req,ReserveNow.req>>를 수신한 후와 트랜잭션 시작 전에 authorize.req로 식별자를 검증하는 것이 좋습니다.
 |===
-// TODO:
+
 [[reset_by_central_system]]
 === Reset
 
 .시퀀스 다이어그램: 재설정
 image::images/figure_35.svg[시퀀스 다이어그램: 재설정]
 
-CSMS는 충전기가 스스로 재설정하도록 요청하기 위해 <<reset_req,Reset.req>> PDU를 보내야 합니다. CSMS는 하드 또는 소프트 재설정을 요청할 수 있습니다. <<reset_req,Reset.req>> PDU를 수신하면 충전기는 <<reset_conf,Reset.conf>> PDU로 응답해야 합니다. 응답 PDU에는 충전기가 자체적으로 재설정을 시도할지 여부가 포함되어야 합니다.
+CSMS는 충전기가 스스로 재설정하도록 요청하기 위해 <<reset_req,Reset.req>> PDU를 보내야 합니다. CSMS는 하드 또는 소프트 리셋을 요청할 수 있습니다. <<reset_req,Reset.req>> PDU를 수신하면 충전기는 <<reset_conf,Reset.conf>> PDU로 응답해야 합니다. 응답 PDU에는 충전기가 자체적으로 재설정을 시도할지 여부가 포함되어야 합니다.
 
 Reset.req를 수신한 후 충전기는 재설정을 수행하기 전에 진행 중인 모든 트랜잭션에 대해 <<stop_transaction_req,StopTransaction.req>>를 보내야 합니다. 충전기가 CSMS에서 <<stop_transaction_conf,StopTransaction.conf>>를 수신하지 못하면 <<stop_transaction_req,StopTransaction.req>>를 대기열에 넣어야 합니다.
 
-소프트 재설정을 수신하면 충전기는 진행 중인 트랜잭션를 우아하게 중지하고 진행 중인 모든 트랜잭션에 대해 <<stop_transaction_req,StopTransaction.req>>를 보내야 합니다. 그런 다음 애플리케이션 소프트웨어를 다시 시작해야 합니다(가능하면 프로세서/컨트롤러를 다시 시작해야 함).
+소프트 리셋을 수신하면 충전기는 진행 중인 트랜잭션를 정상적으로 중지하고 진행 중인 모든 트랜잭션에 대해 <<stop_transaction_req,StopTransaction.req>>를 보내야 합니다. 그런 다음 애플리케이션 소프트웨어를 다시 시작해야 합니다(가능하면 프로세서/컨트롤러를 다시 시작해야 함).
 
-하드 리셋을 받으면 Charge Point는 (모든) 하드웨어를 다시 시작해야 하며, 진행 중인 트랜잭션를 우아하게 중지할 필요는 없습니다. 가능하다면 Charge Point는 <<boot_notification_conf,BootNotification.conf>>를 통해 재시작하고 CSMS에서 수락한 후 이전에 진행 중이던 트랜잭션에 대해 <<stop_transaction_req,StopTransaction.req>>를 보냅니다. 이것은 "하드" 리셋을 보내면 올바르게 작동하지 않는 Charge Point에 대한 최후의 해결책이며, (대기 중인) 정보가 손실될 수 있습니다.
+하드 리셋을 받으면 충전기는 (모든) 하드웨어를 다시 시작해야 하며, 진행 중인 트랜잭션를 정상적으로 중지할 필요는 없습니다. 가능하다면 충전기는 <<boot_notification_conf,BootNotification.conf>>를 통해 재시작하고 CSMS에서 수락한 후 이전에 진행 중이던 트랜잭션에 대해 <<stop_transaction_req,StopTransaction.req>>를 보냅니다. 이것은 "하드" 리셋을 보내면 올바르게 작동하지 않는 충전기에 대한 최후의 해결책이며, (대기 중인) 정보가 손실될 수 있습니다.
 
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/info-icon.svg[info-icon,32,32] |
-지속 상태: 예를 들어: 커넥터가 사용 불가능으로 설정되면 지속됩니다.
+지속 상태: 예를 들어, "Unavilable"로 설정된 커넥터 상태는 지속되어야 합니다.
 |===
 
 [[send_local_list_by_central_system]]
-=== 로컬 목록 전송
+=== Send Local List
 
 .시퀀스 다이어그램: 로컬 목록 전송
 image::images/figure_36.svg[시퀀스 다이어그램: 로컬 목록 전송]
 
-CSMS는 충전소가 idTags의 권한 부여에 사용할 수 있는 <<local_authorization_list,Local Authorization List>>를 전송할 수 있습니다. 목록은 충전소의 현재 목록을 대체하는 전체 목록이거나 충전소의 현재 목록에 적용할 업데이트가 있는 차등 목록일 수 있습니다.
+CSMS는 충전기가 idTags의 권한 부여에 사용할 수 있는 <<local_authorization_list,Local Authorization List>>를 전송할 수 있습니다. 목록은 충전기의 현재 목록을 대체하는 전체 목록이거나 충전기의 현재 목록에 적용할 업데이트가 있는 차등 목록(differential list)일 수 있습니다.
 
-CSMS는 충전소로 목록을 전송하기 위해 <<send_local_list_req,SendLocalList.req>> PDU를 전송해야 합니다. <<send_local_list_req,SendLocalList.req>> PDU에는 업데이트 유형(전체 또는 차등)과 충전소가 업데이트된 후 로컬 권한 부여 목록과 연관시켜야 하는 버전 번호가 포함되어야 합니다.
+CSMS는 충전기로 목록을 전송하기 위해 <<send_local_list_req,SendLocalList.req>> PDU를 전송해야 합니다. <<send_local_list_req,SendLocalList.req>> PDU에는 업데이트 유형(전체 또는 차등)과 충전기가 업데이트된 후 로컬 인증 목록과 연관시켜야 하는 버전 번호가 포함되어야 합니다.
 
-<<send_local_list_req,SendLocalList.req>> PDU를 수신하면 충전소는 <<send_local_list_conf,SendLocalList.conf>> PDU로 응답해야 합니다. 응답 PDU는 충전소가 로컬 권한 부여 목록의 업데이트를 수락했는지 여부를 나타내야 합니다. 상태가 실패 또는 버전 불일치이고 updateType이 차등인 경우 CSMS는 updateType Full로 전체 로컬 권한 부여 목록을 다시 보내야 합니다.
+<<send_local_list_req,SendLocalList.req>> PDU를 수신하면 충전기는 <<send_local_list_conf,SendLocalList.conf>> PDU로 응답해야 합니다. 응답 PDU는 충전기가 로컬 인증 목록의 업데이트를 수락했는지 여부를 나타내야 합니다. 상태가 실패 또는 버전 불일치이고 updateType이 차등인 경우 CSMS는 updateType Full로 전체 로컬 인증 목록을 다시 보내야 합니다.
 
 [[set_charging_profile_by_central_system]]
-=== 충전 프로파일 설정
+=== Set Charging Profile
 
 .시퀀스 다이어그램: 충전 프로파일 설정
 image::images/figure_37.svg[시퀀스 다이어그램: 충전 프로파일 설정]
@@ -1511,53 +1511,53 @@ CSMS는 다음과 같은 상황에서 충전 프로파일을 설정하기 위해
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/warning-icon.svg[warning-icon,32,32] |
-트랜잭션와 TxProfile 간의 불일치를 방지하기 위해 CSMS는 프로파일이 특정 트랜잭션에 적용되는 경우 <<set_charging_profile_req,SetChargingProfile.req>>에 transactionId를 포함해야 합니다.
+트랜잭션과 TxProfile 간의 불일치를 방지하기 위해 CSMS는 프로파일이 특정 트랜잭션에 적용되는 경우 <<set_charging_profile_req,SetChargingProfile.req>>에 transactionId를 포함해야 합니다.
 |===
 
 이러한 상황은 아래에 설명되어 있습니다.
 
-==== 트랜잭션 시작 시 청구 프로파일 설정
+==== Setting a charging profile at start of transaction
 
-CSMS가 <<start_transaction_req,StartTransaction.req>>를 수신하면 CSMS는 <<start_transaction_conf,StartTransaction.conf>>로 응답해야 합니다. 청구 프로파일이 필요한 경우 CSMS는 <<set_charging_profile_req,SetChargingProfile.req>>를 충전기으로 보내기로 선택할 수 있습니다.
+CSMS가 <<start_transaction_req,StartTransaction.req>>를 수신하면 CSMS는 <<start_transaction_conf,StartTransaction.conf>>로 응답해야 합니다. 충전 프로파일이 필요한 경우 CSMS는 <<set_charging_profile_req,SetChargingProfile.req>>를 충전기로 보내는 것을 선택할 수 있습니다.
 
-요금 프로파일을 보내기 전에 <<start_transaction_req,StartTransaction.req>> PDU의 타임스탬프를 확인하여 트랜잭션이 계속 진행 중일 가능성이 있는지 확인하는 것이 좋습니다. <<start_transaction_req,StartTransaction.req>>는 오프라인 기간 동안 캐시되었을 수 있습니다.
+충전 프로파일을 보내기 전에 <<start_transaction_req,StartTransaction.req>> PDU의 타임스탬프를 확인하여 트랜잭션이 계속 진행 중일 가능성이 있는지 확인하는 것이 좋습니다. <<start_transaction_req,StartTransaction.req>>는 오프라인 기간 동안 캐시되었을 수 있습니다.
 
-==== RemoteStartTransaction 요청에서 요금 프로파일 설정
+==== Setting a charge profile in a RemoteStartTransaction request
 
-CSMS는 <<remote_start_transaction_req,RemoteStartTransaction>> 요청에 요금 프로파일을 포함할 수 있습니다.
+CSMS는 <<remote_start_transaction_req,RemoteStartTransaction>> 요청에 충전 프로파일을 포함할 수 있습니다.
 
-CSMS에 <<charging_profile_type,ChargingProfile>>이 포함된 경우 ChargingProfilePurpose는 TxProfile로 설정해야 하며 transactionId는 설정해서는 안 됩니다.
-
-[cols="1,10",frame="none",grid="cols"]
-|===
-a|image::asset/info-icon.svg[info-icon,32,32] |
-요금 지점은 새로 시작된 트랜잭션에 지정된 프로파일을 적용해야 합니다. 이 트랜잭션는 CSMS에서 <<start_transaction_conf,StartTransaction.conf>>를 통해 할당한 transactionId를 받게 됩니다. 충전기가 <<set_charging_profile_req,SetChargingProfile.req>>를 수신하면, 이 트랜잭션에 대한 _transactionId_와 <<remote_start_transaction_req,RemoteStartTransaction.req>>에 제공된 프로파일과 동일한 StackLevel을 갖는 충전기는 기존 충전 프로파일을 대체해야 하며, 그렇지 않은 경우 기존 프로파일 옆에 프로파일을 설치/스택해야 합니다.
-|===
-
-==== 트랜잭션 중에 충전 프로파일 설정
-
-CSMS는 충전기에 충전 프로파일을 보내 해당 트랜잭션에 대한 충전 프로파일을 업데이트할 수 있습니다. CSMS는 이 목적으로 <<set_charging_profile_req,SetChargingProfile.req>> PDU를 사용해야 합니다. 동일한 <<charging_profile_id,chargingProfileId>> 또는 동일한 <<stack_level,stackLevel>> / <<charging_profile_purpose,ChargingProfilePurpose>> 조합을 가진 충전 프로파일이 충전기에 있는 경우, 새로운 충전 프로파일은 기존 충전 프로파일을 대체해야 하며, 그렇지 않은 경우 추가해야 합니다. 그런 다음 충전기는 충전 프로파일 컬렉션을 다시 평가하여 어떤 충전 프로파일이 활성화될지 결정해야 합니다. 업데이트된 충전 프로파일이 현재 트랜잭션에만 적용되도록 하려면 <<charging_profile_type,ChargingProfile>>의 <<charging_profile_purpose,chargingProfilePurpose>>를 TxProfile로 설정해야 합니다. (섹션 참조: <<charging_profile_purpose,Charging Profile Purposes>>)
-
-==== 트랜잭션 외부에서 충전 프로파일 설정
-
-CSMS는 기본 충전 프로파일로 사용할 충전 프로파일을 충전기으로 보낼 수 있습니다. CSMS는 해당 목적으로 <<set_charging_profile_req,SetChargingProfile.req>> PDU를 사용해야 합니다. 이러한 충전 프로파일은 언제든지 보낼 수 있습니다. 동일한 <<charging_profile_id,chargingProfileId>> 또는 동일한 <<stack_level,stackLevel>> / <<charging_profile_purpose,ChargingProfilePurpose>> 조합을 가진 충전 프로파일이 충전기에 있는 경우 새 충전 프로파일이 기존 충전 프로파일을 대체해야 하며, 그렇지 않은 경우 추가해야 합니다. 그런 다음 충전기는 충전 프로파일 모음을 다시 평가하여 어떤 충전 프로파일이 활성화될지 결정해야 합니다.
+CSMS가 <<charging_profile_type,ChargingProfile>>를 포함한 경우 ChargingProfilePurpose는 TxProfile로 설정해야 하며 transactionId는 설정해서는 안 됩니다.
 
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/info-icon.svg[info-icon,32,32] |
-활성 트랜잭션이 없거나 트랜잭션이 진행되기 전에 목적을 <<tx_profile,TxProfile>>로 설정한 <<charging_profile_type,ChargingProfile>>을 설정할 수 없습니다.
+충전기는 새로 시작된 트랜잭션에 지정된 프로파일을 적용해야 합니다. 이 트랜잭션는 CSMS에서 <<start_transaction_conf,StartTransaction.conf>>를 통해 할당한 transactionId를 받게 됩니다. 충전기가 <<set_charging_profile_req,SetChargingProfile.req>>를 수신하면, 이 트랜잭션에 대한 _transactionId_와 <<remote_start_transaction_req,RemoteStartTransaction.req>>에 제공된 프로파일과 동일한 StackLevel을 갖는 충전기는 기존 충전 프로파일을 대체해야 하며, 그렇지 않은 경우 기존 프로파일 옆에 프로파일을 설치/스택해야 합니다.
 |===
+
+==== Setting a charging profile during a transaction
+
+CSMS는 충전기에 충전 프로파일을 보내 해당 트랜잭션에 대한 충전 프로파일을 업데이트할 수 있습니다. CSMS는 이 목적으로 <<set_charging_profile_req,SetChargingProfile.req>> PDU를 사용해야 합니다. 동일한 <<charging_profile_id,chargingProfileId>> 또는 동일한 <<stack_level,stackLevel>> / <<charging_profile_purpose,ChargingProfilePurpose>> 조합을 가진 충전 프로파일이 충전기에 있는 경우, 새로운 충전 프로파일은 기존 충전 프로파일을 대체해야 하며, 그렇지 않은 경우 추가해야 합니다. 그런 다음 충전기는 충전 프로파일 컬렉션을 다시 평가하여 어떤 충전 프로파일을 활성화할지 결정해야 합니다. 업데이트된 충전 프로파일이 현재 트랜잭션에만 적용되도록 하려면 <<charging_profile_type,ChargingProfile>>의 <<charging_profile_purpose,chargingProfilePurpose>>를 TxProfile로 설정해야 합니다. (<<charging_profile_purpose,Charging Profile Purposes>> 섹션 참조)
+
+==== Setting a charging profile outside of a transaction
+
+CSMS는 기본 충전 프로파일로 사용할 충전 프로파일을 충전기로 보낼 수 있습니다. CSMS는 해당 목적으로 <<set_charging_profile_req,SetChargingProfile.req>> PDU를 사용해야 합니다. 이러한 충전 프로파일은 언제든지 보낼 수 있습니다. 동일한 <<charging_profile_id,chargingProfileId>> 또는 동일한 <<stack_level,stackLevel>> / <<charging_profile_purpose,ChargingProfilePurpose>> 조합을 가진 충전 프로파일이 충전기에 있는 경우 새 충전 프로파일이 기존 충전 프로파일을 대체해야 하며, 그렇지 않은 경우 추가해야 합니다. 그런 다음 충전기는 충전 프로파일 모음을 다시 평가하여 어떤 충전 프로파일이 활성화될지 결정해야 합니다.
 
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/info-icon.svg[info-icon,32,32] |
-<<charging_profile_type,ChargingProfile>>이 실행 중에 새로 고쳐지면 새 <<charging_profile_type,ChargingProfile>>의 시작 일정을 과거에 두는 것이 좋습니다. 그러면 ChargingProfiles 사이에 기본 충전 동작 기간이 없습니다. 충전기는 새 <<charging_profile_type,ChargingProfile>>이 설치될 때까지 기존 <<charging_profile_type,ChargingProfile>>을 계속 실행해야 합니다.
+<<charging_profile_type,ChargingProfile>>를 활성 트랜잭션이 없거나, 트랜잭션이 진행되기 전에 설정하는 경우, <<tx_profile,TxProfile>>를 설정하기 위한 목적으로 사용할 수 없습니다.
 |===
 
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/info-icon.svg[info-icon,32,32] |
-<<charging_schedule_period,chargingSchedulePeriod>>가 기간보다 길면 나머지 기간은 실행되지 않아야 합니다. 기간이 <<charging_schedule_period,chargingSchedulePeriod>>보다 길면 충전기는 _duration_이 끝날 때까지 마지막 <<charging_schedule_period,chargingSchedulePeriod>>의 값을 유지해야 합니다.
+<<charging_profile_type,ChargingProfile>>이 실행 중에 업데이트 되는 경우, 새 <<charging_profile_type,ChargingProfile>>의 시작 일정을 과거에 두는 것이 좋습니다. 그러면 ChargingProfiles 사이에 기본 충전 동작 기간이 없습니다. 충전기는 새 <<charging_profile_type,ChargingProfile>>이 설치될 때까지 기존 <<charging_profile_type,ChargingProfile>>을 계속 실행해야 합니다.
+|===
+
+[cols="1,10",frame="none",grid="cols"]
+|===
+a|image::asset/info-icon.svg[info-icon,32,32] |
+<<charging_schedule_period,chargingSchedulePeriod>>가 기간보다 길면 나머지 기간은 실행되지 않아야 합니다. 기간이 <<charging_schedule_period,chargingSchedulePeriod>>보다 길면 충전기는 _duration_ 이 끝날 때까지 마지막 <<charging_schedule_period,chargingSchedulePeriod>>의 값을 유지해야 합니다.
 |===
 
 [cols="1,10",frame="none",grid="cols"]
@@ -1575,11 +1575,11 @@ a|image::asset/info-icon.svg[info-icon,32,32] |
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/info-icon.svg[info-icon,32,32] |
-<<recurrency_kind_type,recurrencyKind>>가 <<recurrency_kind_type,recurrencyKind>> 기간보다 짧은 <<charging_schedule_type,chargingSchedule>> _duration_과 함께 사용되는 경우, 충전기는 <<charging_schedule_type,chargingSchedule>> _duration_이 끝난 후 기본 동작으로 돌아갑니다. 이 폴백은 충전기가 사용 가능한 경우 더 낮은 stackLevel을 가진 <<charging_profile_type,ChargingProfile>>을 사용해야 함을 의미합니다. 다른 <<charging_profile_type,ChargingProfile>>을 사용할 수 없는 경우 충전기는 <<charging_profile_type,ChargingProfile>>이 설치되지 않은 것처럼 충전을 허용해야 합니다. <<charging_schedule_period,chargingSchedulePeriod>> 및/또는 기간이 반복 기간 기간보다 긴 경우 나머지 기간은 실행되지 않아야 합니다.
+<<recurrency_kind_type,recurrencyKind>>가 <<recurrency_kind_type,recurrencyKind>> 기간보다 짧은 <<charging_schedule_type,chargingSchedule>> _duration_ 과 함께 사용되는 경우, 충전기는 <<charging_schedule_type,chargingSchedule>> _duration_ 이 끝난 후 기본 동작으로 돌아갑니다. 이 폴백은 충전기가 사용 가능한 경우 더 낮은 stackLevel을 가진 <<charging_profile_type,ChargingProfile>>을 사용해야 함을 의미합니다. 다른 <<charging_profile_type,ChargingProfile>>을 사용할 수 없는 경우 충전기는 <<charging_profile_type,ChargingProfile>>이 설치되지 않은 것처럼 충전을 허용해야 합니다. <<charging_schedule_period,chargingSchedulePeriod>> 및/또는 기간이 반복 기간 기간보다 긴 경우 나머지 기간은 실행되지 않아야 합니다.
 |===
 
 [[trigger_message]]
-=== 트리거 메시지
+=== Trigger Message
 
 .시퀀스 다이어그램: 트리거 메시지
 image::images/figure_38.svg[시퀀스 다이어그램: 트리거 메시지]
@@ -1588,20 +1588,19 @@ image::images/figure_38.svg[시퀀스 다이어그램: 트리거 메시지]
 
 <<trigger_message_req,TriggerMessage.req>>를 사용하면 CSMS가 충전기에 요청하여 충전기에서 시작한 메시지를 보낼 수 있습니다. 요청에서 CSMS는 수신하고자 하는 메시지를 표시합니다. CSMS는 이러한 요청된 모든 메시지에 대해 선택적으로 이 요청이 적용되는 커넥터를 표시할 수 있습니다. 요청된 메시지는 다음과 같습니다. 지정된 connectorId가 메시지와 관련이 없으면 무시해야 합니다. 이러한 경우에도 요청된 메시지를 보내야 합니다.
 
-반대로, connectorId가 관련이 있지만 없는 경우, 이는 "허용된 모든 connectorId 값에 대해"로 해석되어야 합니다. 예를 들어, connectorId 0에 대한 statusNotification 요청은 Charge Point의 상태에 대한 요청입니다. connectorId가 없는 statusNotification에 대한 요청은 여러 statusNotification에 대한 요청입니다. Charge Point 자체에 대한 알림과 각 커넥터에 대한 알림입니다.
-Charge Point Central System
+반대로, connectorId가 관련이 있지만 없는 경우, 이는 "허용된 모든 connectorId 값에 대해"로 해석되어야 합니다. 예를 들어, connectorId 0에 대한 statusNotification 요청은 충전기의 상태에 대한 요청입니다. connectorId가 없는 statusNotification에 대한 요청은 여러 statusNotification에 대한 요청입니다. 충전기 자체에 대한 알림과 각 커넥터에 대한 알림입니다.
 
-.시퀀스 다이어그램: 트리거 메시지 StatusNotification 예
-image::images/figure_39.svg[시퀀스 다이어그램: 트리거 메시지 StatusNotification 예]
+.시퀀스 다이어그램: 트리거 메시지 - StatusNotification 예
+image::images/figure_39.svg[시퀀스 다이어그램: 트리거 메시지 - StatusNotification 예]
 
-Charge Point는 요청된 메시지를 보내기 전에 먼저 TriggerMessage 응답을 보내야 합니다. <<trigger_message_conf,TriggerMessage.conf>>에서 Charge Point는 ACCEPTED 또는 REJECTED를 반환하여 보낼지 여부를 표시해야 합니다. Charge Point가 보내기 요청을 수락하거나 거부하는 것은 Charge Point에 달려 있습니다. 요청된 메시지가 알려지지 않았거나 구현되지 않은 경우 Charge Point는 NOT_IMPLEMENTED를 반환해야 합니다.
+충전기는 요청된 메시지를 보내기 전에 먼저 TriggerMessage 응답을 보내야 합니다. <<trigger_message_conf,TriggerMessage.conf>>에서 충전기는 ACCEPTED 또는 REJECTED를 반환하여 보낼지 여부를 표시해야 합니다. 충전기가 보내기 요청을 수락하거나 거부하는 것은 충전기에 달려 있습니다. 요청된 메시지가 알려지지 않았거나 구현되지 않은 경우 충전기는 NOT_IMPLEMENTED를 반환해야 합니다.
 
-Charge Point가 수락으로 표시한 메시지는 전송해야 합니다. 요청을 수락하고 실제로 요청된 메시지를 전송하는 사이에 정상적인 작업으로 인해 동일한 메시지가 전송되는 상황이 발생할 수 있습니다. 이러한 경우 방금 전송된 메시지는 요청을 준수하는 것으로 간주될 수 있습니다.
+충전기가 ACCEPTED로 표시한 메시지는 전송해야 합니다. 요청을 수락하고 실제로 요청된 메시지를 전송하는 사이에 정상적인 작업으로 인해 동일한 메시지가 전송되는 상황이 발생할 수 있습니다. 이러한 경우 방금 전송된 메시지는 요청을 준수하는 것으로 간주될 수 있습니다.
 
 TriggerMessage 메커니즘은 과거 데이터를 검색하기 위한 것이 아닙니다. 트리거하는 메시지는 현재 정보만 제공해야 합니다. 예를 들어 이런 방식으로 트리거된 <<metervalues_req,MeterValues.req>> 메시지는 구성 키 <<meter_values_sampled_data,`MeterValuesSampledData`>>에 구성된 모든 측정량에 대한 최신 측정값을 반환해야 합니다. <<start_transaction_req,StartTransaction>> 및 <<stop_transaction_req,StopTransaction>>은 상태와 관련이 없지만 본질적으로 전환을 설명하기 때문에 이 메커니즘에서 제외되었습니다.
 
 [[unlock_connector_by_central_system]]
-=== 커넥터 잠금 해제
+=== Unlock Connector
 
 .시퀀스 다이어그램: 커넥터 잠금 해제
 image::images/figure_40.svg[시퀀스 다이어그램: 커넥터 잠금 해제]
@@ -1611,20 +1610,20 @@ CSMS는 충전기에 커넥터 잠금 해제를 요청할 수 있습니다. 이�
 
 EV 운전자가 CPO 헬프 데스크에 전화하면 운영자가 수동으로 <<unlock_connector_req,UnlockConnector.req>>를 충전기로 보내 커넥터 잠금 해제를 다시 시도할 수 있습니다. 이번에는 커넥터가 잠금 해제되고 EV 운전자가 케이블을 분리하고 운전할 수 있기를 바랍니다.
 
-<<unlock_connector_req,UnlockConnector.req>>는 실행 중인 트랜잭션를 원격으로 중지하는 데 사용해서는 안 되며, 대신 <<remote_stop_transaction_by_central_system,Remote Stop Transaction>>을 사용하세요.
+<<unlock_connector_req,UnlockConnector.req>>는 실행 중인 트랜잭션를 원격으로 중지하는 데 사용해서는 안 되며, 대신 <<remote_stop_transaction_by_central_system,Remote Stop Transaction>>을 사용해야 합니다.
 
-<<unlock_connector_req,UnlockConnector.req>> PDU를 수신하면 충전소는 <<unlock_connector_conf,UnlockConnector.conf>> PDU로 응답해야 합니다. 응답 PDU는 충전소가 커넥터를 잠금 해제할 수 있었는지 여부를 나타내야 합니다.
+<<unlock_connector_req,UnlockConnector.req>> PDU를 수신하면 충전기는 <<unlock_connector_conf,UnlockConnector.conf>> PDU로 응답해야 합니다. 응답 PDU는 충전기가 커넥터를 잠금 해제할 수 있었는지 여부를 나타내야 합니다.
 
-특정 커넥터에서 진행 중인 트랜잭션이 있는 경우 충전소는 <<stop_transaction_by_central_system,Stop Transaction>>에 설명된 대로 먼저 트랜잭션를 완료해야 합니다.
+특정 커넥터에서 진행 중인 트랜잭션이 있는 경우 충전기는 <<stop_transaction_by_central_system,Stop Transaction>>에 설명된 대로 먼저 트랜잭션를 완료해야 합니다.
 
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/warning-icon.svg[warning-icon,32,32] |
-<<unlock_connector_req,UnlockConnector.req>>는 커넥터 액세스 도어를 잠금 해제하는 것이 아니라 커넥터의 케이블 고정 잠금을 해제하기 위한 것입니다.
+<<unlock_connector_req,UnlockConnector.req>>는 충전기 커버를 잠금 해제하는 것이 아니라 커넥터의 케이블 고정 잠금을 해제하기 위한 것입니다.
 |===
 
 [[update_firmware_by_central_system]]
-=== 펌웨어 업데이트
+=== Update Firmware
 
 .시퀀스 다이어그램: 펌웨어 업데이트
 image::images/figure_41.svg[시퀀스 다이어그램: 펌웨어 업데이트]
@@ -1635,20 +1634,20 @@ CSMS는 충전기에 펌웨어를 업데이트해야 한다는 것을 알릴 수
 
 펌웨어를 다운로드하고 설치하는 동안 충전기는 <<firmware_status_notification_req,FirmwareStatusNotification.req>> PDU를 보내 CSMS에 업데이트 프로세스 상태를 알려야 합니다.
 
-새 펌웨어 이미지가 "유효"한 경우 충전기는 가능한 한 빨리 새 펌웨어를 설치해야 합니다.
+새 펌웨어 이미지가 "vaild"한 경우 충전기는 가능한 한 빨리 새 펌웨어를 설치해야 합니다.
 
 펌웨어 설치 중에 충전을 계속할 수 없는 경우 설치를 시작하기 전에 충전 세션이 종료될 때까지(충전기 유휴) 기다리는 것이 좋습니다. 충전기가 세션이 종료될 때까지 기다리는 동안 사용하지 않는 커넥터를 UNAVAILABLE로 설정하는 것이 좋습니다.
 
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/info-icon.svg[info-icon,32,32] |
-위의 시퀀스 다이어그램은 예시입니다. 상태를 _Installed_로 보내기 전에 먼저 Charge Point를 재부팅하여 새 펌웨어가 부팅되고 Central System에 연결할 수 있는지 확인하는 것이 좋습니다. 이는 필수 사항이 아닙니다.
+위의 시퀀스 다이어그램은 예시입니다. 상태를 _Installed_ 로 보내기 전에 먼저 충전기를 재부팅하여 새 펌웨어가 부팅되고 CSMS에 연결할 수 있는지 확인하는 것이 좋습니다. 이는 필수 사항이 아닙니다.
 |===
 
 <<<
 
 [[messages]]
-== 메시지
+== Messages
 
 [[authorize_req]]
 === Authorize.req
@@ -1657,7 +1656,7 @@ a|image::asset/info-icon.svg[info-icon,32,32] |
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
 |**idTag** |<<idtoken,IdToken>> |1..1 |필수. 여기에는 인증이 필요한 식별자가 들어 있습니다.
 |===
@@ -1665,13 +1664,13 @@ a|image::asset/info-icon.svg[info-icon,32,32] |
 [[authorize_conf]]
 === Authorize.conf
 
-여기에는 CSMS가 충전소에서 <<authorize_req,Authorize.req>> PDU에 대한 응답으로 보낸 Authorize.conf PDU의 필드 정의가 들어 있습니다. <<authorize,Authorize>>도 참조하세요.
+여기에는 CSMS가 충전기에서 <<authorize_req,Authorize.req>> PDU에 대한 응답으로 보낸 Authorize.conf PDU의 필드 정의가 들어 있습니다. <<authorize,Authorize>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**idTagInfo** |<<id_tag_info,IdTagInfo>> |1..1 |필수. 여기에는 권한 부여 상태, 만료 및 부모 ID에 대한 정보가 포함됩니다.
+|**idTagInfo** |<<id_tag_info,IdTagInfo>> |1..1 |필수. 여기에는 인증 상태, 만료 및 parent id에 대한 정보가 포함됩니다.
 |===
 
 [[boot_notification_req]]
@@ -1681,41 +1680,41 @@ a|image::asset/info-icon.svg[info-icon,32,32] |
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드. |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**chargeBoxSerialNumber** |<<cistring25type,CiString25Type>> |0..1 |선택 사항. 여기에는 충전소 내부의 충전 상자 일련 번호를 식별하는 값이 포함됩니다. 더 이상 사용되지 않으며 향후 버전에서 제거됩니다.
-|**chargePointModel** |<<cistring20type,CiString20Type>> |1..1 |필수. 여기에는 충전소의 모델을 식별하는 값이 포함됩니다.
-|**chargePointSerialNumber** |<<cistring25type,CiString25Type>> |0..1 |선택 사항. 여기에는 충전소의 일련 번호를 식별하는 값이 포함됩니다.
-|**chargePointVendor** |<<cistring20type,CiString20Type>> |1..1 |필수. 여기에는 충전소의 공급업체를 식별하는 값이 포함됩니다.
+|**chargeBoxSerialNumber** |<<cistring25type,CiString25Type>> |0..1 |선택 사항. 여기에는 충전기 내부의 충전 단자의 일련 번호를 식별하는 값이 포함됩니다. 이 필드는 더 이상 사용되지 않으며 향후 버전에서 제거됩니다.
+|**chargePointModel** |<<cistring20type,CiString20Type>> |1..1 |필수. 여기에는 충전기의 모델을 식별하는 값이 포함됩니다.
+|**chargePointSerialNumber** |<<cistring25type,CiString25Type>> |0..1 |선택 사항. 여기에는 충전기의 일련 번호를 식별하는 값이 포함됩니다.
+|**chargePointVendor** |<<cistring20type,CiString20Type>> |1..1 |필수. 여기에는 충전기의 공급업체를 식별하는 값이 포함됩니다.
 |**firmwareVersion** |<<cistring50type,CiString50Type>> |0..1 |선택 사항. 여기에는 충전기의 펌웨어 버전이 포함됩니다.
 |**iccid** |<<cistring20type,CiString20Type>> |0..1 |선택 사항. 여기에는 모뎀 SIM 카드의 ICCID가 포함됩니다.
 |**imsi** |<<cistring20type,CiString20Type>> |0..1 |선택 사항. 여기에는 모뎀 SIM 카드의 IMSI가 포함됩니다.
-|**meterSerialNumber** |<<cistring25type,CiString25Type>> |0..1 |선택 사항. 여기에는 충전기의 주 전기 미터의 일련 번호가 포함됩니다.
-|**meterType** |<<cistring25type,CiString25Type>> |0..1 |선택 사항. 여기에는 충전기의 주 전기 미터의 유형이 포함됩니다.
+|**meterSerialNumber** |<<cistring25type,CiString25Type>> |0..1 |선택 사항. 여기에는 충전기의 주 계량기의 일련 번호가 포함됩니다.
+|**meterType** |<<cistring25type,CiString25Type>> |0..1 |선택 사항. 여기에는 충전기의 주 계량기의 유형이 포함됩니다.
 |===
 
 [[boot_notification_conf]]
 === BootNotification.conf
 
-여기에는 <<boot_notification_req,BootNotification.req>> PDU에 대한 응답으로 Central System에서 Charge Point로 보낸 BootNotification.conf PDU의 필드 정의가 들어 있습니다. 또한 Boot Notification을 참조하세요.
+여기에는 <<boot_notification_req,BootNotification.req>> PDU에 대한 응답으로 CSMS에서 충전기로 보낸 BootNotification.conf PDU의 필드 정의가 들어 있습니다. Boot Notification도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**currentTime** |dateTime |1..1 |필수. 여기에는 Central System의 현재 시간이 포함됩니다.
-|**interval** |integer |1..1 |필수. <<registration_status,RegistrationStatus>>가 _Accepted_인 경우, 여기에는 초 단위의 하트비트 간격이 포함됩니다. Central System이 Accepted가 아닌 다른 값을 반환하는 경우, interval 필드의 값은 다음 BootNotification 요청을 보내기 전 최소 대기 시간을 나타냅니다.
-|**status** |<<registration_status,RegistrationStatus>> |1..1 |필수. 여기에는 충전기가 System Central에 등록되었는지 여부가 포함됩니다.
+|**currentTime** |dateTime |1..1 |필수. 여기에는 CSMS의 현재 시간이 포함됩니다.
+|**interval** |integer |1..1 |필수. <<registration_status,RegistrationStatus>>가 _Accepted_ 인 경우, 여기에는 초 단위의 하트비트 간격이 포함됩니다. CSMS가 Accepted가 아닌 다른 값을 반환하는 경우, interval 필드의 값은 다음 BootNotification 요청을 보내기 전 최소 대기 시간을 나타냅니다.
+|**status** |<<registration_status,RegistrationStatus>> |1..1 |필수. 여기에는 충전기가 CSMS에 등록되었는지 여부가 포함됩니다.
 |===
 
 [[cancel_reservation_req]]
 === CancelReservation.req
 
-CSMS에서 충전소로 보낸 CancelReservation.req PDU의 필드 정의가 포함되어 있습니다. <<cancel_reservation_by_central_system,Cancel Reservation>>도 참조하세요.
+CSMS에서 충전기로 보낸 CancelReservation.req PDU의 필드 정의가 포함되어 있습니다. <<cancel_reservation_by_central_system,Cancel Reservation>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
 |**reservationId** |정수 |1..1 |필수. 취소할 예약의 ID입니다.
 |===
@@ -1723,104 +1722,104 @@ CSMS에서 충전소로 보낸 CancelReservation.req PDU의 필드 정의가 포
 [[cancel_reservation_conf]]
 === CancelReservation.conf
 
-여기에는 <<cancel_reservation_req,CancelReservation.req>> PDU에 대한 응답으로 Charge Point에서 Central System으로 보낸 CancelReservation.conf PDU의 필드 정의가 포함되어 있습니다. 또한 <<cancel_reservation_by_central_system,Cancel Reservation>>을 참조하세요.
+여기에는 <<cancel_reservation_req,CancelReservation.req>> PDU에 대한 응답으로 충전기에서 CSMS로 보낸 CancelReservation.conf PDU의 필드 정의가 포함되어 있습니다. <<cancel_reservation_by_central_system,Cancel Reservation>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**상태** |<<cancel_reservation_status,CancelReservationStatus>> |1..1 |필수. Central System에서 예약을 취소한 성공 또는 실패를 나타냅니다.
+|**status** |<<cancel_reservation_status,CancelReservationStatus>> |1..1 |필수. CSMS에서 보낸 예약 취소 메시지에 대한 성공 또는 실패를 나타냅니다.
 |===
 
 [[change_availability_req]]
 === ChangeAvailability.req
 
-여기에는 CSMS가 충전소로 보낸 ChangeAvailability.req PDU의 필드 정의가 포함되어 있습니다. 또한 <<change_availability_by_central_system,Change Availability>>를 참조하세요.
+여기에는 CSMS가 충전기로 보낸 ChangeAvailability.req PDU의 필드 정의가 포함되어 있습니다.  <<change_availability_by_central_system,Change Availability>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**connectorId** |정수 +
+|**connectorId** |integer +
 connectorId >= 0 |1..1
-|필수. 가용성을 변경해야 하는 커넥터의 ID입니다. 충전소와 모든 커넥터의 가용성을 변경해야 하는 경우 ID '0'(영)이 사용됩니다.
+|필수. 가용성을 변경해야 하는 커넥터의 ID입니다. 충전기와 모든 커넥터의 가용성을 변경해야 하는 경우 ID '0'(영)이 사용됩니다.
 |**type** |<<availability_type,AvailabilityType>> |1..1 |필수. 여기에는 충전기가 수행해야 하는 가용성 변경 유형이 포함됩니다.
 |===
 
 [[change_availability_conf]]
 === ChangeAvailability.conf
 
-여기에는 Charge Point에서 Central System으로 반환한 ChangeAvailability.conf PDU의 필드 정의가 포함되어 있습니다. 또한 <<change_availability_by_central_system,Change Availability>>를 참조하세요.
+여기에는 충전기에서 CSMS로 반환한 ChangeAvailability.conf PDU의 필드 정의가 포함되어 있습니다. 또한 <<change_availability_by_central_system,Change Availability>>를 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**상태** |<<availability_status,AvailabilityStatus>> |1..1
-|필수. Charge Point에서 가용성 변경을 수행할 수 있는지 여부를 나타냅니다.
+|**status** |<<availability_status,AvailabilityStatus>> |1..1
+|필수. 충전기에서 가용성 변경을 수행할 수 있는지 여부를 나타냅니다.
 |===
 
 [[change_configuration_req]]
 === ChangeConfiguration.req
 
-여기에는 Central System에서 Charge Point로 보낸 ChangeConfiguration.req PDU의 필드 정의가 포함되어 있습니다. '키' 및 '값' 필드의 내용과 의미는 Charge Point와 Central System 간에 합의하는 것이 좋습니다. 또한 <<change_configuration_by_central_system,Change Configuration>>을 참조하세요.
+여기에는 CSMS에서 충전기로 보낸 ChangeConfiguration.req PDU의 필드 정의가 포함되어 있습니다. '키' 및 '값' 필드의 내용과 의미는 충전기와 CSMS 간에 합의하는 것이 좋습니다. <<change_configuration_by_central_system,Change Configuration>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**키** |<<cistring50type,CiString50Type>> |1..1 |필수. 변경할 구성 설정의 이름입니다. +
-표준 구성 키 이름과 연관된 값은 를 참조하세요.
-|**값** |<<cistring500type,CiString500Type>> |1..1 |필수. 설정에 대한 문자열인 새 값입니다. +
-표준 구성 키 이름 및 연관된 값은 다음을 참조하세요.
+|**key** |<<cistring50type,CiString50Type>> |1..1 |필수. 변경할 구성 설정의 이름입니다. +
+표준 구성 키 이름과 연관된 값은 configuration key를 참조하세요.
+|**value** |<<cistring500type,CiString500Type>> |1..1 |필수. 설정에 대한 문자열인 새 값입니다. +
+표준 구성 키 이름 및 연관된 값은 configuration key를 참조하세요.
 |===
 
 [[change_configuration_conf]]
 === ChangeConfiguration.conf
 
-여기에는 Charge Point에서 Central System으로 반환된 ChangeConfiguration.conf PDU의 필드 정의가 포함되어 있습니다. 또한 <<change_configuration_by_central_system,Change Configuration>>을 참조하세요.
+여기에는 충전기에서 CSMS로 반환된 ChangeConfiguration.conf PDU의 필드 정의가 포함되어 있습니다. <<change_configuration_by_central_system,Change Configuration>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**상태** |<<configuration_status,ConfigurationStatus>> |1..1 |필수. 구성 변경이 수락되었는지 여부를 반환합니다.
+|**status** |<<configuration_status,ConfigurationStatus>> |1..1 |필수. 구성 변경이 수락되었는지 여부를 반환합니다.
 |===
 
 [[clear_cache_req]]
 === ClearCache.req
 
-여기에는 Central System에서 Charge Point로 보낸 ClearCache.req PDU의 필드 정의가 포함되어 있습니다. <<clear_cache_by_central_system,Clear Cache>>도 참조하세요.
+여기에는 CSMS에서 충전기로 보낸 ClearCache.req PDU의 필드 정의가 포함되어 있습니다. <<clear_cache_by_central_system,Clear Cache>>도 참조하세요.
 
 정의된 필드가 없습니다.
 
 [[clear_cache_conf]]
 === ClearCache.conf
 
-여기에는 <<clear_cache_req,ClearCache.req>> PDU에 대한 응답으로 Charge Point에서 Central System으로 보낸 ClearCache.conf PDU의 필드 정의가 들어 있습니다. <<clear_cache_by_central_system,Clear Cache>>도 참조하세요.
+여기에는 <<clear_cache_req,ClearCache.req>> PDU에 대한 응답으로 충전기에서 CSMS로 보낸 ClearCache.conf PDU의 필드 정의가 들어 있습니다. <<clear_cache_by_central_system,Clear Cache>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**상태** |<<clear_cache_status,ClearCacheStatus>> |1..1 |필수. 충전소에서 요청을 실행한 경우 수락되고, 그렇지 않으면 거부됩니다.
+|**status** |<<clear_cache_status,ClearCacheStatus>> |1..1 |필수. 충전기에서 요청을 실행한 경우 수락되고, 그렇지 않으면 거부됩니다.
 |===
 
 [[clear_charging_profile_req]]
 === ClearChargingProfile.req
 
-CSMS에서 충전소로 보낸 ClearChargingProfile.req PDU의 필드 정의가 포함되어 있습니다.
+CSMS에서 충전기로 보낸 ClearChargingProfile.req PDU의 필드 정의가 포함되어 있습니다.
 
 CSMS는 이 메시지를 사용하여 특정 충전 프로파일(id로 표시) 또는 선택적 connectorId, stackLevel 및 <<charging_profile_purposes,chargingProfilePurpose>> 필드의 값과 일치하는 충전 프로파일을 지울(제거) 수 있습니다. <<clear_charging_profile_by_central_system,Clear Charging Profile>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**id** |정수 |0..1 |선택 사항. 지울 충전 프로파일의 ID입니다.
-|**connectorId** |정수 |0..1 |선택 사항. 충전 프로파일을 지울 커넥터의 ID를 지정합니다. 0(0)의 connectorId는 전체 충전기에 대한 충전 프로파일을 지정합니다. 이 매개변수가 없으면 요청의 다른 기준과 일치하는 모든 충전 프로파일에 지우기가 적용됩니다.
+|**id** |integer |0..1 |선택 사항. 지울 충전 프로파일의 ID입니다.
+|**connectorId** |integer |0..1 |선택 사항. 충전 프로파일을 지울 커넥터의 ID를 지정합니다. 0(0)의 connectorId는 전체 충전기에 대한 충전 프로파일을 지정합니다. 이 매개변수가 없으면 요청의 다른 기준과 일치하는 모든 충전 프로파일에 지우기가 적용됩니다.
 |**chargingProfilePurpose** |<<charging_profile_purpose_type,ChargingProfilePurposeType>> |0..1 |선택 사항. 요청의 다른 기준을 충족하는 경우 지워질 충전 프로파일의 목적을 지정합니다.
-|**stackLevel** |정수 |0..1 |선택 사항. 요청의 다른 기준을 충족하는 경우 충전 프로파일이 지워지는 stackLevel을 지정합니다.
+|**stackLevel** |integer |0..1 |선택 사항. 요청의 다른 기준을 충족하는 경우 충전 프로파일이 지워지는 stackLevel을 지정합니다.
 |===
 
 [[clear_charging_profile_conf]]
@@ -1830,19 +1829,19 @@ CSMS는 이 메시지를 사용하여 특정 충전 프로파일(id로 표시) �
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**상태** |<<charging_profile_status,ClearChargingProfileStatus>> |1..1 |필수. 충전기가 요청을 실행할 수 있었는지 여부를 나타냅니다.
+|**status** |<<charging_profile_status,ClearChargingProfileStatus>> |1..1 |필수. 충전기가 요청을 실행할 수 있었는지 여부를 나타냅니다.
 |===
 
 [[data_transfer_req]]
 === DataTransfer.req
 
-여기에는 CSMS에서 충전소로 또는 그 반대로 전송한 DataTransfer.req PDU의 필드 정의가 포함됩니다. <<data_transfer_by_chargepoint,Data Transfer>>도 참조하세요.
+여기에는 CSMS에서 충전기로 또는 그 반대로 전송한 DataTransfer.req PDU의 필드 정의가 포함됩니다. <<data_transfer_by_chargepoint,Data Transfer>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
 |**vendorId** |CiString255Type |1..1 |필수. 공급업체별 구현을 식별합니다.
 |**messageId** |CiString50Type |0..1 |선택 사항. 추가 식별 필드
@@ -1853,106 +1852,105 @@ CSMS는 이 메시지를 사용하여 특정 충전 프로파일(id로 표시) �
 [[data_transfer_conf]]
 === DataTransfer.conf
 
-여기에는 충전소에서 CSMS로 전송한 DataTransfer.conf PDU의 필드 정의가 포함되어 있으며, <<data_transfer_req,DataTransfer.req>> PDU에 대한 응답으로 CSMS 또는 그 반대로 전송됩니다. 또한 <<data_transfer_by_chargepoint,Data Transfer>>를 참조하세요.
+여기에는 충전기에서 CSMS로 전송한 DataTransfer.conf PDU의 필드 정의가 포함되어 있으며, <<data_transfer_req,DataTransfer.req>> PDU에 대한 응답으로 CSMS 또는 그 반대로 전송됩니다. <<data_transfer_by_chargepoint,Data Transfer>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**상태** |<<data_transfer_status,DataTransferStatus>> |1..1 |필수. 데이터 전송의 성공 또는 실패를 나타냅니다.
-|**데이터** |텍스트 +
+|**status** |<<data_transfer_status,DataTransferStatus>> |1..1 |필수. 데이터 전송의 성공 또는 실패를 나타냅니다.
+|**data** |텍스트 +
 길이 정의되지 않음 |0..1 |선택 사항. 요청에 대한 응답 데이터
 |===
 
 [[diagnostics_status_notification_req]]
 === DiagnosticsStatusNotification.req
 
-여기에는 충전기에서 CSMS로 보낸 DiagnosticsStatusNotification.req PDU의 필드 정의가 포함되어 있습니다. 또한 <<diagnostics_status_notification_by_charge_point,Diagnostics Status Notification>>을 참조하세요.
+여기에는 충전기에서 CSMS로 보낸 DiagnosticsStatusNotification.req PDU의 필드 정의가 포함되어 있습니다. <<diagnostics_status_notification_by_charge_point,Diagnostics Status Notification>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**상태** |<<diagnostics_status,DiagnosticsStatus>> |1..1 |필수. 여기에는 진단 업로드 상태가 포함되어 있습니다.
+|**status** |<<diagnostics_status,DiagnosticsStatus>> |1..1 |필수. 여기에는 진단 업로드 상태가 포함되어 있습니다.
 |===
 
 [[diagnostics_status_notification_conf]]
 === DiagnosticsStatusNotification.conf
 
-여기에는 CSMS가 <<diagnostics_status_notification_req,DiagnosticsStatusNotification.req>> PDU에 대한 응답으로 충전소로 보낸 DiagnosticsStatusNotification.conf PDU의 필드 정의가 포함되어 있습니다. 또한 <<diagnostics_status_notification_by_charge_point,Diagnostics Status Notification>>을 참조하세요.
+여기에는 CSMS가 <<diagnostics_status_notification_req,DiagnosticsStatusNotification.req>> PDU에 대한 응답으로 충전기로 보낸 DiagnosticsStatusNotification.conf PDU의 필드 정의가 포함되어 있습니다. <<diagnostics_status_notification_by_charge_point,Diagnostics Status Notification>>도 참조하세요.
 
 정의된 필드가 없습니다.
 
 [[firmware_status_notification_req]]
 === FirmwareStatusNotification.req
 
-여기에는 충전소가 CSMS로 보낸 FirmwareStatusNotifitacion.req PDU의 필드 정의가 포함되어 있습니다. 또한 <<firmware_status_notification_charge_point,Firmware Status Notification>>을 참조하세요.
+여기에는 충전기가 CSMS로 보낸 FirmwareStatusNotifitacion.req PDU의 필드 정의가 포함되어 있습니다. 또한 <<firmware_status_notification_charge_point,Firmware Status Notification>>을 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**상태** |<<firmware_status,FirmwareStatus>> |1..1 |필수. 여기에는 펌웨어 설치의 진행 상태가 포함됩니다.
+|**status** |<<firmware_status,FirmwareStatus>> |1..1 |필수. 여기에는 펌웨어 설치의 진행 상태가 포함됩니다.
 |===
 
 [[firmware_status_notification_conf]]
 === FirmwareStatusNotification.conf
 
-여기에는 CSMS가 <<firmware_status_notification_req,FirmwareStatusNotification.req>> PDU에 대한 응답으로 충전기으로 보낸 FirmwareStatusNotification.conf PDU의 필드 정의가 포함됩니다. <<firmware_status_notification_charge_point,Firmware Status Notification>>도 참조하세요.
+여기에는 CSMS가 <<firmware_status_notification_req,FirmwareStatusNotification.req>> PDU에 대한 응답으로 충전기로 보낸 FirmwareStatusNotification.conf PDU의 필드 정의가 포함됩니다. <<firmware_status_notification_charge_point,Firmware Status Notification>>도 참조하세요.
 
 정의된 필드가 없습니다.
 
 [[get_composite_schedule_req]]
 === GetCompositeSchedule.req
 
-여기에는 CSMS가 충전소로 보낸 GetCompositeSchedule.req PDU의 필드 정의가 들어 있습니다. 또한 <<get_composite_schedule_by_central_system,Get Composite Schedule>>을 참조하세요.
+여기에는 CSMS가 충전기로 보낸 GetCompositeSchedule.req PDU의 필드 정의가 들어 있습니다. 또한 <<get_composite_schedule_by_central_system,Get Composite Schedule>>을 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**connectorId** |정수 |1..1 |필수. 일정이 요청된 커넥터의 ID입니다. ConnectorId=0인 경우 충전소는 그리드 연결에 대한 예상 소비량을 계산합니다.
-|**기간** |정수 |1..1 |필수. 초 단위 시간. 요청된 일정의 길이
+|**connectorId** |integer |1..1 |필수. 일정이 요청된 커넥터의 ID입니다. ConnectorId=0인 경우 충전소는 그리드 연결에 대한 예상 소비량을 계산합니다.
+|**duration** |integer |1..1 |필수. 초 단위 시간. 요청된 일정의 길이
 |**chargingRateUnit** |<<charging_rate_unit_type,ChargingRateUnitType>> |0..1 |선택 사항. 전력 또는 전류 프로파일을 강제로 적용하는 데 사용할 수 있습니다.
 |===
 
 [[get_composite_schedule_conf]]
 === GetCompositeSchedule.conf
 
-여기에는 충전소가 GetCompositeSchedule.req PDU에 대한 응답으로 중앙
-시스템에 보낸 GetCompositeSchedule.conf PDU의 필드 정의가 포함됩니다. Get Composite Schedule도 참조하세요.
+여기에는 충전소가 GetCompositeSchedule.req PDU에 대한 응답으로 CSMS에 보낸 GetCompositeSchedule.conf PDU의 필드 정의가 포함됩니다. Get Composite Schedule도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
 |**status** |<<get_composite_schedule_status,GetCompositeScheduleStatus>> |1..1 |필수. 요청의 상태. 충전기는 요청을 처리할 수 있었는지 여부를 나타냅니다.
-|**connectorId** |정수 |0..1 |선택 사항. 이 알림에 포함된 충전 일정은 커넥터에 적용됩니다.
+|**connectorId** |integer |0..1 |선택 사항. 이 알림에 포함된 충전 일정은 커넥터에 적용됩니다.
 |**scheduleStart** |dateTime |0..1 |선택 사항. 시간. 충전 프로파일에 포함된 기간은 이 시점을 기준으로 합니다. +
-상태가 "거부됨"인 경우 이 필드가 없을 수 있습니다.
-|**chargingSchedule** |<<charging_schedule_type,ChargingSchedule>> |0..1 |선택 사항. 계획된 복합 충전 일정, 시간 경과에 따른 에너지 소비량. 항상 ScheduleStart를 기준으로 합니다. 상태가 "거부됨"인 경우 이 필드가 없을 수 있습니다.
+상태가 "Rejected"인 경우 이 필드가 없을 수 있습니다.
+|**chargingSchedule** |<<charging_schedule_type,ChargingSchedule>> |0..1 |선택 사항. 계획된 복합 충전 일정, 시간 경과에 따른 에너지 소비량. 항상 ScheduleStart를 기준으로 합니다. 상태가 "Rejected"인 경우 이 필드가 없을 수 있습니다.
 |===
 
 [[get_configuration_req]]
 === GetConfiguration.req
 
-여기에는 CSMS에서 충전기으로 보낸 GetConfiguration.req PDU의 필드 정의가 포함되어 있습니다. <<get_configuration_by_central_system,Get Configuration>>도 참조하세요.
+여기에는 CSMS에서 충전기로 보낸 GetConfiguration.req PDU의 필드 정의가 포함되어 있습니다. <<get_configuration_by_central_system,Get Configuration>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**키** |<<cistring50type,CiString50Type>> |0..* |선택 사항. 구성 값이 요청되는 키 목록.
+|**key** |<<cistring50type,CiString50Type>> |0..* |선택 사항. 구성 값이 요청되는 키 목록.
 |===
 
 [[get_configuration_conf]]
 === GetConfiguration.conf
 
-여기에는 Charge Point에서 Central System으로 보낸 GetConfiguration.conf PDU의 필드 정의가 포함되어 있으며, <<get_configuration_req,GetConfiguration.req>>에 대한 응답으로 전송됩니다. 또한 <<get_configuration_by_central_system,Get Configuration>>을 참조하세요.
+여기에는 충전기에서 CSMS으로 보낸 GetConfiguration.conf PDU의 필드 정의가 포함되어 있으며, <<get_configuration_req,GetConfiguration.req>>에 대한 응답으로 전송됩니다. <<get_configuration_by_central_system,Get Configuration>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
 |**configurationKey** |<<keyvalue,KeyValue>> |0..* |선택 사항. 요청되거나 알려진 키 목록
 |**unknownKey** |<<cistring50type,CiString50Type>> |0..* |선택 사항. 알려지지 않은 요청된 키
@@ -1961,15 +1959,15 @@ CSMS는 이 메시지를 사용하여 특정 충전 프로파일(id로 표시) �
 [[get_diagnostics_req]]
 === GetDiagnostics.req
 
-여기에는 Central System에서 Charge Point로 보낸 GetDiagnostics.req PDU의 필드 정의가 들어 있습니다. 또한 <<get_diagnostics_by_central_system,Get Diagnostics>>를 참조하세요.
+여기에는 CSMS에서 충전기로 보낸 GetDiagnostics.req PDU의 필드 정의가 들어 있습니다. <<get_diagnostics_by_central_system,Get Diagnostics>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**위치** |모든 URI |1..1 |필수. 여기에는 진단 파일을 업로드할 위치(디렉토리)가 들어 있습니다.
-|**재시도** |정수 |0..1 |선택 사항. Charge Point가 포기하기 전에 진단을 업로드해야 하는 횟수를 지정합니다. 이 필드가 없으면 Charge Point에서 재시도할 횟수를 결정합니다.
-|**retryInterval** |정수 |0..1 |선택 사항. 재시도가 시도될 수 있는 간격(초). 이 필드가 없으면 Charge Point에서 시도 사이에 기다릴 시간을 결정합니다.
+|**location** |anyURI |1..1 |필수. 여기에는 진단 파일을 업로드할 위치(디렉토리)가 들어 있습니다.
+|**retries** |integer |0..1 |선택 사항. 충전기가 진단 업로드를 시도해야 하는 횟수를 지정합니다. 이 필드가 없으면 충전기에서 재시도할 횟수를 결정합니다.
+|**retryInterval** |integer |0..1 |선택 사항. 재시도를 시도하는 간격(초). 이 필드가 없으면 충전기에서 재시도 대기 시간을 결정합니다.
 |**startTime** |dateTime |0..1 |선택 사항. 진단에 포함할 가장 오래된 로깅 정보의 날짜와 시간이 포함됩니다.
 |**stopTime** |dateTime |0..1 |선택 사항. 진단에 포함할 가장 최신 로깅 정보의 날짜와 시간이 포함됩니다.
 |===
@@ -1977,11 +1975,11 @@ CSMS는 이 메시지를 사용하여 특정 충전 프로파일(id로 표시) �
 [[get_diagnostics_conf]]
 === GetDiagnostics.conf
 
-여기에는 Charge Point에서 <<get_diagnostics_req,GetDiagnostics.req>> PDU에 대한 응답으로 Central System으로 보낸 GetDiagnostics.conf PDU의 필드 정의가 포함됩니다. Get Diagnostics도 참조하세요.
+여기에는 충전기에서 <<get_diagnostics_req,GetDiagnostics.req>> PDU에 대한 응답으로 CSMS로 보낸 GetDiagnostics.conf PDU의 필드 정의가 포함됩니다. Get Diagnostics도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드. |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
 |**fileName** |<<cistring255type,CiString255Type>> |0..1 |선택 사항. 여기에는 업로드될 진단 정보가 있는 파일의 이름이 포함됩니다. 진단 정보를 사용할 수 없는 경우 이 필드는 존재하지 않습니다.
 |===
@@ -1989,173 +1987,181 @@ CSMS는 이 메시지를 사용하여 특정 충전 프로파일(id로 표시) �
 [[get_local_list_version_req]]
 === GetLocalListVersion.req
 
-여기에는 Central System에서 Charge Point로 보낸 GetLocalListVersion.req PDU의 필드 정의가 포함됩니다. <<get_local_list_version_by_central_system,Get Local List Version>>도 참조하세요.
+여기에는 CSMS에서 충전기로 보낸 GetLocalListVersion.req PDU의 필드 정의가 포함됩니다. <<get_local_list_version_by_central_system,Get Local List Version>>도 참조하세요.
 
 정의된 필드가 없습니다.
 
 [[get_local_list_version_conf]]
 === GetLocalListVersion.conf
 
-여기에는 충전소에서 <<get_local_list_version_req,GetLocalListVersion.req>> PDU에 대한 응답으로 CSMS에 보낸 GetLocalListVersion.conf PDU의 필드 정의가 포함되어 있습니다. 또한 <<get_local_list_version_by_central_system,Get Local List Version>>을 참조하세요.
+여기에는 충전기에서 <<get_local_list_version_req,GetLocalListVersion.req>> PDU에 대한 응답으로 CSMS에 보낸 GetLocalListVersion.conf PDU의 필드 정의가 포함되어 있습니다. <<get_local_list_version_by_central_system,Get Local List Version>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**listVersion** |정수 |1..1 |필수. 여기에는 충전소의 로컬 권한 부여 목록의 현재 버전 번호가 포함되어 있습니다.
+|**listVersion** |integer |1..1 |필수. 여기에는 충전소의 로컬 인증 목록의 현재 버전 번호가 포함되어 있습니다.
 |===
 
 [[heartbeat_req]]
 === Heartbeat.req
 
-여기에는 Charge Point에서 Central System으로 보낸 Heartbeat.req PDU의 필드 정의가 들어 있습니다. <<heartbeat_by_charge_point,Heartbeat>>도 참조하세요.
+여기에는 충전기에서 CSMS으로 보낸 Heartbeat.req PDU의 필드 정의가 들어 있습니다. <<heartbeat_by_charge_point,Heartbeat>>도 참조하세요.
 
 정의된 필드가 없습니다.
 
 [[heartbeat_conf]]
 === Heartbeat.conf
 
-여기에는 <<heartbeat_req,Heartbeat.req>> PDU에 대한 응답으로 Central System에서 Charge Point로 보낸 Heartbeat.conf PDU의 필드 정의가 포함되어 있습니다. 또한 <<heartbeat_by_charge_point,Heartbeat>>를 참조하세요.
+여기에는 <<heartbeat_req,Heartbeat.req>> PDU에 대한 응답으로 CSMS에서 충전기로 보낸 Heartbeat.conf PDU의 필드 정의가 포함되어 있습니다. <<heartbeat_by_charge_point,Heartbeat>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**currentTime** |dateTime |1..1 |필수. 여기에는 Central System의 현재 시간이 포함되어 있습니다.
+|**currentTime** |dateTime |1..1 |필수. 여기에는 CSMS의 현재 시간이 포함되어 있습니다.
 |===
 
 [[metervalues_req]]
 === MeterValues.req
 
-여기에는 Charge Point에서 Central System으로 보낸 MeterValues.req PDU의 필드 정의가 포함되어 있습니다. 또한 <<meter_values_by_charge_point,Meter Values>>를 참조하세요.
-[cols="1,1,1,5",options="header"] |=== |필드 이름 |필드 유형 |카드 |설명 |**connectorId** |정수 + connectorId >= 0 |1..1 |필수. 여기에는 충전기의 커넥터를 지정하는 숫자(>0)가 포함됩니다. '0'(영)은 주 전력계를 지정하는 데 사용됩니다. |**transactionId** |정수 |0..1 |선택 사항. 이러한 미터 샘플이 관련된 트랜잭션입니다. |**meterValue** |<<metervalue,MeterValue>> |1..* |필수. 타임스탬프가 있는 샘플링된 미터 값입니다. |===
+여기에는 충전기에서 CSMS로 보낸 MeterValues.req PDU의 필드 정의가 포함되어 있습니다. <<meter_values_by_charge_point,Meter Values>>도 참조하세요.
+
+[cols="1,1,1,5",options="header"] 
+|=== 
+|필드 이름 |필드 유형 |카디널리티 |설명 
+
+|**connectorId** |integer + connectorId >= 0 |1..1 |필수. 여기에는 충전기의 커넥터를 지정하는 숫자(>0)가 포함됩니다. '0'(영)은 주 전력계를 지정하는 데 사용됩니다. 
+|**transactionId** |integer |0..1 |선택 사항. 미터 샘플과 관련된 트랜잭션입니다. 
+|**meterValue** |<<metervalue,MeterValue>> |1..* |필수. 타임스탬프가 있는 샘플링된 미터 값입니다. 
+|===
 
 [[metervalues_conf]]
 === MeterValues.conf
 
-여기에는 <<metervalues_req,MeterValues.req>> PDU에 대한 응답으로 Central System에서 Charge Point로 보낸 MeterValues.conf PDU의 필드 정의가 포함되어 있습니다. 또한 <<meter_values_by_charge_point,Meter Values>>를 참조하세요.
+여기에는 <<metervalues_req,MeterValues.req>> PDU에 대한 응답으로 CSMS에서 충전기로 보낸 MeterValues.conf PDU의 필드 정의가 포함되어 있습니다. <<meter_values_by_charge_point,Meter Values>>도 참조하세요.
 
 정의된 필드가 없습니다.
 
 [[remote_start_transaction_req]]
 === RemoteStartTransaction.req
 
-여기에는 Central System에서 Charge Point로 보낸 RemoteStartTransaction.req PDU의 필드 정의가 포함되어 있습니다. 또한 <<remote_start_transaction_by_central_system,Remote Start Transaction>>을 참조하세요.
+여기에는 CSMS에서 충전기로 보낸 RemoteStartTransaction.req PDU의 필드 정의가 포함되어 있습니다. <<remote_start_transaction_by_central_system,Remote Start Transaction>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드. |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**connectorId** |정수 |0..1 |선택 사항. 트랜잭션를 시작할 커넥터 번호입니다. connectorId는 0보다 커야 합니다.
-|**idTag** |<<idtoken,IdToken>> |1..1 |필수. Charge Point에서 트랜잭션를 시작하는 데 사용해야 하는 식별자입니다.
-|**chargingProfile** |<<charging_profile_type,ChargingProfile>> |0..1 |선택 사항. Charge Point에서 요청한 트랜잭션에 사용할 충전 프로파일입니다. <<charging_profile_purpose_type,ChargingProfilePurpose>>는 <<tx_profile,TxProfile>>로 설정해야 합니다.
+|**connectorId** |integer |0..1 |선택 사항. 트랜잭션를 시작할 커넥터 번호입니다. connectorId는 0보다 커야 합니다.
+|**idTag** |<<idtoken,IdToken>> |1..1 |필수. 충전기에서 트랜잭션를 시작하는 데 사용해야 하는 식별자입니다.
+|**chargingProfile** |<<charging_profile_type,ChargingProfile>> |0..1 |선택 사항. 충전기에서 요청한 트랜잭션에 사용할 충전 프로파일입니다. <<charging_profile_purpose_type,ChargingProfilePurpose>>는 <<tx_profile,TxProfile>>로 설정해야 합니다.
 |===
 
 [[remote_start_transaction_conf]]
 === RemoteStartTransaction.conf
 
-여기에는 Charge Point에서 Central System으로 전송된 RemoteStartTransaction.conf PDU의 필드 정의가 포함됩니다. <<remote_start_transaction_by_central_system,Remote Start Transaction>>도 참조하세요.
+여기에는 충전기에서 CSMS로 전송된 RemoteStartTransaction.conf PDU의 필드 정의가 포함됩니다. <<remote_start_transaction_by_central_system,Remote Start Transaction>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**상태** |<<remote_start_stop_status,RemoteStartStopStatus>> |1..1 |필수. Charge Point에서 트랜잭션 시작 요청을 수락하는지 여부를 나타내는 상태입니다.
+|**status** |<<remote_start_stop_status,RemoteStartStopStatus>> |1..1 |필수. 충전기에서 트랜잭션 시작 요청을 수락하는지 여부를 나타내는 상태입니다.
 |===
 
 [[remote_stop_transaction_req]]
 === RemoteStopTransaction.req
 
-여기에는 Central System에서 Charge Point로 보낸 RemoteStopTransaction.req PDU의 필드 정의가 포함되어 있습니다. 또한 <<remote_stop_transaction_by_central_system,Remote Stop Transaction>>을 참조하세요.
+여기에는 CSMS에서 충전기로 보낸 RemoteStopTransaction.req PDU의 필드 정의가 포함되어 있습니다. <<remote_stop_transaction_by_central_system,Remote Stop Transaction>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**transactionId** |정수 |1..1 |필수. Charge Point에서 중지하도록 요청한 트랜잭션의 식별자입니다.
+|**transactionId** |integer |1..1 |필수. 충전기에서 중지하도록 요청한 트랜잭션의 id입니다.
 |===
 
 [[remote_stop_transaction_conf]]
 === RemoteStopTransaction.conf
 
-여기에는 Charge Point에서 Central System으로 보낸 RemoteStopTransaction.conf PDU의 필드 정의가 포함되어 있습니다. 또한 <<remote_stop_transaction_by_central_system,Remote Stop Transaction>>을 참조하세요.
+여기에는 충전기에서 CSMS으로 보낸 RemoteStopTransaction.conf PDU의 필드 정의가 포함되어 있습니다. <<remote_stop_transaction_by_central_system,Remote Stop Transaction>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드. |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**상태** |<<remote_start_stop_status,RemoteStartStopStatus>> |1..1 |필수. 충전소에서 트랜잭션 중지 요청을 수락하는지 여부를 나타내는 상태.
+|**status** |<<remote_start_stop_status,RemoteStartStopStatus>> |1..1 |필수. 충전소에서 트랜잭션 중지 요청을 수락하는지 여부를 나타내는 상태.
 |===
 
 [[reserve_now_req]]
 === ReserveNow.req
 
-여기에는 CSMS에서 충전소로 보낸 ReserveNow.req PDU의 필드 정의가 포함됩니다. <<reserve_now_by_central_system,Reserve Now>>도 참조하세요.
+여기에는 CSMS에서 충전기로 보낸 ReserveNow.req PDU의 필드 정의가 포함됩니다. <<reserve_now_by_central_system,Reserve Now>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드. |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**connectorId** |정수 +
+|**connectorId** |integer +
 connectorId >= 0 |1..1 |필수. 여기에는 예약할 커넥터의 ID가 포함됩니다. 값 0은 예약이 특정 커넥터를 위한 것이 아님을 의미합니다.
 |**expiryDate** |dateTime |1..1 |필수. 여기에는 예약이 종료되는 날짜와 시간이 포함됩니다.
 |**idTag** |<<idtoken,IdToken>> |1..1 |필수. 충전소가 커넥터를 예약해야 하는 식별자입니다.
 |**parentIdTag** |<<idtoken,IdToken>> |0..1 |선택 사항. 부모 idTag입니다.
-|**reservationId** |정수 |1..1 |필수. 이 예약에 대한 고유 ID입니다.
+|**reservationId** |integer |1..1 |필수. 이 예약에 대한 고유 ID입니다.
 |===
 
 [[reserve_now_conf]]
 === ReserveNow.conf
 
-여기에는 충전소에서 <<reserve_now_req,ReserveNow.req>> PDU에 대한 응답으로 CSMS에 보낸 ReserveNow.conf PDU의 필드 정의가 포함되어 있습니다. 또한 <<reserve_now_by_central_system,Reserve Now>>를 참조하세요.
+여기에는 충전기에서 <<reserve_now_req,ReserveNow.req>> PDU에 대한 응답으로 CSMS에 보낸 ReserveNow.conf PDU의 필드 정의가 포함되어 있습니다. <<reserve_now_by_central_system,Reserve Now>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**상태** |<<reservation_status,ReservationStatus>> |1..1 |필수. 예약의 성공 또는 실패를 나타냅니다.
+|**status** |<<reservation_status,ReservationStatus>> |1..1 |필수. 예약의 성공 또는 실패를 나타냅니다.
 |===
 
 [[reset_req]]
 === Reset.req
 
-여기에는 CSMS가 충전소로 보낸 Reset.req PDU의 필드 정의가 들어 있습니다. 또한 <<reset_by_central_system,Reset>>을 참조하세요.
+여기에는 CSMS가 충전기로 보낸 Reset.req PDU의 필드 정의가 들어 있습니다. <<reset_by_central_system,Reset>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**유형** |<<reset_type,ResetType>> |1..1 |필수. 여기에는 충전소가 수행해야 하는 재설정 유형이 들어 있습니다.
+|**type** |<<reset_type,ResetType>> |1..1 |필수. 여기에는 충전기가 수행해야 하는 재설정 유형이 들어 있습니다.
 |===
 
 [[reset_conf]]
 === Reset.conf
 
-여기에는 충전소가 <<reset_req,Reset.req>> PDU에 대한 응답으로 CSMS에 보낸 Reset.conf PDU의 필드 정의가 들어 있습니다. 또한 <<reset_by_central_system,Reset>>을 참조하세요.
+여기에는 충전기가 <<reset_req,Reset.req>> PDU에 대한 응답으로 CSMS에 보낸 Reset.conf PDU의 필드 정의가 들어 있습니다. <<reset_by_central_system,Reset>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**상태** |<<reset_status,ResetStatus>> |1..1 |필수. 충전소에서 재설정을 수행할 수 있는지 여부를 나타냅니다.
+|**status** |<<reset_status,ResetStatus>> |1..1 |필수. 충전기에서 재설정을 수행할 수 있는지 여부를 나타냅니다.
 |===
 
 [[send_local_list_req]]
 === SendLocalList.req
 
-여기에는 CSMS에서 충전소로 보낸 SendLocalList.req PDU의 필드 정의가 포함됩니다.
+여기에는 CSMS에서 충전기로 보낸 SendLocalList.req PDU의 필드 정의가 포함됩니다.
 
-(빈) localAuthorizationList가 제공되지 않고 updateType이 Full인 경우 모든 식별 정보가 목록에서 제거됩니다. (빈) localAuthorizationList 없이 차등 업데이트를 요청해도 목록에 영향을 미치지 않습니다. localAuthorizationList의 모든 idTags는 고유해야 하며 중복 값은 허용되지 않습니다. <<send_local_list_by_central_system,Send Local List>>도 참조하세요.
+(비어 있는) localAuthorizationList가 제공되지 않고 updateType이 Full인 경우, 모든 식별 정보가 목록에서 제거됩니다. (비어 있는) localAuthorizationList 없이 차등 업데이트를 요청해도 목록에 영향을 미치지 않습니다. localAuthorizationList의 모든 idTags는 고유해야 하며 중복 값은 허용되지 않습니다. <<send_local_list_by_central_system,Send Local List>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|listVersion |정수 |1..1
+|listVersion |intger |1..1
 |필수. 전체 업데이트의 경우 전체 목록의 버전 번호입니다. 차등 업데이트의 경우 업데이트가 적용된 후의 목록 버전 번호입니다.
 
 |localAuthorizationList |<<authorization_data,AuthorizationData>> |0..*
-|선택 사항. 전체 업데이트의 경우 새 로컬 권한 부여 목록을 구성하는 값 목록이 포함됩니다. 차등 업데이트의 경우 충전기의 로컬 권한 부여 목록에 적용할 변경 사항이 포함됩니다. <<authorization_data,AuthorizationData>> 요소의 최대 수는 구성 키 <<send_local_list_max_length,`SendLocalListMaxLength`>>에서 사용할 수 있습니다.
+|선택 사항. 전체 업데이트의 경우 새 로컬 인증 목록을 구성하는 값 목록이 포함됩니다. 차등 업데이트의 경우 충전기의 로컬 인증 목록에 적용할 변경 사항이 포함됩니다. <<authorization_data,AuthorizationData>> 요소의 최대 수는 구성 키 <<send_local_list_max_length,`SendLocalListMaxLength`>>에서 사용할 수 있습니다.
 
 |updateType |<<update_type,UpdateType>> |1..1
 |필수. 여기에는 이 요청의 업데이트 유형(전체 또는 차등)이 포함됩니다.
@@ -2164,27 +2170,27 @@ connectorId >= 0 |1..1 |필수. 여기에는 예약할 커넥터의 ID가 포함
 [[send_local_list_conf]]
 === SendLocalList.conf
 
-여기에는 <<send_local_list_req,SendLocalList.req>> PDU에 대한 응답으로 충전기에서 CSMS로 보낸 SendLocalList.conf PDU의 필드 정의가 포함됩니다. 또한 <<send_local_list_by_central_system,Send Local List>>를 참조하세요.
+여기에는 <<send_local_list_req,SendLocalList.req>> PDU에 대한 응답으로 충전기에서 CSMS로 보낸 SendLocalList.conf PDU의 필드 정의가 포함됩니다. <<send_local_list_by_central_system,Send Local List>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**상태** |<<update_status,UpdateStatus>> |1..1 |필수. 충전소가 로컬 권한 목록 업데이트를 성공적으로 수신하고 적용했는지 여부를 나타냅니다.
+|**status** |<<update_status,UpdateStatus>> |1..1 |필수. 충전기가 로컬 인증 목록 업데이트를 성공적으로 수신하고 적용했는지 여부를 나타냅니다.
 |===
 
 [[set_charging_profile_req]]
 === SetChargingProfile.req
 
-여기에는 CSMS에서 충전소로 보낸 SetChargingProfile.req PDU의 필드 정의가 포함됩니다.
+여기에는 CSMS에서 충전기로 보낸 SetChargingProfile.req PDU의 필드 정의가 포함됩니다.
 
-CSMS는 이 메시지를 사용하여 충전소로 충전 프로파일을 보냅니다. <<set_charging_profile_by_central_system,Set Charging Profile>>도 참조하세요.
+CSMS는 이 메시지를 사용하여 충전기로 충전 프로파일을 보냅니다. <<set_charging_profile_by_central_system,Set Charging Profile>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드. |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**connectorId** |정수 |1..1 |필수. 충전 프로파일이 적용되는 커넥터입니다. connectorId = 0인 경우 메시지에는 충전기에 대한 전체 제한이 포함됩니다.
+|**connectorId** |integer |1..1 |필수. 충전 프로파일이 적용되는 커넥터입니다. connectorId = 0인 경우 메시지에는 충전기에 대한 전체 제한이 포함됩니다.
 |**csChargingProfiles** |<<charging_profile_type,ChargingProfile>> |1..1 |필수. 충전기에서 설정할 충전 프로파일입니다.
 |===
 
@@ -2195,55 +2201,55 @@ CSMS는 이 메시지를 사용하여 충전소로 충전 프로파일을 보냅
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**상태** |<<충전_프로파일_상태,충전_프로파일상태>> |1..1 |필수. 충전소에서 메시지를 성공적으로 처리할 수 있었는지 여부를 반환합니다. 이는 일정이 문자 그대로 준수될 것이라는 보장은 없습니다. 충전소에서 고려해야 할 다른 제약 조건이 있을 수 있습니다.
+|**status** |<<charging_profile_status,ChargingProfileStatus>> |1..1 |필수. 충전기에서 메시지를 성공적으로 처리할 수 있었는지 여부를 반환합니다. 이는 일정이 문자 그대로 준수될 것이라는 보장은 없습니다. 충전기에서 고려해야 할 다른 제약 조건이 있을 수 있습니다.
 |===
 
 [[start_transaction_req]]
 === StartTransaction.req
 
-이 섹션에는 충전소에서 CSMS로 보낸 StartTransaction.req PDU의 필드 정의가 포함되어 있습니다. <<start_transaction_by_charge_point,Start Transaction>>도 참조하세요.
+이 섹션에는 충전기에서 CSMS로 보낸 StartTransaction.req PDU의 필드 정의가 포함되어 있습니다. <<start_transaction_by_charge_point,Start Transaction>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드. |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**connectorId** |정수 +
-connectorId > 0 |1..1 |필수. 이는 충전소의 어떤 커넥터가 사용되는지 식별합니다.
-|**idTag** |<<idtoken,IdToken>> |1..1 |필수. 이는 트랜잭션를 시작해야 하는 식별자를 포함합니다.
-|**meterStart** |정수 |1..1 |필수. 이는 트랜잭션 시작 시 커넥터의 미터 값(Wh)을 포함합니다.
-|**reservationId** |정수 |0..1 |선택 사항. 이는 이 트랜잭션의 결과로 종료되는 예약의 ID를 포함합니다.
+|**connectorId** |integer +
+connectorId > 0 |1..1 |필수. 이는 충전기의 어떤 커넥터가 사용되는지 식별합니다.
+|**idTag** |<<idtoken,IdToken>> |1..1 |필수. 이는 트랜잭션를 시작해야 하는 ID를 포함합니다.
+|**meterStart** |integer |1..1 |필수. 이는 트랜잭션 시작 시 커넥터의 미터 값(Wh)을 포함합니다.
+|**reservationId** |integer |0..1 |선택 사항. 이는 이 트랜잭션의 결과로 종료되는 예약의 ID를 포함합니다.
 |**timestamp** |dateTime |1..1 |필수. 이는 트랜잭션이 시작된 날짜와 시간을 포함합니다.
 |===
 
 [[start_transaction_conf]]
 === StartTransaction.conf
 
-여기에는 CSMS가 <<start_transaction_req,StartTransaction.req>> PDU에 대한 응답으로 충전소로 보낸 StartTransaction.conf PDU의 필드 정의가 포함됩니다. 또한 <<start_transaction_by_charge_point,Start Transaction>>을 참조하세요.
+여기에는 CSMS가 <<start_transaction_req,StartTransaction.req>> PDU에 대한 응답으로 충전기로 보낸 StartTransaction.conf PDU의 필드 정의가 포함됩니다. <<start_transaction_by_charge_point,Start Transaction>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
 |**idTagInfo** |<<id_tag_info,IdTagInfo>> |1..1 |필수. 여기에는 승인 상태, 만료 및 부모 ID에 대한 정보가 포함됩니다.
-|**transactionId** |정수 |1..1 |필수. 여기에는 CSMS가 제공한 트랜잭션 ID가 포함됩니다.
+|**transactionId** |integer |1..1 |필수. 여기에는 CSMS가 제공한 트랜잭션 ID가 포함됩니다.
 |===
 
 [[status_notification_req]]
 === StatusNotification.req
 
-여기에는 충전소에서 CSMS로 보낸 StatusNotification.req PDU의 필드 정의가 포함되어 있습니다. <<status_notification,Status Notification>>도 참조하세요.
+여기에는 충전기에서 CSMS로 보낸 StatusNotification.req PDU의 필드 정의가 포함되어 있습니다. <<status_notification,Status Notification>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**connectorId** |정수 +
-connectorId >= 0 |1..1 |필수. 상태가 보고되는 커넥터의 ID입니다. 상태가 충전소 메인 컨트롤러에 대한 경우 ID '0'(영)이 사용됩니다.
-|**errorCode** |<<chargepoint_errorcode,ChargePointErrorCode>> |1..1 |필수. 충전소에서 보고한 오류 코드가 포함되어 있습니다.
+|**connectorId** |integer +
+connectorId >= 0 |1..1 |필수. 상태가 보고되는 커넥터의 ID입니다. 상태가 충전기 메인 컨트롤러에 대한 경우 ID '0'(영)이 사용됩니다.
+|**errorCode** |<<chargepoint_errorcode,ChargePointErrorCode>> |1..1 |필수. 충전기에서 보고한 오류 코드가 포함되어 있습니다.
 |**info** |<<cistring50type,CiString50Type>> |0..1 |선택 사항. 오류와 관련된 추가 자유 형식 정보.
-|**status** |<<charge_point_status,ChargePointStatus>> |1..1 |필수. 여기에는 충전소의 현재 상태가 포함됩니다.
+|**status** |<<charge_point_status,ChargePointStatus>> |1..1 |필수. 여기에는 충전기의 현재 상태가 포함됩니다.
 |**timestamp** |dateTime |0..1 |선택 사항. 상태가 보고되는 시간입니다. 없는 경우 메시지 수신 시간으로 간주됩니다.
 |**vendorId** |<<cistring255type,CiString255Type>> |0..1 |선택 사항. 공급업체별 구현을 식별합니다.
 |**vendorErrorCode** |<<cistring50type,CiString50Type>> |0..1 |선택 사항. 여기에는 공급업체별 오류 코드가 포함됩니다.
@@ -2252,23 +2258,23 @@ connectorId >= 0 |1..1 |필수. 상태가 보고되는 커넥터의 ID입니다.
 [[status_notification_conf]]
 === StatusNotification.conf
 
-여기에는 CSMS가 <<status_notification_req,StatusNotification.req>> PDU에 대한 응답으로 충전소로 보낸 StatusNotification.conf PDU의 필드 정의가 포함되어 있습니다. 또한 <<status_notification,Status Notification>>을 참조하세요.
+여기에는 CSMS가 <<status_notification_req,StatusNotification.req>> PDU에 대한 응답으로 충전기로 보낸 StatusNotification.conf PDU의 필드 정의가 포함되어 있습니다. <<status_notification,Status Notification>>도 참조하세요.
 
 정의된 필드가 없습니다.
 
 [[stop_transaction_req]]
 === StopTransaction.req
 
-여기에는 충전소가 CSMS로 보낸 StopTransaction.req PDU의 필드 정의가 포함되어 있습니다. 또한 <<stop_transaction_by_central_system,Stop Transaction>>을 참조하세요.
+여기에는 충전기가 CSMS로 보낸 StopTransaction.req PDU의 필드 정의가 포함되어 있습니다. <<stop_transaction_by_central_system,Stop Transaction>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드. |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
 |**idTag** |<<idtoken,IdToken>> |0..1 |선택 사항. 여기에는 충전을 중지하도록 요청한 식별자가 포함됩니다. 충전기가 idTag 없이도 충전을 종료할 수 있으므로 선택 사항입니다(예: 재설정의 경우). 충전기는 알려진 경우 idTag를 보내야 합니다.
-|**meterStop** |정수 |1..1 |필수. 여기에는 트랜잭션이 끝날 때 커넥터에 대한 미터 값(Wh)이 포함됩니다.
+|**meterStop** |integer |1..1 |필수. 여기에는 트랜잭션이 끝날 때 커넥터에 대한 미터 값(Wh)이 포함됩니다.
 |**timestamp** |dateTime |1..1 |필수. 여기에는 트랜잭션이 중지된 날짜와 시간이 포함됩니다.
-|**transactionId** |정수 |1..1 |필수. 여기에는 <<start_transaction_conf,StartTransaction.conf>>에서 수신한 트랜잭션 ID가 포함됩니다.
+|**transactionId** |integer |1..1 |필수. 여기에는 <<start_transaction_conf,StartTransaction.conf>>에서 수신한 트랜잭션 ID가 포함됩니다.
 |**reason** |<<reason,Reason>> |0..1 |선택 사항. 여기에는 트랜잭션이 중지된 이유가 포함됩니다. <<reason,Reason>>이 "Local"일 때만 생략할 수 있습니다.
 |**transactionData** |<<metervalue,MeterValue>> |0..* |선택 사항. 여기에는 청구 목적에 관련된 트랜잭션 사용 세부 정보가 포함됩니다.
 |===
@@ -2276,11 +2282,11 @@ connectorId >= 0 |1..1 |필수. 상태가 보고되는 커넥터의 ID입니다.
 [[stop_transaction_conf]]
 === StopTransaction.conf
 
-여기에는 <<stop_transaction_req,StopTransaction.req>> PDU에 대한 응답으로 Central System에서 Charge Point로 보낸 StopTransaction.conf PDU의 필드 정의가 포함되어 있습니다. 또한 <<stop_transaction_by_central_system,Stop Transaction>>을 참조하세요.
+여기에는 <<stop_transaction_req,StopTransaction.req>> PDU에 대한 응답으로 CSMS에서 충전기로 보낸 StopTransaction.conf PDU의 필드 정의가 포함되어 있습니다. <<stop_transaction_by_central_system,Stop Transaction>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
 |**idTagInfo** |<<id_tag_info,IdTagInfo>> |0..1 |선택 사항. 여기에는 승인 상태, 만료 및 부모 ID에 대한 정보가 포함되어 있습니다. 식별자 없이 트랜잭션이 중단되었을 수 있으므로 선택 사항입니다.
 |===
@@ -2288,52 +2294,52 @@ connectorId >= 0 |1..1 |필수. 상태가 보고되는 커넥터의 ID입니다.
 [[trigger_message_req]]
 === TriggerMessage.req
 
-여기에는 CSMS가 충전기으로 보낸 TriggerMessage.req PDU의 필드 정의가 들어 있습니다. <<trigger_message,Trigger Message>>도 참조하세요.
+여기에는 CSMS가 충전기로 보낸 TriggerMessage.req PDU의 필드 정의가 들어 있습니다. <<trigger_message,Trigger Message>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
 |**requestedMessage** |<<message_trigger,MessageTrigger>> |1..1 |필수.
-|**connectorId** |정수 +
+|**connectorId** |integer +
 connectorId > 0 |0..1 |선택 사항. 요청이 특정 커넥터에 적용되는 경우에만 채워집니다.
 |===
 
 [[trigger_message_conf]]
 === TriggerMessage.conf
 
-여기에는 충전소에서 <<trigger_message_req,TriggerMessage.req>> PDU에 대한 응답으로 CSMS에 보낸 TriggerMessage.conf PDU의 필드 정의가 포함되어 있습니다. <<trigger_message,Trigger Message>>도 참조하세요.
+여기에는 충전기에서 <<trigger_message_req,TriggerMessage.req>> PDU에 대한 응답으로 CSMS에 보낸 TriggerMessage.conf PDU의 필드 정의가 포함되어 있습니다. <<trigger_message,Trigger Message>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**상태** |<<trigger_message_status,TriggerMessageStatus>> |1..1 |필수. 충전소에서 요청된 알림을 보낼지 여부를 나타냅니다.
+|**status** |<<trigger_message_status,TriggerMessageStatus>> |1..1 |필수. 충전기에서 요청된 알림을 보낼지 여부를 나타냅니다.
 |===
 
 [[unlock_connector_req]]
 === UnlockConnector.req
 
-CSMS에서 충전기으로 보낸 UnlockConnector.req PDU의 필드 정의가 포함되어 있습니다. <<unlock_connector_by_central_system,Unlock Connector>>도 참조하세요.
+CSMS에서 충전기로 보낸 UnlockConnector.req PDU의 필드 정의가 포함되어 있습니다. <<unlock_connector_by_central_system,Unlock Connector>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**connectorId** |정수 +
+|**connectorId** |integer +
 connectorId > 0 |1..1 |필수. 잠금 해제할 커넥터의 식별자가 포함되어 있습니다.
 |===
 
 [[unlock_connector_conf]]
 === UnlockConnector.conf
 
-여기에는 <<unlock_connector_req,UnlockConnector.req>> PDU에 대한 응답으로 Charge Point에서 Central System으로 보낸 UnlockConnector.conf PDU의 필드 정의가 포함되어 있습니다. <<unlock_connector_by_central_system,Unlock Connector>>도 참조하세요.
+여기에는 <<unlock_connector_req,UnlockConnector.req>> PDU에 대한 응답으로 충전기에서 CSMS로 보낸 UnlockConnector.conf PDU의 필드 정의가 포함되어 있습니다. <<unlock_connector_by_central_system,Unlock Connector>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**상태** |<<unlock_status,UnlockStatus>> |1..1 |필수. 충전기가 커넥터를 잠금 해제했는지 여부를 나타냅니다.
+|**status** |<<unlock_status,UnlockStatus>> |1..1 |필수. 충전기가 커넥터를 잠금 해제했는지 여부를 나타냅니다.
 |===
 
 [[update_firmware_req]]
@@ -2343,21 +2349,21 @@ CSMS에서 충전기로 보낸 UpdateFirmware.req PDU의 필드 정의가 포함
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
-|**위치** |anyURI |1..1 |필수. 펌웨어를 검색할 위치를 가리키는 URI가 포함된 문자열이 포함되어 있습니다.
-|**retries** |정수 |0..1 |선택 사항. 이것은 Charge Point가 포기하기 전에 펌웨어 다운로드를 시도해야 하는 횟수를 지정합니다. 이 필드가 없으면 Charge Point가 재시도할 횟수를 결정합니다.
-|**retrieveDate** |dateTime |1..1 |필수. 이것은 Charge Point가 (새로운) 펌웨어를 검색할 수 있는 날짜와 시간을 포함합니다.
-|**retryInterval** |정수 |0..1 |선택 사항. 재시도를 시도할 수 있는 간격(초)입니다. 이 필드가 없으면 Charge Point가 시도 사이에 기다릴 시간을 결정합니다.
+|**location** |anyURI |1..1 |필수. 펌웨어를 검색할 위치를 가리키는 URI가 포함된 문자열이 포함되어 있습니다.
+|**retries** |integer |0..1 |선택 사항. 이것은 충전기가 포기하기 전에 펌웨어 다운로드를 시도해야 하는 횟수를 지정합니다. 이 필드가 없으면 충전기가 재시도할 횟수를 결정합니다.
+|**retrieveDate** |dateTime |1..1 |필수. 이것은 충전기가 (새로운) 펌웨어를 검색할 수 있는 날짜와 시간을 포함합니다.
+|**retryInterval** |integer |0..1 |선택 사항. 재시도를 시도할 수 있는 간격(초)입니다. 이 필드가 없으면 충전기가 시도 사이에 기다릴 시간을 결정합니다.
 |===
 
 [[update_firmware_conf]]
 === UpdateFirmware.conf
 
-여기에는 Charge Point가 <<update_firmware_req,UpdateFirmware.req>> PDU에 대한 응답으로 Central System에 보낸 UpdateFirmware.conf PDU의 필드 정의가 포함됩니다. <<update_firmware_by_central_system,Update Firmware>>도 참조하세요.
+여기에는 충전기가 <<update_firmware_req,UpdateFirmware.req>> PDU에 대한 응답으로 CSMS에 보낸 UpdateFirmware.conf PDU의 필드 정의가 포함됩니다. <<update_firmware_by_central_system,Update Firmware>>도 참조하세요.
 
 정의된 필드가 없습니다.
-
+// TODO:
 [[types]]
 == Types
 
@@ -2370,7 +2376,7 @@ _Class_
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
 |**idTag** |<<idtoken,IdToken>> |1..1 |필수. 이 권한이 적용되는 식별자입니다.
 |**idTagInfo** |<<id_tag_info,IdTagInfo>> |0..1 |선택 사항입니다. (UpdateType이 Full인 경우 필수) 여기에는 권한 부여 상태, 만료 및 부모 ID에 대한 정보가 포함됩니다. 차등 업데이트의 경우 다음이 적용됩니다. 이 요소가 있는 경우 이 항목은 로컬 권한 부여 목록에 추가되거나 업데이트되어야 합니다. 이 요소가 없는 경우 로컬 권한 부여 목록에서 이 ID 태그에 대한 항목을 삭제해야 합니다.
@@ -2506,7 +2512,7 @@ image::images/figure_42.svg[클래스 다이어그램: 충전 프로파일]
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
 |[[충전_프로파일_id]]**충전 프로파일 ID** |정수 |1..1 |필수. 이 프로파일의 고유 식별자입니다.
 |**트랜잭션 ID** |정수 |0..1 |선택 사항입니다. 충전 프로파일 용도가 <<tx_profile,TxProfile>>로 설정된 경우에만 유효하며, 트랜잭션 ID를 사용하여 프로파일을 특정 트랜잭션와 일치시킬 수 있습니다.
@@ -2600,7 +2606,7 @@ _Class_
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
 |기간 |정수 |0..1 |선택 사항. 초 단위의 충전 일정 기간입니다. 기간이 비어 있으면 마지막 기간은 무기한 계속되거나 startSchedule이 없는 경우 트랜잭션이 끝날 때까지 계속됩니다.
 |startSchedule |dateTime |0..1 |선택 사항. 절대 일정의 시작점입니다. 없는 경우 일정은 충전 시작을 기준으로 합니다.
@@ -2618,7 +2624,7 @@ _Class_
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
 |**startPeriod** |정수 |1..1 |필수. 일정 시작부터 초 단위로 기간의 시작입니다. StartPeriod의 값은 이전 기간의 종료 시간도 정의합니다.
 |**limit** |십진수 |1..1 |필수. 해당 chargingRateUnit에서 일정 기간 동안의 충전 속도 제한(예: 암페어 또는 와트)입니다. 최대 1자리 분수 허용(예: 8.1).
@@ -2822,7 +2828,7 @@ expiryDate가 제공되지 않으면 상태에 종료 날짜가 없습니다.
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
 |**expiryDate** |dateTime |0..1 |선택 사항. 여기에는 idTag가 Authorization Cache에서 제거되어야 하는 날짜가 포함됩니다.
 |**parentIdTag** |<<idtoken,IdToken>> |0..1 |선택 사항. 여기에는 parent-identifier가 포함됩니다.
@@ -2852,7 +2858,7 @@ _Class_
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드. |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
 |**키** |<<cistring50type,CiString50Type>> |1..1 |필수.
 |**읽기 전용** |부울 |1..1 |필수. ChangeConfiguration 메시지로 값을 설정할 수 있는 경우 False
@@ -2954,7 +2960,7 @@ _Class_
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
 |**timestamp** |dateTime |1..1 |필수. 측정된 값의 타임스탬프
 |**sampledValue** |<<sampled_value,SampledValue>> |1..* |필수. 하나 이상의 측정된 값
@@ -3131,7 +3137,7 @@ _Class_
 
 [cols="1,1,1,5",options="header"]
 |===
-|필드 이름 |필드 유형 |카드 |설명
+|필드 이름 |필드 유형 |카디널리티 |설명
 
 |**value** |문자열 |1..1 |필수. "Raw"(10진수) 숫자 또는 "SignedData" 값입니다. 필드 유형은 디지털 서명된 데이터 판독을 허용하기 위한 "문자열"입니다. 온도 및 전류와 같은 측정량에 대한 분수 값을 허용하기 위해 10진수 숫자 값도 허용됩니다.
 |**context** |<<reading_context,ReadingContext>> |0..1 |선택 사항. 세부 값의 유형: 시작, 끝 또는 샘플. 기본값 = "Sample.Periodic"
