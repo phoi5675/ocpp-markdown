@@ -104,7 +104,7 @@ All sections and appendixes, except "Scope" and "Terminology and Conventions", a
 
 This section contains the terminology that is used throughout this document.
 
-[cols="s,d",options="autowidth"]
+[%autowidth.stretch,cols="s,d",options="autowidth"]
 |===
 |[[central_system]]Central System |Charge Point Management System: the central system that manages Charge Points and has the information for authorizing users for using its Charge Points.
 |[[cistring]]CiString |Case Insensitive String. Only printable ASCII allowed.
@@ -129,7 +129,7 @@ This section contains the terminology that is used throughout this document.
 [[abbreviations]]
 === Abbreviations
 
-[cols="s,d",options="autowidth"]
+[%autowidth.stretch,cols="s,d",options="autowidth"]
 |===
 |CSL |Comma Separated List
 |CPO |Charge Point Operator
@@ -158,7 +158,7 @@ This section contains the terminology that is used throughout this document.
 
 === References
 
-[cols="s,d",options="autowidth"]
+[%autowidth.stretch,cols="s,d",options="autowidth"]
 |===
 |[[iec61851_1]][IEC61851-1] |"IEC 61851-1 2010: Electric vehicle conductive charging system - Part 1: General requirements"
 <https://webstore.iec.ch/publication/>
@@ -200,7 +200,7 @@ This section is normative.
 
 In OCPP 1.6 features and associated messages are grouped in _profiles_. Depending on the required functionality, implementers can choose to implement one or more of the following profiles.
 
-[cols="3s,10",options="header,autowidth"]
+[%autowidth.stretch,cols="s,d",options="autowidth"]
 |===
 |PROFILE NAME |DESCRIPTION
 
