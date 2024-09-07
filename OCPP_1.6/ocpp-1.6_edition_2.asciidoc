@@ -2526,8 +2526,8 @@ image::images/figure_42.svg[Class Diagram: ChargingProfile]
 |**chargingProfileKind** |<<charging_profile_kind_type,ChargingProfileKindType>> |1..1 |Required. Indicates the kind of schedule.
 |**recurrencyKind** |<<recurrency_kind_type,RecurrencyKindType>> |0..1 |Optional. Indicates the start point of a recurrence.
 |**validFrom** |dateTime |0..1 |Optional. Point in time at which the profile starts to be valid. If absent, the profile is valid as soon as it is received by the Charge Point.
-|validTo |dateTime |0..1 |Optional. Point in time at which the profile stops to be valid. If absent, the profile is valid until it is replaced by another profile.
-|chargingSchedule |<<charging_schedule_type,ChargingSchedule>> |1..1 |Required. Contains limits for the available power or current over time.
+|**validTo** |dateTime |0..1 |Optional. Point in time at which the profile stops to be valid. If absent, the profile is valid until it is replaced by another profile.
+|**chargingSchedule** |<<charging_schedule_type,ChargingSchedule>> |1..1 |Required. Contains limits for the available power or current over time.
 |===
 
 [[charging_profile_kind_type]]
@@ -2613,11 +2613,11 @@ Charging schedule structure defines a list of charging periods, as used in: <<ge
 |===
 |FIELD NAME |FIELD TYPE |CARD. |DESCRIPTION
 
-|duration |integer |0..1 |Optional. Duration of the charging schedule in seconds. If the duration is left empty, the last period will continue indefinitely or until end of the transaction in case startSchedule is absent.
-|startSchedule |dateTime |0..1 |Optional. Starting point of an absolute schedule. If absent the schedule will be relative to start of charging.
-|chargingRateUnit |<<charging_rate_unit_type,ChargingRateUnitType>> |1..1 |Required. The unit of measure Limit is expressed in.
-|chargingSchedulePeriod |<<charging_schedule_period,ChargingSchedulePeriod>> |1..* |Required. List of <<charging_schedule_period,ChargingSchedulePeriod>> elements defining maximum power or current usage over time. The startSchedule of the first <<charging_schedule_period,ChargingSchedulePeriod>> SHALL always be 0.
-|[[minchargingrate]]minChargingRate |decimal |0..1 |Optional. Minimum charging rate supported by the electric vehicle. The unit of measure is defined by the chargingRateUnit. This parameter is intended to be used by a local smart charging algorithm to optimize the power allocation for in the case a charging process is inefficient at lower charging rates. Accepts at most one digit fraction (e.g. 8.1).
+|**duration** |integer |0..1 |Optional. Duration of the charging schedule in seconds. If the duration is left empty, the last period will continue indefinitely or until end of the transaction in case startSchedule is absent.
+|**startSchedule** |dateTime |0..1 |Optional. Starting point of an absolute schedule. If absent the schedule will be relative to start of charging.
+|**chargingRateUnit** |<<charging_rate_unit_type,ChargingRateUnitType>> |1..1 |Required. The unit of measure Limit is expressed in.
+|**chargingSchedulePeriod** |<<charging_schedule_period,ChargingSchedulePeriod>> |1..* |Required. List of <<charging_schedule_period,ChargingSchedulePeriod>> elements defining maximum power or current usage over time. The startSchedule of the first <<charging_schedule_period,ChargingSchedulePeriod>> SHALL always be 0.
+|[[minchargingrate]]**minChargingRate** |decimal |0..1 |Optional. Minimum charging rate supported by the electric vehicle. The unit of measure is defined by the chargingRateUnit. This parameter is intended to be used by a local smart charging algorithm to optimize the power allocation for in the case a charging process is inefficient at lower charging rates. Accepts at most one digit fraction (e.g. 8.1).
 |===
 
 [[charging_schedule_period]]
@@ -2934,7 +2934,7 @@ Import is energy flow from the Grid to the Charge Point, EV or other load. Expor
 a|image::asset/info-icon.svg[info-icon,32,32] |
 All "Register" values relating to a single charging transaction, or a non-transactional consumer (e.g. charge point internal power supply, overall supply) MUST be monotonically increasing in time.
 
-The actual quantity of energy corresponding to a reported ".Register" value is computed as the register value in question minus the register value recorded/reported at the start of the transaction or other relevant starting reference point in time. For improved auditability ".Register" values SHOULD reported exactly as they are directly read from a non-volatile register in the electrical metering hardware, and SHOULD NOT be re-based to zero at the start of transactions. This allows any "missing energy" between sequential transactions, due to hardware fault, mis-wiring, fraud, etc. to be identified, by allowing the Central System to confirm that the starting register value of any transaction is identical to the finishing register value of the preceding transaction on the same connector.
+The actual quantity of energy corresponding to a reported "Register" value is computed as the register value in question minus the register value recorded/reported at the start of the transaction or other relevant starting reference point in time. For improved auditability "Register" values SHOULD reported exactly as they are directly read from a non-volatile register in the electrical metering hardware, and SHOULD NOT be re-based to zero at the start of transactions. This allows any "missing energy" between sequential transactions, due to hardware fault, mis-wiring, fraud, etc. to be identified, by allowing the Central System to confirm that the starting register value of any transaction is identical to the finishing register value of the preceding transaction on the same connector.
 |===
 
 [[message_trigger]]
@@ -2942,7 +2942,7 @@ The actual quantity of energy corresponding to a reported ".Register" value is c
 
 _Enumeration_
 
-Type of request to be triggered in a <<trigger_message_req,TriggerMessage.req>>
+Type of request to be triggered in a <<trigger_message_req,TriggerMessage.req>>.
 
 [cols="2,8",options="header"]
 |===
@@ -2952,7 +2952,7 @@ Type of request to be triggered in a <<trigger_message_req,TriggerMessage.req>>
 |DiagnosticsStatusNotification |To trigger a <<diagnostics_status_notification_req,DiagnosticsStatusNotification>> request
 |FirmwareStatusNotification |To trigger a <<firmware_status_notification_req,FirmwareStatusNotification>> request
 |Heartbeat |To trigger a <<heartbeat_req,Heartbeat>> request
-|MeterValues |To trigger a MeterValues request
+|MeterValues |To trigger a <<metervalue,MeterValues>> request
 |StatusNotification |To trigger a <<status_notification_req,StatusNotification>> request
 |===
 
@@ -3601,7 +3601,8 @@ A value of "0" (numeric zero), by convention, is to be interpreted to mean that 
 |**Required/optional** |required
 |**Accessibility** |RW
 |**Type** |CSL
-|**Description** |Clock-aligned periodic measurand(s) to be included in the TransactionData element of <<stop_transaction_req,StopTransaction.req>> <<metervalues_req,MeterValues.req>> PDU for every `ClockAlignedDataInterval` of the Transaction
+|**Description** |Clock-aligned periodic measurand(s) to be included in the TransactionData element of <<stop_transaction_req,StopTransaction.req>> +
+<<metervalues_req,MeterValues.req>> PDU for every `ClockAlignedDataInterval` of the Transaction
 |===
 
 [[stop_txn_aligned_data_max_length]]
@@ -3840,10 +3841,10 @@ The following changes are made in OCPP 1.6 compared to OCPP 1.5 [OCPP1.5]:
   ** heartbeatInterval to interval, interval now also used for other purposes than heartbeat, need to fix in spec
   ** Added status Pending
 * <<chargepoint_errorcode,ChargePointErrorCode>>
-  ** Added enumvalues: `InternalError`, `LocalListConfict` and UnderVoltage
+  ** Added enumvalues: `InternalError`, `LocalListConfict` and `UnderVoltage`
   ** Renamed enum value `Mode3Error` to `EVCommunicationError`
 * <<charge_point_status,ChargePointStatus>>
-  ** Replaced enum value Occupied with the more detailed values: `Preparing`, `Charging`, `SuspendedEVSE`, `SuspendedEV` and `Finishing`
+  ** Replaced enum value `Occupied` with the more detailed values: `Preparing`, `Charging`, `SuspendedEVSE`, `SuspendedEV` and `Finishing`
 * <<charging_rate_unit_type,ChargingRateUnitType>>
   ** New
 * <<configuration_status,ConfigurationStatus>>
