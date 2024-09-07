@@ -23,7 +23,7 @@ edition 2 FINAL, 2017-09-28
 
 저작권 © 2010 – 2017 Open Charge Alliance. 모든 권리 보유.
 
-이 문서는 _*크리에이티브 커먼즈 저작자표시-변경금지 4.0 국제 공공라이선스*_ (<https://creativecommons.org/licenses/by-nd/4.0/legalcode>)에 따라 제공됩니다.
+이 문서는 _Creative Commons Attribution-NoDerivatives 4.0 International Public License_ (<https://creativecommons.org/licenses/by-nd/4.0/legalcode>)에 따라 제공됩니다.
 
 <<<
 
@@ -104,7 +104,7 @@ edition 2 FINAL, 2017-09-28
 
 이 섹션에는 이 문서 전체에서 사용되는 용어가 포함되어 있습니다.
 
-[cols="s,d",options="autowidth"]
+[%autowidth.stretch,cols="s,d",options="autowidth"]
 |===
 |[[central_system]]Central System |충전소 관리 시스템(Charge Point Management System, CSMS): 충전소를 관리, 사용자에게 충전기 사용을 허가하는 정보를 제공하는 CSMS입니다.
 |[[cistring]]CiString |대소문자 구분 없는 문자열입니다. 인쇄 가능한 ASCII만 허용됩니다.
@@ -129,7 +129,7 @@ edition 2 FINAL, 2017-09-28
 [[abbreviations]]
 === Abbreviations
 
-[cols="s,d",options="autowidth"]
+[%autowidth.stretch,cols="s,d",options="autowidth"]
 |===
 |CSL |쉼표로 구분된 목록
 |CPO |충전소 운영자
@@ -158,7 +158,7 @@ edition 2 FINAL, 2017-09-28
 
 === References
 
-[cols="s,d",options="autowidth"]
+[%autowidth.stretch,cols="s,d",options="autowidth"]
 |===
 |[[iec61851_1]][IEC61851-1] |"IEC 61851-1 2010: 전기차 전도성 충전 시스템 - 1부: 일반 요구 사항"
 <https://webstore.iec.ch/publication/>
@@ -200,6 +200,7 @@ CSMS와 충전소 간의 상호 운용성을 개선하기 위해 <<ocpp_1.6ct,OC
 
 OCPP 1.6에서 기능과 관련 메시지는 _프로파일_로 그룹화됩니다. 필요한 기능에 따라 구현자는 다음 프로파일 중 하나 이상을 구현하도록 선택할 수 있습니다.
 
+[%autowidth.stretch,cols="s,d",options="autowidth"]
 |===
 |프로파일 이름 |설명
 
@@ -219,11 +220,11 @@ OCPP 1.6에서 기능과 관련 메시지는 _프로파일_로 그룹화됩니�
 
 프로파일의 모든 메시지 그룹화는 아래 표에서 찾을 수 있습니다.
 
-[%autowidth,cols=".^,6*^.^",options="header,autowidth"]
+[%autowidth.stretch,cols=".^,6*^.^",options="header,autowidth"]
 |===
 |메시지 |코어 |펌웨어 +
               관리 |로컬 인증 +
-                    리스트 관리+
+                    리스트 관리
                               |원격 +
                               트리거 |예약 |스마트 +
                                           차징
@@ -269,7 +270,7 @@ OCPP 1.6에서 기능과 관련 메시지는 _프로파일_로 그룹화됩니�
 . Charge Point가 카드 인증을 요청하고 충전 트랜잭션 상태를 전송
 . Central System이 Charge Point에 펌웨어 업데이트를 요청
 
-다음 그림의 화살표 레이블은 작업 호출 중에 교환된 PDU를 나타냅니다. 이러한 PDU는 <<messages,메시지>> 섹션에서 자세히 정의됩니다.
+다음 그림의 화살표 레이블은 작업 호출 중에 교환된 PDU를 나타냅니다. 이러한 PDU는 <<messages,Messages>> 섹션에서 자세히 정의됩니다.
 
 .시퀀스 다이어그램: 트랜잭션 시작 및 중지의 예
 image::images/figure_1.svg[시퀀스 다이어그램: 트랜잭션 시작 및 중지의 예]
@@ -385,7 +386,7 @@ a|image::asset/info-icon.svg[info-icon,32,32] |잘못된 식별자의 경우, �
 이 섹션은 정보 제공 용도입니다.
 
 <<energy_transfer_period,Energy Transfer Period>>는 EV와 EVSE 간에 에너지가 전송되는 기간입니다. +
-<<transaction,트랜잭션>> 중에 여러 에너지 전송 기간이 있을 수 있습니다.
+<<transaction,Transaction>> 중에 여러 에너지 전송 기간이 있을 수 있습니다.
 
 여러 에너지 전송 기간은 다음 중 하나로 구분할 수 있습니다.
 

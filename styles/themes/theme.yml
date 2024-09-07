@@ -11,7 +11,7 @@ font:
     NotoSans:
       normal: MalgunGothicRegular.ttf
       bold: MalgunGothicBold.ttf
-      italic: NotoSans-Italic.ttf
+      italic: 87MMILSANG-Oblique.ttf
       bold_italic: NotoSans-BoldItalic.ttf
     M+ 1mn:
       normal: SpaceMono-Regular.ttf

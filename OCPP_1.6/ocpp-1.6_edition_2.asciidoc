@@ -23,7 +23,7 @@ edition 2 FINAL, 2017-09-28
  
 Copyright © 2010 – 2017 Open Charge Alliance. All rights reserved.
 
-This document is made available under the _*Creative Commons Attribution-NoDerivatives 4.0 International Public License*_ (<https://creativecommons.org/licenses/by-nd/4.0/legalcode>).
+This document is made available under the _Creative Commons Attribution-NoDerivatives 4.0 International Public License_ (<https://creativecommons.org/licenses/by-nd/4.0/legalcode>).
 
 <<<
 
