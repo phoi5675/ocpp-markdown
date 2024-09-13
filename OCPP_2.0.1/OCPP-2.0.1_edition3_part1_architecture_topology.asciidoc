@@ -1,199 +1,99 @@
-# OCPP 2.0.
+= OCPP 2.0.1
+:doctype: book
+:toc: 
+:toclevels: 2
+:toc-title: Table of Contents
+:icons: font
+:icon-set: far
 
-## Part 1 - Architecture & Topology
+[discrete]
+== Part 1 - Architecture & Topology
 
-## Edition 3 FINAL, 2024-05-
+Edition 3 FINAL, 2024-05-06
 
+<<<
 
-## Table of Contents
+[discrete]
+== Disclaimer
 
-- Disclaimer
-- Version History
-- 1. Introduction.
-   - 1.1. Goal of this document
-   - 1.2. Terms and abbreviations
-- 2. 3-tier model
-- 3. Information Model
-- 4. Device Model: Addressing Components and Variables.
-   - 4.1. Components
-   - 4.2. Variables
-   - 4.3. Characteristics and Attributes
-   - 4.4. Monitoring
-   - 4.5. Standardized lists of Components and Variables
-   - 4.6. Minimum Device Model
-- 5. Information Model vs. Device Model
-- 6. Using OCPP for other purposes than EV charging
-- 7. Numbering
-   - 7.1. EVSE numbering
-   - 7.2. Connector numbering
-   - 7.3. Transaction IDs.
-- 8. Topologies supported by OCPP
-   - 8.1. Charging Station(s) directly connected to CSMS
-   - 8.2. Multiple Charging Stations connected to CSMS via Local Proxy
-   - 8.3. Multiple Charging Stations connected to CSMS via Local Controller
-   - 8.4. Non-OCPP Charging Stations connected to CSMS via OCPP Local Controller.
-   - 8.5. DSO control signals to CSMS
-   - 8.6. Parallel control by CSMS and EMS.
-- 9. Part 1 Appendix: OCPP Information Model.
-   - 9.1. Explanation of UML representation and message generation
-   - 9.2. Visual Representation of OCPP Information Model
+Copyright © 2010 - 2024 Open Charge Alliance. All rights reserved.
 
-
-## Disclaimer
-
-Copyright © 2010 – 2024 Open Charge Alliance. All rights reserved.
-
-This document is made available under the _*Creative Commons Attribution-NoDerivatives 4.0 International Public License*_
-
+This document is made available under the _*Creative Commons Attribution-NoDerivatives 4.0 International Public License*_ +
 (https://creativecommons.org/licenses/by-nd/4.0/legalcode).
 
+<<<
 
-## Version History
+[discrete]
+== Version History
 
-**Version Date Description**
+[%autowidth.stretch,options="header,autowidth"]
+|===
+|Version |Date |Description**
 
-2.0.1 Edition 3
+|2.0.1 Edition 3 |2024-05-06 |OCPP 2.0.1 Edition 3. All errata from OCPP 2.0.1 Part 1 until and including Errata 2024-04 have been merged into this version of the specification.
+|2.0.1 |2020-03-31 |Final version of OCPP 2.0.1
+|2.0   |2018-04-11 |OCPP 2.0 April 2018 +
+                    First release of this Architecture & Topology document
+|===
 
-2024-05-06 OCPP 2.0.1 Edition 3. All errata from OCPP 2.0.1 Part 1 until and including Errata
+:sectnums:
+== Introduction.
 
-2024-04 have been merged into this version of the specification.
-
-2.0.
-
-2020-03-31 Final version of OCPP 2.0.
-
-2.
-
-2018-04-
-
-OCPP 2.0 April 2018
-
-First release of this Architecture & Topology document
-
-
-## 1. Introduction.
-
-### 1.1. Goal of this document
+=== Goal of this document
 
 The goal of this document is to describe a number of architecture related topics for OCPP 2.0.1.
 
-OCPP was originally intended for two way communication between a backoffice, in OCPP the _Charging Station Management System_
+OCPP was originally intended for two way communication between a backoffice, in OCPP the _Charging Station Management System_ (in this document: CSMS) and a Charging Station. The protocol has become more advanced and with every new revision new functionalities and options are added. It has evolved into a protocol that can be used in different architectures for different types of Charging Stations.
 
-(in this document: CSMS) and a Charging Station. The protocol has become more advanced and with every new revision new
+This document describes, in addition to the original "simple" setup CSMS <> Charging Station, a number of topologies as an additional explanation for using OCPP. Furthermore, the Device Management concept to configure and monitor any type of Charging Station, the OCPP Information Model and the 3-tier model are explained.
 
-functionalities and options are added. It has evolved into a protocol that can be used in different architectures for different types of
+This document is partially **informative** and partially **normative** and is not intended to limit the use of OCPP. However, it does add an explanation what kind of use of OCPP the creators of OCPP had in mind when creating this version of the specification. This document is therefore also intended to support the reader of the protocol specification in Part 2 of OCPP to understand how it can be used.
 
-Charging Stations.
-
-This document describes, in addition to the original "simple" setup CSMS <> Charging Station, a number of topologies as an
-
-additional explanation for using OCPP. Furthermore, the Device Management concept to configure and monitor any type of
-
-Charging Station, the OCPP Information Model and the 3-tier model are explained.
-
-This document is partially **informative** and partially **normative** and is not intended to limit the use of OCPP. However, it does add an
-
-explanation what kind of use of OCPP the creators of OCPP had in mind when creating this version of the specification. This
-
-document is therefore also intended to support the reader of the protocol specification in Part 2 of OCPP to understand how it can
-
-be used.
-
-### 1.2. Terms and abbreviations
+=== Terms and abbreviations
 
 This section contains the terminology and abbreviations that are used throughout this document.
 
-**1.2.1. Terms**
+==== Terms
 
-**Term Meaning**
+[%autowidth.stretch,options="header,autowidth"]
+|===
+|Term       |Meaning
+^s|Charging Station |The Charging Station is the physical system where EVs can be charged. A Charging Station has one or more EVSEs.
+^s|Connector |The term Connector, as used in this specification, refers to an independently operated and managed electrical outlet on a Charging Station. In other words, this corresponds to a single physical Connector. In some cases an EVSE may have multiple physical socket types and/or tethered cable/Connector arrangements(i.e. Connectors) to facilitate different vehicle types (e.g. four-wheeled EVs and electric scooters).
+^s|EVSE |An EVSE is considered as an independently operated and managed part of the Charging Station that can deliver energy to one EV at a time.
+^s|Local port Smart Meter |The Local port on a Smart Meter is a port (for example serial) on a digital electricity meter that provides access to information about meter readings and usage.
+|===
 
-**Charging Station** The Charging Station is the physical system where EVs can be charged. A Charging Station
+==== Abbreviations
 
-has one or more EVSEs.
+[%autowidth.stretch,options="header,autowidth"]
+|===
+|Abbreviation     |Meaning
 
-**Connector** The term Connector, as used in this specification, refers to an independently operated and
+^|DSO     |Distribution System Operator
+^|CSO     |Charging Station Operator
+^|CSMS    |Charging Station Management System
+^|EMS     |Energy Management System. In this document this is defined as a device that manages the local loads (consumption an production) based on local and/or contractual constraints and/or contractual incentives. It has additional inputs, such as sensors and controls from e.g. PV, battery storage.
+^|EVSE    |Electric Vehicle Supply Equipment
+^|LC      |Local Controller. In this document this is defined as a device that can send messages to its Charging Stations, independently of the CSMS. A typical usage for this is the local smart charging case described in the Smart Charging chapter of Part 2 of OCPP, where a Local Controller can impose charge limits on its Charging Stations.
+^|LP      |Local Proxy. Acts as a message router.
+|===
 
-managed electrical outlet on a Charging Station. In other words, this corresponds to a single
-
-physical Connector. In some cases an EVSE may have multiple physical socket types and/or
-
-tethered cable/Connector arrangements(i.e. Connectors) to facilitate different vehicle types
-
-(e.g. four-wheeled EVs and electric scooters).
-
-**EVSE** An EVSE is considered as an independently operated and managed part of the Charging
-
-Station that can deliver energy to one EV at a time.
-
-**Local port Smart Meter** The Local port on a Smart Meter is a port (for example serial) on a digital electricity meter
-
-that provides access to information about meter readings and usage.
-
-**1.2.2. Abbreviations**
-
-**Abbreviation Meaning**
-
-DSO Distribution System Operator
-
-CSO Charging Station Operator
-
-CSMS Charging Station Management System
-
-EMS Energy Management System. In this document this is defined as a device that manages the local loads
-
-(consumption an production) based on local and/or contractual constraints and/or contractual incentives. It
-
-has additional inputs, such as sensors and controls from e.g. PV, battery storage.
-
-EVSE Electric Vehicle Supply Equipment
-
-LC Local Controller. In this document this is defined as a device that can send messages to its Charging
-
-Stations, independently of the CSMS. A typical usage for this is the local smart charging case described in
-
-the Smart Charging chapter of Part 2 of OCPP, where a Local Controller can impose charge limits on its
-
-Charging Stations.
-
-LP Local Proxy. Acts as a message router.
-
-
-## 2. 3-tier model
+== 3-tier model
 
 _This section is informative._
 
-To understand the terminology in the OCPP specification, it is important to understand the starting point of this specification. The
+To understand the terminology in the OCPP specification, it is important to understand the starting point of this specification. The OCPP specification uses the term Charging Station as the physical system where EVs can be charged. A Charging Station can have one or more EVSEs (Electric Vehicle Supply Equipment). An EVSE is considered as a part of the Charging Station that can deliver energy to one EV at a time. The term Connector, as used in this specification, refers to an independently operated and managed electrical outlet on a Charging Station, in other words, this corresponds to a single physical Connector. In some cases an EVSE may have multiple physical socket types and/or tethered cable/connector arrangements to facilitate different vehicle types (e.g. four- wheeled EVs and electric scooters). This setup is referred to as the 3-tier model and visualized in the figure below.
 
-OCPP specification uses the term Charging Station as the physical system where EVs can be charged. A Charging Station can have
+.3-tier model as used in OCPP
+image::images/figure_1.svg[3-tier model as used in OCPP]
 
-one or more EVSEs (Electric Vehicle Supply Equipment). An EVSE is considered as a part of the Charging Station that can deliver
+[cols="^.^1,10"%autowidth.stretch]
+|===
+s|NOTE |This section describes the charging infrastructure on a logical level for communication purposes. We do not wish to impose a mapping onto physical hardware. This is a manufacturer’s choice. For example, the EVSE might be integrated into a Charging Station and to look as just a part of that device, but it might just as well have its own casing and live outside of the physical entity Charging Station, for example a charging plaza with 20 EVSEs and Connectors which communicates via 1 modem as 1 Charging Station to the CSMS is seen by OCPP as 1 Charging Station.
+|===
 
-energy to one EV at a time. The term Connector, as used in this specification, refers to an independently operated and managed
-
-electrical outlet on a Charging Station, in other words, this corresponds to a single physical Connector. In some cases an EVSE may
-
-have multiple physical socket types and/or tethered cable/connector arrangements to facilitate different vehicle types (e.g. four-
-
-wheeled EVs and electric scooters). This setup is referred to as the 3-tier model and visualized in the figure below.
-
-_Figure 1. 3-tier model as used in OCPP_
-
-**NOTE**
-
-This section describes the charging infrastructure on a logical level for communication purposes. We do not wish
-
-to impose a mapping onto physical hardware. This is a manufacturer’s choice. For example, the EVSE might be
-
-integrated into a Charging Station and to look as just a part of that device, but it might just as well have its own
-
-casing and live outside of the physical entity Charging Station, for example a charging plaza with 20 EVSEs and
-
-Connectors which communicates via 1 modem as 1 Charging Station to the CSMS is seen by OCPP as 1 Charging
-
-Station.
-
-
-## 3. Information Model
+== Information Model
 
 _This section is informative._
 
@@ -431,7 +331,7 @@ The Information Model is divided into a number of "functions" to have a better o
 For more details about the actual model per function, please refer to the appendix.
 
 
-## 4. Device Model: Addressing Components and Variables.
+== Device Model: Addressing Components and Variables.
 
 The Device Model refers to a generalized mechanism within OCPP to enable any model of Charging Station to report how it is build
 
@@ -451,7 +351,7 @@ Station and a CSMS. The use cases and messages that are used to manage a device 
 
 specification. This chapter only focuses on the data model.
 
-### 4.1. Components
+=== Components
 
 In OCPP 2.0.1, a Charging Station is modelled as a set of _"Components"_ , typically representing physical devices (including any
 
@@ -570,7 +470,7 @@ RCD
 
 ChargingStatusIndicator
 
-### 4.2. Variables
+=== Variables
 
 Every _component_ has a number of _variables_ , that can, as appropriate, be used to hold, set, read, and/or report on all (externally
 
@@ -602,7 +502,7 @@ Each distinct _variable_ instance is uniquely identified by an (optional) _varia
 
 _variableInstance_ is provided, then the default or only instance of a _variable_ is referenced.
 
-### 4.3. Characteristics and Attributes
+=== Characteristics and Attributes
 
 Each _variable_ , in addition to its primary ( _"Actual"_ ) value, can have a set of associated secondary data that is linked to the same
 
@@ -808,7 +708,7 @@ actual fan speed. If the actual fan speed is measured to be 502, it’s out of r
 
 actual value of a physical component should be updated without checking the min and max values/limits.
 
-### 4.4. Monitoring
+=== Monitoring
 
 Optional monitoring settings can be associated with a variable, that allow changes to _variable_ ( _Actual_ ) values are to be reported to
 
@@ -1008,7 +908,7 @@ EVSEType
 ```
 _Figure 5. Variables and monitoring_
 
-### 4.5. Standardized lists of Components and Variables
+=== Standardized lists of Components and Variables
 
 To provide some level of interoperability between different Charging Stations and CSMSs, besides the above defined model of
 
@@ -1024,7 +924,7 @@ made. In these cases it is advised to provide feedback to the Open Charge Allian
 
 _Components_ and _Variables_ in new versions of OCPP.
 
-### 4.6. Minimum Device Model
+=== Minimum Device Model
 
 Since the Device Model is a _generalized_ mechanism which can be applied to any model of Charging Station, the complexity of
 
@@ -1090,7 +990,7 @@ events.
 _N08 Periodic Event_ see N07.
 
 
-## 5. Information Model vs. Device Model
+== Information Model vs. Device Model
 
 As described above, the terms Information Model and Device Model refer to different concepts. The Information Model refers to a
 
@@ -1105,7 +1005,7 @@ The messages that are used for Device Management are therefore part of the Infor
 modelling a device ( _'Component'_ and _'Variable'_ ) are also part of the Information Model.
 
 
-## 6. Using OCPP for other purposes than EV charging
+== Using OCPP for other purposes than EV charging
 
 As indicated in the introduction of this document, OCPP is primarily intended for two way communication between a CSMS and a
 
@@ -1122,11 +1022,11 @@ by the fact that the component Charging Station is not present at the top level.
 provide use cases for non Charging Station devices. However, they may be added in a future version of OCPP.
 
 
-## 7. Numbering
+== Numbering
 
 _This section is normative._
 
-### 7.1. EVSE numbering
+=== EVSE numbering
 
 To enable the CSMS to address all the EVSEs of a Charging Station, EVSEs MUST always be numbered in the same way.
 
@@ -1143,7 +1043,7 @@ Example: A Charging Station with 3 EVSEs: All EVSEs MUST be numbered with the ID
 
 EVSEs of a Charging Station in a logical way: from left to right, top to bottom incrementing.
 
-### 7.2. Connector numbering
+=== Connector numbering
 
 To enable the CSMS to address all the Connectors of a Charging Station, Connectors MUST always be numbered in the same way.
 
@@ -1161,7 +1061,7 @@ Example: A Charging Station with 3 EVSEs that each have 2 connectors, is numbere
 - EVSE 2 has connectors with connectorId 1 and 2
 - EVSE 3 has connectors with connectorId 1 and 2
 
-### 7.3. Transaction IDs.
+=== Transaction IDs.
 
 TransactionIds are now generated by the Charging Station and MUST be unique on this Charging Station for every started
 
@@ -1172,7 +1072,7 @@ In OCPP 1.x this was done by the CSMS.
 The format of the transaction ID is left to implementation. This MAY for example be an incremental number or an UUID.
 
 
-## 8. Topologies supported by OCPP
+== Topologies supported by OCPP
 
 This chapter shows a number of topologies for using OCPP. As indicated in the introduction, OCPP was originally used for a setup
 
@@ -1184,7 +1084,7 @@ relations between these components:
 
 _Figure 6. Possible components in a setup using OCPP_
 
-### 8.1. Charging Station(s) directly connected to CSMS
+=== Charging Station(s) directly connected to CSMS
 
 **Description**
 
@@ -1201,7 +1101,7 @@ OCPP
 ```
 _Figure 7. Charging Station directly connected to CSMS_
 
-### 8.2. Multiple Charging Stations connected to CSMS via Local Proxy
+=== Multiple Charging Stations connected to CSMS via Local Proxy
 
 **Description**
 
@@ -1243,7 +1143,7 @@ OCPP
 _Figure 8. Multiple Charging Stations connected to CSMS via Local Proxy_
 
 
-### 8.3. Multiple Charging Stations connected to CSMS via Local Controller
+=== Multiple Charging Stations connected to CSMS via Local Controller
 
 **Description**
 
@@ -1300,7 +1200,7 @@ connections between CSMS and LC needed. For further information, please refer to
 
 in Part 4.
 
-### 8.4. Non-OCPP Charging Stations connected to CSMS via OCPP Local Controller.
+=== Non-OCPP Charging Stations connected to CSMS via OCPP Local Controller.
 
 **Description**
 
@@ -1336,7 +1236,7 @@ non-OCPP
 ```
 _Figure 10. Multiple non-OCPP Charging Stations connected to CSMS via Local Controller_
 
-### 8.5. DSO control signals to CSMS
+=== DSO control signals to CSMS
 
 **Description**
 
@@ -1365,7 +1265,7 @@ Non-OCPP (e.g. OpenADR or OSCP) OCPP
 _Figure 11. Smart Charging - DSO control signals to CSMS_
 
 
-### 8.6. Parallel control by CSMS and EMS.
+=== Parallel control by CSMS and EMS.
 
 **Description**
 
@@ -1394,9 +1294,9 @@ OCPP OCPP or other
 _Figure 12. Parallel control by CSMS and EMS_
 
 
-## 9. Part 1 Appendix: OCPP Information Model.
+== Part 1 Appendix: OCPP Information Model.
 
-### 9.1. Explanation of UML representation and message generation
+=== Explanation of UML representation and message generation
 
 In the next paragraph, the UML schemes of the OCPP Information Model are shown. The model is based on the Common
 
@@ -1433,7 +1333,7 @@ DataTypes such as _CounterType_ , are replaced by the Primitive DataType they re
 _integer_.
 
 
-### 9.2. Visual Representation of OCPP Information Model
+=== Visual Representation of OCPP Information Model
 
 ```
 «BusinessComponent»
@@ -1561,7 +1461,7 @@ ChargingProfilePurposeEnumType [ 0 .. 1 ]
 ```
 + ChargingProfileKind: ChargingProfileKindEnumType
 ```
-#### [0..1]
+==== [0..1]
 
 ```
 + RecurrencyKind: RecurrencyKindEnumType [0..1]
@@ -1575,7 +1475,7 @@ ChargingProfilePurposeEnumType [ 0 .. 1 ]
 ```
 + ChargingLimitSource: ChargingLimitSourceEnumType
 ```
-#### [0..*]
+==== [0..*]
 
 ```
 «BusinessComponent»
@@ -1733,48 +1633,48 @@ RootModel::ConnectorType
 ```
 +TxnUpdateSampledValue
 ```
-#### 0..*
+==== 0..*
 
 ```
 +Reservation
 ```
-#### 0..*
+==== 0..*
 
 ```
 +GroupIDToken
 ```
-#### 0..1
+==== 0..1
 
 ```
 +Transaction
 ```
-#### 0..*
+==== 0..*
 
 ```
 +Connector
 ```
-#### 0..1
+==== 0..1
 
 ```
 +TxnStopSampledValue
 ```
-#### 0..*
+==== 0..*
 
 ```
 +Transaction
 ```
-#### 0..1
+==== 0..1
 
-#### +EV
+==== +EV
 
-#### 0..1
+==== 0..1
 
 ```
 +TxnStartSampledValue
 ```
-#### 0..*
+==== 0..*
 
-#### +EV 0..*
+==== +EV 0..*
 
 ```
 +ChargingProfile 0..*
@@ -1782,12 +1682,12 @@ RootModel::ConnectorType
 ```
 +Message
 ```
-#### 0..*
+==== 0..*
 
 ```
 +Transaction
 ```
-#### 0..1
+==== 0..1
 
 ```
 +Transaction 0..1
@@ -1795,7 +1695,7 @@ RootModel::ConnectorType
 ```
 +Reservation
 ```
-#### 0..1
+==== 0..1
 
 ```
 +Reservation 0..*
@@ -1806,26 +1706,26 @@ RootModel::ConnectorType
 ```
 +Reservation 0..*
 ```
-#### +EVSE 0..1
+==== +EVSE 0..1
 
 ```
 +Reservation
 ```
-#### 0..*
+==== 0..*
 
 ```
 +IDToken
 ```
-#### 0..1
+==== 0..1
 
 ```
 +Transaction
 ```
-#### 0..*
+==== 0..*
 
-#### +EVSE
+==== +EVSE
 
-#### 0..1
+==== 0..1
 
 ```
 +Transaction 0..1
@@ -1833,9 +1733,9 @@ RootModel::ConnectorType
 ```
 +IDToken 0..*
 ```
-#### +EVSE
+==== +EVSE
 
-#### 0..1
+==== 0..1
 
 ```
 +ChargingProfile 0..*
@@ -1843,12 +1743,12 @@ RootModel::ConnectorType
 ```
 +Transaction
 ```
-#### 0..*
+==== 0..*
 
 ```
 +MeteringFunction
 ```
-#### 0..*
+==== 0..*
 
 ```
 +IDTokenInfo 0..1
@@ -1859,12 +1759,12 @@ RootModel::ConnectorType
 ```
 +ChargingProfile
 ```
-#### 0..1
+==== 0..1
 
 ```
 +Transaction
 ```
-#### 0..1
+==== 0..1
 
 _Figure 14. OCPP Information Model: Transactions_
 
@@ -2250,17 +2150,17 @@ ChargingLimitType
 ```
 +CertificateChain
 ```
-#### 0..*
+==== 0..*
 
 ```
 +ParentCertificate 0 .. 1
 ```
-#### +EVSE 0..1
+==== +EVSE 0..1
 
 ```
 +CompositeSchedule
 ```
-#### 0..*
+==== 0..*
 
 ```
 +ChargePoint 0..1
@@ -2268,26 +2168,26 @@ ChargingLimitType
 ```
 +ChargingProfile 0..*
 ```
-#### +EVSE 0..1
+==== +EVSE 0..1
 
-#### +EV
+==== +EV
 
-#### 0..1
+==== 0..1
 
 ```
 +ChargingProfile
 ```
-#### 0..1
+==== 0..1
 
 ```
 +Transaction
 ```
-#### 0..1
+==== 0..1
 
 ```
 +ChargingSchedule
 ```
-#### 0..1
+==== 0..1
 
 ```
 +ChargingNeeds 0..*
@@ -2295,7 +2195,7 @@ ChargingLimitType
 ```
 +DCChargingParameters
 ```
-#### 0..1
+==== 0..1
 
 ```
 +RootCertificate 0..*
@@ -2303,18 +2203,18 @@ ChargingLimitType
 ```
 +Transaction 0..1
 ```
-#### +EV 0..1
+==== +EV 0..1
 
-#### +EV 0..1
+==== +EV 0..1
 
-#### +EVCC 0..1
+==== +EVCC 0..1
 
 ```
 +OEMProvisioningCertificate
 ```
-#### 0..1
+==== 0..1
 
-#### +EVSE 0..1
+==== +EVSE 0..1
 
 ```
 {ConnectorUse}
@@ -2322,29 +2222,29 @@ ChargingLimitType
 ```
 +Connector 0..* +EV
 ```
-#### 0..1
+==== 0..1
 
 ```
 +ChargingNeeds
 ```
-#### 0..1
+==== 0..1
 
 ```
 +ChildCertificate 0 ..*
 ```
-#### +EVSE 0..*
+==== +EVSE 0..*
 
 ```
 +ChargingLimit
 ```
-#### 0..1
+==== 0..1
 
 ```
 +Connector0..1
 ```
-#### +EV
+==== +EV
 
-#### 0..1
+==== 0..1
 
 ```
 +ChargingSchedule0..*
@@ -2355,14 +2255,14 @@ ChargingLimitType
 ```
 +ContractSignatureCertificateChain 0..1
 ```
-#### +EV
+==== +EV
 
-#### 0..*
+==== 0..*
 
 ```
 +ChargingProfile
 ```
-#### 0..*
+==== 0..*
 
 ```
 +ChargingProfile 0..*
@@ -2373,12 +2273,12 @@ ChargingLimitType
 ```
 +SAProvisioningCertificateChain
 ```
-#### 0..1
+==== 0..1
 
 ```
 +Transaction
 ```
-#### 0..*
+==== 0..*
 
 ```
 +Connector 0..1
@@ -2390,14 +2290,14 @@ ChargingLimitType
 ```
 +ACChargingParameters
 ```
-#### 0..1
+==== 0..1
 
 ```
 +Transaction
 ```
-#### 0..*
+==== 0..*
 
-#### +EVSE 0..1
+==== +EVSE 0..1
 
 ```
 +ChargePoint0..1
@@ -2549,7 +2449,7 @@ UnitOfMeasureType
 ```
 +MeteringFunction
 ```
-#### 0..1
+==== 0..1
 
 ```
 +MeterValue 0..*
@@ -2557,12 +2457,12 @@ UnitOfMeasureType
 ```
 +SampledValue
 ```
-#### 0..1
+==== 0..1
 
 ```
 +SignedMeterValue
 ```
-#### 0..1
+==== 0..1
 
 ```
 +Meter 0..1
@@ -2576,7 +2476,7 @@ UnitOfMeasureType
 ```
 +MeteringFunction
 ```
-#### 0..1
+==== 0..1
 
 ```
 +Meter 0..1
@@ -2878,32 +2778,32 @@ Components::LogType
 ```
 +CentralServerCertificate
 ```
-#### 0..1
+==== 0..1
 
 ```
 +FirmwareSigningCertificate
 ```
-#### 0..1
+==== 0..1
 
 ```
 +ChargePointCertificate
 ```
-#### 0..1
+==== 0..1
 
 ```
 +CentralServerCertificate
 ```
-#### 0..1
+==== 0..1
 
 ```
 +RootCertificate
 ```
-#### 0..1
+==== 0..1
 
 ```
 +ChargePointOperatorHierarchy
 ```
-#### 0..1
+==== 0..1
 
 ```
 +ChildCertificate 0 ..*
@@ -2917,7 +2817,7 @@ Components::LogType
 ```
 +SecurityProfile
 ```
-#### 0..1
+==== 0..1
 
 ```
 +CertificateChain 0..*
@@ -2925,12 +2825,12 @@ Components::LogType
 ```
 +ManufacturerHierarchy
 ```
-#### 0..1
+==== 0..1
 
 ```
 +SecurityLog
 ```
-#### 0..1
+==== 0..1
 
 _Figure 18. OCPP Information Model: Security-Profiles_
 

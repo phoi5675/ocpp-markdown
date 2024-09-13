@@ -1,11 +1,11 @@
-# OCPP 2.0.
+= OCPP 2.0.
 
-## Part 2 - Appendices
+== Part 2 - Appendices
 
 Edition 3 v1.4 FINAL, 2024-05-
 
 
-## Table of Contents
+== Table of Contents
 
 - Disclaimer
 - Version History
@@ -19,7 +19,7 @@ Edition 3 v1.4 FINAL, 2024-05-
 - 5. Reason Codes.
 
 
-## Disclaimer
+== Disclaimer
 
 Copyright © 2010 – 2024 Open Charge Alliance. All rights reserved.
 
@@ -29,7 +29,7 @@ This document is made available under the _*Creative Commons Attribution-NoDeriv
 **Disclaimer**
 
 
-## Version History
+== Version History
 
 ```
 Appendix version Date OCPP Version Description
@@ -49,7 +49,7 @@ Appendix 5: Added reason MissingDeviceModelInfo
 **Version History**
 
 
-## 1. Security Events
+== 1. Security Events
 
 The table below provides a list of security events. Security events that are implemented SHALL be stored at the security log and
 security events that are implemented and marked as critical SHALL also be pushed to the CSMS.
@@ -157,7 +157,7 @@ Yes
 **Appendix 1. Security Events**
 
 
-## Appendix 2. Standardized Units of Measure
+== Appendix 2. Standardized Units of Measure
 
 The standardized values for Unit of Measure. Default value of "unit" is always "Wh".
 
@@ -200,13 +200,13 @@ kWh kilowatt-hours (energy)
 **Appendix 2. Standardized Units of Measure**
 
 
-## Appendix 3. Standardized Components
+== Appendix 3. Standardized Components
 
 This appendix provides a list of all standardized component names for OCPP 2.0.1 for controller components and for physical
 components. A summary table listing just all components without variables is provided at the end of this appendix in Summary List
 of Standardized Components.
 
-### 3.1. Controller Components
+=== 3.1. Controller Components
 
 This is the list of Standardized Controller Components for OCPP 2.0.1. and typical Variables that might be associated with them.
 
@@ -726,7 +726,7 @@ StopTxOnEVSideDisconnect boolean When set to true, the Charging Station SHALL ad
 transaction when the cable is unplugged from the EV.
 ```
 
-### 3.2. Physical Components
+=== 3.2. Physical Components
 
 This is a non-exhaustive list of Standardized Physical Components that SHALL be used when mapping a real Charging Station to
 the Device Model (for monitoring purposes).
@@ -987,14 +987,14 @@ EnergyCapacity Wh EVEnergyCapacity Total capacity of traction battery * 100
 EnergyImport.target Wh EVEnergyRequest (DC)
 EAmount (AC)
 ```
-#### -
+==== -
 
 ```
 DepartureTime dateTime DepartureTime
 Provided as seconds since message
 receipt. Convert to absolute time.
 ```
-#### -
+==== -
 
 ```
 RemainingTimeBulk s RemainingTimeToBulkSoC -
@@ -1682,7 +1682,7 @@ Enabled VehicleIdSensor enabled
 Active Processing
 ```
 
-### 3.3. Summary List of Standardized Components
+=== 3.3. Summary List of Standardized Components
 
 Following is a list that sums up all above-mentioned standardized component names.
 
@@ -1916,7 +1916,7 @@ registration number via ANPR hardware, a VIN, or other local identifier of the v
 range/active RFID, or any other relevant technology and result.
 
 
-## 4. Standardized Variables
+== 4. Standardized Variables
 
 This is a non-exhaustive list of Standardized Variables that SHALL be used when the Charging Station and CSMS want to exchange
 information about a Variable. See also Part 1, paragraph 4.5.
@@ -2162,7 +2162,7 @@ VoltageImbalance decimal Percent Percentage voltage imbalance in three phase sup
 **Appendix 4. Standardized Variables**
 
 
-## 5. Reason Codes.
+== 5. Reason Codes.
 
 The table below provides a list of standardized reason codes that can be used in the optional StatusInfo element of a response.
 
