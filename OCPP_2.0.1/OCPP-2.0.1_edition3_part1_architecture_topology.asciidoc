@@ -93,231 +93,20 @@ image::images/figure_1.svg[3-tier model as used in OCPP]
 s|NOTE |This section describes the charging infrastructure on a logical level for communication purposes. We do not wish to impose a mapping onto physical hardware. This is a manufacturer’s choice. For example, the EVSE might be integrated into a Charging Station and to look as just a part of that device, but it might just as well have its own casing and live outside of the physical entity Charging Station, for example a charging plaza with 20 EVSEs and Connectors which communicates via 1 modem as 1 Charging Station to the CSMS is seen by OCPP as 1 Charging Station.
 |===
 
+<<<
+
 == Information Model
 
 _This section is informative._
 
-Given the growing complexity of the messages of OCPP, OCPP 2.0.1 is based on an _Information Model_ as a blueprint for the
+Given the growing complexity of the messages of OCPP, OCPP 2.0.1 is based on an _Information Model_ as a blueprint for the messages and inherent schemas of OCPP. With an information model, we mean a logical object set, describing real objects with all their properties. This provides an informative representation of information structure in the protocol. Furthermore, it enables making objects within OCPP reusable and enables consistent definition of messages and automatically generated message schemas (Part 3).
 
-messages and inherent schemas of OCPP. With an information model, we mean a logical object set, describing real objects with all
+The Information Model is a model, also called Domain Model or Core Model, based on which the OCPP messages and datatypes are generated. These datatypes are extracted from the the OCPP 1.6 specification and are named Core DataTypes and Qualified DataTypes. The figure below illustrates how the DataTypes in the information model are built up.
 
-their properties. This provides an informative representation of information structure in the protocol. Furthermore, it enables
+In part 2 - Specification, chapter Datatypes, some DataTypes have the Common: prefix. This originates from the Information Model. It means that the DataType is able to be shared among other DataTypes and Messages. This has no impact on the OCPP implementation of a device.
 
-making objects within OCPP reusable and enables consistent definition of messages and automatically generated message
-
-schemas (Part 3).
-
-The Information Model is a model, also called Domain Model or Core Model, based on which the OCPP messages and datatypes
-
-are generated. These datatypes are extracted from the the OCPP 1.6 specification and are named Core DataTypes and Qualified
-
-DataTypes. The figure below illustrates how the DataTypes in the information model are built up.
-
-In part 2 - Specification, chapter Datatypes, some DataTypes have the Common: prefix. This originates from the Information Model.
-
-It means that the DataType is able to be shared among other DataTypes and Messages. This has no impact on the OCPP
-
-implementation of a device.
-
-```
-«BDTSimpleType»
-```
-```
-IntegerType
-```
-```
-«Facet»
-```
-```
-+ fractionDigits = 0 {readOnly}
-```
-```
-(from QualifiedDataTypes)
-```
-```
-«CDTSimpleType,LDT,EC...
-```
-```
-NumericType
-```
-```
-«Supplementary»
-```
-```
-+ format: String [0..1]
-```
-```
-(from CoreDataTypes)
-```
-```
-«PRIMSimpleType»
-```
-```
-Decimal
-```
-```
-(from PrimitiveDataTypes)
-```
-```
-anySimpleType
-```
-```
-«XSDsimpleType»
-```
-```
-XSDDatatypes::decimal
-```
-```
-«BDTSimpleType»
-```
-```
-PercentageType
-```
-```
-«Facet»
-```
-```
-+ fractionDigits = 0 {readOnly}
-```
-```
-+ minInclusive = 0 {readOnly}
-```
-```
-+ maxInclusive = 100 {readOnly}
-```
-```
-(from QualifiedDataTypes)
-```
-```
-«BDTComplexType»
-```
-```
-PositiveAmount
-```
-```
-«Facet»
-```
-```
-+ fractionDigits = 0 {readOnly}
-```
-```
-+ minInclusive = 0 {readOnly}
-```
-```
-(from QualifiedDataTypes)
-```
-```
-«CDTComplexType,ECDMChange,...
-```
-```
-AmountType
-```
-```
-«Supplementary»
-```
-```
-+ currency: String [0..1]
-```
-```
-+ currencyCodeListVersion: String [0..1]
-```
-```
-(from CoreDataTypes)
-```
-```
-«BDTComplexType»
-```
-```
-PowerType
-```
-```
-(from QualifiedDataTypes)
-```
-```
-«CDTComplexType,LDT,ECDMChange,...
-```
-```
-MeasureType
-```
-```
-«Supplementary»
-```
-```
-+ measureUnit: String [0..1]
-```
-```
-+ measureUnit.CodeListVersion: String [0..1]
-```
-```
-(from CoreDataTypes)
-```
-```
-«CDTComplexType,LDT,ECDMChange,CDT»
-```
-```
-IdentifierType
-```
-```
-«Supplementary»
-```
-```
-+ identificationScheme: String [ 0 .. 1 ]
-```
-```
-+ identificationScheme.Agency: String [ 0 .. 1 ]
-```
-```
-+ identificationScheme.AgencyName: String [ 0 .. 1 ]
-```
-```
-+ identificationScheme.Name: String [ 0 .. 1 ]
-```
-```
-+ identificationScheme.UniformResource: String [ 0 .. 1 ]
-```
-```
-+ identificationScheme.Version: String [ 0 .. 1 ]
-```
-```
-+ identificationSchemeData.UniformResource: String [ 0 .. 1 ]
-```
-```
-(from CoreDataTypes)
-```
-```
-«PRIMSimpleType»
-```
-```
-NormalizedString
-```
-```
-(from PrimitiveDataTypes)
-```
-```
-string
-```
-```
-«XSDsimpleType»
-```
-```
-XSDDatatypes::normalizedString
-```
-```
-«BDTComplexType»
-```
-```
-CertificateSerialNumberType
-```
-```
-«Facet»
-```
-```
-+ maxLength = 20 {readOnly}
-```
-```
-(from QualifiedDataTypes)
-```
-_Figure 2. Example datatypes_
+.Example datatypes
+image::images/figure_2.svg[Example datatypes]
 
 The Information Model is divided into a number of "functions" to have a better overview of the model (thus for readability):
 
@@ -330,697 +119,209 @@ The Information Model is divided into a number of "functions" to have a better o
 
 For more details about the actual model per function, please refer to the appendix.
 
+<<<
 
+[[device_model]]
 == Device Model: Addressing Components and Variables.
 
-The Device Model refers to a generalized mechanism within OCPP to enable any model of Charging Station to report how it is build
-
-up, so it can be managed from any CSMS. To manage a Charging Station with the Device Model (i.e. "to manage a device") a
-
-number of messages and use cases is defined to configure and monitor a Charging Station in detail, without defining the structure
-
-of the Charging Station in advance. To be able do do this, OCPP provides a generalized mechanism to allow the exchange of a wide
-
-range of information about Charging Station. This version of the Device Model has the 3-tier model (Charging Station, EVSE,
-
-Connector) as its starting point, which means that any description created with the Device Model follows these three tiers. The
-
-remainder of this chapter describes how the data (and associated meta-data) looks like that can be exchanged between a Charging
-
-Station and a CSMS. The use cases and messages that are used to manage a device are _not_ described here, but in Part 2 of the
-
-specification. This chapter only focuses on the data model.
+The Device Model refers to a generalized mechanism within OCPP to enable any model of Charging Station to report how it is build up, so it can be managed from any CSMS. To manage a Charging Station with the Device Model (i.e. "to manage a device") a number of messages and use cases is defined to configure and monitor a Charging Station in detail, without defining the structure of the Charging Station in advance. To be able do do this, OCPP provides a generalized mechanism to allow the exchange of a wide range of information about Charging Station. This version of the Device Model has the 3-tier model (Charging Station, EVSE, Connector) as its starting point, which means that any description created with the Device Model follows these three tiers. The remainder of this chapter describes how the data (and associated meta-data) looks like that can be exchanged between a Charging Station and a CSMS. The use cases and messages that are used to manage a device are _not_ described here, but in Part 2 of the specification. This chapter only focuses on the data model.
 
 === Components
 
-In OCPP 2.0.1, a Charging Station is modelled as a set of _"Components"_ , typically representing physical devices (including any
+In OCPP 2.0.1, a Charging Station is modelled as a set of _"Components"_ , typically representing physical devices (including any external equipment to which it is connected for data gathering and/or control), logical functionality, or logical data entities. _Components_ of different types are primarily identified by a ComponentName, that is either the name of a _standardized_ component (see OCPP part 2c), or a custom/non-standardized component name, for new, pre-standardized equipment, vendor specific extensions, etc.
 
-external equipment to which it is connected for data gathering and/or control), logical functionality, or logical data entities.
+_ChargingStation_ (TopLevel), _EVSE_ , and _Connector_ represent the three major "tiers" of a Charging Station, and constitute an implicit "location-based" addressing scheme that is widely used in many OCPP data structures. Each "tier" has a component of the same name, which represents the tier. For example, EVSE 1 on a Charging Station is represented by the component named "EVSE" (no instance name) with " _evseId_ = 1". In the same manner, Connector 1 on EVSE 1 is represented by the component named "Connector" (no instance name) with " _evseId_ = 1, _connectorId_ = 1".
 
-_Components_ of different types are primarily identified by a ComponentName, that is either the name of a _standardized_ component
+By default, all _components_ are located at the _ChargingStation_ tier, but individual instances of any component can be associated with a specific _EVSE_ , or a specific _Connector_ (on a specific EVSE) by including EVSE or EVSE and Connector identification numbers as part of a component addressing reference.
 
-(see OCPP part 2c), or a custom/non-standardized component name, for new, pre-standardized equipment, vendor specific
+Additionally, there can be more than one instance of a component (in the functional dimension), representing multi-occurrence physical or logical components (e.g. power converter modules, fan banks, resident firmware images, etc.).
 
-extensions, etc.
+Each distinct _component_ instance is uniquely identified by an (optional) _componentInstance_ addressing key. When no _componentInstance_ is provided, then the default or only instance of a _component_ is referenced.
 
-_ChargingStation_ (TopLevel), _EVSE_ , and _Connector_ represent the three major "tiers" of a Charging Station, and constitute an implicit
+_Components_ do not in themselves hold data: all externally accessible data associated with each component instance is represented by a set of _variables_ that can be read, set, and/or monitored for changes. The relationship of a Component with one or more Variables is illustrated in below.
 
-"location-based" addressing scheme that is widely used in many OCPP data structures. Each "tier" has a component of the same
+.Component and variables
+image::images/figure_3.svg[Component and variables]
 
-name, which represents the tier. For example, EVSE 1 on a Charging Station is represented by the component named "EVSE" (no
+The table below illustrates some common components (by their standardized component-names), and examples of the hierarchical location levels at which they typically occur for a basic home charger and a typical public Charging Station.
 
-instance name) with " _evseId_ = 1". In the same manner, Connector 1 on EVSE 1 is represented by the component named "Connector"
+[%autowidth.stretch,cols="1,1,1",options="header",frame=all,grid=all]
+|===
+3.+<|Basic home charger example configuration
 
-(no instance name) with " _evseId_ = 1, _connectorId_ = 1".
+s|ChargingStation tier    s|EVSE tier    s|Connector tier
+|ChargingStation (itself, as a whole) |EVSE (itself, as a whole) |Connector (itself, as a whole)
+|RadioLink |ControlMetering |PlugRetentionLock
+|TokenReader |OverCurrentBreaker |{nbsp}
+|Controller   |RCD  |{nbsp}
+|{nbsp}       |ChargingStatusIndicator  |{nbsp}
+|===
 
-By default, all _components_ are located at the _ChargingStation_ tier, but individual instances of any component can be associated with
+[%autowidth.stretch,cols="1,1,1",options="header",frame=all,grid=all]
+|===
+3.+<|Public Charging Station example configuration
 
-a specific _EVSE_ , or a specific _Connector_ (on a specific EVSE) by including EVSE or EVSE and Connector identification numbers as
-
-part of a component addressing reference.
-
-Additionally, there can be more than one instance of a component (in the functional dimension), representing multi-occurrence
-
-physical or logical components (e.g. power converter modules, fan banks, resident firmware images, etc.).
-
-Each distinct _component_ instance is uniquely identified by an (optional) _componentInstance_ addressing key. When no
-
-_componentInstance_ is provided, then the default or only instance of a _component_ is referenced.
-
-_Components_ do not in themselves hold data: all externally accessible data associated with each component instance is
-
-represented by a set of _variables_ that can be read, set, and/or monitored for changes. The relationship of a Component with one or
-
-more Variables is illustrated in below.
-
-«BusinessComponent»
-
-**VariableType**
-
-+ Instance: NameIdentifierType [ 0 .. 1 ]
-
-+ Name: NameIdentifierType
-
-«BusinessComponent»
-
-**ComponentType**
-
-+ Instance: NameIdentifierType [ 0 .. 1 ]
-
-+ Name: NameIdentifierType
-
-«BusinessComponent»
-
-**EVSEType**
-
-+ ConnectorId: NumericIdentifierType [ 0 .. 1 ]
-
-«Content»
-
-+ MRID: NumericIdentifierType
-
-*
-
-1
-
-0 1
-
-_Figure 3. Component and variables_
-
-The table below illustrates some common components (by their standardized component-names), and examples of the hierarchical
-
-location levels at which they typically occur for a basic home charger and a typical public Charging Station.
-
-**Basic home charger example configuration**
-
-**ChargingStation tier EVSE tier Connector tier**
-
-ChargingStation (itself, as a whole) EVSE (itself, as a whole) Connector (itself, as a whole)
-
-RadioLink ControlMetering PlugRetentionLock
-
-TokenReader OverCurrentBreaker
-
-Controller RCD
-
-
-**Basic home charger example configuration**
-
-ChargingStatusIndicator
-
-**Public Charging Station example configuration**
-
-**ChargingStation tier EVSE tier Connector tier**
-
-ChargingStation (itself, as a whole) EVSE (itself, as a whole) Connector (itself, as a whole)
-
-ElectricalFeed ElectricalFeed AccessProtection
-
-TokenReader TokenReader PlugRetentionLock
-
-Display Display
-
-FiscalMetering FiscalMetering
-
-Clock ControlMetering
-
-Controller OverCurrentBreaker
-
-RCD
-
-ChargingStatusIndicator
+s|ChargingStation tier s|EVSE tier s|Connector tier
+|ChargingStation (itself, as a whole) |EVSE (itself, as a whole) |Connector (itself, as a whole)
+|ElectricalFeed |ElectricalFeed |AccessProtection
+|TokenReader |TokenReader |PlugRetentionLock
+|Display     |Display     |{nbsp}
+|FiscalMetering |FiscalMetering  |{nbsp}
+|Clock          |ControlMetering |{nbsp}
+|Controller     |OverCurrentBreaker |{nbsp}
+|{nbsp}         |RCD                |{nbsp}
+|{nbsp}         |ChargingStatusIndicator  |{nbsp}
+|===
 
 === Variables
 
-Every _component_ has a number of _variables_ , that can, as appropriate, be used to hold, set, read, and/or report on all (externally
+Every _component_ has a number of _variables_ , that can, as appropriate, be used to hold, set, read, and/or report on all (externally visible) data applicable to that _component_ , including configuration parameters, measured values (e.g. a current or a temperature) and/or monitored changes to variable values.
 
-visible) data applicable to that _component_ , including configuration parameters, measured values (e.g. a current or a temperature)
+Although many _components_ can have associated _variables_ that are, by their nature, specific to the component type (e.g. _ConnectorType_ for a _Connector_ component), there are a minimal set of standardized _variables_ that are used to provide standardized high level event notification and state/status reporting (e.g. _Problem_ , _Active_ ) on a global and/or selective basis, and also to report component presence, availability, etc. during the inventorying/discovery process (e.g. _Available_ , _Enabled_ ). A Charging Station is not required to report the base variables: _Present_ , _Available_ and _Enabled_ when they are readonly and set to _true_. When a Charging Station does not report: _Present_ , _Available_ and/or _Enabled_ the Central System SHALL assume them to be readonly and set to _true_ Variables can be any of a range of common general-purpose data types (boolean, integer, decimal, date-time, string), but also can have their allowable values constrained to particular ranges, enumeration lists, sets, or ordered lists.
 
-and/or monitored changes to variable values.
+To support complex components, there can be more than one instance of any given variable name associated with any components (e.g. power converter modules reporting temperature, current, or voltage at multiple points).
 
-Although many _components_ can have associated _variables_ that are, by their nature, specific to the component type (e.g.
-
-_ConnectorType_ for a _Connector_ component), there are a minimal set of standardized _variables_ that are used to provide standardized
-
-high level event notification and state/status reporting (e.g. _Problem_ , _Active_ ) on a global and/or selective basis, and also to report
-
-component presence, availability, etc. during the inventorying/discovery process (e.g. _Available_ , _Enabled_ ). A Charging Station is not
-
-required to report the base variables: _Present_ , _Available_ and _Enabled_ when they are readonly and set to _true_. When a Charging
-
-Station does not report: _Present_ , _Available_ and/or _Enabled_ the Central System SHALL assume them to be readonly and set to _true_
-
-Variables can be any of a range of common general-purpose data types (boolean, integer, decimal, date-time, string), but also can
-
-have their allowable values constrained to particular ranges, enumeration lists, sets, or ordered lists.
-
-To support complex components, there can be more than one instance of any given variable name associated with any
-
-components (e.g. power converter modules reporting temperature, current, or voltage at multiple points).
-
-Each distinct _variable_ instance is uniquely identified by an (optional) _variableInstance_ addressing key string value. When no
-
-_variableInstance_ is provided, then the default or only instance of a _variable_ is referenced.
+Each distinct _variable_ instance is uniquely identified by an (optional) _variableInstance_ addressing key string value. When no _variableInstance_ is provided, then the default or only instance of a _variable_ is referenced.
 
 === Characteristics and Attributes
 
-Each _variable_ , in addition to its primary ( _"Actual"_ ) value, can have a set of associated secondary data that is linked to the same
+Each _variable_ , in addition to its primary ( _"Actual"_ ) value, can have a set of associated secondary data that is linked to the same primary _variable_ name and _variableInstance_.
 
-primary _variable_ name and _variableInstance_.
-
-This greatly avoids cluttering the _variables_ namespace with confusing clusters of ancillary variable names (e.g. FanSpeed,
-
-FanSpeedUnits, MinimumFanSpeed, BaseFanSpeed) that lack consistence and discoverability.
+This greatly avoids cluttering the _variables_ namespace with confusing clusters of ancillary variable names (e.g. FanSpeed, FanSpeedUnits, MinimumFanSpeed, BaseFanSpeed) that lack consistence and discoverability.
 
 The ancillary variable data includes:
 
-- Variable characteristics meta-data (read-only)
-
-◦
-
-Unit of measure (V,W,kW,kWh, etc.)
-
-◦
-
-Data type (Integer, Decimal, String, Date, OptionList, etc.)
-
-◦
-
-Lower limit
-
-◦
-
-Upper limit
-
-◦
-
-List of allowed values for enumerated variables
-
-- Variable attributes (read-write):
-
-◦
-
-Actual value
-
-◦
-
-Target value
-
-◦
-
-Configured lower limit
-
-◦
-
-Configured upper limit
-
-◦
-
-Mutability (whether the value can be altered or not, e.g. ReadOnly or ReadWrite)
-
-◦
-
-Persistence (whether the value is preserved in case of a reboot or power loss)
-
+* Variable characteristics meta-data (read-only)
+** Unit of measure (V,W,kW,kWh, etc.)
+** Data type (Integer, Decimal, String, Date, OptionList, etc.)
+** Lower limit
+** Upper limit
+** List of allowed values for enumerated variables
+* Variable attributes (read-write):
+** Actual value
+** Target value
+** Configured lower limit
+** Configured upper limit
+** Mutability (whether the value can be altered or not, e.g. ReadOnly or ReadWrite)
+** Persistence (whether the value is preserved in case of a reboot or power loss)
 
 The relationship of a Variable with one or more VariableAttributes is illustrated in the figure below.
 
-«BusinessComponent»
-
-**VariableType**
-
-+ Instance: NameIdentifierType [ 0 .. 1 ]
-
-+ Name: NameIdentifierType
-
-«BusinessComponent»
-
-**VariableAttributeType**
-
-+ Constant: IndicatorType
-
-+ Mutability: MutabilityEnumType [0..1]
-
-+ Persistent: IndicatorType
-
-+ Type: AttributeEnumType [ 0 .. 1 ]
-
-+ Value: Base64String2500Type
-
-«BusinessComponent»
-
-**VariableCharacteristicsType**
-
-+ DataType: DataEnumType
-
-+ MaxLimit: AmountType [0..1]
-
-+ MinLimit: AmountType [0..1]
-
-+ SupportsMonitoring: IndicatorType
-
-+ Unit: MeasurementUnitType [0..1]
-
-+ ValuesList: CI1000TextType [0..1]
-
-«BusinessComponent»
-
-**ComponentType**
-
-+ Instance: NameIdentifierType [ 0 .. 1 ]
-
-+ Name: NameIdentifierType
-
-«BusinessComponent»
-
-**EVSEType**
-
-+ ConnectorId: NumericIdentifierType [ 0 .. 1 ]
-
-«Content»
-
-+ MRID: NumericIdentifierType
-
-1
-
-0..
-
-*
-
-1
-
-0
-
-1
-
-**1**
-
-1..*
-
-_Figure 4. Variable attributes and characteristics_
-
-There is a difference between how to implement (physical) devices and (virtual) controller components, using the DeviceModel. A
-
-(virtual) controller component has to be implementing as described in part 2 chapter the "Referenced Components and Variables".
-
-These kind of components/variables are only using the variableAttribute type 'Actual'. Depending on if this variableAttribute is
-
-writable, the CSMS can use this to set a new value.
-
-(Physical) devices are a bit more complex to implement. For example, there is a fan with a fan speed, that has a (physical) limit with
-
-a range of 0 - 1000. But it should not be allowed to set the value below 200, because the fan can stop functioning. And it should not
-
-be set above 500, because that would be bad for the fan on the long run. When implementing this device using the DeviceModel, it
-
-can be defined as follows:
-
-**Component name** Fan
-
-**Variable name** FanSpeed
-
-**variableAttribute 1 type** Actual
-
-**value** <The current fan speed value of the fan.>
-
-**mutability** ReadOnly
-
-**variableAttribute 2 type** Target
-
-**value** <The CSMS can use this value to adjust the fan
-
-speed. The Charging Station SHALL try to keep the
-
-actual value at the target value.>
-
-**mutability** ReadWrite
-
-**variableAttribute 3 type** MaxSet
-
-**value** <The value '500' from the example. The target may
-
-not be set above this value.>
-
-**variableAttribute 4 type** MinSet
-
-**value** <The value '200' from the example. The target may
-
-not be set below this value.>
-
-**variableCharacteristics maxLimit** <The value '1000' from the example. This could be the
-
-physical max limit of the fan.>
-
-**minLimit** <The value '0' from the example. This could be the
-
-physical min limit of the fan. This could also be -1000,
-
-if the fan is also able to rotate in the other direction.>
-
-**Description** This is an example of how a fan could be defined using the DeviceModel.
-
-When trying to set the target with value 600, the Charging Station will first check the allowed min and max values/limits and reject
-
-
-the set. If the target value is set to 500, the value is within range and the Charging Station will allow the set and start to adjust the
-
-actual fan speed. If the actual fan speed is measured to be 502, it’s out of range. But it should be reported to the CSMS, so the
-
-actual value of a physical component should be updated without checking the min and max values/limits.
+.Variable attributes and characteristics
+image::images/figure_4.svg[Variable attributes and characteristics]
+
+There is a difference between how to implement (physical) devices and (virtual) controller components, using the DeviceModel. A (virtual) controller component has to be implementing as described in part 2 chapter the "Referenced Components and Variables".
+
+These kind of components/variables are only using the variableAttribute type 'Actual'. Depending on if this variableAttribute is writable, the CSMS can use this to set a new value.
+
+(Physical) devices are a bit more complex to implement. For example, there is a fan with a fan speed, that has a (physical) limit with a range of 0 - 1000. But it should not be allowed to set the value below 200, because the fan can stop functioning. And it should not be set above 500, because that would be bad for the fan on the long run. When implementing this device using the DeviceModel, it can be defined as follows:
+
+[cols="<.^1s,<.^1s,<.^1s,<.^3",%autowidth.stretch,frame=all,grid=all]
+|===
+|Component         |name                 2.+d|Fan
+.13+|Variable   |name                 2.+d|FanSpeed
+                 .3+|variableAttribute 1     |type d|Actual
+                                              |value d|<The current fan speed value of the fan.>
+                                              |mutability d|ReadOnly
+                 .3+|variableAttribute 2     |type  d|Target
+                                              |value d|<The CSMS can use this value to adjust the fan speed. The Charging Station SHALL try to keep the actual value at the target value.>
+                                              |mutability d|ReadWrite
+                 .2+|variableAttribute 3     |type  d|MaxSet
+                                              |value d|<The value '500' from the example. The target may not be set above this value.>
+                 .2+|variableAttribute 4     |type  d|MinSet
+                                              |value d|<The value '200' from the example. The target may not be set below this value.>
+                 .2+|variableCharacteristics |maxLimit d|<The value '1000' from the example. This could be the physical max limit of the fan.>
+                                              |minLimit d|<The value '0' from the example. This could be the physical min limit of the fan. This could also be -1000, if the fan is also able to rotate in the other direction.>
+|Description 3+d|This is an example of how a fan could be defined using the DeviceModel.
+|===
+
+When trying to set the target with value 600, the Charging Station will first check the allowed min and max values/limits and reject the set. If the target value is set to 500, the value is within range and the Charging Station will allow the set and start to adjust the actual fan speed. If the actual fan speed is measured to be 502, it’s out of range. But it should be reported to the CSMS, so the actual value of a physical component should be updated without checking the min and max values/limits.
 
 === Monitoring
 
-Optional monitoring settings can be associated with a variable, that allow changes to _variable_ ( _Actual_ ) values are to be reported to
-
-the CSMS as event notifications.
+Optional monitoring settings can be associated with a variable, that allow changes to _variable_ ( _Actual_ ) values are to be reported to the CSMS as event notifications.
 
 These include:
 
-- Monitoring value
-- Monitoring type: upper threshold, lower threshold, delta, periodic
-- Severity level when reporting the event
+* Monitoring value
+* Monitoring type: upper threshold, lower threshold, delta, periodic
+* Severity level when reporting the event
 
 The following table show which MonitorType/dataType combinations are possible.
 
-**string decimal integer dateTime boolean OptionList SequenceList MemberList**
+[%autowidth.stretch,cols="<.^s,8*^.^",options="header"]
+|===
+|{nbsp}           |string |decimal |integer |dateTime |boolean |OptionList |SequenceList |MemberList
+|UpperThreshold   |{nbsp} |X       |X       |{nbsp}   |{nbsp}  |{nbsp}     |{nbsp}       |{nbsp}
+|LowerThreshold   |{nbsp} |X       |X       |{nbsp}   |{nbsp}  |{nbsp}     |{nbsp}       |{nbsp}
+|Delta            |X      |X       |X       |X        |X       |X          |X            |X
+|Periodic         |X      |X       |X       |{nbsp}   |X       |X          |X            |X
+|PeriodicClockAligned |X      |X       |X       |{nbsp}   |X       |X          |X            |X
+|===
 
-**UpperThresh**
-
-**old**
-
-X X
-
-**LowerThresh**
-
-**old**
-
-X X
-
-**Delta** X X X X X X X X
-
-**Periodic** X X X X X X X
-
-**PeriodicCloc**
-
-**kAligned**
-
-X X X X X X X
-
-- For _UpperThreshold_ and _LowerThreshold_ the value represents the to be exceeded value by the actual value of the variable.
-- For _Delta_ this value represents the change in value comparing with the actual value from the moment the monitor was set.
-
-◦
-
-When the dataType of the variable is integer or decimal, this value represents the difference to be reached to trigger
-
-the monitor.
-
-◦
-
-When the dataType of the variable is dateTime the unit of measure will be in seconds.
-
-◦
-
-When the dataType of the variable is string, boolean, OptionList, SequenceList or MemberList, this value is ignored.
-
-The monitor will be triggered by every change in the actual value.
-
-- When a delta monitor is triggered OR when the Charging Station has rebooted, the Charging Station shall set a new
-
-momentary value.
-
-- For _Periodic_ and _PeriodicClockAligned_ the value represents the interval in seconds.
+* For _UpperThreshold_ and _LowerThreshold_ the value represents the to be exceeded value by the actual value of the variable.
+* For _Delta_ this value represents the change in value comparing with the actual value from the moment the monitor was set.
+** When the dataType of the variable is integer or decimal, this value represents the difference to be reached to trigger the monitor.
+** When the dataType of the variable is dateTime the unit of measure will be in seconds.
+** When the dataType of the variable is string, boolean, OptionList, SequenceList or MemberList, this value is ignored. +
+  The monitor will be triggered by every change in the actual value.
+* When a delta monitor is triggered OR when the Charging Station has rebooted, the Charging Station shall set a new momentary value.
+* For _Periodic_ and _PeriodicClockAligned_ the value represents the interval in seconds.
 
 The relationship between a Variable and one or more VariableMonitoring elements is illustrated in the figure below.
 
-
-```
-«BusinessComponent»
-```
-```
-VariableType
-```
-```
-+ Instance: NameIdentifierType [ 0 .. 1 ]
-```
-```
-+ Name: NameIdentifierType
-```
-```
-«BusinessComponent»
-```
-```
-VariableAttributeType
-```
-```
-+ Constant: IndicatorType
-```
-```
-+ Mutability: MutabilityEnumType [0..1]
-```
-```
-+ Persistent: IndicatorType
-```
-```
-+ Type: AttributeEnumType [ 0 .. 1 ]
-```
-```
-+ Value: Base64String2500Type
-```
-```
-«BusinessComponent»
-```
-```
-VariableCharacteristicsType
-```
-```
-+ DataType: DataEnumType
-```
-```
-+ MaxLimit: AmountType [0..1]
-```
-```
-+ MinLimit: AmountType [0..1]
-```
-```
-+ SupportsMonitoring: IndicatorType
-```
-```
-+ Unit: MeasurementUnitType [0..1]
-```
-```
-+ ValuesList: CI1000TextType [0..1]
-```
-```
-«BusinessComponent»
-```
-```
-ComponentType
-```
-```
-+ Instance: NameIdentifierType [ 0 .. 1 ]
-```
-```
-+ Name: NameIdentifierType
-```
-```
-«BusinessComponent»
-```
-```
-VariableMonitoringType
-```
-```
-+ Id: NumericIdentifierType
-```
-```
-+ Severity: NumericIdentifierType
-```
-```
-+ Transaction: IndicatorType
-```
-```
-+ Type: MonitorEnumType
-```
-```
-+ Value: MeasureType
-```
-```
-«BusinessComponent»
-```
-```
-EVSEType
-```
-```
-+ ConnectorId: NumericIdentifierType [ 0 .. 1 ]
-```
-```
-«Content»
-```
-```
-+ MRID: NumericIdentifierType
-```
-```
-1
-```
-```
-0..
-```
-```
-*
-```
-```
-1
-```
-```
-1
-```
-```
-1..*
-```
-```
-*
-```
-```
-1
-```
-```
-0 1
-```
-_Figure 5. Variables and monitoring_
+.Variables and monitoring
+image::images/figure_5.svg[Variables and monitoring]
 
 === Standardized lists of Components and Variables
 
-To provide some level of interoperability between different Charging Stations and CSMSs, besides the above defined model of
-
-_Components_ and _Variables_ , part 2 - appendices of the OCPP specification provides a list of standardized names for Components
-
-and Variables. The idea of this lists is to make sure that _if_ a Charging Station and CSMS want to exchange information about a
-
-component, they both use the same name and description _if_ it is listed in the OCPP specification. For names of a _Components_ or
-
-_Variables_ that are not listed in the specification, bilateral appointments between Charging Station manufacturer and CSMS are to be
-
-made. In these cases it is advised to provide feedback to the Open Charge Alliance to be able to include new/additional
-
-_Components_ and _Variables_ in new versions of OCPP.
+To provide some level of interoperability between different Charging Stations and CSMSs, besides the above defined model of _Components_ and _Variables_ , part 2 - appendices of the OCPP specification provides a list of standardized names for Components and Variables. The idea of this lists is to make sure that _if_ a Charging Station and CSMS want to exchange information about a component, they both use the same name and description _if_ it is listed in the OCPP specification. For names of a _Components_ or _Variables_ that are not listed in the specification, bilateral appointments between Charging Station manufacturer and CSMS are to be made. In these cases it is advised to provide feedback to the Open Charge Alliance to be able to include new/additional _Components_ and _Variables_ in new versions of OCPP.
 
 === Minimum Device Model
 
-Since the Device Model is a _generalized_ mechanism which can be applied to any model of Charging Station, the complexity of
+Since the Device Model is a _generalized_ mechanism which can be applied to any model of Charging Station, the complexity of different implementations can vary. It consists of a number of use cases and messages that are not all required. This section describes the minimum part of the Device Model that needs to be implemented to create a working implementation of OCPP 2.0.1.
 
-different implementations can vary. It consists of a number of use cases and messages that are not all required. This section
+The Device Model introduces Components and Variables that can be used for configuring and monitoring a Charging Station. A number of these Components and Variables are included in the list of _Referenced Components and Variables_ (grouped by Functional Block) in Part 2 of the specification. When implementing a Functional Block, ALL required Configuration Variables that belong to a Functional Block SHALL be implemented. The required Configuration Variables from the _General_ section SHALL also be implemented for all implementations of OCPP 2.0.1.
 
-describes the minimum part of the Device Model that needs to be implemented to create a working implementation of OCPP 2.0.1.
+The following table describes which messages are required or optional to implement for all use cases that are part of the Device Model implementation.
 
-The Device Model introduces Components and Variables that can be used for configuring and monitoring a Charging Station. A
+[%autowidth.stretch,cols="<.^2,<.^3",frame=all,grid=all,options="header"]
+|===
+2.+s|Use cases / messages that are part of a minimium Device Model implementation
 
-number of these Components and Variables are included in the list of _Referenced Components and Variables_ (grouped by
+s|Use case              s|Messages
+|_B05 Set Variables_    |SetVariables message MUST be implemented
+|_B06 Get Variables_    |GetVariables message MUST be implemented.
+|_B07 Get Base Report_  |GetBaseReport message MUST be implemented and MUST support ConfigurationInventory and FullInventory. The content of these reports depends on the implementation of the Charging Station. It is up to the implementer to decide which components and variables exist in the implementation.
 
-Functional Block) in Part 2 of the specification. When implementing a Functional Block, ALL required Configuration Variables that
+2.+s|Additional use cases / messages that are _not_ part of a minimium Device Model implementation
+s|Use case              s|Messages
+|_B08 Get Custom Report_ |GetCustomReport message is optional.
+|_N02 Get Monitoring Report_ |GetMonitoringReportRequest message is optional.
+|_N03 Set Monitoring Base_   |SetMonitoringBaseRequest message is optional.
+|_N04 Set Variable Monitoring_ |SetVariableMonitoringRequest message is optional.
 
-belong to a Functional Block SHALL be implemented. The required Configuration Variables from the _General_ section SHALL also be
+|_N05 Set Monitoring Level_ |SetMonitoringLevelRequest message is optional.
+|_N06 Clear/Remove Monitoring_ |ClearVariableMonitoringRequest message is optional.
+|_N07 Alert Event_ |it is RECOMMENDED that NotifyEventRequest is implemented in the Charging Station even when monitoring is not implemented, so that this can be used to report built-in monitoring events.
+|_N08 Periodic Event_ |see N07.
+|===
 
-implemented for all implementations of OCPP 2.0.1.
-
-The following table describes which messages are required or optional to implement for all use cases that are part of the Device
-
-Model implementation.
-
-**Use cases / messages that are part of a minimium Device Model implementation**
-
-**Use case Messages**
-
-_B05 Set Variables_ SetVariables message MUST be implemented
-
-_B06 Get Variables_ GetVariables message MUST be implemented.
-
-_B07 Get Base Report_ GetBaseReport message MUST be implemented and MUST support ConfigurationInventory
-
-and FullInventory. The content of these reports depends on the implementation of the
-
-Charging Station. It is up to the implementer to decide which components and variables exist
-
-in the implementation.
-
-**Additional use cases / messages that are** **_not_** **part of a minimium Device Model implementation**
-
-**Use case Messages**
-
-_B08 Get Custom Report_ GetCustomReport message is optional.
-
-_N02 Get Monitoring Report_ GetMonitoringReportRequest message is optional.
-
-_N03 Set Monitoring Base_ SetMonitoringBaseRequest message is optional.
-
-_N04 Set Variable Monitoring_ SetVariableMonitoringRequest message is optional.
-
-
-**Use cases / messages that are part of a minimium Device Model implementation**
-
-_N05 Set Monitoring Level_ SetMonitoringLevelRequest message is optional.
-
-_N06 Clear/Remove Monitoring_ ClearVariableMonitoringRequest message is optional.
-
-_N07 Alert Event_ it is RECOMMENDED that NotifyEventRequest is implemented in the Charging Station even
-
-when monitoring is not implemented, so that this can be used to report built-in monitoring
-
-events.
-
-_N08 Periodic Event_ see N07.
-
+<<<
 
 == Information Model vs. Device Model
 
-As described above, the terms Information Model and Device Model refer to different concepts. The Information Model refers to a
+As described above, the terms Information Model and Device Model refer to different concepts. The Information Model refers to a model of the information structure upon which the messages and datatypes in OCPP are based, whereas the Device Model refers to a generalized mechanism within OCPP to enable any model of Charging Station to report how it is build up so, it can be managed from any CSMS without defining the structure of the Charging Station in advance.
 
-model of the information structure upon which the messages and datatypes in OCPP are based, whereas the Device Model refers
+The messages that are used for Device Management are therefore part of the Information Model and the objects that are used for modelling a device ( _'Component'_ and _'Variable'_ ) are also part of the Information Model.
 
-to a generalized mechanism within OCPP to enable any model of Charging Station to report how it is build up so, it can be managed
-
-from any CSMS without defining the structure of the Charging Station in advance.
-
-The messages that are used for Device Management are therefore part of the Information Model and the objects that are used for
-
-modelling a device ( _'Component'_ and _'Variable'_ ) are also part of the Information Model.
-
+<<<
 
 == Using OCPP for other purposes than EV charging
 
-As indicated in the introduction of this document, OCPP is primarily intended for two way communication between a CSMS and a
+As indicated in the introduction of this document, OCPP is primarily intended for two way communication between a CSMS and a Charging Station. However, with the addition of the Device Model as described in the chapter <<device_model,Device Model>>, OCPP can additionally be used for other purposes. For example, the reporting of Events or Status changes in transformers or stand-alone battery packs might also be useful for companies that are rolling out EV charging infrastructure. In this example, a BootNotification could be used to connect these devices to a management system. In the device model a device that is not a Charging Station, can be recognized by the fact that the component Charging Station is not present at the top level. At the moment the OCPP specification does not provide use cases for non Charging Station devices. However, they may be added in a future version of OCPP.
 
-Charging Station. However, with the addition of the Device Model as described in the chapter Device Model, OCPP can additionally
-
-be used for other purposes. For example, the reporting of Events or Status changes in transformers or stand-alone battery packs
-
-might also be useful for companies that are rolling out EV charging infrastructure. In this example, a BootNotification could be used
-
-to connect these devices to a management system. In the device model a device that is not a Charging Station, can be recognized
-
-by the fact that the component Charging Station is not present at the top level. At the moment the OCPP specification does not
-
-provide use cases for non Charging Station devices. However, they may be added in a future version of OCPP.
-
+<<<
 
 == Numbering
 
@@ -1032,16 +333,12 @@ To enable the CSMS to address all the EVSEs of a Charging Station, EVSEs MUST al
 
 EVSEs numbering (evseIds) MUST be as follows:
 
-- The EVSEs MUST be sequentially numbered, starting from 1 at every Charging Station (no numbers may be skipped).
-- evseIds MUST never be higher than the total number of EVSEs of a Charging Station
-- For operations initiated by the CSMS, evseId 0 is reserved for addressing the entire Charging Station.
-- For operations initiated by the Charging Station (when reporting), evseId 0 is reserved for the Charging Station main
+* The EVSEs MUST be sequentially numbered, starting from 1 at every Charging Station (no numbers may be skipped).
+* evseIds MUST never be higher than the total number of EVSEs of a Charging Station
+* For operations initiated by the CSMS, evseId 0 is reserved for addressing the entire Charging Station.
+* For operations initiated by the Charging Station (when reporting), evseId 0 is reserved for the Charging Station main controller.
 
-controller.
-
-Example: A Charging Station with 3 EVSEs: All EVSEs MUST be numbered with the IDs: 1, 2 and 3. It is advisable to number the
-
-EVSEs of a Charging Station in a logical way: from left to right, top to bottom incrementing.
+Example: A Charging Station with 3 EVSEs: All EVSEs MUST be numbered with the IDs: 1, 2 and 3. It is advisable to number the EVSEs of a Charging Station in a logical way: from left to right, top to bottom incrementing.
 
 === Connector numbering
 
@@ -1049,40 +346,34 @@ To enable the CSMS to address all the Connectors of a Charging Station, Connecto
 
 Connector numbering (connectorIds) MUST be as follows:
 
-- The connectors are numbered (increasing) starting at connectorId 1 on every EVSE
-- Every connector per EVSE has a unique number
-- ID of the first Connector of an EVSE MUST be 1
-- Additional Connectors of the same EVSE MUST be sequentially numbered (no numbers may be skipped)
-- connectorIds MUST never be higher than the total number of connectors on that EVSE
+* The connectors are numbered (increasing) starting at connectorId 1 on every EVSE
+* Every connector per EVSE has a unique number
+* ID of the first Connector of an EVSE MUST be 1
+* Additional Connectors of the same EVSE MUST be sequentially numbered (no numbers may be skipped)
+* connectorIds MUST never be higher than the total number of connectors on that EVSE
 
 Example: A Charging Station with 3 EVSEs that each have 2 connectors, is numbered as follows:
 
-- EVSE 1 has connectors with connectorId 1 and 2
-- EVSE 2 has connectors with connectorId 1 and 2
-- EVSE 3 has connectors with connectorId 1 and 2
+* EVSE 1 has connectors with connectorId 1 and 2
+* EVSE 2 has connectors with connectorId 1 and 2
+* EVSE 3 has connectors with connectorId 1 and 2
 
 === Transaction IDs.
 
-TransactionIds are now generated by the Charging Station and MUST be unique on this Charging Station for every started
-
-transaction.
+TransactionIds are now generated by the Charging Station and MUST be unique on this Charging Station for every started transaction.
 
 In OCPP 1.x this was done by the CSMS.
 
 The format of the transaction ID is left to implementation. This MAY for example be an incremental number or an UUID.
 
+<<<
 
 == Topologies supported by OCPP
 
-This chapter shows a number of topologies for using OCPP. As indicated in the introduction, OCPP was originally used for a setup
+This chapter shows a number of topologies for using OCPP. As indicated in the introduction, OCPP was originally used for a setup where each Charging Station communicates directly with the CSMS. It is important to keep in mind that OCPP has no knowledge of the topology of the Charging Station network. The following figure shows the possible components in a setup using OCPP and the relations between these components:
 
-where each Charging Station communicates directly with the CSMS. It is important to keep in mind that OCPP has no knowledge of
-
-the topology of the Charging Station network. The following figure shows the possible components in a setup using OCPP and the
-
-relations between these components:
-
-_Figure 6. Possible components in a setup using OCPP_
+.Possible components in a setup using OCPP
+image::images/figure_6.svg[Possible components in a setup using OCPP]
 
 === Charging Station(s) directly connected to CSMS
 
@@ -1090,16 +381,8 @@ _Figure 6. Possible components in a setup using OCPP_
 
 This is the basic setup for using OCPP.
 
-CSMS
-
-Charging
-
-Station
-
-```
-OCPP
-```
-_Figure 7. Charging Station directly connected to CSMS_
+.Charging Station directly connected to CSMS
+image::images/figure_7.svg[Charging Station directly connected to CSMS]
 
 === Multiple Charging Stations connected to CSMS via Local Proxy
 
