@@ -482,7 +482,6 @@ image::part1/images/figure_19.svg[OCPP Information Model: Security-Authorization
 
 .OCPP Information Model: Communication
 image::part1/images/figure_20.svg[OCPP Information Model: Communication]
-// TODO: image 경로 변경
 
 .OCPP Information Model: SecondaryActorSchedule
 image::part1/images/figure_21.svg[OCPP Information Model: SecondaryActorSchedule]

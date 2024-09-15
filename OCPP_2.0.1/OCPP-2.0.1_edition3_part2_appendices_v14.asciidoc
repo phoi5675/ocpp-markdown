@@ -1,24 +1,20 @@
-= OCPP 2.0.
+= OCPP 2.0.1
+:doctype: book
+:toc: 
+:toclevels: 2
+:toc-title: Table of Contents
+:icons: font
+:icon-set: far
+:stem: latexmath
 
+[discrete]
 == Part 2 - Appendices
 
-Edition 3 v1.4 FINAL, 2024-05-
+Edition 3 v1.4 FINAL, 2024-05-06
 
+<<<
 
-== Table of Contents
-
-- Disclaimer
-- Version History
-- 1. Security Events
-- 2. Standardized Units of Measure
-- 3. Standardized Components
-   - 3.1. Controller Components
-   - 3.2. Physical Components
-   - 3.3. Summary List of Standardized Components
-- 4. Standardized Variables
-- 5. Reason Codes.
-
-
+[discrete]
 == Disclaimer
 
 Copyright © 2010 – 2024 Open Charge Alliance. All rights reserved.
@@ -26,539 +22,364 @@ Copyright © 2010 – 2024 Open Charge Alliance. All rights reserved.
 This document is made available under the _*Creative Commons Attribution-NoDerivatives 4.0 International Public License*_
 (https://creativecommons.org/licenses/by-nd/4.0/legalcode).
 
-**Disclaimer**
+<<<
 
-
+[discrete]
 == Version History
 
-```
-Appendix version Date OCPP Version Description
-1.4 2024-05-06 OCPP 2.0.1 Edition 3 Appendix version for Edition 3 Updated parts are marked with
-" (Updated in v1.4) "
-1.3 2022-12-15 OCPP 2.0.1 Appendix version for Errata 2 (2022)
-Updated parts are marked with " (Updated in v1.3) ".
-1.2 2021-10-01 OCPP 2.0.1 Appendix version for Errata 1 (2021)
-Appendix 3: Updated components are marked with " (Updated in
-v1.2) ".
-Appendix 3: Added ConnectedEV component for info from
-ISO15118 and CHAdeMO.
+[%autowidth.stretch,cols="1,1,1,3",options="header,autowidth"]
+|===
+|Appendix version |Date       |OCPP Version     |Description
+
+|1.4              |2024-05-06 |OCPP 2.0.1 Edition 3 |Appendix version for Edition 3 Updated parts are marked with "_(Updated in v1.4)_"
+|1.3              |2022-12-15 |OCPP 2.0.1       |Appendix version for Errata 2 (2022) Updated parts are marked with "_(Updated in v1.3)_".
+|1.2              |2021-10-01 |OCPP 2.0.1       |Appendix version for Errata 1 (2021) Appendix 3: Updated components are marked with "_(Updated in v1.2)_". +
+Appendix 3: Added ConnectedEV component for info from ISO15118 and CHAdeMO. +
 Appendix 5: Added reason MissingDeviceModelInfo
-1.1 2020-03-23 OCPP 2.0.1 Update for OCPP 2.0.
-1.0 2018-04-11 OCPP 2.0 First release of this Appendix for OCPP 2.
-```
-**Version History**
+|1.1              |2020-03-23 |OCPP 2.0.1       |Update for OCPP 2.0.
+|1.0              |2018-04-11 |OCPP 2.0         |First release of this Appendix for OCPP 2.0
+|===
 
+<<<
 
-== 1. Security Events
+:sectnums:
+:chapter-signifier: Appendix
+== Security Events
 
-The table below provides a list of security events. Security events that are implemented SHALL be stored at the security log and
-security events that are implemented and marked as critical SHALL also be pushed to the CSMS.
-This is a non-exhaustive list of security events, when a security event matches the _description_ of one of the Security Events in this
-section, for interoperability reasons, the Security Event from this section SHALL be used, instead of adding a new (proprietary)
-Security Event. Some security events like; _InvalidCsmsCertificate_ , _InvalidChargingStationCertificate_ , etc. are mandatory to be
-implemented. Please refer to Part 2 - Specification for which security events are mandatory to be implemented.
+The table below provides a list of security events. Security events that are implemented SHALL be stored at the security log and security events that are implemented and marked as critical SHALL also be pushed to the CSMS. +
+This is a non-exhaustive list of security events, when a security event matches the _description_ of one of the Security Events in this section, for interoperability reasons, the Security Event from this section SHALL be used, instead of adding a new (proprietary) Security Event. Some security events like; _InvalidCsmsCertificate_, _InvalidChargingStationCertificate_, etc. are mandatory to be implemented. Please refer to Part 2 - Specification for which security events are mandatory to be implemented.
 
 _(Updated in v1.3)_
 
-```
-Security Event Description Critical
-FirmwareUpdated The Charging Station firmware is updated Yes
-FailedToAuthenticateAtCsms The authentication credentials provided by the Charging Station were
-rejected by the CSMS
-```
-```
-No
-```
-```
-CsmsFailedToAuthenticate The authentication credentials provided by the CSMS were rejected by
-the Charging Station
-```
-```
-No
-```
-```
-SettingSystemTime The system time on the Charging Station was changed more than
-ClockCtrlr.TimeAdjustmentReportingThreshold seconds
-```
-```
-Yes
-```
-```
-StartupOfTheDevice The Charging Station has booted Yes
-ResetOrReboot The Charging Station was rebooted or reset Yes
-SecurityLogWasCleared The security log was cleared Yes
-ReconfigurationOfSecurityParameters Security parameters, such as keys or the security profile used, were
-changed
-```
-```
-No
-```
-```
-MemoryExhaustion The Flash or RAM memory of the Charging Station is getting full Yes
-InvalidMessages The Charging Station has received messages that are not valid OCPP
-messages, if signed messages, signage invalid/incorrect
-```
-```
-No
-```
-```
-AttemptedReplayAttacks The Charging Station has received a replayed message (other than the
-CSMS trying to resend a message because it there was for example a
-network problem)
-```
-```
-No
-```
-```
-TamperDetectionActivated The physical tamper detection sensor was triggered Yes
-InvalidFirmwareSignature The firmware signature is not valid Yes
-InvalidFirmwareSigningCertificate The certificate used to verify the firmware signature is not valid Yes
-InvalidCsmsCertificate The certificate that the CSMS uses was not valid or could not be verified Yes
-InvalidChargingStationCertificate The certificate sent to the Charging Station using the
-CertificateSignedRequest message is not a valid certificate
-```
-```
-Yes
-```
-```
-InvalidTLSVersion The TLS version used by the CSMS is lower than 1.2 and is not allowed
-by the security specification
-```
-```
-Yes
-```
-```
-InvalidTLSCipherSuite The CSMS did only allow connections using TLS cipher suites that are
-not allowed by the security specification
-```
-```
-Yes
-```
-```
-MaintenanceLoginAccepted Successful login to the local maintenance interface. It is recommended
-to include information like the user identification and the origin of the
-login attempt, which can be an ip-address or a touch screen for
-example, to the techInfo field. For this the following format is strongly
-recommended: '{\'user\': \'...\', \'origin\': \'...\'}'
-```
-```
-Yes
-```
-```
-MaintenanceLoginFailed Failed login attempt to the local maintenance interface. It is
-recommended to include information like the user identification and the
-origin of the login attempt, which can be an ip-address or a touch screen
-for example, to the techInfo field. For this the following format is
-strongly recommended: '{\'user\': \'...\', \'origin\': \'...\'}'
-```
-```
-Yes
-```
-**Appendix 1. Security Events**
+[%autowidth.stretch,options="header,autowidth"]
+|===
+|Security Event      |Description                              |Critical
+|FirmwareUpdated     |The Charging Station firmware is updated |Yes
+|FailedToAuthenticateAtCsms |The authentication credentials provided 
+                     by the Charging Station were rejected 
+                     by the CSMS                               |No
+|CsmsFailedToAuthenticate |The authentication credentials 
+                           provided by the CSMS were rejected 
+                           by the Charging Station             |No
+|SettingSystemTime   |The system time on the Charging Station 
+                      was changed more than 
+                      `ClockCtrlr.TimeAdjustmentReportingThreshold` seconds |Yes
+|StartupOfTheDevice |The Charging Station has booted            |Yes
+|ResetOrReboot       |The Charging Station was rebooted or reset |Yes
+|SecurityLogWasCleared |The security log was cleared            |Yes
+|ReconfigurationOfSecurityParameters |Security parameters, such 
+                      as keys or the security profile used, were changed |No
+|MemoryExhaustion |The Flash or RAM memory of the Charging Station is getting full |Yes
+|InvalidMessages |The Charging Station has received messages that 
+                 are not valid OCPP messages, if signed messages, signage invalid/incorrect |No
+|AttemptedReplayAttacks |The Charging Station has received a replayed message (other than the CSMS trying to resend a message because it there was for example a network problem) |No
+|TamperDetectionActivated |The physical tamper detection sensor was triggered |Yes
+|InvalidFirmwareSignature |The firmware signature is not valid |Yes
+|InvalidFirmwareSigningCertificate |The certificate used to verify the firmware signature is not valid |Yes
+|InvalidCsmsCertificate |The certificate that the CSMS uses was not valid or could not be verified |Yes
+|InvalidChargingStationCertificate |The certificate sent to the Charging Station using the CertificateSignedRequest message is not a valid certificate |Yes
+|InvalidTLSVersion |The TLS version used by the CSMS is lower than 1.2 and is not allowed by the security specification |Yes
+|InvalidTLSCipherSuite |The CSMS did only allow connections using TLS cipher suites that are not allowed by the security specification |Yes
+|MaintenanceLoginAccepted |Successful login to the local maintenance interface. It is recommended to include information like the user identification and the origin of the login attempt, which can be an ip-address or a touch screen for example, to the techInfo field. For this the following format is strongly recommended: '{\'user\': \'...\', \'origin\': \'...\'}' |Yes
+|MaintenanceLoginFailed |Failed login attempt to the local maintenance interface. It is recommended to include information like the user identification and the origin of the login attempt, which can be an ip-address or a touch screen for example, to the techInfo field. For this the following format is strongly recommended: '{\'user\': \'...\', \'origin\': \'...\'}' |Yes
+|===
 
-
-== Appendix 2. Standardized Units of Measure
+== Standardized Units of Measure
 
 The standardized values for Unit of Measure. Default value of "unit" is always "Wh".
 
-```
-Value Description
-A Amperes (current)
-ASU Arbitrary Strength Unit (Signal Strength)
-B Bytes
-Celsius Degrees (temperature)
-dB Decibel (for example Signal Strength)
-dBm Power relative to 1mW (^10 log(P/1mW))
-Deg Degrees (angle/rotation)
-Fahrenheit Degrees (temperature)
-Hz Hertz (frequency)
-K Degrees Kelvin (temperature)
-lx Lux (Light Intensity)
-m Meter (length)
-ms2 m/s^2 (Acceleration)
-N Newtons (Force)
-Ohm Ohm (Impedance)
-kPa kiloPascal (Pressure)
-Percent Percentage
-RH Relative Humidity%
-RPM Revolutions per Minute
-s Seconds (Time)
-V Voltage (DC or r.m.s. AC)
-VA Volt-Ampere (apparent power)
-kVA kiloVolt-Ampere (apparent power)
-VAh Volt-Ampere-hours (apparent energy)
-kVAh kiloVolt-Ampere-hours (apparent energy)
-var vars (reactive power)
-kvar kilovars (reactive power)
-varh var-hours (reactive energy)
-kvarh kilovar-hours (reactive energy)
-W Watts (power)
-kW kilowatts (power)
-Wh Watt-hours (energy). Default
-kWh kilowatt-hours (energy)
-```
-**Appendix 2. Standardized Units of Measure**
+[cols="s,d",%autowidth.stretch,options="header,autowidth"]
+|===
+|Value      |Description
+|A          |Amperes (current)
+|ASU        |Arbitrary Strength Unit (Signal Strength)
+|B          |Bytes
+|Celsius    |Degrees (temperature)
+|dB         |Decibel (for example Signal Strength)
+|dBm        |Power relative to 1mW (stem:[^{10}] log(P/1mW))
+|Deg        |Degrees (angle/rotation)
+|Fahrenheit |Degrees (temperature)
+|Hz         |Hertz (frequency)
+|K          |Degrees Kelvin (temperature)
+|lx         |Lux (Light Intensity)
+|m          |Meter (length)
+|ms2        |m/sstem:[^{2}] (Acceleration)
+|N          |Newtons (Force)
+|Ohm        |Ohm (Impedance)
+|kPa        |kiloPascal (Pressure)
+|Percent    |Percentage
+|RH         |Relative Humidity%
+|RPM        |Revolutions per Minute
+|s          |Seconds (Time)
+|V          |Voltage (DC or r.m.s. AC)
+|VA         |Volt-Ampere (apparent power)
+|kVA        |kiloVolt-Ampere (apparent power)
+|VAh        |Volt-Ampere-hours (apparent energy)
+|kVAh       |kiloVolt-Ampere-hours (apparent energy)
+|var        |vars (reactive power)
+|kvar       |kilovars (reactive power)
+|varh       |var-hours (reactive energy)
+|kvarh      |kilovar-hours (reactive energy)
+|W          |Watts (power)
+|kW         |kilowatts (power)
+|Wh         |Watt-hours (energy). Default
+|kWh        |kilowatt-hours (energy)
+|===
 
+== Standardized Components
 
-== Appendix 3. Standardized Components
+This appendix provides a list of all standardized component names for OCPP 2.0.1 for controller components and for physical components. A summary table listing just all components without variables is provided at the end of this appendix in <<summary_list_of_standardized_components,Summary List of Standardized Components>>.
 
-This appendix provides a list of all standardized component names for OCPP 2.0.1 for controller components and for physical
-components. A summary table listing just all components without variables is provided at the end of this appendix in Summary List
-of Standardized Components.
-
-=== 3.1. Controller Components
+=== Controller Components
 
 This is the list of Standardized Controller Components for OCPP 2.0.1. and typical Variables that might be associated with them.
 
-```
-IMPORTANT This list does not imply that these Components are required, nor does it imply that the listed Variables arerequired for a Component or no other Variables are allowed to be associated with a Component.
-```
-**3.1.1. AlignedDataCtrlr**
 
-```
-Description
-Logical Component responsible for configuration relating to the reporting of clock-aligned meter data.
-Variables Type Description
-Enabled boolean If this variable reports a value of true, Aligned Data is enabled.
-Available boolean If this variable reports a value of true, Aligned Data is supported.
-Interval integer Size (in seconds) of the clock-aligned data interval, intended to be transmitted in
-the MeterValuesRequest message.
-Measurands MemberList Clock-aligned measurand(s) to be included in MeterValuesRequest, every
-AlignedDataInterval seconds.
-SendDuringIdle boolean If set to true, the Charging Station SHALL not send clock aligned meter values
-when a transaction is ongoing.
-SignReadings boolean If set to true, the Charging Station SHALL include signed meter values in the
-TransactionEventRequest to the CSMS.
-TxEndedInterval integer Size (in seconds) of the clock-aligned data interval, intended to be transmitted in
-the TransactionEventRequest (eventType = Ended) message.
-TxEndedMeasurands MemberList Clock-aligned periodic measurand(s) to be included in the meterValues element
-of TransactionEventRequest (eventType = Ended) for every
-TxEndedAlignedDataInterval of the transaction.
-```
-**3.1.2. AuthCtrlr** _(Updated in v1.2)_
+[cols="^.^1s,10"%autowidth.stretch]
+|===
+|IMPORTANT |This list does not imply that these Components are required, nor does it imply that the listed Variables arerequired for a Component or no other Variables are allowed to be associated with a Component.
+|===
 
-```
-Description
-Logical Component responsible for configuration relating to the use of authorization for Charging Station use.
-Variables Type Description
-Enabled boolean If set to false , then no authorization is done before starting a transaction or when
-reading an idToken. If an idToken was provided, then it will be put in the idToken
-field of the TransactionEventRequest. If no idToken was provided, then idToken in
-TransactionEventRequest will be left empty and type is set to
-NoAuthorization.
-AdditionalInfoItemsPerMessag
-e
-```
-```
-integer Maximum number of AdditionalInfo items that can be sent in one message.
-```
-```
-AuthorizeRemoteStart boolean Whether a remote request to start a transaction in the form of
-RequestStartTransactionRequest message should be authorized beforehand like
-a local action to start a transaction.
-DisableRemoteAuthorization boolean When set to true this instructs the Charging Station to not issue any
-AuthorizationRequests, but only use Authorization Cache and Local Authorization
-List to determine validity of idTokens.
-LocalAuthorizeOffline boolean Whether the Charging Station, when Offline, will start a transaction for locally-
-authorized identifiers.
-LocalPreAuthorize boolean Whether the Charging Station, when online, will start a transaction for locally-
-authorized identifiers without waiting for or requesting an AuthorizeResponse
-from the CSMS.
-```
+==== AlignedDataCtrlr
 
-```
-Description
-MasterPassGroupId string IdTokens that have this id as groupId belong to the Master Pass Group.
-OfflineTxForUnknownIdEnabled boolean If this key exists, the Charging Station supports Unknown Offline Authorization.
-```
-**3.1.3. AuthCacheCtrlr** _(Updated in v1.2)_
+[cols="<.^2,<.^1,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+3.+|Description
 
-```
-Description
-Logical Component responsible for configuration relating to the use of a local cache for authorization for Charging Station use.
-Variables Type Description
-Enabled boolean If this variable exists, the Charging Station supports an Authorization Cache.
-Available boolean If this variable reports a value of true, Authorization Cache is supported.
-LifeTime integer Indicates in seconds how long it takes until a token expires in the authorization
-cache since it is last used.
-Policy OptionList Cache Entry Replacement Policy: (LRU,LFU) LeastRecentlyUsed or
-LeastFrequentlyUsed. Allowed values: LRU, LFU.
-DisablePostAuthorize boolean When set to true this variable disables the behavior to request authorization for
-an idToken that is stored in the cache with a status other than Accepted, as
-stated in C10.FR.03 and C12.FR.05.
-```
-**3.1.4. CHAdeMOCtrlr** _(Updated in v1.2)_
+3.+|Logical Component responsible for configuration relating to the reporting of clock-aligned meter data.
+s|Variables  s|Type      s|Description
+|Enabled      |boolean    |If this variable reports a value of true, Aligned Data is enabled.
+|Available    |boolean    |If this variable reports a value of true, Aligned Data is supported.
+|Interval     |integer    |Size (in seconds) of the clock-aligned data interval, intended to be transmitted in the MeterValuesRequest message.
+|Measurands   |MemberList |Clock-aligned measurand(s) to be included in MeterValuesRequest, every AlignedDataInterval seconds.
+|SendDuringIdle |boolean  |If set to true, the Charging Station SHALL not send clock aligned meter values when a transaction is ongoing.
+|SignReadings |boolean    |If set to true, the Charging Station SHALL include signed meter values in the TransactionEventRequest to the CSMS.
+|TxEndedInterval |integer |Size (in seconds) of the clock-aligned data interval, intended to be transmitted in the TransactionEventRequest (eventType = Ended) message.
+|TxEndedMeasurands |MemberList |Clock-aligned periodic measurand(s) to be included in the meterValues element of TransactionEventRequest (eventType = Ended) for every TxEndedAlignedDataInterval of the transaction.
+|===
 
-```
-Description
-A CHAdeMO Controller component communicates with an EV using the wired CANbus protocol to exchange information and
-control charging using the CHAdeMO protocol
-Variables Type Description
-Enabled boolean CHAdeMO controller enabled
-Active boolean Connected
-Complete boolean Protocol session ended normally
-Tripped boolean CHAdeMO protocol terminated abnormally
-Problem boolean CHAdeMO controller fault
-SelftestActive(Set) boolean Start self-test by setting to true
-SelftestActive boolean Self-test running when reported as true
-Specific CHAdeMO interface data from vehicle:
-CHAdeMOProtocolNumber integer CHAdeMO protocol number (H'102.0)
-VehicleStatus boolean Vehicle status (H'102.5.3)
-DynamicControl boolean Vehicle is compatible with dynamic control (H'110.0.0)
-HighCurrentControl boolean Vehicle is compatible with high current control (H'110.0.1)
-HighVoltageControl boolean Vehicle is compatible with high voltage control (H'110.1.2)
-AutoManufacturerCode integer Auto manufacturer code (H'700.0)
-A single byte manufacturer code assigned by CHAdeMO association
-```
-**3.1.5. ClockCtrlr**
+==== AuthCtrlr _(Updated in v1.2)_
 
-```
-Description
-Provides a means to configure management of time tracking by Charging Station.
-Variables Type Description
-DateTime dateTime Contains the current date and time.
-NtpServerUri string This contains the address of the NTP server. Multiple NTP servers can be
-configured as backups, etc. If the NTP client supports it, it can also connect to
-multiple NTP servers simultaneous to get a more reliable time source. Variable
-instance value is single digit NTP priority (1=highest).
-```
+[cols="<.^2,<.^1,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+3.+|Description
 
-```
-Description
-NtpSource string When an NTP client is implemented, this variable can be used to configure the
-client: Use the NTP server provided via DHCP, or use the manually configured
-NTP server.
-TimeOffset string Configured local time offset in the format: "+01:00", "-02:00" etc.
-NextTimeOffsetTransitionDateT
-ime
-```
-```
-dateTime Date time of the next time offset transition.
-```
-```
-TimeSource string Via this variable, the Charging Station provides the CSMS with the option to
-configure a clock source, if more than 1 are implemented.
-TimeZone string Configured current local time zone in the format: "Europe/Oslo", "Asia/Singapore"
-etc.
-TimeAdjustmentReportingThres
-hold
-```
-```
-integer If set, then time adjustments with an absolute value in seconds larger than this
-need to be reported as a security event SettingSystemTime.
-```
-**3.1.6. CustomizationCtrlr** _(New in v1.2)_
+3.+|Logical Component responsible for configuration relating to the use of authorization for Charging Station use.
+s|Variables         s|Type        s|Description
+|Enabled             |boolean      |If set to _false_, then no authorization is done before starting a transaction or when reading an _idToken_. If an _idToken_ was provided, then it will be put in the _idToken_ field of the TransactionEventRequest. If no _idToken_ was provided, then _idToken_ in TransactionEventRequest will be left empty and type is set to `NoAuthorization`.
+|AdditionalInfoItemsPerMessage |integer |Maximum number of AdditionalInfo items that can be sent in one message.
+|AuthorizeRemoteStart |boolean |Whether a remote request to start a transaction in the form of RequestStartTransactionRequest message should be authorized beforehand like a local action to start a transaction.
+|DisableRemoteAuthorization |boolean |When set to true this instructs the Charging Station to not issue any AuthorizationRequests, but only use Authorization Cache and Local Authorization List to determine validity of idTokens.
+|LocalAuthorizeOffline |boolean |Whether the Charging Station, when Offline, will start a transaction for locally-authorized identifiers.
+|LocalPreAuthorize |boolean |Whether the Charging Station, when online, will start a transaction for locally-authorized identifiers without waiting for or requesting an AuthorizeResponse from the CSMS.
+|MasterPassGroupId |string |IdTokens that have this id as groupId belong to the Master Pass Group.
+|OfflineTxForUnknownIdEnabled |boolean |If this key exists, the Charging Station supports Unknown Offline Authorization.
+|===
 
-```
-Description
-Logical Component responsible for configuration relating to custom vendor-specific implementations, using the DataTransfer
-message and CustomData extensions.
-Variables Type Description
-CustomImplementationEnabled boolean This standard configuration variable can be used to enable/disable custom
-implementations that the Charging Station supports. The instance name of the
-variable matches the vendorId of the customization in CustomData or
-DataTransfer messages.
-```
-**3.1.7. DeviceDataCtrlr**
+==== AuthCacheCtrlr _(Updated in v1.2)_
 
-```
-Description
-Logical Component responsible for configuration relating to the exchange and storage of Charging Station Device Model data.
-Variables Type Description
-BytesPerMessage integer Message Size (in bytes) - maxLimit used to report constraint on message size.
+[cols="<.^2,<.^1,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+3.+|Description
+
+3.+|Logical Component responsible for configuration relating to the use of a local cache for authorization for Charging Station use.
+s|Variables       s|Type      s|Description
+|Enabled           |boolean    |If this variable exists, the Charging Station supports an Authorization Cache.
+|Available         |boolean    |If this variable reports a value of true, Authorization Cache is supported.
+|LifeTime          |integer    |Indicates in seconds how long it takes until a token expires in the authorization cache since it is last used.
+|Policy            |OptionList |Cache Entry Replacement Policy: (LRU,LFU) LeastRecentlyUsed or LeastFrequentlyUsed. Allowed values: LRU, LFU.
+|DisablePostAuthorize |boolean |When set to true this variable disables the behavior to request authorization for an idToken that is stored in the cache with a status other than Accepted, as stated in C10.FR.03 and C12.FR.05.
+|===
+
+==== CHAdeMOCtrlr _(Updated in v1.2)_
+
+[cols="<.^2,<.^1,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+3.+|Description
+
+3.+|A CHAdeMO Controller component communicates with an EV using the wired CANbus protocol to exchange information and control charging using the CHAdeMO protocol
+s|Variables       s|Type    s|Description
+|Enabled           |boolean  |CHAdeMO controller enabled
+|Active            |boolean  |Connected
+|Complete          |boolean  |Protocol session ended normally
+|Tripped           |boolean  |CHAdeMO protocol terminated abnormally
+|Problem           |boolean  |CHAdeMO controller fault
+|SelftestActive(Set) |boolean |Start self-test by setting to true
+|SelftestActive     |boolean |Self-test running when reported as true
+3.+s|_Specific CHAdeMO interface data from vehicle:_
+|CHAdeMOProtocolNumber    |integer |CHAdeMO protocol number (H'102.0)
+|VehicleStatus    |boolean |Vehicle status (H'102.5.3)
+|DynamicControl     |boolean |Vehicle is compatible with dynamic control (H'110.0.0)
+|HighCurrentControl     |boolean |Vehicle is compatible with high current control (H'110.0.1)
+|HighVoltageControl     |boolean |Vehicle is compatible with high voltage control (H'110.1.2)
+|AutoManufacturerCode     |integer |Auto manufacturer code (H'700.0) +
+    _A single byte manufacturer code assigned by CHAdeMO association_
+|===
+
+==== ClockCtrlr
+
+[cols="<.^2,<.^1,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+3.+|Description
+
+3.+|Provides a means to configure management of time tracking by Charging Station.
+s|Variables     s|Type      s|Description
+|DateTime   |dateTime |Contains the current date and time.
+|NtpServerUri   |string |This contains the address of the NTP server. Multiple NTP servers can be configured as backups, etc. If the NTP client supports it, it can also connect to multiple NTP servers simultaneous to get a more reliable time source. Variable instance value is single digit NTP priority (1=highest).
+|NtpSource  |string |When an NTP client is implemented, this variable can be used to configure the client: Use the NTP server provided via DHCP, or use the manually configured NTP server.
+|TimeOffset   |string |Configured local time offset in the format: "+01:00", "-02:00" etc.
+|NextTimeOffsetTransitionDateTime   |dateTime |Date time of the next time offset transition.
+|TimeSource   |string |Via this variable, the Charging Station provides the CSMS with the option to configure a clock source, if more than 1 are implemented.
+|TimeZone   |string |Configured current local time zone in the format: "Europe/Oslo", "Asia/Singapore" etc.
+|TimeAdjustmentReportingThreshold   |integer |If set, then time adjustments with an absolute value in seconds larger than this need to be reported as a security event SettingSystemTime.
+|===
+
+==== CustomizationCtrlr _(New in v1.2)_
+
+[cols="<.^2,<.^1,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+3.+|Description
+
+3.+|Logical Component responsible for configuration relating to custom vendor-specific implementations, using the DataTransfer message and CustomData extensions.
+s|Variables     s|Type    s|Description
+|CustomImplementationEnabled |boolean |This standard configuration variable can be used to enable/disable custom implementations that the Charging Station supports. The instance name of the variable matches the _vendorId_ of the customization in CustomData or DataTransfer messages.
+|===
+
+==== DeviceDataCtrlr
+
+[cols="<.^2,<.^1,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+3.+|Description
+
+3.+|Logical Component responsible for configuration relating to the exchange and storage of Charging Station Device Model data.
+s|Variables     s|Type      s|Description
+|BytesPerMessage |integer |Message Size (in bytes) - maxLimit used to report constraint on message size. +
 Which message is specified in the instance.
-ItemsPerMessage integer Maximum number of entries that can be sent in one message. Which entries in
-which message is specified in the instance.
-ValueSize integer Can be used to limit the following fields: SetVariableData.attributeValue,
-GetVariableResult.attributeValue, VariableAttribute.value,
-VariableCharacteristics.valueList and EventData.actualValue.
-```
-**3.1.8. DisplayMessageCtrlr**
+|ItemsPerMessage |integer |Maximum number of entries that can be sent in one message. Which entries in which message is specified in the instance.
+|ValueSize |integer |Can be used to limit the following fields: SetVariableData.attributeValue, GetVariableResult.attributeValue, VariableAttribute.value, VariableCharacteristics.valueList and EventData.actualValue.
+|===
 
-```
-Description
-Logical Component responsible for configuration relating to the display of messages to Charging Station users.
-Variables Type Description
-Enabled boolean Whether Display Message is enabled.
-Available boolean Whether Display Message is supported.
-DisplayMessages integer Amount of different messages that are currently configured in this Charging
-Station, via SetDisplayMessageRequest.
-PersonalMessageSize integer Max size (in characters) of the personal message element of the IdTokenInfo
-data (0 specifies no personal data may be stored).
-SupportedFormats MemberList List of message formats supported by this Charging Station. Possible values: See
-MessageFormatEnumType.
-```
-**3.1.9. ISO15118Ctrlr** _(Updated in v1.3)_
+==== DisplayMessageCtrlr
 
+[cols="<.^2,<.^1,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+3.+|Description
 
-```
-Description
-Communicates with an EV to exchange information and control charging using the ISO 15118 protocol.
-Variables Type Description
-Enabled boolean ISO15118 controller enabled
-Active boolean Connected
-Tripped boolean ISO15118 communication session aborted
-Complete boolean ISO15118 communication session ended
-Problem boolean ISO15118 controller fault
-SeccId string The name of the SECC in the string format as required by ISO 15118.
-SelftestActive(Set) boolean Start self-test by setting to true
-SelftestActive boolean Self-test running when reported as true
-ContractValidationOffline boolean Supports validation of a contract certificate when offline
-CentralContractValidationAllow
-ed
-```
-```
-boolean Contract certificates can be validated by the CSMS
-```
-```
-PnCEnabled boolean If this variable is true , then ISO 15118 plug and charge as described by use case
-C07 - Authorization using Contract Certificates is enabled.
-If this variable is false , then ISO 15118 plug and charge as described by use case
-C07 - Authorization using Contract Certificates is disabled.
-V2GCertificateInstallationEnabl
-ed
-```
-```
-boolean If this variable is true , then ISO 15118 V2G Charging Station certificate
-installation as described by use case A02 - Update Charging Station Certificate
-by request of CSMS and A03 - Update Charging Station Certificate initiated by the
-Charging Station is enabled.
-If this variable is false , then ISO 15118 V2G Charging Station certificate
-installation as described by use case A02 - Update Charging Station Certificate
-by request of CSMS and A03 - Update Charging Station Certificate initiated by the
-Charging Station is disabled.
-ContractCertificateInstallationE
-nabled
-```
-```
-boolean If this variable is true , then ISO 15118 contract certificate installation/update as
-described by use case M01 - Certificate installation EV and M02 - Certificate
-Update EV is enabled.
-If this variable is false , then ISO 15118 contract certificate installation/update as
-described by use case M01 - Certificate installation EV and M02 - Certificate
-Update EV is disabled.
-RequestMeteringReceipt boolean If this variable is true , then Charging Station shall request a metering receipt from
-EV before sending a fiscal meter value to CSMS.
-OrganizationName string The organizationName of the CSO operating the charging station.
-It is used as the organizationName (O) of the SECC leaf certificate.
-Example: "John Doe Charging Services Ltd"
-Note: This value will usually be identical to SecurityCtrlr.OrganizationName, but it
-does not have to be.
-CountryName string The countryName of the SECC in the ISO 3166-1 format.
-It is used as the countryName (C) of the SECC leaf certificate.
-Example: "DE"
-Specific ISO15118 interface data from vehicle:
-MaxScheduleEntries integer MaxEntriesSAScheduleType (15118-2)
-or MaximumSupportingPoints (15118-20) Number of allowed schedule periods
-RequestedEnergyTransferMode OptionList RequestedEnergyTransferMode
-"AC_single_phase_core", "AC_three_phase_core", "DC_core, "DC_extended",
-"DC_combo_core", "DC_unique"
-```
-**3.1.10. LocalAuthListCtrlr** _(Updated in v1.2)_
+3.+|Logical Component responsible for configuration relating to the display of messages to Charging Station users.
+s|Variables     s|Type    s|Description
+|Enabled |boolean |Whether Display Message is enabled.
+|Available |boolean |Whether Display Message is supported.
+|DisplayMessages |integer |Amount of different messages that are currently configured in this Charging Station, via SetDisplayMessageRequest.
+|PersonalMessageSize |integer |Max size (in characters) of the personal message element of the IdTokenInfo data (0 specifies no personal data may be stored).
+|SupportedFormats |MemberList |List of message formats supported by this Charging Station. Possible values: See MessageFormatEnumType.
+|===
 
-```
-Description
-Logical Component responsible for configuration relating to the use of Local Authorization Lists for Charging Station use.
-Variables Type Description
-Enabled boolean Whether Local Authorization List is enabled.
-Entries integer Amount of IdTokens currently in the Local Authorization List. The maxLimit of
-this variable SHALL be provided to report the maximum number of IdTokens that
-can be stored in the Local Authorization List.
-```
+==== ISO15118Ctrlr _(Updated in v1.3)_
 
-```
-Description
-Available boolean Whether Local Authorization List is supported.
-ItemsPerMessage integer Maximum number of identifications that can be sent in a single
-SendLocalListRequest.
-BytesPerMessage integer Message Size (in bytes) - puts a constraint on SendLocalListRequest message
-size.
-Storage integer Indicates the number of bytes currently used by the Local Authorization List.
-MaxLimit indicates the maximum number of bytes that can be used by the Local
-Authorization List.
-DisablePostAuthorize boolean When set to true this variable disables the behavior to request authorization for
-an idToken that is stored in the local authorization list with a status other than
-Accepted, as stated in C14.FR.03.
-```
-**3.1.11. MonitoringCtrlr** _(Updated in v1.3)_
+[cols="<.^2,<.^1,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+3.+|Description
 
-```
-Description
-Logical Component responsible for configuration relating to the exchange of monitoring event data.
-Variables Type Description
-Enabled boolean Whether Monitoring is enabled.
-Available boolean Whether Monitoring is supported.
-ItemsPerMessage integer Maximum number of items.
-BytesPerMessage integer Message Size (in bytes) - puts constraint on message size.
-MonitoringBase optionList Currently used MonitoringBase. (readonly)
-MonitoringLevel integer Currently use MonitoringLevel (readonly)
-OfflineQueuingSeverity integer When set and the Charging Station is offline, the Charging Station shall queue
-any notifyEventRequest messages triggered by a monitor with a severity number
-equal to or lower than the severity configured here. Value ranging from 0
-(Emergency) to 9 (Debug).
-ActiveMonitoringBase OptionList Shows the currently used MonitoringBase. Valid values according
-MonitoringBaseEnumType: All, FactoryDefault, HardwiredOnly. (readonly)
-ActiveMonitoringLevel integer Shows the currently used MonitoringLevel. Valid values are severity levels of
-SetMonitoringLevelRequest: 0-9. (readonly)
-```
-**3.1.12. OCPPCommCtrlr** _(Updated in v1.4)_
+3.+|Communicates with an EV to exchange information and control charging using the ISO 15118 protocol.
+s|Variables     s|Type    s|Description
+|Enabled |boolean |ISO15118 controller enabled
+|Active |boolean |Connected
+|Tripped |boolean |ISO15118 communication session aborted
+|Complete |boolean |ISO15118 communication session ended
+|Problem |boolean |ISO15118 controller fault
+|SeccId |string |The name of the SECC in the string format as required by ISO 15118.
+|SelftestActive(|Set)| boolean Start self-test by setting to true
+|SelftestActive |boolean |Self-test running when reported as true
+|ContractValidationOffline |boolean |Supports validation of a contract certificate when offline
+|CentralContractValidationAllowed |boolean |Contract certificates can be validated by the CSMS
+|PnCEnabled |boolean |If this variable is true , then ISO 15118 plug and charge as described by use case C07 - Authorization using Contract Certificates is enabled. +
+If this variable is false , then ISO 15118 plug and charge as described by use case C07 - Authorization using Contract Certificates is disabled.
+|V2GCertificateInstallationEnabled |boolean |If this variable is _true_, then ISO 15118 V2G Charging Station certificate installation as described by use case A02 - Update Charging Station Certificate by request of CSMS and A03 - Update Charging Station Certificate initiated by the Charging Station is enabled. +
+If this variable is _false_, then ISO 15118 V2G Charging Station certificate installation as described by use case A02 - Update Charging Station Certificate by request of CSMS and A03 - Update Charging Station Certificate initiated by the Charging Station is disabled.
+|ContractCertificateInstallationEnabled |boolean |If this variable is _true_, then ISO 15118 contract certificate installation/update as described by use case M01 - Certificate installation EV and M02 - Certificate Update EV is enabled. +
+If this variable is _false_, then ISO 15118 contract certificate installation/update as described by use case M01 - Certificate installation EV and M02 - Certificate Update EV is disabled.
+|RequestMeteringReceipt |boolean |If this variable is _true_, then Charging Station shall request a metering receipt from EV before sending a fiscal meter value to CSMS.
+|OrganizationName |string |The organizationName of the CSO operating the charging station. +
+    It is used as the **organizationName** (O) of the SECC leaf certificate. +
+    Example: "John Doe Charging Services Ltd" +
+    Note: This value will usually be identical to SecurityCtrlr.OrganizationName, but it does not have to be.
+|CountryName |string |The countryName of the SECC in the ISO 3166-1 format. +
+    It is used as the countryName (C) of the SECC leaf certificate. +
+    Example: "DE"
+3.+s|_Specific ISO15118 interface data from vehicle:_
+|MaxScheduleEntries |integer |MaxEntriesSAScheduleType (15118-2) +
+    or MaximumSupportingPoints (15118-20) _Number of allowed schedule periods_
+|RequestedEnergyTransferMode |OptionList |RequestedEnergyTransferMode +
+    _"AC_single_phase_core", "AC_three_phase_core", "DC_core, "DC_extended", "DC_combo_core", "DC_unique"_
+|===
 
-```
-Description
-Logical Component responsible for configuration relating to information exchange between Charging Station and CSMS.
-Variables Type Description
-ActiveNetworkProfile integer Indicates the configuration profile the station uses at that moment to connect to
-the network.
-FileTransferProtocols MemberList List of supported file transfer protocols.
-HeartbeatInterval integer Interval in seconds of inactivity (no OCPP exchanges) with CSMS after which the
-Charging Station should send HeartbeatRequest.
-MessageAttempts integer How often the Charging Station should try to submit a TransactionEventRequest
-message when the CSMS fails to process it.
-MessageAttemptInterval integer How long in seconds the Charging Station should wait before resubmitting a
-TransactionEventRequest message that the CSMS failed to process.
-MessageTimeout integer Message timeout in seconds. The message timeout setting in a Charging Station
-can be configured in the messageTimeout field in the NetworkConnectionProfile.
-MinimumStatusDuration integer Minimum duration that a Charging Station or EVSE status is stable before
-StatusNotificationRequest is sent to the CSMS.
-NetworkConfigurationPriority string A comma separated ordered list of the priority of the possible Network
-Connection Profiles.
-NetworkProfileConnectionAtte
-mpts
-```
-```
-integer Specifies the number of connection attempts the Charging Station executes
-before switching to a different profile.
-```
+==== LocalAuthListCtrlr _(Updated in v1.2)_
 
-```
-Description
-OfflineThreshold integer When the offline period in seconds of a Charging Station exceeds the
-OfflineThreshold it is recommended to send a StatusNotificationRequest for all
-its Connectors when the Charging Station is back online.
-PublicKeyWithSignedMeterValu
-e
-```
-```
-boolean This Configuration Variable can be used to configure whether a public key needs
-to be sent with a signed meter value.
-QueueAllMessages boolean When this variable is set to true, the Charging Station will queue all message until
-they are delivered to the CSMS.
-RetryBackOffRepeatTimes integer When the Charging Station is reconnecting, after a connection loss, it will use this
-variable for the amount of times it will double the previous back-off time.
-RetryBackOffRandomRange integer When the Charging Station is reconnecting, after a connection loss, it will use this
-variable as the maximum value for the random part of the back-off time.
-RetryBackOffWaitMinimum integer When the Charging Station is reconnecting, after a connection loss, it will use this
-variable as the minimum back-off time, the first time it tries to reconnect.
-UnlockOnEVSideDisconnect boolean When set to true, the Charging Station SHALL unlock the cable on the Charging
-Station side when the cable is unplugged at the EV. For an EVSE with only fixed
-cables, the mutability SHALL be ReadOnly and the actual value SHALL be false.
-For a charging station with fixed cables and sockets, the variable is only
-applicable to the sockets.
-WebSocketPingInterval integer Number of seconds between pings.
-FieldLength integer This variable is used to report the length of <field> in <message> when it is larger
-than the length that is defined in the standard OCPP message schema.
-```
-**3.1.13. ReservationCtrlr**
+[cols="<.^2,<.^1,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+3.+|Description
+
+3.+|Logical Component responsible for configuration relating to the use of Local Authorization Lists for Charging Station use.
+s|Variables     s|Type    s|Description
+|Enabled |boolean |Whether Local Authorization List is enabled.
+|Entries |integer |Amount of IdTokens currently in the Local Authorization List. The maxLimit of this variable SHALL be provided to report the maximum number of IdTokens that can be stored in the Local Authorization List.
+|Available |boolean |Whether Local Authorization List is supported.
+|ItemsPerMessage |integer |Maximum number of identifications that can be sent in a single SendLocalListRequest.
+|BytesPerMessage |integer |Message Size (in bytes) - puts a constraint on SendLocalListRequest message size.
+|Storage |integer |Indicates the number of bytes currently used by the Local Authorization List. MaxLimit indicates the maximum number of bytes that can be used by the Local Authorization List.
+|DisablePostAuthorize |boolean |When set to _true_ this variable disables the behavior to request authorization for an idToken that is stored in the local authorization list with a status other than `Accepted`, as stated in C14.FR.03.
+|===
+
+==== MonitoringCtrlr _(Updated in v1.3)_
+
+[cols="<.^2,<.^1,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+3.+|Description
+
+3.+|Logical Component responsible for configuration relating to the exchange of monitoring event data.
+s|Variables     s|Type    s|Description
+|Enabled |boolean |Whether Monitoring is enabled.
+|Available |boolean |Whether Monitoring is supported.
+|ItemsPerMessage |integer |Maximum number of items.
+|BytesPerMessage |integer |Message Size (in bytes) - puts constraint on message size.
+|MonitoringBase |optionList |Currently used MonitoringBase. (readonly)
+|MonitoringLevel |integer |Currently use MonitoringLevel (readonly)
+|OfflineQueuingSeverity |integer |When set and the Charging Station is offline, the Charging Station shall queue any notifyEventRequest messages triggered by a monitor with a severity number equal to or lower than the severity configured here. Value ranging from 0 (Emergency) to 9 (Debug).
+|ActiveMonitoringBase |OptionList |Shows the currently used MonitoringBase. Valid values according MonitoringBaseEnumType: All, FactoryDefault, HardwiredOnly. (readonly)
+|ActiveMonitoringLevel |integer |Shows the currently used MonitoringLevel. Valid values are severity levels of SetMonitoringLevelRequest: 0-9. (readonly)
+|===
+
+==== OCPPCommCtrlr _(Updated in v1.4)_
+
+[cols="<.^2,<.^1,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+3.+|Description
+
+3.+|Logical Component responsible for configuration relating to information exchange between Charging Station and CSMS.
+s|Variables     s|Type    s|Description
+|ActiveNetworkProfile s|integer |Indicates the configuration profile the station uses at that moment to connect to the network.
+|FileTransferProtocols |MemberList |List of supported file transfer protocols.
+|HeartbeatInterval |integer |Interval in seconds of inactivity (no OCPP exchanges) with CSMS after which the Charging Station should send HeartbeatRequest.
+|MessageAttempts |integer |How often the Charging Station should try to submit a TransactionEventRequest message when the CSMS fails to process it.
+|MessageAttemptInterval |integer |How long in seconds the Charging Station should wait before resubmitting a TransactionEventRequest message that the CSMS failed to process.
+|MessageTimeout |integer |Message timeout in seconds. The message timeout setting in a Charging Station can be configured in the messageTimeout field in the NetworkConnectionProfile.
+|MinimumStatusDuration |integer |Minimum duration that a Charging Station or EVSE status is stable before StatusNotificationRequest is sent to the CSMS.
+|NetworkConfigurationPriority |string |A comma separated ordered list of the priority of the possible Network Connection Profiles.
+|NetworkProfileConnectionAttempts |integer |Specifies the number of connection attempts the Charging Station executes before switching to a different profile.
+|OfflineThreshold |integer |When the offline period in seconds of a Charging Station exceeds the OfflineThreshold it is recommended to send a StatusNotificationRequest for all its Connectors when the Charging Station is back online.
+|PublicKeyWithSignedMeterValue |boolean |This Configuration Variable can be used to configure whether a public key needs to be sent with a signed meter value.
+|QueueAllMessages |boolean |When this variable is set to true, the Charging Station will queue all message until they are delivered to the CSMS.
+|RetryBackOffRepeatTimes |integer |When the Charging Station is reconnecting, after a connection loss, it will use this variable for the amount of times it will double the previous back-off time.
+|RetryBackOffRandomRange |integer |When the Charging Station is reconnecting, after a connection loss, it will use this variable as the maximum value for the random part of the back-off time.
+|RetryBackOffWaitMinimum |integer |When the Charging Station is reconnecting, after a connection loss, it will use this variable as the minimum back-off time, the first time it tries to reconnect.
+|UnlockOnEVSideDisconnect |boolean |When set to true, the Charging Station SHALL unlock the cable on the Charging Station side when the cable is unplugged at the EV. For an EVSE with only fixed cables, the mutability SHALL be ReadOnly and the actual value SHALL be false. +
+    For a charging station with fixed cables and sockets, the variable is only applicable to the sockets.
+|WebSocketPingInterval |integer |Number of seconds between pings.
+|FieldLength |integer |This variable is used to report the length of <field> in <message> when it is larger than the length that is defined in the standard OCPP message schema.
+|===
+
+// TODO:
+==== ReservationCtrlr
 
 ```
 Description
@@ -1682,7 +1503,9 @@ Enabled VehicleIdSensor enabled
 Active Processing
 ```
 
-=== 3.3. Summary List of Standardized Components
+
+[[summary_list_of_standardized_components]]
+=== Summary List of Standardized Components
 
 Following is a list that sums up all above-mentioned standardized component names.
 
