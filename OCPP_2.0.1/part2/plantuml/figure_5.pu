@@ -1,0 +1,20 @@
+@startuml figure_5
+!include style.puml
+
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+CSMS -> ChargingStation: SetVariablesRequest(BasicAuthPassword)
+activate CSMS
+activate ChargingStation
+
+ChargingStation --> CSMS: SetVariablesResponse(status = Accepted)
+deactivate CSMS
+
+ChargingStation -> ChargingStation: disconnect
+
+ChargingStation -> CSMS: connect (using new password)
+
+ChargingStation -[hidden]-> CSMS
+deactivate ChargingStation
+@enduml
