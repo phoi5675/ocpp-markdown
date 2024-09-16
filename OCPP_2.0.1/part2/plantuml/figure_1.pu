@@ -1,0 +1,93 @@
+@startuml figure_1
+!include style.puml
+
+participant "Transaction" as Transaction
+participant "Energy Offer" as EnergyOffer
+participant "Energy Flow" as EnergyFlow
+
+activate Transaction
+group TransactionGroup 
+  note over Transaction
+    Transaction start is configured
+    via configuration Variable:
+    TxStartPoint
+  end note
+
+  group EnergyOfferPeriod
+    note over EnergyOffer
+      Energy Offer Period starts when
+      the EVSE is ready and willing to
+      supply energy.
+    end note
+
+    Transaction -[hidden]-> EnergyOffer
+    activate EnergyOffer
+
+    group EnergyTransferPeriod
+      EnergyOffer -[hidden]-> EnergyFlow
+      activate EnergyFlow
+
+      note right of EnergyFlow
+        Energy is transferred.
+      end note
+
+      EnergyFlow -[hidden]-> EnergyOffer
+      deactivate EnergyFlow
+    end group
+
+    note right of EnergyOffer
+      During an EnergyOfferPeriod there may
+      be periods the EV is not charging due to
+      for instance, warm/full battery or EV
+      internal smart charging.
+    end note
+
+    group EnergyTransferPeriod
+      EnergyOffer -[hidden]-> EnergyFlow
+      activate EnergyFlow
+
+      note right of EnergyFlow
+        Energy is transferred.
+      end note
+
+      EnergyFlow -[hidden]-> EnergyOffer
+      deactivate EnergyFlow
+    end group
+    deactivate EnergyOffer    
+  end group
+
+  group EnergyOfferSuspendPeriod
+    note over EnergyOffer
+      During a transaction, there may be periods
+      the EnergyOffer to EV is suspended by the
+      EVSE, for instance due to Smart Charging
+      or local balancing.
+    end note
+  end group
+
+  group EnergyOfferPeriod
+    Transaction -[hidden]-> EnergyOffer
+    activate EnergyOffer
+    group EnergyTransferPeriod
+      EnergyOffer -[hidden]-> EnergyFlow
+      activate EnergyFlow
+
+      note right of EnergyFlow
+        Energy is transferred.
+      end note
+
+      EnergyFlow -[hidden]-> EnergyOffer
+      deactivate EnergyFlow
+    end group
+    deactivate EnergyOffer
+  end group
+
+  deactivate Transaction
+  note over Transaction
+    Transaction stop is configured
+    via configuration Variable:
+    TxStopPoint
+  end note
+end group
+
+@enduml
