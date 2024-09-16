@@ -28,7 +28,7 @@ This document is made available under the _*Creative Commons Attribution-NoDeriv
 
 [%autowidth.stretch,options="header,autowidth"]
 |===
-|Version |Date |Description**
+|Version |Date |Description
 
 |2.0.1 Edition 3 |2024-05-06 |OCPP 2.0.1 Edition 3. All errata from OCPP 2.0.1 Part 1 until and including Errata 2024-04 have been merged into this version of the specification.
 |2.0.1 |2020-03-31 |Final version of OCPP 2.0.1
