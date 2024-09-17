@@ -1026,9 +1026,9 @@ image::part2/images/figure_5.svg[Update Charging Station Password for HTTP Basic
 
 [[update_charging_station_certificate_by_request_of_csms]]
 ==== A02 - Update Charging Station Certificate by request of CSMS
-// TODO:
-_Table 27. A02 - Update Charging Station Certificate by request of CSMS_
 
+.A02 - Update Charging Station Certificate by request of CSMS
+// TODO:
 ```
 No. Type Description
 1 Name Update Charging Station Certificate by request of CSMS
