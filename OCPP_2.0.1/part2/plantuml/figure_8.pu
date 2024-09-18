@@ -1,0 +1,25 @@
+@startuml figure_8
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+ChargingStation -> ChargingStation: A security related event occurred
+
+activate ChargingStation
+
+note right of CSMS
+  see part 2 Appendices
+  for security
+  related events
+end note
+opt key valid
+  ChargingStation -> CSMS: SecurityEventNotificationRequest()
+  activate CSMS
+
+  CSMS --> ChargingStation: SecurityEventNotificationResponse()
+  deactivate CSMS
+  deactivate ChargingStation
+end
+
+@enduml

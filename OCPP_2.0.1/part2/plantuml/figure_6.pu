@@ -1,0 +1,49 @@
+@startuml figure_6
+!include style.puml
+
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+participant "Certificate Authority Server" as CAS
+
+note over CSMS, ChargingStation
+  CS certificate is almost due
+end note
+
+CSMS -> ChargingStation: TriggerMessageRequest(SignCertificate)
+activate CSMS
+activate ChargingStation
+
+ChargingStation --> CSMS: TriggerMessageResponse(Accepted)
+deactivate CSMS
+
+ChargingStation -> ChargingStation: \
+  generate new \n\
+  public / private key pair
+
+ChargingStation -> CSMS: SignCertificateRequest(csr)
+activate CSMS
+CSMS --> ChargingStation: SignCertificateResponse(Accepted)
+deactivate ChargingStation
+
+CSMS -> CAS: forward CSR
+activate CAS
+CAS -> CAS: sign certificate
+
+CAS --> CSMS: return Signed Certificate
+deactivate CAS
+
+CSMS -> ChargingStation: CertificateSignedRequest(certificate)
+activate ChargingStation
+
+ChargingStation -> ChargingStation: \
+  Verify validity \n\
+  of signed certificate
+
+ChargingStation --> CSMS: CertificateSignedResponse (Accepted/Rejected)
+deactivate CSMS
+
+opt key valid
+  ChargingStation -> ChargingStation: Switch to new certificate
+end
+
+@enduml
