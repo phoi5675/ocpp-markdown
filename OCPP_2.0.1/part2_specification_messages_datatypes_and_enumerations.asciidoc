@@ -1,0 +1,5362 @@
+= Messages, Datatypes & Enumerations
+
+[[messages]]
+== Messages
+
+=== 1.1. Authorize
+
+**1.1.1. AuthorizeRequest**
+
+This contains the field definition of the AuthorizeRequest PDU sent by the Charging Station to the CSMS.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+certificate string[0..5500] 0..1 Optional. The X.509 certificate chain presented by EV and
+encoded in PEM format. Order of certificates in chain is
+from leaf up to (but excluding) root certificate. Only
+needed in case of central contract validation when
+Charging Station cannot validate the contract certificate.
+idToken IdTokenType 1..1 Required. This contains the identifier that needs to be
+authorized.
+iso15118CertificateHashDa
+ta
+
+
+OCSPRequestDataType 0..4 Optional. Contains the information needed to verify the
+EV Contract Certificate via OCSP. Not needed if
+certificate is provided.
+
+**1.1.2. AuthorizeResponse**
+
+This contains the field definition of the AuthorizeResponse PDU sent by the CSMS to the Charging Station in response to an
+AuthorizeRequest.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+certificateStatus AuthorizeCertificateStatusEnumTy
+pe
+
+
+0..1 Optional. Certificate status information. - if all certificates
+are valid: return 'Accepted'. - if one of the certificates was
+revoked, return 'CertificateRevoked'.
+idTokenInfo IdTokenInfoType 1..1 Required. This contains information about authorization
+status, expiry and group id.
+
+==== 1.2. BootNotification.
+
+**1.2.1. BootNotificationRequest**
+
+This contains the field definition of the BootNotificationRequest PDU sent by the Charging Station to the CSMS.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+reason BootReasonEnumType 1..1 Required. This contains the reason for sending this
+message to the CSMS.
+chargingStation ChargingStationType 1..1 Required. Identifies the Charging Station
+
+**1.2.2. BootNotificationResponse**
+
+This contains the field definition of the BootNotificationResponse PDU sent by the CSMS to the Charging Station in response to a
+BootNotificationRequest.
+
+_Class_
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Field Name Field Type Card. Description
+currentTime dateTime 1..1 Required. This contains the CSMS’s current time.
+interval integer 1..1 Required. When Status is Accepted, this contains the
+heartbeat interval in seconds. If the CSMS returns
+something other than Accepted, the value of the interval
+field indicates the minimum wait time before sending a
+next BootNotification request.
+status RegistrationStatusEnumType 1..1 Required. This contains whether the Charging Station has
+been registered within the CSMS.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+==== 1.3. CancelReservation.
+
+**1.3.1. CancelReservationRequest**
+
+This contains the field definition of the CancelReservationRequest PDU sent by the CSMS to the Charging Station.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+reservationId integer 1..1 Required. Id of the reservation to cancel.
+
+**1.3.2. CancelReservationResponse**
+
+This contains the field definition of the CancelReservationResponse PDU sent by the Charging Station to the CSMS in response to a
+CancelReservationRequest.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status CancelReservationStatusEnumTyp
+e
+
+
+1..1 Required. This indicates the success or failure of the
+canceling of a reservation by CSMS.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+==== 1.4. CertificateSigned
+
+[[certificate_signed_request]]
+==== CertificateSignedRequest
+
+This contains the field definition of the CertificateSignedRequest PDU sent by the CSMS to the Charging Station.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+certificateChain string[0..10000] 1..1 Required. The signed PEM encoded X.509 certificate.
+This SHALL also contain the necessary sub CA
+certificates, when applicable. The order of the bundle
+follows the certificate chain, starting from the leaf
+certificate.
+
+
+The Configuration Variable MaxCertificateChainSize can
+be used to limit the maximum size of this field.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Field Name Field Type Card. Description
+certificateType CertificateSigningUseEnumType 0..1 Optional. Indicates the type of the signed certificate that
+is returned. When omitted the certificate is used for both
+the 15118 connection (if implemented) and the Charging
+Station to CSMS connection. This field is required when a
+certificateType was included in the
+SignCertificateRequest that requested this certificate to
+be signed AND both the 15118 connection and the
+Charging Station connection are implemented.
+
+
+[[certificate_signed_response]]
+==== CertificateSignedResponse
+
+This contains the field definition of the CertificateSignedResponse PDU sent by the Charging Station to the CSMS in response to a
+CertificateSignedRequest.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status CertificateSignedStatusEnumType 1..1 Required. Returns whether certificate signing has been
+accepted, otherwise rejected.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+==== 1.5. ChangeAvailability
+
+**1.5.1. ChangeAvailabilityRequest**
+
+This contains the field definition of the ChangeAvailabilityRequest PDU sent by the CSMS to the Charging Station.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+operationalStatus OperationalStatusEnumType 1..1 Required. This contains the type of availability change
+that the Charging Station should perform.
+evse EVSEType 0..1 Optional. Contains Id’s to designate a specific
+EVSE/connector by index numbers. When omitted, the
+message refers to the Charging Station as a whole.
+
+**1.5.2. ChangeAvailabilityResponse**
+
+This contains the field definition of the ChangeAvailabilityResponse PDU sent by the Charging Station to the CSMS.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status ChangeAvailabilityStatusEnumType 1..1 Required. This indicates whether the Charging Station is
+able to perform the availability change.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+==== 1.6. ClearCache
+
+**1.6.1. ClearCacheRequest**
+
+This contains the field definition of the ClearCacheRequest PDU sent by the CSMS to the Charging Station. No fields are defined.
+
+**1.6.2. ClearCacheResponse**
+
+This contains the field definition of the ClearCacheResponse PDU sent by the Charging Station to the CSMS in response to a
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+ClearCacheRequest.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status ClearCacheStatusEnumType 1..1 Required. Accepted if the Charging Station has executed
+the request, otherwise rejected.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+==== 1.7. ClearChargingProfile
+
+**1.7.1. ClearChargingProfileRequest**
+
+This contains the field definition of the ClearChargingProfileRequest PDU sent by the CSMS to the Charging Station. The CSMS can
+use this message to clear (remove) either a specific charging profile (denoted by id) or a selection of charging profiles that match
+with the values of the optional evse, stackLevel and ChargingProfilePurpose fields.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+chargingProfileId integer 0..1 Optional. The Id of the charging profile to clear.
+chargingProfileCriteria ClearChargingProfileType 0..1 Optional. Specifies the charging profile.
+
+**1.7.2. ClearChargingProfileResponse**
+
+This contains the field definition of the ClearChargingProfileResponse PDU sent by the Charging Station to the CSMS in response to
+a ClearChargingProfileRequest.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status ClearChargingProfileStatusEnumTy
+pe
+
+
+1..1 Required. Indicates if the Charging Station was able to
+execute the request.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+==== 1.8. ClearDisplayMessage
+
+**1.8.1. ClearDisplayMessageRequest**
+
+This contains the field definition of the ClearDisplayMessageRequest PDU sent by the CSMS to the Charging Station. The CSMS
+asks the Charging Station to clear a display message that has been configured in the Charging Station to be cleared/removed. See
+also O05 - Clear a Display Message.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+id integer 1..1 Required. Id of the message that SHALL be removed
+from the Charging Station.
+
+**1.8.2. ClearDisplayMessageResponse**
+
+This contains the field definition of the ClearDisplayMessageResponse PDU sent by the Charging Station to the CSMS in a response
+to a ClearDisplayMessageRequest. See also O05 - Clear a Display Message.
+
+_Class_
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Field Name Field Type Card. Description
+status ClearMessageStatusEnumType 1..1 Required. Returns whether the Charging Station has been
+able to remove the message.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+==== 1.9. ClearedChargingLimit
+
+**1.9.1. ClearedChargingLimitRequest**
+
+This contains the field definition of the ClearedChargingLimitRequest PDU sent by the Charging Station to the CSMS.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+chargingLimitSource ChargingLimitSourceEnumType 1..1 Required. Source of the charging limit.
+evseId integer 0..1 Optional. EVSE Identifier.
+
+**1.9.2. ClearedChargingLimitResponse**
+
+This contains the field definition of the ClearedChargingLimitResponse PDU sent by the CSMS to the Charging Station. No fields are
+defined.
+
+==== 1.10. ClearVariableMonitoring.
+
+**1.10.1. ClearVariableMonitoringRequest**
+
+This contains the field definition of the ClearVariableMonitoringRequest PDU sent by the CSMS to the Charging Station.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+id integer 1..* Required. List of the monitors to be cleared, identified by
+there Id.
+
+**1.10.2. ClearVariableMonitoringResponse**
+
+This contains the field definition of the ClearVariableMonitoringResponse PDU sent by the Charging Station to the CSMS.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+clearMonitoringResult ClearMonitoringResultType 1..* Required. List of result statuses per monitor.
+
+==== 1.11. CostUpdated
+
+**1.11.1. CostUpdatedRequest**
+
+This contains the field definition of the CostUpdatedRequest PDU sent by the CSMS to the Charging Station. With this request the
+CSMS can send the current cost of a transaction to a Charging Station.
+
+_Class_
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Field Name Field Type Card. Description
+totalCost decimal 1..1 Required. Current total cost, based on the information
+known by the CSMS, of the transaction including taxes. In
+the currency configured with the configuration Variable:
+[Currency]
+transactionId identifierString[0..36] 1..1 Required. Transaction Id of the transaction the current
+cost are asked for.
+
+**1.11.2. CostUpdatedResponse**
+
+This contains the field definition of the CostUpdatedResponse PDU sent by the Charging Station to the CSMS in response to
+CostUpdatedRequest. No fields are defined.
+
+==== 1.12. CustomerInformation
+
+This contains the field definition of the CustomerInformationRequest PDU sent by the CSMS to the Charging Station.
+
+**1.12.1. CustomerInformationRequest**
+
+_Class_
+
+
+Field Name Field Type Card. Description
+requestId integer 1..1 Required. The Id of the request.
+report boolean 1..1 Required. Flag indicating whether the Charging Station
+should return NotifyCustomerInformationRequest
+messages containing information about the customer
+referred to.
+clear boolean 1..1 Required. Flag indicating whether the Charging Station
+should clear all information about the customer referred
+to.
+customerIdentifier string[0..64] 0..1 Optional. A (e.g. vendor specific) identifier of the
+customer this request refers to. This field contains a
+custom identifier other than IdToken and Certificate. One
+of the possible identifiers (customerIdentifier,
+customerIdToken or customerCertificate) should be in
+the request message.
+idToken IdTokenType 0..1 Optional. The IdToken of the customer this request refers
+to. One of the possible identifiers (customerIdentifier,
+customerIdToken or customerCertificate) should be in
+the request message.
+customerCertificate CertificateHashDataType 0..1 Optional. The Certificate of the customer this request
+refers to. One of the possible identifiers
+(customerIdentifier, customerIdToken or
+customerCertificate) should be in the request message.
+
+**1.12.2. CustomerInformationResponse**
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status CustomerInformationStatusEnumT
+ype
+
+
+1..1 Required. Indicates whether the request was accepted.
+
+
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+==== 1.13. DataTransfer
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+[[data_transfer_request]]
+==== DataTransferRequest
+
+This contains the field definition of the DataTransferRequest PDU sent either by the CSMS to the Charging Station or vice versa.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+messageId string[0..50] 0..1 Optional. May be used to indicate a specific message or
+implementation.
+data anyType 0..1 Optional. Data without specified length or format. This
+needs to be decided by both parties (Open to
+implementation).
+vendorId string[0..255] 1..1 Required. This identifies the Vendor specific
+implementation
+
+**1.13.2. DataTransferResponse**
+
+This contains the field definition of the DataTransferResponse PDU sent by the Charging Station to the CSMS or vice versa in
+response to a DataTransferRequest.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status DataTransferStatusEnumType 1..1 Required. This indicates the success or failure of the data
+transfer.
+data anyType 0..1 Optional. Data without specified length or format, in
+response to request.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+==== 1.14. DeleteCertificate
+
+**1.14.1. DeleteCertificateRequest**
+
+Used by the CSMS to request deletion of an installed certificate on a Charging Station.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+certificateHashData CertificateHashDataType 1..1 Required. Indicates the certificate of which deletion is
+requested.
+
+**1.14.2. DeleteCertificateResponse**
+
+Response to a DeleteCertificateRequest.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status DeleteCertificateStatusEnumType 1..1 Required. Charging Station indicates if it can process the
+request.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+==== 1.15. FirmwareStatusNotification
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+**1.15.1. FirmwareStatusNotificationRequest**
+
+This contains the field definition of the FirmwareStatusNotificationRequest PDU sent by the Charging Station to the CSMS.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status FirmwareStatusEnumType 1..1 Required. This contains the progress status of the
+firmware installation.
+requestId integer 0..1 Optional. The request id that was provided in the
+UpdateFirmwareRequest that started this firmware
+update. This field is mandatory, unless the message was
+triggered by a TriggerMessageRequest AND there is no
+firmware update ongoing.
+
+**1.15.2. FirmwareStatusNotificationResponse**
+
+This contains the field definition of the FirmwareStatusNotificationResponse PDU sent by the CSMS to the Charging Station in
+response to a FirmwareStatusNotificationRequest. No fields are defined.
+
+==== 1.16. Get15118EVCertificate
+
+**1.16.1. Get15118EVCertificateRequest**
+
+This message is sent by the Charging Station to the CSMS if an ISO 15118 vehicle selects the service Certificate installation. NOTE:
+This message is based on CertificateInstallationReq Res from ISO 15118 2.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+iso15118SchemaVersion string[0..50] 1..1 Required. Schema version currently used for the 15118
+session between EV and Charging Station. Needed for
+parsing of the EXI stream by the CSMS.
+action CertificateActionEnumType 1..1 Required. Defines whether certificate needs to be
+installed or updated.
+exiRequest string[0..5600] 1..1 Required. Raw CertificateInstallationReq request from EV,
+Base64 encoded.
+
+**1.16.2. Get15118EVCertificateResponse**
+
+Response message from CSMS to Charging Station containing the status and optionally new certificate. NOTE: This message is
+based on CertificateInstallationReq Res from ISO 15118-2.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status Iso15118EVCertificateStatusEnum
+Type
+
+
+1..1 Required. Indicates whether the message was processed
+properly.
+exiResponse string[0..5600] 1..1 Required. Raw CertificateInstallationRes response for the
+EV, Base64 encoded. The Charging Station can let the
+CSMS know it supports a higher field size by reporting
+this using the device model as
+OCPPCommCtrlr.FieldLength["Get15118EVCertificateRes
+ponse.exiResponse"]  <New max length>
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+==== 1.17. GetBaseReport.
+
+**1.17.1. GetBaseReportRequest**
+
+This contains the field definition of the GetBaseReportRequest PDU sent by the CSMS to the Charging Station.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+requestId integer 1..1 Required. The Id of the request.
+reportBase ReportBaseEnumType 1..1 Required. This field specifies the report base.
+
+**1.17.2. GetBaseReportResponse**
+
+This contains the field definition of the GetBaseReportResponse PDU sent by the Charging Station to the CSMS.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status GenericDeviceModelStatusEnumTy
+pe
+
+
+1..1 Required. This indicates whether the Charging Station is
+able to accept this request.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+==== 1.18. GetCertificateStatus
+
+**1.18.1. GetCertificateStatusRequest**
+
+This contains the field definition of the GetCertificateStatusRequest PDU sent by the Charging Station to the CSMS.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+ocspRequestData OCSPRequestDataType 1..1 Required. Indicates the certificate of which the status is
+requested.
+
+**1.18.2. GetCertificateStatusResponse**
+
+This contains the field definition of the GetCertificateStatusResponse PDU sent by the CSMS to the Charging Station.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status GetCertificateStatusEnumType 1..1 Required. This indicates whether the charging station
+was able to retrieve the OCSP certificate status.
+ocspResult string[0..5500] 0..1 Optional. OCSPResponse class as defined in IETF RFC
+6960. DER encoded (as defined in IETF RFC 6960), and
+
+then base64 encoded. MAY only be omitted when status
+is not Accepted.
+**statusInfo** StatusInfoType 0..1 Optional. Detailed status information.
+
+==== 1.19. GetChargingProfiles
+
+**1.19.1. GetChargingProfilesRequest**
+
+The message GetChargingProfilesRequest can be used by the CSMS to request installed charging profiles from the Charging
+Station. The charging profiles will then be reported by the Charging Station via ReportChargingProfilesRequest messages.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+_Class_
+
+
+Field Name Field Type Card. Description
+requestId integer 1..1 Required. Reference identification that is to be used by
+the Charging Station in the
+ReportChargingProfilesRequest when provided.
+evseId integer 0..1 Optional. For which EVSE installed charging profiles
+SHALL be reported. If 0, only charging profiles installed
+on the Charging Station itself (the grid connection)
+SHALL be reported. If omitted, all installed charging
+profiles SHALL be reported. Reported charging profiles
+SHALL match the criteria in field chargingProfile.
+chargingProfile ChargingProfileCriterionType 1..1 Required. Specifies the charging profile.
+
+**1.19.2. GetChargingProfilesResponse**
+
+This contains the field definition of the GetChargingProfilesResponse PDU sent by the Charging Station to the CSMS in response to
+a GetChargingProfilesRequest.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status GetChargingProfileStatusEnumTyp
+e
+
+
+1..1 Required. This indicates whether the Charging Station is
+able to process this request and will send
+ReportChargingProfilesRequest messages.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+==== 1.20. GetCompositeSchedule
+
+**1.20.1. GetCompositeScheduleRequest**
+
+This contains the field definition of the GetCompositeScheduleRequest PDU sent by the CSMS to the Charging Station.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+duration integer 1..1 Required. Length of the requested schedule in seconds.
+chargingRateUnit ChargingRateUnitEnumType 0..1 Optional. Can be used to force a power or current profile.
+evseId integer 1..1 Required. The ID of the EVSE for which the schedule is
+requested. When evseid=0, the Charging Station will
+calculate the expected consumption for the grid
+connection.
+
+**1.20.2. GetCompositeScheduleResponse**
+
+This contains the field definition of the GetCompositeScheduleResponse PDU sent by the Charging Station to the CSMS in
+response to a GetCompositeScheduleRequest.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status GenericStatusEnumType 1..1 Required. The Charging Station will indicate if it was able
+to process the request
+schedule CompositeScheduleType 0..1 Optional. This field contains the calculated composite
+schedule. It may only be omitted when this message
+contains status Rejected.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+==== 1.21. GetDisplayMessages
+
+**1.21.1. GetDisplayMessagesRequest**
+
+_Class_
+
+
+Field Name Field Type Card. Description
+id integer 0..* Optional. If provided the Charging Station shall return
+Display Messages of the given ids. This field SHALL NOT
+contain more ids than set in
+NumberOfDisplayMessages.maxLimit
+requestId integer 1..1 Required. The Id of this request.
+priority MessagePriorityEnumType 0..1 Optional. If provided the Charging Station shall return
+Display Messages with the given priority only.
+state MessageStateEnumType 0..1 Optional. If provided the Charging Station shall return
+Display Messages with the given state only.
+
+**1.21.2. GetDisplayMessagesResponse**
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status GetDisplayMessagesStatusEnumTy
+pe
+
+
+1..1 Required. Indicates if the Charging Station has Display
+Messages that match the request criteria in the
+GetDisplayMessagesRequest
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+==== 1.22. GetInstalledCertificateIds.
+
+**1.22.1. GetInstalledCertificateIdsRequest**
+
+Used by the CSMS to request an overview of the installed certificates on a Charging Station.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+certificateType GetCertificateIdUseEnumType 0..* Optional. Indicates the type of certificates requested.
+When omitted, all certificate types are requested.
+
+**1.22.2. GetInstalledCertificateIdsResponse**
+
+Response to a GetInstalledCertificateIDsRequest.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status GetInstalledCertificateStatusEnum
+Type
+
+
+1..1 Required. Charging Station indicates if it can process the
+request.
+certificateHashDataChain CertificateHashDataChainType 0..* Optional. The Charging Station includes the Certificate
+information for each available certificate.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+==== 1.23. GetLocalListVersion
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+**1.23.1. GetLocalListVersionRequest**
+
+This contains the field definition of the GetLocalListVersionRequest PDU sent by the CSMS to the Charging Station. No fields are
+defined.
+
+**1.23.2. GetLocalListVersionResponse**
+
+This contains the field definition of the GetLocalListVersionResponse PDU sent by the Charging Station to CSMS in response to a
+GetLocalListVersionRequest.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+versionNumber integer 1..1 Required. This contains the current version number of the
+local authorization list in the Charging Station.
+
+==== 1.24. GetLog
+
+**1.24.1. GetLogRequest**
+
+This contains the field definition of the GetLogRequest PDU sent by the CSMS to the Charging Station.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+logType LogEnumType 1..1 Required. This contains the type of log file that the
+Charging Station should send.
+requestId integer 1..1 Required. The Id of this request
+retries integer 0..1 Optional. This specifies how many times the Charging
+Station must retry to upload the log before giving up. If
+this field is not present, it is left to Charging Station to
+decide how many times it wants to retry. If the value is 0,
+it means: no retries.
+retryInterval integer 0..1 Optional. The interval in seconds after which a retry may
+be attempted. If this field is not present, it is left to
+Charging Station to decide how long to wait between
+attempts.
+log LogParametersType 1..1 Required. This field specifies the requested log and the
+location to which the log should be sent.
+
+**1.24.2. GetLogResponse**
+
+This contains the field definition of the GetLogResponse PDU sent by the Charging Station to the CSMS in response to a
+GetLogRequest.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status LogStatusEnumType 1..1 Required. This field indicates whether the Charging
+Station was able to accept the request.
+filename string[0..255] 0..1 Optional. This contains the name of the log file that will
+be uploaded. This field is not present when no logging
+information is available.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+==== 1.25. GetMonitoringReport
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+**1.25.1. GetMonitoringReportRequest**
+
+This contains the field definition of the GetMonitoringReportRequest PDU sent by the CSMS to the Charging Station.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+requestId integer 1..1 Required. The Id of the request.
+monitoringCriteria MonitoringCriterionEnumType 0..3 Optional. This field contains criteria for components for
+which a monitoring report is requested
+componentVariable ComponentVariableType 0..* Optional. This field specifies the components and
+variables for which a monitoring report is requested.
+
+**1.25.2. GetMonitoringReportResponse**
+
+This contains the field definition of the GetMonitoringReportResponse PDU sent by the Charging Station to the CSMS.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status GenericDeviceModelStatusEnumTy
+pe
+
+
+1..1 Required. This field indicates whether the Charging
+Station was able to accept the request.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+==== 1.26. GetReport
+
+[[get_report_request]]
+==== GetReportRequest
+
+This contains the field definition of the GetReportRequest PDU sent by the CSMS to the Charging Station.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+requestId integer 1..1 Required. The Id of the request.
+componentCriteria ComponentCriterionEnumType 0..4 Optional. This field contains criteria for components for
+which a report is requested
+componentVariable ComponentVariableType 0..* Optional. This field specifies the components and
+variables for which a report is requested.
+
+
+[[get_report_response]]
+==== GetReportResponse
+
+The response to a GetReportRequest, sent by the Charging Station to the CSMS.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status GenericDeviceModelStatusEnumTy
+pe
+
+
+1..1 Required. This field indicates whether the Charging
+Station was able to accept the request.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+==== 1.27. GetTransactionStatus
+
+**1.27.1. GetTransactionStatusRequest**
+
+With this message, the CSMS can ask the Charging Station whether it has transaction-related messages waiting to be delivered to
+the CSMS. When a transactionId is provided, only messages for a specific transaction are asked for.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+_Class_
+
+
+Field Name Field Type Card. Description
+transactionId identifierString[0..36] 0..1 Optional. The Id of the transaction for which the status is
+requested.
+
+**1.27.2. GetTransactionStatusResponse**
+
+The response to a GetTransactionStatusRequest, sent by the Charging Station to the CSMS.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+ongoingIndicator boolean 0..1 Optional. Whether the transaction is still ongoing.
+messagesInQueue boolean 1..1 Required. Whether there are still message to be delivered.
+
+==== 1.28. GetVariables.
+
+**1.28.1. GetVariablesRequest**
+
+This contains the field definition of the GetVariablesRequest PDU sent by the CSMS to the Charging Station.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+getVariableData GetVariableDataType 1..* Required. List of requested variables.
+
+**1.28.2. GetVariablesResponse**
+
+This contains the field definition of the GetVariablesResponse PDU sent by the CSMS to the Charging Station in response to
+GetVariablesRequest.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+getVariableResult GetVariableResultType 1..* Required. List of requested variables and their values.
+
+==== 1.29. Heartbeat
+
+**1.29.1. HeartbeatRequest**
+
+This contains the field definition of the HeartbeatRequest PDU sent by the Charging Station to the CSMS. No fields are defined.
+
+**1.29.2. HeartbeatResponse**
+
+This contains the field definition of the HeartbeatResponse PDU sent by the CSMS to the Charging Station in response to a
+HeartbeatRequest.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+currentTime dateTime 1..1 Required. Contains the current time of the CSMS.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+=== InstallCertificate
+
+[[install_certificate_request]]
+==== InstallCertificateRequest
+
+Used by the CSMS to request installation of a certificate on a Charging Station. Note: This message is not for installing a TLS client
+certificate in a charging station. The CertificateSignedRequest mechanism is used for that.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+certificateType InstallCertificateUseEnumType 1..1 Required. Indicates the certificate type that is sent.
+certificate string[0..5500] 1..1 Required. A PEM encoded X.509 certificate.
+
+**1.30.2. InstallCertificateResponse**
+
+The response to a InstallCertificateRequest, sent by the Charging Station to the CSMS.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status InstallCertificateStatusEnumType 1..1 Required. Charging Station indicates if installation was
+successful.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+==== 1.31. LogStatusNotification.
+
+**1.31.1. LogStatusNotificationRequest**
+
+This contains the field definition of the LogStatusNotificationRequest PDU sent by the Charging Station to the CSMS.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status UploadLogStatusEnumType 1..1 Required. This contains the status of the log upload.
+requestId integer 0..1 Optional. The request id that was provided in
+GetLogRequest that started this log upload. This field is
+mandatory, unless the message was triggered by a
+TriggerMessageRequest AND there is no log upload
+ongoing.
+
+**1.31.2. LogStatusNotificationResponse**
+
+This contains the field definition of the LogStatusNotificationResponse PDU sent by the CSMS to the Charging Station in response
+to LogStatusNotificationRequest. No fields are defined.
+
+==== 1.32. MeterValues
+
+**1.32.1. MeterValuesRequest**
+
+This contains the field definition of the MeterValuesRequest PDU sent by the Charging Station to the CSMS. This message might be
+removed in a future version of OCPP. It will be replaced by Device Management Monitoring events.
+
+_Class_
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Field Name Field Type Card. Description
+evseId integer 1..1 Required. This contains a number (>0) designating an
+EVSE of the Charging Station. ‘0’ (zero) is used to
+designate the main power meter.
+meterValue MeterValueType 1..* Required. The sampled meter values with timestamps.
+
+**1.32.2. MeterValuesResponse**
+
+This contains the field definition of the MeterValuesResponse PDU sent by the CSMS to the Charging Station in response to a
+MeterValuesRequest PDU. This message might be removed in a future version of OCPP. It will be replaced by Device Management
+Monitoring events.
+
+No fields are defined.
+
+==== 1.33. NotifyChargingLimit
+
+**1.33.1. NotifyChargingLimitRequest**
+
+The message NotifyChargingLimitRequest can be used to communicate a charging limit, set by an external system on the Charging
+Station (Not installed by the CSO via SetChargingProfileRequest), to the CSMS.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+evseId integer 0..1 Optional. The charging schedule contained in this
+notification applies to an EVSE. evseId must be > 0.
+chargingLimit ChargingLimitType 1..1 Required. This contains the source of the charging limit
+and whether it is grid critical.
+chargingSchedule ChargingScheduleType 0..* Optional. Contains limits for the available power or
+current over time, as set by the external source.
+
+**1.33.2. NotifyChargingLimitResponse**
+
+The NotifyChargingLimitResponse message is sent by the CSMS to the Charging Station in response to a
+NotifyChargingLimitsRequest. No fields are defined.
+
+==== 1.34. NotifyCustomerInformation
+
+This contains the field definition of the NotifyCustomerInformationRequest PDU sent by the Charging Station to the CSMS.
+
+**1.34.1. NotifyCustomerInformationRequest**
+
+_Class_
+
+
+Field Name Field Type Card. Description
+data string[0..512] 1..1 Required. (Part of) the requested data. No format
+specified in which the data is returned. Should be human
+readable.
+tbc boolean 0..1 Optional. “to be continued” indicator. Indicates whether
+another part of the monitoringData follows in an
+upcoming notifyMonitoringReportRequest message.
+Default value when omitted is false.
+seqNo integer 1..1 Required. Sequence number of this message. First
+message starts at 0.
+generatedAt dateTime 1..1 Required. Timestamp of the moment this message was
+generated at the Charging Station.
+requestId integer 1..1 Required. The Id of the request.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+**1.34.2. NotifyCustomerInformationResponse**
+
+==== 1.35. NotifyDisplayMessages
+
+**1.35.1. NotifyDisplayMessagesRequest**
+
+This contains the field definition of the NotifyDisplayMessagesRequest PDU sent by the Charging Station to the CSMS.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+requestId integer 1..1 Required. The id of the GetDisplayMessagesRequest that
+requested this message.
+tbc boolean 0..1 Optional. "to be continued" indicator. Indicates whether
+another part of the report follows in an upcoming
+NotifyDisplayMessagesRequest message. Default value
+when omitted is false.
+messageInfo MessageInfoType 0..* Optional. The requested display message as configured
+in the Charging Station.
+
+**1.35.2. NotifyDisplayMessagesResponse**
+
+The NotifyDisplayMessagesResponse message is sent by the CSMS to the Charging Station in response to a
+NotifyDisplayMessagesRequest. No fields are defined.
+
+==== 1.36. NotifyEVChargingNeeds
+
+**1.36.1. NotifyEVChargingNeedsRequest**
+
+The Charging Station uses this message to communicate the charging needs as calculated by the EV to the CSMS.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+maxScheduleTuples integer 0..1 Optional. Contains the maximum schedule tuples the car
+supports per schedule.
+evseId integer 1..1 Required. Defines the EVSE and connector to which the
+EV is connected. EvseId may not be 0.
+chargingNeeds ChargingNeedsType 1..1 Required. The characteristics of the energy delivery
+required.
+
+**1.36.2. NotifyEVChargingNeedsResponse**
+
+Response to a NotifyEVChargingNeedsRequest.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status NotifyEVChargingNeedsStatusEnu
+mType
+
+
+1..1 Required. Returns whether the CSMS has been able to
+process the message successfully. It does not imply that
+the evChargingNeeds can be met with the current
+charging profile.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+==== 1.37. NotifyEVChargingSchedule
+
+**1.37.1. NotifyEVChargingScheduleRequest**
+
+The Charging Station uses this message to communicate the charging schedule as calculated by the EV to the CSMS.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+timeBase dateTime 1..1 Required. Periods contained in the charging profile are
+relative to this point in time.
+evseId integer 1..1 Required. The charging schedule contained in this
+notification applies to an EVSE. EvseId must be > 0.
+chargingSchedule ChargingScheduleType 1..1 Required. Planned energy consumption of the EV over
+time. Always relative to timeBase.
+
+**1.37.2. NotifyEVChargingScheduleResponse**
+
+Response to a NotifyEVChargingScheduleRequest message.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status GenericStatusEnumType 1..1 Required. Returns whether the CSMS has been able to
+process the message successfully. It does not imply any
+approval of the charging schedule.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+==== 1.38. NotifyEvent.
+
+**1.38.1. NotifyEventRequest**
+
+This contains the field definition of the NotifyEventRequest PDU sent by the Charging Station to the CSMS.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+generatedAt dateTime 1..1 Required. Timestamp of the moment this message was
+generated at the Charging Station.
+tbc boolean 0..1 Optional. “to be continued” indicator. Indicates whether
+another part of the report follows in an upcoming
+notifyEventRequest message. Default value when
+omitted is false.
+seqNo integer 1..1 Required. Sequence number of this message. First
+message starts at 0.
+eventData EventDataType 1..* Required. List of EventData. An EventData element
+contains only the Component, Variable and
+VariableMonitoring data that caused the event. The list of
+EventData will usally contain one eventData element, but
+the Charging Station may decide to group multiple events
+in one notification. For example, when multiple events
+triggered at the same time.
+
+**1.38.2. NotifyEventResponse**
+
+Response to NotifyEventRequest. No fields are defined.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+=== 1.39. NotifyMonitoringReport
+
+**1.39.1. NotifyMonitoringReportRequest**
+
+This contains the field definition of the NotifyMonitoringRequest PDU sent by the Charging Station to the CSMS.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+requestId integer 1..1 Required. The id of the GetMonitoringRequest that
+requested this report.
+tbc boolean 0..1 Optional. “to be continued” indicator. Indicates whether
+another part of the monitoringData follows in an
+upcoming notifyMonitoringReportRequest message.
+Default value when omitted is false.
+seqNo integer 1..1 Required. Sequence number of this message. First
+message starts at 0.
+generatedAt dateTime 1..1 Required. Timestamp of the moment this message was
+generated at the Charging Station.
+monitor MonitoringDataType 0..* Optional. List of MonitoringData containing monitoring
+settings.
+
+**1.39.2. NotifyMonitoringReportResponse**
+
+Response to a NotifyMonitoringRequest message. No fields are defined.
+
+=== 1.40. NotifyReport
+
+**1.40.1. NotifyReportRequest**
+
+This contains the field definition of the NotifyReportRequest PDU sent by the Charging Station to the CSMS.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+requestId integer 1..1 Required. The id of the GetReportRequest or
+GetBaseReportRequest that requested this report
+generatedAt dateTime 1..1 Required. Timestamp of the moment this message was
+generated at the Charging Station.
+tbc boolean 0..1 Optional. “to be continued” indicator. Indicates whether
+another part of the report follows in an upcoming
+notifyReportRequest message. Default value when
+omitted is false.
+seqNo integer 1..1 Required. Sequence number of this message. First
+message starts at 0.
+reportData ReportDataType 0..* Optional. List of ReportData.
+
+**1.40.2. NotifyReportResponse**
+
+Response to a NotifyReportRequest message. No fields are defined.
+
+=== 1.41. PublishFirmware
+
+**1.41.1. PublishFirmwareRequest**
+
+This contains the field definition of the PublishFirmwareRequest PDU sent by the CSMS to the Local Controller.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+_Class_
+
+
+Field Name Field Type Card. Description
+location string[0..512] 1..1 Required. This contains a string containing a URI pointing
+to a location from which to retrieve the firmware.
+retries integer 0..1 Optional. This specifies how many times the Charging
+Station must retry to download the firmware before
+giving up. If this field is not present, it is left to Charging
+Station to decide how many times it wants to retry. If the
+value is 0, it means: no retries.
+checksum identifierString[0..32] 1..1 Required. The MD5 checksum over the entire firmware
+file as a hexadecimal string of length 32.
+requestId integer 1..1 Required. The Id of the request.
+retryInterval integer 0..1 Optional. The interval in seconds after which a retry may
+be attempted. If this field is not present, it is left to
+Charging Station to decide how long to wait between
+attempts.
+
+**1.41.2. PublishFirmwareResponse**
+
+This contains the field definition of the PublishFirmwareResponse PDU sent by the Local Controller to the CSMS in response to a
+PublishFirmwareRequest.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status GenericStatusEnumType 1..1 Required. Indicates whether the request was accepted.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+=== 1.42. PublishFirmwareStatusNotification
+
+**1.42.1. PublishFirmwareStatusNotificationRequest**
+
+This contains the field definition of the PublishFirmwareStatusNotificationRequest PDU sent by the Charging Station to the CSMS.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status PublishFirmwareStatusEnumType 1..1 Required. This contains the progress status of the
+publishfirmware installation.
+location string[0..512] 0..* Optional. Required if status is Published. Can be multiple
+URI’s, if the Local Controller supports e.g. HTTP, HTTPS,
+and FTP.
+requestId integer 0..1 Optional. The request id that was provided in the
+PublishFirmwareRequest which triggered this action.
+
+**1.42.2. PublishFirmwareStatusNotificationResponse**
+
+This contains the field definition of the PublishFirmwareStatusNotificationResponse PDU sent by the CSMS to the Charging station
+in response to a PublishFirmwareStatusNotificationRequest.
+
+=== 1.43. ReportChargingProfiles
+
+**1.43.1. ReportChargingProfilesRequest**
+
+Reports charging profiles installed in the Charging Station, as requested via a GetChargingProfilesRequest message. The charging
+profile report can be split over multiple ReportChargingProfilesRequest messages, this can be because charging profiles for
+different charging sources need to be reported, or because there is just to much data for one message.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+_Class_
+
+
+Field Name Field Type Card. Description
+requestId integer 1..1 Required. Id used to match the
+GetChargingProfilesRequest message with the resulting
+ReportChargingProfilesRequest messages. When the
+CSMS provided a requestId in the
+GetChargingProfilesRequest, this field SHALL contain the
+same value.
+chargingLimitSource ChargingLimitSourceEnumType 1..1 Required. Source that has installed this charging profile.
+tbc boolean 0..1 Optional. To Be Continued. Default value when omitted:
+false. false indicates that there are no further messages
+as part of this report.
+evseId integer 1..1 Required. The evse to which the charging profile applies.
+If evseId  0, the message contains an overall limit for the
+Charging Station.
+chargingProfile ChargingProfileType 1..* Required. The charging profile as configured in the
+Charging Station.
+
+**1.43.2. ReportChargingProfilesResponse**
+
+The ReportChargingProfilesResponse message is sent by the CSMS to the Charging Station in response to a
+ReportChargingProfilesRequest. No fields are defined.
+
+=== 1.44. RequestStartTransaction
+
+**1.44.1. RequestStartTransactionRequest**
+
+This contains the field definitions of the RequestStartTransactionRequest PDU sent to Charging Station by CSMS.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+evseId integer 0..1 Optional. Number of the EVSE on which to start the
+transaction. EvseId SHALL be > 0
+remoteStartId integer 1..1 Required. Id given by the server to this start request. The
+Charging Station will return this in the
+TransactionEventRequest, letting the server know which
+transaction was started for this request.
+idToken IdTokenType 1..1 Required. The identifier that the Charging Station must
+use to start a transaction.
+chargingProfile ChargingProfileType 0..1 Optional. Charging Profile to be used by the Charging
+Station for the requested transaction.
+ChargingProfilePurpose MUST be set to TxProfile
+groupIdToken IdTokenType 0..1 Optional. The groupIdToken is only relevant when the
+transaction is to be started on an EVSE for which a
+reservation for groupIdToken is active, and the
+configuration variable AuthorizeRemoteStart  false
+(otherwise the AuthorizeResponse could return the
+groupIdToken).
+
+**1.44.2. RequestStartTransactionResponse**
+
+This contains the field definitions of the RequestStartTransactionResponse PDU sent from Charging Station to CSMS.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status RequestStartStopStatusEnumType 1..1 Required. Status indicating whether the Charging Station
+accepts the request to start a transaction.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Field Name Field Type Card. Description
+transactionId identifierString[0..36] 0..1 Optional. When the transaction was already started by
+the Charging Station before the
+RequestStartTransactionRequest was received, for
+example: cable plugged in first. This contains the
+transactionId of the already started transaction.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+=== 1.45. RequestStopTransaction
+
+**1.45.1. RequestStopTransactionRequest**
+
+This contains the field definitions of the RequestStopTransactionRequest PDU sent to Charging Station by CSMS.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+transactionId identifierString[0..36] 1..1 Required. The identifier of the transaction which the
+Charging Station is requested to stop.
+
+**1.45.2. RequestStopTransactionResponse**
+
+This contains the field definitions of the RequestStopTransactionResponse PDU sent from Charging Station to CSMS.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status RequestStartStopStatusEnumType 1..1 Required. Status indicating whether Charging Station
+accepts the request to stop a transaction.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+=== 1.46. ReservationStatusUpdate.
+
+**1.46.1. ReservationStatusUpdateRequest**
+
+This contains the field definition of the ReservationStatusUpdateRequest PDU sent by the Charging Station to the CSMS.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+reservationId integer 1..1 Required. The ID of the reservation.
+reservationUpdateStatus ReservationUpdateStatusEnumTyp
+e
+
+
+1..1 Required. The updated reservation status.
+
+**1.46.2. ReservationStatusUpdateResponse**
+
+This contains the field definition of the ReservationStatusUpdateResponse PDU sent by the CSMS to the Charging Station in
+response to a ReservationStatusUpdateRequest. No fields are defined.
+
+=== 1.47. ReserveNow
+
+**1.47.1. ReserveNowRequest**
+
+This contains the field definition of the ReserveNowRequest PDU sent by the CSMS to the Charging Station.
+
+_Class_
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Field Name Field Type Card. Description
+id integer 1..1 Required. Id of reservation.
+expiryDateTime dateTime 1..1 Required. Date and time at which the reservation expires.
+connectorType ConnectorEnumType 0..1 Optional. This field specifies the connector type.
+evseId integer 0..1 Optional. This contains ID of the evse to be reserved.
+idToken IdTokenType 1..1 Required. The identifier for which the reservation is
+made.
+groupIdToken IdTokenType 0..1 Optional. The group identifier for which the reservation is
+made.
+
+**1.47.2. ReserveNowResponse**
+
+This contains the field definition of the ReserveNowResponse PDU sent by the Charging Station to the CSMS in response to
+ReserveNowRequest PDU.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status ReserveNowStatusEnumType 1..1 Required. This indicates the success or failure of the
+reservation.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+=== Reset
+
+[[reset_request]]
+==== ResetRequest
+
+This contains the field definition of the ResetRequest PDU sent by the CSMS to the Charging Station.
+
+_Class_
+
+Field Name Field Type Card. Description
+type ResetEnumType 1..1 Required. This contains the type of reset that the
+Charging Station or EVSE should perform.
+evseId integer 0..1 Optional. This contains the ID of a specific EVSE that
+needs to be reset, instead of the entire Charging Station.
+
+[[reset_response]]
+==== ResetResponse
+
+This contains the field definition of the ResetResponse PDU sent by the Charging Station to the CSMS in response to ResetRequest.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status ResetStatusEnumType 1..1 Required. This indicates whether the Charging Station is
+able to perform the reset.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+=== SecurityEventNotification
+
+[[security_event_notification_request]]
+==== SecurityEventNotificationRequest
+
+Sent by the Charging Station to the CSMS in case of a security event.
+
+_Class_
+
+Field Name Field Type Card. Description
+type string[0..50] 1..1 Required. Type of the security event. This value should be
+taken from the Security events list.
+timestamp dateTime 1..1 Required. Date and time at which the event occurred.
+techInfo string[0..255] 0..1 Optional. Additional information about the occurred
+security event.
+
+[[security_event_notification_response]]
+==== SecurityEventNotificationResponse
+
+Sent by the CSMS to the Charging Station to confirm the receipt of a SecurityEventNotificationRequest message. No fields are
+defined.
+
+=== 1.50. SendLocalList
+
+**1.50.1. SendLocalListRequest**
+
+This contains the field definition of the SendLocalListRequest PDU sent by the CSMS to the Charging Station. If no (empty)
+localAuthorizationList is given and the updateType is Full, all IdTokens are removed from the list. Requesting a Differential update
+without or with empty localAuthorizationList will have no effect on the list. All IdTokens in the localAuthorizationList MUST be
+unique, no duplicate values are allowed.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+versionNumber integer 1..1 Required. In case of a full update this is the version
+number of the full list. In case of a differential update it is
+the version number of the list after the update has been
+applied.
+updateType UpdateEnumType 1..1 Required. This contains the type of update (full or
+differential) of this request.
+localAuthorizationList AuthorizationData 0..* Optional. This contains the Local Authorization List
+entries.
+
+**1.50.2. SendLocalListResponse**
+
+This contains the field definition of the SendLocalListResponse PDU sent by the Charging Station to the CSMS in response to
+SendLocalListRequest PDU.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status SendLocalListStatusEnumType 1..1 Required. This indicates whether the Charging Station
+has successfully received and applied the update of the
+Local Authorization List.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+=== 1.51. SetChargingProfile
+
+**1.51.1. SetChargingProfileRequest**
+
+This contains the field definition of the SetChargingProfileRequest PDU sent by the CSMS to the Charging Station. The CSMS uses
+this message to send charging profiles to a Charging Station.
+
+_Class_
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Field Name Field Type Card. Description
+evseId integer 1..1 Required. For TxDefaultProfile an evseId=0 applies the
+profile to each individual evse. For
+ChargingStationMaxProfile and
+ChargingStationExternalConstraints an evseId=0
+contains an overal limit for the whole Charging Station.
+chargingProfile ChargingProfileType 1..1 Required. The charging profile to be set at the Charging
+Station.
+
+**1.51.2. SetChargingProfileResponse**
+
+This contains the field definition of the SetChargingProfileResponse PDU sent by the Charging Station to the CSMS in response to
+SetChargingProfileRequest PDU.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status ChargingProfileStatusEnumType 1..1 Required. Returns whether the Charging Station has been
+able to process the message successfully. This does not
+guarantee the schedule will be followed to the letter.
+There might be other constraints the Charging Station
+may need to take into account.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+=== 1.52. SetDisplayMessage.
+
+**1.52.1. SetDisplayMessageRequest**
+
+This contains the field definition of the SetDisplayMessageRequest PDU sent by the CSMS to the Charging Station. The CSMS asks
+the Charging Station to configure a new display message that the Charging Station will display (in the future). See also O01 - Set
+Display Message, O02 - Set Display Message for Transaction and O06 - Replace Display Message
+
+_Class_
+
+
+Field Name Field Type Card. Description
+message MessageInfoType 1..1 Required. Message to be configured in the Charging
+Station, to be displayed.
+
+**1.52.2. SetDisplayMessageResponse**
+
+This contains the field definition of the SetDisplayMessageResponse PDU sent by the Charging Station to the CSMS in a response
+to a SetDisplayMessageRequest. See also O01 - Set Display Message, O02 - Set Display Message for Transaction and O06 -
+Replace Display Message
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status DisplayMessageStatusEnumType 1..1 Required. This indicates whether the Charging Station is
+able to display the message.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+=== 1.53. SetMonitoringBase
+
+**1.53.1. SetMonitoringBaseRequest**
+
+This contains the field definition of the SetMonitoringBaseRequest PDU sent by the CSMS to the Charging Station.
+
+_Class_
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Field Name Field Type Card. Description
+monitoringBase MonitoringBaseEnumType 1..1 Required. Specify which monitoring base will be set
+
+**1.53.2. SetMonitoringBaseResponse**
+
+This contains the field definition of the SetMonitoringBaseResponse PDU sent by the Charging Station to the CSMS in response to a
+SetMonitoringBaseRequest.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status GenericDeviceModelStatusEnumTy
+pe
+
+
+1..1 Required. Indicates whether the Charging Station was
+able to accept the request.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+=== 1.54. SetMonitoringLevel
+
+**1.54.1. SetMonitoringLevelRequest**
+
+This contains the field definition of the SetMonitoringLevelRequest PDU sent by the CSMS to the Charging Station.
+
+_Class_
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Field Name Field Type Card. Description
+severity integer 1..1 Required. The Charging Station SHALL only report events
+with a severity number lower than or equal to this
+severity. The severity range is 0-9, with 0 as the highest
+and 9 as the lowest severity level.
+
+
+The severity levels have the following meaning:
+0-Danger
+Indicates lives are potentially in danger. Urgent attention
+is needed and action should be taken immediately.
+1-Hardware Failure
+Indicates that the Charging Station is unable to continue
+regular operations due to Hardware issues. Action is
+required.
+2-System Failure
+Indicates that the Charging Station is unable to continue
+regular operations due to software or minor hardware
+issues. Action is required.
+3-Critical
+Indicates a critical error. Action is required.
+4-Error
+Indicates a non-urgent error. Action is required.
+5-Alert
+Indicates an alert event. Default severity for any type of
+monitoring event.
+6-Warning
+Indicates a warning event. Action may be required.
+7-Notice
+Indicates an unusual event. No immediate action is
+required.
+8-Informational
+Indicates a regular operational event. May be used for
+reporting, measuring throughput, etc. No action is
+required.
+9-Debug
+Indicates information useful to developers for debugging,
+not useful during operations.
+
+**1.54.2. SetMonitoringLevelResponse**
+
+This contains the field definition of the SetMonitoringLevelResponse PDU sent by the Charging Station to the CSMS in response to
+a SetMonitoringLevelRequest.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status GenericStatusEnumType 1..1 Required. Indicates whether the Charging Station was
+able to accept the request.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+=== 1.55. SetNetworkProfile
+
+**1.55.1. SetNetworkProfileRequest**
+
+With this message the CSMS gains the ability to configure the connection data (e.g. CSMS URL, OCPP version, APN, etc) on a
+Charging Station.
+
+_Class_
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Field Name Field Type Card. Description
+configurationSlot integer 1..1 Required. Slot in which the configuration should be
+stored.
+connectionData NetworkConnectionProfileType 1..1 Required. Connection details.
+
+**1.55.2. SetNetworkProfileResponse**
+
+This contains the field definition of the SetNetworkProfileResponse PDU sent by the Charging Station to the CSMS in response to a
+SetNetworkProfileRequest.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status SetNetworkProfileStatusEnumType 1..1 Required. Result of operation.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+=== 1.56. SetVariableMonitoring
+
+**1.56.1. SetVariableMonitoringRequest**
+
+This contains the field definition of the SetVariableMonitoringRequest PDU sent by the CSMS to the Charging Station.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+setMonitoringData SetMonitoringDataType 1..* Required. List of MonitoringData containing monitoring
+settings.
+
+**1.56.2. SetVariableMonitoringResponse**
+
+This contains the field definition of the SetVariableMonitoringResponse PDU sent by the Charging Station to the CSMS in response
+to a SetVariableMonitoringRequest.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+setMonitoringResult SetMonitoringResultType 1..* Required. List of result statuses per monitor.
+
+=== 1.57. SetVariables
+
+[[set_variables_request]]
+==== SetVariablesRequest
+
+This contains the field definition of the SetVariablesRequest PDU sent by the CSMS to the Charging Station.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+setVariableData SetVariableDataType 1..* Required. List of Component-Variable pairs and attribute
+values to set.
+
+
+[[set_variables_response]]
+==== SetVariablesResponse
+
+This contains the field definition of the SetVariablesResponse PDU sent by the Charging Station to the CSMS in response to a
+SetVariablesRequest.
+
+_Class_
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Field Name Field Type Card. Description
+setVariableResult SetVariableResultType 1..* Required. List of result statuses per Component-Variable.
+
+=== 1.58. SignCertificate
+
+[[sign_certificate_request]]
+==== SignCertificateRequest
+
+Sent by the Charging Station to the CSMS to request that the Certificate Authority signs the public key into a certificate.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+csr string[0..5500] 1..1 Required. The Charging Station SHALL send the public
+key in form of a Certificate Signing Request (CSR) as
+described in RFC 2986 [22] and then PEM encoded, using
+the SignCertificateRequest message.
+certificateType CertificateSigningUseEnumType 0..1 Optional. Indicates the type of certificate that is to be
+signed. When omitted the certificate is to be used for
+both the 15118 connection (if implemented) and the
+Charging Station to CSMS connection.
+
+
+[[sign_certificate_response]]
+==== SignCertificateResponse
+
+Sent by the CSMS to the Charging Station in response to the SignCertificateRequest message.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status GenericStatusEnumType 1..1 Required. Specifies whether the CSMS can process the
+request.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+=== 1.59. StatusNotification
+
+**1.59.1. StatusNotificationRequest**
+
+This contains the field definition of the StatusNotificationRequest PDU sent by the Charging Station to the CSMS. This message
+might be removed in a future version of OCPP. It will be replaced by Device Management Monitoring events.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+timestamp dateTime 1..1 Required. The time for which the status is reported.
+connectorStatus ConnectorStatusEnumType 1..1 Required. This contains the current status of the
+Connector.
+evseId integer 1..1 Required. The id of the EVSE to which the connector
+belongs for which the the status is reported.
+connectorId integer 1..1 Required. The id of the connector within the EVSE for
+which the status is reported.
+
+**1.59.2. StatusNotificationResponse**
+
+This contains the field definition of StatusNotificationResponse sent by the CSMS to the Charging Station in response to a
+StatusNotificationRequest. This message might be removed in a future version of OCPP. It will be replaced by Device Management
+Monitoring events.
+
+No fields are defined.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+=== 1.60. TransactionEvent.
+
+**1.60.1. TransactionEventRequest**
+
+This section contains the field definition of the TransactionEventRequest PDU sent by the Charging Station to the CSMS. For each
+of the eventTypes; Started, Updated and Ended, the corresponding cardinality is specified.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+eventType TransactionEventEnumType 1..1 Required. This contains the type of this event. The first
+TransactionEvent of a transaction SHALL contain:
+"Started" The last TransactionEvent of a transaction
+SHALL contain: "Ended" All others SHALL contain:
+"Updated"
+timestamp dateTime 1..1 Required. The date and time at which this transaction
+event occurred.
+triggerReason TriggerReasonEnumType 1..1 Required. Reason the Charging Station sends this
+message to the CSMS
+seqNo integer 1..1 Required. Incremental sequence number, helps with
+determining if all messages of a transaction have been
+received.
+offline boolean 0..1 Optional. Indication that this transaction event happened
+when the Charging Station was offline. Default  false,
+meaning: the event occurred when the Charging Station
+was online.
+numberOfPhasesUsed integer 0..1 Optional. If the Charging Station is able to report the
+number of phases used, then it SHALL provide it. When
+omitted the CSMS may be able to determine the number
+of phases used via device management.
+cableMaxCurrent integer 0..1 Optional. The maximum current of the connected cable in
+Ampere (A).
+reservationId integer 0..1 Optional. This contains the Id of the reservation that
+terminates as a result of this transaction.
+transactionInfo TransactionType 1..1 Required. Contains transaction specific information.
+idToken IdTokenType 0..1 Optional. This contains the identifier for which a
+transaction is (or will be) started or stopped. Is required
+when the EV Driver becomes authorized for this
+transaction and when the EV Driver ends authorization.
+The IdToken should only be sent once in a
+TransactionEventRequest for every authorization (for
+starting or for stopping) done for this transaction, so that
+CSMS can return the idTokenInfo in the
+TransactionEventResponse. idToken should not be
+present in the TransactionEventRequest when a
+transaction is ended by a
+RequestStopTransactionRequest or a ResetRequest.
+evse EVSEType 0..1 Optional. This identifies which evse (and connector) of
+the Charging Station is used.
+meterValue MeterValueType 0..* Optional. This contains the relevant meter values.
+Depending on the EventType of this TransactionEvent the
+following Configuration Variable is used to configure the
+content:
+Started: SampledDataTxStartedMeasurands
+Updated: SampledDataTxUpdatedMeasurands
+Ended: SampledDataTxEndedMeasurands &
+AlignedDataTxEndedMeasurands
+
+**1.60.2. TransactionEventResponse**
+
+This contains the field definition of the TransactionEventResponse PDU sent by the CSMS to the Charging Station in response to a
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+TransactionEventRequest.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+totalCost decimal 0..1 Optional. When eventType of TransactionEventRequest is
+Updated, then this value contains the running cost.
+When eventType of TransactionEventRequest is Ended,
+then this contains the final total cost of this transaction,
+including taxes, in the currency configured with the
+Configuration Variable: Currency. Absence of this value
+does not imply that the transaction was free. To indicate
+a free transaction, the CSMS SHALL send a value of 0.00.
+chargingPriority integer 0..1 Optional. Priority from a business point of view. Default
+priority is 0, The range is from -9 to 9. Higher values
+indicate a higher priority. The chargingPriority in
+TransactionEventResponse is temporarily, so it may not
+be set in the IdTokenInfoType afterwards. Also the
+chargingPriority in TransactionEventResponse overrules
+the one in IdTokenInfoType.
+idTokenInfo IdTokenInfoType 0..1 Optional. This contains information about authorization
+status, expiry and group id. Is required when the
+transactionEventRequest contained an idToken.
+updatedPersonalMessage MessageContentType 0..1 Optional. This can contain updated personal message
+that can be shown to the EV Driver. This can be used to
+provide updated tariff information.
+
+=== 1.61. TriggerMessage
+
+[[trigger_message_request]]
+==== TriggerMessageRequest
+
+This contains the field definition of the TriggerMessageRequest PDU sent by the CSMS to the Charging Station.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+requestedMessage MessageTriggerEnumType 1..1 Required. Type of message to be triggered.
+evse EVSEType 0..1 Optional. Can be used to specifiy the EVSE and
+Connector if required for the message which needs to be
+sent.
+
+[[trigger_message_response]]
+==== TriggerMessageResponse
+
+This contains the field definition of the TriggerMessageResponse PDU sent by the Charging Station to the CSMS in response to
+TriggerMessageResponse.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status TriggerMessageStatusEnumType 1..1 Required. Indicates whether the Charging Station will
+send the requested notification or not.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+=== 1.62. UnlockConnector
+
+**1.62.1. UnlockConnectorRequest**
+
+This contains the field definition of the UnlockConnectorRequest PDU sent by the CSMS to the Charging Station.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+_Class_
+
+
+Field Name Field Type Card. Description
+evseId integer 1..1 Required. This contains the identifier of the EVSE for
+which a connector needs to be unlocked.
+connectorId integer 1..1 Required. This contains the identifier of the connector
+that needs to be unlocked.
+
+**1.62.2. UnlockConnectorResponse**
+
+This contains the field definition of the UnlockConnectorResponse PDU sent by the Charging Station to the CSMS in response to an
+UnlockConnectorRequest.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status UnlockStatusEnumType 1..1 Required. This indicates whether the Charging Station
+has unlocked the connector.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+=== 1.63. UnpublishFirmware
+
+**1.63.1. UnpublishFirmwareRequest**
+
+This contains the field definition of the UnpublishFirmwareRequest PDU sent by the CSMS to the Charging Station.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+checksum identifierString[0..32] 1..1 Required. The MD5 checksum over the entire firmware
+file as a hexadecimal string of length 32.
+
+**1.63.2. UnpublishFirmwareResponse**
+
+This contains the field definition of the UnpublishFirmwareResponse PDU sent by the Charging Station to the CSMS in response to
+a UnpublishFirmwareRequest.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status UnpublishFirmwareStatusEnumTyp
+e
+
+
+1..1 Required. Indicates whether the Local Controller
+succeeded in unpublishing the firmware.
+
+=== 1.64. UpdateFirmware
+
+**1.64.1. UpdateFirmwareRequest**
+
+This contains the field definition of the UpdateFirmwareRequest PDU sent by the CSMS to the Charging Station.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+retries integer 0..1 Optional. This specifies how many times the Charging
+Station must retry to download the firmware before
+giving up. If this field is not present, it is left to Charging
+Station to decide how many times it wants to retry. If the
+value is 0, it means: no retries.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Field Name Field Type Card. Description
+retryInterval integer 0..1 Optional. The interval in seconds after which a retry may
+be attempted. If this field is not present, it is left to
+Charging Station to decide how long to wait between
+attempts.
+requestId integer 1..1 Required. The Id of this request
+firmware FirmwareType 1..1 Required. Specifies the firmware to be updated on the
+Charging Station.
+
+**1.64.2. UpdateFirmwareResponse**
+
+This contains the field definition of the UpdateFirmwareResponse PDU sent by the Charging Station to the CSMS in response to an
+UpdateFirmwareRequest.
+
+_Class_
+
+
+Field Name Field Type Card. Description
+status UpdateFirmwareStatusEnumType 1..1 Required. This field indicates whether the Charging
+Station was able to accept the request.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+== 2. Datatypes
+
+=== 2.1. ACChargingParametersType
+
+_Class_
+
+EV AC charging parameters.
+
+ACChargingParametersType is used by: Common:ChargingNeedsType
+
+
+Field Name Field Type Card. Description
+energyAmount integer 1..1 Required. Amount of energy requested (in Wh). This
+includes energy required for preconditioning.
+evMinCurrent integer 1..1 Required. Minimum current (amps) supported by the
+electric vehicle (per phase).
+evMaxCurrent integer 1..1 Required. Maximum current (amps) supported by the
+electric vehicle (per phase). Includes cable capacity.
+evMaxVoltage integer 1..1 Required. Maximum voltage supported by the electric
+vehicle
+
+=== 2.2. AdditionalInfoType
+
+_Class_
+
+Contains a case insensitive identifier to use for the authorization and the type of authorization to support multiple forms of
+identifiers.
+
+AdditionalInfoType is used by: Common:IdTokenType
+
+
+Field Name Field Type Card. Description
+additionalIdToken identifierString[0..36] 1..1 Required. This field specifies the additional IdToken.
+type string[0..50] 1..1 Required. This defines the type of the additionalIdToken.
+This is a custom type, so the implementation needs to be
+agreed upon by all involved parties.
+
+=== 2.3. APNType.
+
+_Class_
+
+Collection of configuration data needed to make a data-connection over a cellular network.
+
+==== NOTE
+
+
+When asking a GSM modem to dial in, it is possible to specify which mobile operator should be used. This can be
+done with the mobile country code (MCC) in combination with a mobile network code (MNC). Example: If your
+preferred network is Vodafone Netherlands, the MCC=204 and the MNC=04 which means the key
+PreferredNetwork  20404 Some modems allows to specify a preferred network, which means, if this network is
+not available, a different network is used. If you specify UseOnlyPreferredNetwork and this network is not
+available, the modem will not dial in.
+
+APNType is used by: SetNetworkProfileRequest.NetworkConnectionProfileType
+
+
+Field Name Field Type Card. Description
+apn string[0..512] 1..1 Required. The Access Point Name as an URL.
+apnUserName string[0..20] 0..1 Optional. APN username.
+apnPassword string[0..20] 0..1 Optional. APN Password.
+simPin integer 0..1 Optional. SIM card pin code.
+preferredNetwork identifierString[0..6] 0..1 Optional. Preferred network, written as MCC and MNC
+concatenated. See note.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Field Name Field Type Card. Description
+useOnlyPreferredNetwork boolean 0..1 Optional. Default: false. Use only the preferred Network,
+do not dial in when not available. See Note.
+apnAuthentication APNAuthenticationEnumType 1..1 Required. Authentication method.
+
+=== 2.4. AuthorizationData
+
+_Class_
+
+Contains the identifier to use for authorization.
+
+AuthorizationData is used by: SendLocalListRequest
+
+
+Field Name Field Type Card. Description
+idTokenInfo IdTokenInfoType 0..1 Optional. Required when UpdateType is Full. This
+contains information about authorization status, expiry
+and group id. For a Differential update the following
+applies: If this element is present, then this entry SHALL
+be added or updated in the Local Authorization List. If
+this element is absent, the entry for this IdToken in the
+Local Authorization List SHALL be deleted.
+idToken IdTokenType 1..1 Required. This contains the identifier which needs to be
+stored for authorization.
+
+=== 2.5. CertificateHashDataChainType
+
+_Class_
+
+CertificateHashDataChainType is used by: GetInstalledCertificateIdsResponse
+
+
+Field Name Field Type Card. Description
+certificateType GetCertificateIdUseEnumType 1..1 Required. Indicates the type of the requested
+certificate(s).
+certificateHashData CertificateHashDataType 1..1 Required. Information to identify a certificate.
+childCertificateHashData CertificateHashDataType 0..4 Optional. Information to identify the child certificate(s).
+
+=== 2.6. CertificateHashDataType
+
+_Class_
+
+CertificateHashDataType is used by: Common:CertificateHashDataChainType , DeleteCertificateRequest ,
+CustomerInformationRequest
+
+
+Field Name Field Type Card. Description
+hashAlgorithm HashAlgorithmEnumType 1..1 Required. Used algorithms for the hashes provided.
+issuerNameHash identifierString[0..128] 1..1 Required. The hash of the issuer’s distinguished name
+(DN), that must be calculated over the DER encoding of
+the issuer’s name field in the certificate being checked.
+issuerKeyHash string[0..128] 1..1 Required. The hash of the DER encoded public key: the
+value (excluding tag and length) of the subject public key
+field in the issuer’s certificate.
+serialNumber identifierString[0..40] 1..1 Required. The string representation of the hexadecimal
+value of the serial number without the prefix "0x" and
+without leading zeroes.
+
+=== 2.7. ChargingLimitType
+
+_Class_
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+ChargingLimitType is used by: NotifyChargingLimitRequest
+
+
+Field Name Field Type Card. Description
+chargingLimitSource ChargingLimitSourceEnumType 1..1 Required. Represents the source of the charging limit.
+isGridCritical boolean 0..1 Optional. Indicates whether the charging limit is critical
+for the grid.
+
+=== 2.8. ChargingNeedsType
+
+_Class_
+
+ChargingNeedsType is used by: NotifyEVChargingNeedsRequest
+
+
+Field Name Field Type Card. Description
+requestedEnergyTransfer EnergyTransferModeEnumType 1..1 Required. Mode of energy transfer requested by the EV.
+departureTime dateTime 0..1 Optional. Estimated departure time of the EV.
+acChargingParameters ACChargingParametersType 0..1 Optional. EV AC charging parameters.
+dcChargingParameters DCChargingParametersType 0..1 Optional. EV DC charging parameters
+
+=== 2.9. ChargingProfileCriterionType.
+
+_Class_
+
+A ChargingProfile consists of ChargingSchedule, describing the amount of power or current that can be delivered per time interval.
+
+ChargingProfileCriterionType is used by: GetChargingProfilesRequest
+
+
+Field Name Field Type Card. Description
+chargingProfilePurpose ChargingProfilePurposeEnumType 0..1 Optional. Defines the purpose of the schedule transferred
+by this profile
+stackLevel integer 0..1 Optional. Value determining level in hierarchy stack of
+profiles. Higher values have precedence over lower
+values. Lowest level is 0.
+chargingProfileId integer 0..* Optional. List of all the chargingProfileIds requested. Any
+ChargingProfile that matches one of these profiles will be
+reported. If omitted, the Charging Station SHALL not filter
+on chargingProfileId. This field SHALL NOT contain more
+ids than set in ChargingProfileEntries.maxLimit
+chargingLimitSource ChargingLimitSourceEnumType 0..4 Optional. For which charging limit sources, charging
+profiles SHALL be reported. If omitted, the Charging
+Station SHALL not filter on chargingLimitSource.
+
+=== 2.10. ChargingProfileType
+
+_Class_
+
+A ChargingProfile consists of ChargingSchedule, describing the amount of power or current that can be delivered per time interval.
+
+ChargingProfileType is used by: RequestStartTransactionRequest , SetChargingProfileRequest , ReportChargingProfilesRequest
+
+
+Field Name Field Type Card. Description
+id integer 1..1 Required. Id of ChargingProfile.
+stackLevel integer 1..1 Required. Value determining level in hierarchy stack of
+profiles. Higher values have precedence over lower
+values. Lowest level is 0.
+chargingProfilePurpose ChargingProfilePurposeEnumType 1..1 Required. Defines the purpose of the schedule
+transferred by this profile
+chargingProfileKind ChargingProfileKindEnumType 1..1 Required. Indicates the kind of schedule.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Field Name Field Type Card. Description
+recurrencyKind RecurrencyKindEnumType 0..1 Optional. Indicates the start point of a recurrence.
+validFrom dateTime 0..1 Optional. Point in time at which the profile starts to be
+valid. If absent, the profile is valid as soon as it is
+received by the Charging Station.
+validTo dateTime 0..1 Optional. Point in time at which the profile stops to be
+valid. If absent, the profile is valid until it is replaced by
+another profile.
+transactionId identifierString[0..36] 0..1 Optional. SHALL only be included when
+ChargingProfilePurpose is set to TxProfile in a
+SetChargingProfileRequest. The transactionId is used to
+match the profile to a specific transaction.
+chargingSchedule ChargingScheduleType 1..3 Required. Schedule that contains limits for the available
+power or current over time. In order to support ISO 15118
+schedule negotiation, it supports at most three schedules
+with associated tariff to choose from. Having multiple
+chargingSchedules is only allowed for charging profiles of
+purpose TxProfile in the context of an ISO 15118
+charging session.
+
+=== 2.11. ChargingSchedulePeriodType
+
+_Class_
+
+Charging schedule period structure defines a time period in a charging schedule.
+
+ChargingSchedulePeriodType is used by: Common:ChargingScheduleType , Common:CompositeScheduleType
+
+
+Field Name Field Type Card. Description
+startPeriod integer 1..1 Required. Start of the period, in seconds from the start of
+schedule. The value of StartPeriod also defines the stop
+time of the previous period.
+limit decimal 1..1 Required. Charging rate limit during the schedule period,
+in the applicable chargingRateUnit, for example in
+Amperes (A) or Watts (W). Accepts at most one digit
+fraction (e.g. 8.1).
+numberPhases integer 0..1 Optional. The number of phases that can be used for
+charging.
+For a DC EVSE this field should be omitted.
+For an AC EVSE a default value of numberPhases  3 will
+be assumed if the field is absent.
+phaseToUse integer 0..1 Optional. Values: 1..3, Used if numberPhases=1 and if the
+EVSE is capable of switching the phase connected to the
+EV, i.e. ACPhaseSwitchingSupported is defined and true.
+It’s not allowed unless both conditions above are true. If
+both conditions are true, and phaseToUse is omitted, the
+Charging Station / EVSE will make the selection on its
+own.
+
+
+[[charging_schedule_type]]
+==== ChargingScheduleType
+
+_Class_
+
+Charging schedule structure defines a list of charging periods, as used in: GetCompositeSchedule.conf and ChargingProfile.
+
+ChargingScheduleType is used by: Common:ChargingProfileType , NotifyChargingLimitRequest ,
+NotifyEVChargingScheduleRequest
+
+
+Field Name Field Type Card. Description
+id integer 1..1 Required. Identifies the ChargingSchedule.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Field Name Field Type Card. Description
+startSchedule dateTime 0..1 Optional. Starting point of an absolute or recurring
+schedule.
+duration integer 0..1 Optional. Duration of the charging schedule in seconds. If
+the duration is left empty, the last period will continue
+indefinitely or until end of the transaction if
+chargingProfilePurpose  TxProfile.
+chargingRateUnit ChargingRateUnitEnumType 1..1 Required. The unit of measure Limit is expressed in.
+minChargingRate decimal 0..1 Optional. Minimum charging rate supported by the EV.
+The unit of measure is defined by the chargingRateUnit.
+This parameter is intended to be used by a local smart
+charging algorithm to optimize the power allocation for in
+the case a charging process is inefficient at lower
+charging rates. Accepts at most one digit fraction (e.g.
+8.1)
+chargingSchedulePeriod ChargingSchedulePeriodType 1..102
+4
+
+
+Required. List of ChargingSchedulePeriod elements
+defining maximum power or current usage over time. The
+maximum number of periods, that is supported by the
+Charging Station, if less than 1024, is set by device model
+variable SmartChargingCtrlr.PeriodsPerSchedule.
+salesTariff SalesTariffType 0..1 Optional. Sales tariff associated with this charging
+schedule.
+
+=== 2.13. ChargingStationType
+
+_Class_
+
+The physical system where an Electrical Vehicle (EV) can be charged.
+
+ChargingStationType is used by: BootNotificationRequest
+
+
+Field Name Field Type Card. Description
+serialNumber string[0..25] 0..1 Optional. Vendor-specific device identifier.
+model string[0..20] 1..1 Required. Defines the model of the device.
+vendorName string[0..50] 1..1 Required. Identifies the vendor (not necessarily in a
+unique manner).
+firmwareVersion string[0..50] 0..1 Optional. This contains the firmware version of the
+Charging Station.
+modem ModemType 0..1 Optional. Defines the functional parameters of a
+communication link.
+
+=== 2.14. ClearChargingProfileType
+
+_Class_
+
+A ChargingProfile consists of a ChargingSchedule, describing the amount of power or current that can be delivered per time
+interval.
+
+ClearChargingProfileType is used by: ClearChargingProfileRequest
+
+
+Field Name Field Type Card. Description
+evseId integer 0..1 Optional. Specifies the id of the EVSE for which to clear
+charging profiles. An evseId of zero (0) specifies the
+charging profile for the overall Charging Station. Absence
+of this parameter means the clearing applies to all
+charging profiles that match the other criteria in the
+request.
+chargingProfilePurpose ChargingProfilePurposeEnumType 0..1 Optional. Specifies to purpose of the charging profiles
+that will be cleared, if they meet the other criteria in the
+request.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Field Name Field Type Card. Description
+stackLevel integer 0..1 Optional. Specifies the stackLevel for which charging
+profiles will be cleared, if they meet the other criteria in
+the request.
+
+=== 2.15. ClearMonitoringResultType
+
+_Class_
+
+ClearMonitoringResultType is used by: ClearVariableMonitoringResponse
+
+
+Field Name Field Type Card. Description
+status ClearMonitoringStatusEnumType 1..1 Required. Result of the clear request for this monitor,
+identified by its Id.
+id integer 1..1 Required. Id of the monitor of which a clear was
+requested.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+=== 2.16. ComponentType
+
+_Class_
+
+A physical or logical component
+
+ComponentType is used by: Common:ComponentVariableType , Common:MessageInfoType ,
+GetVariablesRequest.GetVariableDataType , GetVariablesResponse.GetVariableResultType ,
+NotifyMonitoringReportRequest.MonitoringDataType , NotifyReportRequest.ReportDataType ,
+SetVariableMonitoringRequest.SetMonitoringDataType , SetVariableMonitoringResponse.SetMonitoringResultType ,
+SetVariablesRequest.SetVariableDataType , SetVariablesResponse.SetVariableResultType , NotifyEventRequest.EventDataType
+
+
+Field Name Field Type Card. Description
+name identifierString[0..50] 1..1 Required. Name of the component. Name should be
+taken from the list of standardized component names
+whenever possible. Case Insensitive. strongly advised to
+use Camel Case.
+instance identifierString[0..50] 0..1 Optional. Name of instance in case the component exists
+as multiple instances. Case Insensitive. strongly advised
+to use Camel Case.
+evse EVSEType 0..1 Optional. Specifies the EVSE when component is located
+at EVSE level, also specifies the connector when
+component is located at Connector level.
+
+=== 2.17. ComponentVariableType
+
+_Class_
+
+Class to report components, variables and variable attributes and characteristics.
+
+ComponentVariableType is used by: GetMonitoringReportRequest , GetReportRequest
+
+
+Field Name Field Type Card. Description
+component ComponentType 1..1 Required. Component for which a report of Variable is
+requested.
+variable VariableType 0..1 Optional. Variable(s) for which the report is requested.
+
+=== 2.18. CompositeScheduleType
+
+_Class_
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+CompositeScheduleType is used by: GetCompositeScheduleResponse
+
+
+Field Name Field Type Card. Description
+evseId integer 1..1 Required. The ID of the EVSE for which the schedule is
+requested. When evseid=0, the Charging Station
+calculated the expected consumption for the grid
+connection.
+duration integer 1..1 Required. Duration of the schedule in seconds.
+scheduleStart dateTime 1..1 Required. Date and time at which the schedule becomes
+active. All time measurements within the schedule are
+relative to this timestamp.
+chargingRateUnit ChargingRateUnitEnumType 1..1 Required. The unit of measure Limit is expressed in.
+chargingSchedulePeriod ChargingSchedulePeriodType 1..* Required. List of ChargingSchedulePeriod elements
+defining maximum power or current usage over time.
+
+=== 2.19. ConsumptionCostType
+
+_Class_
+
+ConsumptionCostType is used by: Common:SalesTariffEntryType
+
+
+Field Name Field Type Card. Description
+startValue decimal 1..1 Required. The lowest level of consumption that defines
+the starting point of this consumption block. The block
+interval extends to the start of the next interval.
+cost CostType 1..3 Required. This field contains the cost details.
+
+=== 2.20. CostType
+
+_Class_
+
+CostType is used by: Common:ConsumptionCostType
+
+
+Field Name Field Type Card. Description
+costKind CostKindEnumType 1..1 Required. The kind of cost referred to in the message
+element amount
+amount integer 1..1 Required. The estimated or actual cost per kWh
+amountMultiplier integer 0..1 Optional. Values: -3..3, The amountMultiplier defines the
+exponent to base 10 (dec). The final value is determined
+by: amount * 10 ^ amountMultiplier
+
+=== 2.21. DCChargingParametersType
+
+_Class_
+
+EV DC charging parameters
+
+DCChargingParametersType is used by: Common:ChargingNeedsType
+
+
+Field Name Field Type Card. Description
+evMaxCurrent integer 1..1 Required. Maximum current (amps) supported by the
+electric vehicle. Includes cable capacity.
+evMaxVoltage integer 1..1 Required. Maximum voltage supported by the electric
+vehicle
+energyAmount integer 0..1 Optional. Amount of energy requested (in Wh). This
+inludes energy required for preconditioning.
+evMaxPower integer 0..1 Optional. Maximum power (in W) supported by the
+electric vehicle. Required for DC charging.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Field Name Field Type Card. Description
+stateOfCharge integer, 0 <  val <  100 0..1 Optional. Energy available in the battery (in percent of the
+battery capacity)
+evEnergyCapacity integer 0..1 Optional. Capacity of the electric vehicle battery (in Wh)
+fullSoC integer, 0 <  val <  100 0..1 Optional. Percentage of SoC at which the EV considers
+the battery fully charged. (possible values: 0 - 100)
+bulkSoC integer, 0 <  val <  100 0..1 Optional. Percentage of SoC at which the EV considers a
+fast charging process to end. (possible values: 0 - 100)
+
+=== 2.22. EventDataType.
+
+_Class_
+
+Class to report an event notification for a component-variable.
+
+EventDataType is used by: NotifyEventRequest
+
+
+Field Name Field Type Card. Description
+eventId integer 1..1 Required. Identifies the event. This field can be referred
+to as a cause by other events.
+timestamp dateTime 1..1 Required. Timestamp of the moment the report was
+generated.
+trigger EventTriggerEnumType 1..1 Required. Type of trigger for this event, e.g. exceeding a
+threshold value.
+cause integer 0..1 Optional. Refers to the Id of an event that is considered to
+be the cause for this event.
+actualValue string[0..2500] 1..1 Required. Actual value ( attributeType Actual) of the
+variable.
+
+
+The Configuration Variable ReportingValueSize can be
+used to limit GetVariableResult.attributeValue,
+VariableAttribute.value and EventData.actualValue. The
+max size of these values will always remain equal.
+techCode string[0..50] 0..1 Optional. Technical (error) code as reported by
+component.
+techInfo string[0..500] 0..1 Optional. Technical detail information as reported by
+component.
+cleared boolean 0..1 Optional. Cleared is set to true to report the clearing of a
+monitored situation, i.e. a 'return to normal'.
+transactionId identifierString[0..36] 0..1 Optional. If an event notification is linked to a specific
+transaction, this field can be used to specify its
+transactionId.
+variableMonitoringId integer 0..1 Optional. Identifies the VariableMonitoring which
+triggered the event.
+eventNotificationType EventNotificationEnumType 1..1 Required. Specifies the event notification type of the
+message.
+component ComponentType 1..1 Required. Component for which event is notified.
+variable VariableType 1..1 Required. Variable for which event is notified.
+
+=== 2.23. EVSEType
+
+_Class_
+
+Electric Vehicle Supply Equipment
+
+EVSEType is used by: Common:ComponentType , TriggerMessageRequest , ChangeAvailabilityRequest , TransactionEventRequest
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Field Name Field Type Card. Description
+id integer 1..1 Required. EVSE Identifier. This contains a number (> 0)
+designating an EVSE of the Charging Station.
+connectorId integer 0..1 Optional. An id to designate a specific connector (on an
+EVSE) by connector index number.
+
+=== 2.24. FirmwareType
+
+_Class_
+
+Represents a copy of the firmware that can be loaded/updated on the Charging Station.
+
+FirmwareType is used by: UpdateFirmwareRequest
+
+
+Field Name Field Type Card. Description
+location string[0..512] 1..1 Required. URI defining the origin of the firmware.
+retrieveDateTime dateTime 1..1 Required. Date and time at which the firmware shall be
+retrieved.
+installDateTime dateTime 0..1 Optional. Date and time at which the firmware shall be
+installed.
+signingCertificate string[0..5500] 0..1 Optional. Certificate with which the firmware was signed.
+PEM encoded X.509 certificate.
+signature string[0..800] 0..1 Optional. Base64 encoded firmware signature.
+
+=== 2.25. GetVariableDataType
+
+_Class_
+
+Class to hold parameters for GetVariables request.
+
+GetVariableDataType is used by: GetVariablesRequest
+
+
+Field Name Field Type Card. Description
+attributeType AttributeEnumType 0..1 Optional. Attribute type for which value is requested.
+When absent, default Actual is assumed.
+component ComponentType 1..1 Required. Component for which the Variable is requested.
+variable VariableType 1..1 Required. Variable for which the attribute value is
+requested.
+
+=== 2.26. GetVariableResultType
+
+_Class_
+
+Class to hold results of GetVariables request.
+
+GetVariableResultType is used by: GetVariablesResponse
+
+
+Field Name Field Type Card. Description
+attributeStatus GetVariableStatusEnumType 1..1 Required. Result status of getting the variable.
+attributeType AttributeEnumType 0..1 Optional. Attribute type for which value is requested.
+When absent, default Actual is assumed.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Field Name Field Type Card. Description
+attributeValue string[0..2500] 0..1 Optional. Value of requested attribute type of component-
+variable. This field can only be empty when the given
+status is NOT accepted.
+
+
+The Configuration Variable ReportingValueSize can be
+used to limit GetVariableResult.attributeValue,
+VariableAttribute.value and EventData.actualValue. The
+max size of these values will always remain equal.
+component ComponentType 1..1 Required. Component for which the Variable is requested.
+variable VariableType 1..1 Required. Variable for which the attribute value is
+requested.
+attributeStatusInfo StatusInfoType 0..1 Optional. Detailed attribute status information.
+
+=== 2.27. IdTokenInfoType
+
+_Class_
+
+Contains status information about an identifier. It is advised to not stop charging for a token that expires during charging, as
+ExpiryDate is only used for caching purposes. If ExpiryDate is not given, the status has no end date.
+
+IdTokenInfoType is used by: Common:AuthorizationData , AuthorizeResponse , TransactionEventResponse
+
+
+Field Name Field Type Card. Description
+status AuthorizationStatusEnumType 1..1 Required. Current status of the ID Token.
+cacheExpiryDateTime dateTime 0..1 Optional. Date and Time after which the token must be
+considered invalid.
+chargingPriority integer 0..1 Optional. Priority from a business point of view. Default
+priority is 0, The range is from -9 to 9. Higher values
+indicate a higher priority. The chargingPriority in
+TransactionEventResponse overrules this one.
+language1 string[0..8] 0..1 Optional. Preferred user interface language of identifier
+user. Contains a language code as defined in [RFC5646].
+evseId integer 0..* Optional. Only used when the IdToken is only valid for
+one or more specific EVSEs, not for the entire Charging
+Station.
+language2 string[0..8] 0..1 Optional. Second preferred user interface language of
+identifier user. Don’t use when language1 is omitted, has
+to be different from language1. Contains a language
+code as defined in [RFC5646].
+groupIdToken IdTokenType 0..1 Optional. This contains the group identifier.
+personalMessage MessageContentType 0..1 Optional. Personal message that can be shown to the EV
+Driver and can be used for tariff information, user
+greetings etc.
+
+=== 2.28. IdTokenType
+
+_Class_
+
+Contains a case insensitive identifier to use for the authorization and the type of authorization to support multiple forms of
+identifiers.
+
+IdTokenType is used by: Common:AuthorizationData , Common:IdTokenInfoType , RequestStartTransactionRequest ,
+AuthorizeRequest , TransactionEventRequest , ReserveNowRequest , CustomerInformationRequest
+
+
+Field Name Field Type Card. Description
+idToken identifierString[0..36] 1..1 Required. IdToken is case insensitive. Might hold the
+hidden id of an RFID tag, but can for example also
+contain a UUID.
+type IdTokenEnumType 1..1 Required. Enumeration of possible idToken types.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Field Name Field Type Card. Description
+additionalInfo AdditionalInfoType 0..* Optional. AdditionalInfo can be used to send extra
+information which can be validated by the CSMS in
+addition to the regular authorization with IdToken.
+AdditionalInfo contains one or more custom types, which
+need to be agreed upon by all parties involved. When
+AdditionalInfo is NOT implemented or a not supported
+AdditionalInfo.type is used, the CSMS/Charging Station
+MAY ignore the AdditionalInfo.
+
+=== 2.29. LogParametersType
+
+_Class_
+
+Generic class for the configuration of logging entries.
+
+LogParametersType is used by: GetLogRequest
+
+
+Field Name Field Type Card. Description
+remoteLocation string[0..512] 1..1 Required. The URL of the location at the remote system
+where the log should be stored.
+oldestTimestamp dateTime 0..1 Optional. This contains the date and time of the oldest
+logging information to include in the diagnostics.
+latestTimestamp dateTime 0..1 Optional. This contains the date and time of the latest
+logging information to include in the diagnostics.
+
+=== 2.30. MessageContentType.
+
+_Class_
+
+Contains message details, for a message to be displayed on a Charging Station.
+
+MessageContentType is used by: Common:IdTokenInfoType , Common:MessageInfoType , TransactionEventResponse
+
+
+Field Name Field Type Card. Description
+format MessageFormatEnumType 1..1 Required. Format of the message.
+language string[0..8] 0..1 Optional. Message language identifier. Contains a
+language code as defined in [RFC5646].
+content string[0..512] 1..1 Required. Message contents.
+
+=== 2.31. MessageInfoType
+
+_Class_
+
+Contains message details, for a message to be displayed on a Charging Station.
+
+MessageInfoType is used by: SetDisplayMessageRequest , NotifyDisplayMessagesRequest
+
+
+Field Name Field Type Card. Description
+id integer 1..1 Required. Unique id within an exchange context. It is
+defined within the OCPP context as a positive Integer
+value (greater or equal to zero).
+priority MessagePriorityEnumType 1..1 Required. With what priority should this message be
+shown
+state MessageStateEnumType 0..1 Optional. During what state should this message be
+shown. When omitted this message should be shown in
+any state of the Charging Station.
+startDateTime dateTime 0..1 Optional. From what date-time should this message be
+shown. If omitted: directly.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Field Name Field Type Card. Description
+endDateTime dateTime 0..1 Optional. Until what date-time should this message be
+shown, after this date/time this message SHALL be
+removed.
+transactionId identifierString[0..36] 0..1 Optional. During which transaction shall this message be
+shown. Message SHALL be removed by the Charging
+Station after transaction has ended.
+message MessageContentType 1..1 Required. Contains message details for the message to
+be displayed on a Charging Station.
+display ComponentType 0..1 Optional. When a Charging Station has multiple Displays,
+this field can be used to define to which Display this
+message belongs.
+
+=== 2.32. MeterValueType.
+
+_Class_
+
+Collection of one or more sampled values in MeterValuesRequest and TransactionEvent. All sampled values in a MeterValue are
+sampled at the same point in time.
+
+MeterValueType is used by: MeterValuesRequest , TransactionEventRequest
+
+
+Field Name Field Type Card. Description
+timestamp dateTime 1..1 Required. Timestamp for measured value(s).
+sampledValue SampledValueType 1..* Required. One or more measured values
+
+=== 2.33. ModemType
+
+_Class_
+
+Defines parameters required for initiating and maintaining wireless communication with other devices.
+
+ModemType is used by: BootNotificationRequest.ChargingStationType
+
+
+Field Name Field Type Card. Description
+iccid identifierString[0..20] 0..1 Optional. This contains the ICCID of the modem’s SIM
+card.
+imsi identifierString[0..20] 0..1 Optional. This contains the IMSI of the modem’s SIM
+card.
+
+=== 2.34. MonitoringDataType
+
+_Class_
+
+Class to hold parameters of SetVariableMonitoring request.
+
+MonitoringDataType is used by: NotifyMonitoringReportRequest
+
+
+Field Name Field Type Card. Description
+component ComponentType 1..1 Required. Component for which monitoring report was
+requested.
+variable VariableType 1..1 Required. Variable for which monitoring report was
+requested.
+variableMonitoring VariableMonitoringType 1..* Required. List of monitors for this Component-Variable
+pair.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+[[network_connection_profile_type]]
+=== NetworkConnectionProfileType
+
+_Class_
+
+The NetworkConnectionProfile defines the functional and technical parameters of a communication link.
+
+NetworkConnectionProfileType is used by: SetNetworkProfileRequest
+
+
+Field Name Field Type Card. Description
+ocppVersion OCPPVersionEnumType 1..1 Required. Defines the OCPP version used for this
+communication function.
+This field is ignored, since the OCPP version to use is
+determined during the websocket handshake.
+ocppTransport OCPPTransportEnumType 1..1 Required. Defines the transport protocol (e.g. SOAP or
+JSON). Note: SOAP is not supported in OCPP 2.0, but is
+supported by other versions of OCPP.
+ocppCsmsUrl string[0..512] 1..1 Required. URL of the CSMS(s) that this Charging Station
+communicates with, without the Charging Station identity
+part.
+The SecurityCtrlr.Identity field is appended to
+ocppCsmsUrl to provide the full websocket URL
+messageTimeout integer 1..1 Required. Duration in seconds before a message send by
+the Charging Station via this network connection times-
+out. The best setting depends on the underlying network
+and response times of the CSMS. If you are looking for a
+some guideline: use 30 seconds as a starting point.
+securityProfile integer 1..1 Required. This field specifies the security profile used
+when connecting to the CSMS with this
+NetworkConnectionProfile.
+
+**ocppInterface** OCPPInterfaceEnumType 1..1 (^) Required. Applicable Network Interface.
+Charging Station is allowed to use a different network
+interface to connect if the given one does not work
+**vpn** VPNType 0..1 Optional. Settings to be used to set up the VPN
+connection
+**apn** APNType 0..1 Optional. Collection of configuration data needed to
+make a data-connection over a cellular network.
+
+=== 2.36. OCSPRequestDataType
+
+_Class_
+
+OCSPRequestDataType is used by: AuthorizeRequest , GetCertificateStatusRequest
+
+
+Field Name Field Type Card. Description
+hashAlgorithm HashAlgorithmEnumType 1..1 Required. Used algorithms for the hashes provided.
+issuerNameHash identifierString[0..128] 1..1 Required. The hash of the issuer’s distinguished name
+(DN), that must be calculated over the DER encoding of
+the issuer’s name field in the certificate being checked.
+issuerKeyHash string[0..128] 1..1 Required. The hash of the DER encoded public key: the
+value (excluding tag and length) of the subject public key
+field in the issuer’s certificate.
+serialNumber identifierString[0..40] 1..1 Required. The string representation of the hexadecimal
+value of the serial number without the prefix "0x" and
+without leading zeroes.
+responderURL string[0..512] 1..1 Required. This contains the responder URL (Case
+insensitive).
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+=== 2.37. RelativeTimeIntervalType
+
+_Class_
+
+RelativeTimeIntervalType is used by: Common:SalesTariffEntryType
+
+
+Field Name Field Type Card. Description
+start integer 1..1 Required. Start of the interval, in seconds from NOW.
+duration integer 0..1 Optional. Duration of the interval, in seconds.
+
+=== 2.38. ReportDataType.
+
+_Class_
+
+Class to report components, variables and variable attributes and characteristics.
+
+ReportDataType is used by: NotifyReportRequest
+
+
+Field Name Field Type Card. Description
+component ComponentType 1..1 Required. Component for which a report of Variable is
+requested.
+variable VariableType 1..1 Required. Variable for which report is requested.
+variableAttribute VariableAttributeType 1..4 Required. Attribute data of a variable.
+variableCharacteristics VariableCharacteristicsType 0..1 Optional. Fixed read-only parameters of a variable.
+
+=== 2.39. SalesTariffEntryType.
+
+_Class_
+
+SalesTariffEntryType is used by: Common:SalesTariffType
+
+
+Field Name Field Type Card. Description
+ePriceLevel integer, 0 <  val 0..1 Optional. Defines the price level of this SalesTariffEntry
+(referring to NumEPriceLevels). Small values for the
+EPriceLevel represent a cheaper TariffEntry. Large values
+for the EPriceLevel represent a more expensive
+TariffEntry.
+relativeTimeInterval RelativeTimeIntervalType 1..1 Required. Defines the time interval the SalesTariffEntry is
+valid for, based upon relative times.
+consumptionCost ConsumptionCostType 0..3 Optional. Defines additional means for further relative
+price information and/or alternative costs.
+
+=== 2.40. SalesTariffType
+
+_Class_
+
+
+NOTE This dataType is based on dataTypes from ISO 15118-2.
+
+SalesTariffType is used by: Common:ChargingScheduleType
+
+
+Field Name Field Type Card. Description
+id integer 1..1 Required. SalesTariff identifier used to identify one sales
+tariff. An SAID remains a unique identifier for one
+schedule throughout a charging session.
+salesTariffDescription string[0..32] 0..1 Optional. A human readable title/short description of the
+sales tariff e.g. for HMI display purposes.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Field Name Field Type Card. Description
+numEPriceLevels integer 0..1 Optional. Defines the overall number of distinct price
+levels used across all provided SalesTariff elements.
+salesTariffEntry SalesTariffEntryType 1..102
+4
+
+
+Required. Encapsulating element describing all relevant
+details for one time interval of the SalesTariff. The
+number of SalesTariffEntry elements is limited by the
+parameter maxScheduleTuples.
+
+=== 2.41. SampledValueType
+
+_Class_
+
+Single sampled value in MeterValues. Each value can be accompanied by optional fields.
+
+To save on mobile data usage, default values of all of the optional fields are such that. The value without any additional fields will
+be interpreted, as a register reading of active import energy in Wh (Watt-hour) units.
+
+SampledValueType is used by: Common:MeterValueType
+
+
+Field Name Field Type Card. Description
+value decimal 1..1 Required. Indicates the measured value.
+context ReadingContextEnumType 0..1 Optional. Type of detail value: start, end or sample.
+Default  "Sample.Periodic"
+measurand MeasurandEnumType 0..1 Optional. Type of measurement. Default =
+"Energy.Active.Import.Register"
+phase PhaseEnumType 0..1 Optional. Indicates how the measured value is to be
+interpreted. For instance between L1 and neutral (L1-N)
+Please note that not all values of phase are applicable to
+all Measurands. When phase is absent, the measured
+value is interpreted as an overall value.
+location LocationEnumType 0..1 Optional. Indicates where the measured value has been
+sampled. Default  "Outlet"
+signedMeterValue SignedMeterValueType 0..1 Optional. Contains the MeterValueSignature with
+sign/encoding method information.
+unitOfMeasure UnitOfMeasureType 0..1 Optional. Represents a UnitOfMeasure including a
+multiplier
+
+=== 2.42. SetMonitoringDataType
+
+_Class_
+
+Class to hold parameters of SetVariableMonitoring request.
+
+SetMonitoringDataType is used by: SetVariableMonitoringRequest
+
+
+Field Name Field Type Card. Description
+id integer 0..1 Optional. An id SHALL only be given to replace an existing
+monitor. The Charging Station handles the generation of
+id’s for new monitors.
+transaction boolean 0..1 Optional. Monitor only active when a transaction is
+ongoing on a component relevant to this transaction.
+Default  false.
+value decimal 1..1 Required. Value for threshold or delta monitoring. For
+Periodic or PeriodicClockAligned this is the interval in
+seconds.
+type MonitorEnumType 1..1 Required. The type of this monitor, e.g. a threshold, delta
+or periodic monitor.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Field Name Field Type Card. Description
+severity integer 1..1 Required. The severity that will be assigned to an event
+that is triggered by this monitor. The severity range is 0-9,
+with 0 as the highest and 9 as the lowest severity level.
+
+
+The severity levels have the following meaning:
+0-Danger
+Indicates lives are potentially in danger. Urgent attention
+is needed and action should be taken immediately.
+1-Hardware Failure
+Indicates that the Charging Station is unable to continue
+regular operations due to Hardware issues. Action is
+required.
+2-System Failure
+Indicates that the Charging Station is unable to continue
+regular operations due to software or minor hardware
+issues. Action is required.
+3-Critical
+Indicates a critical error. Action is required.
+4-Error
+Indicates a non-urgent error. Action is required.
+5-Alert
+Indicates an alert event. Default severity for any type of
+monitoring event.
+6-Warning
+Indicates a warning event. Action may be required.
+7-Notice
+Indicates an unusual event. No immediate action is
+required.
+8-Informational
+Indicates a regular operational event. May be used for
+reporting, measuring throughput, etc. No action is
+required.
+9-Debug
+Indicates information useful to developers for debugging,
+not useful during operations.
+component ComponentType 1..1 Required. Component for which monitor is set.
+variable VariableType 1..1 Required. Variable for which monitor is set.
+
+=== 2.43. SetMonitoringResultType
+
+_Class_
+
+Class to hold result of SetVariableMonitoring request.
+
+SetMonitoringResultType is used by: SetVariableMonitoringResponse
+
+
+Field Name Field Type Card. Description
+id integer 0..1 Optional. Id given to the VariableMonitor by the Charging
+Station. The Id is only returned when status is accepted.
+Installed VariableMonitors should have unique id’s but
+the id’s of removed Installed monitors should have
+unique id’s but the id’s of removed monitors MAY be
+reused.
+status SetMonitoringStatusEnumType 1..1 Required. Status is OK if a value could be returned.
+Otherwise this will indicate the reason why a value could
+not be returned.
+type MonitorEnumType 1..1 Required. The type of this monitor, e.g. a threshold, delta
+or periodic monitor.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Field Name Field Type Card. Description
+severity integer 1..1 Required. The severity that will be assigned to an event
+that is triggered by this monitor. The severity range is 0-9,
+with 0 as the highest and 9 as the lowest severity level.
+
+
+The severity levels have the following meaning:
+0-Danger
+Indicates lives are potentially in danger. Urgent attention
+is needed and action should be taken immediately.
+1-Hardware Failure
+Indicates that the Charging Station is unable to continue
+regular operations due to Hardware issues. Action is
+required.
+2-System Failure
+Indicates that the Charging Station is unable to continue
+regular operations due to software or minor hardware
+issues. Action is required.
+3-Critical
+Indicates a critical error. Action is required.
+4-Error
+Indicates a non-urgent error. Action is required.
+5-Alert
+Indicates an alert event. Default severity for any type of
+monitoring event.
+6-Warning
+Indicates a warning event. Action may be required.
+7-Notice
+Indicates an unusual event. No immediate action is
+required.
+8-Informational
+Indicates a regular operational event. May be used for
+reporting, measuring throughput, etc. No action is
+required.
+9-Debug
+Indicates information useful to developers for debugging,
+not useful during operations.
+component ComponentType 1..1 Required. Component for which status is returned.
+variable VariableType 1..1 Required. Variable for which status is returned.
+statusInfo StatusInfoType 0..1 Optional. Detailed status information.
+
+=== 2.44. SetVariableDataType
+
+_Class_
+
+SetVariableDataType is used by: SetVariablesRequest
+
+
+Field Name Field Type Card. Description
+attributeType AttributeEnumType 0..1 Optional. Type of attribute: Actual, Target, MinSet,
+MaxSet. Default is Actual when omitted.
+attributeValue string[0..1000] 1..1 Required. Value to be assigned to attribute of variable.
+The value is allowed to be an empty string ("").
+The Configuration Variable ConfigurationValueSize can
+be used to limit SetVariableData.attributeValue and
+VariableCharacteristics.valueList. The max size of these
+values will always remain equal.
+component ComponentType 1..1 Required. The component for which the variable data is
+set.
+variable VariableType 1..1 Required. Specifies the that needs to be set.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+=== 2.45. SetVariableResultType
+
+_Class_
+
+SetVariableResultType is used by: SetVariablesResponse
+
+
+Field Name Field Type Card. Description
+attributeType AttributeEnumType 0..1 Optional. Type of attribute: Actual, Target, MinSet,
+MaxSet. Default is Actual when omitted.
+attributeStatus SetVariableStatusEnumType 1..1 Required. Result status of setting the variable.
+component ComponentType 1..1 Required. The component for which result is returned.
+variable VariableType 1..1 Required. The variable for which the result is returned.
+attributeStatusInfo StatusInfoType 0..1 Optional. Detailed attribute status information.
+
+=== 2.46. SignedMeterValueType.
+
+_Class_
+
+Represent a signed version of the meter value.
+
+SignedMeterValueType is used by: Common:SampledValueType
+
+
+Field Name Field Type Card. Description
+signedMeterData string[0..2500] 1..1 Required. Base64 encoded, contains the signed data
+which might contain more then just the meter value. It
+can contain information like timestamps, reference to a
+customer etc.
+signingMethod string[0..50] 1..1 Required. Method used to create the digital signature.
+encodingMethod string[0..50] 1..1 Required. Method used to encode the meter values
+before applying the digital signature algorithm.
+publicKey string[0..2500] 1..1 Required. Base64 encoded, sending depends on
+configuration variable PublicKeyWithSignedMeterValue.
+
+=== 2.47. StatusInfoType
+
+_Class_
+
+Element providing more information about the status.
+
+StatusInfoType is used by: Common:ClearMonitoringResultType , BootNotificationResponse , CancelReservationResponse ,
+TriggerMessageResponse , UnlockConnectorResponse , UpdateFirmwareResponse , ClearDisplayMessageResponse ,
+Get15118EVCertificateResponse , GetCompositeScheduleResponse , ChangeAvailabilityResponse , GetLogResponse ,
+ClearChargingProfileResponse , NotifyEVChargingNeedsResponse , ClearCacheResponse , NotifyEVChargingScheduleResponse ,
+RequestStartTransactionResponse , RequestStopTransactionResponse , SetChargingProfileResponse ,
+SetDisplayMessageResponse , SetNetworkProfileResponse , SignCertificateResponse , DataTransferResponse ,
+CertificateSignedResponse , DeleteCertificateResponse , GetChargingProfilesResponse , GetInstalledCertificateIdsResponse ,
+InstallCertificateResponse , GetBaseReportResponse , GetMonitoringReportResponse , GetReportResponse ,
+GetVariablesResponse.GetVariableResultType , ReserveNowResponse , SetMonitoringBaseResponse ,
+SetMonitoringLevelResponse , SetVariableMonitoringResponse.SetMonitoringResultType ,
+SetVariablesResponse.SetVariableResultType , PublishFirmwareResponse , GetCertificateStatusResponse , ResetResponse ,
+GetDisplayMessagesResponse , CustomerInformationResponse , SendLocalListResponse
+
+
+Field Name Field Type Card. Description
+reasonCode string[0..20] 1..1 Required. A predefined code for the reason why the
+status is returned in this response. The string is case-
+insensitive.
+additionalInfo string[0..512] 0..1 Optional. Additional text to provide detailed information.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+=== 2.48. TransactionType
+
+_Class_
+
+TransactionType is used by: TransactionEventRequest
+
+
+Field Name Field Type Card. Description
+transactionId identifierString[0..36] 1..1 Required. This contains the Id of the transaction.
+chargingState ChargingStateEnumType 0..1 Optional. Current charging state, is required when state
+has changed.
+timeSpentCharging integer 0..1 Optional. Contains the total time that energy flowed from
+EVSE to EV during the transaction (in seconds). Note that
+timeSpentCharging is smaller or equal to the duration of
+the transaction.
+stoppedReason ReasonEnumType 0..1 Optional. The <i>stoppedReason </i>is the reason/event
+that initiated the process of stopping the transaction. It
+will normally be the user stopping authorization via card
+(Local or MasterPass) or app (Remote), but it can also be
+CSMS revoking authorization (DeAuthorized), or
+disconnecting the EV when TxStopPoint  EVConnected
+(EVDisconnected). Most other reasons are related to
+technical faults or energy limitations. MAY only be
+omitted when <i>stoppedReason </i>is "Local"
+remoteStartId integer 0..1 Optional. The ID given to remote start request
+(RequestStartTransactionRequest. This enables to CSMS
+to match the started transaction to the given start
+request.
+
+=== 2.49. UnitOfMeasureType
+
+_Class_
+
+Represents a UnitOfMeasure with a multiplier
+
+UnitOfMeasureType is used by: Common:SampledValueType
+
+
+Field Name Field Type Card. Description
+unit string[0..20] 0..1 Optional. Unit of the value. Default  "Wh" if the (default)
+measurand is an "Energy" type. This field SHALL use a
+value from the list Standardized Units of Measurements
+in Part 2 Appendices. If an applicable unit is available in
+that list, otherwise a "custom" unit might be used.
+multiplier integer 0..1 Optional. Multiplier, this value represents the exponent to
+base 10. I.e. multiplier 3 means 10 raised to the 3rd
+power. Default is 0.
+
+=== 2.50. VariableAttributeType
+
+_Class_
+
+Attribute data of a variable.
+
+VariableAttributeType is used by: NotifyReportRequest.ReportDataType
+
+
+Field Name Field Type Card. Description
+type AttributeEnumType 0..1 Optional. Attribute: Actual, MinSet, MaxSet, etc. Defaults
+to Actual if absent.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Field Name Field Type Card. Description
+value string[0..2500] 0..1 Optional. Value of the attribute. May only be omitted
+when mutability is set to 'WriteOnly'.
+
+
+The Configuration Variable ReportingValueSize can be
+used to limit GetVariableResult.attributeValue,
+VariableAttribute.value and EventData.actualValue. The
+max size of these values will always remain equal.
+mutability MutabilityEnumType 0..1 Optional. Defines the mutability of this attribute. Default
+is ReadWrite when omitted.
+persistent boolean 0..1 Optional. If true, value will be persistent across system
+reboots or power down. Default when omitted is false.
+constant boolean 0..1 Optional. If true, value that will never be changed by the
+Charging Station at runtime. Default when omitted is
+false.
+
+=== 2.51. VariableCharacteristicsType
+
+_Class_
+
+Fixed read-only parameters of a variable.
+
+VariableCharacteristicsType is used by: NotifyReportRequest.ReportDataType
+
+
+Field Name Field Type Card. Description
+unit string[0..16] 0..1 Optional. Unit of the variable. When the transmitted value
+has a unit, this field SHALL be included.
+dataType DataEnumType 1..1 Required. Data type of this variable.
+minLimit decimal 0..1 Optional. Minimum possible value of this variable.
+maxLimit decimal 0..1 Optional. Maximum possible value of this variable. When
+the datatype of this Variable is String, OptionList,
+SequenceList or MemberList, this field defines the
+maximum length of the (CSV) string.
+valuesList string[0..1000] 0..1 Optional. Mandatory when dataType  OptionList,
+MemberList or SequenceList. valuesList specifies the
+allowed values for the type.
+
+
+* OptionList: The (Actual) Variable value must be a single
+value from the reported (CSV) enumeration list.
+
+
+* MemberList: The (Actual) Variable value may be an
+(unordered) (sub-)set of the reported (CSV) valid values
+list.
+
+
+* SequenceList: The (Actual) Variable value may be an
+ordered (priority, etc) (sub-)set of the reported (CSV) valid
+values.
+
+
+This is a comma separated list.
+
+
+The Configuration Variable ConfigurationValueSize can
+be used to limit SetVariableData.attributeValue and
+VariableCharacteristics.valueList. The max size of these
+values will always remain equal.
+supportsMonitoring boolean 1..1 Required. Flag indicating if this variable supports
+monitoring.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+=== 2.52. VariableMonitoringType
+
+_Class_
+
+A monitoring setting for a variable.
+
+VariableMonitoringType is used by: NotifyMonitoringReportRequest.MonitoringDataType
+
+
+Field Name Field Type Card. Description
+id integer 1..1 Required. Identifies the monitor.
+transaction boolean 1..1 Required. Monitor only active when a transaction is
+ongoing on a component relevant to this transaction.
+value decimal 1..1 Required. Value for threshold or delta monitoring. For
+Periodic or PeriodicClockAligned this is the interval in
+seconds.
+type MonitorEnumType 1..1 Required. The type of this monitor, e.g. a threshold, delta
+or periodic monitor.
+severity integer 1..1 Required. The severity that will be assigned to an event
+that is triggered by this monitor. The severity range is 0-9,
+with 0 as the highest and 9 as the lowest severity level.
+
+
+The severity levels have the following meaning:
+0-Danger
+Indicates lives are potentially in danger. Urgent attention
+is needed and action should be taken immediately.
+1-Hardware Failure
+Indicates that the Charging Station is unable to continue
+regular operations due to Hardware issues. Action is
+required.
+2-System Failure
+Indicates that the Charging Station is unable to continue
+regular operations due to software or minor hardware
+issues. Action is required.
+3-Critical
+Indicates a critical error. Action is required.
+4-Error
+Indicates a non-urgent error. Action is required.
+5-Alert
+Indicates an alert event. Default severity for any type of
+monitoring event.
+6-Warning
+Indicates a warning event. Action may be required.
+7-Notice
+Indicates an unusual event. No immediate action is
+required.
+8-Informational
+Indicates a regular operational event. May be used for
+reporting, measuring throughput, etc. No action is
+required.
+9-Debug
+Indicates information useful to developers for debugging,
+not useful during operations.
+
+=== 2.53. VariableType
+
+_Class_
+
+Reference key to a component-variable.
+
+VariableType is used by: Common:ComponentVariableType , GetVariablesRequest.GetVariableDataType ,
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+GetVariablesResponse.GetVariableResultType , NotifyMonitoringReportRequest.MonitoringDataType ,
+NotifyReportRequest.ReportDataType , SetVariableMonitoringRequest.SetMonitoringDataType ,
+SetVariableMonitoringResponse.SetMonitoringResultType , SetVariablesRequest.SetVariableDataType ,
+SetVariablesResponse.SetVariableResultType , NotifyEventRequest.EventDataType
+
+
+Field Name Field Type Card. Description
+name identifierString[0..50] 1..1 Required. Name of the variable. Name should be taken
+from the list of standardized variable names whenever
+possible. Case Insensitive. strongly advised to use Camel
+Case.
+instance identifierString[0..50] 0..1 Optional. Name of instance in case the variable exists as
+multiple instances. Case Insensitive. strongly advised to
+use Camel Case.
+
+=== 2.54. VPNType.
+
+_Class_
+
+VPN Configuration settings
+
+VPNType is used by: SetNetworkProfileRequest.NetworkConnectionProfileType
+
+
+Field Name Field Type Card. Description
+server string[0..512] 1..1 Required. VPN Server Address
+user string[0..20] 1..1 Required. VPN User
+group string[0..20] 0..1 Optional. VPN group.
+password string[0..20] 1..1 Required. VPN Password.
+key string[0..255] 1..1 Required. VPN shared secret.
+type VPNEnumType 1..1 Required. Type of VPN
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+== 3. Enumerations.
+
+=== 3.1. APNAuthenticationEnumType
+
+_Enumeration_
+
+APNAuthenticationEnumType is used by: setNetworkProfile:SetNetworkProfileRequest.APNType
+
+
+Value Description
+CHAP Use CHAP authentication
+NONE Use no authentication
+PAP Use PAP authentication
+AUTO Sequentially try CHAP, PAP, NONE.
+
+=== 3.2. AttributeEnumType
+
+_Enumeration_
+
+AttributeEnumType is used by: Common:VariableAttributeType , getVariables:GetVariablesRequest.GetVariableDataType ,
+getVariables:GetVariablesResponse.GetVariableResultType , setVariables:SetVariablesRequest.SetVariableDataType ,
+setVariables:SetVariablesResponse.SetVariableResultType
+
+
+Value Description
+Actual The actual value of the variable.
+Target The target value for this variable.
+MinSet The minimal allowed value for this variable
+MaxSet Thne maximum allowed value for this variable
+
+=== 3.3. AuthorizationStatusEnumType
+
+_Enumeration_
+
+Status of an authorization response.
+
+AuthorizationStatusEnumType is used by: Common:IdTokenInfoType
+
+
+Value Description
+Accepted Identifier is allowed for charging.
+Blocked Identifier has been blocked. Not allowed for charging.
+ConcurrentTx Identifier is already involved in another transaction and multiple transactions are not allowed. (Only relevant
+for the response to a transactionEventRequest(eventType=Started).)
+Expired Identifier has expired. Not allowed for charging.
+Invalid Identifier is invalid. Not allowed for charging.
+NoCredit Identifier is valid, but EV Driver doesn’t have enough credit to start charging. Not allowed for charging.
+NotAllowedTypeEVS
+E
+
+
+Identifier is valid, but not allowed to charge at this type of EVSE.
+
+
+NotAtThisLocation Identifier is valid, but not allowed to charge at this location.
+NotAtThisTime Identifier is valid, but not allowed to charge at this location at this time.
+Unknown Identifier is unknown. Not allowed for charging.
+
+=== 3.4. AuthorizeCertificateStatusEnumType.
+
+_Enumeration_
+
+Status of the EV Contract certificate.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+AuthorizeCertificateStatusEnumType is used by: authorize:AuthorizeResponse
+
+
+Value Description
+Accepted Positive response
+SignatureError <not used>
+CertificateExpired If the contract certificate in the AuthorizeRequest is expired.
+CertificateRevoked If the Charging Station or CSMS determine (via a CRL or OCSP response) that the contract certificate in the
+AuthorizeRequest is marked as revoked.
+NoCertificateAvailab
+le
+
+
+<not used>
+
+
+CertChainError If the contract certificate contained in the AuthorizeRequest message is not valid.
+ContractCancelled If the EMAID provided by EVCC is invalid, unknown, expired or blocked.
+
+=== 3.5. BootReasonEnumType
+
+_Enumeration_
+
+BootReasonEnumType is used by: bootNotification:BootNotificationRequest
+
+
+Value Description
+ApplicationReset The Charging Station rebooted due to an application error.
+FirmwareUpdate The Charging Station rebooted due to a firmware update.
+LocalReset The Charging Station rebooted due to a local reset command.
+PowerUp The Charging Station powered up and registers itself with the CSMS.
+RemoteReset The Charging Station rebooted due to a remote reset command.
+ScheduledReset The Charging Station rebooted due to a scheduled reset command.
+Triggered Requested by the CSMS via a TriggerMessage
+Unknown The boot reason is unknown.
+Watchdog The Charging Station rebooted due to an elapsed watchdog timer.
+
+=== 3.6. CancelReservationStatusEnumType
+
+_Enumeration_
+
+Status in CancelReservationResponse.
+
+CancelReservationStatusEnumType is used by: cancelReservation:CancelReservationResponse
+
+
+Value Description
+Accepted Reservation for the identifier has been canceled.
+Rejected Reservation could not be canceled, because there is no reservation active for the identifier.
+
+=== 3.7. CertificateActionEnumType
+
+_Enumeration_
+
+CertificateActionEnumType is used by: get15118EVCertificate:Get15118EVCertificateRequest
+
+
+Value Description
+Install Install the provided certificate.
+Update Update the provided certificate.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+=== 3.8. CertificateSignedStatusEnumType
+
+_Enumeration_
+
+CertificateSignedStatusEnumType is used by: certificateSigned:CertificateSignedResponse
+
+
+Value Description
+Accepted Signed certificate is valid.
+Rejected Signed certificate is invalid.
+
+
+[[certificate_signing_use_enum_type]]
+=== CertificateSigningUseEnumType
+
+_Enumeration_
+
+CertificateSigningUseEnumType is used by: signCertificate:SignCertificateRequest , certificateSigned:CertificateSignedRequest
+
+
+Value Description
+ChargingStationCert
+ificate
+
+
+Client side certificate used by the Charging Station to connect the the CSMS.
+
+
+V2GCertificate Use for certificate for 15118 connections. This means that the certificate should be derived from the V2G
+root.
+
+=== 3.10. ChangeAvailabilityStatusEnumType
+
+_Enumeration_
+
+Status returned in response to ChangeAvailabilityRequest.
+
+ChangeAvailabilityStatusEnumType is used by: changeAvailability:ChangeAvailabilityResponse
+
+
+Value Description
+Accepted Request has been accepted and will be executed.
+Rejected Request has not been accepted and will not be executed.
+Scheduled Request has been accepted and will be executed when transaction(s) in progress have finished.
+
+=== 3.11. ChargingLimitSourceEnumType
+
+_Enumeration_
+
+Enumeration for indicating from which source a charging limit originates.
+
+ChargingLimitSourceEnumType is used by: notifyChargingLimit:NotifyChargingLimitRequest.ChargingLimitType ,
+clearedChargingLimit:ClearedChargingLimitRequest ,
+getChargingProfiles:GetChargingProfilesRequest.ChargingProfileCriterionType ,
+reportChargingProfiles:ReportChargingProfilesRequest
+
+
+Value Description
+EMS Indicates that an Energy Management System has sent a charging limit.
+Other Indicates that an external source, not being an EMS or system operator, has sent a charging limit.
+SO Indicates that a System Operator (DSO or TSO) has sent a charging limit.
+CSO Indicates that the CSO has set this charging profile.
+
+=== 3.12. ChargingProfileKindEnumType
+
+_Enumeration_
+
+Kind of charging profile.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+ChargingProfileKindEnumType is used by: Common:ChargingProfileType
+
+
+Value Description
+Absolute Schedule periods are relative to a fixed point in time defined in the schedule. This requires that startSchedule
+is set to a starting point in time.
+Recurring The schedule restarts periodically at the first schedule period. To be most useful, this requires that
+startSchedule is set to a starting point in time.
+Relative Charging schedule periods should start when the EVSE is ready to deliver energy. i.e. when the EV driver is
+authorized and the EV is connected. When a ChargingProfile is received for a transaction that is already
+charging, then the charging schedule periods should remain relative to the PowerPathClosed moment.
+No value for startSchedule should be supplied.
+
+=== 3.13. ChargingProfilePurposeEnumType
+
+_Enumeration_
+
+Purpose of the charging profile.
+
+ChargingProfilePurposeEnumType is used by: Common:ChargingProfileType ,
+clearChargingProfile:ClearChargingProfileRequest.ClearChargingProfileType ,
+getChargingProfiles:GetChargingProfilesRequest.ChargingProfileCriterionType
+
+
+Value Description
+ChargingStationExte
+rnalConstraints
+
+
+Additional constraints that will be incorporated into a local power schedule. Only valid for a Charging Station.
+Therefore evse.Id MUST be 0 in the SetChargingProfileRequest message.
+ChargingStationMax
+Profile
+
+
+Configuration for the maximum power or current available for an entire Charging Station.
+
+
+TxDefaultProfile Default profile that can be configured in the Charging Station. When a new transaction is started, this profile
+SHALL be used, unless it was a transaction that was started by a RequestStartTransactionRequest with a
+ChargingProfile that is accepted by the Charging Station.
+TxProfile Profile with constraints to be imposed by the Charging Station on the current transaction, or on a new
+transaction when this is started via a RequestStartTransactionRequest with a ChargingProfile. A profile with
+this purpose SHALL cease to be valid when the transaction terminates.
+
+=== 3.14. ChargingProfileStatusEnumType
+
+_Enumeration_
+
+Status returned in response to SetChargingProfileRequest.
+
+ChargingProfileStatusEnumType is used by: setChargingProfile:SetChargingProfileResponse
+
+
+Value Description
+Accepted Request has been accepted and will be executed.
+Rejected Request has not been accepted and will not be executed.
+
+=== 3.15. ChargingRateUnitEnumType
+
+_Enumeration_
+
+Unit in which a charging schedule is defined.
+
+ChargingRateUnitEnumType is used by: Common:ChargingScheduleType , Common:CompositeScheduleType ,
+getCompositeSchedule:GetCompositeScheduleRequest
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Value Description
+W Watts (power). This is the TOTAL allowed charging power. If used for AC Charging, the phase current should
+be calculated via: Current per phase  Power / (Line Voltage * Number of Phases). The "Line Voltage" used in
+the calculation is not the measured voltage, but the set voltage for the area (hence, 230 of 110 volt). The
+"Number of Phases" is the numberPhases from the ChargingSchedulePeriod. It is usually more convenient to
+use this for DC charging. Note that if numberPhases in a ChargingSchedulePeriod is absent, 3 SHALL be
+assumed.
+A Amperes (current). The amount of Ampere per phase, not the sum of all phases. It is usually more
+convenient to use this for AC charging.
+
+=== 3.16. ChargingStateEnumType
+
+_Enumeration_
+
+The state of the charging process.
+
+ChargingStateEnumType is used by: transactionEvent:TransactionEventRequest.TransactionType
+
+
+Value Description
+Charging The contactor of the Connector is closed and energy is flowing to between EVSE and EV.
+EVConnected There is a connection between EV and EVSE, in case the protocol used between EV and the Charging Station
+can detect a connection, the protocol needs to detect this for the state to become active. The connection
+can either be wired or wireless.
+SuspendedEV When the EV is connected to the EVSE and the EVSE is offering energy but the EV is not taking any energy.
+SuspendedEVSE When the EV is connected to the EVSE but the EVSE is not offering energy to the EV, e.g. due to a smart
+charging restriction, local supply power constraints, or when charging has stopped because of the
+authorization status in the response to a transactionEventRequest indicating that charging is not allowed
+etc.
+Idle There is no connection between EV and EVSE.
+
+=== 3.17. ClearCacheStatusEnumType
+
+_Enumeration_
+
+Status returned in response to ClearCacheRequest.
+
+ClearCacheStatusEnumType is used by: clearCache:ClearCacheResponse
+
+
+Value Description
+Accepted Command has been executed.
+Rejected Command has not been executed.
+
+=== 3.18. ClearChargingProfileStatusEnumType
+
+_Enumeration_
+
+Status returned in response to ClearChargingProfileRequest.
+
+ClearChargingProfileStatusEnumType is used by: clearChargingProfile:ClearChargingProfileResponse
+
+
+Value Description
+Accepted Request has been accepted and will be executed.
+Unknown No Charging Profile(s) were found matching the request.
+
+=== 3.19. ClearMessageStatusEnumType
+
+_Enumeration_
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+Result for a ClearDisplayMessageRequest as used in a ClearDisplayMessageResponse.
+
+ClearMessageStatusEnumType is used by: clearDisplayMessage:ClearDisplayMessageResponse
+
+
+Value Description
+Accepted Request successfully executed: message cleared.
+Unknown Given message (based on the id) not known.
+
+=== 3.20. ClearMonitoringStatusEnumType
+
+_Enumeration_
+
+ClearMonitoringStatusEnumType is used by: Common:ClearMonitoringResultType
+
+
+Value Description
+Accepted Monitor successfully cleared.
+Rejected Clearing of monitor rejected.
+NotFound Monitor Id is not found.
+
+=== 3.21. ComponentCriterionEnumType
+
+_Enumeration_
+
+ComponentCriterionEnumType is used by: getReport:GetReportRequest
+
+
+Value Description
+Active Components that are active, i.e. having Active  1
+Available Components that are available, i.e. having Available  1
+Enabled Components that are enabled, i.e. having Enabled  1
+Problem Components that reported a problem, i.e. having Problem  1
+
+=== 3.22. ConnectorEnumType
+
+_Enumeration_
+
+Allowed values of ConnectorCode.
+
+NOTE
+
+
+This enumeration does not attempt to include every possible power connector type worldwide as an individual
+type, but to specifically define those that are known to be in use (or likely to be in use) in the Charging Stations
+using the OCPP protocol. In particular, many of the very large number of domestic electrical sockets designs in
+use in many countries are excluded, unless there is evidence that they are or are likely to be approved for use on
+Charging Stations in some jurisdictions (e.g. as secondary connectors for charging light EVs such as electric
+scooters). These light connector types can be represented with the enumeration value Other1PhMax16A.
+Similarly, any single phase connector not otherwise enumerated that is rated for 16A or over should be reported
+as Other1PhOver16A. All 3 phase connector types not explicitly enumerated should be represented as Other3Ph.
+
+ConnectorEnumType is used by: reserveNow:ReserveNowRequest
+
+
+Value Description
+cCCS1 Combined Charging System 1 (captive cabled) a.k.a. Combo 1
+cCCS2 Combined Charging System 2 (captive cabled) a.k.a. Combo 2
+cG105 JARI G105-1993 (captive cabled) a.k.a. CHAdeMO
+cTesla Tesla Connector (captive cabled)
+cType1 IEC62196-2 Type 1 connector (captive cabled) a.k.a. J1772
+cType2 IEC62196-2 Type 2 connector (captive cabled) a.k.a. Mennekes connector
+s309-1P-16A 16A 1 phase IEC60309 socket
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Value Description
+s309-1P-32A 32A 1 phase IEC60309 socket
+s309-3P-16A 16A 3 phase IEC60309 socket
+s309-3P-32A 32A 3 phase IEC60309 socket
+sBS1361 UK domestic socket a.k.a. 13Amp
+sCEE-7-7 CEE 7/7 16A socket. May represent 7/4 & 7/5 a.k.a Schuko
+sType2 IEC62196-2 Type 2 socket a.k.a. Mennekes connector
+sType3 IEC62196-2 Type 2 socket a.k.a. Scame
+Other1PhMax16A Other single phase (domestic) sockets not mentioned above, rated at no more than 16A. CEE7/17, AS3112,
+NEMA 5-15, NEMA 5-20, JISC8303, TIS166, SI 32, CPCS-CCC, SEV1011, etc.
+Other1PhOver16A Other single phase sockets not mentioned above (over 16A)
+Other3Ph Other 3 phase sockets not mentioned above. NEMA14-30, NEMA14-50.
+Pan Pantograph connector
+wInductive Wireless inductively coupled connection (generic)
+wResonant Wireless resonant coupled connection (generic)
+Undetermined Yet to be determined (e.g. before plugged in)
+Unknown Unknown; not determinable
+
+=== 3.23. ConnectorStatusEnumType
+
+_Enumeration_
+
+A status can be reported for the Connector of an EVSE of a Charging Station. States considered Operative are: Available, Reserved
+and Occupied. States considered Inoperative are: Unavailable, Faulted.
+
+ConnectorStatusEnumType is used by: statusNotification:StatusNotificationRequest
+
+
+Value Description
+Available When a Connector becomes available for a new User (Operative)
+Occupied When a Connector becomes occupied, so it is not available for a new EV driver. (Operative)
+Reserved When a Connector becomes reserved as a result of ReserveNow command (Operative)
+Unavailable When a Connector becomes unavailable as the result of a Change Availability command or an event upon
+which the Charging Station transitions to unavailable at its discretion. Upon receipt of ChangeAvailability
+message command, the status MAY change immediately or the change MAY be scheduled. When
+scheduled, StatusNotification SHALL be send when the availability change becomes effective (Inoperative)
+Faulted When a Connector (or the EVSE or the entire Charging Station it belongs to) has reported an error and is not
+available for energy delivery. (Inoperative).
+
+=== 3.24. CostKindEnumType.
+
+_Enumeration_
+
+CostKindEnumType is used by: Common:CostType
+
+
+Value Description
+CarbonDioxideEmiss
+ion
+
+
+Absolute value. Carbon Dioxide emissions, in grams per kWh.
+
+
+RelativePricePercen
+tage
+
+
+Relative value. Price per kWh, as percentage relative to the maximum price stated in any of all tariffs
+indicated to the EV.
+RenewableGeneratio
+nPercentage
+
+
+Relative value. Percentage of renewable generation within total generation.
+
+=== 3.25. CustomerInformationStatusEnumType
+
+_Enumeration_
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+Status in CancelReservationResponse.
+
+CustomerInformationStatusEnumType is used by: customerInformation:CustomerInformationResponse
+
+
+Value Description
+Accepted The Charging Station accepted the message.
+Rejected When the Charging Station is in a state where it cannot process this request.
+Invalid In a request to the Charging Station no reference to a customer is included.
+
+=== 3.26. DataEnumType
+
+_Enumeration_
+
+DataEnumType is used by: Common:VariableCharacteristicsType
+
+
+Value Description
+string This variable is of the type string.
+decimal This variable is of the type decimal.
+integer This variable is of the type integer.
+dateTime DateTime following the [RFC3339] specification.
+boolean This variable is of the type boolean.
+OptionList Supported/allowed values for a single choice, enumerated, text variable.
+SequenceList Supported/allowed values for an ordered sequence variable.
+MemberList Supported/allowed values for a mathematical set variable.
+
+=== 3.27. DataTransferStatusEnumType
+
+_Enumeration_
+
+Status in DataTransferResponse.
+
+DataTransferStatusEnumType is used by: dataTransfer:DataTransferResponse
+
+
+Value Description
+Accepted Message has been accepted and the contained request is accepted.
+Rejected Message has been accepted but the contained request is rejected.
+UnknownMessageId Message could not be interpreted due to unknown messageId string.
+UnknownVendorId Message could not be interpreted due to unknown vendorId string.
+
+=== 3.28. DeleteCertificateStatusEnumType
+
+_Enumeration_
+
+DeleteCertificateStatusEnumType is used by: deleteCertificate:DeleteCertificateResponse
+
+
+Value Description
+Accepted Normal successful completion (no errors).
+Failed The Charging Station either failed to remove the certificate or rejected the request. A Charging Station may
+reject the request to prevent the deletion of a certificate, if it is the last one from its certificate type.
+NotFound Requested resource not found.
+
+=== 3.29. DisplayMessageStatusEnumType.
+
+_Enumeration_
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+Result for a SetDisplayMessageRequest as used in a SetDisplayMessageResponse.
+
+DisplayMessageStatusEnumType is used by: setDisplayMessage:SetDisplayMessageResponse
+
+
+Value Description
+Accepted Request to display message accepted.
+NotSupportedMessa
+geFormat
+
+
+None of the formats in the given message are supported.
+
+
+Rejected Request cannot be handled.
+NotSupportedPriorit
+y
+
+
+The given MessagePriority not supported for displaying messages by Charging Station.
+
+
+NotSupportedState The given MessageState not supported for displaying messages by Charging Station.
+UnknownTransactio
+n
+
+
+Given Transaction not known/ongoing.
+
+=== 3.30. EnergyTransferModeEnumType
+
+_Enumeration_
+
+Enumeration of energy transfer modes.
+
+EnergyTransferModeEnumType is used by: Common:ChargingNeedsType
+
+
+Value Description
+DC DC charging.
+AC_single_phase AC single phase charging according to IEC 62196.
+AC_two_phase AC two phase charging according to IEC 62196.
+AC_three_phase AC three phase charging according to IEC 62196.
+
+=== 3.31. EventNotificationEnumType.
+
+_Enumeration_
+
+Specifies the event notification type of the message.
+
+EventNotificationEnumType is used by: notifyEvent:NotifyEventRequest.EventDataType
+
+
+Value Description
+HardWiredNotificati
+on
+
+
+The software implemented by the manufacturer triggered a hardwired notification.
+
+
+HardWiredMonitor Triggered by a monitor, which is hardwired by the manufacturer.
+PreconfiguredMonit
+or
+
+
+Triggered by a monitor, which is preconfigured by the manufacturer.
+
+
+CustomMonitor Triggered by a monitor, which is set with the setvariablemonitoringrequest message by the Charging Station
+Operator.
+
+=== 3.32. EventTriggerEnumType
+
+_Enumeration_
+
+EventTriggerEnumType is used by: notifyEvent:NotifyEventRequest.EventDataType
+
+
+Value Description
+
+**Alerting** (^) Monitored variable has passed an Lower or Upper Threshold.
+Also used as trigger type for a HardWiredNotification.
+**Delta** Delta Monitored Variable value has changed by more than specified amount
+**Periodic** Periodic Monitored Variable has been sampled for reporting at the specified interval
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+=== 3.33. FirmwareStatusEnumType
+
+_Enumeration_
+
+Status of a firmware download.
+
+A value with "Intermediate state" in the description, is an intermediate state, update process is not finished.
+
+A value with "Failure end state" in the description, is an end state, update process has stopped, update failed.
+
+A value with "Successful end state" in the description, is an end state, update process has stopped, update successful.
+
+FirmwareStatusEnumType is used by: firmwareStatusNotification:FirmwareStatusNotificationRequest
+
+
+Value Description
+Downloaded Intermediate state. New firmware has been downloaded by Charging Station.
+DownloadFailed Failure end state. Charging Station failed to download firmware.
+Downloading Intermediate state. Firmware is being downloaded.
+DownloadScheduled Intermediate state. Downloading of new firmware has been scheduled.
+DownloadPaused Intermediate state. Downloading has been paused.
+Idle Charging Station is not performing firmware update related tasks. Status Idle SHALL only be used as in a
+FirmwareStatusNotificationRequest that was triggered by TriggerMessageRequest.
+InstallationFailed Failure end state. Installation of new firmware has failed.
+Installing Intermediate state. Firmware is being installed.
+Installed Successful end state. New firmware has successfully been installed in Charging Station.
+InstallRebooting Intermediate state. Charging Station is about to reboot to activate new firmware. If sent before installing the
+firmware, it indicates the Charging Station is about to reboot to start installing new firmware. If sent after
+installing the new firmware, it indicates the Charging Station has finished installing, but requires a reboot to
+activate the new firmware, which will be done automatically when idle.
+This status MAY be omitted if a reboot is an integral part of the installation and cannot be reported
+separately.
+InstallScheduled Intermediate state. Installation of the downloaded firmware is scheduled to take place on installDateTime
+given in UpdateFirmware request.
+InstallVerificationFai
+led
+
+
+Failure end state. Verification of the new firmware (e.g. using a checksum or some other means) has failed
+and installation will not proceed. (Final failure state)
+InvalidSignature Failure end state. The firmware signature is not valid.
+SignatureVerified Intermediate state. Provide signature successfully verified.
+
+=== 3.34. GenericDeviceModelStatusEnumType
+
+_Enumeration_
+
+GenericDeviceModelStatusEnumType is used by: getBaseReport:GetBaseReportResponse ,
+getMonitoringReport:GetMonitoringReportResponse , getReport:GetReportResponse ,
+setMonitoringBase:SetMonitoringBaseResponse
+
+
+Value Description
+Accepted Request has been accepted and will be executed.
+Rejected Request has not been accepted and will not be executed.
+NotSupported The content of the request message is not supported.
+EmptyResultSet If the combination of received criteria result in an empty result set.
+
+=== 3.35. GenericStatusEnumType
+
+_Enumeration_
+
+Generic message response status
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+GenericStatusEnumType is used by: getCompositeSchedule:GetCompositeScheduleResponse ,
+notifyEVChargingSchedule:NotifyEVChargingScheduleResponse , signCertificate:SignCertificateResponse ,
+setMonitoringLevel:SetMonitoringLevelResponse , publishFirmware:PublishFirmwareResponse
+
+
+Value Description
+Accepted Request has been accepted and will be executed.
+Rejected Request has not been accepted and will not be executed.
+
+=== 3.36. GetCertificateIdUseEnumType.
+
+_Enumeration_
+
+GetCertificateIdUseEnumType is used by: Common:CertificateHashDataChainType ,
+getInstalledCertificateIds:GetInstalledCertificateIdsRequest
+
+
+Value Description
+V2GRootCertificate Use for certificate of the V2G Root.
+MORootCertificate Use for certificate from an eMobility Service provider. To support PnC charging with contracts from service
+providers that not derived their certificates from the V2G root.
+CSMSRootCertificat
+e
+
+
+Root certificate for verification of the CSMS certificate.
+
+
+V2GCertificateChain ISO 15118 V2G certificate chain (excluding the V2GRootCertificate).
+ManufacturerRootC
+ertificate
+
+
+Root certificate for verification of the Manufacturer certificate.
+
+==== 3.37. GetCertificateStatusEnumType
+
+_Enumeration_
+
+GetCertificateStatusEnumType is used by: getCertificateStatus:GetCertificateStatusResponse
+
+
+Value Description
+Accepted Successfully retrieved the OCSP certificate status.
+Failed Failed to retrieve the OCSP certificate status.
+
+==== 3.38. GetChargingProfileStatusEnumType
+
+_Enumeration_
+
+GetChargingProfileStatusEnumType is used by: getChargingProfiles:GetChargingProfilesResponse
+
+
+Value Description
+Accepted Normal successful completion (no errors).
+NoProfiles No ChargingProfiles found that match the information in the GetChargingProfilesRequest.
+
+==== 3.39. GetDisplayMessagesStatusEnumType.
+
+_Enumeration_
+
+GetDisplayMessagesStatusEnumType is used by: getDisplayMessages:GetDisplayMessagesResponse
+
+
+Value Description
+Accepted Request accepted, there are Display Messages found that match all the requested criteria. The Charging
+Station will send NotifyDisplayMessagesRequest messages to report the requested Display Messages.
+Unknown No messages found that match the given criteria.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+==== 3.40. GetInstalledCertificateStatusEnumType
+
+_Enumeration_
+
+GetInstalledCertificateStatusEnumType is used by: getInstalledCertificateIds:GetInstalledCertificateIdsResponse
+
+
+Value Description
+Accepted Normal successful completion (no errors).
+NotFound Requested resource not found.
+
+==== 3.41. GetVariableStatusEnumType
+
+_Enumeration_
+
+GetVariableStatusEnumType is used by: getVariables:GetVariablesResponse.GetVariableResultType
+
+
+Value Description
+Accepted Variable successfully set.
+Rejected Request is rejected.
+UnknownComponen
+t
+
+
+Component is not known.
+
+
+UnknownVariable Variable is not known.
+NotSupportedAttrib
+uteType
+
+
+The AttributeType is not supported.
+
+==== 3.42. HashAlgorithmEnumType
+
+_Enumeration_
+
+HashAlgorithmEnumType is used by: Common:CertificateHashDataType , Common:OCSPRequestDataType
+
+
+Value Description
+SHA256 SHA-256 hash algorithm.
+SHA384 SHA-384 hash algorithm.
+SHA512 SHA-512 hash algorithm.
+
+==== 3.43. IdTokenEnumType
+
+_Enumeration_
+
+Allowable values of the **IdTokenType** field.
+
+IdTokenEnumType is used by: Common:IdTokenType
+
+
+Value Description
+Central A centrally, in the CSMS (or other server) generated id (for example used for a remotely started transaction
+that is activated by SMS). No format defined, might be a UUID.
+eMAID Electro-mobility account id as defined in ISO 15118
+ISO14443 ISO 14443 UID of RFID card. It is represented as an array of 4 or 7 bytes in hexadecimal representation.
+ISO15693 ISO 15693 UID of RFID card. It is represented as an array of 8 bytes in hexadecimal representation.
+KeyCode User use a private key-code to authorize a charging transaction. For example: Pin-code.
+Local A locally generated id (e.g. internal id created by the Charging Station). No format defined, might be a UUID
+MacAddress The MacAddress of the EVCC (Electric Vehicle Communication Controller) that is connected to the EVSE.
+This is used as a token type when the MAC address is used for authorization ("Autocharge").
+NoAuthorization Transaction is started and no authorization possible. Charging Station only has a start button or mechanical
+key etc. IdToken field SHALL be left empty.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+==== 3.44. InstallCertificateStatusEnumType.
+
+_Enumeration_
+
+InstallCertificateStatusEnumType is used by: installCertificate:InstallCertificateResponse
+
+
+Value Description
+Accepted The installation of the certificate succeeded.
+Rejected The certificate is invalid and/or incorrect OR the CSO tries to install more certificates than allowed.
+Failed The certificate is valid and correct, but there is another reason the installation did not succeed.
+
+==== 3.45. InstallCertificateUseEnumType
+
+_Enumeration_
+
+InstallCertificateUseEnumType is used by: installCertificate:InstallCertificateRequest
+
+
+Value Description
+V2GRootCertificate Use for certificate of the V2G Root, a V2G Charging Station Certificate MUST be derived from one of the
+installed V2GRootCertificate certificates.
+MORootCertificate Use for certificate from an eMobility Service provider. To support PnC charging with contracts from service
+providers that not derived their certificates from the V2G root.
+CSMSRootCertificat
+e
+
+
+Root certificate, used by the CA to sign the CSMS and Charging Station certificate.
+
+
+ManufacturerRootC
+ertificate
+
+
+Root certificate for verification of the Manufacturer certificate.
+
+==== 3.46. Iso15118EVCertificateStatusEnumType
+
+_Enumeration_
+
+Iso15118EVCertificateStatusEnumType is used by: get15118EVCertificate:Get15118EVCertificateResponse
+
+
+Value Description
+Accepted exiResponse included. This is no indication whether the update was successful, just that the message was
+processed properly.
+Failed Processing of the message was not successful, no exiResponse included.
+
+==== 3.47. LocationEnumType
+
+_Enumeration_
+
+Allowable values of the optional "location" field of a value element.
+
+LocationEnumType is used by: Common:SampledValueType
+
+
+Value Description
+Body Measurement inside body of Charging Station (e.g. Temperature).
+Cable Measurement taken from cable between EV and Charging Station.
+EV Measurement taken by EV.
+
+**Inlet** (^) For the Charging Station ( _evseId_  0): measurement at network ("grid") inlet connection.
+For measurements with _evseId_ > 0, these are measurements taken at the EVSE inlet (This can be useful for a
+DC charger).
+**Outlet** Measurement at a Connector. Default value.
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+==== 3.48. LogEnumType
+
+_Enumeration_
+
+LogEnumType is used by: getLog:GetLogRequest
+
+
+Value Description
+DiagnosticsLog This contains the field definition of a diagnostics log file
+SecurityLog Sent by the CSMS to the Charging Station to request that the Charging Station uploads the security log.
+
+==== 3.49. LogStatusEnumType.
+
+_Enumeration_
+
+Generic message response status
+
+LogStatusEnumType is used by: getLog:GetLogResponse
+
+
+Value Description
+Accepted Accepted this log upload. This does not mean the log file is uploaded is successfully, the Charging Station
+will now start the log file upload.
+Rejected Log update request rejected.
+AcceptedCanceled Accepted this log upload, but in doing this has canceled an ongoing log file upload.
+
+==== 3.50. MeasurandEnumType.
+
+_Enumeration_
+
+Allowable values of the optional "measurand" field of a Value element, as used in MeterValuesRequest and
+TransactionEventRequest with eventTypes _Started_ , _Ended_ and _Updated_. Default value of "measurand" is always
+"Energy.Active.Import.Register".
+
+**Note 1** : Two measurands (Current.Offered and Power.Offered) are available that are strictly speaking no measured values. They
+indicate the maximum amount of current/power that is being offered to the EV and are intended for use in smart charging
+applications.
+
+**Note 2:** Import is energy flow from the Grid to the Charging Station, EV or other load. Export is energy flow from the EV to the
+Charging Station and/or from the Charging Station to the Grid. Except in the case of a meter replacement, all "Register" values
+relating to a single charging transaction, or a non-transactional consumer (e.g. Charging Station internal power supply, overall
+supply) MUST be monotonically increasing in time.
+
+**Note 3:** The actual quantity of energy corresponding to a reported ".Register" value is computed as the register value in question
+minus the register value recorded/reported at the start of the transaction or other relevant starting reference point in time. For
+improved auditability, ".Register" values SHOULD be reported exactly as they are directly read from a non-volatile register in the
+electrical metering hardware, and SHOULD NOT be re-based to zero at the start of transactions. This allows any "missing energy"
+between sequential transactions, due to hardware fault, meter replacement, mis-wiring, fraud, etc. to be identified, by allowing the
+CSMS to confirm that the starting register value of any transaction is identical to the finishing register value of the preceding
+transaction on the same connector.
+
+MeasurandEnumType is used by: Common:SampledValueType
+
+
+Value Description
+Current.Export Instantaneous current flow from EV
+Current.Import Instantaneous current flow to EV
+Current.Offered Maximum current offered to EV
+Energy.Active.Expor
+t.Register
+
+
+Numerical value read from the "active electrical energy" (Wh or kWh) register of the (most authoritative)
+electrical meter measuring energy exported (to the grid).
+Energy.Active.Impor
+t.Register
+
+
+Numerical value read from the "active electrical energy" (Wh or kWh) register of the (most authoritative)
+electrical meter measuring energy imported (from the grid supply).
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Value Description
+Energy.Reactive.Exp
+ort.Register
+
+
+Numerical value read from the "reactive electrical energy" (varh or kvarh) register of the (most authoritative)
+electrical meter measuring energy exported (to the grid).
+Energy.Reactive.Imp
+ort.Register
+
+
+Numerical value read from the "reactive electrical energy" (varh or kvarh) register of the (most authoritative)
+electrical meter measuring energy imported (from the grid supply).
+Energy.Active.Expor
+t.Interval
+
+
+Absolute amount of "active electrical energy" (Wh or kWh) exported (to the grid) during an associated time
+"interval", specified by a Metervalues ReadingContext, and applicable interval duration configuration values
+(in seconds) for ClockAlignedDataInterval and TxnMeterValueSampleInterval.
+Energy.Active.Impor
+t.Interval
+
+
+Absolute amount of "active electrical energy" (Wh or kWh) imported (from the grid supply) during an
+associated time "interval", specified by a Metervalues ReadingContext, and applicable interval duration
+configuration values (in seconds) for ClockAlignedDataInterval and TxnMeterValueSampleInterval.
+Energy.Active.Net Numerical value read from the “net active electrical energy" (Wh or kWh) register.
+Energy.Reactive.Exp
+ort.Interval
+
+
+Absolute amount of "reactive electrical energy" (varh or kvarh) exported (to the grid) during an associated
+time "interval", specified by a Metervalues ReadingContext, and applicable interval duration configuration
+values (in seconds) for ClockAlignedDataInterval and TxnMeterValueSampleInterval.
+Energy.Reactive.Imp
+ort.Interval
+
+
+Absolute amount of "reactive electrical energy" (varh or kvarh) imported (from the grid supply) during an
+associated time "interval", specified by a Metervalues ReadingContext, and applicable interval duration
+configuration values (in seconds) for ClockAlignedDataInterval and TxnMeterValueSampleInterval.
+Energy.Reactive.Net Numerical value read from the “net reactive electrical energy" (varh or kvarh) register.
+Energy.Apparent.Ne
+t
+
+
+Numerical value read from the "apparent electrical energy" (VAh or kVAh) register.
+
+
+Energy.Apparent.Im
+port
+
+
+Numerical value read from the "apparent electrical import energy" (VAh or kVAh) register.
+
+
+Energy.Apparent.Ex
+port
+
+
+Numerical value read from the "apparent electrical export energy" (VAh or kVAh) register.
+
+
+Frequency Instantaneous reading of powerline frequency
+Power.Active.Export Instantaneous active power exported by EV. (W or kW)
+Power.Active.Import Instantaneous active power imported by EV. (W or kW)
+Power.Factor Instantaneous power factor of total energy flow
+Power.Offered Maximum power offered to EV
+Power.Reactive.Exp
+ort
+
+
+Instantaneous reactive power exported by EV. (var or kvar)
+
+
+Power.Reactive.Imp
+ort
+
+
+Instantaneous reactive power imported by EV. (var or kvar)
+
+
+SoC State of charge of charging vehicle in percentage
+
+**Voltage** (^) Instantaneous DC or AC RMS supply voltage.
+For _location_  Inlet and _evseId_  0: voltage at charging station grid connection.
+For _location_  Outlet and _evseId_ > 0: voltage at EVSE outlet towards the EV.
+
+==== 3.51. MessageFormatEnumType
+
+_Enumeration_
+
+Format of a message to be displayed on the display of the Charging Station.
+
+MessageFormatEnumType is used by: Common:MessageContentType
+
+
+Value Description
+ASCII Message content is ASCII formatted, only printable ASCII allowed.
+HTML Message content is HTML formatted.
+URI Message content is URI that Charging Station should download and use to display. for example a HTML
+page to be shown in a web-browser.
+UTF8 Message content is UTF-8 formatted.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+==== 3.52. MessagePriorityEnumType
+
+_Enumeration_
+
+Priority with which a message should be displayed on a Charging Station.
+
+MessagePriorityEnumType is used by: Common:MessageInfoType , getDisplayMessages:GetDisplayMessagesRequest
+
+
+Value Description
+AlwaysFront Show this message always in front. Highest priority, don’t cycle with other messages. When a newer
+message with this MessagePriority is received, this message is replaced. No Charging Station own message
+may override this message.
+InFront Show this message in front of the normal cycle of messages. When more messages with this priority are to
+be shown, they SHALL be cycled.
+NormalCycle Show this message in the cycle of messages.
+
+==== 3.53. MessageStateEnumType
+
+_Enumeration_
+
+State of the Charging Station during which a message SHALL be displayed.
+
+MessageStateEnumType is used by: Common:MessageInfoType , getDisplayMessages:GetDisplayMessagesRequest
+
+
+Value Description
+Charging Message only to be shown while the Charging Station is charging.
+Faulted Message only to be shown while the Charging Station is in faulted state.
+Idle Message only to be shown while the Charging Station is idle (not charging).
+Unavailable Message only to be shown while the Charging Station is in unavailable state.
+
+
+[[message_trigger_enum_type]]
+==== MessageTriggerEnumType
+
+_Enumeration_
+
+Type of request to be triggered by trigger messages.
+
+MessageTriggerEnumType is used by: triggerMessage:TriggerMessageRequest
+
+
+Value Description
+BootNotification To trigger BootNotification.
+LogStatusNotificatio
+n
+
+
+To trigger LogStatusNotification.
+
+
+FirmwareStatusNotif
+ication
+
+
+To trigger FirmwareStatusNotification.
+
+
+Heartbeat To trigger Heartbeat.
+MeterValues To trigger MeterValues.
+SignChargingStation
+Certificate
+
+
+To trigger a SignCertificate with certificateType: ChargingStationCertificate.
+
+
+SignV2GCertificate To trigger a SignCertificate with certificateType: V2GCertificate
+StatusNotification To trigger StatusNotification.
+TransactionEvent To trigger TransactionEvent.
+SignCombinedCertif
+icate
+
+
+To trigger a SignCertificate with certificateType: ChargingStationCertificate AND V2GCertificate
+
+
+PublishFirmwareSta
+tusNotification
+
+
+To trigger PublishFirmwareStatusNotification.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+==== 3.55. MonitorEnumType
+
+_Enumeration_
+
+MonitorEnumType is used by: Common:VariableMonitoringType ,
+setVariableMonitoring:SetVariableMonitoringRequest.SetMonitoringDataType ,
+setVariableMonitoring:SetVariableMonitoringResponse.SetMonitoringResultType
+
+
+Value Description
+UpperThreshold Triggers an event notice when the actual value of the Variable rises above monitorValue
+LowerThreshold Triggers an event notice when the actual value of the Variable drops below monitorValue.
+Delta Triggers an event notice when the actual value has changed more than plus or minus monitorValue since the
+time that this monitor was set or since the last time this event notice was sent, whichever was last. For
+variables that are not numeric, like boolean, string or enumerations, a monitor of type Delta will trigger an
+event notice whenever the variable changes, regardless of the value of monitorValue.
+Periodic Triggers an event notice every monitorValue seconds interval, starting from the time that this monitor was
+set.
+PeriodicClockAligne
+d
+
+
+Triggers an event notice every monitorValue seconds interval, starting from the nearest clock-aligned interval
+after this monitor was set. For example, a monitorValue of 900 will trigger event notices at 0, 15, 30 and 45
+minutes after the hour, every hour.
+
+==== 3.56. MonitoringBaseEnumType
+
+_Enumeration_
+
+MonitoringBaseEnumType is used by: setMonitoringBase:SetMonitoringBaseRequest
+
+
+Value Description
+All Activate all pre-configured monitors.
+FactoryDefault Activate the default monitoring settings as recommended by the manufacturer. This is a subset of all pre-
+configured monitors.
+HardWiredOnly Clears all custom monitors and disables all pre-configured monitors.
+
+==== 3.57. MonitoringCriterionEnumType.
+
+_Enumeration_
+
+MonitoringCriterionEnumType is used by: getMonitoringReport:GetMonitoringReportRequest
+
+
+Value Description
+ThresholdMonitorin
+g
+
+
+Report variables and components with a monitor of type UpperThreshold or LowerThreshold.
+
+
+DeltaMonitoring Report variables and components with a monitor of type Delta.
+PeriodicMonitoring Report variables and components with a monitor of type Periodic or PeriodicClockAligned.
+
+==== 3.58. MutabilityEnumType
+
+_Enumeration_
+
+MutabilityEnumType is used by: Common:VariableAttributeType
+
+
+Value Description
+ReadOnly This variable is read-only.
+WriteOnly This variable is write-only.
+ReadWrite This variable is read-write.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+==== 3.59. NotifyEVChargingNeedsStatusEnumType
+
+_Enumeration_
+
+NotifyEVChargingNeedsStatusEnumType is used by: notifyEVChargingNeeds:NotifyEVChargingNeedsResponse
+
+
+Value Description
+Accepted A schedule will be provided momentarily.
+Rejected Service not available.
+Processing The CSMS is gathering information to provide a schedule.
+
+==== 3.60. OCPPInterfaceEnumType.
+
+_Enumeration_
+
+Enumeration of network interfaces.
+
+OCPPInterfaceEnumType is used by: setNetworkProfile:SetNetworkProfileRequest.NetworkConnectionProfileType
+
+
+Value Description
+Wired0 Use wired connection 0
+Wired1 Use wired connection 1
+Wired2 Use wired connection 2
+Wired3 Use wired connection 3
+Wireless0 Use wireless connection 0
+Wireless1 Use wireless connection 1
+Wireless2 Use wireless connection 2
+Wireless3 Use wireless connection 3
+
+==== 3.61. OCPPTransportEnumType
+
+_Enumeration_
+
+Enumeration of OCPP transport mechanisms. SOAP is currently not a valid value for OCPP 2.0.
+
+OCPPTransportEnumType is used by: setNetworkProfile:SetNetworkProfileRequest.NetworkConnectionProfileType
+
+
+Value Description
+JSON Use JSON over WebSockets for transport of OCPP PDU’s
+SOAP Use SOAP for transport of OCPP PDU’s
+
+==== 3.62. OCPPVersionEnumType
+
+_Enumeration_
+
+Enumeration of OCPP versions.
+
+OCPPVersionEnumType is used by: setNetworkProfile:SetNetworkProfileRequest.NetworkConnectionProfileType
+
+
+Value Description
+OCPP12 OCPP version 1.2
+OCPP15 OCPP version 1.5
+OCPP16 OCPP version 1.6
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Value Description
+
+**OCPP20** (^) OCPP version 2.0
+The OCPP 2.0 release of OCPP has been deprecated, so this value OCPP20 must now be used for OCPP
+2.0.1 implementations in the NetworkConnectionProfile. Note that OCPP 2.0.1 does have its own Websocket
+subprotocol name: ocpp2.0.1.
+
+==== 3.63. OperationalStatusEnumType
+
+_Enumeration_
+
+Requested availability change.
+
+OperationalStatusEnumType is used by: changeAvailability:ChangeAvailabilityRequest
+
+
+Value Description
+Inoperative Charging Station is not available for charging.
+Operative Charging Station is available for charging.
+
+==== 3.64. PhaseEnumType
+
+_Enumeration_
+
+Phase specifies how a measured value is to be interpreted. Please note that not all values of Phase are applicable to all
+Measurands.
+
+PhaseEnumType is used by: Common:SampledValueType
+
+
+Value Description
+L1 Measured on L1
+L2 Measured on L2
+L3 Measured on L3
+N Measured on Neutral
+L1-N Measured on L1 with respect to Neutral conductor
+L2-N Measured on L2 with respect to Neutral conductor
+L3-N Measured on L3 with respect to Neutral conductor
+L1-L2 Measured between L1 and L2
+L2-L3 Measured between L2 and L3
+L3-L1 Measured between L3 and L1
+
+==== 3.65. PublishFirmwareStatusEnumType
+
+_Enumeration_
+
+Status for when publishing a Firmware.
+
+PublishFirmwareStatusEnumType is used by: publishFirmwareStatusNotification:PublishFirmwareStatusNotificationRequest
+
+
+Value Description
+Idle
+DownloadScheduled Intermediate state. Downloading of new firmware has been scheduled.
+Downloading Intermediate state. Firmware is being downloaded.
+Downloaded Intermediate state. New firmware has been downloaded by Charging Station.
+Published The firmware has been successfully published.
+DownloadFailed Failure end state. Charging Station failed to download firmware.
+DownloadPaused Intermediate state. Downloading has been paused.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Value Description
+InvalidChecksum Failure end state. The firmware checksum is not matching.
+ChecksumVerified Intermediate state. The Firmware checksum is successfully verified.
+PublishFailed Publishing the new firmware has failed.
+
+==== 3.66. ReadingContextEnumType.
+
+_Enumeration_
+
+Values of the context field.
+
+ReadingContextEnumType is used by: Common:SampledValueType
+
+
+Value Description
+Interruption.Begin Value taken at start of interruption.
+Interruption.End Value taken when resuming after interruption.
+Other Value for any other situations.
+Sample.Clock Value taken at clock aligned interval.
+Sample.Periodic Value taken as periodic sample relative to start time of transaction.
+Transaction.Begin Value taken at start of transaction.
+Transaction.End Value taken at end of transaction.
+Trigger Value taken in response to TriggerMessageRequest.
+
+==== 3.67. ReasonEnumType
+
+_Enumeration_
+
+Reason for stopping a transaction.
+
+ReasonEnumType is used by: transactionEvent:TransactionEventRequest.TransactionType
+
+
+Value Description
+DeAuthorized The transaction was stopped because of the authorization status in the response to a
+transactionEventRequest.
+EmergencyStop Emergency stop button was used.
+EnergyLimitReached EV charging session reached a locally enforced maximum energy transfer limit
+EVDisconnected Disconnecting of cable, vehicle moved away from inductive charge unit.
+GroundFault A GroundFault has occurred
+ImmediateReset A Reset(Immediate) command was received.
+Local Stopped locally on request of the EV Driver at the Charging Station. This is a regular termination of a
+transaction. Examples: presenting an IdToken tag, pressing a button to stop.
+LocalOutOfCredit A local credit limit enforced through the Charging Station has been exceeded.
+MasterPass The transaction was stopped using a token with a MasterPassGroupId.
+Other Any other reason.
+OvercurrentFault A larger than intended electric current has occurred
+PowerLoss Complete loss of power.
+PowerQuality Quality of power too low, e.g. voltage too low/high, phase imbalance, etc.
+Reboot A locally initiated reset/reboot occurred. (for instance watchdog kicked in)
+Remote Stopped remotely on request of the CSMS. This is a regular termination of a transaction. Examples:
+termination using a smartphone app, exceeding a (non local) prepaid credit.
+SOCLimitReached Electric vehicle has reported reaching a locally enforced maximum battery State of Charge (SOC)
+StoppedByEV The transaction was stopped by the EV
+TimeLimitReached EV charging session reached a locally enforced time limit
+Timeout EV not connected within timeout
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+==== 3.68. RecurrencyKindEnumType
+
+_Enumeration_
+
+RecurrencyKindEnumType is used by: Common:ChargingProfileType
+
+
+Value Description
+Daily The schedule restarts every 24 hours, at the same time as in the startSchedule.
+Weekly The schedule restarts every 7 days, at the same time and day-of-the-week as in the startSchedule.
+
+==== 3.69. RegistrationStatusEnumType
+
+_Enumeration_
+
+Result of registration in response to BootNotificationRequest.
+
+RegistrationStatusEnumType is used by: bootNotification:BootNotificationResponse
+
+
+Value Description
+Accepted Charging Station is accepted by the CSMS.
+Pending CSMS is not yet ready to accept the Charging Station. CSMS may send messages to retrieve information or
+prepare the Charging Station.
+Rejected Charging Station is not accepted by CSMS. This may happen when the Charging Station id is not known by
+CSMS.
+
+==== 3.70. ReportBaseEnumType
+
+_Enumeration_
+
+ReportBaseEnumType is used by: getBaseReport:GetBaseReportRequest
+
+
+Value Description
+ConfigurationInvent
+ory
+
+
+Required. A (configuration) report that lists all Components/Variables that can be set by the operator.
+
+
+FullInventory Required. A (full) report that lists everything except monitoring settings.
+SummaryInventory Optional. A (summary) report that lists Components/Variables relating to the Charging Station’s current
+charging availability, and to any existing problem conditions.
+
+
+For the Charging Station Component:
+
+- AvailabilityState.
+For each EVSE Component:
+- AvailabilityState.
+For each Connector Component:
+- AvailabilityState (if known and different from EVSE).
+For all Components in an abnormal State:
+- Active (Problem, Tripped, Overload, Fallback) variables.
+- Any other diagnostically relevant Variables of the Components.
+- Include TechCode and TechInfo where available.
+
+
+All monitored Component.Variables in Critical or Alert state shall also be included.
+
+- Charging Stations that do not have Monitoring implemented are NOT REQUIRED to include Connector
+Availability, monitoring alerts, and MAY limit problem reporting detail to just the active Problem boolean
+Variable.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+==== 3.71. RequestStartStopStatusEnumType.
+
+_Enumeration_
+
+The result of a RequestStartTransactionRequest or RequestStopTransactionRequest.
+
+RequestStartStopStatusEnumType is used by: requestStartTransaction:RequestStartTransactionResponse ,
+requestStopTransaction:RequestStopTransactionResponse
+
+
+Value Description
+Accepted Command will be executed.
+Rejected Command will not be executed.
+
+==== 3.72. ReservationUpdateStatusEnumType
+
+_Enumeration_
+
+ReservationUpdateStatusEnumType is used by: reservationStatusUpdate:ReservationStatusUpdateRequest
+
+
+Value Description
+Expired The reservation is expired.
+Removed The reservation is removed.
+
+==== 3.73. ReserveNowStatusEnumType
+
+_Enumeration_
+
+Status in ReserveNowResponse.
+
+ReserveNowStatusEnumType is used by: reserveNow:ReserveNowResponse
+
+
+Value Description
+Accepted Reservation has been made.
+Faulted Reservation has not been made, because evse, connectors or specified connector are in a faulted state.
+Occupied Reservation has not been made. The evse or the specified connector is occupied.
+Rejected Reservation has not been made. Charging Station is not configured to accept reservations.
+Unavailable Reservation has not been made, because evse, connectors or specified connector are in an unavailable
+state.
+
+==== 3.74. ResetEnumType.
+
+_Enumeration_
+
+Type of reset requested.
+
+ResetEnumType is used by: reset:ResetRequest
+
+
+Value Description
+Immediate Immediate reset of the Charging Station.
+OnIdle Delay reset until no more transactions are active.
+
+==== 3.75. ResetStatusEnumType
+
+_Enumeration_
+
+Result of ResetRequest.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+ResetStatusEnumType is used by: reset:ResetResponse
+
+
+Value Description
+Accepted Command will be executed.
+Rejected Command will not be executed.
+Scheduled Reset command is scheduled, Charging Station is busy with a process that cannot be interrupted at the
+moment. Reset will be executed when process is finished.
+
+==== 3.76. SendLocalListStatusEnumType.
+
+_Enumeration_
+
+Type of update for SendLocalListRequest.
+
+SendLocalListStatusEnumType is used by: sendLocalList:SendLocalListResponse
+
+
+Value Description
+Accepted Local Authorization List successfully updated.
+Failed Failed to update the Local Authorization List.
+VersionMismatch Version number in the request for a differential update is less or equal then version number of current list.
+
+==== 3.77. SetMonitoringStatusEnumType.
+
+_Enumeration_
+
+SetMonitoringStatusEnumType is used by: setVariableMonitoring:SetVariableMonitoringResponse.SetMonitoringResultType
+
+
+Value Description
+Accepted Monitor successfully set.
+UnknownComponen
+t
+
+
+Component is not known.
+
+
+UnknownVariable Variable is not known.
+UnsupportedMonitor
+Type
+
+
+Requested monitor type is not supported.
+
+
+Rejected Request is rejected.
+Duplicate A monitor already exists for the given type/severity combination.
+
+==== 3.78. SetNetworkProfileStatusEnumType
+
+_Enumeration_
+
+Possible values of SetNetworkProfileStatus as used in SetNetworkProfileResponse.
+
+SetNetworkProfileStatusEnumType is used by: setNetworkProfile:SetNetworkProfileResponse
+
+
+Value Description
+Accepted Setting new data successful
+Rejected Setting new data rejected
+Failed Setting new data failed
+
+==== 3.79. SetVariableStatusEnumType
+
+_Enumeration_
+
+SetVariableStatusEnumType is used by: setVariables:SetVariablesResponse.SetVariableResultType
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Value Description
+Accepted Variable successfully set.
+Rejected Request is rejected.
+UnknownComponen
+t
+
+
+Component is not known.
+
+
+UnknownVariable Variable is not known.
+NotSupportedAttrib
+uteType
+
+
+The AttributeType is not supported.
+
+
+RebootRequired A reboot is required.
+
+==== 3.80. TransactionEventEnumType
+
+_Enumeration_
+
+TransactionEventEnumType is used by: transactionEvent:TransactionEventRequest
+
+
+Value Description
+Ended Last event of a transaction
+Started First event of a transaction.
+Updated Transaction event in between 'Started' and 'Ended'.
+
+==== 3.81. TriggerMessageStatusEnumType
+
+_Enumeration_
+
+Status in TriggerMessageResponse.
+
+TriggerMessageStatusEnumType is used by: triggerMessage:TriggerMessageResponse
+
+
+Value Description
+Accepted Requested message will be sent.
+Rejected Requested message will not be sent.
+NotImplemented Requested message cannot be sent because it is either not implemented or unknown.
+
+==== 3.82. TriggerReasonEnumType
+
+_Enumeration_
+
+Reason that triggered a transactionEventRequest.
+
+TriggerReasonEnumType is used by: transactionEvent:TransactionEventRequest
+
+
+Value Description
+Authorized Charging is authorized, by any means. Might be an RFID, or other authorization means.
+CablePluggedIn Cable is plugged in and EVDetected.
+ChargingRateChang
+ed
+
+
+Rate of charging changed by more than LimitChangeSignificance.
+
+
+ChargingStateChang
+ed
+
+
+Charging State changed.
+
+
+Deauthorized The transaction was stopped because of the authorization status in the response to a
+transactionEventRequest.
+EnergyLimitReached Maximum energy of charging reached. For example: in a pre-paid charging solution
+EVCommunicationL
+ost
+
+
+Communication with EV lost, for example: cable disconnected.
+
+
+EVConnectTimeout EV not connected before the connection is timed out.
+MeterValueClock Needed to send a clock aligned meter value
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+
+Value Description
+MeterValuePeriodic Needed to send a periodic meter value
+TimeLimitReached Maximum time of charging reached. For example: in a pre-paid charging solution
+Trigger Requested by the CSMS via a TriggerMessageRequest.
+UnlockCommand CSMS sent an Unlock Connector command.
+StopAuthorized An EV Driver has been authorized to stop charging. For example: By swiping an RFID card.
+EVDeparted EV departed. For example: When a departing EV triggers a parking bay detector.
+EVDetected EV detected. For example: When an arriving EV triggers a parking bay detector.
+RemoteStop A RequestStopTransactionRequest has been sent.
+RemoteStart A RequestStartTransactionRequest has been sent.
+AbnormalCondition An Abnormal Error or Fault Condition has occurred.
+SignedDataReceived Signed data is received from the energy meter.
+ResetCommand CSMS sent a Reset Charging Station command.
+
+==== 3.83. UnlockStatusEnumType
+
+_Enumeration_
+
+Status in response to UnlockConnectorRequest.
+
+UnlockStatusEnumType is used by: unlockConnector:UnlockConnectorResponse
+
+
+Value Description
+Unlocked Connector has successfully been unlocked.
+UnlockFailed Failed to unlock the connector.
+OngoingAuthorizedT
+ransaction
+
+
+The connector is not unlocked, because there is still an authorized transaction ongoing.
+
+
+UnknownConnector The specified connector is not known by the Charging Station.
+
+==== 3.84. UnpublishFirmwareStatusEnumType
+
+_Enumeration_
+
+Status for when publishing a Firmware.
+
+UnpublishFirmwareStatusEnumType is used by: unpublishFirmware:UnpublishFirmwareResponse
+
+
+Value Description
+DownloadOngoing Intermediate state. Firmware is being downloaded.
+NoFirmware There is no published file.
+Unpublished Successful end state. Firmware file no longer being published.
+
+==== 3.85. UpdateEnumType
+
+_Enumeration_
+
+UpdateEnumType is used by: sendLocalList:SendLocalListRequest
+
+
+Value Description
+Differential Indicates that the current Local Authorization List must be updated with the values in this message.
+Full Indicates that the current Local Authorization List must be replaced by the values in this message.
+
+Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
+
+
+==== 3.86. UpdateFirmwareStatusEnumType.
+
+_Enumeration_
+
+Generic message response status
+
+UpdateFirmwareStatusEnumType is used by: updateFirmware:UpdateFirmwareResponse
+
+
+Value Description
+Accepted Accepted this firmware update request. This does not mean the firmware update is successful, the Charging
+Station will now start the firmware update process.
+Rejected Firmware update request rejected.
+AcceptedCanceled Accepted this firmware update request, but in doing this has canceled an ongoing firmware update.
+InvalidCertificate The certificate is invalid.
+RevokedCertificate Failure end state. The Firmware Signing certificate has been revoked.
+
+==== 3.87. UploadLogStatusEnumType.
+
+_Enumeration_
+
+UploadLogStatusEnumType is used by: logStatusNotification:LogStatusNotificationRequest
+
+
+Value Description
+BadMessage A badly formatted packet or other protocol incompatibility was detected.
+Idle The Charging Station is not uploading a log file. Idle SHALL only be used when the message was triggered by
+a TriggerMessageRequest.
+NotSupportedOperat
+ion
+
+
+The server does not support the operation
+
+
+PermissionDenied Insufficient permissions to perform the operation.
+Uploaded File has been uploaded successfully.
+UploadFailure Failed to upload the requested file.
+Uploading File is being uploaded.
+AcceptedCanceled On-going log upload is canceled and new request to upload log has been accepted.
+
+==== 3.88. VPNEnumType.
+
+_Enumeration_
+
+Enumeration of VPN Types.
+
+VPNEnumType is used by: setNetworkProfile:SetNetworkProfileRequest.VPNType
+
+
+Value Description
+IKEv2 IKEv2 VPN
+IPSec IPSec VPN
+L2TP L2TP VPN
+PPTP PPTP VPN
+

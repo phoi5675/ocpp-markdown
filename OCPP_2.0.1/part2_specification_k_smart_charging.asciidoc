@@ -1,0 +1,3608 @@
+[[smart_charging]]
+= K. SmartCharging
+
+== 1. Introduction
+
+This Functional Block describes all the functionalities that enable the CSO (or a third party) to influence the charging current/power
+
+transferred during a transaction, or set limits to the amount of current/power a Charging Station can draw from the grid.
+
+Smart Charging in general has more than one definition. It can mean that the grid capacity is used in such a manner that
+consumers are able to charge their batteries fully at any time, even if large groups of consumers wish to ‘fill up’ simultaneously.
+Smart can also mean that energy prices can be taken into consideration when charging. Or again smart can be taken as using a
+local supply of sustainable energy from solar panels. And it is even 'smarter' when the Electric Vehicle (EV) driver wishes to be part
+of the solution. Within OCPP, Smart Charging means that a CSMS gains the ability to influence the (de-)charging power or current of
+a specific EV, or the total allowed energy consumption on an entire Charging Station / a group of Charging Stations. Different
+setups can be used. The following four typical kinds of smart charging will be used to illustrate the possible behavior of smart
+charging using OCPP:
+
+- Internal Load Balancing
+- Central Smart Charging
+- Local Smart Charging
+- External Smart Charging Control Signals
+
+These types will be explained in Types of Smart Charging. Of course, more complex use cases are possible in which two or more of
+the above use cases are combined into one more complex system.
+
+
+NOTE A mapping of the ISO 15118 and OCPP terminology is provided in ISO 15118 and OCPP terminology mapping
+
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+=== 2. Types of Smart Charging
+
+_This section is informative._
+
+==== 2.1. Internal Load Balancing
+
+The simplest form of smart charging is the Load Balancing use case. This concerns internal load balancing within the Charging
+Station, where the Charging Station controls current/power per EVSE. The Charging Station is configured with a fixed limit, e.g. the
+maximum current of the connection to the grid. The Charging Station in this case is responsible for optimizing charging for all its
+EVSEs. When a charging station is not directly connected to the grid, the energy system of a client will be responsible for the power
+
+supply.
+This setup is typically used to set limits that are necessary due to known physical limits.
+
+
+Charging Station: CS10
+
+
+Charging Station: CS11
+
+
+Charging Station
+CS10
+
+
+EVSE
+1
+
+
+EVSE
+2
+
+
+Charging Station
+CS11
+
+
+EVSE
+2
+
+
+EVSE
+1
+
+
+CSMS
+
+
+CSMS sets known physical
+grid connections limits.
+
+
+EV1
+
+
+EV2
+
+
+OCPP charging profile
+
+
+OCPP charging profile
+
+
+Control Pilot signal
+or ISO 15118
+
+
+Control Pilot signal
+or ISO 15118
+
+_Figure 94. Internal Load Balancing Smart Charging Topology_
+
+==== 2.2. Central Smart Charging.
+
+The next level in smart charging is when the CSMS has the ability to influence the charging power or current of a specific EV, the
+total allowed energy consumption on an entire Charging Station or a group of Charging Stations. Central Smart Charging assumes
+that charge limits are controlled by the CSMS. This could for example be based on a grid connection, energy availability on the grid
+(e.g. capacity forecast from the grid operator (DSO)) or the wiring of a building. In this setup, the CSMS can optimize charging not
+only on one Charging Station, but one level "up": it can optimize more than one Charging Station that share a connection and thus
+
+calculate a more efficient schedule for charging.
+
+
+CSMS
+
+
+CSMS receives a capacity
+forecast from an external
+
+party (e.g. DSO). (^) Charging Station
+CS10
+Charging Station
+CS11
+Charging Station
+CS12
+EV1
+EV2
+OCPP charging profile
+OCPP charging profile
+Control Pilot signal
+or ISO 15118
+Control Pilot signal
+or ISO 15118
+_Figure 95. Central Smart Charging Topology_
+Central Smart Charging can be done with a Control Pilot signal, albeit with some limitations, because an EV cannot communicate
+its charging needs via the Control Pilot signal. In analogy to the Local Smart Charging use case, an EVSE can execute a charging
+schedule by the Control Pilot signal.
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+==== 2.3. Local Smart Charging
+
+Local Smart Charging describes a use case in which smart charging enabled Charging Stations have charging limits controlled
+locally by a Local Controller, not the CSMS. This type of smart charging assumes the existence of a Local Controller, which is a
+logical component that controls a group of Charging Stations. A typical use would be a number of Charging Stations in a parking
+garage where the rating of the connection to the grid is less than the sum the ratings of the Charging Stations. Another application
+might be that the Local Controller receives information about the availability of power from a DSO or a local smart grid node.
+
+
+Local group
+
+
+Local Controller
+CS00
+
+
+Local Controller limits power usage of total
+group to pre-configured
+maximum capacity.
+
+
+Charging Station
+CS01
+
+
+Charging Station
+CS02
+
+
+Charging Station
+CS03
+
+
+EV1
+
+
+EV2
+CSMS
+
+
+OCPP charging profile
+
+
+OCPP charging profile
+Control Pilot signal or ISO 15118
+
+
+Control Pilot signal
+or ISO 15118
+
+
+OCPP ChargingStationMaxProfile
+
+_Figure 96. Local Smart Charging Topology_
+
+==== 2.4. External Smart Charging Control Signals
+
+The OCPP protocol is originally developed for communication between a CSMS and one or more Charging Stations. As described in
+the above, this means that a Charging Station Operator (CSO) CSMS controls a Charging Station and, based on the charging limits
+of both the EV and the Charging Station, the CSO determines how fast the EV is charged. However, in some situations /
+applications of OCPP enabled Charging Stations, these are not the only 2 factors that determine the charging speed. Other inputs
+that determine charging speed could be DSO signals (e.g. via IEC 61850 [IEC61850-7-420], IEC 60870 [IEC60870-5-104], DNP3
+[DNP3] or OpenADR [OPENADR]) or signals from a Building / Home Energy Management System. Although these signals are out of
+scope for OCPP, it seems clear from an OCPP perspective that the CSMS is to be informed of changes in charging by external
+signals. However, this also leads to a number of questions, such as how to deal with conflicting signals. The figure below presents
+an example setup with an Energy Management System, where the external signals are visualized both in a setup with direct
+communication to the Charging Station as well as a multiple Charging Station setup using a Local Controller:
+
+_Figure 97. External Smart Charging_
+
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+_Figure 98. External Smart Charging via LC_
+
+If a Charging Station is connected both to the outside world as well as to an Energy Management System (EMS), this could result in
+a situation where the EMS, for whatever reason, decides that charging is not opportune, despite a charging schedule it might have
+received from the CSMS. This means that the Charging Station will not behave as expected by the CSMS. To prevent this, the
+Charging Station will have to be able to notify the CSMS that it has received a command from the EMS. An example reason could be
+an airconditioning system that is given preference / priority instead of charging an EV by a home user (in this case assuming that
+using the airconditioning and EV charging at the same time is not possible). This EMS might be in place to manage the maximum
+limit of a connection, but this can also be externally controlled.
+
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+=== 3. Charging profiles
+
+==== 3.1. Introduction
+
+Influencing the charge power or current is based on sending energy transfer limits at specific points in time to a Charging Station.
+Those limits are combined in a ChargingProfile. A ChargingProfile holds the ChargingSchedule which defines a block of charging
+Power or Current limits and can contain a start time and duration. These can be applied to Charging Stations as well as to EVSEs of
+the Charging Stations. In Example ChargingProfile an example of a ChargingProfile is given to illustrate how these charging profiles
+can be used.
+
+A CSMS can send a charging profile to a Charging Station using the message SetChargingProfileRequest, in the following
+situations:
+
+- At the start of a transaction to set the charging profile for the transaction
+- In a RequestStartTransaction request sent to a Charging Station
+- During a transaction to change the active profile for the transaction
+- Outside the context of a transaction as a separate message to set a charging profile to a local controller, Charging Station,
+    or a default charging profile to an EVSE.
+
+==== 3.2. Charging profile purposes
+
+This section describes a number of types of charging profiles that are supported in OCPP. There are four different types of charging
+profiles, depending on their _purpose_ :
+
+
+ChargingProfile
+Purpose
+
+
+Description
+
+
+ChargingStationMaxProfi
+le
+
+
+In internal load balancing scenarios, the Charging Station has one or more local charging profiles that
+limit the power or current to be shared by all EVSEs of the Charging Station. The CSMS SHALL configure
+such a profile with ChargingProfilePurpose set to " ChargingStationMaxProfile ".
+ChargingStationMaxProfile can only be set at Charging Station evseId 0.
+TxProfile A transaction-specific profile with purpose TxProfile overrules the TxDefaultProfile for the duration of
+the current transaction only or until the TxProfile expires, whichever occurs earlier.
+TxDefaultProfile Default schedules for new transactions that MAY be used to impose charging policies. An example
+could be a policy that prevents charging during the day.
+ChargingStationExternal
+Constraints
+
+
+When an external system, not the CSMS, sets a charging limit or schedule, the Charging Station uses this
+purpose to report such a limit/schedule.
+
+==== 3.3. Charging profile recurrency
+
+This section explains the different kinds of charging schedules that can be use in a charging profile, as defined by the value of the
+attribute _chargingProfileKind_ :
+
+
+ChargingProfile
+Kind
+
+
+Description
+
+
+Absolute The charging schedule periods are relative to an absolute point in time defined in the schedule. This
+requires that startSchedule is set to a starting point in time. Use this, for example, to define a schedule
+that reduces charging between 17:00h and 21:00h, regardless of when charging session was started.
+Recurring The charging schedule restarts periodically at the first schedule period. To be most useful, this requires
+that startSchedule is set to a starting point in time. Use this in combination with recurrencyKind  Daily,
+for example, to define a schedule that reduces charging between 17:00h and 21:00h every day,
+regardless of when charging session was started.
+Relative Charging schedule periods should start when the EVSE is ready to deliver energy. i.e. when the EV driver
+is authorized and the EV is connected. When a ChargingProfile is received for a transaction that is
+already charging, then the charging schedule periods should remain relative to the PowerPathClosed
+moment.
+No value for startSchedule should be supplied.
+
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+==== 3.4. Stacking charging profiles
+
+It is allowed to stack charging profiles of the same ChargingProfile purpose in order to describe complex calendars. For example,
+one can define ChargingProfile of purpose TxDefaultProfile with a duration and recurrence of one week that allows full power or
+current charging on weekdays from 23:00h to 06:00h and from 00:00h to 24:00h in weekends and reduced power or current
+charging at other times. On top of that, one can define other TxDefaultProfiles that define exceptions to this rule, for example for
+holidays.
+
+A ChargingProfile holds a ChargingSchedule that defines limits for a certain time interval. Precedence of ChargingSchedules is
+determined by the _stackLevel_ of their ChargingProfile. When more than one ChargingProfile with the same chargingProfilePurpose
+is valid, then a ChargingSchedule of a ChargingProfile with a higher stack level overrules a ChargingSchedule from a
+ChargingProfile with a lower stack level.
+
+To avoid conflicts, it is not allowed to have multiple charging profiles with the same _stackLevel_ and same _chargingProfilePurpose_ to
+be valid on the same EVSE at a given time. Note, that a charging profile for EVSE #0 is considered to be active on all EVSEs!
+
+==== 3.5. Combining Charging Profile Purposes
+
+The Composite Schedule that will guide the charging level is a combination of the prevailing Charging Profiles of the different
+chargingProfilePurposes and stack levels.
+
+As mentioned before, for each charging profile purpose, at any point in time, the leading charging schedule for that purpose is the
+charging schedule that has a schedule period defined for that time and that belongs to a charging profile with the highest stack
+level that is valid at that time, as determined by their _validFrom_ and _validTo_ parameters. The Composite Schedule is then calculated
+by taking the lowest charging limit (taking the different chargingRateUnits into account) among the leading profiles of the different
+
+purposes for each time interval.
+
+The only exception is when both a TxDefaultProfile and a TxProfile are valid. In that case, the TxProfile will always overrule the
+TxDefaultProfile, hence the Composite Schedule will not take the leading profile of purpose TxDefaultProfile into account in this
+specific situation. Note that time intervals do not have to be of fixed length, nor do they have to be the same for every
+
+ChargingProfile purpose. This means that a resulting Composite Schedule MAY contain intervals of different lengths.
+
+In case the Charging Station is equipped with more than one EVSE, the limit value of ChargingStationMaxProfile is the limit for all
+EVSEs combined.
+
+The two figures below will be used to give an example of combining multiple charging profiles with different stackLevels and
+Purposes.
+
+
+ChargingStationMaxProfile
+
+TxDefaultProfile (^) ChargingStationExternalConstraints
+profile with stackLevel=0
+profile with stackLevel=2
+profile with stackLevel=1
+profile with stackLevel=0
+profile with stackLevel=1
+profile with stackLevel=0
+_Figure 99. Multiple valid charging profiles - situation 1_
+Suppose that at a certain time interval the valid charging profiles are as in the above figure (situation 1). The composite schedule
+for this time interval will then be the lowest of the charging limits given in the ChargingStationMaxProfile with stackLevel 0, the
+TxDefaultProfile with stackLevel 2 and the ChargingStationExternalConstraints profile with stackLevel 1.
+ChargingStationMaxProfile TxProfile^
+TxDefaultProfile (^) ChargingStationExternalConstraints
+profile with stackLevel=0 profile with stackLevel=1 profile with stackLevel=0
+profile with stackLevel=2
+profile with stackLevel=1
+profile with stackLevel=0
+profile with stackLevel=1
+profile with stackLevel=0
+_Figure 100. Multiple valid charging profiles - situation 2_
+On the other hand, consider the situation in which for a certain time interval the valid charging profiles are as in the above figure
+(situation 2). The composite schedule for this time interval will then be the lowest of the charging limits given in the
+ChargingStationMaxProfile with stackLevel 0, the TxProfile with stackLevel 1 and the ChargingStationExternalConstraints profile
+with stackLevel 1. Note that in this situation the TxProfile overrules the TxDefaultProfile.
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+==== 3.6. Example Charging Profile
+
+This section is informative.
+
+The following data structure describes a daily default profile that limits the power to 6 kW between 08:00h and 20:00h and to 11 kW
+between 00:00h and 08:00h and between 20:00h and 00:00h.
+
+
+ChargingProfile
+chargingProfileId 100
+stackLevel 0
+chargingProfilePurpose TxDefaultProfile
+chargingProfileKind Recurring
+recurrencyKind Daily
+chargingSchedule (List of 1 ChargingSchedule elements)
+ChargingSchedule
+duration 86400 ( 24 hours)
+startSchedule 2013-01-01T00:00Z
+chargingRateUnit W
+chargingSchedulePeriod (List of 3 ChargingSchedulePeriod elements)
+ChargingSchedulePeriod
+startPeriod 0 (=00:00)
+limit 11000
+numberPhases 3
+ChargingSchedulePeriod
+startPeriod 28800 (=08:00)
+limit 6000
+numberPhases 3
+ChargingSchedulePeriod
+startPeriod 72000 (=20:00)
+limit 11000
+numberPhases 3
+
+IMPORTANT
+
+
+The amount of phases used during charging is limited by the capabilities of: The Charging Station, EV and
+Cable between CS and EV. If any of these three is not capable of 3 phase charging, the EV will be charged
+using the number of phases that is supported by all three.
+
+IMPORTANT
+
+
+Switching the number of used phases during a schedule or transaction should be done with care. Some
+EVs MAY not support this and changing the amount of phases MAY result in physical damage. With the
+Configuration Variable: Phases3to1 The Charging Station can tell if it supports switching the amount of
+phases during a transaction.
+
+
+TIP On days on which daylight saving goes into or out of effect, a special profile might be needed (e.g. for relativeprofiles).
+
+**3.6.1. Example Using Stacked Charging Profiles**
+
+A CSO wishes to limit charging to 2 kW during the peak hours of the day from 17:00h to 20:00h. This limit does not apply to
+
+Sundays and this limit does not apply to Christmas Day either.
+
+If this applies to a large number or charging stations, then it is not practical to delete the charging profile every Sunday and then
+add it again on Monday. A possible solution is to add profiles with higher stack level for the exceptions to the base profile. See the
+following JSON examples where stack levels #2 and #3 are used to define exceptions for Sunday and Christmas.
+
+**(1) TxDefaultProfile, stack #1:** time-of-day limitation to 2 kW, recurring every day from 17:00h to 20:00h.
+
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+"chargingProfile": {
+"id": 10, "stackLevel": 1, "chargingProfilePurpose": "TxDefaultProfile",
+"chargingProfileKind": "Recurring", "recurrencyKind": "Daily",
+"chargingSchedule": [ {
+"id": 1, "startSchedule": "2020-01-09T17:00:00", "duration": 1080,
+"chargingRateUnit": "W",
+"chargingSchedulePeriod": [ { "startPeriod": 0, "limit": 2000 } ]
+} ]
+}
+
+**(2) TxDefaultProfile, stack #2:** overruling Sundays to no limit, recurring every week starting 2020-01-05.
+
+
+"chargingProfile": {
+"id": 11, "stackLevel": 2, "chargingProfilePurpose": "TxDefaultProfile",
+"chargingProfileKind": "Recurring", "recurrencyKind": "Weekly",
+"chargingSchedule": [ {
+"id": 1, "startSchedule": "2020-01-05T00:00:00", "duration": 86400,
+"chargingRateUnit": "W",
+"chargingSchedulePeriod": [ { "startPeriod": 0, "limit": 999999 } ]
+} ]
+}
+
+**(3) TxDefaultProfile, stack #3:** overruling Christmas Day 2020 to no limit, fixed date 2020-12-25.
+Note, that this profile is only valid in the year 2020.
+
+
+"chargingProfile": {
+"id": 12, "stackLevel": 3, "chargingProfilePurpose": "TxDefaultProfile",
+"chargingProfileKind": "Absolute",
+"validFrom": "2020-01-01T00:00:00", "validTo": "2021-01-01T00:00:00",
+"chargingSchedule": [ {
+"id": 1, "startSchedule": "2020-12-25T00:00:00", "duration": 86400,
+"chargingRateUnit": "W",
+"chargingSchedulePeriod": [ { "startPeriod": 0, "limit": 999999 } ]
+} ]
+}
+
+NOTE
+
+
+Normally, when no limits are desired for charging, one will not define a charging schedule period for those hours
+(see stack level #1 for hours outside 17:00h - 20:00h). However, when overruling a charging schedule by one from
+a profile with a higher stack level, it is not possible to define a charging schedule period that has no limit.
+Therefore, the charging schedules for stack #2 and #3 in the above example use a (arbitrary) high value of
+999999.
+
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+=== 4. Smart Charging Signals to a Charging Station from Multiple Actors
+
+This section is normative.
+
+Within OCPP, multiple mechanism are supported for Smart Charging, i.e. multiple mechanisms are available that can add a limit
+when charging an EV:
+
+1. The CSMS can influence charging by sending a SetChargingProfile message to the Charging Station. See K01 -
+    SetChargingProfile.
+2. The EV can influence charging based on the PlugAndCharge functionality: the ISO 15118 enables EV initiated Charging
+    Limits. See Section 5.3. ISO 15118 based Smart Charging.
+3. Some local input, for example a Home Energy Management System (HEMS) or DSO, can influence the charging, for example
+    via an External Smart Charging Control signal. See K11 - Set / Update External Charging Limit.
+4. A Charging Station can limit charging when it is load balancing when more than 1 EV is charging.
+
+The assumption is that all parties that might be involved in setting limits for charging an EV will use one of the above mechanisms
+directly or indirectly.
+
+To determine how a Charging Station should respond to simultaneous smart charging signals from multiple actors, the following
+rules should be followed:
+
+_Table 158. Smart Charging rules for multiple actor situation_
+
+
+ID Precondition Requirement definition Note
+SC.01 At any point in time, the charging limit, which is
+the result of merging the schedules from
+external sources and the OCPP charging
+profiles with the highest stackLevel from each
+of the purposes ChargingStationMaxProfile,
+ChargingStationExternalConstraints and
+TxDefaultProfile (or TxProfile), SHALL be less
+than or equal to the lowest value of available
+power or current in any of the merged
+schedules.
+
+
+For safety purposes.
+
+
+SC.02 When the
+ChargingProfile has
+changed
+
+
+The Charging Station SHALL always inform the
+CSMS.
+
+
+The message used for this varies depending
+on the which of the mechanisms mentioned at
+the start of this section is applicable:
+
+1. n/a
+2. NotifyEVChargingScheduleRequest
+3. NotifyChargingLimitRequest
+4. TransactionEventRequest
+SC.03 Reporting to the CSMS concerning a changed
+limit in the ChargingProfile for mechanisms 3
+and 4 as described in SC.02 MAY be skipped if
+the change in the limit is smaller than the
+percentage defined in the Configuration
+Variable: LimitChangeSignificance.
+
+
+This is to prevent the Charging Station to send
+a lot of messages for small fluctuations (e.g.
+due to HEMS / smart meter input at the
+Charging Station)
+
+
+SC.04 The GetCompositeScheduleResponse
+message SHALL always report the expected
+charging schedule, i.e. the lowest limit for
+charging. This means that when an EV has a
+charging limit X and indicates (e.g. using the
+ISO 15118 protocol) that it will use less energy
+than offered, amount Y, the Charging Station
+SHALL report limit Y.
+
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+=== 5. Use cases & Requirements
+
+==== 5.1. General Smart Charging
+
+==== K01 - SetChargingProfile
+
+_Table 159. K01 - Central Smart Charging_
+
+
+No. Type Description
+1 Name SetChargingProfile
+2 ID K01
+Functional block K. Smart Charging
+3 Objective(s) To enable the CSMS to influence the charging power or current drawn from a specific EVSE or the
+entire Charging Station over a period of time.
+4 Description The CSMS sends a SetChargingProfileRequest to the Charging Station to influence the power or
+current drawn by EVs. The CSMS calculates a ChargingSchedule to stay within certain limits,
+which MAY be imposed by any external system.
+Actors Charging Station, CSMS, EV
+
+_Scenario description_ (^) **1.** The CSMS sets charging limits by sending SetChargingProfileRequest to the Charging Station.
+
+**2.** The Charging Station responds with SetChargingProfileResponse.
+**5 Prerequisite(s)** n/a
+
+**6 Postcondition(s)** (^) **Successful postcondition:**
+The Charging Station _Successfully_ influences the charging power or current of a specific EV,
+following the SetChargingProfileRequest sent by the CSMS.
+**Failure postcondition:**
+The Charging Station was _not_ able to influence the charging power or current of a specific EV,
+following the SetChargingProfileRequest sent by the CSMS.
+CSMS Charging Station
+SetChargingProfileRequest(evseId, chargingProfile)
+SetChargingProfileResponse(Accepted)
+_Figure 101. Sequence Diagram: SetChargingProfile_
+**7 Error handling** n/a
+**8 Remark(s)** n/a
+**K01 - SetChargingProfile - Requirements**
+_Table 160. K01 - Requirements_
+**ID Precondition Requirement definition Note**
+K01.FR.01 The CSMS MAY choose to set charging limits to a
+transaction using TxProfile.
+K01.FR.02 The CSMS MAY send a new charging profile for the EVSE
+that SHALL be used as a limit schedule for the EV.
+K01.FR.03 The CSMS SHALL include the _transactionId_ in the
+SetChargingProfileRequest when setting a TxProfile.
+The transactionId is used to
+match the profile to a
+specific transaction.
+K01.FR.04 (^) K01.FR.03 AND
+the given _transactionId_ is
+known
+The Charging Station SHALL apply the sent TxProfile to
+the transaction with the specified _transactionId_.
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+ID Precondition Requirement definition Note
+K01.FR.05 When a
+SetChargingProfileRequest
+with an already known
+ChargingProfile. id is
+received AND
+the existing ChargingProfile
+does NOT have
+chargingProfilePurpose =
+ChargingStationExter
+nalConstraints
+
+
+The Charging Station SHALL replace the existing
+ChargingProfile with the one specified.
+
+
+ChargingStationExternalCon
+straints profile cannot be
+replaced.
+
+
+K01.FR.06 When
+chargingProfilePurpose is
+NOT TxProfile
+
+
+The CSMS SHALL NOT send a ChargingProfile with a
+stackLevel - chargingProfilePurpose - evseId combination
+that already exists in another ChargingProfile (with
+different id ) on the Charging Station and has an
+overlapping validity period.
+
+
+This is to ensure that no two
+charging profiles with same
+stack level and purpose can
+be valid at the same time.
+
+
+K01.FR.07 When the Charging Station
+accepts a
+SetChargingProfileRequest
+
+
+The Charging Station SHALL re-evaluate its collection of
+charging profiles to determine which ChargingProfile will
+become active.
+K01.FR.08 The CSMS MAY send charging profiles to a Charging
+Station that are to be used as default charging profiles.
+K01.FR.09 When a
+SetChargingProfileRequest
+with a TxProfile is received
+AND there is no transaction
+active on the specified EVSE
+
+
+The Charging Station SHALL send a
+SetChargingProfileResponse with status Rejected.
+
+
+K01.FR.10 When validFrom and validTo
+of a ChargingProfile are not
+set
+
+
+The Charging Station SHALL consider the ChargingProfile
+to be valid indefinitely until it is explicitly replaced.
+
+
+K01.FR.11 If ChargingSchedule has a
+duration AND
+ChargingSchedulePeriod. sta
+rtPeriod >=
+ChargingSchedule. duration
+
+
+The Charging Station SHALL not execute the
+ChargingSchedulePeriod, because it is past the duration
+of the ChargingSchedule.
+
+
+K01.FR.12 A ChargingSchedulePeriod remains active until the next
+ChargingSchedulePeriod in the list starts or until
+ChargingSchedule. duration has elapsed.
+K01.FR.13 When recurrencyKind is
+used in combination with a
+ChargingSchedule duration
+shorter than recurrencyKind
+period.
+
+
+The Charging Station SHALL fall back to default behavior
+after ChargingSchedule duration ends.
+
+
+K01.FR.14 When a
+SetChargingProfileRequest
+with a TxDefaultProfile and
+evseId  0 is received AND
+No other TxDefaultProfile
+with the same stackLevel is
+installed on any specific
+EVSE.
+
+
+The Charging Station SHALL apply, but not copy, this
+profile to all EVSEs.
+
+
+A TxDefaultProfile charging
+profile on EVSE #0 is
+“owned by” EVSE #0, but
+has effect on all EVSEs.
+
+
+K01.FR.15 When a
+SetChargingProfileRequest
+with a TxDefaultProfile and
+evseId > 0 is received AND
+No TxDefaultProfile with the
+same stackLevel is installed
+on EVSE #0.
+
+
+The Charging Station SHALL only apply this profile to the
+specified EVSE.
+
+
+K01.FR.16 TxProfile SHALL only be be used with evseId >0.
+K01.FR.17 When more than one ChargingProfile with the same
+chargingProfilePurpose is valid, as determined by their
+validFrom and validTo fields, then a ChargingSchedule
+from a ChargingProfile with a higher stackLevel overrules
+a ChargingSchedule from a ChargingProfile with a lower
+stackLevel.
+
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+ID Precondition Requirement definition Note
+K01.FR.19 The CSMS SHALL NOT set phaseToUse in a
+SetChargingProfileRequest when numberPhases is other
+than 1.
+K01.FR.20 The CSMS SHALL NOT set phaseToUse in a
+SetChargingProfileRequest when the EVSE does not have
+ACPhaseSwitchingSupported defined and set to true.
+K01.FR.21 The optional ChargingSchedule field minChargingRate
+MAY be used by the Charging Station to optimize the
+power distribution between the EVSEs.
+
+
+The parameter informs the
+Local Controller that
+charging below
+minChargingRate is
+inefficient, giving the
+possibility to select another
+balancing strategy.
+K01.FR.22 The CSMS SHALL NOT set chargingProfilePurpose to
+ChargingStationExternalConstraints in a
+SetChargingProfileRequest.
+
+
+This purpose is only used
+when an external system
+has set a charging
+limit/schedule.
+K01.FR.26 When a
+SetChargingProfileRequest
+is received with a value for
+chargingRateUnit , that is not
+configured in the
+configuration variable
+ChargingScheduleChar
+gingRateUnit.
+
+
+Charging Station SHALL respond with
+SetChargingProfileResponse with status Rejected.
+
+
+K01.FR.27 ChargingProfiles set via SetChargingProfileRequest
+SHALL be persistent across reboots/power cycles.
+K01.FR.28 When a
+SetChargingProfileRequest
+is received for an evseId
+that does not exist.
+
+
+Charging Station SHALL respond with
+SetChargingProfileResponse with status Rejected
+
+
+K01.FR.29 When Charging Station does
+not support smart charging.
+
+
+Charging Station SHALL respond with RPC Framework
+CALLERROR: NotSupported or NotImplemented.
+K01.FR.30 chargingProfile has a
+chargingSchedule with
+startSchedule set to a time
+in the future
+
+
+The Charging Station SHALL only start imposing the
+limitation of this schedule as of point in time set by
+startSchedule
+
+
+K01.FR.31 The startPeriod of the first chargingSchedulePeriod in a
+chargingSchedule SHALL always be 0.
+
+K01.FR.32 (^) (K01.FR.14 OR K01.FR.15)
+AND a transaction is active
+on the specified EVSE(s)
+(evseId  0 refers to all
+EVSEs.)
+The Charging Station SHALL continue the transaction on
+the specified EVSE(s), but switch to using the
+new/updated TxDefaultProfile.
+K01.FR.33 (^) K01.FR.03 AND
+the given transactionId is
+not known
+The Charging Station SHALL reject the
+SetChargingProfileRequest.
+K01.FR.34 The CSMS has not received
+a
+NotifyEVChargingNeedsReq
+uest for the current
+transaction, i.e. charging
+session is not using ISO
+15118
+The ChargingProfile in the SetChargingProfileRequest
+SHALL contain only one ChargingScheduleType.
+See use cases K15-K17 for
+ISO 15118 smart charging.
+K01.FR.35 The list of ChargingSchedulePeriod elements in a
+chargingSchedule SHALL be ordered by increasing values
+of ChargingSchedulePeriod. _startPeriod_.
+This means the list is in
+chronological order
+K01.FR.36 When _validFrom_ of a
+ChargingProfile is set
+The Charging Station SHALL consider the ChargingProfile
+to be valid when current time > _validFrom_.
+K01.FR.37 When _validTo_ of a
+ChargingProfile is set
+The Charging Station SHALL consider the ChargingProfile
+to be valid when current time < _validTo_.
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+ID Precondition Requirement definition Note
+K01.FR.38 When
+chargingProfilePurpose =
+ChargingStationMaxPr
+ofile
+
+
+chargingProfileKind SHALL NOT be Relative
+
+
+K01.FR.39 When
+chargingProfilePurpose is
+TxProfile
+
+
+The CSMS SHALL NOT send a ChargingProfile with a
+stackLevel - transactionId combination that already exists
+in another ChargingProfile (with different id ) with purpose
+TxProfile.
+
+
+This is to ensure that no two
+charging profiles with same
+stack level and purpose can
+be valid at the same time.
+K01.FR.40 When chargingProfileKind of
+a ChargingProfile is
+Absolute or Recurring
+
+
+A value for startSchedule SHALL exist in the
+ChargingSchedule of the ChargingProfile.
+
+
+This determines start date-
+time of the schedule and of
+the recurrency sequence.
+K01.FR.41 When chargingProfileKind of
+a ChargingProfile is
+Relative
+
+
+The field startSchedule SHALL be absent in the
+ChargingSchedule of the ChargingProfile.
+
+
+A relative profile starts from
+when the profile is
+activated.
+
+
+K01.FR.42 K01.FR.41 It is RECOMMENDED to make the
+ChargingSchedulePeriods relative to the moment the
+Charging Station is ready to deliver energy. i.e. when the
+EV driver is authorized and the EV is connected.
+
+
+This is the point in a
+transaction where the
+charging station is ready to
+deliver energy. If
+PowerPathClosed is a
+TxStartPoint, then this will
+concur with the start of a
+transaction.
+In the next OCPP version,
+this will become a more
+strict requirement.
+K01.FR.43 When a
+SetChargingProfileRequest
+with a value for
+numberPhases is received
+AND
+the EVSE is of type AC AND
+the Charging Station cannot
+ensure that no more than
+the received numberPhases
+will be used
+
+
+The Charging Station SHALL respond with status =
+Rejected
+
+
+Note that even when for
+example the ChargingProfile
+defines 3 phases and the
+Charging Station is able to
+charge with 3 phases, it is
+not guaranteed that the EV
+or cable are able to charge
+with 3 phases.
+Based on received
+MeterValues the CSMS can
+determine the used number
+of phases.
+Please refer to requirement
+K01.FR.50 and K01.FR.51,
+for correctly calculating the
+limits per phase.
+K01.FR.44 When a
+SetChargingProfileRequest
+with a value for
+numberPhases or
+phaseToUse is received
+AND
+the EVSE is of type DC
+
+
+The Charging Station MAY respond with status =
+Accepted , instead of Rejected and ignore the provided
+values for numberPhases and phaseToUse.
+
+
+K01.FR.45 When a
+SetChargingProfileRequest
+with a value for
+numberPhases is received
+AND
+the EVSE is of type AC AND
+the received numberPhases
+is NOT supported by the
+Charging Station and higher
+than the numberPhases that
+are supported by the
+Charging Station
+
+
+The Charging Station MAY respond with status =
+Accepted , instead of Rejected and impose the limits to a
+lower numberPhases
+
+
+Please refer to requirement
+K01.FR.50 and K01.FR.51,
+for correctly calculating the
+limits per phase.
+
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+ID Precondition Requirement definition Note
+K01.FR.46 When a
+SetChargingProfileRequest
+with numberPhases  1 and
+a value for phaseToUse is
+received AND
+the EVSE is of type AC AND
+the EVSE is capable of
+switching the phase
+connected to the EV, which
+is indicated by
+ACPhaseSwitchingSupporte
+d defined as true OR
+the EVSE is already going to
+use the received
+phaseToUse
+
+
+The Charging Station SHALL use the phase indicated by
+the received phaseToUse to connect to the EV.
+
+
+K01.FR.47 When a
+SetChargingProfileRequest
+with numberPhases  1 and
+phaseToUse is omitted is
+received AND
+the EVSE is of type AC
+
+
+The Charging Station SHALL select the phase on its own.
+
+
+K01.FR.48 When a
+SetChargingProfileRequest
+with a value for phaseToUse
+is received AND
+the EVSE is NOT capable of
+switching the phase
+connected to the EV, which
+is indicated by
+ACPhaseSwitchingSupporte
+d not being implemented or
+defined as false AND
+the EVSE is NOT going to
+use the received
+phaseToUse
+
+
+The Charging Station SHALL respond with status =
+Rejected.
+
+
+K01.FR.49 When a
+SetChargingProfileRequest
+without a value for
+numberPhases is received
+AND
+the EVSE is of type AC
+
+
+The Charging Station SHALL assume numberPhases  3
+as a default value.
+
+
+K01.FR.50 When a
+SetChargingProfileRequest
+with a chargingRateUnit  W
+is received AND
+The ChargingSchedule is
+used for AC charging
+
+
+The Charging Station SHOULD calculate the phase
+current limit via: Current per phase  Power / (Line
+Voltage * Number of Phases).
+
+
+The "Line Voltage" used in
+the calculation is not the
+measured voltage, but the
+set voltage for the area (for
+example, 230 or 110 V). The
+"Number of Phases" is the
+numberPhases from the
+ChargingSchedulePeriod.
+It is usually more
+convenient to use
+chargingRateUnit  A for AC
+charging.
+K01.FR.51 When a
+SetChargingProfileRequest
+with a chargingRateUnit  A
+is received
+
+
+The Charging Station SHALL use the provided limits, to
+limit the amount of Ampere per phase, not the sum of all
+phases.
+
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+ID Precondition Requirement definition Note
+K01.FR.52 When a
+SetChargingProfileRequest
+with a TxDefaultProfile and
+evseId  0 is received AND
+A TxDefaultProfile with the
+same stackLevel is installed
+on a specific EVSE and its
+chargingProfile.id does NOT
+equal the received
+chargingProfile.id
+
+
+The Charging Station SHALL respond with a
+SetChargingProfileResponse with status Rejected and
+optionally with reasonCode  DuplicateProfile.
+
+
+K01.FR.53 When a
+SetChargingProfileRequest
+with a TxDefaultProfile and
+evseId > 0 is received AND
+A TxDefaultProfile with the
+same stackLevel is installed
+on EVSE #0 and its
+chargingProfile.id does NOT
+equal the received
+chargingProfile.id
+
+
+The Charging Station SHALL respond with a
+SetChargingProfileResponse with status Rejected and
+optionally with reasonCode  DuplicateProfile.
+
+==== K02 - Central Smart Charging
+
+_Table 161. K02 - Central Smart Charging_
+
+
+No. Type Description
+1 Name Central Smart Charging
+2 ID K02
+Functional block K. Smart Charging
+3 Objective(s) To enable the CSMS to influence the charging power or current drawn from a specific EVSE or the
+entire Charging Station over a period of time.
+4 Description The CSMS sends a SetChargingProfileRequest to the Charging Station to influence the power or
+current drawn by the EV. The CSMS calculates a ChargingSchedule to stay within limits which
+MAY be imposed by any external system.
+
+
+See: Central Smart Charging
+Actors Charging Station, CSMS, EV, EV Driver
+Scenario description 1. After authorization the Charging Station will set a maximum current, that an EV might draw via
+the Control Pilot signal. This limit is based on (default) ChargingProfiles that the Charging Station
+previously received from the CSMS.
+
+**2.** The EV starts charging and a TransactionEventRequest is sent to the CSMS.
+**3.** The CSMS responds with a TransactionEventResponse.
+**4.** In response to a TransactionEventRequest the CSMS MAY choose to set charging limits to the
+transaction using a SetChargingProfileRequest.
+**5.** The Charging Station responds with a SetChargingProfileResponse.
+**6.** While charging is in progress the EVSE will continuously adapt the maximum current or power
+according to the installed ChargingProfiles.
+
+_Alternative scenario(s)_ (^) K03 - Local Smart Charging
+K04 - Internal Load Balancing
+**5 Prerequisite(s)** The Functional Block _Smart Charging_ is installed.
+**6 Postcondition(s)** (^) **Successful postcondition:**
+The Charging Station _Successfully_ influences the charging power or current of a specific EV,
+following the SetChargingProfileRequest sent by the CSMS.
+**Failure postcondition:**
+The Charging Station was _not_ able to influence the charging power or current of a specific EV,
+following the SetChargingProfileRequest sent by the CSMS.
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+EV Driver
+
+
+EV Charging Station CSMS
+
+
+User authorization successful and transaction is started
+
+
+set max current(limit)
+switch power on
+
+
+TransactionEventRequest(eventType  Updated, transactionId,
+chargingState  Charging, ...)
+TransactionEventResponse(...)
+start charging()
+loop Change according to charging profile
+[for each interval period in charging profile]
+
+
+get limit from charging profile():limit
+
+
+Charging Station implements charging
+profile via the Control Pilot
+signal whenever maximum current
+needs changing.
+set max current(limit)
+opt [Change of limits by CSMS]
+SetChargingProfileRequest(evseId,chargingProfile.id,[transactionId],
+chargingProfilePurpose: TxProfile, ChargingProfileKind, RecurrencyKind, ValidFrom,
+ValidTo, ChargingSchedule)
+
+
+CSMS decides to
+change the charging profile.
+SetChargingProfileResponse(Accepted)
+
+
+User authorization successful
+
+
+end charging()
+switch power off
+
+
+TransactionEventRequest(eventType  Updated, transactionId,
+chargingState  EVConnected, ...)
+TransactionEventResponse(...)
+unplug cable
+StatusNotificationRequest(Available)
+StatusNotificationResponse()
+TransactionEventRequest(eventType  Ended, transactionId, timestamp,
+stopReason, ...)
+TransactionEventResponse([IdTokenInfo])
+
+_Figure 102. Sequence Diagram: Central Smart Charging_
+
+Explanation for the above figure:
+
+- After authorization the EVSE will set a maximum current to use via the Control Pilot signal. This limit is based on a (default)
+    charging profile that the EVSE had previously received from the CSMS. The EV starts charging and a
+    TransactionEventRequest is sent to the CSMS.
+- While charging is in progress the EVSE will continuously adapt the maximum current or power according to the charging
+    profile. Optionally, at any point in time the CSMS may send a new charging profile for the EVSE. The Charging Station will
+    then also take this new schedule into account when calculating a new composite schedule. This way the CSMS can
+    influence the charging of an ongoing transaction.
+
+
+7 Error handling n/a
+
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+**8 Remark(s)** (^) The CSMS determines the constraints on ChargingSchedule per transaction.
+The CSMS imposes charging limits on EVSEs. In response to a TransactionEventRequest the
+CSMS may choose to set charging limits to the transaction using the TxProfile. It is
+RECOMMENDED to check the offline flag in TransactionEventRequest prior to sending a
+charging profile to check if the transaction is likely to be still ongoing, the
+TransactionEventRequest might have been cached during an _Offline_ period.
+The final schedule constraints that apply to a transaction are determined by merging the profiles
+with purposes _ChargingStationMaxProfile_ with the profile _TxProfile_ or TxDefaultProfile in case no
+profile of purpose _TxProfile_ is provided. Zero or more of the following ChargingProfile purposes
+MAY have been previously received from the CSMS: _ChargingStationMaxProfile_ or
+TxDefaultProfile.
+It is recommended to omit the duration field of the ChargingSchedule from a TxProfile, so that it
+automatically lasts until the end of the transaction. If the TxProfile expires before the transaction
+ends, it falls back to the lowest limit of the active TxDefaultProfile and
+ChargingStationMaxProfile. If there are no other active profiles, it falls back to the local limit of
+the Charging Station.
+The scenario description and sequence diagram above are based on the Configuration Variable
+for start transaction being configured as follows:
+TxStartPoint: Authorized, DataSigned, PowerPathClosed, EnergyTransfer
+This use-case is also valid for other configurations, but then the transaction might start/stop at
+another moment, which might change the sequence in which message are send. For more details
+see the use case: E01 - Start Transaction options.
+**K02 - Central Smart Charging - Requirements**
+_Table 162. K02 - Requirements_
+**ID Precondition Requirement definition Note**
+K02.FR.01 The CSMS SHALL use charging profiles to stay within the
+limits imposed by any external system.
+K02.FR.02 After authorization. The EVSE will set a maximum current to use via the
+Control Pilot signal.
+This requirement only
+applies to AC chargers that
+use 61851. The limit may be
+based on a (default)
+charging profile that the
+EVSE previously received
+from the CSMS.
+K02.FR.03 In order to ensure that an updated ChargingProfile
+applies only to the current transaction, the CSMS SHALL
+set the chargingProfilePurpose of the ChargingProfile to
+_TxProfile_.
+An updated charging profile
+can be sent by the CSMS by
+sending a ChargingProfile
+with the same
+chargingProfileId.
+K02.FR.04 If a transaction-specific
+profile with purpose
+_TxProfile_ is present.
+The TxProfile SHALL overrule the default charging profile
+with purpose TxDefaultProfile for the duration of the
+current transaction only.
+K02.FR.05 (^) K02.FR.04
+After the transaction is
+stopped
+The TxProfile SHALL be deleted.
+K02.FR.06 The optional ChargingSchedule field minChargingRate
+MAY be used by the Charging Station to optimize the
+power distribution between the EVSEs.
+The parameter informs the
+Local Controller that
+charging below
+minChargingRate is
+inefficient, giving the
+possibility to select another
+balancing strategy.
+K02.FR.07 The CSMS SHALL NOT set chargingProfilePurpose to
+ChargingStationExternalConstraints in a
+SetChargingProfileRequest.
+This purpose is only used
+when an external system
+has set a charging
+limit/schedule.
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+ID Precondition Requirement definition Note
+
+K02.FR.08 (^) K02.FR.04 AND
+The charging schedule of
+TxProfile ends, before the
+transaction ends, because
+the set duration or validTo
+period expired
+The Charging Station SHALL fall back to using the lowest
+limit of the active TxDefaultProfile and
+ChargingStationMaxProfile. If there are no other active
+profiles, it falls back to the local limit of the Charging
+Station
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+==== K03 - Local Smart Charging
+
+_Table 163. K03 - Local Smart Charging_
+
+
+No. Type Description
+1 Name Local Smart Charging
+2 ID K03
+Functional block K. Smart Charging
+3 Objective(s) To enable charging limits to be set at the Charging Station by a Local Controller.
+4 Description Local Smart Charging describes a use case in which smart charging enabled Charging Stations
+have charging limits controlled locally by a Local Controller, not directly by the CSMS. The
+charging limits MAY either be pre-configured in the Local Controller in one way or another, or they
+can be set by the CSMS. The Local Controller SHALL contain the logic to distribute this capacity
+among the connected EVSEs by adjusting their limits as needed.
+This use case for Local Smart Charging is about limiting the amount of power that can be used by
+a group of Charging Stations, to a certain maximum.
+
+
+See Figure Local Smart Charging Topology
+Actors Charging Station, CSMS, EV, Local Controller, EV Driver
+Scenario description 1. After authorization the Charging Station will set a maximum current, an EV might draw, via the
+Control Pilot signal. This limit is based on a TxDefaultProfile that the Charging Station previously
+received from the CSMS.
+
+**2.** The EV starts charging, the Charging Station sends a TransactionEventRequest.
+**3.** A TransactionEventRequest is sent to the CSMS via the Local Controller, so that the Local
+Controller knows a transaction has started.
+**4.** During the transaction, the Local Controller sends a SetChargingProfileRequest to influence the
+charging current/power.
+**5.** The Charging Station calculates the charging limits based on the installed ChargingProfiles.
+**6.** The Local Controller just passes on the messages between Charging Station and CSMS, so that
+the CSMS can address all the Local Smart Charging group members individually.
+**7.** While charging is in progress the EVSE will continuously adapt the maximum current according
+to the installed ChargingProfiles.
+
+**5 Prerequisite(s)** (^) The Functional Block _Smart Charging_ is installed.
+**6 Postcondition(s)** (^) **Successful postcondition:**
+The Local Controller _Successfully_ controls maximum charging limits via the Control Pilot Signal.
+**Failure postcondition:**
+n/a
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+EV Charging Station Local Controller CSMS
+
+
+User authorization successful and transaction is started
+
+
+set max current(limit)
+switch power on
+
+
+start charging
+TransactionEventRequest(eventType  Updated,
+transactionId  AB1234,
+chargingState  Charging, ...)
+TransactionEventRequest(eventType  Updated,
+transactionId  AB1234,
+chargingState  Charging, ...)
+TransactionEventResponse(...)
+TransactionEventResponse(...)
+
+
+loop Change according to charging profile
+[for each interval period in charging profile]
+
+
+get limit from charging profile():limit
+
+
+Charging Station implements TxDefaultProfile
+via the Control Pilot
+signal whenever maximum current
+needs changing.
+
+
+set max current(limit)
+
+
+opt [Change of limits by controller]
+
+
+SetChargingProfileRequest(evseId, csChargingProfiles) Local Controller decides to change the charging profile.
+
+
+SetChargingProfileResponse(Accepted)
+
+
+User authorization successful
+
+
+end charging()
+switch power off
+
+
+TransactionEventRequest(eventType  Updated,
+transactionId  AB1234,
+chargingState  EVConnected, ...)
+TransactionEventRequest(eventType  Updated,
+transactionId  AB1234,
+chargingState  EVConnected, ...)
+TransactionEventResponse(...)
+TransactionEventResponse(...)
+
+
+Transaction is stopped
+
+_Figure 103. Sequence Diagram: Local Smart Charging_
+
+
+7 Error handling n/a
+8 Remark(s) The Local Controller for Local Smart Charging can be implemented in different ways, for example:
+as a separate physical component or as part of a ‘master’ Charging Station controlling a number
+of other Charging Stations.
+
+
+The Local Controller MAY or MAY NOT have any EVSEs of its own.
+
+
+The limits on Charging Stations in a Local Smart Charging group can either be pre-configured in
+the Local Controller in one way or another, or they can be set by the CSMS. The Local Controller
+contains the logic to distribute this capacity among the connected EVSEs by adjusting their limits
+as needed.
+
+**K03 - Local Smart Charging - Requirements**
+
+_Table 164. K03 - Requirements_
+
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+ID Precondition Requirement definition Note
+K03.FR.01 The Local Controller MAY impose charging limits on a
+Charging Station.
+K03.FR.02 K03.FR.01 These limits MAY be changed dynamically during the
+charging process in order to keep the power
+consumption of the group of Charging Stations within the
+group limits.
+K03.FR.03 If at any point in time the
+Local Controller sends a
+new ChargingProfile to an
+EVSE
+
+
+The Charging Station SHALL take this new
+ChargingProfile into account when calculating a new
+composite schedule that it will use to charge the EV.
+
+
+K03.FR.04 A Transaction with a chargingPriority that is higher than
+other transactions SHALL be fulfilled as long as possible,
+even if other transactions have to be suspended.
+K03.FR.05 If a chargingPriority is given
+in a
+TransactionEventResponse
+that is different from the
+chargingPriority in the
+IdTokenInfo.
+
+
+The chargingPriority from the TransactionEventResponse
+SHALL be used for this transaction and for this
+transaction only.
+
+
+It shall therefore not be
+stored e.g. in the
+Authorization Cache.
+
+
+K03.FR.06 When no chargingPriority is
+known.
+
+
+The Transaction or IdToken SHALL be assumed to have
+chargingPriority 0.
+K03.FR.07 The optional ChargingSchedule field minChargingRate
+MAY be used by the Charging Station to optimize the
+power distribution between the EVSEs.
+
+
+The parameter informs the
+Local Controller that
+charging below
+minChargingRate is
+inefficient, giving the
+possibility to select another
+balancing strategy.
+K03.FR.08 The Local Controller SHALL NOT set
+chargingProfilePurpose to
+ChargingStationExternalConstraints in a
+SetChargingProfileRequest.
+
+
+This purpose is only used
+when an external system
+has set a charging
+limit/schedule.
+
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+==== K04 - Internal Load Balancing
+
+_Table 165. K04 - Internal Load Balancing_
+
+
+No. Type Description
+1 Name Internal Load Balancing
+2 ID K04
+Functional block K. Smart Charging
+3 Objective(s) To enable internal load balancing within the Charging Station and between EVSEs.
+4 Description The Load Balancing use case is about internal load balancing within the Charging Station, where
+the Charging Station controls current/power per EVSE.
+
+
+The Charging Station is configured with a fixed limit, e.g. the maximum current of the connection
+to the grid.
+
+
+See K01 - Set Charging Profile
+Actors Charging Station, CSMS, EVSE
+
+_Scenario description_ (^) **1.** The CSMS sets known physical grid connection limits by sending a ChargingProfile.
+
+**2.** The Charging Station controls current/power per EVSE.
+**3.** The EVSE sends a Control Pilot signal to the EV.
+**5 Prerequisite(s)** The Functional Block _Smart Charging_ is installed.
+
+**6 Postcondition(s)** (^) **Successful postcondition:**
+The Charging Station _Successfully_ balances the current/power between the different EVSEs,
+based on what the CSMS is sending.
+**Failure postcondition:**
+ChargingProfile is _not Accepted_. Charging is possible, although the Charging Station will _not_
+adhere to the ChargingProfile.
+**7 Error handling** n/a
+**8 Remark(s)** n/a
+**K04 - Internal Load Balancing - Requirements**
+_Table 166. K04 - Requirements_
+**ID Precondition Requirement definition Note**
+K04.FR.01 The Charging Station SHALL control the
+ChargingSchedule per EVSE.
+K04.FR.02 The Charging Station SHALL be configured with a fixed
+limit.
+e.g. the maximum current of
+the connection to the grid.
+K04.FR.03 A ChargingProfile with the purpose
+ChargingStationMaxProfile can only be set at Charging
+Station EVSE with Id 0.
+K04.FR.04 The optional ChargingSchedule field minChargingRate
+MAY be used by the Charging Station to optimize the
+power distribution between the EVSEs.
+The parameter informs the
+Local Controller that
+charging below
+minChargingRate is
+inefficient, giving the
+possibility to select another
+balancing strategy.
+K04.FR.05 The combined energy flow of all EVSEs (and the Charging
+Station hardware itself) SHALL NOT be greater than the
+limit set by _ChargingStationMaxProfile_.
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+==== K05 - Remote Start Transaction with Charging Profile
+
+_Table 167. K05 - Remote Start Transaction with Charging Profile_
+
+
+No. Type Description
+1 Name Remote Start Transaction with Charging Profile
+2 ID K05
+Functional block K. Smart Charging
+3 Objective(s) To enable the CSMS to remotely start a transaction by directly including a ChargingProfile, in
+order to assure that the transaction will use the right ChargingProfile.
+4 Description This use case covers how the CSMS can remotely start a transaction with purpose TxProfile. This
+assures that the right TxProfile is used. Also, when the Charging Station goes Offline after
+receiving RequestStartTransactionRequest.
+This is also needed, as switching from three phase- to one phase charging is not always possible
+and the transaction needs to start at the right phase.
+Actors Charging Station, CSMS, External Trigger
+Scenario description 1. The CSMS requests a Charging Station to remotely start a transaction by sending a
+RequestStartTransactionRequest with a ChargingProfile with purpose TxProfile.
+
+**2.** The Charging Station responds with a RequestStartTransactionResponse indicating that it is
+able to start the transaction and will use the ChargingProfile.
+**3.** The Charging Station informs the CSMS that a transaction has started by sending a
+TransactionEventRequest (eventType  Started) message.
+**4.** The transaction is started in the same way as described in E. Transaction.
+**5.** The Charging Station sends a TransactionEventRequest (eventType  Updated) to inform the
+CSMS that it is charging.
+**6.** The Charging Station continues the regular smart charging session, following the set
+ChargingProfiles.
+
+**5 Prerequisite(s)** (^) The Functional Block _Smart Charging_ is installed.
+**6 Postcondition(s)** (^) **Successful postcondition:**
+The Charging Station _Successfully_ charges taking into account the provided ChargingProfile.
+**Failure postcondition:**
+The transaction is _not_ started.
+The Charging Station _Unsuccessfully_ charges taking into account the provided ChargingProfile.
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+External Trigger
+
+
+CSMS Charging Station
+
+
+remote start()
+RequestStartTransactionRequest(idToken, chargingProfile, remoteStartId  123)
+RequestStartTransactionResponse(status  Accepted)
+
+
+opt
+notification
+
+
+opt [AuthorizeRemoteStart  true]
+AuthorizeRequest(idToken)
+AuthorizeResponse(idTokenInfo)
+
+
+StatusNotificationRequest(Occupied)
+StatusNotificationResponse()
+alt [within ConnectionTimeOut]
+Plugin cable
+
+
+opt [if cable not permanently attached]
+lock connector
+
+
+start energy offer
+
+
+opt
+notification
+
+
+TransactionEventRequest(eventType  Started,
+chargingState  Charging, remoteStartId  123, ...)
+TransactionEventResponse(...)
+Continue regular smart charging session
+
+_Figure 104. Sequence Diagram: Remote Start Transaction with Charging Profile_
+
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+7 Error handling n/a
+8 Remark(s) The scenario description and sequence diagram above are based on the Configuration Variable
+for start transaction being configured as follows:
+TxStartPoint: EVConnected, Authorized, DataSigned, PowerPathClosed, EnergyTransfer
+This use-case is also valid for other configurations, but then the transaction might start/stop at
+another moment, which might change the sequence in which message are send. For more details
+see the use case: E01 - Start Transaction options.
+
+
+When a ChargingProfile with purpose TxProfile is provided as part of a
+RequestStartTransactionRequest, then a transactionId cannot be provided in the ChargingProfile,
+because it is not known at the time.
+
+**K05 - Remote Start Transaction with Charging Profile - Requirements**
+
+_Table 168. K05 - Requirements_
+
+
+ID Precondition Requirement definition Note
+K05.FR.01 The CSMS MAY include a ChargingProfile in a
+RequestStartTransactionRequest.
+K05.FR.02 K05.FR.01 The Purpose of the ChargingProfile SHALL always be
+TxProfile.
+
+K05.FR.03 (^) K05.FR.01 AND
+NOT K05.FR.04
+The Charging Station SHALL use the given profile to
+calculate its composite schedule.
+K05.FR.04 If a Charging Station
+without support for Smart
+Charging receives a
+RequestStartTransactionRe
+quest with a
+ChargingProfile.
+The Charging Station SHALL ignore the specified
+ChargingProfile.
+The device model variable
+SmartChargingCtrlr.Enabled
+tells CSMS whether smart
+charging is supported.
+K05.FR.05 If a Charging Station with
+support for Smart Charging
+receives a
+RequestStartTransactionRe
+quest with an invalid
+ChargingProfile.
+The Charging Station SHALL respond with
+RequestStartTransactionResponse with _status_ =
+Rejected and optionally with _reasonCode_ =
+"InvalidProfile" or "InvalidSchedule".
+The device model variable
+SmartChargingCtrlr.Enabled
+tells CSMS whether smart
+charging is supported.
+
+==== K06 - Offline Behavior Smart Charging During Transaction.
+
+_Table 169. K06 - Offline Behavior Smart Charging During Transaction_
+
+
+No. Type Description
+1 Name Offline Behavior Smart Charging During Transaction
+2 ID K06
+Functional block K. Smart Charging
+3 Objective(s) To enable the Charging Station to continue to use the current ChargingProfile for the duration of
+the transaction while it is Offline.
+4 Description If a Charging Station goes Offline after having received a transaction-specific ChargingProfile with
+purpose TxProfile, then it continues to use this profile for the duration of the transaction.
+Actors Charging Station, CSMS, EV
+
+_Scenario description_ (^) **1.** The CSMS sends a SetChargingProfileRequest to the Charging Station with a TxProfile.
+
+**2.** The Charging Station responds with a SetChargingProfileResponse.
+**3.** While charging is in progress the EVSE will continuously adapt the maximum current or power
+according to the installed ChargingProfiles.
+**4.** The Charging Station is _Offline_ and operates stand-alone.
+**5.** While charging is in progress the EVSE will continuously adapt the maximum current or power
+according to the already installed ChargingProfiles.
+
+**5 Prerequisite(s)** (^) A transaction is ongoing.
+The Functional Block _Smart Charging_ is installed.
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+No. Type Description
+
+**6 Postcondition(s)** (^) **Successful postcondition:**
+The Charging Station continues to use the charging profiles which are available.
+**Failure postcondition:**
+n/a
+EV Driver
+EV Charging Station CSMS
+User authorization successful and transaction is started
+SetChargingProfileRequest(TxProfile, evseId)
+SetChargingProfileResponse(Accepted)
+connection loss
+loop Change according to charging profile
+[for each interval period in charging profile]
+get limit from charging profile():limit
+Charging Station implements charging
+profile via the Control Pilot
+signal whenever maximum current
+needs changing.
+set max current(limit)
+_Figure 105. Sequence Diagram: Offline Behavior Smart Charging_
+**7 Error handling** n/a
+**8 Remark(s)** n/a
+**K06 - Offline Behavior Smart Charging During Transaction - Requirements**
+_Table 170. K06 - Requirements_
+**ID Precondition Requirement definition**
+K06.FR.01 If the Charging Station goes _Offline_
+after having received a transaction-
+specific ChargingProfile with
+purpose TxProfile.
+The Charging Station SHALL continue to use this profile for the duration of
+the transaction.
+K06.FR.02 If the Charging Station goes _Offline_ ,
+without having any charging profiles.
+The Charging Station SHALL execute the transaction as if no constraints
+apply.
+
+==== K07 - Offline Behavior Smart Charging at Start of Transaction
+
+_Table 171. K07 - Offline Behavior Smart Charging at Start of Transaction_
+
+
+No. Type Description
+1 Name Offline Behavior Smart Charging at Start of Transaction
+2 ID K07
+Functional block K. Smart Charging
+3 Objective(s) To enable the Charging Station to continue to use a ChargingProfile for a transaction which is
+started Offline.
+4 Description By setting a TxDefaultProfile on a Charging Station, the CSMS can assure that any transaction,
+which is started while the communication with the CSMS is Offline , uses this profile.
+Actors Charging Station, CSMS, EV, EV Driver
+
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+No. Type Description
+
+_Scenario description_ (^) **1.** The CSMS sends a SetChargingProfileRequest to the Charging Station with a TxDefaultProfile.
+
+**2.** The Charging Station responds with a SetChargingProfileResponse.
+**3.** The Charging Station goes _Offline_ and operates stand-alone.
+**4.** The Charging Station allows automatic authorization of any presented IdToken by either:
+_a._ The Local Authorization List; a list of identifiers that can be synchronized with the CSMS.
+_b._ Authorization Cache entries; which autonomously maintains a record of previously presented
+identifiers that have been successfully authorized by the CSMS. (Successfully meaning: a
+response received on a message containing an IdToken).
+_c._ Configuration Variable: OfflineTxForUnknownIdEnabled  TRUE
+**5.** The transaction is started in the same way as described in E. Transactions.
+**6.** While charging is in progress the EVSE will continuously adapt the maximum current or power
+according to the already installed ChargingProfiles.
+
+**5 Prerequisite(s)** (^) The Charging Station is _Offline_.
+The Functional Block _Smart Charging_ is installed.
+The IdToken is known in the Local Authorization List, the IdToken is known in the Authorization
+Cache, or unknown offline authorization is enabled.
+**6 Postcondition(s)** (^) **Successful postcondition:**
+The Charging Station uses the installed TxDefaultProfile which are available for the _Offline_ started
+transaction.
+**Failure postcondition:**
+n/a
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+EV Driver
+
+
+EV Charging Station CSMS
+
+
+SetChargingProfileRequest(TxDefaultProfile, evseId)
+
+
+SetChargingProfileResponse(Accepted)
+
+
+Time period between start of transaction and setting of charging profile can be minutes, but can also be days.
+
+
+connection loss
+
+
+Present IdToken()
+
+
+opt [if supported]
+check local authorization list()
+
+
+opt [if supported]
+Check Authorization Cache()
+
+
+opt
+notification
+
+
+alt [LocalAuthorizeOffline=true & (Id in cache or (Id in local list & Valid)) or (OfflineTxForUnknownIdEnabled=true
+& Id not Invalid in local list)]
+lock connector
+
+
+start energy offer
+
+
+loop Change according to charging profile
+[for each interval period in charging profile]
+
+
+get limit from charging profile():limit
+
+
+Charging Station implements charging
+profile via the Control Pilot
+signal whenever maximum current
+needs changing.
+
+
+set max current(limit)
+
+_Figure 106. Sequence Diagram: Offline Behavior Smart Charging_
+
+
+7 Error handling n/a
+8 Remark(s) See section Combining Charging Profile Purposes for a description on how to combine different
+charging profile purposes.
+
+**K07 - Offline Behavior Smart Charging at Start of Transaction - Requirements**
+
+_Table 172. K07 - Requirements_
+
+
+ID Precondition Requirement definition Note
+K07.FR.01 If a Charging Station goes
+Offline before a transaction
+is started or before a
+transaction-specific
+ChargingProfile with
+purpose TxProfile was
+received.
+
+
+The Charging Station SHALL use the charging profiles
+which are available.
+
+
+With purpose
+TxDefaultProfile for the
+duration of the current
+transaction only.
+
+==== K08 - Get Composite Schedule
+
+_Table 173. K08 - Get Composite Schedule_
+
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+No. Type Description
+1 Name Get Composite Schedule
+2 ID K08
+Functional block K. Smart Charging
+3 Objective(s) To request the Charging Station to report the composite charging schedule.
+4 Description This use cases describes how the CSMS requests the Charging Station to report the Composite
+Charging Schedule, as calculated by the Charging Station, by sending
+GetCompositeScheduleRequest.
+
+
+The CompositeSchedule is the result of the calculation of all active schedules and possible local
+limits present in the Charging Station.
+Actors Charging Station, CSMS
+Scenario description 1. The CSMS requests the Charging Station to report the Composite Charging Schedule by
+sending a GetCompositeScheduleRequest.
+
+**2.** The Charging Station calculates the schedule.
+**3.** The Charging Station responds with a GetCompositeScheduleResponse with the status and
+ChargingSchedule.
+
+**5 Prerequisite(s)** (^) The Functional Block _Smart Charging_ is installed.
+**6 Postcondition(s)** (^) **Successful postcondition:**
+The CSMS _Successfully_ received the composite schedule from the Charging Station.
+**Failure postcondition:**
+The CSMS did _not_ receive the composite schedule from the Charging Station.
+CSMS Charging Station
+GetCompositeScheduleRequest(evseId, duration)
+calculate
+schedule
+GetCompositeScheduleResponse(status, schedule)
+_Figure 107. Sequence Diagram: Get Composite Schedule_
+**7 Error handling** n/a
+**8 Remark(s)** Please note that the charging schedule sent by the Charging Station is only indicative for that
+point in time. This schedule might change over time due to external causes (e.g. local balancing
+based on grid connection capacity is active and one EVSE becomes available).
+The Composite Schedule that will guide the charging level is a combination of the prevailing
+Charging Profiles of the different chargingProfilePurposes.
+This Composite Schedule is calculated by taking the minimum value for each time interval (see:
+Smart Charging signals to a Charging Station from multiple actors). Time intervals do not have to
+be of fixed length, nor do they have to be the same for every charging profile purpose. This means
+that a resulting Composite Schedule MAY contain intervals of different lengths.
+The reported schedule, in GetCompositeScheduleResponse, is the result of the calculation of all
+active schedules and possible local limits present in the Charging Station.
+The composite schedule reports the expected power or current the Charging Station expects to
+consume from the grid, for the requested EVSE, during the requested time period.
+When requested for evseid=0, the Charging Station will calculate the total expected consumption
+for the grid connection.
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+**K08 - Get Composite Schedule - Requirements**
+
+_Table 174. K08 - Requirements_
+
+
+ID Precondition Requirement definition
+K08.FR.01 The CSMS MAY request the Charging Station to report the
+CompositeSchedule by sending GetCompositeScheduleRequest.
+K08.FR.02 Upon receipt of
+GetCompositeScheduleRequest.
+
+
+The Charging Station SHALL calculate the scheduled time intervals, from
+the moment of message receipt up to the Duration (in seconds) and send
+them to the CSMS.
+K08.FR.03 If the evseId in the
+GetCompositeScheduleRequest is
+set to '0'
+
+
+The Charging Station SHALL report the total expected power or current
+the Charging Station expects to consume from the grid during the
+requested time period.
+K08.FR.04 At any point in time, the available power or current in the
+CompositeSchedule, which is the result of merging the schedules of
+charging profiles ChargingStationMaxProfile,
+ChargingStationExternalConstraints and TxDefaultProfile (or TxProfile),
+SHALL be less than or equal to lowest value of available power or current
+in any of the merged schedules.
+K08.FR.05 If the Charging Station is not able to
+report the requested schedule, for
+instance if the evseId is unknown
+
+
+The Charging Station SHALL respond with the status Rejected.
+
+K08.FR.06 (^) K08.FR.02 AND
+When there is no transaction active
+on an EVSE
+The Charging Station SHALL calculate the CompositeSchedule as if there
+is a transaction ongoing on the EVSE that is using the TxDefaultProfile (if
+this profile purpose is set)
+K08.FR.07 When receiving a
+GetCompositeScheduleRequest with
+a chargingRateUnit, which is not
+configured in the configuration
+variable
+ChargingScheduleChargingRat
+eUnit
+The Charging Station SHALL respond with
+GetCompositeScheduleResponse with status Rejected.
+
+==== K09 - Get Charging Profiles
+
+_Table 175. K09 - Get Charging Profiles_
+
+
+No. Type Description
+1 Name Get Charging Profile
+2 ID K09
+Functional block K. Smart Charging
+3 Objectives To enable the CSMS to view the Charging Schedules/limits installed in a Charging Station, these
+can be installed by the CSMS or some other source.
+4 Description With the GetChargingProfilesRequest message the CSMS can ask a Charging Station to report all,
+or a subset of all the install Charging Profiles from the different possible sources. This can be
+used for some automatic smart charging control system, or for debug purposes by a CSO.
+Actors Charging Station, CSMS
+Scenario description 1 The CSMS asks the Charging Station for the installed charging profiles by sending a
+GetChargingProfilesRequest message.
+2 The Charging Station responds, indicating if it can report Charging Schedules by sending a
+GetChargingProfilesResponse message.
+3 Charging Station sends a number of ReportChargingProfilesRequest messages to CSMS.
+4 The CSMS acknowledges reception of the reports by sending a
+ReportChargingProfilesResponse to the Charging Station for every
+ReportChargingProfilesRequest.
+5 Prerequisites n/a
+6 Postcondition(s) The CSMS knows which charging profiles have been installed in the Charging Station that match
+the requested parameters.
+
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+CSMS Charging Station
+
+
+GetChargingProfileRequest(requestId  123, chargingProfile,...)
+
+
+GetChargingProfileResponse(status  Accepted)
+
+
+loop [while tbc  true]
+ReportChargingProfilesRequest(requestId  123, ...)
+
+
+ReportChargingProfilesResponse()
+
+_Figure 108. Sequence diagram of the use case "Get Charging Profiles"_
+
+
+7 Error Handling When the Charging Station has no charging profiles that match the parameters in the
+GetChargingProfilesRequest the Charging Station SHALL respond with: NoProfiles.
+8 Remarks The charging profiles report can be split over multiple ReportChargingProfilesRequest messages,
+this can be because charging profiles for different charging sources need to be reported, or
+because there is just to much data for one message. To indicate that more reports will follow the
+flag tbc can be used.
+
+**K09 - Get Charging Profiles - Requirements**
+
+_Table 176. K09 - Requirements_
+
+
+ID Precondition Requirements Note
+K09.FR.01 When requestId is set in the
+GetChargingProfilesRequest
+
+
+The Charging Station SHALL set the requestId in every
+ReportChargingProfilesRequest that is sent as a result of
+this GetChargingProfilesRequest.
+K09.FR.02 When the charging profiles
+are reported in more than
+one
+ReportChargingProfilesReq
+uest
+
+
+The Charging Station SHALL set the tbc flag to true for all
+ReportChargingProfilesRequest messages except the
+last.
+
+
+K09.FR.03 The CSMS SHALL specify in chargingProfile criteria in
+GetChargingProfilesRequest either:
+
+- a (list of) _chargingProfileId(s)_ OR
+- one or more of the fields _stackLevel_ ,
+_chargingLimitSource_ , _chargingProfilePurpose_.
+
+
+These fields are filter values
+of equal importance, but
+because a chargingProfileId
+uniquely identifies a
+charging profile, the other
+fields are not needed if
+chargingProfileIds are used.
+K09.FR.04 If evseId is set to a value
+greater than 0 in the
+GetChargingProfilesRequest
+
+
+The Charging Station SHALL report the installed charging
+profiles for the specified EVSE that match all fields in
+chargingProfile.
+K09.FR.05 If evseId is set to 0 in
+GetChargingProfilesRequest
+
+
+The Charging Station SHALL only report charging profiles
+installed on the Charging Station itself (the grid
+connection) that match all fields in chargingProfile.
+
+
+EVSE #0 can have a
+ChargingStation
+MaxProfile,
+ChargingStation
+ExternalConstraints or
+a TxDefaultProfile.
+Note, that a
+TxDefaultProfile is not
+applied to EVSE #0 but to all
+individual EVSEs (see
+K01.FR.14).
+K09.FR.06 If evseId is NOT set in the
+GetChargingProfilesRequest
+
+
+The Charging Station SHALL report all installed charging
+profiles that match all fields in chargingProfile.
+
+==== K10 - Clear Charging Profile.
+
+_Table 177. K10 - Clear Charging Profile_
+
+
+No. Type Description
+1 Name Clear Charging Profile
+
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+No. Type Description
+2 ID K10
+Functional block K. Smart Charging
+3 Objective(s) To clear some or all of the charging profiles.
+4 Description If the CSMS wishes to clear some or all of the charging profiles that were previously sent to the
+Charging Station, then the CSMS sends a ClearChargingProfileRequest to the Charging Station.
+Actors Charging Station, CSMS
+
+_Scenario description_ (^) **1.** The CSMS sends a ClearChargingProfileRequest to the Charging Station.
+
+**2.** The Charging Station responds with a ClearChargingProfileResponse specifying whether it was
+able to process the request in the status.
+**5 Prerequisite(s)** One or more ChargingProfiles are installed.
+
+**6 Postcondition(s)** (^) **Successful postcondition:**
+The requested charging profiles are _Successfully_ cleared.
+**Failure postcondition:**
+The requested charging profiles are _not_ cleared, as no ChargingProfile is found.
+Charging Station CSMS
+ClearChargingProfileRequest([id], [evseId], [chargingProfilePurpose], [stackLevel])
+ClearChargingProfileResponse(status)
+_Figure 109. Sequence Diagram of the use case "Clear Charging Profile"_
+**7 Error handling** n/a
+**8 Remark(s)** n/a
+**K10 - Clear Charging Profile - Requirements**
+_Table 178. K10 - Requirements_
+**ID Precondition Requirement definition Note**
+K10.FR.01 If the Charging Station does
+not have any matching
+ChargingProfile.
+Upon receipt of a ClearChargingProfileRequest, the
+Charging Station SHALL respond with the status
+_Unknown_.
+K10.FR.02 The CSMS SHALL either specify a chargingProfile.id OR
+include one or more of the fields stackLevel, evseId and
+chargingProfilePurpose in the
+ClearChargingProfileRequest to specify which Charging
+Profiles need to be cleared.
+K10.FR.03 Upon receipt of a
+ClearChargingProfileReques
+t with a specified
+_chargingProfileId_ AND
+the chargingProfilePurpose
+of the referenced
+ChargingProfile is NOT
+ChargingStationExter
+nalConstraints
+The Charging Station SHALL clear the Charging Profile
+with the matching id and respond with a
+ClearChargingProfileResponse message with _status_ =
+Accepted.
+K10.FR.04 (^) NOT K10.FR.03 AND
+NOT K10.FR.08 AND
+Upon receipt of a
+ClearChargingProfileReques
+t, with optional values for
+_evseId_ ,
+_chargingProfilePurpose_ ,
+_stackLevel_
+The Charging Station SHALL clear the ChargingProfile(s)
+that match (as logical AND) the values in the request,
+except those for that have ChargingProfile =
+ChargingStationExternalConstraints and
+respond with a ClearChargingProfileResponse message
+with _status_  Accepted.
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+ID Precondition Requirement definition Note
+K10.FR.05 After clearing one or more
+Charging Profiles.
+
+
+The Charging Station SHALL recalculate its composite
+schedule and set the resulting maximum power/current
+values to all ongoing transactions.
+K10.FR.06 The CSMS SHALL NOT set chargingProfilePurpose to
+ChargingStationExternalConstraints in a
+ClearChargingProfileRequest.
+
+K10.FR.07 (^) K10.FR.05
+AND the cleared profile has
+chargingProfilePurpose =
+TxDefaultProfile
+The Charging Station SHALL continue any active
+transaction, that started with a TxDefaultProfile, as if it
+was started without a TxDefaultProfile.
+K10.FR.08 Upon receipt of a
+ClearChargingProfileReques
+t, with optional values for
+_evseId_ ,
+_chargingProfilePurpose_ ,
+_stackLevel_ AND
+the matched
+ChargingProfile(s) all have
+ChargingProfile =
+ChargingStationExter
+nalConstraints
+The Charging Station SHALL respond with a
+ClearChargingProfileResponse message with _status_ =
+Unknown.
+Charging profiles for
+external constraints are
+disregarded by
+ClearChargingProfile
+message.
+K10.FR.09 Upon receipt of a
+ClearChargingProfileReques
+t with a specified
+_chargingProfileId_ AND
+the chargingProfilePurpose
+of the referenced
+ChargingProfile =
+ChargingStationExter
+nalConstraints
+The Charging Station SHALL respond with a
+ClearChargingProfileResponse message with _status_ =
+Unknown.
+Charging profiles for
+external constraints are
+disregarded by
+ClearChargingProfile
+message.
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+==== 5.2. External Charging Limit based Smart Charging
+
+==== K11 - Set / Update External Charging Limit With Ongoing Transaction
+
+_Table 179. K11 - Set / update external charging limit with ongoing transaction_
+
+
+No. Type Description
+1 Name Set / Update External Charging Limit With Ongoing Transaction
+2 ID K11
+Functional block K. Smart Charging
+3 Objectives To inform the CSMS of a charging schedule or charging limit imposed by an External Control
+System on the Charging Station with ongoing transaction(s).
+4 Description An External Control System sends a charging limit/schedule to a Charging Station. This limit is
+sent to the CSMS.
+Actors External Control System, Charging Station, CSMS
+
+_Scenario description_ (^) **1.** External control system sends charging limit/schedule to Charging Station.
+
+**2.** Optional: Charging Station calculates new charging schedule.
+**3.** Charging Station adjusts the charging speed of the ongoing transaction(s).
+**4.** If the charging limit changed by more than: LimitChangeSignificance, the Charging
+Station sends a NotifyChargingLimitRequest message to CSMS with optionally the set charging
+limit/schedule.
+**5.** The CSMS responds with NotifyChargingLimitResponse to the Charging Station.
+**6.** If the charging rate changes by more than: LimitChangeSignificance, the Charging
+Station sends a TransactionEventRequest message to inform the CSMS.
+**7.** The CSMS responds with TransactionEventResponse to the Charging Station.
+
+**5 Prerequisites** (^) Charging Station is not in error state.
+An external system can set/clear a charging limit/schedule on the Charging Station via another
+connection than OCPP.
+**6 Postcondition(s)** (^) The ongoing transaction will be limited by the received charging limit from the external system.
+The CSMS is informed of the new limit/schedule imposed by the external system.
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+External Control System
+(example DSO) Charging Station CSMS
+
+
+loop
+opt [during charging process]
+I/U value
+reactive power factor
+
+
+opt [if MeterValues enabled]
+alt [No transaction ongoing]
+MeterValuesRequest(evseId, meterValue)
+MeterValuesResponse()
+[transaction ongoing]
+TransactionEventRequest(eventType  Updated, ...)
+TransactionEventResponse(...)
+
+
+Set grid limit
+
+
+opt [if transaction ongoing]
+opt
+recalculate charging schedule
+
+
+set charging limit(minimum of all known limits)
+
+
+opt [if charging limit changed more than: LimitChangeSignificance]
+NotifyChargingLimitRequest(evseId, chargingSchedule, chargingLimit)
+NotifyChargingLimitResponse()
+
+
+opt [if charging rate changed more than: LimitChangeSignificance]
+TransactionEventRequest(eventType  Updated, trigger  ChargingRateChanged, ...)
+TransactionEventResponse(...)
+
+_Figure 110. Sequence diagram of the use case "Setting / Updating External Charging Limit with Ongoing Transaction"_
+
+
+7 Error Handling n/a
+8 Remarks The external system could, for example, use IEC 61850 [IEC61850-7-420] or OpenADR [OPENADR]
+to communicate the grid limit to the Charging Station, but this could be any protocol. Furthermore,
+an example of an external system is given, in this case a DSO that might set an external charging
+limit in case of grid problems, but this could be any other external system or reason to set a
+charging limit.
+
+**K11 - Set / Update External Charging Limit With Ongoing Transaction -**
+
+**Requirements**
+
+_Table 180. K11 - Requirements_
+
+
+ID Precondition Requirements Note
+K11.FR.01 When an external charging
+limit/schedule is received
+during an ongoing
+transaction
+
+
+The Charging Station SHALL NOT charge the ongoing
+transaction faster than this given limit/schedule.
+
+K11.FR.02 (^) K11.FR.01
+AND
+Charging limit changed by
+more than:
+LimitChangeSignifica
+nce
+The Charging Station SHALL inform the CSMS of the new
+charging limit/schedule imposed by the external system
+by sending a NotifyChargingLimitRequest.
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+ID Precondition Requirements Note
+
+K11.FR.03 (^) K11.FR.02
+AND
+EnableNotifyCharging
+LimitWithSchedules is
+true
+The NotifyChargingLimitRequest SHALL contain the
+charging limits/schedules as set by the external system.
+K11.FR.04 (^) K11.FR.01
+AND
+Charging rate changed by
+more than:
+LimitChangeSignifica
+nce
+The Charging Station SHALL send a
+TransactionEventRequest message to the CSMS with
+trigger  ChargingRateChanged
+K11.FR.05 K11.FR.02 The Charging Station SHALL NOT set the
+chargingLimitSource to CSO in the
+NotifyChargingLimitRequest.
+K11.FR.06 When an external charging
+limit/schedule is received
+The Charging Station SHALL use purpose
+ChargingStationExternalConstraints when reporting
+about this limit (e.g. in a ReportChargingProfilesRequest).
+It is RECOMMENDED to use
+negative values for the _id_ of
+a
+ChargingStationExter
+nalConstraints profile,
+to minimize the risk of a
+clash with an _id_ that CSMS
+might use for a (future)
+charging profile.
+
+==== K12 - Set / Update External Charging Limit Without Ongoing Transaction
+
+_Table 181. K12 - Set / update external charging limit without ongoing transaction_
+
+
+No. Type Description
+1 Name Set / Update External Charging Limit Without Ongoing Transaction
+2 ID K12
+Functional block K. Smart Charging
+3 Objectives To inform the CSMS of a charging schedule or charging limit imposed by an external system on
+the Charging Station for new transactions or on the grid connection.
+4 Description An External Control System sends a charging limit to a Charging Station. This limit is sent to the
+CSMS.
+Actors External Control System, Charging Station, CSMS
+
+_Scenario description_ (^) **1.** External Control System sends a charging limit to Charging Station (not during a transaction).
+
+**2.** Optional: Charging Station calculates new charging schedule.
+**3.** Charging Station adjusts the charging speed.
+**4.** If the charging limit changed by more than: LimitChangeSignificance, the Charging
+Station sends a NotifyChargingLimitRequest message to CSMS with optionally the set charging
+limit/schedule.
+**5.** The CSMS responds with a NotifyChargingLimitResponse to the Charging Station.
+
+**5 Prerequisites** (^) Charging Station is not in error state.
+An external system that can set/clear a charging limit/schedule on the Charging Station via
+another connection than OCPP.
+**6 Postcondition(s)** (^) New transactions will be limited by the received charging limit from the external system.
+The CSMS is informed of the new limit/schedule imposed by the external system.
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+External Control System
+(example DSO) Charging Station CSMS
+
+
+Set grid limit
+
+
+opt [if charging limit changed more than: LimitChangeSignificance]
+NotifyChargingLimitRequest(evseId, chargingLimit, chargingSchedule)
+
+
+NotifyChargingLimitResponse()
+
+_Figure 111. Sequence diagram of the use case "Set / Update External Charging Limit Without Ongoing Transaction"_
+
+
+7 Error Handling n/a
+8 Remarks The external system could, for example, use IEC 61850 [IEC61850-7-420] or OpenADR [OPENADR]
+to communicate the grid limit to the Charging Station, but this could be any protocol. Furthermore,
+an example of an external system is given, in this case a DSO that might set an external charging
+limit in case of grid problems, but this could be any other external system or reason to set a
+charging limit.
+
+**K12 - Set / Update External Charging Limit Without Ongoing Transaction -**
+
+**Requirements**
+
+_Table 182. K12 - Requirements_
+
+
+ID Precondition Requirements Note
+K12.FR.01 When an external charging
+limit/schedule is received
+while no transactions are
+ongoing
+
+
+The total load of all EVSEs SHALL NOT exceed this given
+limit.
+
+K12.FR.02 (^) K12.FR.01
+AND
+Charging limit changed by
+more than:
+LimitChangeSignifica
+nce
+The Charging Station SHALL inform the CSMS of the new
+charging limit/schedule imposed by the external system
+by sending a NotifyChargingLimitRequest.
+K12.FR.03 (^) K12.FR.02
+AND
+EnableNotifyCharging
+LimitWithSchedules is
+true
+The NotifyChargingLimitRequest SHALL contain the
+charging limit/schedule as set by the external system.
+K12.FR.04 K12.FR.02 The Charging Station SHALL NOT set the
+chargingLimitSource to CSO in the
+NotifyChargingLimitRequest.
+K12.FR.05 When an external charging
+limit/schedule is received
+The Charging Station SHALL use purpose
+ChargingStationExternalConstraints when reporting
+about this limit (e.g. in a ReportChargingProfilesRequest).
+It is RECOMMENDED to use
+negative values for the _id_ of
+a
+ChargingStationExter
+nalConstraints profile,
+to minimize the risk of a
+clash with an _id_ that CSMS
+might use for a (future)
+charging profile.
+
+==== K13 - Reset / Release External Charging Limit
+
+_Table 183. K13 - Reset / Release External Charging Limit_
+
+
+No. Type Description
+1 Name Reset / Release External Charging Limit
+2 ID K13
+Functional block K. Smart Charging
+
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+No. Type Description
+3 Objectives To release a charging limit that was previously imposed.
+4 Description An external control system sends a signal to release a previously imposed charging limit to a
+Charging Station. The Charging Station notifies the CSMS about this.
+Actors External control system, Charging Station, CSMS
+
+_Scenario description_ (^) **1.** External control system release/removes a charging limit/schedule on the Charging Station
+
+**2.** When a transaction is ongoing, the Charging Station calculates the new Charging Schedule and
+adjusts charging speed.
+**3.** The Charging Station sends a ClearedChargingLimitRequest to notify the CSMS.
+**4.** The CSMS acknowledges with a ClearedChargingLimitResponse to the Charging Station.
+**5.** When the change has impact on an ongoing charging transaction and is more than:
+LimitChangeSignificance, the Charging Station sends a TransactionEventRequest to notify
+the CSMS.
+**6.** The CSMS acknowledges with a TransactionEventResponse to the Charging Station.
+
+**5 Prerequisites** (^) Previously, a charging limit was sent to the Charging Station under consideration.
+An external system that can set/clear a charging limit/schedule on the Charging Station via
+another connection than OCPP.
+**6 Postcondition(s)** The previously received charging limit is not limiting charging anymore.
+External Control System
+(example DSO) Charging Station CSMS
+release grid limit
+opt [if transaction ongoing]
+opt
+recalculate charging schedule
+release charging limit
+ClearedChargingLimitRequest(evseId, chargingLimitSource)
+ClearedChargingLimitResponse()
+opt [if charging rate changed more than: LimitChangeSignificance]
+TransactionEventRequest(eventType  Updated, trigger  ChargingRateChanged, ...)
+TransactionEventResponse(...)
+_Figure 112. Sequence diagram of the use case "Release / Reset External Charging Limit"_
+**7 Error Handling n/a
+8 Remarks** The external system could, for example, IEC 61850 [IEC61850-7-420] or OpenADR [OPENADR] to
+release the grid limit, but this could be any protocol. Furthermore, an example of an external
+system is given, in this case a DSO that might set an external charging limit in case of grid
+problems, but this could be any other external system or reason to set a charging limit.
+**K13 - Reset / Release External Charging Limit - Requirements**
+_Table 184. K13 - Requirements_
+**ID Precondition Requirements**
+K13.FR.01 (^) A transaction is ongoing
+AND
+External charging limit is
+released/removed
+The Charging Station SHALL NOT limit charging anymore based on the
+previously received limit.
+K13.FR.02 K13.FR.01 The Charging Station SHALL notify the CSMS by sending a
+ClearedChargingLimitRequest message.
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+ID Precondition Requirements
+
+K13.FR.03 (^) K13.FR.01
+AND
+Charging rate changed by more
+than: LimitChangeSignificance
+The Charging Station SHALL send a TransactionEventRequest message to
+the CSMS with trigger  ChargingRateChanged.
+
+==== K14 - External Charging Limit with Local Controller
+
+_Table 185. K14 - External Charging Limit with Local Controller_
+
+
+No. Type Description
+1 Name Handle external charging limit with a local controller
+2 ID K14
+Functional block K. Smart Charging
+3 Objective(s) To adjust the charging limits according to the External Control System requirements.
+4 Description An external control system sends a charging limit to the Local Controller. The Local Controller
+notifies the CSMS, calculates the new charging schedules and sends a
+SetChargingProfileRequest messages to all Charging Stations for which the charging profile has
+changed.
+Actors External control system, Local Controller, Charging Station, CSMS
+
+_Scenario description_ (^) **1.** External control system sends a charging limit/schedule to Local Controller.
+
+**2.** Local Controller sends a NotifyChargingLimitRequest message to the CSMS.
+**3.** Local Controller calculates new Charging Profiles for all connected Charging Stations.
+**4.** Local Controller sends a SetChargingProfileRequest message to all Charging Stations for
+which the charging profile has changed.
+**5.** External control system sends a charging limit/schedule to Local Controller.
+**6.** Local Controller sends a ClearedChargingLimitRequest message to the CSMS.
+**7.** Local Controller calculates new Charging Profiles for all connected Charging Stations.
+**8.** Local Controller sends a ClearChargingProfileRequest messages to all affected Charging
+Stations.
+
+**5 Prerequisite(s)** (^) Ongoing transaction(s).
+An external system that can set/clear a charging limit/schedule on Local Controller via another
+connection than OCPP.
+**6 Postcondition(s)** (^) **Successful postcondition:**
+The ongoing transactions will be limited by the received charging limit from the external system.
+The CSMS is informed of the new limit/schedule imposed by the external system.
+**Failure postcondition:**
+The CSMS is not informed about the changed charging limit.
+The External Control System is not able to change the charging limit.
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+External Control System Local Controller Charging Stations CSMS
+
+
+Set grid limit
+
+
+NotifyChargingLimitsRequest(chargingLimitSource, [chargingLimitGridCritical],...)
+
+
+NotifyChargingLimitsResponse()
+
+
+Recalculate Charging Schedules
+
+
+loop [All affected EVSEs]
+SetChargingProfileRequest(evseId, chargingProfile)
+
+
+SetChargingProfileResponse(status)
+
+
+Release grid limit
+
+
+ClearedChargingLimitRequest(chargingLimitSource,...)
+
+
+ClearedChargingLimitResponse()
+
+
+loop [All affected EVSE's]
+ClearChargingProfileRequest(...)
+
+
+ClearChargingProfileResponse(status)
+
+_Figure 113. Sequence Diagram: External Charging Limit with Local Controller._
+
+
+7 Error handling n/a
+8 Remark(s) n/a
+
+**K14 - External Charging Limit with Local Controller - Requirements**
+
+_Table 186. K14 - Requirements_
+
+
+ID Precondition Requirement definition
+K14.FR.01 When an external charging
+limit/schedule is received
+
+
+The total load of all Charging Stations SHALL NOT exceed this given limit.
+
+K14.FR.02 (^) K14.FR.01
+AND
+Charging limit changed by more
+than: LimitChangeSignificance
+The Local Controller SHALL inform the CSMS of the new charging
+limit/schedule imposed by the external system by sending a
+NotifyChargingLimitRequest.
+K14.FR.03 When an external charging
+limit/schedule is released
+The local controller SHALL notify the CSMS by sending a
+ClearedChargingLimitRequest.
+K14.FR.04 K14.FR.03 The local controller SHALL clear the hard limit on Charging Stations by
+sending a ClearChargingProfileRequest message to the Charging
+Stations.
+K14.FR.05 When the Local Controller receives
+an external charging limit/schedule
+It SHALL send a SetChargingProfileRequest to all Charging Stations for
+which the charging profile has changed.
+K14.FR.06 K14.FR.05 The Local Controller SHALL NOT set chargingProfilePurpose to
+ChargingStationExternalConstraints.
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+==== 5.3. ISO 15118 based Smart Charging
+
+==== K15 - Charging with load leveling based on High Level Communication
+
+_Table 187. K15 - Charging with load leveling based on High Level Communication_
+
+
+No. Type Description
+1 Name Charging with load leveling based on High Level Communication.
+2 ID K15
+Functional block K. Smart Charging
+Reference ISO15118-1 E1 AC Charging with load leveling based on High Level Communication, and E4 DC
+charging with load leveling based on High Level Communication.
+
+**3 Objectives** (^) See ISO15118-1, use case Objective E1, page 29.
+**4 Description** (^) See ISO15118-1, use case Description E1, page 29.
+**5 Actors** EV, Charging Station, CSMS.
+**6 Combined scenario
+description**
+
+**1.** The EV sends a ChargeParameterDiscoveryReq message to the Charging Station.
+**2**. The Charging Station sends a NotifyEVChargingNeedsRequest message to the CSMS.
+**3**. The CSMS sends a NotifyEVChargingNeedsResponse message to the Charging Station.
+**4.** The CSMS sends a SetChargingProfileRequest message to the Charging Station.
+**5.** The Charging Station sends a SetChargingProfileResponse message to the CSMS.
+**6.** The Charging Station responds to the EV with a ChargeParameterDiscoveryRes message to the
+EV.
+**7.** The EV sends a PowerDeliveryReq message to the Charging Station with
+ChargeProgress=Start. This marks the point in time when the EVSE provides voltage to its output
+power outlet and the EV can start to recharge its battery.
+**8.** The contactor is closed.
+**9.** The transaction is updated with a TransactionEventRequest message.
+**10.** A PowerdeliveryRes message is sent to the EV.
+**11.** Optionally, the Charging Station sends a NotifyEVChargingScheduleRequest message to the
+CSMS.
+
+**7 Prerequisites** (^) Both the Charging Station and the EV support ISO 15118.
+The configured TxStartPoint needs to contain at least one of ParkingBayOccupied, EVConnected,
+Authorized or PowerPathClosed, such that the OCPP transaction is started before
+ChargeParameterDiscoverReq is sent by EV, such that CSMS can send a TxProfile charging
+profile.
+**8 Postcondition(s)** (^) See ISO15118-1, use case End conditions E1, page 29.
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+EV Charging Station CSMS
+
+
+TransactionEventRequest(eventType  Started, ...)
+TransactionEventResponse(...)
+ChargeParameterDiscoveryReq(EnergyTransferMode, EVChargeParam)
+NotifyEVChargingNeedsRequest(evseId, chargingNeeds)
+NotifyEVChargingNeedsResponse(Accepted)
+loop [Until SetChargingProfileRequest]
+ChargeParameterDiscoveryRes(Ongoing)
+ChargeParameterDiscoveryReq(EnergyTransferMode, EVChargeParam)
+
+
+SetChargingProfileRequest(evseId, chargingProfile)
+SetChargingProfileResponse(Accepted)
+ChargeParameterDiscoveryRes(Finished, SAScheduleList)
+PowerDeliveryReq(Start, ChargingProfile, EVPowerDeliveryParam)
+Contactor close
+
+
+PowerDeliveryRes(OK)
+opt [If EV provides a charging schedule]
+NotifyEVChargingScheduleRequest(...)
+NotifyEVChargingScheduleResponse(Accepted)
+
+
+TransactionEventRequest(...)
+TransactionEventResponse(...)
+
+_Figure 114. Sequence Diagram: Charging with load leveling based on High Level Communication_
+
+
+9 Error handling The Charging Station needs to use the information from the SetChargingProfileRequest message
+to create the response to the ISO 15118 ChargeParameterDiscoveryReq towards the EV. This
+message has a timeout of 60 seconds, which means the SetChargingProfileRequest has to be
+sent well within 60 seconds after receiving the NotifyEVChargingNeedsRequest. If the Charging
+Station does not receive the SetChargingProfileRequest in time or when the
+NotifyEVChargingNeedsResponse has status  Processing, then the Charging Station will return
+a schedule in ChargeParameterDiscoverRes that matches the capabilities of the EVSE. When
+CSMS sends the SetChargingProfileRequest at a later time, then this will trigger a renegotiation
+according to use case K16 - Renegotiation initiated by CSMS.
+
+
+10 Remark(s) Signed SalesTariffs are currently not supported. If these are needed please use P01 - Data
+Transfer to the Charging Station to send these to the Charging Station.
+
+**K15 - Charging with load leveling based on High Level Communication -**
+
+**Requirements**
+
+_Table 188. K15 - Requirements_
+
+
+ID Precondition Requirements Note
+K15.FR.01 When the Charging
+Station receives
+charging needs from
+the EV
+
+
+The Charging Station SHALL send a
+NotifyEVChargingNeedsRequest to the CSMS.
+
+
+K15.FR.02 K15.FR.01 In response to a
+NotifyEVChargingNeedsRequest the CSMS
+SHALL send a
+NotifyEVChargingNeedsResponse.
+K15.FR.03 K15.FR.02 If the CSMS is able to provide a charging
+schedule, it SHALL indicate this by setting the
+status field in the
+NotifyEVChargingNeedsResponse to
+'Accepted'.
+
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+ID Precondition Requirements Note
+K15.FR.04 K15.FR.02 If the CSMS is not able to provide a charging
+schedule, it SHALL indicate this by setting the
+status field in the
+NotifyEVChargingNeedsResponse to
+'Rejected'.
+K15.FR.05 K15.FR.02 If the CSMS is able to provide a charging
+schedule; but needs processing time, it SHALL
+indicate this by setting the status field in the
+NotifyEVChargingNeedsResponse to
+'Processing'.
+
+
+The Charging Station does not have to wait for
+the SetChargingProfileRequest. CSMS will
+send it later and trigger a renegotiation as per
+use case K16.
+
+
+K15.FR.06 A NotifyEVChargingNeedsRequest SHALL
+contain either ACChargingParameters or
+DCChargingParameters.
+K15.FR.07 K15.FR.03 or
+K15.FR.05
+
+
+The CSMS SHALL send a
+SetChargingProfileRequest with
+chargingProfilePurpose  TxProfile and a
+transactionId and at most three
+chargingSchedule and optional salesTariff
+elements, that each contain no more periods
+than specified by maxScheduleTuples in
+NotifyEVChargingNeedsRequest and by device
+model variable
+SmartChargingCtrlr.PeriodsPerSched
+ule.
+
+
+The Charging Station will calculate the
+composite schedule(s) for the EVSE (taking
+into account a
+ChargingStationMaxProfile or
+ChargingStationExternalConstraints
+if present) and will convert that to the
+SAScheduleList format for ISO 15118.
+
+
+K15.FR.08 K15.FR.01 The CSMS SHOULD send a
+SetChargingProfileRequest to the Charging
+Station within 60 seconds.
+
+
+This is to satisfy the ISO 15118
+ChargeParameterDiscoveryReq timeout.
+
+===== K15.FR.09 K15.FR.07
+
+===== AND
+
+
+EV returns a charging
+profile
+
+
+Charging Station SHALL verify that provided
+charging profile is within boundaries of the
+ChargingSchedule from CSMS.
+
+
+In ISO 15118 EV can sent its charging profile
+as part of PowerDeliveryReq.
+
+
+K15.FR.10 K15.FR.09 Charging Station SHALL send the EV charging
+profile in a NotifyEVChargingScheduleRequest
+message to CSMS.
+K15.FR.11 K15.FR.10
+
+
+AND
+EV charging profile is
+within limits of CSMS
+ChargingSchedule
+
+
+CSMS responds with
+NotifyEVChargingScheduleResponse with
+status Accepted to Charging Station.
+
+
+Note: Already checked by Charging Station, but
+CSMS does its own check.
+
+===== K15.FR.12 K15.FR.10
+
+===== AND
+
+
+EV charging profile is
+NOT within limits of
+CSMS
+ChargingSchedule
+
+
+CSMS responds with
+NotifyEVChargingScheduleResponse with
+status Rejected to Charging Station.
+
+
+K15.FR.13 K15.FR.12 CSMS starts new renegotiation as per use
+case K16.
+K15.FR.14 K15.FR.11 The Charging Station SHOULD take the
+schedule from the
+NotifyEVChargingScheduleRequest into
+account when calculating the actual
+Composite schedule.
+K15.FR.15 K15.FR.01
+
+
+AND
+Charging Station is
+offline
+
+
+The Charging Station SHALL use the
+TxDefaultProfile (if present) and generate a
+charging schedule within the limits of its
+composite schedule.
+
+
+K15.FR.16 K15.FR.07 It is RECOMMENDED to configure the Charging
+Station, such that a TransactionEvent with
+idToken has been sent prior to the
+NotifyEVChargingNeedsRequest Message, so
+that CSMS can take the user into account
+when creating a charging schedule.
+
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+ID Precondition Requirements Note
+K15.FR.17 When Charging Station
+receives a
+SetChargingProfileReq
+uest immediately after
+the transaction has
+started and before it
+has sent the
+NotifyEVChargingNeed
+sRequest to CSMS
+
+
+The Charging Station SHOULD respond with
+SetChargingProfileResponse with status =
+Rejected and a statusInfo with reasonCode =
+InvalidMessageSeq.
+
+
+CSMS sent profile too early. It does not harm if
+CS accepts the charging profile instead of
+rejecting it, as long as it sends a charging
+profile again when it receives the
+NotifyEVChargingNeedsRequest.
+
+===== K15.FR.18 K15.FR.03 OR
+
+===== K15.FR.05
+
+
+CSMS IS RECOMMENDED to use only one
+chargingSchedule in a
+SetChargingProfileRequest.
+
+
+This ensures that there is no doubt about
+which schedule the EV will follow, even when
+no NotifyEVChargingScheduleRequest is
+received.
+K15.FR.19 K15.FR.07
+
+
+AND
+EV does not return a
+charging profile
+
+
+Charging Station IS RECOMMENDED to return
+an EV charging profile as a chargingSchedule
+in a NotifyEVChargingScheduleRequest
+message to CSMS that matches the schedule
+that was selected by the EV (i.e.
+chargingSchedule.id  SAScheduleTupleId)
+
+
+In ISO 15118-2 the EV charging profile and the
+selected schedule are returned as
+ChargingProfile and SAScheduleTupleId in
+PowerDeliveryReq.
+
+==== K16 - Renegotiation initiated by CSMS
+
+_Table 189. K16 - Renegotiation initiated by CSMS_
+
+
+No. Type Description
+1 Name Renegotiation initiated by CSMS.
+2 ID K16
+Functional block K. Smart Charging
+3 Objectives To control the charging power or current of a Charging Station
+4 Description The CSMS sends a SetChargingProfileRequest to the Charging Station to influence the power or
+current drawn by the EV. The CSMS calculates a ChargingSchedule to stay within limits which
+MAY be imposed by an external system.
+Note: Description of actions between EV and Charging Station is informative only and not
+mandated by OCPP.
+
+Actors (^) EV, Charging Station, CSMS
+Scenario description (^) **1** CSMS sends a SetChargingProfileRequest to the Charging Station.
+**2** Charging Station responds with a SetChargingProfileResponse to the CSMS.
+**3** When EV sends the next CurrentDemandReq (for DC) or ChargingStatusReq (for AC), the
+Charging Station will respond with _evseNotification_  ReNegotiation.
+**4** EV sends a PowerDeliveryReq with _chargeProgress_  ReNegotiate to confirm this.
+**5** Charging Station responds with a PowerDeliveryRes.
+**6** EV sends a ChargeParameterDiscoveryReq.
+**7** Charging Station responds with a ChargeParameterDiscoveryRes with an SAScheduleList that
+contains the ChargingSchedule data from the SetChargingProfileRequest.
+**8** EV sends a PowerDeliveryReq with _chargeProgress_  Start (with an optional charging profile)
+to confirm this.
+**9** Charging Station responds with PowerDeliveryRes and, if charging was suspended at start of
+the renegotiation, will resume power delivery.
+**10** If EV provided a charging profile in the previous step, then Charging Station will send a
+NotifyEVChargingScheduleRequest to the CSMS.
+**5 Prerequisites** Charging session started according to use case K15.
+**6 Postcondition(s)** Charging session uses the new charging profile.
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+EV Charging Station CSMS
+
+
+loop [Charging in progress...]
+alt [if AC Charging]
+ChargingStatusReq()
+ChargingStatusRes()
+[if DC Charging]
+CurrentDemandReq()
+CurrentDemandRes()
+
+
+TransactionEventRequest(eventType  Updated,...)
+TransactionEventResponse(...)
+
+
+CSMS sets new schedule
+SetChargingProfileRequest(evseId, chargingProfile)
+SetChargingProfileResponse(Accepted)
+alt [if AC Charging]
+ChargingStatusReq()
+ChargingStatusRes(ReNegotiation)
+[if DC Charging]
+CurrentDemandReq()
+CurrentDemandRes(ReNegotiation)
+PowerDeliveryReq(ReNegotiate)
+
+PowerDeliveryRes(OK) (^) Power delivery may be halted
+ChargeParameterDiscoveryReq(EnergyTransferMode, EVChargeParam)
+ChargeParameterDiscoveryRes(SAScheduleList) (^) Charging Station supplies charging profile as SASchedule
+PowerDeliveryReq(Start, ChargingProfile, EVPowerDeliveryParam)
+PowerDeliveryRes(OK) Power delivery continues
+opt [If EV provides a charging schedule]
+NotifyEVChargingScheduleRequest(evseId, chargingSchedule)
+NotifyEVChargingScheduleResponse(Accepted)
+_Figure 115. Renegotiation initiated by CSMS_
+**7 Remark(s)** Signed SalesTariffs are currently not supported. If these are needed please use P01 - Data
+Transfer to the Charging Station to send these to the Charging Station.
+**K16 - Renegotiation initiated by CSMS - Requirements
+ID Precondition Requirements NOTE**
+K16.FR.01 CSMS sends a new
+SetChargingProfileReq
+uest
+Charging Station SHALL respond with a
+SetChargingProfileResponse with _status_ =
+Accepted.
+K16.FR.02 K16.FR.01 Charging Station SHALL initiate schedule
+renegotiation with EV.
+In ISO 15118 this is done by replying with
+EVSENotification=ReNegotiation to a
+CurrentDemandReq (for DC) or
+ChargingStatusReq (for AC) message.
+K16.FR.03 K16.FR.02 Charging Station SHALL provide the
+ChargingSchedule data to the EV.
+In ISO 15118 this is done in the
+ChargeParameterDiscoverRes message.
+K16.FR.04 EV returns a charging
+profile
+Charging Station SHALL verify that provided
+charging profile is within boundaries of the
+ChargingSchedule from CSMS.
+In ISO 15118 EV may provide this as part of
+the PowerDeliveryReq message.
+K16.FR.05 K16.FR.04 Charging Station SHALL send the EV charging
+profile in a NotifyEVChargingScheduleRequest
+message to CSMS.
+K16.FR.06 K16.FR.05
+AND
+EV charging profile is
+within limits of CSMS
+ChargingSchedule
+CSMS responds with
+NotifyEVChargingScheduleResponse with
+_status_ Accepted to Charging Station.
+Note: Already checked by Charging Station, but
+CSMS does its own check.
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+ID Precondition Requirements NOTE
+K16.FR.07 K16.FR.05
+
+
+AND
+EV charging profile is
+NOT within limits of
+CSMS
+ChargingSchedule
+
+
+CSMS responds with
+NotifyEVChargingScheduleResponse with
+status Rejected to Charging Station.
+
+
+K16.FR.08 K16.FR.07 CSMS starts new renegotiation as per use
+case K16.
+K16.FR.09 When the Charging
+Station receives
+charging needs from
+the EV
+
+
+The Charging Station SHOULD NOT send a
+NotifyEVChargingNeedsRequest to the CSMS.
+
+
+CSMS initiated the renegotiation and has just
+sent a new charging profile, based on the initial
+charging needs from EV, energy already
+consumed by EV and whatever information
+has caused CSMS to update the charging
+profile.
+In ISO 15118 charging needs are sent via
+ChargeParameter-DiscoveryReq.
+K16.FR.10 K16.FR.04 The Charging Station SHOULD take the
+schedule from the
+NotifyEVChargingScheduleRequest into
+account when calculating the actual
+Composite schedule.
+K16.FR.11 K16.FR.02
+AND
+current or power in
+new charging schedule
+is lower than actual
+current or power
+
+
+The Charging Station SHALL request EV to
+lower current or power to a value matching the
+new charging schedule at the first possible
+opportunity.
+
+
+In ISO 15118 this can be communicated in
+CurrentDemandRes (for DC) or
+ChargingStatusRes (for AC).
+
+===== K16.FR.12 K16.FR.09
+
+===== AND
+
+
+Charging Station
+sends a
+NotifyEVChargingNeed
+sRequest
+
+
+The CSMS SHALL send a
+SetChargingProfileRequest.
+
+
+This situation is not desirable, because
+charging profile will likely be the same as in
+K16.FR.01, but this is added for robustness
+when Charging Station is not adhering to
+K16.FR.09.
+
+
+K16.FR.13 EV does not return a
+charging profile
+
+
+Charging Station IS RECOMMENDED to return
+an EV charging profile as a chargingSchedule
+in a NotifyEVChargingScheduleRequest
+message to CSMS that matches the schedule
+that was selected by the EV (i.e.
+chargingSchedule.id  SAScheduleTupleId)
+
+
+In ISO 15118-2 the EV charging profile and the
+selected schedule are returned as
+ChargingProfile and SAScheduleTupleId in
+PowerDeliveryReq.
+
+==== K17 - Renegotiation initiated by EV
+
+_Table 190. K17 - Renegotiation initiated by EV_
+
+
+No. Type Description
+1 Name Renegotiation initiated by EV.
+2 ID K16
+Functional block K. Smart Charging
+3 Objectives To let an EV request a new charging schedule.
+4 Description The EV signals the Charging Station that it wants to renegotiate and it provides new charging
+needs, which the Charging Station sends to the CSMS. Based on this and other parameters, the
+CSMS calculates a new charging schedule and sends it via SetChargingProfileRequest to
+Charging Station, which communicates it to the EV.
+Note: Description of actions between EV and Charging Station is informative only and not
+mandated by OCPP.
+
+Actors (^) EV, Charging Station, CSMS
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+No. Type Description
+Scenario description 1 When EV sends a ChargeParameterDiscoveryReq with with charging needs parameters, then
+Charging Station sends this information in a NotifyEVChargingNeedsRequest to CSMS.
+2 CSMS responds with NotifyEVChargingNeedsResponse to Charging Station.
+3 CSMS calculates new charging schedule, that tries to accomodate the EV charging needs and
+still fits within the schedule boundaries imposed by other parameters.
+4 CSMS sends a SetChargingProfileRequest with the new schedule to the Charging Station.
+5 Charging Station responds with SetChargingProfileResponse with status Accepted.
+6 Charging Station sends new charging schedule to EV in a ChargeParameterDiscoveryRes
+message.
+7 EV sends a PowerDeliveryReq with chargeProgress  Start (with an optional charging profile)
+to confirm this.
+8 Charging Station responds with PowerDeliveryRes and, if charging was suspended at start of
+the renegotiation, will resume power delivery.
+9 If EV provided a charging profile in the previous step, then Charging Station will send a
+NotifyEVChargingScheduleRequest to the CSMS.
+5 Prerequisites Charging session started according to use case K15.
+6 Postcondition(s) Charging session uses the new charging profile.
+
+
+EV Charging Station CSMS
+
+
+loop [Charging in progress...]
+alt [if AC Charging]
+ChargingStatusReq()
+ChargingStatusRes()
+[if DC Charging]
+CurrentDemandReq()
+CurrentDemandRes()
+TransactionEventRequest(eventType  Updated,...)
+TransactionEventResponse(...)
+
+
+EV proposes new schedule
+PowerDeliveryReq(Renegotiate)
+PowerDeliveryRes(OK) Power delivery may be halted
+ChargeParameterDiscoveryReq(EnergyTransferMode, EVChargeParam)
+NotifyEVChargingNeedsRequest(evseId, chargingNeeds)
+NotifyEVChargingNeedsResponse(Accepted)
+calculate new profile
+
+
+SetChargingProfileRequest(evseId, chargingProfile)
+SetChargingProfileResponse(Accepted)
+ChargeParameterDiscoveryRes(SAScheduleList) Charging Station supplies charging profile as SASchedule
+PowerDeliveryReq(Start, ChargingProfile, EVPowerDeliveryParam)
+
+PowerDeliveryRes(OK) (^) Power delivery continues
+opt [If EV provides a charging schedule]
+NotifyEVChargingScheduleRequest(evseId, chargingSchedule)
+NotifyEVChargingScheduleResponse(Accepted)
+_Figure 116. Renegotiation initiated by EV_
+**7 Remark(s)** Signed SalesTariffs are currently not supported. If these are needed please use P01 - Data
+Transfer to the Charging Station to send these to the Charging Station.
+**K17 - Renegotiation initiated by EV - Requirements**
+_Table 191. K17 - Requirements_
+**ID Precondition Requirements Note**
+K17.FR.01 EV triggers a
+renegotiation and
+sends new charging
+needs
+The Charging Station SHALL send a
+NotifyEVChargingNeedsRequest to the CSMS.
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+ID Precondition Requirements Note
+K17.FR.02 K17.FR.01 In response to a
+NotifyEVChargingNeedsRequest the CSMS
+SHALL send a
+NotifyEVChargingNeedsResponse.
+K17.FR.03 K17.FR.02 If the CSMS is able to provide a charging
+schedule, it SHALL indicate this by setting the
+status field in the
+NotifyEVChargingNeedsResponse to
+'Accepted'.
+K17.FR.04 K17.FR.02 If the CSMS is not able to provide a charging
+schedule, it SHALL indicate this by setting the
+status field in the
+NotifyEVChargingNeedsResponse to
+'Rejected'.
+K17.FR.05 K17.FR.02 If the CSMS is able to provide a charging
+schedule; but needs processing time, it SHALL
+indicate this by setting the status field in the
+NotifyEVChargingNeedsResponse to
+'Processing'.
+K17.FR.06 A NotifyEVChargingNeedsRequest SHALL
+contain either ACChargingParameters or
+DCChargingParameters.
+K17.FR.07 K17.FR.03 or
+K17.FR.05
+
+
+The CSMS SHALL send a
+SetChargingProfileRequest with
+chargingProfilePurpose  TxProfile and at
+most three chargingSchedule and optional
+salesTariff elements, that each contain no
+more periods than specified by
+maxScheduleTuples in
+NotifyEVChargingNeedsRequest and by device
+model variable
+SmartChargingCtrlr.PeriodsPerSchedule.
+K17.FR.08 K17.FR.01 The CSMS SHOULD send a
+SetChargingProfileRequest to the Charging
+Station within 60 seconds.
+
+
+This is to satisfy the ISO 15118
+ChargeParameterDiscoveryReq timeout.
+
+===== K17.FR.09 K17.FR.07
+
+===== AND
+
+
+EV returns a charging
+profile
+
+
+Charging Station SHALL verify that provided
+charging profile is within boundaries of the
+ChargingSchedule from CSMS.
+
+
+In ISO 15118 EV can sent its charging profile
+as part of PowerDeliveryReq.
+
+
+K17.FR.10 K17.FR.09 Charging Station SHALL send the EV charging
+profile in a NotifyEVChargingScheduleRequest
+message to CSMS.
+K17.FR.11 K17.FR.10
+
+
+AND
+EV charging profile is
+within limits of CSMS
+ChargingSchedule
+
+
+CSMS responds with
+NotifyEVChargingScheduleResponse with
+status Accepted to Charging Station.
+
+
+Note: Already checked by Charging Station, but
+CSMS does its own check.
+
+===== K17.FR.12 K17.FR.10
+
+===== AND
+
+
+EV charging profile is
+NOT within limits of
+CSMS
+ChargingSchedule
+
+
+CSMS responds with
+NotifyEVChargingScheduleResponse with
+status Rejected to Charging Station.
+
+
+K17.FR.13 K17.FR.12 CSMS starts new renegotiation as per use
+case K16.
+K17.FR.14 K17.FR.11 The Charging Station SHOULD take the
+schedule from the
+NotifyEVChargingScheduleRequest into
+account when calculating the actual
+Composite schedule.
+
+Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+
+
+
+ID Precondition Requirements Note
+K17.FR.15 K17.FR.01
+
+
+AND
+Charging Station is
+offline
+
+
+The Charging Station SHALL use the
+TxDefaultProfile (if present) and generate a
+charging schedule within the limits of its
+composite schedule.
+
+
+K17.FR.16 K17.FR.07
+EV does not return a
+charging profile
+
+
+Charging Station IS RECOMMENDED to return
+an EV charging profile as a chargingSchedule
+in a NotifyEVChargingScheduleRequest
+message to CSMS that matches the schedule
+that was selected by the EV (i.e.
+chargingSchedule.id  SAScheduleTupleId)
+
+
+In ISO 15118-2 the EV charging profile and the
+selected schedule are returned as
+ChargingProfile and SAScheduleTupleId in
+PowerDeliveryReq.
+

@@ -1,0 +1,854 @@
+= A. Security
+
+<<<
+
+== OCPP Security
+
+This Functional Block describes the security requirements for the OCPP protocol. The security part was developed to strengthen and mature the future development and standardization of OCPP. It is based amongst others on the end-to-end security design by LaQuSo <<ocpp_security_21,[21]>>. Security requirements are included on security measures at Charging Station and CSMS, to support users of the
+OCPP.
+
+=== Security Objectives
+
+_This section is informative._
+
+OCPP security has been designed to meet the following security objectives:
+
+. To allow the creation of a secure communication channel between the CSMS and Charging Station. The integrity and confidentiality of messages on this channel should be protected with strong cryptographic measures.
+. To provide mutual authentication between the Charging Station and the CSMS. Both parties should be able to identify who they are communicating with.
+. To provide a secure firmware update process by allowing the Charging Station to check the source and the integrity of firmware images, and by allowing non-repudiation of these images.
+. To allow logging of security events to facilitate monitoring the security of the smart charging system. A list of security related events and their 'criticality' is provided in the appendices.
+
+=== Design Considerations
+
+_This section is informative._
+
+The security Functional Block was designed to fit into the approach taken in OCPP. Standard web technologies are used whenever possible to allow cost-effective implementations using available web libraries and software. No application layer security measures are included. Based on these considerations, OCPP security is based on TLS and public key cryptography using X.509 certificates. Because the CSMS usually acts as the server, different users or role-based access control on the Charging Station are not implemented in this standard. To mitigate this, it is recommended to implement access control on the CSMS. To make sure the mechanisms implemented there cannot be bypassed, OCPP should not be used by qualified personnel performing maintenance to Charging Stations locally at the Charging Station, as other protocols may be used for local maintenance purposes.
+
+<<<
+
+=== Security Profiles
+
+This section defines the different OCPP security profiles and their requirement. OCPP 2.0.1 supports three security profiles:The table below shows which security measures are used by which profile.
+
+.Overview of OCPP security profiles
+[cols="^.^1s,<.^1,<.^1,<.^1",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Profile  |Charging Station +
+          Authentication
+                            |CSMS +
+                            Authentication
+                                            |Communication +
+                                            Security
+|1. Unsecured Transport with Basic Authentication
+  |HTTP Basic Authentication |- |-
+|2. TLS with Basic Authentication |HTTP Basic Authentication 
+  |TLS authentication using certificate |Transport Layer Security (TLS)
+|3. TLS with Client Side Certificates |TLS authentication using certificate
+  |TLS authentication using certificate |Transport Layer Security (TLS)
+|===
+
+- The <<unsecured_transport_with_basic_authentication_profile_1,Unsecured Transport with Basic Authentication Profile>> does not include authentication for the CSMS, or measures to set up a secure communication channel. Therefore, it should only be used in trusted networks, for instance in networks where there is a VPN between the CSMS and the Charging Station. For field operation it is highly recommended to use a security profile with TLS.
+- In some cases (e.g. lab installations, test setups, etc.) one might prefer to use OCPP 2.0.1 without implementing security. While this is possible, it is NOT considered a valid OCPP 2.0.1 implementation.
+- When the Charging Station does not have the correct date and time set, it cannot validate the server certificate. A solution for this might be to either use NTP, mobile network to set time automatically, or have an installer tool that sets the time before the first connection.
+
+==== Generic Security Profile requirements
+
+.Generic Security Profile requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition       |Requirement definition
+|A00.FR.001 |{nbsp}             |The Charging Station and CSMS SHALL only use one security profile at a time
+|A00.FR.002 |If the Charging Station tries to connect with a different profile than the CSMS is using
+  |The CSMS SHALL terminate the connection.
+|A00.FR.003 |If the CSMS tries to connect with a different profile than the Charging Station is using
+  |The Charging Station SHALL terminate the connection.
+|A00.FR.004 |{nbsp}             |The security profile SHALL be configured before OCPP communication is possible.
+|A00.FR.005 |{nbsp}             |Lowering the security profile that is used, to a less secure profile, is for security reasons, not part of the OCPP specification, and MUST be done through another method, not via OCPP. OCPP messages SHALL NOT be used for this (e.g. <<set_variables_request,SetVariablesRequest>> or <<data_transfer_request,DataTransferRequest>>).
+|A00.FR.006 |When a CSMS communicates with Charging Stations with different security profiles or different versions of OCPP.
+  |The CSMS MAY operate the Charging Stations via different addresses or ports of the CSMS. +
+  For instance, the CSMS server may have one TCP port for TLS with Basic Authentication, and another port for TLS with Client Side Certificates. +
+  In this case there is only one security profile in use per port of the CSMS, which is allowed.
+|===
+
+[[unsecured_transport_with_basic_authentication_profile_1]]
+==== Unsecured Transport with Basic Authentication Profile - 1
+
+.Security Profile 1 - Unsecured Transport with Basic Authentication
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+|1   |Name            |Unsecured Transport with Basic Authentication
+|2   |Profile No.     |1
+|3   |Description     |The Unsecured Transport with Basic Authentication profile provides a low level of security. +
+  Charging Station authentication is done through a username and password. No measures are included to secure the communication channel.
+|4   |Charging Station Authentication |For Charging Station authentication HTTP Basic authentication is used.
+|5   |CSMS Authentication |In this profile, the CSMS does not authenticate itself to the Charging Station. The Charging Station has to trust that the server it connects to is indeed the CSMS.
+|6   |Communication Security |No communication security measures are included in the profile.
+|===
+
+.Sequence Diagram: HTTP Basic Authentication sequence diagram
+image::part2/images/figure_2.svg[Sequence Diagram: HTTP Basic Authentication sequence diagram]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7    |Remark(s)     |Please note, that the encoding of the basic authentication password in OCPP 2.0.1 (A00.FR.205) differs from how this was done in OCPP 1.6.
+|===
+
+==== Unsecured Transport with Basic Authentication Profile - Requirements
+
+.Security Profile 1 - Unsecured Transport with Basic Authentication - Requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition     |Requirement definition
+
+|A00.FR.201 |{nbsp}           |The <<unsecured_transport_with_basic_authentication_profile_1,Unsecured Transport with Basic Authentication Profile>> SHOULD only be used in trusted networks.
+|A00.FR.202 |{nbsp}           |The Charging Station SHALL authenticate itself to the CSMS using HTTP Basic authentication <<ocpp_security_18,[18]>>
+|A00.FR.203 |A00.FR.202       |The client, i.e. the Charging Station, SHALL provide a username and password with every connection request.
+|A00.FR.204 |A00.FR.203       |The username SHALL be equal to the Charging Station identity, which is the identifying string of the Charging Station as it uses it in the OCPP-J connection URL. When using Basic Authentication, the Charging Station identity may not contain the character ":". Otherwise the CSMS may be unable to separate the username from the password.
+|A00.FR.205 |{nbsp}           |The password SHALL be stored in the <<basic_auth_password,`BasicAuthPassword`>> Configuration Variable. It SHALL be a randomly chosen passwordString with a sufficiently high entropy, consisting of minimum 16 and maximum 40 characters (alpha-numeric characters and the special characters allowed by passwordString). The password SHALL be sent as a UTF-8 encoded string (NOT encoded into octet string or base64).
+|A00.FR.206 |A00.FR.203       |With HTTP Basic, the username and password are transmitted in clear text, encoded in base64 only. Hence, it is RECOMMENDED that this mechanism will only be used over connections that are already secured with other means, such as VPNs.
+|A00.FR.207 |A00.FR.202       |The CSMS SHALL validate that Charging Station identity and the Basic Authentication password match with username and password in the authorization header of the connection request.
+|===
+
+[[tls_with_basic_authentication_profile_2]]
+==== TLS with Basic Authentication Profile - 2
+
+.Security Profile 2 - TLS with Basic Authentication
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type              |Description
+|1   |Name              |TLS with Basic Authentication
+|2   |Profile No.       |2
+|3   |Description       |In the TLS with Basic Authentication profile, the communication channel is secured using Transport Layer Security (TLS). The CSMS authenticates itself using a TLS server certificate. The Charging Stations authenticate themselves using HTTP Basic Authentication.
+|4   |Charging Station Authentication |For Charging Station authentication HTTP Basic authentication is used. +
+  Because TLS is used in this profile, the password will be sent encrypted, reducing the risks of using this authentication method.
+|5   |CSMS Authentication |The Charging Station authenticates the CSMS via the TLS server certificate.
+|6   |Communication Security |The communication between Charging Station and CSMS is secured using TLS.
+|===
+
+.Sequence Diagram: TLS with Basic Authentication sequence diagram
+image::part2/images/figure_3.svg[Sequence Diagram: TLS with Basic Authentication sequence diagram]
+
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Remark(s)         |TLS allows a number of configurations, not all of which provide sufficient security. The requirements below describe the configurations allowed for OCPP.
+
+The Charging Station should include the same header as used in Basic Auth RFC 2617, while requesting to upgrade the http connection to a websocket connection as described in RFC 6455. The server first needs to validate the Authorization header before upgrading the connection.
+
+**Example:** +
+_GET /ws HTTP/1.1_ +
+_(Remote-Addr: 127.0.0.1)_ +
+_UPGRADE: websocket_ +
+_CONNECTION: Upgrade_ +
+_HOST: 127.0.0.1:9999_ +
+_ORIGIN: http://127.0.0.1:9999_ +
+_SEC-WEBSOCKET-KEY: Pb4obWo2214EfaPQuazMjA==_ +
+_SEC-WEBSOCKET-VERSION: 13_ +
+_AUTHORIZATION: Basic <Base64 encoded(<ChargePointId>:<AuthorizationKey>)>_
+
+Please note, that the encoding of the basic authentication password in OCPP 2.0.1 (A00.FR.304) differs from how this was done in OCPP 1.6.
+|===
+
+==== TLS with Basic Authentication Profile - Requirements
+
+.Security Profile 2 - TLS with Basic Authentication - Requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
+
+|A00.FR.301 |{nbsp}               |The Charging Station SHALL authenticate itself to the CSMS using HTTP Basic authentication <<ocpp_security_18,[18]>>
+|A00.FR.302 |A00.FR.301           |The client, i.e. the Charging Station, SHALL provide a username and password with every connection request.
+|A00.FR.303 |A00.FR.302           |The username SHALL be equal to the Charging Station identity, which is the identifying string of the Charging Station as it uses it in the OCPP-J connection URL. When using Basic Authentication, the Charging Station identity may not contain the character ":". Otherwise the CSMS may be unable to separate the username from the password.
+|A00.FR.304 |A00.FR.302           |The password SHALL be stored in the <<basic_auth_password,`BasicAuthPassword`>> Configuration Variable. It SHALL be a randomly chosen passwordString with a sufficiently high entropy, consisting of minimum 16 and maximum 40 characters (alpha-numeric characters and the special characters allowed by passwordString). The password SHALL be sent as a UTF-8 encoded string (NOT encoded into octet string or base64).
+|A00.FR.306 |{nbsp}               |The CSMS SHALL act as the TLS server.
+|A00.FR.307 |{nbsp}               |The CSMS SHALL authenticate itself by using the CSMS certificate as server side certificate.
+|A00.FR.308 |{nbsp}               |The Charging Station SHALL verify the certification path of the CSMS’s certificate according to the path validation rules established in Section 6 of <<ocpp_security_3,[3]>>.
+|A00.FR.309 |{nbsp}               |The Charging Station SHALL verify that the commonName includes the CSMS’s FQDN.
+|A00.FR.310 |If the CSMS does not own a valid certificate, or if the certification path is invalid
+  |The Charging Station SHALL trigger an InvalidCsmsCertificate security event (See part 2 appendices for the full list of security events).
+|A00.FR.311 |A00.FR.310           |The Charging Station SHALL terminate the connection.
+|A00.FR.312 |{nbsp}               |The communication channel SHALL be secured using Transport Layer Security (TLS) <<ocpp_security_4,[4]>>.
+|A00.FR.313 |{nbsp}               |The Charging Station and CSMS SHALL only use TLS v1.2 or above.
+|A00.FR.314 |{nbsp}               |Both of these endpoints SHALL check the version of TLS used.
+
+|A00.FR.315 |A00.FR.314 +
+  AND +
+  The CSMS detects that the Charging Station only allows connections using an older version of TLS, or only allows SSL
+    |The CSMS SHALL terminate the connection.
+|A00.FR.316 |A00.FR.314 +
+  AND +
+  The Charging Station detects that the CSMS only allows connections using an older version of TLS, or only allows SSL
+    |The Charging Station SHALL trigger an InvalidTLSVersion security event AND terminate the connection (See part 2 appendices for the full list of security events).
+
+    NOTE: This is a critical security event that will need to be queued and sent to CSMS once a successful connection has been made, as described in use case A04. +
+    A security event only needs to be sent once for repeated failed connection attempts, in order to avoid overflow to the offline queue.
+|A00.FR.317 |{nbsp}               |TLS SHALL be implemented as in [4] or its successor standards without any modifications.
+|A00.FR.318 |{nbsp}               |The CSMS SHALL support at least the following four cipher suites: +
+  *TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256* +
+  *TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384* +
+  *TLS_RSA_WITH_AES_128_GCM_SHA256* +
+  *TLS_RSA_WITH_AES_256_GCM_SHA384* 
+
+  Note: The CSMS will have to provide 2 different certificates to support both cipher suites. Also when using security profile 3, the CSMS should be capable of generating client side certificates for both cipher suites.
+|A00.FR.319 |{nbsp}               |The Charging Station SHALL support at least the cipher suites:
+  (*TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256* +
+  AND +
+  *TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384*) +
+  OR +
+  (*TLS_RSA_WITH_AES_128_GCM_SHA256* +
+  AND +
+  *TLS_RSA_WITH_AES_256_GCM_SHA384*)
+
+  Note 1: TLS_RSA does not support forward secrecy, therefore TLS_ECDHE is RECOMMENDED. Furthermore, if the Charging Station detects an algorithm used that is not secure, it SHOULD trigger an InvalidTLSCipherSuite security event (See part 2 appendices for the full list of security events).
+
+  {nbsp}
+
+  Note 2: Please note that <<iso15118_2,ISO15118-2>> prescribes to implement the following cipher suites for the communication between EV and Charging Station: +
+  TLS_ECDH_ECDSA_WITH_AES_128_**CBC**_SHA256, +
+  TLS_ECDHE_ECDSA_WITH_AES_128_**CBC**_SHA256
+|A00.FR.320 |{nbsp}                 |The Charging Station and CSMS SHALL NOT use cipher suites that use cryptographic primitives marked as unsuitable for legacy use in <<ocpp_security_1,[1]>>. This will mean that when one (or more) of the cipher suites described in this specification becomes marked as unsuitable for legacy use, it SHALL NOT be used anymore.
+|A00.FR.321 |{nbsp}                 |The TLS Server and Client SHALL NOT use TLS compression methods to avoid compression side-channel attacks and to ensure interoperability as described in Section 6 of <<ocpp_security_10,[10]>>.
+|A00.FR.322 |A00.FR.320 +
+  AND +
+  The CSMS detects that the Charging Station only allows connections using one of these suites The 
+    |CSMS SHALL terminate the connection.
+|A00.FR.323 |A00.FR.320 +
+  AND +
+  The Charging Station detects that the CSMS only allows connections using one of these suites
+    |The Charging Station SHALL trigger an InvalidTLSCipherSuite security event AND terminate the connection (See part 2 appendices for the full list of security events).
+|A00.FR.324 |A00.FR.302             |The CSMS SHALL validate that Charging Station identity and the Basic Authentication password match with username and password in the authorization header of the connection request.
+|===
+
+==== TLS with Client Side Certificates Profile - 3
+
+.Security Profile 3 - TLS with Client Side Certificates
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+|1   |Name            |TLS with Client Side Certificates
+|2   |Profile No.     |3
+|3   |Description     |In the TLS with Client Side Certificates profile, the communication channel is secured using Transport Layer Security (TLS). Both the Charging Station and CSMS authenticate themselves using certificates.
+|4   |Charging Station Authentication |The CSMS authenticates the Charging Station via the TLS client certificate.
+|5   |CSMS Authentication |The Charging Station authenticates the CSMS via the TLS server certificate.
+|6   |Communication Security |The communication between Charging Station and CSMS is secured using TLS.
+|===
+
+.Sequence Diagram: TLS with Client Side Certificates
+image::part2/images/figure_4.svg[Sequence Diagram: TLS with Client Side Certificates]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Remark(s)       |N/a
+|===
+
+==== TLS with Client Side Certificates Profile - Requirements
+
+.Security Profile 3 - TLS with Client Side Certificates - Requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
+
+|A00.FR.401 |{nbsp}               |The Charging Station SHALL authenticate itself to the CSMS using the Charging Station certificate.
+|A00.FR.402 |{nbsp}               |The Charging Station certificate SHALL be used as a TLS client side certificate
+|A00.FR.403 |{nbsp}               |The CSMS SHALL verify the certification path of the Charging Station’s certificate according to the path validation rules established in Section 6 of <<ocpp_security_3,[3]>>
+
+|A00.FR.404 |{nbsp}               |The CSMS SHALL verify that the certificate is owned by the CSO (or an organization trusted by the CSO) by checking that the O(`organizationName`) RDN in the subject field of the certificate contains the CSO name.
+|A00.FR.405 |{nbsp}               |The CSMS SHALL verify that the certificate belongs to this Charging Station by checking that the CN (`commonName`) RDN in the subject field of the certificate contains the unique serial number of the Charging Station (see <<certificate_properties,Certificate Properties>>).
+|A00.FR.406 |If the Charging Station certificate is not owned by the CSO, for instance immediately after installation
+  |it is RECOMMENDED to update the certificate before continuing communication with the Charging Station (also see <<installation,Installation>>)
+|A00.FR.407 |NOT A00.FR.429 AND +
+  If the Charging Station does not own a valid certificate, or if the certification path is invalid
+    |The CSMS SHALL terminate the connection.
+|A00.FR.408 |A00.FR.407 OR A00.FR.429 |It is RECOMMENDED to log a security event InvalidChargingStationCertificate in the CSMS.
+|A00.FR.409 |{nbsp}               |The CSMS SHALL act as the TLS server.
+|A00.FR.410 |{nbsp}               |The CSMS SHALL authenticate itself by using the CSMS certificate as server side certificate.
+|A00.FR.411 |{nbsp}               |The Charging Station SHALL verify the certification path of the CSMS’s certificate according to the path validation rules established in Section 6 of <<ocpp_security_3,[3]>>.
+|A00.FR.412 |{nbsp}               |The Charging Station SHALL verify that the commonName matches the CSMS’s FQDN.
+|A00.FR.413 |If the CSMS does not own a valid certificate, or if the certification path is invalid
+    |The Charging Station SHALL trigger an InvalidCsmsCertificate security event (See part 2 appendices for the full list of security events).
+|A00.FR.414 |A00.FR.413           |The Charging Station SHALL terminate the connection.
+|A00.FR.415 |{nbsp}               |The communication channel SHALL be secured using Transport Layer Security (TLS) <<ocpp_security_4,[4]>>.
+|A00.FR.416 |{nbsp}               |The Charging Station and CSMS SHALL only use TLS v1.2 or above.
+|A00.FR.417 |{nbsp}               |Both of these endpoints SHALL check the version of TLS used.
+|A00.FR.418 |A00.FR.417 +
+  AND +
+  The CSMS detects that the Charging Station only allows connections using an older version of TLS, or only allows SSL
+    |The CSMS SHALL terminate the connection.
+|A00.FR.419 |A00.FR.417 +
+  AND +
+  The Charging Station detects that the CSMS only allows connections using an older version of TLS, or only allows SSL
+    |The Charging Station SHALL trigger an InvalidTLSVersion security event AND terminate the connection (See part 2 appendices for the full list of security events).
+
+    NOTE: This is a critical security event that will need to be queued and sent to CSMS once a connection has been made, as described in use case A04. +
+    A security event only needs to be sent once for repeated failed connection attempts, in order to avoid overflow to the offline queue. A00.FR.420 TLS SHALL be implemented as in <<ocpp_security_4,[4]>> or its successor standards without any modifications.
+|A00.FR.421 |{nbsp}               |The CSMS SHALL support at least the following four cipher suites: +
+  *TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256* +
+  *TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384* +
+  *TLS_RSA_WITH_AES_128_GCM_SHA256* +
+  *TLS_RSA_WITH_AES_256_GCM_SHA384* +
+  Note: The CSMS will have to provide 2 different certificates to support both cipher suites. Also when using security profile 3, the CSMS should be capable of generating client side certificates for both cipher suites.
+
+|A00.FR.422 |{nbsp}               |The Charging Station SHALL support at least the cipher suites: +
+  (*TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256* +
+  AND +
+  *TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384*) +
+  OR +
+  (*TLS_RSA_WITH_AES_128_GCM_SHA256* +
+  AND +
+  *TLS_RSA_WITH_AES_256_GCM_SHA384*)
+
+  Note 1: TLS_RSA does not support forward secrecy, therefore TLS_ECDHE is RECOMMENDED. Furthermore, if the Charging Station detects an algorithm used that is not secure, it SHOULD trigger an InvalidTLSCipherSuite security event (See part 2 appendices for the full list of security events).
+
+  {nbsp}
+
+  Note 2: Please note that <<iso15118_2,ISO15118-2>> prescribes to implement the following cipher suites for the communication between EV and Charging Station: +
+  TLS_ECDH_ECDSA_WITH_AES_128_**CBC**_SHA256,
+  TLS_ECDHE_ECDSA_WITH_AES_128_**CBC**_SHA256
+|A00.FR.423 |{nbsp}               |The Charging Station and CSMS SHALL NOT use cipher suites that use cryptographic primitives marked as unsuitable for legacy use in <<ocpp_security_1,[1]>>. This will mean that when one (or more) of the cipher suites described in this specification becomes marked as unsuitable for legacy use, it SHALL NOT be used anymore.
+|A00.FR.424 |{nbsp}               |The TLS Server and Client SHALL NOT use TLS compression methods to avoid compression side-channel attacks and to ensure interoperability as described in Section 6 of <<ocpp_security_10,[10]>>.
+|A00.FR.425 |A00.FR.424 +
+  AND +
+  If the CSMS detects that the Charging Station only allows connections using one of these suites
+    |The CSMS SHALL terminate the connection.
+|A00.FR.426 |A00.FR.424 +
+  AND +
+  The Charging Station detects that the CSMS only allows connections using one of these suites
+    |The Charging Station SHALL trigger an InvalidTLSCipherSuite security event AND terminate the connection (See part 2 appendices for the full list of security events).
+|A00.FR.427 |{nbsp}               |A unique Charging Station certificate SHALL be used for each Charging Station.
+|A00.FR.428 |{nbsp}               |The Charging Station Certificate MAY be the same certificate as the SECC Certificate in <<iso15118_2,ISO15118-2>>, used to set up a TLS connection between the Charging Station and an Electric Vehicle.
+|A00.FR.429 |If Charging Station certificate has been expired AND +
+  CSMS has been explicitly configured to accept a connection by this specific Charging Station with an expired certificate.
+    |CSMS MAY accept this Charging Station in a BootNotification - Pending
+state (use case B02) after which it SHALL immediately execute <<update_charging_station_certificate_by_request_of_csms,A02 - Update Charging Station Certificate by request of CSMS>> to renew the certificate.
+|===
+
+=== Keys used in OCPP
+
+_This section is normative._
+
+OCPP uses a number of public private key pairs for its security, see below Table. To manage the keys on the Charging Station, messages have been added to OCPP. Updating keys on the CSMS or at the manufacturer is out of scope for OCPP. If TLS with Client Side certificates is used, the Charging Station requires a "Charging Station certificate" for authentication against the CSMS.
+
+.Certificates used in the OCPP security specification
+[cols="^.^3,<.^2,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Certificate        |Private Key Stored At      |Description
+|CSMS Certificate   |CSMS                       |Key used to authenticate the CSMS.
+|Charging Station Certificate |Charging Station |Key used to authenticate the Charging Station.
+|Firmware Signing Certificate |Manufacturer     |Key used to verify the firmware signature.
+|SECC Certificate   |Charging Station           |Certificate used by <<iso15118_2,ISO15118-2>> to set up a TLS connection between the Charging Station and an Electric Vehicle.
+|===
+
+[[certificate_properties]]
+==== Certificate Properties
+
+_This section is normative._
+
+.Certificate Properties requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
+
+|A00.FR.501 |{nbsp}               |All certificates SHALL use a private key that provides security equivalent to a symmetric key of at least 112 bits according to Section 5.6.1 of <<ocpp_security_17,[17]>>. This is the key size that NIST recommends for the period 2011-2030.
+|A00.FR.502 |A00.FR.501 +
+  AND +
+  RSA or DSA
+    |This translates into a key that SHALL be at least 2048 bits long.
+|A00.FR.503 |A00.FR.501 +
+  AND +
+  elliptic curve cryptography
+    |This translates into a key that SHALL be at least 224 bits long.
+A00.FR.504 For all cryptographic operations, only the algorithms recommended by BSI in <<ocpp_security_12,[12]>>, which are suitable for use in future systems, SHALL be used. This restriction includes the signing of certificates in the certificate hierarchy
+|A00.FR.505 |{nbsp}               |For signing by the certificate authority RSA-PSS, or ECDSA SHOULD be used.
+|A00.FR.506 |{nbsp}               |For computing hash values the SHA256 algorithm SHOULD be used.
+|A00.FR.507 |{nbsp}               |The certificates SHALL be stored and transmitted in the X.509 format encoded in Privacy-Enhanced Mail (PEM) format.
+|A00.FR.508 |{nbsp}               |All certificates SHALL include a serial number.
+|A00.FR.509 |{nbsp}               |The subject field of the certificate SHALL contain the organization name of the certificate owner in the O (`organizationName`) RDN.
+|A00.FR.510 |{nbsp}               |For the CSMS certificate, the subject field SHALL contain the FQDN of the endpoint of the server in the CN (`commonName`) RDN.
+|A00.FR.511 |{nbsp}               |For the Charging Station certificate, the subject field SHALL contain a CN (`commonName`) RDN which consists of the unique serial number of the Charging Station. This serial number SHALL NOT be in the format of a URL or an IP address so that Charging Station certificates can be differentiated from CSMS certificates.
+
+  {nbsp}
+
+  Note: According to <<rfc2818,RFC 2818>>, if a subjectAltName extension of type `dnsName` is present, that must be used as the identity. This would be incompliant with OCPP and <<iso15118_1,ISO 15118>>. Therefore it SHOULD NOT be used in Charging Station and CSMS certificates. +
+  It is allowed to use the subjectAltName extension of type dnsName for a CSMS, when the CSMS has multiple network paths to reach it (for example, via a private APN + VPN using its IP address in the VPN and via public Internet using a named URL).
+|A00.FR.512 |{nbsp}                |For all certificates the X.509 Key Usage extension <<ocpp_security_19,[19]>> SHOULD be used to restrict the usage of the certificate to the operations for which it will be used.
+|A00.FR.513 |{nbsp}                |If the Charging Station Certificate is also used as SECC Certificate in the ISO 15118 protocol, the certificate SHOULD also meet the requirements in <<iso15118_2,ISO15118-2>>.
+|A00.FR.514 |{nbsp}                |For all certificates it is strongly RECOMMENDED NOT to use the X.509 Extended Key Usage extension, to be compatible with the ISO 15118 standard. There are alternative mechanisms available.
+|===
+
+[[certificate_hierarchy]]
+==== Certificate Hierarchy
+
+_This section is normative._
+
+The OCPP protocol supports the use of two separate certificate hierarchies:
+
+. The Charging Station Operator hierarchy which contains the CSMS, and Charging Station certificates.
+. The Manufacturer hierarchy which contains the Firmware Signing certificate.
+
+The CSMS can update the CSO root certificates stored on the Charging Station using the <<install_certificate_request,InstallCertificateRequest>> message.
+
+.Certificate Hierarchy requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
+
+|A00.FR.601 |{nbsp}               |The Charging Station Operator MAY act as a certificate authority for the Charging Station Operator hierarchy
+|A00.FR.602 |A00.FR.601           |The Charging Station Operator MAY for instance follow the certificate hierarchy described in Appendices E and F of <<iso15118_2,ISO15118-2>> and use the CSO Sub-CA 2 certificate to sign the CSMS and Charging Station certificates. This could give the advantage that the online verification of Charging Station client side certificates can be done within the Charging Station Operator’s networks, simplifying the network architecture.
+|A00.FR.603 |{nbsp}               |The private keys belonging to the CSO root certificates MUST be well protected.
+|A00.FR.604 |{nbsp}               |As the Manufacturer is usually a separate organization from the Charging Station Operator, a trusted third party SHOULD be used as a certificate authority. This is essential to have non-repudiation of firmware images.
+|===
+
+=== Certificate Revocation
+
+_This section is normative._
+
+In some cases a certificate may become invalid prior to the expiration of the validity period. Such cases include changes of the organization name, or the compromise or suspected compromise of the certificate’s private key. In such cases, the certificate needs to be revoked or indicate it is no longer valid. The revocation of the certificate does not mean that the connection needs to be closed as the the connection can stay open longer than 24 hours.
+
+Different methods are recommended for certificate revocation, see below Table.
+
+.Recommended revocation methods for the different certificates.
+[cols="<.^2,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Certificate                  |Revocation
+
+|CSMS certificate             |Fast expiration
+|Charging Station certificate |Online verification
+|Firmware Signing certificate |Online verification
+|===
+
+.Certificate Revocation requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
+
+|A00.FR.701 |{nbsp}               |Fast expiration SHOULD be used to revoke the CSMS certificate. (See Note 1)
+|A00.FR.702 |{nbsp}               |The CSMS SHOULD use online certificate verification to verify the validity of the Charging Station certificates.
+|A00.FR.703 |{nbsp}               |It is RECOMMENDED that a separate certificate authority server is used to manage the certificates.
+|A00.FR.704 |A00.FR.703           |This server SHOULD also keep track of which certificates have been revoked.
+|A00.FR.705 |{nbsp}               |The CSMS SHALL verify the validity of the certificate with the certificate authority server. (See Note 2)
+|A00.FR.707 |{nbsp}               |Prior to providing the certificate for firmware validation to the Charging Station, the CSMS SHOULD validate both, the certificate and the signed firmware update.
+|===
+
+Note 1: With fast expiration, the certificate is only valid for a short period, less than 24 hours. After that the server needs to request a new certificate from the Certificate Authority, which may be the CSO itself (see section <<certificate_hierarchy,Certificate Hierarchy>>). This prevents the Charging Stations from needing to implement revocation lists or online certificate verification. This simplifies the implementation of certificate management at the Charging Station and reduces communication costs at the Charging Station side. By requiring fast expiration, if the certificate is compromised, the impact is reduced to only a short period.
+
+When the certificate chain should becomes compromised, attackers could used forged certificates to trick a Charging Station to connect to a "fake" CSMS. By using fast expiration, the time a Charging Station is vulnerable is greatly reduced.
+
+The Charging Station always communicates with the Certificate Authority through the CSMS, this way, if the Charging Station is compromised, the Charging Station cannot attack the CA directly.
+
+Note 2: This allows for immediate revocation of Charging Station certificates. Revocation of Charging Station certificates will happen for instance when a Charging Station is removed. This is more common than revoking the CSMS certificate, which is normally only done when it is compromised.
+
+[[installation]]
+==== Installation
+
+_This section is normative._
+
+Unique credentials should be used to authenticate each Charging Station to the CSMS, whether they are the password used for HTTP Basic Authentication (see <<unsecured_transport_with_basic_authentication_profile_1,Charging Station Authentication>>) or the Charging Station certificate. These unique credentials have to be put on the Charging Station at some point during manufacturing or installation.
+
+.Certificate Installation requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
+
+|A00.FR.801 |{nbsp}               |It is RECOMMENDED that the manufacturer initializes the Charging Station with unique credentials during manufacturing.
+|A00.FR.802 |A00.FR.801           |The credentials SHOULD be generated using a cryptographic random number generator, and installed in a secure environment.
+|A00.FR.803 |A00.FR.801           |They SHOULD be sent to the CSO over a secure channel, so that the CSO can import them in the CSMS
+|A00.FR.804 |If Charging Station certificates are used.
+  |The manufacturer MAY sign these using their own certificate.
+|A00.FR.805 |A00.FR.804           |It is RECOMMENDED that the CSO immediately updates the credentials after installation using the methods described in Section <<update_charging_station_password_for_http_basic_authentication,A01 - Update Charging Station Password for HTTP Basic Authentication>> or <<update_charging_station_certificate_by_request_of_csms,A02 - Update Charging Station Certificate by request of CSMS>>.
+|A00.FR.806 |Before the 'factory credentials' have been updated
+  |The CSMS MAY restrict the functionality that the Charging Station can use. The CSMS can use the BootNotification state: Pending for this. During the Pending state, the CSMS can update the credentials.
+|A00.FR.807 |A00.FR.804 AND +
+  Charging Station manufacturer certificate has expired
+    |The CSMS MAY accept a connection by Charging Station in a `Pending` state after the BootNotification and immediately execute use case <<update_charging_station_certificate_by_request_of_csms,A02 - Update Charging Station Certificate by request of CSMS>> to install a new valid CSO certificate.
+|===
+
+== Use cases & Requirements
+:sectnums!:
+
+[[update_charging_station_password_for_http_basic_authentication]]
+=== A01 - Update Charging Station Password for HTTP Basic Authentication
+
+.A01 - Password Management
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+|1   |Name            |Update Charging Station Password for HTTP Basic Authentication
+|2   |ID              |A01
+|{nbsp} d|_Functional block_ |A. Security
+|3   |Objective(s)    |This use case defines how to use the BasicAuthPassword, the password used to authenticate Charging Stations in the Basic and TLS with Basic Authentication security profiles.
+|4   |Description     |To enable the CSMS to configure a new password for HTTP Basic Authentication, the CSMS can send a new value for the <<basic_auth_password,`BasicAuthPassword`>> Configuration Variable.
+|{nbsp} d|_Actors_    |Charging Station, CSMS
+|{nbsp} d|_Scenario description_ 
+  |*1.* The CSMS sends a <<set_variables_request,SetVariablesRequest>>(ComponentName=SecurityCtrlr, VariableName=BasicAuthPassword) to the Charging Station. +
+  *2.* The Charging Station responds with <<set_variables_response,SetVariablesResponse>> and the status _Accepted_. +
+  *3.* The Charging Station disconnects its current connection. (Storing any queued messages) +
+  *4.* The Charging Station connects to the CSMS with the new password.
+|5   |Prerequisite(s) |Security Profile: <<unsecured_transport_with_basic_authentication_profile_1,Basic Security Profile>> or <<tls_with_basic_authentication_profile_2,TLS with Basic Authentication>> in use.
+|6   |Postcondition(s) |*Successful postcondition:* +
+  The Charging Station has reconnected to the CSMS with the new password.
+
+  *Failure postcondition:* +
+  If the Charging Station responds to the <<set_variables_request,SetVariablesRequest>> with a <<set_variables_response,SetVariablesResponse>> with a status other than _Accepted_, the Charging Station will keep using the old credentials. The CSMS might treat the Charging Station differently, e.g. by not accepting the Charging Station’s boot notifications.
+|===
+
+.Update Charging Station Password for HTTP Basic Authentication (happy flow)
+image::part2/images/figure_5.svg[Update Charging Station Password for HTTP Basic Authentication (happy flow)]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling    |n/a
+|8   |Remark(s)         |n/a
+|===
+
+==== A01 - Update Charging Station Password for HTTP Basic Authentication - Requirements
+
+.A01 - Update Charging Station Password for HTTP Basic Authentication - Requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
+
+|A01.FR.01  |{nbsp}               |The password SHALL be stored in the configuration variable <<basic_auth_password,`BasicAuthPassword`>>.
+|A01.FR.02  |{nbsp}               |To set a Charging Station’s basic authorization password via OCPP, the CSMS SHALL send the Charging Station a <<set_variables_request,SetVariablesRequest>> message with the <<basic_auth_password,`BasicAuthPassword`>> Configuration Variable.
+|A01.FR.03  |A01.FR.02 +
+  AND +
+  The Charging Station responds to this <<set_variables_request,SetVariablesRequest>> with a <<set_variables_response,SetVariablesResponse>> with status _Accepted_.
+    |The CSMS SHALL assume that the authorization key change was successful, and no longer accept the credentials previously used by the Charging Station.
+|A01.FR.04  |A01.FR.02 +
+  AND +
+  The Charging Station responds to this <<set_variables_request,SetVariablesRequest>> with a <<set_variables_response,SetVariablesResponse>> with status other than _Accepted_.
+    |The CSMS SHALL assume that the Charging Station has NOT changed the password. Therefore the CSMS SHALL keep accepting the old credentials.
+|A01.FR.05  |A01.FR.04            |While the CSMS SHALL still accepts a connection from the Charging Station, it MAY restrict the functionality that the Charging Station can use. The CSMS can use the BootNotification state: Pending for this. During the Pending state, the CSMS can for example retry to update the credentials.
+|A01.FR.06  |{nbsp}               |Different passwords SHOULD be used for different Charging Stations.
+|A01.FR.07  |{nbsp}               |Passwords SHOULD be generated randomly to ensure that the passwords have sufficient entropy.
+|A01.FR.08  |{nbsp}               |the CSMS SHOULD only store salted password hashes, not the passwords themselves.
+|A01.FR.09  |{nbsp}               |the CSMS SHOULD NOT put the passwords in clear-text in log files or debug information. In this way, if the CSMS is compromised not all Charging Station password will be immediately compromised.
+|A01.FR.10  |{nbsp}               |On the Charging Station the password needs to be stored in clear-text. Extra care SHOULD be taken into storing it securely. Definitions of mechanisms how to securely store the credentials are however not in scope of the OCPP Security Profiles.
+|A01.FR.11  |A01.FR.02            |The Charging Station SHALL log the change of an <<basic_auth_password,`BasicAuthPassword`>> in the Security log.
+|A01.FR.12  |A01.FR.11            |The Charging Station SHALL NOT disclose the content of the BasicAuthPassword in its logging. This is to prevent exposure of key material to persons that may have access to a diagnostics file.
+|===
+
+[[update_charging_station_certificate_by_request_of_csms]]
+=== A02 - Update Charging Station Certificate by request of CSMS
+
+.A02 - Update Charging Station Certificate by request of CSMS
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Update Charging Station Certificate by request of CSMS
+|2   |ID              |A02
+|{nbsp} d|_Functional block_ |A. Security
+|3   |Objective(s)    |To facilitate the management of the Charging Station client side certificate, a certificate update procedure is provided.
+|4   |Description     |The CSMS requests the Charging Station to update its key using <<trigger_message_request,TriggerMessageRequest>> with the _requestedMessage_ field set to <<message_trigger_enum_type,SignChargingStationCertificate>> (or <<message_trigger_enum_type,SignV2GCertificate>> for separate 15118 certificate).
+
+If the Charging Station has a separate ISO15118Ctrlr (SECC in ISO 15118) for each EVSE, then CSMS will have to send a request for each of them. The device model the Charging Station will tell if ISO15118Ctrlr is located at toplevel or EVSE-level. +
+If the Charging Station has multiple SECCs that each control multiple EVSEs, then these are represented in device model by an ISO15118Ctrlr for each EVSE. The EVSEs that are controlled by the same SECC report an ISO15118Ctrlr with the same "SeccId".
+|{nbsp} d|_Actors_    |Charging Station, CSMS, Certificate Authority Server
+|{nbsp} d|_Scenario description_ |_SignChargingStationCertificate_
+
+  **1.** The CSMS requests the Charging Station to update its certificate using the <<trigger_message_request,TriggerMessageRequest>> with the _requestedMessage_ field set to <<message_trigger_enum_type,SignChargingStationCertificate>>. +
+  **2.** The Charging Station responds with <<trigger_message_response,TriggerMessageResponse>> +
+  **3.** The Charging Station generates a new public / private key pair. +
+  **4.** The Charging Station sends a <<sign_certificate_request,SignCertificateRequest>> to the CSMS containing the _certificateType_  `ChargingStationCertificate`. +
+  **5.** The CSMS responds with <<sign_certificate_response,SignCertificateResponse>>, with status _Accepted_. +
+  **6.** The CSMS forwards the CSR to the Certificate Authority Server. +
+  **7.** Certificate Authority Server signs the certificate. +
+  **8.** The Certificate Authority Server returns the Signed Certificate to the CSMS. +
+  **9.** The CSMS sends <<certificate_signed_request,CertificateSignedRequest>> to the Charging Station. +
+  **10.** The Charging Station verifies the Signed Certificate. +
+  **11.** The Charging Station responds with <<certificate_signed_response,CertificateSignedResponse>> to the CSMS with the status _Accepted_ or _Rejected_.
+|{nbsp} |_Alternative scenario_ |_SignV2GCertificate_ +
+
+  **1.** CSMS requests information about component ISO15118Ctrlr by sending a <<get_report_request,GetReportRequest>> for _componentVariable.component_  "ISO15118Ctrlr" and _componentVariable.variable_  "SeccId". +
+  **2.** For each **unique** SeccId that is returned: +
+
+  **2.1.** The CSMS requests the Charging Station to update its certificate using the <<trigger_message_request,TriggerMessageRequest>> with the _requestedMessage_ field set to <<message_trigger_enum_type,SignV2GCertificate>> for a 15118 certificate, and evse set to the EVSE of the ISO15118Ctrlr. (If ISO15118Ctrlr only exists as one component at toplevel, then evse can be omitted.) +
+  **2.2.** The Charging Station responds with <<trigger_message_response,TriggerMessageResponse>> +
+  **2.3.** The Charging Station generates a new public / private key pair. +
+  **2.4.** The Charging Station sends a <<sign_certificate_request,SignCertificateRequest>> to the CSMS containing the _certificateType_ = `V2GCertificate` and a csr in which the CommonName (CN) is set to the value of SeccId. +
+  **2.5.** CSMS responds with <<sign_certificate_response,SignCertificateResponse>>, with status _Accepted_. +
+  **2.6.** The CSMS forwards the CSR to the Certificate Authority Server. +
+  **2.7.** Certificate Authority Server signs the certificate. +
+  **2.8.** The Certificate Authority Server returns the Signed Certificate to the CSMS. +
+  **2.9.** The CSMS sends <<certificate_signed_request,CertificateSignedRequest>> to the Charging Station. +
+  **2.10.** The Charging Station verifies the Signed Certificate. +
+  **2.11.** The Charging Station responds with <<certificate_signed_response,CertificateSignedResponse>> to the CSMS with the status _Accepted_ or _Rejected_.
+|5     |Prerequisite(s)  |The standard configuration variable "OrganizationName" MUST be set. For <<message_trigger_enum_type,SignV2GCertificate>> the variable ISO15118Ctrlr.SeccId must be set.
+|6     |Postcondition(s) |**Successful postcondition:** +
+  New Client Side certificate installed in the Charging Station. +
+  **Failure postcondition:** +
+  New Client Side certificate is rejected and discarded.
+|===
+
+.Update Charging Station Certificate
+image::part2/images/figure_6.svg[Update Charging Station Certificate]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling  |The CSMS accepts the CSR request from the Charging Station, before forwarding it to the CA. But when the CA cannot be reached, or rejects the CSR, the Charging Station will never known. The CSMS may do some checks on the CSR, but cannot do all the checks that a CA does, and it does not prevent connection timeout to the CA. When something like this goes wrong, either the CA is offline or the CSR send by the Charging Station is not correct, according to the CA. In both cases this is something an operator at the CSO needs to be notified of. The operator then needs to investigate the issue. When resolved, the operator can re-run A02. +
+  It is NOT RECOMMENDED to let the Charging Station retry when the certificate is not send within X minutes or hours. When the CSR is incorrect, that will not be resolved automatically. It is possible that only a new firmware will fix this.
+|8   |Remark(s)       |The Charging Station Operator may act as a certificate authority for the Charging Station Operator hierarchy.
+
+  The applicable Certification Authority SHALL check the information in the CSR. +
+  If it is correct, the Certificate Authority SHALL sign the CSR, send it to the CSO, the CSO sends it back to the Charging Station in the <<certificate_signed_request,CertificateSignedRequest>> message. +
+  The certificate authority SHOULD implement strong measures to keep the certificate signing private keys secure.
+
+  {nbsp}
+
+  Even though the messages <<certificate_signed_request,CertificateSignedRequest>> (see use cases <<update_charging_station_certificate_by_request_of_csms,A02>> and <<update_charging_station_certificate_initiated_by_the_charging_station,A03>>) and <<install_certificate_request,InstallCertificateRequest>> (use case <<install_ca_certificate_in_a_charging_station,M05 - Install CA Certificate in a Charging Station>>) are both used to send certificates, their purposes are different. <<certificate_signed_request,CertificateSignedRequest>> is used to return the the Charging Stations own public certificate and V2G certificate(s) signed by a Certificate Authority. <<install_certificate_request,InstallCertificateRequest>> is used to install Root certificates.
+
+  {nbsp}
+
+  For V2G certificate handling see use cases <<retrieve_list_of_available_certificates_from_a_charging_station,M03 - Retrieve list of available certificates from a Charging Station>>, <<delete_a_specific_certificate_from_a_charging_station,M04 - Delete a specific certificate from a Charging Station>> and <<get_v2g_charging_station_certificate_status,M06 - Get Charging Station Certificate status>>.
+|===
+
+==== A02 - Update Charging Station Certificate by request of CSMS - Requirements
+
+.A02 - Requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
+
+|A02.FR.01  |{nbsp}               |A key update SHOULD be performed after installation of the Charging Station, to change the key from the one initially provisioned by the manufacturer (possibly a default key).
+|A02.FR.02  |After sending a <<trigger_message_response,TriggerMessageResponse>>.
+  |The Charging Station SHALL generate a new public / private key pair using one of the key generation functions described in Section 4.2.1.3 of <<ocpp_security_16,[16]>>.
+|A02.FR.03  |A02.FR.02            |The Charging Station SHALL send the public, key in form of a Certificate Signing Request (CSR) as described in RFC 2986 <<ocpp_security_22,[22]>> and then PEM encoded, using the <<sign_certificate_request,SignCertificateRequest>> message.
+|A02.FR.04  |{nbsp}               |The CSMS SHOULD NOT sign the certificate itself, but instead forwards the CSR to a dedicated certificate authority server managing the certificates for the Charging Station infrastructure. The dedicated authority server MAY be operated by the CSO.
+|A02.FR.05  |{nbsp}               |The private key generated by the Charging Station during the key update process SHALL NOT leave the Charging Station at any time, and SHALL NOT be readable via OCPP or any other (remote) communication connection.
+|A02.FR.06  |{nbsp}               |The Charging Station SHALL verify the validity of the signed certificate in the <<certificate_signed_request,CertificateSignedRequest>> message, checking at least the period when the certificate is valid, the properties in <<certificate_properties,Certificate Properties>>, and that it is part of the Charging Station Operator certificate hierarchy as described in <<certificate_hierarchy,Certificate Hierarchy>>.
+|A02.FR.07  |{nbsp}               |If the certificate is not valid. The Charging Station SHALL respond to the CertificateSignedRequest with status _Rejected_ AND discard the certificate AND trigger an _InvalidChargingStationCertificate_ security event (See part 2 appendices for the full list of security events).
+|A02.FR.08  |{nbsp}               |The Charging Station SHALL switch to the new certificate as soon as the current date and time is after the 'Not valid before' field in the certificate (e.g. by closing the websocket and TLS connection and reconnecting with the new certificate).
+|A02.FR.09  |If the Charging Station contains more than one valid certificate of the _ChargingStationCertificate_ type.
+  |The Charging Station SHALL use the newest certificate, as measured by the start of the validity period.
+|A02.FR.10  |A02.FR.09 +
+  AND When the Charging Station has validated that the new certificate works
+    |The Charging Station MAY discard the old certificate. It is RECOMMENDED to store old certificates for one month, as fallback.
+|A02.FR.11  |Upon receipt of a <<sign_certificate_request,SignCertificateRequest>> AND It is able to process the request
+  |The CSMS SHALL set status to _Accepted_ in the <<sign_certificate_response,SignCertificateResponse>>.
+|A02.FR.12  |Upon receipt of a <<sign_certificate_request,SignCertificateRequest>> AND It is NOT able to process the request
+  |The CSMS SHALL set status to _Rejected_ in the <<sign_certificate_response,SignCertificateResponse>>.
+|A02.FR.13  |When using different certificates for 15118 connections and the Charging Station to CSMS connection
+  |The Charging Station SHALL set the <<certificate_signing_use_enum_type,certificateType>> field in the <<sign_certificate_request,SignCertificateRequest>> to the certificate for which the update was triggered.
+|A02.FR.14  |When receiving a <<sign_certificate_request,SignCertificateRequest>> with <<certificate_signing_use_enum_type,certificateType>> included
+  |It is RECOMMENDED for the CSMS to set the <<certificate_signing_use_enum_type,certificateType>> field in the <<certificate_signed_request,CertificateSignedRequest>> to the type of certificate in the <<sign_certificate_request,SignCertificateRequest>>.
+|A02.FR.15  |If the Charging Station contains more than one valid V2G certificate, derived from the same root certificate.
+  |The Charging Station SHALL use the newest certificate, as measured by the start of the validity period.
+|A02.FR.16  |If the configuration variable <<max_certificate_chainsize,MaxCertificateChainSize>> is implemented AND The Charging Station receives a <<certificate_signed_request,CertificateSignedRequest>> message with a certificate (chain) with with a size that exceeds the set value configured at <<max_certificate_chainsize,MaxCertificateChainSize>>
+  |The Charging Station SHALL respond with a <<certificate_signed_response,CertificateSignedResponse>> message with status _Rejected_.
+|A02.FR.17  |When the CSMS accepted the SignCertificateRequest for a CSR AND the Charging Station did not yet receive a CertificateSignedRequest for this CSR AND the number of seconds configured at <<cert_signing_wait_minimum,CertSigningWaitMinimum>> has expired
+  |The Charging Station SHALL send a new SignCertificateRequest for the CSR. Optionally, this CSR MAY be for a newly generated key pair.
+|A02.FR.18  |A02.FR.17 |The Charging Station SHALL double the previous back-off time, starting with the number of seconds configured at <<cert_signing_wait_minimum,CertSigningWaitMinimum>>, every time the back-off time expires without having received the CertificateSignedRequest for this CSR.
+|A02.FR.19 |A02.FR.18 AND +
+  The maximum number of increments is reached
+    |The Charging Station SHALL stop resending the SignCertificateRequest, until it is requested by the CSMS via a TriggerMessageRequest for `SignChargingStationCertificate`, `SignV2GCertificate` or `SignCombinedCertificate`.
+|A02.FR.20  |A02.FR.07 |The Charging Station SHALL NOT initiate the back-off mechanism and resend the SignCertificateRequest, until this is requested by the CSMS via a TriggerMessageRequest for `SignChargingStationCertificate`, `SignV2GCertificate` or `SignCombinedCertificate`.
+|A02.FR.21  |When the Charging Station receives a SignCertificateResponse with status _Rejected_, in response to a SignCertificateRequest with certificateType _V2GCertificate_
+  |It is RECOMMENDED to turn off <<iso15118_pnc_enabled,ISO15118PnCEnabled>> until the Charging Station has been rebooted.
+|===
+
+[[update_charging_station_certificate_initiated_by_the_charging_station]]
+=== A03 - Update Charging Station Certificate initiated by the Charging Station
+
+_Table 29. A03 - Update Charging Station Certificate initiated by the Charging Station_
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Update Charging Station Certificate initiated by the Charging Station
+|2   |ID              |A03
+|{nbsp} d|_Functional block_ |A. Security
+|3   |Objective(s)    |To facilitate the management of the Charging Station client side certificate, a certificate update procedure is provided.
+|4   |Description     |The Charging Station detects that the certificate (<<certificate_signing_use_enum_type,ChargingStationCertificate>> or <<certificate_signing_use_enum_type,V2GCertificate>> for 15118) it is using will expire in one month. The Charging Station initiates the process to update its key using <<sign_certificate_request,SignCertificateRequest>> indicating the requested certificate in the <<certificate_signing_use_enum_type,CertificateSigningUse>> field.
+|{nbsp} d|_Actors_ |Charging Station, CSMS, Certificate Authority Server
+|{nbsp} d|_Scenario description_ |
+  **1.** The Charging Station detects that the Charging Station certificate is due to expire. +
+  **2.** The Charging Station generates a new public / private key pair. +
+  **3.** The Charging Station sends a <<sign_certificate_request,SignCertificateRequest>> to the CSMS containing the applicable <<certificate_signing_use_enum_type,CertificateSigningUse>>. +
+  **4.** The CSMS responds with a SignCertificateResponse, with status _Accepted_. +
+  **5.** The CSMS forwards the CSR to the Certificate Authority Server. +
+  **6.** Certificate Authority Server signs the certificate. +
+  **7.** The Certificate Authority Server returns the Signed Certificate to the CSMS. +
+  **8.** The CSMS sends a <<certificate_signed_request,CertificateSignedRequest>> to the Charging Station. +
+  **9.** The Charging Station verifies the Signed Certificate. +
+  **10.** The Charging Station responds with a <<certificate_signed_response,CertificateSignedResponse>> to the CSMS with the status _Accepted_ or _Rejected_.
+|5     |Prerequisite(s)  |The standard configuration variable `OrganizationName` MUST be set.
+|6     |Postcondition(s) |
+  **Successful postcondition:** +
+  New Client Side certificate installed in the Charging Station. +
+  **Failure postcondition:** +
+  New Client Side certificate is rejected and discarded.
+|===
+
+
+.Update Charging Station Certificate initiated by Charging Station
+image::part2/images/figure_7.svg[Update Charging Station Certificate initiated by Charging Station]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7     |Error handling   |The CSMS accepts the CSR request from the Charging Station, before forwarding it to the CA. But when the CA cannot be reached, or rejects the CSR, the Charging Station will never known. The CSMS may do some checks on the CSR, but cannot do all the checks that a CA does, and it does not prevent connection timeout to the CA. When something like this goes wrong, either the CA is offline or the CSR send by the Charging Station is not correct, according to the CA. In both cases this is something an operator at the CSO needs to be notified of. The operator then needs to investigate the issue. When resolved, the operator can re-run A02. +
+It is NOT RECOMMENDED to let the Charging Station retry when the certificate is not send within X minutes or hours. When the CSR is incorrect, that will not be resolved automatically. It is possible that only a new firmware will fix this.
+|8     |Remark(s)        |Same remarks as in <<update_charging_station_certificate_by_request_of_csms,A02 - Update Charging Station Certificate by request of CSMS>> apply.
+|===
+
+==== A03 - Update Charging Station Certificate initiated by the Charging Station - Requirements
+
+_Table 30. A03 - Requirements_
+
+
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
+
+|A03.FR.01  |{nbsp}               |A key update MAY be performed after installation of the Charging Station, to change the key from the one initially provisioned by the manufacturer (possibly a default key).
+|A03.FR.02  |When the Charging Station detects that the current Charging Station certificate will expire in one month.
+  |The Charging Station SHALL generate a new public / private key pair using one of the key generation functions described in Section 4.2.1.3 of <<ocpp_sescurity_16,[16]>>.
+|A03.FR.03  |A03.FR.02            |The Charging Station SHALL send the public key in form of a Certificate Signing Request (CSR) as described in RFC 2986 <<ocpp_security_22,[22]>> and then PEM encoded, using the <<sign_certificate_request,SignCertificateRequest>> message.
+|A03.FR.04  |{nbsp}               |The CSMS SHOULD NOT sign the certificate itself, but instead forwards the CSR to a dedicated certificate authority server managing the certificates for the Charging Station infrastructure. The dedicated authority server MAY be operated by the CSO.
+|A03.FR.05  |{nbsp}               |The private key generated by the Charging Station during the key update process SHALL NOT leave the Charging Station at any time, and SHALL NOT be readable via OCPP or any other (remote) communication connection.
+|A03.FR.06  |{nbsp}               |The Charging Station SHALL verify the validity of the signed certificate in the <<certificate_signed_request,CertificateSignedRequest>> message, checking at least the period when the certificate is valid, the properties in <<certificate_properties,Certificate Properties>>, and that it is part of the Charging Station Operator certificate hierarchy as described in <<certificate_hierarchy,Certificate Hierarchy>>.
+|A03.FR.07  |If the certificate is not valid. 
+  |The Charging Station SHALL respond to the CertificateSignedRequest with status Rejected AND discard the certificate AND trigger an _InvalidChargingStationCertificate_ security event (See part 2 appendices for the full list of security events).
+|A03.FR.08  |{nbsp}               |The Charging Station SHALL switch to the new certificate as soon as the current date and time is after the 'Not valid before' field in the certificate (e.g. by closing the websocket and TLS connection and reconnecting with the new certificate).
+|A03.FR.09  |If the Charging Station contains more than one valid certificate of the _ChargingStationCertificate_ type.
+  |The Charging Station SHALL use the newest certificate, as measured by the start of the validity period.
+
+|A03.FR.10  |A03.FR09 +
+  AND When the Charging Station has validated that the new certificate works
+    |The Charging Station MAY discard the old certificate. It is RECOMMENDED to store old certificates for one month, as fallback.
+|A03.FR.11  |Upon receipt of a <<sign_certificate_request,SignCertificateRequest>> AND It is able to process the request
+  |The CSMS SHALL set status to _Accepted_ in the <<sign_certificate_response,SignCertificateResponse>>.
+|A03.FR.12  |Upon receipt of a <<sign_certificate_request,SignCertificateRequest>> AND It is NOT able to process the request
+  |The CSMS SHALL set status to _Rejected_ in the <<sign_certificate_response,SignCertificateResponse>>.
+|A03.FR.13  |When using different certificates for 15118 connections and the Charging Station to CSMS connection
+  |The Charging Station SHALL include the <<certificate_signing_use_enum_type,certificateType>> field in the <<sign_certificate_request,SignCertificateRequest>> to specify which certificate it wants to update.
+|A03.FR.14  |When receiving a <<sign_certificate_request,SignCertificateRequest>> with <<certificate_signing_use_enum_type,certificateType>> included 
+  |It is RECOMMENDED for the CSMS to set the <<certificate_signing_use_enum_type,certificateType>> field in the CertificateSignedRequest to the type of certificate in the <<sign_certificate_request,SignCertificateRequest>>.
+|A03.FR.15  |If the Charging Station contains more than one valid V2G certificate, derived from the same root certificate.
+  |The Charging Station SHALL use the newest certificate, as measured by the start of the validity period.
+|A03.FR.16  |If the configuration variable <<max_certificate_chainsize,MaxCertificateChainSize>> is implemented AND The Charging Station receives a <<certificate_signed_request,CertificateSignedRequest>> message with a certificate (chain) with with a size that exceeds the set value configured at <<max_certificate_chainsize,MaxCertificateChainSize>>
+  |The Charging Station SHALL respond with a <<certificate_signed_response,CertificateSignedResponse>> message with status Rejected.
+|A03.FR.17  |When the CSMS accepted the SignCertificateRequest for a CSR AND +
+  the Charging Station did not yet receive a CertificateSignedRequest for this CSR AND +
+  the number of seconds configured at <<cert_signing_wait_minimum,CertSigningWaitMinimum>> has expired
+    |The Charging Station SHALL send a new SignCertificateRequest for the CSR. Optionally, this CSR MAY be for a newly generated key pair.
+|A03.FR.18  |A03.FR.17          |The Charging Station SHALL double the previous back-off time, starting with the number of seconds configured at <<cert_signing_wait_minimum,CertSigningWaitMinimum>>, every time the back-off time expires without having received the CertificateSignedRequest for this CSR.
+|A03.FR.19  |A03.FR.18 AND +
+  The maximum number of increments is reached
+    |The Charging Station SHALL stop resending the SignCertificateRequest, until it is requested by the CSMS via a TriggerMessageRequest for `SignChargingStationCertificate`, `SignV2GCertificate` or `SignCombinedCertificate`.
+|===
+
+=== A04 - Security Event Notification.
+
+.A04 - Security Event Notification
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Security Event Notification
+|2   |ID              |A04
+|{nbsp} d|_Functional block_ |A. Security
+|3   |Objective(s)    |To inform the CSMS of critical security events.
+|4   |Description     |This use case allows the Charging Station to immediately inform the CSMS of changes in the system security.
+|{nbsp} d|_Actors_    |CSMS, Charging Station
+|{nbsp} d|_Scenario description_ 
+  |**1.** A _critical_ security event happens. +
+  **2.** The Charging Station sends a <<security_event_notification_request,SecurityEventNotificationRequest>> to the CSMS. +
+  **3.** The CSMS responds with <<security_event_notification_response,SecurityEventNotificationResponse>> to the Charging Station.
+|5     |Prerequisite(s) |n/a
+|6     |Postcondition(s)|The Charging Station _successfully_ informs the CSMS of critical security events by sending a <<security_event_notification_request,SecurityEventNotificationRequest>> to the CSMS.
+|===
+
+.Security Event Notification
+image::part2/images/figure_8.svg[Security Event Notification]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling  |n/a
+|8   |Remark(s)       |A list of security related events and their 'criticality' is provided in the Appendices (_Appendix 1. Security Events_)
+|===
+
+==== A04 - Security Event Notification - Requirements
+
+_Table 32. A04 - Security Event Notification - Requirements_
+
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
+|A04.FR.01  |When a _critical_ security event happens
+  |The Charging Station SHALL inform the CSMS of the security events by sending a <<security_event_notification_request,SecurityEventNotificationRequest>> to the CSMS. |{nbsp}
+|A04.FR.02  |A04.FR.01 AND +
+  the Charging Station is disconnected.
+    |Security event notifications MUST be queued with a guaranteed delivery at the CSMS. |{nbsp}
+|A04.FR.03  |A04.FR.01            |The CSMS SHALL confirm the receipt of the notification using the <<security_event_notification_response,SecurityEventNotificationResponse>> message. |{nbsp}
+|A04.FR.04  |When a security event happens (also non-critical)
+  |The Charging Station SHALL store the security event in a security log.
+    |It is recommended to implement this log in a rolling format.
+|===
+
+=== A05 - Upgrade Charging Station Security Profile
+
+_Table 33. A05 - Upgrade Charging Station Security Profile_
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Upgrade Charging Station Security Profile
+|2   |ID              |A05
+|{nbsp} d|_Functional block_ |A. Security
+|3   |Objective(s)    |The CSO wants to increase the security of the OCPP connection between CSMS and a Charging Station.
+|4   |Description     |Use case when migrating from OCPP 1.6 without security profiles to OCPP 1.6 with security profiles or OCPP 2.0.1 Before migrating to a security profile the prerequisites, like installed certificates or password need to be configured.
+|{nbsp} d|_Actors_    |CSMS, Charging Station
+|{nbsp} d|_Scenario description_ 
+  |*1.* The CSMS sets a new value for the <<network_configuration_priority,`NetworkConfigurationPriority`>> Configuration Variable via <<set_variables_request,SetVariablesRequest>>, such that the <<network_connection_profile_type,NetworkConnectionProfile>> for the new (higher) security profile becomes first in the list and the existing connection profile becomes second in the list. +
+  2. The Charging Station responds with a <<set_variables_response,SetVariablesResponse>> with status _Accepted_ +
+  3. The CSMS sends a <<reset_request,ResetRequest>>(OnIdle) +
+  4. The Charging Station reboots and connects via the new primary <<network_connection_profile_type,NetworkConnectionProfile>>
+|5   |Prerequisite(s) |The CSO ensures that a <<network_connection_profile_type,NetworkConnectionProfile>> has been set using (higher) security profile +
+  AND +
+  that the prerequisite(s) for going to a higher security profile are met before sending the command to change to a higher security profile.
+|6   |Postcondition(s) |The Charging Station was successfully upgraded to a higher security profile.
+|===
+
+.Upgrade Charging Station Security Profile
+image::part2/images/figure_9.svg[Upgrade Charging Station Security Profile]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling |n/a
+|8   |Remark(s)      |For security reasons it is not allowed to revert to a lower Security Profile using OCPP.
+|===
+
+==== - Upgrade Charging Station Security Profile - Requirements
+
+.A05 - Upgrade Charging Station Security Profile
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
+
+|A05.FR.02  |The Charging Station receives <<set_variables_request,SetVariablesRequest>> for <<network_configuration_priority,`NetworkConfigurationPriority`>> containing a profile slot for a <<network_connection_profile_type,NetworkConnectionProfile>> with a 'securityProfile' value higher than the current value +
+  AND +
+  new value is 2 or 3 +
+  AND +
+  No valid CSMSRootCertificate installed
+    |The Charging Station SHALL respond with <<set_variables_response,SetVariablesResponse>>(Rejected), and not update the value for <<security_profile,`SecurityProfile`>> and/or reconnect to the CSMS.
+|A05.FR.03  |The Charging Station receives <<set_variables_request,SetVariablesRequest>> for <<network_configuration_priority,`NetworkConfigurationPriority`>> containing a profile slot for a <<network_connection_profile_type,NetworkConnectionProfile>> with a 'securityProfile' value higher than the current value +
+  AND +
+  new value is 3 +
+  AND +
+  No valid ChargingStationCertificate installed
+    |The Charging Station SHALL respond with <<set_variables_response,SetVariablesResponse>>(Rejected), and not update the value for <<security_profile,`SecurityProfile`>> and/or reconnect to the CSMS.
+|A05.FR.04  |The Charging Station receives <<set_variables_request,SetVariablesRequest>> for <<network_configuration_priority,`NetworkConfigurationPriority`>> containing profile slots for <<network_connection_profile_type,NetworkConnectionProfile>>s with a 'securityProfile' value equal to or higher than the current value +
+  AND +
+  all prerequisites are met
+    |The Charging Station SHALL respond with <<set_variables_response,SetVariablesResponse>>(Accepted)
+|A05.FR.05  |A05.FR.04 AND +
+  After a reboot
+    |The Charging Station SHALL begin connecting to the first entry of <<network_configuration_priority,`NetworkConfigurationPriority`>>
+|A05.FR.06  |A05.FR.05 AND +
+  The Charging Station successfully connected to the CSMS using the (new) <<network_connection_profile_type,NetworkConnectionProfile>>
+    |The Charging Station SHALL update the value of the configuration variable SecurityProfile AND it SHALL remove all <<network_connection_profile_type,NetworkConnectionProfile>>s with a lower securityProfile than stored at SecurityProfile AND update <<network_configuration_priority,`NetworkConfigurationPriority`>> accordingly.
+|A05.FR.07  |A05.FR.06              |The CSMS SHALL NOT allow the Charging Station to connect with a lower security profile anymore.
+|===

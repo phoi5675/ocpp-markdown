@@ -1,0 +1,467 @@
+= Generic
+
+<<<
+
+:sectnums!:
+== Version History
+
+[cols="<.^*3",%autowidth.stretch,options="header,autowidth"]
+|===
+|Version         |Date        |Description
+
+|2.0.1 Edition 3 |2024-05-06  |OCPP 2.0.1 Edition 3. All errata from OCPP 2.0.1 Part 2 until and including Errata 2024-04 have been merged into this version of the specification.
+|2.0.1 Edition 2 |2022-12-15  |OCPP 2.0.1 Edition 2. All errata from OCPP 2.0.1 Part 2 - Errata v2.0 have been merged into this version of the specification.
+|2.0.1           |2020-03-31  |Final version of OCPP 2.0.
+|2.0             |2018-04-11  |OCPP 2.0 April 2018 +
+  First major release since 1.0. +
+  Lots of new/improved/revised functionality +
+  Revised documentation
+|===
+
+== Scope
+
+This document defines the protocol used between a **Charging Station** and a **Charging Station Management System** in an EV charging infrastructure in the form of use cases. If the protocol requires a certain action or response from one side or the other, then this will be stated in this document.
+
+This part of the specification does not define the communication technology. In order to ensure widespread compatibility OCPP 2.0.1 is limited to JSON. The specifications for the JSON implementation are in "Part 4 - JSON over WebSockets implementation guide".
+
+=== OCPP 2.0.1
+
+This specification defines version 2.0.1 of OCPP.
+
+After the release of OCPP 2.0, some issues were found in OCPP 2.0. Some of these issues could not be fixed issuing errata to the specification text only, as has been done with OCPP 1.6, but required changes to the protocol’s machine-readable schema definition files that cannot be backward compatible.
+
+To prevent confusion in the market and possible interoperability issues in the field, OCA has decided to name this version: 2.0.1. +
+OCPP 2.0.1 contains fixes for all the known issues, to date, not only the fixes to the messages.
+
+This version replaces OCPP 2.0. OCA advises implementers of OCPP to no longer implement OCPP 2.0 and only use version 2.0.1 going forward.
+
+As a rule, existing numbered requirements are only updated or removed, previously used requirements numbers are never reused for a totally different requirement.
+
+Any mentions of "OCPP 2.0" refers to revision 2.0.1 unless specifically stated otherwise.
+
+=== OCPP 2.0.1 Edition 3
+
+A number of errata documents have been released for OCPP 2.0.1 Edition 2 that was released in 2022. These errata until and including Errata 2024-04 have been incorporated in this document, “OCPP-2.0.1_edition3_part2_specification”, such that it is no longer necessary to read these errata in addition to the specification. The incorporation of the errata in edition 3 does not affect any schemas of OCPP messages. Certain errata did contain changes to requirements or even new requirements, but only in cases where a requirement contains an obvious error and would not or could not be implemented as described. New requirements were only added when they were already implicitly there. These changes have been discussed in or were proposed by the Technology Working Group of the Open Charge Alliance.
+
+The appendices of the OCPP 2.0.1 part 2 can be updated without requiring a new OCPP release. This mainly concerns the components and variables of the OCPP device model, which can be extended with new components or variables, as long as they are optional.
+
+== Conventions, Terminology and Abbreviations
+
+=== Conventions
+
+==== Normative
+
+All sections and appendices are normative, unless they are explicitly indicated to be informative.
+
+==== Requirements take precedence over text
+
+Whenever there is any (apparent) conflict between narrative text and requirements in the specification document, the requirements have precedence.
+
+==== Requirement Keywords
+
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC-2119 <<rfc2119,[RFC2119]>>, subject to the following additional clarification clause:
+
+The phrase "valid reasons in particular circumstances" relating to the usage of the terms "SHOULD", "SHOULD NOT", "RECOMMENDED", and "NOT RECOMMENDED" is to be taken to mean technically valid reasons, such as the absence of necessary hardware to support a function from a Charging Station design: for the purposes of this specification it specifically excludes decisions made on commercial, or other non-technical grounds, such as cost of implementation, or likelihood of use.
+
+==== Primitive Datatypes
+
+The specification mentions the following primitive datatypes:
+
+.Primitive Datatypes
+[cols="<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Datatype       |Description
+
+|string         |The characters defined in the UTF-8 character set are allowed to be used.
+|integer        |32 bit (31 bit resolution, 1 sign bit)
+
+                No leading 0’s
+
+                No plus sign
+
+                Allowed value examples: 1234, -1234 +
+                Not Allowed: 01234, +1234
+|decimal        |For data being reported by the Charging Station, the full resolution of the source data must be preserved. The decimal sent towards the Charging Station SHALL NOT have more than six decimal places.
+|identifierString |This is a case-insensitive dataType and can only contain characters from the following character set: a-z, A-Z, 0-9, '*', '-', '_', '=', ':', '+', '\|', '@', '.'
+|dateTime       |All time values exchanged between CSMS and Charging Station SHALL be formatted as defined in <<rfc3339,[RFC3339]>>. Additionally fractional seconds have been given an extra limit. The number of decimal places SHALL NOT exceed the maximum of 3. +
+  Example 1: 2019-04-12T23:20:50.52Z represents 20 minutes and 50.52 seconds after the 23rd hour of April 12th, 2019 in UTC. +
+  Example 2: 2019-12-19T16:39:57+01:00 represents 39 minutes and 57 seconds after the 16th hour of December 19th, 2019 with an offset of +01:00 from UTC (Central European Time).
+|passwordString |This is a UTF-8 encoded case-sensitive string that can only contain characters from the following character set: "a-z", "A-Z", "0-9" +
+  or any of the following limited set of symbols: * - _  : + \| @.
+|AnyType        |Data without specified length or format.
+|boolean        |Only allowed values: "false" and "true".
+|===
+
+==== Normal communication
+
+Unless otherwise specified, all use cases and requirements assume normal communication between Charging Station and CSMS (_Online_).
+
+==== Field description
+
+In many cases, further explanation about how or when to use certain fields in messages and datatypes is given in the field description. See Chapter <<messages,Messages>>.
+
+=== Terminology
+
+==== General Terminology
+
+This section contains the terminology that is used throughout this document.
+
+.Terminology
+[cols="<.^2s,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Terminology          |Description
+
+|Application          |layer OSI-Layer 5-7.
+|Authentication       |Authentication is the process of confirming an identity or attribute. When speaking about authentication one should distinguish between user authentication (e.g. sender/receiver) and message authentication.
+|Block cipher         |Cryptographic primitive to encrypt/decrypt messages of fixed block length. Example: AES encrypts blocks of 128 bits (16 bytes) at a time.
+|Cable Plugged in     |In this document this can mean the following: +
+  - Cable fixed on Charging Station side, cable plugged in to EV +
+  - Cable plugged into the Charging Station and EV +
+  - Wireless Charger detects an EV +
+|Certificate          |A digital certificate authenticates a public key or entity. See also Public-Key Infrastructure.
+|Certificate Management Protocol |An internet protocol used to manage X.509 digital certificates within a PKI. It is described in RFC 4210 and uses the certificate request message format (CRMF) described in RFC 4211.
+|Charging Cable       |Cable assembly equipped with a, by the EV accepted, plug, intended to be used for the connection between an EV and an EVSE. One side may be permanently attached to the EVSE, or also be equipped with a plug that is accepted by the EVSE.
+|Charging Loop        |In this specification the ISO 15118-2 definition of the charging loop is used: _the V2G messaging phase for controlling the charging process by ISO 15118_.
+|Charging Profile     |Generic Charging Profile, used for different types of Profiles. Contains information about the Profile and holds the <<charging_schedule_type,ChargingSchedule>>.
+|Charging Schedule    |Part of a Charging Profile. Defines a block of charging Power or Current limits. Can contain a start time and length.
+|Charging Station     |The Charging Station is the physical system where EVs can be charged. A Charging Station has one or more EVSEs.
+|Composite Charging Schedule |The charging schedule as calculated by the Charging Station. It is the result of the calculation of all active schedules and possible local limits present in the Charging Station. Local Limits might be taken into account.
+|Confidentiality      |Only authorized entities may access confidential data. To protect data from unauthorized access it can be encrypted. Then only entities with access to the secret keys can access the data after decrypting it.
+|Connector            |The term Connector, as used in this specification, refers to an independently operated and managed electrical outlet on a Charging Station. In other words, this corresponds to a single physical Connector. In some cases an EVSE may have multiple physical socket types and/or tethered cable/Connector arrangements(i.e. Connectors) to facilitate different vehicle types (e.g. four-wheeled EVs and electric scooters).
+|Contactor            |An electrically controlled switching device, typically used by Charging Stations to switch charging power on/off.
+|Contract Certificate |A valid certificate for a charging contract in an EV for 15118 communication.
+|Control Pilot signal |A signal used by a Charging Station to inform an EV of a maximum current limit, as defined by <<iec61851_1,IEC61851-1>>.
+
+|Cost                 |Cost to be paid by an EV Driver for consumed energy/time etc. Including taxes.
+|Cryptographic hash function |Cryptographic hash functions should behave as one-way functions. They must be preimage resistant, 2nd preimage resistant, and collision-resistant. Changes in the input must produce explicitly different results in the output. Example: SHA-256. See also ENISA <<ocpp_security_1,OCPP Security [1]>>.
+|Cryptography         |The ENISA Algorithms, Key Sizes and Parameters Report [1] provides an overview of the current state of the art.
+|CSMS <tab>           |Charging Station Management System. The system that manages Charging Stations and has the information for authorizing Users for using its Charging Stations.
+|Data Integrity       |See Integrity and Message authentication.
+|Digital Signature    |Authenticates the sender. In practice digital signatures are implemented using elliptic curves (EC).
+|Encryption           |Using a cryptographic scheme, the message is mapped to a random-looking undecipherable string (ciphertext). Decryption reverses the encryption process and can only be performed with the corresponding decryption key. This decryption key is either the same as the encryption key (symmetric cryptography) or the private key in a public-key cryptosystem. The confidentiality of the message can be guaranteed only while the keys are kept secret.
+|Energy Management System |A device that manages the local loads (consumption an production) based on local and/or contractual constraints and/or contractual incentives. It has additional inputs, such as sensors and controls from e.g. PV, battery storage.
+|Energy Offer Period  |Time during which a Charging Station is ready and willing to offer energy to an EV.
+|[[energy_transfer_period]]Energy Transfer Period |Time during which an EV chooses to take offered energy, or return it.
+|EVSE                   |An EVSE is considered as an independently operated and managed part of the Charging Station that can deliver energy to one EV at a time.
+|Hash function          |Function that maps a message to a bit string of fixed length (hash value). See also cryptographic hash function.
+|Hash value             |Output of a (cryptographic) hash function. The length is fixed in the specs of the hash function.
+|High level communication |bi-directional digital communication using protocol and messages and physical and data link layers specified in ISO 15118 series <<iso15118_1,[ISO15118-1]>>
+|Idle State               |In both use cases and sequence diagrams, Idle status is referred as the state in which a Charging Station is not performing any use case related tasks. Condition during which the equipment can promptly provide a primary function but is not doing so.
+|Integrity                |Data cannot be altered without authorization. See also Message authentication.
+|Local Controller         |A logical entity between a CSMS and one or more Charging Stations that has the ability to control charging of a group of Charging Stations based on the input from the CSMS, and can send messages to its Charging Stations, independently of the CSMS.
+|Master Pass              |IdToken that can be used to stop any (or all) ongoing transactions. This can be used by for example law enforcement personal to stop a transaction.
+|Master Pass UI           |Master Pass User Interface, this might be a full color touchscreen, but might also be just a couple of buttons and LEDs and/or sounds that enable a user to select transactions to be stopped.
+|Message authentication   |Messages should be protected against unauthorized modifications. The message should always be sent together with an authentication tag providing its authenticity. Such an authentication tag can be the second output of an authenticated cipher such as AES-CCM or AES-GCM or a message authentication code.
+|Mode of Operation        |A mode of operation specifies how the message blocks are processed by the block cipher. Using a block cipher in CBC or CTR mode provides encryption only, whereas using a block cipher in CCM or GCM mode encrypts the plaintext and produces a message authentication tag for the ciphertext.
+|OCPP-J                   |OCPP via JSON over WebSocket.
+|Offline                  |There is no communication possible between the Charging Station and CSMS. For an OCPP-J connection this means the WebSocket connection is not open.
+|Password authentication  |The user proves his/her identity using a password or PIN.
+|Phase Rotation           |Defines the wiring order of the phases between the electrical meter (or if absent, the grid connection), and the Charging Station Connector.
+|Price                    |Specific price tag of a single tariff entry, for example: 0.35 per kWh incl. 18% VAT.
+
+|Public-key cryptography  |"Cryptographic scheme where a public key is published and henceforth can be used for encryption of messages or verification of digital signatures. Each public key has a counterpart, the corresponding private key. This key must be kept secret and is used for decryption or digital signing of messages. Public-key primitives have a high computational complexity for encryption and therefore are mostly used as part of a hybrid encryption scheme where the public key is used to communicate a common symmetric session key under which all further communication is encrypted. Certificates administered by a public-key infrastructure are used to establish the authenticity of the public key. See also ENISA OCPP Security [12]. The most popular public-key encryption scheme is RSA. Digital signatures can be generated most efficiently with elliptic-curve based (EC) mechanisms."
+|Public-key infrastructure |System to generate, administer, and revoke certificates.
+|Resume regular transaction |Used in sequence diagrams to indicate that this use case/sequence diagram has ended, but the transaction has not ended and will continue, but that is outside of scope of that specific use case.
+|Requirement              |Provision that conveys criteria to be fulfilled. ISO/IEC Guide 2:2004, 7.5.
+|Security Event           |Any event relevant to the secure operation of the device.
+|Security Function        |Any function on the device that is needed for it to be operated securely, including access control, authentication, and encryption.
+|Session                  |A Session in OCPP is a general term that refers to the charging process of an EV, that might include a Transaction.
+|Session key              |Symmetric key with a limited lifetime.
+|Symmetric cryptography   |Sender and receiver hold the same key. Examples for symmetric primitives are block ciphers or MACs.
+|Transaction              |A transaction in OCPP is a part of the complete process of charging an EV that starts and stops based on configurable parameters. These configurable parameters refer to moments in the charging process, such as the EV being connected or the EV driver being authorized.
+|Tariff                   |Collection of prices depending on charging time, power usage and other price affecting parameters.
+|Use case                 |A use case is a structured way of describing the (inter)actions necessary to achieve a certain objective. In this document, a use case consists of an actor list, a scenario description, postconditions and a sequence diagram and is always followed by a list of numbered requirements.
+|User Authentication      |Verification of the identity of the communication partners (e.g., user on the device). Moreover, verification that the communication partners are still alive throughout a session.
+|===
+
+==== ISO 15118 and OCPP terminology mapping
+
+_This section is informative._
+
+The ISO 15118 terminology is more comprehensive when referring to specific components within EVs and Charging Stations. The following table shows a "mapping" of these terms.
+
+.ISO 15118 and OCPP terminology mapping
+[cols="<.^,<.^",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ISO 15118                              |OCPP
+|ChargingProfile (contains the power over time the EV is planned to consume)
+  |Loosely corresponds to ChargingSchedule in NotifyEVChargingSchedule message.
+|SASchedule (the power limits from a secondary actor for charging an EV for a specific time)
+  |Loosely corresponds to ChargingProfile in SetChargingProfile message.
+|EVCC (i.e. Electric Vehicle Communication Controller) 
+  |Controller in the EV that is used for ISO 15118 communication.
+|Outlet                                 |Connector
+|SECC (i.e. Supply Equipment Communication Controller)
+  |Controller in the EVSE of the Charging Station that is used for ISO 15118 communication.
+|SA (i.e. Secondary Actor)              |CSMS (or other backend systems)
+|===
+
+=== Abbreviations
+
+==== General Abbreviations
+
+This section contains the abbreviations that are used throughout this document.
+
+.Abbreviations
+[cols="<.^1s,<.^10",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Abbreviation   |Description
+
+|AES            |Advanced Encryption Standard. Original name for this block cipher was Rijndael named after its designers Vincent Rijmen and Joan Daemen.
+|BEV            |Battery Electric Vehicle
+|CMP            |Certificate Management Protocol
+|CS Charging    |Station
+|CSL            |Comma Separated List
+|CSMS           |Charging Station Management System
+|CSO            |Charging Station Operator
+|DHCP           |Dynamic Host Configuration Protocol
+|DNS            |Domain Name System
+|DSO            |Distribution System Operator
+|DST            |Daylight Saving Time
+|EC Elliptic    |Curve. See also ENISA <<ocpp_security_1,OCPP Security [1]>>
+|ECDSA          |Elliptic Curve Digital Signature Algorithm.
+|EMS            |Energy Management System
+|ENISA          |European Union Agency for Network and Information Security.
+|EV Electric    |Vehicle
+|EVSE           |EV Supply Equipment <<iec61851_1,IEC61851-1>>
+|FQDN           |Fully Qualified Domain Name
+|FTP(S)         |File Transport Protocol (Secure)
+|HTTP(S)        |HyperText Transport Protocol (Secure)
+|ICCID          |Integrated Circuit Card Identifier
+|IMSI           |International Mobile Subscription Identity
+|JSON           |JavaScript Simple Object Notation
+|MAC            |Message authentication code. Provides data integrity. Examples: CMAC, GMAC. See also ENISA <<ocpp_security_1,OCPP Security [1]>>.
+|NAT            |Network Address Translation
+|NIST           |National Institute of Standards and Technology.
+|NTP            |Network Time Protocol
+|PDU            |Protocol Data Unit
+|PHEV           |Plugin Hybrid Electric Vehicle
+|RDN            |Relative Distinguished Name
+|RSA            |Public-key cryptosystem named after its inventors Rivest, Shamir, and Adleman.
+|RSA            |PSS RSA-PSS is a new signature scheme that is based on the RSA cryptosystem and provides increased security assurance. It was added in version 2.1 of PKCS #1, following <<ocpp_security_23,OCPP Security [23]>>
+|RST            |3 phase power connection, Standard Reference Phasing
+|RTS            |3 phase power connection, Reversed Reference Phasing
+|SRT            |3 phase power connection, Reversed 240 degree rotation
+|STR            |3 phase power connection, Standard 120 degree rotation
+|TRS            |3 phase power connection, Standard 240 degree rotation
+|TSR            |3 phase power connection, Reversed 120 degree rotation
+|SC Smart       |Charging
+|TLS            |Transport Layer Security
+|TSO            |Transmission System Operator
+|URI            |Uniform Resource Identifier RFC-3986 <<rfc3986,[RFC3986]>>
+|URL            |Uniform Resource Locator - refers to the subset of URIs that, in addition to identifying a resource, provide a means of locating the resource by describing its primary access mechanism (e.g., its network "location").
+|UTC            |Coordinated Universal Time
+|WAN            |Wide Area Network.
+|===
+
+==== ISO 15118 Abbreviations
+
+This section contains the abbreviations from ISO 15118 that are used in this document.
+
+.ISO 15118 Abbreviations
+[cols="<.^1s,<.^10",%autowidth.stretch,frame=all,grid=all]
+|===
+|EIM        |External Identification Means
+|EMAID      |E-Mobility Account Identifier
+|EVCC       |EV Communication Controller
+|HLC        |High Level Communication
+|HMI        |Human Machine Interface
+|LAN        |Local Area Network
+|MO         |Mobility Operator
+|OEM        |Original Equipment Manufacturer
+|OCSP       |Online Certificate Status Protocol
+|PWM        |Pulse Width Modulation
+|SA         |Secondary Actor
+|SECC       |Supply Equipment Communication Controller
+|V2G        |Vehicle to Grid
+|===
+
+=== Actors
+
+_This section is informative._
+
+In OCPP, system actors are covering functions or devices.
+
+.Actors
+[cols="<.^2,<.^2,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Actor name       |Actor type     |Actor description
+|EV Driver        |Actor          |The Driver of an EV who wants to charge the EV at a Charging Station.
+|Connector        |Device         |The term "Connector", as used in this specification, refers to an independently operated and managed electrical outlet on a Charging Station. In other words, this corresponds to a single physical Connector. In some cases an EVSE may have multiple Connectors: multiple physical socket types and/or types (e.g. four-wheeled EVs and electric scooters).
+|CSMS             |System         |Charging Station Management System: manages Charging Stations and has the information for authorizing Users for using its Charging Stations.
+|Charging Station |Device         |The Charging Station is the physical system where an EV can be charged. A Charging Station has one or more EVSEs.
+|Charging Station Operator |Actor |A party that manages a CSMS.
+|Electric Vehicle |Device         |Electric Vehicle, distributed energy resource with a remote battery and socket.
+|Local Controller |Device         |A logical entity between a CSMS and one or more Charging Stations that has the ability to control charging of a group of Charging Stations based on the input from the CSMS.
+|External Control System |Actor   |An external system that may impose charging limits/constraints on the Charging Station or CSMS, for example a DSO or EMS.
+|===
+
+=== References
+
+==== Generic references
+
+.References
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Reference            |Description
+
+|[[dnp3]][DNP3]     |Distributed Network Protocol. https://www.dnp.org/About/Overview-of-DNP3-Protocol
+|[[emi3_b0]][EMI3-BO]     |"eMI3 standard version V1.0" http://emi3group.com/documents-links/
+|[[iec60870_5_104]][IEC60870-5-104]     |Set of standards which define systems used for telecontrol (supervisory control and data acquisition) in electrical engineering and power system automation applications. https://webstore.iec.ch/publication/3755
+|[[iec61850_7_420]][IEC61850-7-420] |Communications standard for distributed energy resources (DER). https://webstore.iec.ch/publication/6019
+|[[iec61851_1]][IEC61851-1] |"IEC 61851-1 2017: EV conductive charging system - Part 1: General requirements" https://webstore.iec.ch/publication/33644
+|[[iec62196]][IEC62196] |IEC 62196: Plugs, socket-outlets, vehicle couplers and vehicle inlets - Conductive charging of electric vehicles. https://webstore.iec.ch/publication/6582
+|[[iso15118_1]][ISO15118-1] |ISO 15118-1 specifies terms and definitions, general requirements and use cases as the basis for the other parts of ISO 15118. It provides a general overview and a common understanding of aspects influencing the charge process, payment and load leveling. https://webstore.iec.ch/publication/9272
+|[[iso15118_2]][ISO15118-2] |Road vehicles – Vehicle to grid communication interface – Part 2: Technical protocol description and Open Systems Interconnection (OSI) layer requirements, Document Identifier: 69/216/CDV. https://webstore.iec.ch/publication/9273
+|[[iso4217]][ISO4217] |"ISO 4217: Currency codes" http://www.iso.org/iso/home/standards/currency_codes.htm
+|[[ocpp2_0_part4]][OCPP2.0-PART4] |"OCPP 2.0.1: Part 4 - JSON over WebSockets implementation guide". http://www.openchargealliance.org/downloads/
+|[[open_adr]][OpenADR] |"Open Automated Demand Response" http://www.openadr.org/
+|[[rfc1321]][RFC1321] |"The MD5 Message-Digest Algorithm" https://tools.ietf.org/html/rfc1321
+|[[rfc2119]][RFC2119] |"Key words for use in RFCs to Indicate Requirement Levels". S. Bradner. March 1997. http://www.ietf.org/rfc/rfc2119.txt
+|[[rfc3339]][RFC3339] |"Date and Time on the Internet: Timestamps" https://tools.ietf.org/html/rfc3339
+|[[rfc3986]][RFC3986] |"Uniform Resource Identifier (URI): Generic Syntax" https://tools.ietf.org/html/rfc3986
+|[[rfc5646]][RFC5646] |"Tags for Identifying Languages" https://tools.ietf.org/html/rfc5646
+|===
+
+==== Security related references
+
+.Security related references
+[cols="^.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Reference            |Description
+|[[ocpp_security_1]][1]   |ENISA European Network and Information Security Agency, Algorithms, key size and parameters report 2014, 2014. (last accessed on 17 January 2016) https://www.enisa.europa.eu/publications/algorithms-key-size-and-parameters-report-2014
+|[[ocpp_security_2]][2]   |National Institute of Standards and Technology. FIPS PUB 140-2, Security Requirements for Cryptographic Modules, May 2001. http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.140-2.pdf
+|[[ocpp_security_3]][3]   |Cooper, D., et al., Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile, Internet Engineering Task Force, Request for Comments 5280, May 2008, http://www.ietf.org/rfc/rfc5280.txt
+|[[ocpp_security_4]][4]   |Dierks, T. and Rescorla, E., The Transport Layer Security (TLS) Protocol Version 1.2, Internet Engineering Task Force, Request for Comments 5246, August 2008, http://www.ietf.org/rfc/rfc5246.txt
+|[[ocpp_security_5]][5]   |Eastlake, D., Transport Layer Security (TLS) Extensions: Extension Definitions, Internet Engineering Task Force, Request for Comments 6066, January 2011, http://www.ietf.org/rfc/rfc6066.txt
+|[[ocpp_security_6]][6]   |McGrew, D. and Bailey, D., AES-CCM Cipher Suites for Transport Layer Security (TLS), Internet Engineering Task Force, Request for Comments 6655, July 2012, http://www.ietf.org/rfc/rfc6655.txt
+|[[ocpp_security_7]][7]   |Rescorla E. et al., Transport Layer Security (TLS) Renegotiation Indication Extension, Internet Engineering Task Force, Request for Comments 5746, February 2010, http://www.ietf.org/rfc/rfc5746.txt
+|[[ocpp_security_8]][8]   |"Russel Housley, Tim Polk, Warwick Ford, and David Solo. Internet Public Key Infrastructure: X.509 Certificate and Certificate Revocation List (CRL) Profile, RFC 3280, April 2002." https://www.ietf.org/rfc/rfc3280.txt
+|[[ocpp_security_9]][9]   |Pettersen. "The Transport Layer Security (TLS) Multiple Certificate Status Request Extension." RFC 6961, June 2013. https://tools.ietf.org/html/rfc6961.
+|[[ocpp_security_10]][10]   |Hollenbeck, S., "Transport Layer Security Protocol Compression Methods", RFC 3749, May 2004. https://www.ietf.org/rfc/rfc3749.txt
+|[[ocpp_security_11]][11]   |National Institute of Standards and Technology. Annex C: Approved Random Number Generators for FIPS PUB 140-2 [25], February 2012. https://csrc.nist.gov/csrc/media/publications/fips/140/2/final/documents/fips1402annexc.pdf
+|[[ocpp_security_12]][12]   |Bundesamt für Sicherheit in der Informationstechnik: Anwendungshinweise und Interpretationen zum Schema, AIS 20, Funktionalitätsklassen und Evaluationsmethodologie für deterministische Zufallszahlengeneratoren, Version 3.0, Bonn, Germany, May 2013. (in German) https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/Zertifizierung/Interpretationen/AIS_20_pdf.html
+|[[ocpp_security_13]][13]   |Bundesamt für Sicherheit in der Informationstechnik: Anwendungshinweise und Interpretationen zum Schema, AIS 31, Funktionalitätsklassen und Evaluationsmethodologie für physikalische Zufallszahlengeneratoren, Version 3.0, Bonn, Germany, May 2013. (in German) https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/Zertifizierung/Interpretationen/AIS_31_pdf.html
+|[[ocpp_security_14]][14]   |"OWASP - Transport Layer Protection Cheat Sheet. https://www.owasp.org/index.php/Transport_Layer_Protection_Cheat_Sheet#Extended_Validation_Certificates "
+|[[ocpp_security_15]][15]   |P. Hoffman and W.C.A. Wijngaards, Elliptic Curve Digital Signature Algorithm (DSA) for DNNSEC, Internet Engineering Task Force (IETF) RFC 6605, April 2012. http://www.ietf.org/rfc/rfc6605.txt
+|[[ocpp_security_16]][16]   |Adams, C., Farrell, S., Kause, T., and T. Mononen, "Internet X.509 Public Key Infrastructure Certificate Management Protocol (CMP)", RFC 4210, September 2005. https://www.ietf.org/rfc/rfc4210.txt
+|[[ocpp_security_17]][17]   |National Institute of Standards and Technology. Special Publication 800-57 Part 1 Rev. 4, Recommendation for Key Management. January 2016. https://csrc.nist.gov/publications/detail/sp/800-57-part-1/rev-4/final
+|[[ocpp_security_18]][18]   |(^) RFC 2617. HTTP Authentication: Basic and Digest Access Authentication. https://www.ietf.org/rfc/rfc2617.txt
+|[[ocpp_security_19]][19]   |RFC 5280. Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile. https://www.ietf.org/rfc/rfc5280.txt
+|[[ocpp_security_20]][20]   |OCPP 1.6. Interface description between Charging Station and CSMS. October 2015. http://www.openchargealliance.org/downloads/
+|[[ocpp_security_21]][21]   |Eekelen, M. van, Poll, E., Hubbers, E., Vieira, B., Broek, F. van den: An end-to-end security design for smart EV-charging for Enexis and ElaadNL by LaQuSo1. December 2, 2014. https://www.elaad.nl/smart-charging-end2end-security-design/
+|[[ocpp_security_22]][22]   |(^) RFC 2986. PKCS #10: Certification Request Syntax Specification, Version 1.7. https://www.ietf.org/rfc/rfc2986.txt
+|[[ocpp_security_23]][23]   |(^) RSA-PSS. https://tools.ietf.org/html/rfc8017
+|[[ocpp_security_24]][24]   |Santesson, et al. "X.509 Internet Public Key Infrastructure Online Certificate Status Protocol - OCSP" RFC 6960. June
+|[[ocpp_security_25]][[rfc2818]][25]   |(^) RFC 2818. HTTP Over TLS. https://tools.ietf.org/html/rfc2818
+|===
+
+[[transaction]]
+=== Definition of Transaction
+
+_This section is informative._
+
+To support as many business cases as possible, and to prevent too many messages being sent when not needed for certain business cases, OCPP 2.0.1 supports flexible configuration of the start and stop of a transaction. This makes it possible to define the start and stop of a transaction depending on market demands.
+
+See: <<flexible_transaction_start_stop,Flexible transaction start/stop>> for more information.
+
+==== Transaction in relation to Energy Transfer Period
+
+The Energy Transfer Period is a period of time during which energy is transferred between the EV and the EVSE. There MAY be multiple <<energy_transfer_period,Energy Transfer Periods>> during a <<transaction,Transaction>>.
+
+Multiple Energy Transfer Periods can be separated by either:
+
+* an EVSE-initiated suspense of transfer during which the EVSE does not offer energy transfer, _or_ 
+* an EV-initiated suspense of transfer during which the EV remains electrically connected to the EVSE, _or_
+* an EV-initiated suspense of transfer during which the EV is not electrically connected to the EVSE.
+
+.OCPP Charging Transaction definition
+image::part2/images/figure_1.svg[OCPP Charging Transaction definition]
+
+=== ISO 15118 support
+
+_This section is informative._
+
+This version of OCPP supports ISO 15118 authorization (also called "Plug and Charge") and ISO 15118 based Smart Charging. (See <<iso15118_2,[ISO15118-2]>>) Furthermore it describes how to install and update ISO 15118 certificates. These 3 functionalities are not included as one functional block, but are included in multiple chapters throughout the specification. ISO 15118 authorization is included in the functional block <<iso_15118_authorization,Authorization>> and the Smart Charging use cases for ISO 15118 are included in the chapter <<smart_charging,Smart Charging>>.
+Certificate handling is described in a separate functional block.
+
+Implementors of 15118 need to be aware of timeout constraints enforced by 15118, see <<iso15118_1,[ISO15118-1]>> (Page: 127, Table: 109) +
+For reference, the current timing constrains for 15118 edition 1 are:
+
+.ISO 15118 Timing constrains
+[cols="<.^4,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Timeout                       |Default
+
+|Sequence Timeouts             |60 seconds
+|Sequence Performance Timeouts |40 seconds
+|PaymentDetailsReq/Res         |5 seconds
+|CertificateUpdateReq/Res      |5 seconds
+|CertificateInstallationReq/Res |5 seconds
+|===
+
+== Generic Requirements
+
+_This section is normative._
+
+The generic requirements build the basis for defining the use case elements described in the Functional Blocks.
+
+.Generic requirements
+[cols="^.^1,<.^3,<.^3,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID     |Precondition         |Requirement definition       |Note
+
+|FR.01  |{nbsp} |The sender of a <message>Request SHALL wait for a <message>Response or a timeout, before sending another request message.  |{nbsp}
+|FR.02  |When the Charging Station receives a valid OCPP request message according to the JSON schemas / RPC Framework AND the other system is not causing a security violation
+  |The Charging Station SHALL respond with a RPC Framework: CALLRESULT.
+    |If the Charging Station/CSMS needs to provide additional information, this can be done in the _statusInfo_ element of the response message.
+|FR.03  |When the Charging Station/CSMS receives an invalid OCPP message according to the JSON schemas / RPC Framework OR the other system causes a security violation
+  |The Charging Station/CSMS SHALL respond with a RPC Framework: CALLERROR. |{nbsp}
+|FR.04  |When the CSMS did not accept the BootNotificationRequest from the Charging Station AND The Charging Station sends a message other than BootNotificationRequest
+  |The CSMS SHALL respond with a RPC Framework: CALLERROR: SecurityError. |{nbsp}
+|FR.05  |There are a few messages that do not provide their result in the response message, but send one or more messages that contain the result. When one of the following messages is received; GetReport, GetBaseReport, GetMonitoringReport, GetDisplayMessages, CustomerInformation, GetChargingProfiles, GetLog, UpdateFirmware, PublishFirmware, TriggerMessage(<message>)
+  |The Charging Station SHALL acknowledge the requests in the list below with a response message(shown after the arrow "→") with the same requestId as the request: GetReport → NotifyReport GetBaseReport → NotifyReport GetMonitoringReport → NotifyMonitoringReport GetDisplayMessages → NotifyDisplayMessage CustomerInformation → NotifyCustomerInformation GetChargingProfiles → ReportChargingProfiles GetLog → LogStatusNotification UpdateFirmware → FirmwareStatusNotification PublishFirmware → PublishFirmwareStatusNotification TriggerMessage(<message>) → <requested message>
+    |The CSMS needs to know that a request for requestId  X was accepted, so that it can expect result messages for this requestId. TriggerMessage does not have a requestId , but the requirement still applies in the sense that a TriggerMessageResponse must be sent before the sending the requested message.
+|===
+
+=== Time Format Requirements
+
+_This section is normative._
+
+All time values exchanged between CSMS and Charging Station SHALL be formatted as defined in RFC-3339 <<rfc3339,[RFC3339]>>. +
+Additionally fractional seconds have been given an extra limit. The number of decimal places SHALL NOT exceed the maximum of 3. However, it is RECOMMENDED to omit fractional seconds entirely, because it is of limited use and omitting it reduces data usages.
+
+It is strongly RECOMMENDED to exchange all time values between CSMS and Charging Station as UTC, with the time zone designator 'Z', as specified by RFC-3339 <<rfc3339,[RFC3339]>>. This will improve interoperability between CSMS and Charging Station.
+
+==== Displaying local time
+
+When a Charging Station wants to give detailed control of configuring the internal clock to a CSO, it can implement one or more of the following Configuration Variables: <<timesource,`TimeSource`>>, <<timezone,`TimeZone`>>, <<timeoffset,`TimeOffset`>>, <<ntp_source,`NtpSource`>>, <<ntp_server_uri,`NtpServerUri`>>.
+
+==== Daylight Saving Time
+
+There are 2 ways a Charging Station can support punctual automated bi-annual changeover between "standard time" and "daylight saving time" periods.
+
+* The transition dates and offsets are known in the Charging Station, based on the configured <<timezone,`TimeZone`>>.
+* The transition date and offset is manually configured for every transition via: <<next_time_offset_transition_datetime,`NextTimeOffsetTransitionDateTime`>> and <<,time_offset_next_transition`TimeOffsetNextTransition`>>.
+
+Daylight saving time is used for displaying the current time to the EV driver.
+
+=== Message Timeouts
+
+_This section is normative._
+
+OCPP does not specify timing requirements for messages. Timing of messages is greatly influenced by the underlying network used. A GPRS network has different timing characteristics compared to a land-line. As OCPP does not require a certain type of network, but leaves this open for the CSO to select, OCPP cannot require timing constrains.
+
+If you are looking for some guidance, start with a 30 second timeout on message requests, and tune it for the network used.
+
+The message timeout setting in a Charging Station can be configured in the messageTimeout field in the <<network_connection_profile_type,NetworkConnectionProfile>>. The purpose of the message timeout is to be able to consider a request message as not sent and continue with other tasks when the message did not arrive due to communication errors or software failure. For transaction related events, use case <<e13_transaction_related_message_not_accepted_by_csms,E13 - Transaction-related message not accepted by CSMS>> describes the retry procedure when this happens. See also the section <<delivering_transaction_related_messages,Delivering transaction-related messages>> in Functional Block E.
+
+A charging station may discover that the connection to CSMS is not functioning correctly when it gets a timeout to a request or when the websocket ping is not answered. In such a situation it is advised that the charging station drops the connection and then reconnects to CSMS. This will create a fresh session and will possibly connect to a different endpoint of a multi-instance CSMS, which may resolve the error.
+
+=== Language support
+
+_This section is informative._
+
+A CSMS can provide the Charging Station with preferred languages for an EV Driver, enabling the Charging Station to communicate with the EV Driver in a language according to his/her preferences.
+
+For any Charging Station that shows messages on a display it is RECOMMENDED to at least also implement these in "English". When the preferred languages for an EV-driver (provided by the CSMS) are not "English" and don’t match any of the other languages implemented in the Charging Station, it is RECOMMENDED to use "English" as fall-back.

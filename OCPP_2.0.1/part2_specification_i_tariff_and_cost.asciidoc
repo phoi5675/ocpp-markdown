@@ -1,0 +1,438 @@
+= I. TariffAndCost
+
+== 1. Introduction
+
+This Functional Block provides tariff and cost information to an EV Driver, when a Charging Station is capable of showing this on a
+display.
+
+Before a driver starts charging he needs to be given tariff information, given detailed prices for all the components that make up the
+tariff plan applicable to this driver at this Charging Station. As this is a human readable text message, it can also be used for other
+things, like a personal welcome message.
+
+Some business cases might require the EV Driver to be shown the running total cost during charging, updated at a regular, fitting
+interval. When the EV Driver stops charging, he needs to be shown to the total cost of the just stopped transaction.
+
+All tariffs and costs are in the currency configured in the Configuration Variable Currency.
+
+=== 1.1. Why no structured tariff information?
+
+Because tariff structures can become very complex it will be difficult to convert these to human-readable text in the Charging
+Station. The CSO is the owner of the tariffs and should be able to provide the Charging Station with a human-readable tariff text. If
+the CSO is not able to generate human-readable texts from its own tariffs, how can a Charging Station be expected to be able to
+this. That is why we have kept the complexity of tariffs out of OCPP.
+
+Edition 3 FINAL, 2024-05-06 **I. TariffAndCost**
+
+
+=== 2. Use cases & Requirements
+
+==== I01 - Show EV Driver-specific Tariff Information
+
+
+No. Type Description
+1 Name Show EV Driver-specific Tariff Information
+2 ID I01
+Functional block I. Tariff and Cost
+3 Objective(s) To show an EV Driver-specific tariff before the start of a transaction.
+4 Description When an EV Driver wants to charge an EV he wants to know how much charging will cost him at
+the Charging Station he is at. The EV Driver is authenticated by his (RFID) token. The Charging
+Station asks the CSMS for information about the presented token. The CSMS returns information
+about the token, including the tariff applicable to this EV Driver.
+Actors Charging Station, CSMS, EV Driver
+
+Scenario description (^) **1.** The EV Driver wants to charge an EV, he presents his IdTokenType.
+
+**2.** The Charging Station sends AuthorizeRequest to the CSMS to request authorization.
+**3.** Upon receipt of AuthorizeRequest, the CSMS responds with AuthorizeResponse. This response
+message indicates whether or not the IdTokenType is accepted by the CSMS, and reports the EV
+Driver-specific tariff in the personalMessage field.
+**4.** The Charging Station shows the EV Driver-specific tariff to the EV Driver.
+Alternative scenario(s) I04 - Show Fallback Tariff Information
+**5 Prerequisite(s)** The Charging Station supports Tariff Information
+
+**6 Postcondition(s)** (^) **Successful postcondition:**
+The EV Driver is authorized, knows which tariff is applicable for him/her and can start charging.
+**Failure postcondition:**
+If the authorization status is other than _Accepted_ , the EV Driver can _not_ start and might not know
+the tariff.
+EV Driver
+Charging Station CSMS
+No ongoing transaction
+for this User
+present IdToken
+AuthorizeRequest(idToken  '123456')
+AuthorizeResponse(status  Accepted,
+PersonalMessage  '0.25/kWh')
+tariff: 0.25/kWh
+_Figure 85. Sequence Diagram: Show EV Driver-specific tariff information_
+**7 Error Handling n/a
+8 Remarks** (^) The tariff information presented this way might be equal to any token presented.
+If known, and applicable, it is advisable to show the tariff information in a language understood by
+the EV Driver.
+It is advisable to give the driver the option to cancel the transaction when he does not agree with
+the tariff. This could be not plugging in the cable, or a cancel button in the user interface etc. As
+long at it is clear to the driver how a transaction can be canceled.
+Edition 3 FINAL, 2024-05-06 **I. TariffAndCost**
+
+
+**I01 - Show EV Driver-specific Tariff Information - Requirements**
+
+
+ID. Precondition Requirements
+I01.FR.01 The CSMS MAY send EV Driver-specific tariff information in the
+PersonalMessage field of an AuthorizeResponse message.
+I01.FR.02 The CSMS SHALL only send the tariff information if the Charging
+Station supports the tariff or DisplayMessage functionality.
+I01.FR.03 I01.FR.01 The Charging Station SHALL show the EV Driver-specific tariff
+information to the EV Driver.
+
+==== I02 - Show EV Driver Running Total Cost During Charging.
+
+
+No. Type Description
+1 Name Show EV Driver Running Total Cost During Charging
+2 ID I02
+Functional block I. Tariff and Cost
+3 Objectives To show an EV Driver the running total cost during charging
+4 Description While a transaction is ongoing, the driver wants to know how much the running total cost is,
+updated at a relevant interval.
+Actors Charging Station, CSMS, EV Driver
+Scenario description 1. Every Y seconds the CSMS sends a CostUpdatedRequest to the Charging Station to update the
+current total cost.
+
+**2.** Upon receipt of the CostUpdatedRequest, the Charging Station responds with a
+CostUpdatedResponse.
+**3.** The Charging Station shows the current total cost to the EV Driver.
+Alternative scenario **1.** Upon receipt of a TransactionEventRequest with _eventType_  Updated the CSMS returns the
+running cost corresponding to the _timestamp_ and _meterValue_ in the field _totalCost_ in the
+TransactionEventResponse.
+**2.** The Charging Station shows the current total cost to the EV Driver.
+
+**5 Prerequisites** (^) The Charging Station supports Tariff Information
+Ongoing transaction
+**6 Postcondition(s)** (^) **Successful postcondition:**
+The EV Driver knows the running total cost during charging.
+**Failure postcondition:**
+Total cost not known to the EV Driver during charging.
+CSMS Charging Station
+EV Driver
+Ongoing transaction
+loop [while transaction ongoing, every Y seconds]
+CostUpdatedRequest(transactionId, cost  X.XX)
+CostUpdatedResponse()
+show cost: X.XX
+_Figure 86. Sequence Diagram: Show EV Driver Running Total Cost During Charging_
+**7 Error Handling n/a
+8 Remarks** Updating the running cost very often will create a lot of messages, which might result in high
+mobile data cost.
+Edition 3 FINAL, 2024-05-06 **I. TariffAndCost**
+
+
+**I02 - Show EV Driver Running Total Cost During Charging - Requirements**
+
+
+ID. Precondition Requirements
+I02.FR.01 The CSMS SHALL send either a CostUpdatedRequest at a
+relevant interval/moment or return the running cost in a
+TransactionEventResponse. This might depend on the charging
+speed, running cost, etc.
+I02.FR.02 Upon receipt of a CostUpdatedRequest
+message.
+
+
+The Charging Station SHALL respond with a
+CostUpdatedResponse message.
+I02.FR.03 I02.FR.02 The Charging Station SHALL show the current total cost to the
+EV Driver.
+I02.FR.04 When running cost is reported in
+TransactionEventResponse
+
+
+The Charging Station SHALL show the current running cost to
+the EV Driver.
+
+==== I03 - Show EV Driver Final Total Cost After Charging
+
+
+No. Type Description
+1 Name Show EV Driver Final Total Cost After Charging
+2 ID I03
+Functional block I. Tariff and Cost
+3 Objectives To show an EV Driver the total cost after the transaction is finished.
+4 Description An EV Driver stops an ongoing transaction by presenting his identification token (for example
+RFID). The transaction is stopped and the total cost of the transaction is shown to the EV Driver.
+Actors Charging Station, CSMS, EV Driver
+
+Scenario description (^) **1.** The EV Driver presents an IdTokenType to stop the transaction.
+
+**2.** The Charging Station sends TransactionEventRequest (eventType  Ended)
+**3.** The CSMS responds with TransactionEventResponse containing the total cost of the
+transaction.
+**4.** The Charging Station shows the total cost to the EV Driver.
+Alternative scenario’s I05 - Show Fallback Total Cost Message
+
+**5 Prerequisites** (^) The Charging Station supports Tariff Information
+Ongoing transaction
+**6 Postcondition(s)** (^) **Successful postcondition:**
+The EV Driver knows the total cost of the transaction.
+**Failure postcondition:**
+The EV Driver does NOT know the total cost of the transaction.
+Edition 3 FINAL, 2024-05-06 **I. TariffAndCost**
+
+
+
+EV Driver
+
+
+Charging Station CSMS
+
+
+Ongoing transaction
+
+
+Present IdToken
+
+
+opt
+notification
+
+
+TransactionEvent / StatusNotification
+messages left out for readability
+
+
+TransactionEventRequest(eventType  Ended, ...)
+
+
+TransactionEventResponse([idTokenInfo], totalCost  X.XX,...)
+
+
+show cost: X.XX
+
+_Figure 87. Sequence Diagram: Show EV Driver Final Total Cost After Charging_
+
+
+7 Error Handling n/a
+8 Remarks If the Charging Station was offline when the transaction ended and the
+TransactionEventResponse with totalCost is received when the Charging Station comes back
+online some time after that, then there is no use in displaying the cost, because the user has likely
+left already. A similar situation applies when TxStopPoint is defined as ParkingBayOccupancy,
+in which case the EV must leave the Charging Station to cause the transaction to end.
+
+
+The scenario description and sequence diagram above are based on the Configuration Variable
+for stop transaction being configured as follows.
+TxStopPoint: ParkingBayOccupancy, EVConnected, Authorized
+This use-case is also valid for other configurations, but then the transaction might stop at another
+moment, which might change the sequence in which message are send. For more details see the
+use case: E06 - Stop Transaction options
+
+**I03 - Show EV Driver Final Total Cost After Charging - Requirements**
+
+
+ID. Precondition Requirements
+I03.FR.01 When transaction is stopped The Charging Station SHALL send a TransactionEventRequest
+(eventType  Ended) to the CSMS.
+
+I03.FR.02 (^) I03.FR.01 AND
+When Total Cost is known to the CSMS.
+The CSMS SHALL send the total cost of the transaction in the
+totalCost field of the TransactionEventResponse message.
+I03.FR.03 (^) I03.FR.02 AND
+Charging Station was online when transaction
+stopped
+The Charging Station SHALL display the total cost to the EV
+Driver.
+I03.FR.04 To indicate a free transaction, the CSMS SHALL set _totalCost_ to
+0.00. Thus omitting _totalCost_ does not imply that the transaction
+was free.
+I03.FR.05 (^) I02.FR.02 AND
+TxStopPoint is defined as
+ParkingBayOccupancy
+The Charging Station SHOULD NOT display the total cost to the
+EV Driver. (Driver has left already).
+
+==== I04 - Show Fallback Tariff Information
+
+
+No. Type Description
+1 Name Show Fallback Tariff Information
+2 ID I04
+Functional block I. Tariff and Cost
+
+Edition 3 FINAL, 2024-05-06 **I. TariffAndCost**
+
+
+
+No. Type Description
+3 Objective(s) To show an EV Driver some information, generic tariff, a message etc., when the Charging Station
+cannot retrieve tariff information for this EV Driver.
+4 Description When an EV Driver wants to charge an EV, he wants an indication of how much charging will cost
+him at the Charging Station he is at, but the Charging Station cannot get a specific tariff for this
+EV Driver (for example: the Charging Station is Offline , or no EV Driver-specific tariff is available).
+For such scenarios, a fallback tariff information message can be configured in the Charging
+Station.
+Actors Charging Station, EV Driver
+
+Scenario description (^) **1.** The EV Driver wants to charge an EV, he presents his IdTokenType.
+
+**2.** The Charging Station authorizes the EV Driver against the Authorization Cache
+**3.** The Charging Station shows the TariffFallbackMessage to the EV Driver.
+Alternative scenario’s I01 - Show EV Driver-specific Tariff Information
+
+**5 Prerequisites** (^) The Charging Station supports Tariff Information
+the Configuration Variable: TariffFallbackMessage is configured.
+**6 Postcondition(s)** (^) **Successful postcondition:**
+EV Driver has been shown the fallback tariff information message
+**Failure postcondition:**
+EV Driver has no information about the tariff at this Charging Station.
+EV Driver
+Charging Station CSMS
+present IdToken
+alt [if Charging Station is offline]
+check authorization cache()
+TariffFallbackMessage
+[No specific tariff is available]
+AuthorizeRequest(idToken)
+AuthorizeResponse(...)
+TariffFallbackMessage
+_Figure 88. Sequence Diagram: Show Fallback Tariff Information_
+**7 Error Handling n/a
+8 Remarks** n/a
+**I04 - Show Fallback Tariff Information - Requirements
+ID. Precondition Requirements**
+I04.FR.01 When the Charging Station cannot get a specific
+tariff for the EV Driver (for example: the
+Charging Station is Offline, or no EV Driver-
+specific tariff is available.)
+The Charging Station SHALL display a fallback tariff information
+message to the EV Driver, which is configured in the
+Configuration Variable: TariffFallbackMessage.
+I04.FR.02 The CSMS MAY configure the TariffFallbackMessage via the
+Configuration Variable: TariffFallbackMessage.
+Edition 3 FINAL, 2024-05-06 **I. TariffAndCost**
+
+
+==== I05 - Show Fallback Total Cost Message
+
+
+No. Type Description
+1 Name Show Fallback Total Cost Message
+2 ID I05
+Functional block I. Tariff and Cost
+3 Objectives To show an EV Driver a message instead of the actual total cost when the Charging Station is
+Offline when a transaction is stopped.
+4 Description When an EV Driver wants to stop an ongoing transaction, but the Charging Station is Offline. The
+transaction will be stopped as described earlier. The Charging Station cannot retrieve the total
+cost for the stopped transaction. The EV Driver needs to be given some message, this message
+can be configured in the Configuration Variable: TotalCostFallbackMessage.
+Actors Charging Station, EV Driver
+
+Scenario description (^) **1.** The EV Driver presents IdTokenType to stop the transaction.
+
+**2.** The Charging Station stops the energy offer.
+**3.** The Charging Station shows the TotalCostFallbackMessage to the EV Driver.
+Alternative scenario’s I03 - Show EV Driver Final Total Cost After Charging
+
+**5 Prerequisites** (^) The Charging Station supports Tariff Information
+The Charging Station is _Offline_
+the Configuration Variable: TotalCostFallbackMessage is configured.
+**6 Postcondition(s)** (^) **Successful postcondition:**
+The EV Driver has received a pre-configured fallback message.
+**Failure postcondition:**
+The EV Driver has not received a pre-configured fallback message.
+EV Driver
+Charging Station
+Ongoing transaction
+present IdToken
+opt [if (id  startId) or (GroupId  GroupId of startId)]
+stop energy offer
+opt [if cable not permanently attached]
+unlock connector
+TotalCostFallbackMessage
+_Figure 89. Sequence Diagram: Show Fallback Total Cost Message_
+**7 Error Handling n/a
+8 Remarks** n/a
+**I05 - Show Fallback Total Cost Message - Requirements
+ID. Precondition Requirements**
+I05.FR.01 The CSMS MAY configure the fallback total cost information
+message via the Configuration Variable:
+TotalCostFallbackMessage.
+Edition 3 FINAL, 2024-05-06 **I. TariffAndCost**
+
+
+
+ID. Precondition Requirements
+I05.FR.02 When the Charging Station cannot retrieve the
+total cost for the stopped transaction, because
+the Charging Station is offline.
+
+
+The Charging Station SHALL show a fallback total cost
+information message to the EV Driver.
+
+==== I06 - Update Tariff Information During Transaction
+
+
+No. Type Description
+1 Name Update Tariff Information During Transaction
+2 ID I06
+Functional block I. Tariff and Cost
+3 Objectives To show an EV Driver updated tariff information during a transaction.
+4 Description During charging (especially DC fast charging) it might be useful to show the EV driver updated
+tariff information when it becomes available.
+Example: If a tariff has a bandwidth:
+charging will cost between 0,25 and 0,40 euro/kWh depending on current energy price. Current
+price is 0,28 euro/kWh.
+Then when the price changing, this tariff information needs to be updated:
+charging will cost between 0,25 and 0,40 euro/kWh depending on current energy price. Current
+price is 0,32 euro/kWh.
+Scenario description 1. The Charging Station sends TransactionEventRequest (eventType  Updated) messages during
+the transaction.
+
+**2.** When the CSMS receives a TransactionEventRequest message it checks if there is updated
+tariff information available.
+**3.** The CSMS acknowledges with a TransactionEventResponse message, which contains the
+updated tariff information if available.
+
+**5 Prerequisites** (^) The Charging Station supports Tariff Information
+There is a transaction ongoing
+**6 Postcondition(s)** (^) **Successful postcondition:**
+The updated tariff information is shown to the EV Driver.
+**Failure postcondition:**
+The EV Driver has not been shown the updated tariff information.
+Charging Station CSMS
+A transaction is ongoing.
+TransactionEventRequest(eventType  Updated,...)
+Check for updated
+tariff information
+TransactionEventResponse(PersonalMessage,...)
+_Figure 90. Sequence Diagram: Update Tariff Information During Transaction_
+**7 Error Handling n/a
+8 Remarks** There may be a policy or a legal requirement in place, that the tariff communicated at the start of
+the transaction must be used for the entire transaction, in which case no updated tariff
+information should be sent during the transaction.
+Edition 3 FINAL, 2024-05-06 **I. TariffAndCost**
+
+
+**I06 - Update Tariff Information During Transaction - Requirements**
+
+
+ID. Precondition Requirements
+I06.FR.01 When the CSMS receives a
+TransactionEventRequest (eventType =
+Updated) from the Charging Station.
+
+
+The CSMS SHALL check if there is updated tariff information
+available.
+
+I06.FR.02 (^) I06.FR.01 AND
+When there is updated tariff information
+available.
+The CSMS SHALL respond with a TransactionEventResponse
+message to the Charging Station, containing the updated tariff
+information in the PersonalMessage field.
+I06.FR.03 I06.FR.02 The Charging Station SHALL display the updated tariff
+information to the EV Driver.
+

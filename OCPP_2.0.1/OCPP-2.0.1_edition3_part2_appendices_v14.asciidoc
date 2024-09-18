@@ -42,7 +42,6 @@ Appendix 5: Added reason MissingDeviceModelInfo
 
 <<<
 
-:sectnums:
 :chapter-signifier: Appendix
 == Security Events
 

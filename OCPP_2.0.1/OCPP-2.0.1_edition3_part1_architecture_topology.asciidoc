@@ -36,7 +36,6 @@ This document is made available under the _*Creative Commons Attribution-NoDeriv
                     First release of this Architecture & Topology document
 |===
 
-:sectnums:
 == Introduction.
 
 === Goal of this document
