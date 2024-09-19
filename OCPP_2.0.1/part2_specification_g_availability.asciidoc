@@ -1,4 +1,5 @@
 = G. Availability
+:!chapter-number:
 
 == 1. Introduction
 

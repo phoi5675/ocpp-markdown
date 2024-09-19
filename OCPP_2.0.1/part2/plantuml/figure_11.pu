@@ -1,0 +1,47 @@
+@startuml figure_11
+!include style.puml
+
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+ChargingStation -> CSMS: BootNotificationRequest(...)
+activate ChargingStation
+activate CSMS
+
+CSMS --> ChargingStation: BootNotificationResponse(status  Pending, interval  X,...)
+deactivate ChargingStation
+deactivate CSMS
+
+opt
+  CSMS -> ChargingStation: GetVariablesRequest(...)
+  activate CSMS
+  activate ChargingStation
+
+  ChargingStation --> CSMS: GetVariablesResponse(...)
+  deactivate ChargingStation
+  deactivate CSMS
+end
+
+opt
+  CSMS -> ChargingStation: SetVariablesRequest(...)
+  activate CSMS
+  activate ChargingStation
+
+  ChargingStation --> CSMS: SetVariablesResponse(...)
+  deactivate CSMS
+  deactivate ChargingStation
+end
+
+loop with interval X while "Pending"
+  ChargingStation -> CSMS: BootNotificationRequest(...)
+  activate CSMS
+  activate ChargingStation
+
+  CSMS --> ChargingStation: BootNotificationResponse(status  Pending, interval  X,...)
+  deactivate CSMS
+end
+
+ChargingStation ->o] : Continue B01 - Cold Boot Charging Station
+deactivate ChargingStation
+
+@enduml

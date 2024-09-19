@@ -1,4 +1,5 @@
 = J. MeterValues
+:!chapter-number:
 
 == 1. Introduction
 

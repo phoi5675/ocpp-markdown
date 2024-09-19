@@ -1,4 +1,5 @@
 = Referenced Components and Variables
+:!chapter-number:
 
 == 1. Controller Components.
 
@@ -466,6 +467,7 @@ This can be used to manually configure the offset for the start or end of the da
 
 [[timesource]]
 ==== TimeSource
+
 **Required** yes
 Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
@@ -969,7 +971,7 @@ Authorization List when current date/time is past the value of cacheExpiryDateTi
 Note, that cacheExpiryDateTime does not affect the behavior of SendLocalListRequest or GetLocalListRequest
 messages.
 
-== 2.6. Transaction related
+=== Transaction related
 
 **2.6.1.** EVConnectionTimeOut
 
@@ -997,7 +999,8 @@ variableCharacteristics dataType boolean
 Description When set to true , the Charging Station SHALL deauthorize the transaction when the cable is unplugged from the
 EV.
 
-**2.6.3.** TxBeforeAcceptedEnabled
+[[tx_before_accepted_enabled]]
+==== `TxBeforeAcceptedEnabled`
 
 
 Required no

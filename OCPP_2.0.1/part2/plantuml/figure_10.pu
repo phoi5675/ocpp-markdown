@@ -1,0 +1,68 @@
+@startuml figure_10
+!include style.puml
+
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+ChargingStation -> ChargingStation: Power up
+
+opt 
+  ChargingStation -> ChargingStation: Self check
+end
+
+ChargingStation -> CSMS: BootNotificationRequest(reason, chargingStation)
+activate ChargingStation
+activate CSMS
+
+CSMS --> ChargingStation: BootNotificationResponse(status  Accepted, currentTime, interval)
+deactivate ChargingStation
+deactivate CSMS
+
+opt
+  loop for all Connectors
+    ChargingStation -> CSMS: StatusNotificationRequest(connectorStatus = Unavailable)
+    activate ChargingStation
+    activate CSMS
+
+    CSMS --> ChargingStation: StatusNotificationResponse()
+    deactivate ChargingStation
+    deactivate CSMS
+  end
+
+  ChargingStation -> ChargingStation: Self check
+end
+
+loop for all Connectors
+  alt Connector was set to Unavailable/Reserved/Faulted prior to (re)boot
+    ChargingStation -> CSMS: StatusNotificationRequest(connectorStatus  Unavailable/Reserved/Faulted)
+    activate ChargingStation
+    activate CSMS
+
+    CSMS --> ChargingStation: StatusNotificationResponse()
+    deactivate ChargingStation
+    deactivate CSMS
+  else else
+    ChargingStation -> CSMS: StatusNotificationRequest(Connectortatus = Available)
+    activate ChargingStation
+    activate CSMS
+
+    CSMS --> ChargingStation: StatusNotificationResponse()
+    deactivate ChargingStation
+    deactivate CSMS
+  end
+end
+
+loop \
+  while powered up and no other messages, \n\
+  with frequency based on Interval from BootNotificationResponse
+
+  ChargingStation -> CSMS: HeartbeatRequest()
+  activate ChargingStation
+  activate CSMS
+
+  CSMS --> ChargingStation: HeartbeatResponse(currentTime)
+  deactivate ChargingStation
+  deactivate CSMS
+end
+
+@enduml

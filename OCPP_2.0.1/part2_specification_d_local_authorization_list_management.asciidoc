@@ -1,6 +1,7 @@
-== D. LocalAuthorizationList Management
+= D. LocalAuthorizationList Management
+:!chapter-number:
 
-=== 1. Introduction
+== Introduction
 
 As explained in C1.4 - Local Authorization List, the Local Authorization List is a list of identifiers that can be synchronized with the
 CSMS. It allows authorization of a user when offline and when online it can be used to reduce authorization response time. This

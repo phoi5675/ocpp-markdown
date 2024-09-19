@@ -28,38 +28,74 @@ This document is made available under the _*Creative Commons Attribution-NoDeriv
 
 include::part2_specification_generic.asciidoc[]
 
+<<<
+
 include::part2_specification_a_security.asciidoc[]
+
+<<<
 
 include::part2_specification_b_provisioning.asciidoc[]
 
+<<<
+
 include::part2_specification_c_authorization.asciidoc[]
+
+<<<
 
 include::part2_specification_d_local_authorization_list_management.asciidoc[]
 
+<<<
+
 include::part2_specification_e_transactions.asciidoc[]
+
+<<<
 
 include::part2_specification_f_remote_control.asciidoc[]
 
+<<<
+
 include::part2_specification_g_availability.asciidoc[]
+
+<<<
 
 include::part2_specification_h_reservation.asciidoc[]
 
+<<<
+
 include::part2_specification_i_tariff_and_cost.asciidoc[]
+
+<<<
 
 include::part2_specification_j_meter_values.asciidoc[]
 
+<<<
+
 include::part2_specification_k_smart_charging.asciidoc[]
+
+<<<
 
 include::part2_specification_l_firmware_management.asciidoc[]
 
+<<<
+
 include::part2_specification_m_iso15118_certificate_management.asciidoc[]
+
+<<<
 
 include::part2_specification_n_diagnostics.asciidoc[]
 
+<<<
+
 include::part2_specification_o_display_message.asciidoc[]
+
+<<<
 
 include::part2_specification_p_data_transfer.asciidoc[]
 
+<<<
+
 include::part2_specification_messages_datatypes_and_enumerations.asciidoc[]
+
+<<<
 
 include::part2_specification_referenced_components_and_variables.asciidoc[]

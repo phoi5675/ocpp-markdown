@@ -1,4 +1,5 @@
 = H. Reservation
+:!chapter-number:
 
 == 1. Introduction
 

@@ -1,4 +1,6 @@
 = Messages, Datatypes & Enumerations
+:!chapter-number:
+:sectnums:
 
 [[messages]]
 == Messages
@@ -47,9 +49,10 @@ revoked, return 'CertificateRevoked'.
 idTokenInfo IdTokenInfoType 1..1 Required. This contains information about authorization
 status, expiry and group id.
 
-==== 1.2. BootNotification.
+=== BootNotification
 
-**1.2.1. BootNotificationRequest**
+[[boot_notification_request]]
+==== BootNotificationRequest
 
 This contains the field definition of the BootNotificationRequest PDU sent by the Charging Station to the CSMS.
 
@@ -61,7 +64,8 @@ reason BootReasonEnumType 1..1 Required. This contains the reason for sending th
 message to the CSMS.
 chargingStation ChargingStationType 1..1 Required. Identifies the Charging Station
 
-**1.2.2. BootNotificationResponse**
+[[boot_notification_response]]
+==== BootNotificationResponse
 
 This contains the field definition of the BootNotificationResponse PDU sent by the CSMS to the Charging Station in response to a
 BootNotificationRequest.
@@ -523,9 +527,10 @@ statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
 
 
-==== 1.17. GetBaseReport.
+=== GetBaseReport
 
-**1.17.1. GetBaseReportRequest**
+[[get_base_report_reuqest]]
+==== GetBaseReportRequest
 
 This contains the field definition of the GetBaseReportRequest PDU sent by the CSMS to the Charging Station.
 
@@ -536,7 +541,8 @@ Field Name Field Type Card. Description
 requestId integer 1..1 Required. The Id of the request.
 reportBase ReportBaseEnumType 1..1 Required. This field specifies the report base.
 
-**1.17.2. GetBaseReportResponse**
+[[get_base_report_response]]
+==== GetBaseReportResponse
 
 This contains the field definition of the GetBaseReportResponse PDU sent by the Charging Station to the CSMS.
 
@@ -823,7 +829,7 @@ pe
 Station was able to accept the request.
 statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
-==== 1.26. GetReport
+=== GetReport
 
 [[get_report_request]]
 ==== GetReportRequest
@@ -1333,9 +1339,10 @@ Charging Station.
 The ReportChargingProfilesResponse message is sent by the CSMS to the Charging Station in response to a
 ReportChargingProfilesRequest. No fields are defined.
 
-=== 1.44. RequestStartTransaction
+=== RequestStartTransaction
 
-**1.44.1. RequestStartTransactionRequest**
+[[request_start_transaction_request]]
+==== RequestStartTransactionRequest
 
 This contains the field definitions of the RequestStartTransactionRequest PDU sent to Charging Station by CSMS.
 
@@ -1361,7 +1368,8 @@ configuration variable AuthorizeRemoteStart  false
 (otherwise the AuthorizeResponse could return the
 groupIdToken).
 
-**1.44.2. RequestStartTransactionResponse**
+[[request_start_transaction_response]]
+==== RequestStartTransactionResponse
 
 This contains the field definitions of the RequestStartTransactionResponse PDU sent from Charging Station to CSMS.
 
@@ -1384,9 +1392,10 @@ example: cable plugged in first. This contains the
 transactionId of the already started transaction.
 statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
-=== 1.45. RequestStopTransaction
+=== RequestStopTransaction
 
-**1.45.1. RequestStopTransactionRequest**
+[[request_stop_transaction_request]]
+==== RequestStopTransactionRequest
 
 This contains the field definitions of the RequestStopTransactionRequest PDU sent to Charging Station by CSMS.
 
@@ -1397,7 +1406,8 @@ Field Name Field Type Card. Description
 transactionId identifierString[0..36] 1..1 Required. The identifier of the transaction which the
 Charging Station is requested to stop.
 
-**1.45.2. RequestStopTransactionResponse**
+[[request_stop_transaction_response]]
+==== RequestStopTransactionResponse
 
 This contains the field definitions of the RequestStopTransactionResponse PDU sent from Charging Station to CSMS.
 
@@ -1833,9 +1843,10 @@ status GenericStatusEnumType 1..1 Required. Specifies whether the CSMS can proce
 request.
 statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
-=== 1.59. StatusNotification
+=== StatusNotification
 
-**1.59.1. StatusNotificationRequest**
+[[status_notification_request]]
+==== StatusNotificationRequest
 
 This contains the field definition of the StatusNotificationRequest PDU sent by the Charging Station to the CSMS. This message
 might be removed in a future version of OCPP. It will be replaced by Device Management Monitoring events.
@@ -1852,7 +1863,8 @@ belongs for which the the status is reported.
 connectorId integer 1..1 Required. The id of the connector within the EVSE for
 which the status is reported.
 
-**1.59.2. StatusNotificationResponse**
+[[status_notification_response]]
+==== StatusNotificationResponse
 
 This contains the field definition of StatusNotificationResponse sent by the CSMS to the Charging Station in response to a
 StatusNotificationRequest. This message might be removed in a future version of OCPP. It will be replaced by Device Management
@@ -1863,9 +1875,10 @@ No fields are defined.
 Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
 
 
-=== 1.60. TransactionEvent.
+=== TransactionEvent
 
-**1.60.1. TransactionEventRequest**
+[[transaction_event_request]]
+==== TransactionEventRequest
 
 This section contains the field definition of the TransactionEventRequest PDU sent by the Charging Station to the CSMS. For each
 of the eventTypes; Started, Updated and Ended, the corresponding cardinality is specified.
@@ -1922,7 +1935,8 @@ Updated: SampledDataTxUpdatedMeasurands
 Ended: SampledDataTxEndedMeasurands &
 AlignedDataTxEndedMeasurands
 
-**1.60.2. TransactionEventResponse**
+[[transaction_event_response]]
+==== TransactionEventResponse
 
 This contains the field definition of the TransactionEventResponse PDU sent by the CSMS to the Charging Station in response to a
 
@@ -3593,7 +3607,8 @@ le
 CertChainError If the contract certificate contained in the AuthorizeRequest message is not valid.
 ContractCancelled If the EMAID provided by EVCC is invalid, unknown, expired or blocked.
 
-=== 3.5. BootReasonEnumType
+[[boot_reason_enum_type]]
+=== BootReasonEnumType
 
 _Enumeration_
 

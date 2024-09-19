@@ -1,4 +1,6 @@
 = A. Security
+:!chapter-number:
+:sectnums:
 
 <<<
 
@@ -650,8 +652,7 @@ image::part2/images/figure_6.svg[Update Charging Station Certificate]
 [[update_charging_station_certificate_initiated_by_the_charging_station]]
 === A03 - Update Charging Station Certificate initiated by the Charging Station
 
-_Table 29. A03 - Update Charging Station Certificate initiated by the Charging Station_
-
+.A03 - Update Charging Station Certificate initiated by the Charging Station
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |No. |Type            |Description
@@ -694,9 +695,7 @@ It is NOT RECOMMENDED to let the Charging Station retry when the certificate is 
 
 ==== A03 - Update Charging Station Certificate initiated by the Charging Station - Requirements
 
-_Table 30. A03 - Requirements_
-
-
+.A03 - Requirements
 [cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
@@ -771,8 +770,7 @@ image::part2/images/figure_8.svg[Security Event Notification]
 
 ==== A04 - Security Event Notification - Requirements
 
-_Table 32. A04 - Security Event Notification - Requirements_
-
+.A04 - Security Event Notification - Requirements
 [cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
@@ -789,8 +787,7 @@ _Table 32. A04 - Security Event Notification - Requirements_
 
 === A05 - Upgrade Charging Station Security Profile
 
-_Table 33. A05 - Upgrade Charging Station Security Profile_
-
+.A05 - Upgrade Charging Station Security Profile
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |No. |Type            |Description

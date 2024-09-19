@@ -1,4 +1,5 @@
 = N. Diagnostics
+:!chapter-number:
 
 == 1. Introduction
 

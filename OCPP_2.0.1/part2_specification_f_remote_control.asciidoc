@@ -1,4 +1,5 @@
 = F. RemoteControl
+:!chapter-number:
 
 ==  Introduction
 

@@ -1,4 +1,5 @@
 = O. DisplayMessage
+:!chapter-number:
 
 == 1. Introduction
 
