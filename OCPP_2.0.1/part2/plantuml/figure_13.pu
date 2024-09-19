@@ -1,0 +1,52 @@
+@startuml figure_13
+!include style.puml
+
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+activate ChargingStation
+
+loop while powered up and no other messages
+  ChargingStation -> CSMS: HeartbeatRequest()
+  activate CSMS
+
+  CSMS --> ChargingStation: HeartbeatResponse(currentTime)
+  deactivate CSMS
+end
+
+ChargingStation -> ChargingStation: Connection loss
+
+note over CSMS, ChargingStation
+  Connection loss can be minutes, but can also be days.
+end note
+
+ChargingStation -> ChargingStation: Connection restored
+
+alt Offline period exceeds offline threshold
+  loop for all Connectors
+    ChargingStation -> CSMS: StatusNotificationRequest(...)
+    activate CSMS
+
+    CSMS --> ChargingStation: StatusNotificationResponse()
+    deactivate CSMS
+    deactivate ChargingStation
+  end
+else When status changed while offline
+  loop for each Connector with status changed during offline period
+    ChargingStation -> CSMS: StatusNotificationRequest(...)
+    activate CSMS
+
+    CSMS --> ChargingStation: StatusNotificationResponse()
+    deactivate CSMS
+  end
+end
+
+loop while powered up and no other messages
+  ChargingStation -> CSMS: HeartbeatRequest()
+  activate CSMS
+
+  CSMS --> ChargingStation: HeartbeatResponse(currentTime)
+  deactivate CSMS
+end
+
+@enduml

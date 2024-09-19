@@ -1,0 +1,26 @@
+@startuml figure_12
+!include style.puml
+
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+activate ChargingStation
+
+ChargingStation -> CSMS: BootNotificationRequest(...)
+activate CSMS
+
+CSMS --> ChargingStation: BootNotificationResponse(status  Rejected, interval  X,...)
+deactivate CSMS
+
+loop with interval X while "Rejected"
+  ChargingStation -> CSMS: BootNotificationRequest(...)
+  activate CSMS
+
+  CSMS --> ChargingStation: BootNotificationResponse(status  Rejected, interval  X,...)
+  deactivate CSMS
+end
+
+ChargingStation ->o]: Continue B01 - Cold Boot Charging Station
+deactivate ChargingStation
+
+@enduml

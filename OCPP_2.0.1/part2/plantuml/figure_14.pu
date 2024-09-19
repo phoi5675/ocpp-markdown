@@ -1,0 +1,18 @@
+@startuml figure_14
+!include style.puml
+
+actor "CSO" as CSO
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+CSO -> CSMS: request to set one or more variables
+
+CSMS -> ChargingStation: SetVariablesRequest(setVariableData)
+activate CSMS
+activate ChargingStation
+
+ChargingStation --> CSMS: SetVariablesResponse(setVariableResult)
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

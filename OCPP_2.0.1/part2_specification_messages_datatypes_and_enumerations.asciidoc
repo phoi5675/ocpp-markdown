@@ -892,9 +892,10 @@ Field Name Field Type Card. Description
 ongoingIndicator boolean 0..1 Optional. Whether the transaction is still ongoing.
 messagesInQueue boolean 1..1 Required. Whether there are still message to be delivered.
 
-==== 1.28. GetVariables.
+=== GetVariables
 
-**1.28.1. GetVariablesRequest**
+[[get_variables_request]]
+==== GetVariablesRequest
 
 This contains the field definition of the GetVariablesRequest PDU sent by the CSMS to the Charging Station.
 
@@ -904,7 +905,8 @@ _Class_
 Field Name Field Type Card. Description
 getVariableData GetVariableDataType 1..* Required. List of requested variables.
 
-**1.28.2. GetVariablesResponse**
+[[get_variables_response]]
+==== GetVariablesResponse
 
 This contains the field definition of the GetVariablesResponse PDU sent by the CSMS to the Charging Station in response to
 GetVariablesRequest.
@@ -915,13 +917,15 @@ _Class_
 Field Name Field Type Card. Description
 getVariableResult GetVariableResultType 1..* Required. List of requested variables and their values.
 
-==== 1.29. Heartbeat
+=== Heartbeat
 
-**1.29.1. HeartbeatRequest**
+[[heartbeat_request]]
+==== HeartbeatRequest
 
 This contains the field definition of the HeartbeatRequest PDU sent by the Charging Station to the CSMS. No fields are defined.
 
-**1.29.2. HeartbeatResponse**
+[[heartbeat_response]]
+==== HeartbeatResponse
 
 This contains the field definition of the HeartbeatResponse PDU sent by the CSMS to the Charging Station in response to a
 HeartbeatRequest.
@@ -2465,7 +2469,8 @@ id integer 1..1 Required. Id of the monitor of which a clear was
 requested.
 statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
-=== 2.16. ComponentType
+[[component_type]]
+=== ComponentType
 
 _Class_
 
@@ -2666,7 +2671,8 @@ signingCertificate string[0..5500] 0..1 Optional. Certificate with which the fir
 PEM encoded X.509 certificate.
 signature string[0..800] 0..1 Optional. Base64 encoded firmware signature.
 
-=== 2.25. GetVariableDataType
+[[get_variable_data_type]]
+=== GetVariableDataType
 
 _Class_
 
@@ -2682,7 +2688,8 @@ component ComponentType 1..1 Required. Component for which the Variable is reque
 variable VariableType 1..1 Required. Variable for which the attribute value is
 requested.
 
-=== 2.26. GetVariableResultType
+[[get_variable_result_type]]
+=== GetVariableResultType
 
 _Class_
 
@@ -3201,7 +3208,8 @@ component ComponentType 1..1 Required. Component for which status is returned.
 variable VariableType 1..1 Required. Variable for which status is returned.
 statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
-=== 2.44. SetVariableDataType
+[[set_variable_data_type]]
+=== SetVariableDataType
 
 _Class_
 
@@ -3221,10 +3229,8 @@ component ComponentType 1..1 Required. The component for which the variable data
 set.
 variable VariableType 1..1 Required. Specifies the that needs to be set.
 
-Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
-
-
-=== 2.45. SetVariableResultType
+[[set_variable_result_type]]
+=== SetVariableResultType
 
 _Class_
 
@@ -3475,7 +3481,8 @@ required.
 Indicates information useful to developers for debugging,
 not useful during operations.
 
-=== 2.53. VariableType
+[[variable_type]]
+=== VariableType
 
 _Class_
 
@@ -3536,7 +3543,8 @@ NONE Use no authentication
 PAP Use PAP authentication
 AUTO Sequentially try CHAP, PAP, NONE.
 
-=== 3.2. AttributeEnumType
+[[attribute_enum_type]]
+=== AttributeEnumType
 
 _Enumeration_
 
@@ -5157,7 +5165,8 @@ Accepted Setting new data successful
 Rejected Setting new data rejected
 Failed Setting new data failed
 
-==== 3.79. SetVariableStatusEnumType
+[[set_variable_status_enum_type]]
+==== SetVariableStatusEnumType
 
 _Enumeration_
 

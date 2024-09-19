@@ -8,6 +8,7 @@
 
 This Functional Block describes all the functionalities that help a CSO provision their Charging Stations, allowing them on their network and retrieving configuration information from these Charging Stations. Additionally, it consists of the ability to retrieve information about the configuration of Charging Stations, make changes to the configuration etc. This chapter also covers resetting a Charging Station and migrating to a new NetworkConnectionProfile.
 
+[[transactions_before_being_accepted_by_a_csms]]
 === Transactions before being accepted by a CSMS
 
 A Charging Station Operator MAY choose to configure a Charging Station to accept transactions before the Charging Station is accepted by a CSMS. Parties who want to implement this such behavior should realize that it is uncertain if those transactions can ever be delivered to the CSMS.
@@ -170,8 +171,7 @@ image::part2/images/figure_11.svg[Sequence Diagram: Cold Boot Charging Station -
 
 ==== B02 - Cold Boot Charging Station - Pending - Requirements
 
-_Table 38. B02 - Requirements_
-
+.B02 - Requirements
 [cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
@@ -193,7 +193,7 @@ _Table 38. B02 - Requirements_
 |B02.FR.07  |If the interval in the <<boot_notification_response,BootNotificationResponse>> equals 0, and the status is other than _Accepted_,
   |The Charging Station SHALL choose a waiting interval on its own, in a way that avoids flooding the CSMS with requests. |{nbsp}
 |B02.FR.08  |If the interval in the <<boot_notification_response,BootNotificationResponse>> > 0, and the status is other than _Accepted_,
-  |The Charging Station SHALL send a <<boot_notification_request,BootNotificationRequest>> after the set interval has past.
+  |The Charging Station SHALL send a <<boot_notification_request,BootNotificationRequest>> after the set interval has past. |{nbsp}
 |B02.FR.09  |The Charging Station has received a <<boot_notification_response,BootNotificationResponse>> with status _Pending_ +
   AND +
   the Charging Station sends a RPC Framework: CALL message that is NOT a <<boot_notification_request,BootNotificationRequest>> or a message triggered by one of the following messages: +
@@ -203,542 +203,305 @@ _Table 38. B02 - Requirements_
       |The Charging Station is not allowed to initiate sending other messages before being accepted.
 |===
 
+<<<
+
 [[cold_boot_charging_station_rejected]]
-==== B03 - Cold Boot Charging Station - Rejected
-
-_Table 39. B03 - Cold Boot Charging Station - Rejected_
-
-
-No. Type Description
-1 Name Cold Boot Charging Station - Rejected
-2 ID B03
-Functional block B. Provisioning
-Parent use case B01 - Cold Boot Charging Station
-
-**3 Objective(s)** (^) To inform the Charging Station that its _not_ (yet) accepted by the CSMS: _Rejected_ status.
-**4 Description** This use case describes the behavior of the CSMS and a Charging Station, when the Charging
-Station is informed by the CSMS that it is not (yet) accepted using the _Rejected_ status.
-_Actors_ Charging Station, CSMS
-_Scenario description_ (^) **1.** The Charging Station is powered up.
-
-**2.** The Charging Station sends BootNotificationRequest to the CSMS.
-**3** The CSMS responds with BootNotificationResponse with the status _Rejected_ to the Charging
-Station.
-**4.** The Charging Station will resend BootNotificationRequest after the number of seconds
-indicated by the interval field. (Interval from BootNotificationResponse).
-
-**5 Prerequisite(s)** (^) **1.** The CSMS requires to set the Charging Station in the _Rejected_ status.
-
-**2.** The Charging Station is powered down.
-**6 Postcondition(s)** The Charging Station remains in the _Rejected_ status.
-
-
-CSMS Charging Station
-
-
-BootNotificationRequest(...)
-
-
-BootNotificationResponse(status  Rejected, interval  X,...)
-
-
-loop [with interval X while "Rejected"]
-BootNotificationRequest(...)
-
-
-BootNotificationResponse(status  Rejected, interval  X,...)
-
-
-Continue B01 - Cold Boot Charging Station
-
-_Figure 12. Sequence Diagram: Cold Boot Charging Station - Rejected_
-
-
-7 Error handling When there is no response or a time-out from the CSMS: The Charging Station resends
-BootNotificationRequest after a waiting interval. This waiting interval can be based on the interval
-from a previous BootNotificationResponse or chosen by the Charging Station itself. In the latter
-case, the Charging Station chooses this interval in a way that avoids flooding the CSMS with
-requests.
-8 Remark(s) During the status Rejected , the Charging Station may no longer be reachable from the CSMS. The
-Charging Station MAY e.g. close its communication channel or shut down its communication
-hardware.
-Additionally, the CSMS MAY close the communication channel, for instance to free up system
-resources.
-
-
-It is advised not to accept any transactions until the BootNotification of the Charging Station has
-been accepted by the CSMS. See: Transactions before being accepted by a CSMS
-
-
-When the CSMS returns with BootNotificationResponse with the status Accepted , B01 - Cold Boot
-Charging Station applies.
-
-**B03 - Cold Boot Charging Station - Rejected - Requirements**
-
-_Table 40. B03 - Requirements_
-
-Edition 3 FINAL, 2024-05-06 **B. Provisioning**
-
-
-
-ID Precondition Requirement definition
-B03.FR.01 If the Charging Station is configured to accept
-Transactions before being accepted by a CSMS
-
-
-The Charging Station MAY allow locally authorized transactions.
-
-
-B03.FR.02 If the CSMS returns the status Rejected. For
-example when a Charging Station is blacklisted.
-
-
-The Charging Station SHALL NOT send any OCPP message to
-the CSMS until the retry interval has expired.
-B03.FR.03 When the CSMS has Rejected the
-BootNotificationRequest from the Charging
-Station.
-
-
-The CSMS SHALL NOT initiate any messages.
-
-
-B03.FR.04 B03.FR.03 The Charging Station MAY close the connection until it needs to
-send the next BootNotificationRequest.
-B03.FR.05 If the interval in the BootNotificationResponse
-equals 0, and the status is other than Accepted
-
-
-The Charging Station SHALL choose a waiting interval on its
-own, in a way that avoids flooding the CSMS with requests.
-B03.FR.06 If the interval in the BootNotificationResponse is
-greater than 0, and the status is other than
-Accepted
-
-
-The Charging Station SHALL send a BootNotificationRequest
-after the set interval has passed.
-
-B03.FR.07 (^) B03.FR.03
-AND
-Charging Station sends a message that is not a
-BootNotificationRequest
-CSMS SHALL respond with RPC Framework: CALLERROR:
-SecurityError.
-B03.FR.08 (^) B03.FR.03
-AND
-CSMS sends a message that is not a response
-to a BootNotificationRequest from Charging
-Station
-Charging Station SHALL respond with RPC Framework:
-CALLERROR: SecurityError.
-Edition 3 FINAL, 2024-05-06 **B. Provisioning**
-
-
-==== B04 - Offline Behavior Idle Charging Station
-
-_Table 41. B04 - Offline Behavior Idle Charging Station_
-
-
-No. Type Description
-1 Name Offline Behavior Idle Charging Station
-2 ID B04
-Functional block B. Provisioning
-3 Objective(s) To attain stand-alone operation of the Charging Station.
-4 Description This use case describes that, in the event of unavailability of the communication, the Charging
-Station is designed to operate stand-alone. In that situation, the Charging Station is said to be
-Offline.
-Actors Charging Station, CSMS
-
-_Scenario description_ (^) **1.** The CSMS or communication is unavailable.
-
-**2.** The Charging Station operates stand-alone.
-**3.** The connection is restored.
-**4.** If the _Offline_ period exceeds the value of the OfflineThreshold Configuration Variable: the
-Charging Station sends a StatusNotificationRequest to the CSMS for each connector. Otherwise it
-only sends a StatusNotificationRequest for Connectors with a status change during the offline
-period.
-**5.** The Charging Station sends HeartbeatRequest to the CSMS.
-**6.** The CSMS responds with HeartbeatResponse.
-**5 Prerequisite(s)** The BootNotification was previously accepted and the Charging Station is able to operate stand-
-alone.
-**6 Postcondition(s)** When connection is restored after a period of _Offline_ behavior, the CSMS knows the Charging
-Stations' and EVSEs' state.
-
-
-CSMS Charging Station
-
-
-loop [while powered up and no other messages]
-HeartbeatRequest()
-
-
-HeartbeatResponse(currentTime)
-
-
-Connection loss
-
-
-Connection loss can be minutes, but can also be days.
-
-
-Connection restored
-
-
-alt [Offline period exceeds offline threshold]
-loop [for all Connectors]
-StatusNotificationRequest(...)
-
-
-StatusNotificationResponse()
-
-
-[When status changed while offline]
-loop [for each Connector with status changed during offline period]
-StatusNotificationRequest(...)
-StatusNotificationResponse()
-
-
-loop [while powered up and no other messages]
-HeartbeatRequest()
-
-
-HeartbeatResponse(currentTime)
-
-_Figure 13. Sequence Diagram: Offline Behavior Idle Charging Station_
-
-
-7 Error handling The offline situation is an non preferred mode of operation that needs to be handled by the
-Charging Station by trying to re-establish the connection.
-8 Remark(s) n/a
-
-Edition 3 FINAL, 2024-05-06 **B. Provisioning**
-
-
-**B04 - Offline Behavior Idle Charging Station - Requirements**
-
-_Table 42. B04 - Requirements_
-
-
-ID Precondition Requirement definition
-
-B04.FR.01 (^) After having been _Offline_ AND
-the _Offline_ period exceeds the value of the
-OfflineThreshold Configuration Variable.
-The Charging Station SHALL send StatusNotificationRequest to
-report the current status of all its Connectors.
-B04.FR.02 (^) After having been _Offline_ AND
-the _Offline_ period does NOT exceed the value of
-the OfflineThreshold Configuration Variable.
-The Charging Station SHALL send StatusNotificationRequest to
-report the current status of only the Connectors for which a state
-change occurred.
-
-==== 2.2. Configuring a Charging Station
-
-NOTE
-
-
-For managing the configuration of a Charging Station a basic understanding of Device Model concepts is
-essential. These concepts are explained in "OCPP 2.0.1: Part 1 - Architecture & Topology", chapter 4.
-
-==== B05 - Set Variables
-
-_Table 43. B05 - Set Variables_
-
-
-No. Type Description
-1 Name Set Variables
-2 ID B05
-Functional block B. Provisioning
-3 Objective(s) To give the CSMS the ability to make changes to variables in the Charging Station.
-4 Description A Charging Station can have a lot of variables that can be configured/changed by the CSMS. A
-CSMS can use these variables to for example influence the behavior of a Charging Station. This
-use case describes how the CSMS requests a Charging Station to set the value of variables of a
-component. The CSMS can request to set more than one value per request.
-Actors CSMS, Charging Station
-
-_Scenario description_ (^) **1.** The CSO triggers the CSMS to request setting one or more variables in a Charging Station.
-
-**2.** The CSMS sends a SetVariablesRequest to the Charging Station.
-**3.** The Charging Station responds with a SetVariablesResponse indicating whether it was able to
-executed the change(s).
-**5 Prerequisite(s)** n/a
-
-**6 Postcondition(s)** (^) **Successful postconditions:**
-
-**1.** The change was executed _Successfully_.
-**Failure postconditions:
-1.** The variable is supported, but setting could not be changed, the Charging Station responds with
-the status _Rejected_.
-**2.** The variable is _not_ supported, the Charging Station responds with the status _UnknownVariable_.
-
-
-CSO
-
-
-CSMS Charging Station
-
-
-request to set one or more variables
-
-
-SetVariablesRequest(setVariableData)
-
-
-SetVariablesResponse(setVariableResult)
-
-_Figure 14. Sequence Diagram: Set Variables_
-
-
-7 Error handling n/a
-
-Edition 3 FINAL, 2024-05-06 **B. Provisioning**
-
-
-
-8 Remark(s) The attributeType Actual corresponds with the actual value of the Variable, whereas the
-attributeTypes Target, MinSet and MaxSet correspond to the target, minimum and maximum
-values that have been set for this variable.
-
-
-This is best explained by an example: the cooling system is configured to operate with a fan
-speed between 1000 and 5000 rpm. These boundaries are represented by the MinSet and MaxSet
-attributes. The current fan speed is represented by the Actual attribute. The desired fan speed is
-represented by the Target attribute.
-
-**B05 - Set Variables - Requirements**
-
-_Table 44. B05 - Requirements_
-
-
-ID Precondition Requirement definition
-B05.FR.01 When the Charging Station receives a
-SetVariablesRequest with an X number of
-SetVariableData elements
-
-
-The Charging Station SHALL respond with an
-SetVariablesResponse with an equal (X) number of
-SetVariableResult elements, one for every SetVariableData
-element in the SetVariablesRequest.
-B05.FR.02 B05.FR.01 Every SetVariableResult element in the SetVariablesResponse
-SHALL contain the same component and variable combination
-as one of the SetVariableData elements in the
-SetVariablesRequest.
-
-B05.FR.03 (^) B05.FR.02
-AND
-If the SetVariablesRequest contains an
-_attributeType_
-The corresponding SetVariableResult element in the
-SetVariablesResponse SHALL also contain the same
-_attributeType_
-B05.FR.04 When the Charging Station receives a
-SetVariablesRequest with an unknown
-Component in the SetVariableData
-The Charging Station SHALL set the _attributeStatus_ field in the
-corresponding SetVariableResult to: UnknownComponent.
-B05.FR.05 When the Charging Station receives a
-SetVariablesRequest with a Variable that is
-unknown for the given Component in the
-SetVariableData
-The Charging Station SHALL set the _attributeStatus_ field in the
-corresponding SetVariableResult to: UnknownVariable.
-B05.FR.06 When the Charging Station receives a
-SetVariablesRequest with an attributeType that
-is unknown for the given Variable in the
-SetVariableData
-The Charging Station SHALL set the _attributeStatus_ field in the
-corresponding SetVariableResult to: NotSupportedAttributeType.
-B05.FR.07 When the Charging Station receives a
-SetVariablesRequest with a _value_ that is
-incorrectly formatted for the given Variable in
-the SetVariableData
-The Charging Station SHALL set the _attributeStatus_ field in the
-corresponding SetVariableResult to: Rejected. (More information
-can be provided in the optional _statusInfo_ element.)
-B05.FR.08 When the Charging Station receives a
-SetVariablesRequest with a _value_ that is lower
-or higher than the range of the given Variable in
-the SetVariableData
-The Charging Station SHALL set the _attributeStatus_ field in the
-corresponding SetVariableResult to: Rejected. (More information
-can be provided in the optional _statusInfo_ element.)
-B05.FR.09 (^) NOT (B05.FR.04 to B05.FR.08) AND
-When the Charging Station receives a
-SetVariablesRequest for a Variable in the
-SetVariableData, but is not able to set it
-The Charging Station SHALL set the _attributeStatus_ field in the
-corresponding SetVariableResult to: Rejected.
-(This happens if the variable is _ReadOnly_ , but may also occur
-when setting the variable fails because of technical problems.)
-B05.FR.10 When the Charging Station was able to set the
-given _value_ from the SetVariableData
-The Charging Station SHALL set the _attributeStatus_ field in the
-corresponding SetVariableResult to: Accepted.
-B05.FR.11 The CSMS SHALL NOT send more SetVariableData elements in a
-SetVariablesRequest than reported by the Charging Station via
-ItemsPerMessageSetVariables.
-B05.FR.12 When the Charging Station receives a
-SetVariablesRequest without an _attributeType_.
-The corresponding SetVariableResult element in the
-SetVariablesResponse SHALL contain the _attributeType_ Actual.
-B05.FR.13 The CSMS SHALL NOT include multiple SetVariableData
-elements, in a single SetVariablesRequest, with the same
-Component, Variable and _AttributeType_ combination. Note that
-an omitted _AttributeType_ counts as the value _Actual_.
-Edition 3 FINAL, 2024-05-06 **B. Provisioning**
-
-
-==== B06 - Get Variables
-
-_Table 45. B06 - Get Variables_
-
-
-No. Type Description
-1 Name Get Variables
-2 ID B06
-Functional block B. Provisioning
-3 Objective(s) To give the CSMS the ability to retrieve the value of an attribute for one or more Variables of one
-or more Components.
-4 Description This use case describes how the CSMS requests a Charging Station to send the value of an
-attribute for one or more variables of one or more components. It is not possible to get all
-attributes of all variables in one call.
-Actors Charging Station, CSMS
-
-_Scenario description_ (^) **1.** The CSO triggers the CSMS to request for a number of variables in a Charging Station.
-
-**2.** The CSMS request the Charging Station for a number of variables with GetVariablesRequest
-with a list of requested variables.
-**3.** The Charging Station responds with a GetVariablesResponse with the requested variables.
-**4.** The CSMS sends an optional notification to the CSO.
-**5 Prerequisite(s)** n/a
-
-**6 Postcondition(s)** (^) **Successful postcondition:**
-The Charging Station was able to send all the requested variables.
-**Failure postcondition:**
-The Charging Station was not able to send all requested variables.
-CSO
-CSMS Charging Station
-request for a number of variables
-getVariablesRequest(getVariableData)
-getVariablesResponse(getVariableResult)
-opt
-notification
-_Figure 15. Sequence Diagram: Get Variables_
-**7 Error handling** n/a
-**8 Remark(s)** n/a
-**B06 - Get Variables - Requirements**
-_Table 46. B06 - Requirements_
-**ID Precondition Requirement definition**
-B06.FR.01 When the Charging Station receives a
-GetVariablesRequest with an X number of
-GetVariableData elements
-The Charging Station SHALL respond with an
-GetVariablesResponse with an equal (X) number of
-GetVariableResult elements, one for every GetVariableData
-element in the GetVariablesRequest.
-B06.FR.02 B06.FR.01 Every GetVariableResult element in the GetVariablesResponse
-SHALL contain the same _component_ and _variable_ combination
-as one of the GetVariableData elements in the
-GetVariablesRequest.
-Edition 3 FINAL, 2024-05-06 **B. Provisioning**
-
-
-
-ID Precondition Requirement definition
-
-B06.FR.03 (^) B06.FR.02
-AND
-If the GetVariablesRequest contains an
-_attributeType_
-The corresponding GetVariableResult element in the
-GetVariablesResponse SHALL also contain the same
-_attributeType_
-B06.FR.04 B06.FR.01 Every GetVariableResult element in the GetVariablesResponse
-SHALL contain an _attributeValue_ with the value of an attribute
-from the requested _attributeType_ in the GetVariablesRequest.
-B06.FR.05 The CSMS SHALL NOT send more GetVariableData elements in
-a GetVariablesRequest than reported by the Charging Station via
-ItemsPerMessageGetVariables.
-B06.FR.06 When the Charging Station receives a
-GetVariablesRequest with an unknown
-Component in the GetVariableData
-The Charging Station SHALL set the _attributeStatus_ field in the
-corresponding GetVariableResult to: UnknownComponent AND
-SHALL omit the _attributeValue_.
-B06.FR.07 When the Charging Station receives a
-GetVariablesRequest with a Variable that is
-unknown for the given Component in the
-GetVariableData
-The Charging Station SHALL set the _attributeStatus_ field in the
-corresponding GetVariableResult to: UnknownVariable AND
-SHALL omit the _attributeValue_.
-B06.FR.08 When the Charging Station receives a
-GetVariablesRequest with an attributeType that
-is unknown for the given Variable in the
-GetVariableData
-The Charging Station SHALL set the _attributeStatus_ field in the
-corresponding GetVariableResult to: NotSupportedAttributeType
-AND SHALL omit the _attributeValue_.
-B06.FR.09 When the Charging Station receives a
-GetVariablesRequest for a Variable in the
-GetVariableData that is _WriteOnly_
-The Charging Station SHALL set the _attributeStatus_ field in the
-corresponding GetVariableResult to: Rejected.
-B06.FR.10 When the Charging Station was able to get the
-_value_ requested from a GetVariablesRequest
-The Charging Station SHALL set the _attributeStatus_ field in the
-corresponding GetVariableResult to: Accepted and set the
-_attributeValue_ to the found value.
-B06.FR.11 When the Charging Station receives a
-GetVariablesRequest without an _attributeType_.
-The corresponding GetVariableResult element in the
-GetVariablesResponse SHALL contain the _attributeType_ Actual.
-B06.FR.13 (^) NOT B06.FR.08
-AND
-the Charging Station has no _attributeValue_ for
-the requested _attributeType_ of the
-componentvariable
-Charging Station SHALL return an empty string as _attributeValue_.
-Note: this can happen, for example, when the _attributeType_
-Target has not yet been set, even though it is supported.
-B06.FR.14 (^) B06.FR.01 AND
-a value for _instance_ is provided in the
-_component_ and/or _variable_ in GetVariableData
-Charging Station SHALL return the specified instance of that
-component and/or variable in GetVariableResult.
-B06.FR.15 (^) B06.FR.01 AND
-no value or an empty string is provided for
-_instance_ in the _component_ and/or _variable_ in
-GetVariableData AND
-a component and/or variable without an
-_instance_ does not exist
-Charging Station SHALL return the _attributeStatus_
-UnknownComponent or UnknownVariable in the
-GetVariableResult entry for GetVariableData.
-B06.FR.16 Charging Station receives a
-GetVariablesRequest with more
-GetVariableData elements than allowed by
-ItemsPerMessageGetVariables
-The Charging Station MAY respond with a
-CALLERROR(OccurenceConstraintViolation)
-B06.FR.17 Charging Station receives a
-GetVariablesRequest with a length of more
-bytes than allowed by
-BytesPerMessageGetVariables
-The Charging Station MAY respond with a
-CALLERROR(FormatViolation)
-Edition 3 FINAL, 2024-05-06 **B. Provisioning**
-
-
-==== B07 - Get Base Report.
-
-_Table 47. B07 - Get Base Report_
-
-
-No. Type Description
+=== B03 - Cold Boot Charging Station - Rejected
+
+.B03 - Cold Boot Charging Station - Rejected
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1    |Name           |Cold Boot Charging Station - Rejected
+|2    |ID             |B03
+|{nbsp} d|_Functional block_  |B. Provisioning
+|{nbsp} d|_Parent use case_ |<<cold_boot_charging_station,B01 - Cold Boot Charging Station>>
+|3    |Objective(s)   |To inform the Charging Station that its _not_ (yet) accepted by the CSMS: _Rejected_ status.
+|4    |Description    |This use case describes the behavior of the CSMS and a Charging Station, when the Charging Station is informed by the CSMS that it is not (yet) accepted using the _Rejected_ status.
+|{nbsp} |_Actors_     |Charging Station, CSMS
+|{nbsp} |_Scenario description_ 
+  |**1.** The Charging Station is powered up. +
+  **2.** The Charging Station sends <<boot_notification_request,BootNotificationRequest>> to the CSMS. +
+  **3** The CSMS responds with <<boot_notification_response,BootNotificationResponse>> with the status _Rejected_ to the Charging Station. +
+  **4.** The Charging Station will resend <<boot_notification_request,BootNotificationRequest>> after the number of seconds indicated by the interval field. (Interval from <<boot_notification_response,BootNotificationResponse>>).
+|5    |Prerequisite(s) 
+  |**1.** The CSMS requires to set the Charging Station in the _Rejected_ status. +
+  **2.** The Charging Station is powered down.
+|6    |Postcondition(s) |The Charging Station remains in the _Rejected_ status.
+|===
+
+.Sequence Diagram: Cold Boot Charging Station - Rejected
+image::part2/images/figure_12.svg[Sequence Diagram: Cold Boot Charging Station - Rejected]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling  |When there is no response or a time-out from the CSMS: The Charging Station resends <<boot_notification_request,BootNotificationRequest>> after a waiting interval. This waiting interval can be based on the interval from a previous <<boot_notification_response,BootNotificationResponse>> or chosen by the Charging Station itself. In the latter case, the Charging Station chooses this interval in a way that avoids flooding the CSMS with requests.
+|8   |Remark(s)       |During the status _Rejected_, the Charging Station may no longer be reachable from the CSMS. The Charging Station MAY e.g. close its communication channel or shut down its communication
+hardware. +
+  Additionally, the CSMS MAY close the communication channel, for instance to free up system resources.
+
+  It is advised not to accept any transactions until the BootNotification of the Charging Station has been accepted by the CSMS. See: <<transactions_before_being_accepted_by_a_csms,Transactions before being accepted by a CSMS>>
+  
+  When the CSMS returns with <<boot_notification_response,BootNotificationResponse>> with the status Accepted , <<cold_boot_charging_station,B01 - Cold Boot Charging Station>> applies.
+|===
+
+==== B03 - Cold Boot Charging Station - Rejected - Requirements
+
+.B03 - Requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
+
+|B03.FR.01  |If the Charging Station is configured to accept <<transactions_before_being_accepted_by_a_csms,Transactions before being accepted by a CSMS>>
+  |The Charging Station MAY allow locally authorized transactions.
+|B03.FR.02  |If the CSMS returns the status _Rejected_. For example when a Charging Station is blacklisted.
+  |The Charging Station SHALL NOT send any OCPP message to the CSMS until the retry interval has expired.
+|B03.FR.03  |When the CSMS has Rejected the <<boot_notification_request,BootNotificationRequest>> from the Charging Station.
+  |The CSMS SHALL NOT initiate any messages.
+|B03.FR.04  |B03.FR.03            |The Charging Station MAY close the connection until it needs to send the next <<boot_notification_request,BootNotificationRequest>>.
+|B03.FR.05  |If the interval in the <<boot_notification_response,BootNotificationResponse>> equals 0, and the status is other than _Accepted_
+  |The Charging Station SHALL choose a waiting interval on its own, in a way that avoids flooding the CSMS with requests.
+|B03.FR.06  |If the interval in the <<boot_notification_response,BootNotificationResponse>> is greater than 0, and the status is other than _Accepted_
+  |The Charging Station SHALL send a <<boot_notification_request,BootNotificationRequest>> after the set interval has passed.
+|B03.FR.07  |B03.FR.03 +
+  AND +
+  Charging Station sends a message that is not a <<boot_notification_request,BootNotificationRequest>>
+    |CSMS SHALL respond with RPC Framework: CALLERROR: SecurityError.
+|B03.FR.08  |B03.FR.03 +
+  AND +
+  CSMS sends a message that is not a response to a <<boot_notification_request,BootNotificationRequest>> from Charging Station
+    |Charging Station SHALL respond with RPC Framework: CALLERROR: SecurityError.
+|===
+
+<<<
+
+=== B04 - Offline Behavior Idle Charging Station
+
+.B04 - Offline Behavior Idle Charging Station
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Offline Behavior Idle Charging Station
+|2   |ID              |B04
+|{nbsp} d|_Functional block_ |B. Provisioning
+|3   |Objective(s)    |To attain stand-alone operation of the Charging Station.
+|4   |Description     |This use case describes that, in the event of unavailability of the communication, the Charging Station is designed to operate stand-alone. In that situation, the Charging Station is said to be _Offline_.
+|{nbsp} d|_Actors_    |Charging Station, CSMS
+|{nbsp} d|_Scenario description_ 
+  |**1.** The CSMS or communication is unavailable. +
+  **2.** The Charging Station operates stand-alone. +
+  **3.** The connection is restored. +
+  **4.** If the _Offline_ period exceeds the value of the <<offline_threshold,OfflineThreshold>> Configuration Variable: the Charging Station sends a <<status_notification_request,StatusNotificationRequest>> to the CSMS for each connector. Otherwise it only sends a <<status_notification_request,StatusNotificationRequest>> for Connectors with a status change during the offline period. +
+  **5.** The Charging Station sends <<heartbeat_request,HeartbeatRequest>> to the CSMS. +
+  **6.** The CSMS responds with <<heartbeat_response,HeartbeatResponse>>.
+|5   |Prerequisite(s)  |The BootNotification was previously accepted and the Charging Station is able to operate stand- alone.
+|6   |Postcondition(s) |When connection is restored after a period of _Offline_ behavior, the CSMS knows the Charging Stations' and EVSEs' state.
+|===
+
+.Sequence Diagram: Offline Behavior Idle Charging Station
+image::part2/images/figure_13.svg[Sequence Diagram: Offline Behavior Idle Charging Station]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7    |Error handling   |The offline situation is an non preferred mode of operation that needs to be handled by the Charging Station by trying to re-establish the connection.
+|8    |Remark(s)        |n/a
+|===
+
+==== B04 - Offline Behavior Idle Charging Station - Requirements
+
+.B04 - Requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
+
+|B04.FR.01  |After having been _Offline_ AND +
+  the _Offline_ period exceeds the value of the <<offline_threshold,OfflineThreshold>> Configuration Variable.
+    |The Charging Station SHALL send <<status_notification_request,StatusNotificationRequest>> to report the current status of all its Connectors.
+|B04.FR.02  |After having been _Offline_ AND the _Offline_ period does NOT exceed the value of the <<offline_threshold,OfflineThreshold>> Configuration Variable.
+  |The Charging Station SHALL send <<status_notification_request,StatusNotificationRequest>> to report the current status of only the Connectors for which a state change occurred.
+|===
+
+:sectnums:
+=== Configuring a Charging Station
+
+[cols="^.^1,10"%autowidth.stretch]
+|===
+s|NOTE |For managing the configuration of a Charging Station a basic understanding of Device Model concepts is essential. These concepts are explained in "OCPP 2.0.1: Part 1 - Architecture & Topology", chapter 4. 
+|===
+
+:sectnums!:
+=== B05 - Set Variables
+
+.B05 - Set Variables
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Set Variables
+|2   |ID              |B05
+|{nbsp} d|_Functional block_ |B. Provisioning
+|3   |Objective(s)    |To give the CSMS the ability to make changes to variables in the Charging Station.
+|4   |Description     |A Charging Station can have a lot of variables that can be configured/changed by the CSMS. A CSMS can use these variables to for example influence the behavior of a Charging Station. This use case describes how the CSMS requests a Charging Station to set the value of variables of a component. The CSMS can request to set more than one value per request.
+|{nbsp} d|_Actors_    |CSMS, Charging Station
+|{nbsp} d|_Scenario description_ 
+  |**1.** The CSO triggers the CSMS to request setting one or more variables in a Charging Station. +
+  **2.** The CSMS sends a <<set_variables_request,SetVariablesRequest>> to the Charging Station. +
+  **3.** The Charging Station responds with a <<set_variables_response,SetVariablesResponse>> indicating whether it was able to executed the change(s).
+|5   |Prerequisite(s) |n/a
+|6   |Postcondition(s)
+  |**Successful postconditions:** +
+  **1.** The change was executed _Successfully_. +
+  **Failure postconditions:** +
+  **1.** The variable is supported, but setting could not be changed, the Charging Station responds with the status _Rejected_. +
+  **2.** The variable is _not_ supported, the Charging Station responds with the status _UnknownVariable_.
+|===
+
+
+.Sequence Diagram: Set Variables
+image::part2/images/figure_14.svg[Sequence Diagram: Set Variables]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling |n/a
+|8   |Remark(s) 
+  |The attributeType Actual corresponds with the actual value of the Variable, whereas the attributeTypes Target, MinSet and MaxSet correspond to the target, minimum and maximum values that have been set for this variable.
+
+  This is best explained by an example: the cooling system is configured to operate with a fan speed between 1000 and 5000 rpm. These boundaries are represented by the MinSet and MaxSet attributes. The current fan speed is represented by the Actual attribute. The desired fan speed is represented by the Target attribute.
+|===
+
+==== B05 - Set Variables - Requirements
+
+.B05 - Requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
+
+|B05.FR.01  |When the Charging Station receives a <<set_variables_request,SetVariablesRequest>> with an X number of <<set_variable_data_type,SetVariableData>> elements
+  |The Charging Station SHALL respond with an <<set_variables_response,SetVariablesResponse>> with an equal (X) number of <<set_variable_result_type,SetVariableResult>> elements, one for every <<set_variable_data_type,SetVariableData>> element in the <<set_variables_request,SetVariablesRequest>>.
+|B05.FR.02  |B05.FR.01            |Every <<set_variable_result_type,SetVariableResult>> element in the <<set_variables_response,SetVariablesResponse>> SHALL contain the same component and variable combination as one of the <<set_variable_data_type,SetVariableData>> elements in the <<set_variables_request,SetVariablesRequest>>.
+|B05.FR.03  |B05.FR.02 +
+  AND +
+  If the <<set_variables_request,SetVariablesRequest>> contains an _attributeType_
+    |The corresponding <<set_variable_result_type,SetVariableResult>> element in the <<set_variables_response,SetVariablesResponse>> SHALL also contain the same _attributeType_
+|B05.FR.04  |When the Charging Station receives a <<set_variables_request,SetVariablesRequest>> with an unknown <<component_type,Component>> in the <<set_variable_data_type,SetVariableData>>
+  |The Charging Station SHALL set the _attributeStatus_ field in the corresponding <<set_variable_result_type,SetVariableResult>> to: <<set_variable_status_enum_type,UnknownComponent>>.
+|B05.FR.05  |When the Charging Station receives a <<set_variables_request,SetVariablesRequest>> with a Variable that is unknown for the given <<component_type,Component>> in the <<set_variable_data_type,SetVariableData>>
+  |The Charging Station SHALL set the _attributeStatus_ field in the corresponding <<set_variable_result_type,SetVariableResult>> to: <<set_variable_status_enum_type,UnknownVariable>>.
+|B05.FR.06  |When the Charging Station receives a <<set_variables_request,SetVariablesRequest>> with an <<attribute_enum_type,attributeType>> that is unknown for the given <<variable_type,Variable>> in the <<set_variable_data_type,SetVariableData>>
+  |The Charging Station SHALL set the _attributeStatus_ field in the corresponding <<set_variable_result_type,SetVariableResult>> to: <<set_variable_status_enum_type,NotSupportedAttributeType>>.
+|B05.FR.07  |When the Charging Station receives a <<set_variables_request,SetVariablesRequest>> with a _value_ that is incorrectly formatted for the given <<variable_type,Variable>> in the <<set_variable_data_type,SetVariableData>>
+  |The Charging Station SHALL set the _attributeStatus_ field in the corresponding <<set_variable_result_type,SetVariableResult>> to: <<set_variable_status_enum_type,Rejected>>. (More information can be provided in the optional _statusInfo_ element.)
+|B05.FR.08  |When the Charging Station receives a <<set_variables_request,SetVariablesRequest>> with a _value_ that is lower or higher than the range of the given <<variable_type,Variable>> in the <<set_variable_data_type,SetVariableData>>
+  |The Charging Station SHALL set the _attributeStatus_ field in the corresponding <<set_variable_result_type,SetVariableResult>> to: <<set_variable_status_enum_type,Rejected>>. (More information can be provided in the optional _statusInfo_ element.)
+|B05.FR.09  |NOT (B05.FR.04 to B05.FR.08) AND +
+  When the Charging Station receives a <<set_variables_request,SetVariablesRequest>> for a <<variable_type,Variable>> in the <<set_variable_data_type,SetVariableData>>, but is not able to set it
+    |The Charging Station SHALL set the _attributeStatus_ field in the corresponding <<set_variable_result_type,SetVariableResult>> to: <<set_variable_status_enum_type,Rejected>>. +
+    (This happens if the variable is _ReadOnly_ , but may also occur when setting the variable fails because of technical problems.)
+|B05.FR.10  |When the Charging Station was able to set the given _value_ from the <<set_variable_data_type,SetVariableData>>
+  |The Charging Station SHALL set the _attributeStatus_ field in the corresponding <<set_variable_result_type,SetVariableResult>> to: <<set_variable_status_enum_type,Accepted>>.
+|B05.FR.11  |{nbsp}
+  |The CSMS SHALL NOT send more <<set_variable_data_type,SetVariableData>> elements in a <<set_variables_request,SetVariablesRequest>> than reported by the Charging Station via <<items_per_message_set_variables,`ItemsPerMessageSetVariables`>>.
+|B05.FR.12  |When the Charging Station receives a <<set_variables_request,SetVariablesRequest>> without an _attributeType_.
+  |The corresponding <<set_variable_result_type,SetVariableResult>> element in the <<set_variables_response,SetVariablesResponse>> SHALL contain the _attributeType_ Actual.
+|B05.FR.13  |{nbsp}
+  |The CSMS SHALL NOT include multiple <<set_variable_data_type,SetVariableData>> elements, in a single <<set_variables_request,SetVariablesRequest>>, with the same <<component_type,Component>>, <<variable_type,Variable>> and _AttributeType_ combination. Note that an omitted _AttributeType_ counts as the value _Actual_.
+|===
+
+<<<
+
+=== B06 - Get Variables
+
+.B06 - Get Variables
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Get Variables
+|2   |ID              |B06
+|{nbsp} d|_Functional block_ |B. Provisioning
+|3   |Objective(s)    |To give the CSMS the ability to retrieve the value of an attribute for one or more Variables of one or more Components.
+|4   |Description     |This use case describes how the CSMS requests a Charging Station to send the value of an attribute for one or more variables of one or more components. It is not possible to get all attributes of all variables in one call.
+|{nbsp} d|_Actors_    |Charging Station, CSMS
+|{nbsp} d|_Scenario description_ 
+  |**1.** The CSO triggers the CSMS to request for a number of variables in a Charging Station. +
+  **2.** The CSMS request the Charging Station for a number of variables with <<get_variables_request,GetVariablesRequest>> with a list of requested variables. +
+  **3.** The Charging Station responds with a <<get_variabels_response,GetVariablesResponse>> with the requested variables. +
+  **4.** The CSMS sends an optional notification to the CSO.
+|5   |Prerequisite(s) |n/a
+|6   |Postcondition(s) 
+  |**Successful postcondition:** +
+  The Charging Station was able to send all the requested variables. +
+  **Failure postcondition:** +
+  The Charging Station was not able to send all requested variables.
+|===
+
+.Sequence Diagram: Get Variables
+image::part2/images/figure_15.svg[Sequence Diagram: Get Variables]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling |n/a
+|8   |Remark(s)      |n/a
+|===
+
+==== B06 - Get Variables - Requirements
+
+.B06 - Requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
+
+|B06.FR.01  |When the Charging Station receives a <<get_variables_request,GetVariablesRequest>> with an X number of <<get_variable_data_type,GetVariableData>> elements
+  |The Charging Station SHALL respond with an <<get_variabels_response,GetVariablesResponse>> with an equal (X) number of <<get_variable_result_type,GetVariableResult>> elements, one for every <<get_variable_data_type,GetVariableData>> element in the <<get_variables_request,GetVariablesRequest>>.
+|B06.FR.02  |B06.FR.01            |Every <<get_variable_result_type,GetVariableResult>> element in the <<get_variabels_response,GetVariablesResponse>> SHALL contain the same _component_ and _variable_ combination as one of the <<get_variable_data_type,GetVariableData>> elements in the <<get_variables_request,GetVariablesRequest>>.
+|B06.FR.03  |B06.FR.02 +
+  AND +
+  If the <<get_variables_request,GetVariablesRequest>> contains an _attributeType_
+    |The corresponding <<get_variable_result_type,GetVariableResult>> element in the <<get_variabels_response,GetVariablesResponse>> SHALL also contain the same _attributeType_
+|B06.FR.04  |B06.FR.01 |Every <<get_variable_result_type,GetVariableResult>> element in the <<get_variabels_response,GetVariablesResponse>> SHALL contain an _attributeValue_ with the value of an attribute from the requested _attributeType_ in the <<get_variables_request,GetVariablesRequest>>.
+|B06.FR.05  |{nbsp}
+  |The CSMS SHALL NOT send more GetVariableData elements in a <<get_variables_request,GetVariablesRequest>> than reported by the Charging Station via <<items_per_message_get_variables,`ItemsPerMessageGetVariables`>>.
+|B06.FR.06  |When the Charging Station receives a <<get_variables_request,GetVariablesRequest>> with an unknown <<component_type,Component>> in the <<get_variable_data_type,GetVariableData>>
+  |The Charging Station SHALL set the _attributeStatus_ field in the corresponding <<get_variable_result_type,GetVariableResult>> to: <<set_variable_status_enum_type,UnknownComponent>> AND SHALL omit the _attributeValue_.
+|B06.FR.07  |When the Charging Station receives a <<get_variables_request,GetVariablesRequest>> with a <<variable_type,Variable>> that is unknown for the given <<component_type,Component>> in the <<get_variable_data_type,GetVariableData>>
+  |The Charging Station SHALL set the _attributeStatus_ field in the corresponding <<get_variable_result_type,GetVariableResult>> to: UnknownVariable AND SHALL omit the _attributeValue_.
+|B06.FR.08  |When the Charging Station receives a <<get_variables_request,GetVariablesRequest>> with an <<attribute_enum_type,attributeType>> that is unknown for the given <<variable_type,Variable>> in the <<get_variable_data_type,GetVariableData>>
+  |The Charging Station SHALL set the _attributeStatus_ field in the corresponding <<get_variable_result_type,GetVariableResult>> to: <<set_variable_status_enum_type,NotSupportedAttributeType>> AND SHALL omit the _attributeValue_.
+|B06.FR.09  |When the Charging Station receives a <<get_variables_request,GetVariablesRequest>> for a <<variable_type,Variable>> in the <<get_variable_data_type,GetVariableData>> that is _WriteOnly_
+  |The Charging Station SHALL set the _attributeStatus_ field in the corresponding <<get_variable_result_type,GetVariableResult>> to: <<set_variable_status_enum_type,Rejected>>.
+|B06.FR.10  |When the Charging Station was able to get the _value_ requested from a <<get_variables_request,GetVariablesRequest>>
+  |The Charging Station SHALL set the _attributeStatus_ field in the corresponding <<get_variable_result_type,GetVariableResult>> to: <<set_variable_status_enum_type,Accepted>> and set the _attributeValue_ to the found value.
+|B06.FR.11  |When the Charging Station receives a <<get_variables_request,GetVariablesRequest>> without an _attributeType_.
+  |The corresponding <<get_variable_result_type,GetVariableResult>> element in the <<get_variabels_response,GetVariablesResponse>> SHALL contain the _attributeType_ Actual.
+|B06.FR.13  |NOT B06.FR.08 +
+  AND +
+  the Charging Station has no _attributeValue_ for the requested _attributeType_ of the componentvariable
+    |Charging Station SHALL return an empty string as _attributeValue_. +
+    Note: this can happen, for example, when the _attributeType_ `Target` has not yet been set, even though it is supported.
+|B06.FR.14  |B06.FR.01 AND +
+  a value for _instance_ is provided in the _component_ and/or _variable_ in <<get_variable_data_type,GetVariableData>>
+    |Charging Station SHALL return the specified instance of that component and/or variable in <<get_variable_result_type,GetVariableResult>>.
+|B06.FR.15  |B06.FR.01 AND +
+  no value or an empty string is provided for _instance_ in the _component_ and/or _variable_ in <<get_variable_data_type,GetVariableData>> AND +
+  a component and/or variable without an _instance_ does not exist
+    |Charging Station SHALL return the _attributeStatus_ `UnknownComponent` or `UnknownVariable` in the <<get_variable_result_type,GetVariableResult>> entry for <<get_variable_data_type,GetVariableData>>.
+|B06.FR.16  |Charging Station receives a <<get_variables_request,GetVariablesRequest>> with more <<get_variable_data_type,GetVariableData>> elements than allowed by <<items_per_message_get_variables,`ItemsPerMessageGetVariables`>>
+  |The Charging Station MAY respond with a CALLERROR(OccurenceConstraintViolation)
+|B06.FR.17  |Charging Station receives a <<get_variables_request,GetVariablesRequest>> with a length of more bytes than allowed by <<bytes_per_message_get_variables,`BytesPerMessageGetVariables`>>
+  |The Charging Station MAY respond with a CALLERROR(FormatViolation)
+|===
+
+<<<
+
+=== B07 - Get Base Report
+
+.B07 - Get Base Report
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+// TODO:
 1 Name Get Base Report
 2 ID B07
 Functional block B. Provisioning
@@ -761,6 +524,8 @@ messages.
 The Charging Station was able to send the requested report.
 **Failure postcondition:**
 The Charging Station was _not_ able to send the requested report.
+|===
+
 CSMS Charging Station
 Something triggers the CSMS to request a report from a Charging Station.
 GetBaseReportRequest(requestId, reportBase)
@@ -769,9 +534,12 @@ loop [for each report part]
 NotifyReportRequest(generatedAt, requestId, tbc, reports,...)
 NotifyReportResponse()
 _Figure 16. Sequence Diagram: Get Base Report_
+
 **7 Error handling** n/a
 **8 Remark(s)** n/a
-**B07 - Get Base Report - Requirements**
+
+==== B07 - Get Base Report - Requirements
+
 _Table 48. B07 - Requirements_
 **ID Precondition Requirement definition Note**
 B07.FR.01 When the Charging

@@ -178,7 +178,8 @@ variableAttributes mutability ReadWrite
 variableCharacteristics dataType integer
 Description Specifies the number of connection attempts the Charging Station executes before switching to a different profile.
 
-**2.1.8.** OfflineThreshold
+[[offline_threshold]]
+==== `OfflineThreshold`
 
 
 Required yes
@@ -295,7 +296,8 @@ variableCharacteristics dataType integer
 Description Maximum number of ComponentVariable entries that can be sent in one getReportRequest or
 GetMonitoringReportRequest message.
 
-**2.1.17.** ItemsPerMessageGetVariables
+[[items_per_message_get_variables]]
+==== `ItemsPerMessageGetVariables`
 
 
 Required yes
@@ -317,7 +319,8 @@ variableAttributes mutability ReadOnly
 variableCharacteristics dataType integer
 Description Message Size (in bytes) - puts constraint on getReportRequest or GetMonitoringReportRequest message size.
 
-**2.1.19.** BytesPerMessageGetVariables
+[[bytes_per_message_get_variables]]
+==== `BytesPerMessageGetVariables`
 
 
 Required yes
@@ -357,7 +360,8 @@ maxLimit 2500
 Description This Configuration Variable can be used to limit the following fields: GetVariableResult.attributeValue,
 VariableAttribute.value and EventData.actualValue. The max size of these values will always remain equal.
 
-**2.1.22.** ItemsPerMessageSetVariables
+[[items_per_message_set_variables]]
+==== `ItemsPerMessageSetVariables`
 
 
 Required yes
