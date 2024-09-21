@@ -1,0 +1,80 @@
+@startuml figure_21b
+!include style.puml
+
+actor "CSO" as CSO
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+alt Reset Charging Station
+
+  note left of ChargingStation
+    Transactions active on one or more EVSEs
+  end note
+
+  CSO -> CSMS: reset CS
+  activate CSMS
+
+  CSMS -> ChargingStation: ResetRequest(Immediate)
+  activate ChargingStation
+
+  ChargingStation --> CSMS: ResetResponse(Accepted)
+  deactivate CSMS
+
+  note over ChargingStation
+    Terminate all transactions,
+    regardless of TxStopPoint.
+  end note
+
+  loop for all stopped transactions
+      ChargingStation -> CSMS: TransactionEventRequest(eventType  Ended, stopReason  ImmediateReset,...)
+      activate CSMS
+
+      CSMS --> ChargingStation: TransactionEventResponse(...)
+      deactivate CSMS
+      deactivate ChargingStation
+  end
+
+  ChargingStation -> ChargingStation: reboot Charging Station
+  activate ChargingStation
+
+  ChargingStation ->o]: Continue B01 - Cold Boot Charging Station
+  deactivate ChargingStation
+else Reset EVSE
+  note left of ChargingStation
+    Transaction active on EVSE
+  end note 
+
+  CSO -> CSMS: reset CS
+  activate CSMS
+
+  CSMS -> ChargingStation: ResetRequest(Immediate, evseId)
+  activate ChargingStation
+
+  ChargingStation --> CSMS: ResetResponse(Scheduled)
+  deactivate CSMS
+
+  note over ChargingStation
+    Terminate transaction,
+    regardless of TxStopPoint.
+  end note
+
+  ChargingStation -> CSMS: TransactionEventRequest(eventType  Ended, stopReason  ImmediateReset,...)
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse(...)
+  deactivate CSMS
+  deactivate ChargingStation
+
+  ChargingStation -> ChargingStation: reset EVSE
+  activate ChargingStation
+
+  loop for all connectors of EVSE
+    ChargingStation -> CSMS: StatusNotificationRequest(Available, evseId, connectorId)
+    activate CSMS
+
+    CSMS --> ChargingStation: StatusNotificationResponse()
+    deactivate ChargingStation
+    deactivate CSMS
+  end
+end
+@enduml

@@ -166,9 +166,10 @@ status CertificateSignedStatusEnumType 1..1 Required. Returns whether certificat
 accepted, otherwise rejected.
 statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
-==== 1.5. ChangeAvailability
+==== ChangeAvailability
 
-**1.5.1. ChangeAvailabilityRequest**
+[[change_availability_request]]
+==== ChangeAvailabilityRequest
 
 This contains the field definition of the ChangeAvailabilityRequest PDU sent by the CSMS to the Charging Station.
 
@@ -864,9 +865,10 @@ pe
 Station was able to accept the request.
 statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
-==== 1.27. GetTransactionStatus
+=== GetTransactionStatus
 
-**1.27.1. GetTransactionStatusRequest**
+[[get_transaction_status_request]]
+==== GetTransactionStatusRequest
 
 With this message, the CSMS can ask the Charging Station whether it has transaction-related messages waiting to be delivered to
 the CSMS. When a transactionId is provided, only messages for a specific transaction are asked for.
@@ -881,7 +883,8 @@ Field Name Field Type Card. Description
 transactionId identifierString[0..36] 0..1 Optional. The Id of the transaction for which the status is
 requested.
 
-**1.27.2. GetTransactionStatusResponse**
+[[get_transaction_status_response]]
+==== GetTransactionStatusResponse
 
 The response to a GetTransactionStatusRequest, sent by the Charging Station to the CSMS.
 
@@ -1731,25 +1734,23 @@ status GenericStatusEnumType 1..1 Required. Indicates whether the Charging Stati
 able to accept the request.
 statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
-=== 1.55. SetNetworkProfile
+=== SetNetworkProfile
 
-**1.55.1. SetNetworkProfileRequest**
+[[set_network_profile_request]]
+==== SetNetworkProfileRequest
 
 With this message the CSMS gains the ability to configure the connection data (e.g. CSMS URL, OCPP version, APN, etc) on a
 Charging Station.
 
 _Class_
 
-Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
-
-
-
 Field Name Field Type Card. Description
 configurationSlot integer 1..1 Required. Slot in which the configuration should be
 stored.
 connectionData NetworkConnectionProfileType 1..1 Required. Connection details.
 
-**1.55.2. SetNetworkProfileResponse**
+[[set_network_profile_response]]
+==== SetNetworkProfileResponse
 
 This contains the field definition of the SetNetworkProfileResponse PDU sent by the Charging Station to the CSMS in response to a
 SetNetworkProfileRequest.
@@ -5200,7 +5201,8 @@ The AttributeType is not supported.
 
 RebootRequired A reboot is required.
 
-==== 3.80. TransactionEventEnumType
+[[transaction_event_enum_type]]
+=== TransactionEventEnumType
 
 _Enumeration_
 

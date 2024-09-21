@@ -1,0 +1,75 @@
+@startuml figure_20
+!include style.puml
+
+actor "CSO" as CSO
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+note left of ChargingStation
+  No transaction is active
+end note
+
+alt Reset Charging Station
+  CSO -> CSMS: reset CS
+  activate CSMS
+
+  CSMS -> ChargingStation: ResetRequest(OnIdle | Immediate)
+  activate ChargingStation
+
+  ChargingStation --> CSMS: ResetResponse(status)
+  deactivate CSMS
+
+  opt Report all connectors as Unavailable during reset
+    loop for all connectors of all EVSEs
+      ChargingStation -> CSMS: StatusNotificationRequest(Unavailable, ...)
+      activate CSMS
+
+      CSMS --> ChargingStation: StatusNotificationResponse()
+      deactivate CSMS
+    end
+  end
+
+  ChargingStation -> ChargingStation: reboot Charging Station
+
+  ChargingStation ->o]:Continue B01 - Cold Boot Charging Station
+  deactivate ChargingStation
+else Reset EVSE
+  CSO -> CSMS: reset EVSE
+  activate CSMS
+
+  CSMS -> ChargingStation: ResetRequest(OnIdle | Immediate, evseId)
+  activate ChargingStation
+
+  ChargingStation --> CSMS: ResetResponse(status)
+  deactivate CSMS
+
+  opt Report connectors of EVSE as Unavailable during reset
+    loop for all connectors of EVSE
+      CSMS -> ChargingStation: StatusNotificationRequest(Unavailable, evseId, connectorId)
+      activate CSMS
+
+      ChargingStation --> CSMS: StatusNotificationResponse()
+      deactivate CSMS
+    end
+  end
+
+  note over ChargingStation
+    reset EVSE without reboot
+    of Charging Station
+  end note
+
+  ChargingStation -> ChargingStation: reset EVSE
+
+  opt Report connectors of EVSE as Available
+    loop for all connectors of EVSE
+      ChargingStation -> CSMS: StatusNotificationRequest(Unavailable, evseId, connectorId)
+      activate CSMS
+
+      CSMS --> ChargingStation: StatusNotificationResponse()
+      deactivate CSMS
+    end
+  end
+
+end
+
+@enduml

@@ -1595,8 +1595,8 @@ The Charging Station SHOULD keep the Charging
 Cable locked until the owner presents his identifier.
 Edition 3 FINAL, 2024-05-06 **E. Transactions**
 
-
-==== E06 - Stop Transaction options
+[[stop_transaction_options]]
+=== E06 - Stop Transaction options
 
 _Table 106. E06 - Stop Transaction_
 

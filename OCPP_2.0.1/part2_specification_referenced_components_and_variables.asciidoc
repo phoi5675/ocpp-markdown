@@ -166,10 +166,9 @@ HeartbeatRequest.
 **Description** A comma separated ordered list of the priority of the possible Network Connection Profiles. The list of possible
 available profile slots for the network configuration profiles SHALL be reported, via the valueList characteristic of
 this Variable.
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
-
-**2.1.7.** NetworkProfileConnectionAttempts
+[[network_profile_connection_attempts]]
+==== NetworkProfileConnectionAttempts
 
 
 Required yes
@@ -1861,9 +1860,10 @@ variableCharacteristics dataType MemberList
 Description List of the priorities supported by this Charging Station. Possible values: MessagePriority.
 
 [[charging_infrastructure_related]]
-== Charging Infrastructure related
+=== Charging Infrastructure related
 
-**2.13.1.** Available
+[[available]]
+==== Available
 
 
 Required yes
@@ -1897,7 +1897,9 @@ EVSE
 availability state independent of the EVSE, then this variable may be used to report the Connector’s availability
 state. As such it replicates ConnectorStatus values reported in StatusNotification messages.
 An EVSE component is addressed on its own tier. So, EVSE #1 is addressed as component EVSE on tier " _evse_  1.
-**2.13.3.** AllowReset
+
+[[allow_reset]]
+==== AllowReset
 **Required** no
 **Component componentName** EVSE
 **evse** *

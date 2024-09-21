@@ -689,647 +689,294 @@ image::part2/images/figure_17.svg[Sequence Diagram: Get Custom Report]
 
 <<<
 
+[[setting_a_new_networkconnectionprofile]]
 === B09 - Setting a new NetworkConnectionProfile
-// TODO:
-_Table 51. B09 - Setting a new NetworkConnectionProfile_
 
+.B09 - Setting a new NetworkConnectionProfile
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
-No. Type Description
-1 Name Setting a new NetworkConnectionProfile.
-2 ID B09
-Functional block B. Provisioning
-3 Objectives To enable the CSMS to update the connection details on the Charging Station.
-4 Description The CSMS updates the connection details on the Charging Station. For instance in preparation of
-a migration to a new CSMS. After completion of this use case, the Charging Station to CSMS
-connection data has been updated.
-Actors Charging Station, CSMS
-Scenario description A Charging Station supports at least two network configuration slots, that are identified by a
-number. The available slot numbers are reported by the Charging Station in the valuesList of
-variable NetworkConfigurationPriority.
-For example: valuesList  "0,1,2" in the base report tells CSMS that three configuration slots,
-numbered 0, 1 and 2, are available (but not necessarily set).
-The configuration slot number that is used for the active connection is reported by variable
-OCPPCommCtrlr.ActiveNetworkProfile.
+|1   |Name            |Setting a new NetworkConnectionProfile.
+|2   |ID              |B09
+|{nbsp} d|_Functional block_ |B. Provisioning
+|3   |Objectives      |To enable the CSMS to update the connection details on the Charging Station.
+|4   |Description     |The CSMS updates the connection details on the Charging Station. For instance in preparation of a migration to a new CSMS. After completion of this use case, the Charging Station to CSMS connection data has been updated.
+|{nbsp} d|_Actors_    |Charging Station, CSMS
+|{nbsp} d|_Scenario description_ |A Charging Station supports at least two network configuration slots, that are identified by a number. The available slot numbers are reported by the Charging Station in the _valuesList_ of variable <<network_configuration_priority,NetworkConfigurationPriority>>. +
+  For example: valuesList  "0,1,2" in the base report tells CSMS that three configuration slots, numbered 0, 1 and 2, are available (but not necessarily set). +
+  The configuration slot number that is used for the active connection is reported by variable OCPPCommCtrlr.ActiveNetworkProfile.
 
-**1.** The CSMS sends a SetNetworkProfileRequest PDU containing an updated connection profile
-and a _configurationSlot_ out of the _valuesList_ of NetworkConfigurationPriority.
-**2.** The Charging Station receives the PDU, validates the content and stores the new data
-**3.** The Charging Station responds by sending a SetNetworkProfileResponse PDU, with status
-_Accepted_
+  **1.** The CSMS sends a <<set_network_profile_request,SetNetworkProfileRequest>> PDU containing an updated connection profile and a _configurationSlot_ out of the _valuesList_ of <<network_configuration_priority,NetworkConfigurationPriority>>. +
+  **2.** The Charging Station receives the PDU, validates the content and stores the new data +
+  **3.** The Charging Station responds by sending a <<set_network_profile_response,SetNetworkProfileResponse>> PDU, with status _Accepted_
+|5   |Prerequisites    |The data supplied by the CSMS matches the Charging Station’s capabilities
+|6   |Postcondition(s) |The Charging Station was able to store the new connection data
+|===
 
-**5 Prerequisites** (^) The data supplied by the CSMS matches the Charging Station’s capabilities
-**6 Postcondition(s)** The Charging Station was able to store the new connection data
-CSMS Charging Station
-SetNetworkProfileRequest(configurationSlot, connectionData)
-Set new credentials()
-SetNetworkProfileResponse(status: Accepted)
-_Figure 18. Sequence Diagram: Set Network Connection Profile_
-**8 Error Handling** Activation of a new NetworkConnectionProfile is described in B10 - Migrate to new CSMS. Errors
-during this use-case are not destructive to the current data connection. Error handling is further
-described in B10 - Migrate to new CSMS
-**9 Remarks** Even when changes are made to the currenctly active NetworkConnectionProfile, these will not
-activated until a reboot has occured, as described in B10 - Migrate to new CSMS.
-**B09 - Setting a new NetworkConnectionProfile - Requirements**
-_Table 52. B09 - Requirements_
-**ID Precondition Requirement definition**
-B09.FR.01 On receipt of the SetNetworkProfileRequest The Charging Station SHALL validate the content, store the new
-data and if successful, respond by sending a
-SetNetworkProfileResponse message, with status _Accepted_
-B09.FR.02 On receipt of the SetNetworkProfileRequest The Charging Station SHALL validate the content. If the content
-is invalid, the Charging Station SHALL respond by sending a
-SetNetworkProfileResponse message, with status _Rejected_
-B09.FR.03 If setting the new networkprofile fails. The Charging Station SHALL respond by sending a
-SetNetworkProfileResponse message, with status _Failed_
-Edition 3 FINAL, 2024-05-06 **B. Provisioning**
+.Sequence Diagram: Set Network Connection Profile
+image::part2/images/figure_18.svg[Sequence Diagram: Set Network Connection Profile]
 
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|8   |Error Handling |Activation of a new NetworkConnectionProfile is described in <<migrate_to_new_csms,B10 - Migrate to new CSMS>>. Errors during this use-case are not destructive to the current data connection. Error handling is further described in <<migrate_to_new_csms,B10 - Migrate to new CSMS>>
+|9   |Remarks        |Even when changes are made to the currenctly active NetworkConnectionProfile, these will not activated until a reboot has occured, as described in <<migrate_to_new_csms,B10 - Migrate to new CSMS>>.
+|===
 
+==== B09 - Setting a new NetworkConnectionProfile - Requirements
 
-ID Precondition Requirement definition
-B09.FR.04 On receipt of the SetNetworkProfileRequest
-AND
-the NetworkConnectionProfile contains a lower
-securityProfile than stored at the configuration
-variable SecurityProfile
+.B09 - Requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
 
+|B09.FR.01  |On receipt of the <<set_network_profile_request,SetNetworkProfileRequest>> |The Charging Station SHALL validate the content, store the new data and if successful, respond by sending a <<set_network_profile_response,SetNetworkProfileResponse>> message, with status _Accepted_
+|B09.FR.02  |On receipt of the <<set_network_profile_request,SetNetworkProfileRequest>> |The Charging Station SHALL validate the content. If the content is invalid, the Charging Station SHALL respond by sending a <<set_network_profile_response,SetNetworkProfileResponse>> message, with status _Rejected_
+|B09.FR.03  |If setting the new networkprofile fails. |The Charging Station SHALL respond by sending a <<set_network_profile_response,SetNetworkProfileResponse>> message, with status _Failed_
+|B09.FR.04  |On receipt of the <<set_network_profile_request,SetNetworkProfileRequest>> AND +
+  the <<network_connection_profile_type,NetworkConnectionProfile>> contains a lower securityProfile than stored at the configuration variable <<security_profile,SecurityProfile>>
+    |The Charging Station SHALL respond by sending a <<set_network_profile_response,SetNetworkProfileResponse>> message, with status _Rejected_
+|B09.FR.05  |When the value of _configurationSlot_ in <<set_network_profile_request,SetNetworkProfileRequest>> does not match an entry in valuesList of <<network_configuration_priority,NetworkConfigurationPriority>>
+  |The Charging Station SHALL respond by sending a <<set_network_profile_response,SetNetworkProfileResponse>> message with status _Rejected_
+|B09.FR.06  |{nbsp}               |A Charging Station SHALL support at least two configuration slots for network connection profiles.
+|===
 
-The Charging Station SHALL respond by sending a
-SetNetworkProfileResponse message, with status Rejected
+<<<
 
-
-B09.FR.05 When the value of configurationSlot in
-SetNetworkProfileRequest does not match an
-entry in valuesList of
-NetworkConfigurationPriority
-
-
-The Charging Station SHALL respond by sending a
-SetNetworkProfileResponse message with status Rejected
-
-
-B09.FR.06 A Charging Station SHALL support at least two configuration
-slots for network connection profiles.
-
-Edition 3 FINAL, 2024-05-06 **B. Provisioning**
-
-
+[[migrate_to_new_csms]]
 ==== B10 - Migrate to new CSMS
 
-_Table 53. B10 - Migrate to new CSMS_
-
-
-No. Type Description
-1 Name Migrate to new CSMS, using a different NetworkConnectionProfile.
-2 ID B10
-Functional block B. Provisioning
-3 Objectives After completion of this use case, the Charging Station connects to a new CSMS.
-4 Description This use case describes how a Charging Station can be instructed to connect to a new CSMS, by
-changing the order of NetworkConnectionProfiles in NetworkConfigurationPriority.
-Actors Charging Station, CSMS 1, CSMS 2
-Scenario description A Charging Station supports at least two network configuration slots, that are identified by a
-number. The available slot numbers are reported by the Charging Station in the valuesList of
-variable NetworkConfigurationPriority.
-For example: valuesList  "0,1,2" in the base report tells CSMS that three configuration slots,
-numbered 0, 1 and 2, are available (but not necessarily set).
-The value of NetworkConfigurationPriority reports the order in which network configurations are
-tried to make a connection.
-For example: value  "1,0" means that Charging Station will first try configuration slot 1 and if that
-fails after the number of attempts configured in NetworkProfileConnectionAttempts, it will try to
-connect with configuration slot 0.
-
-**1.** CSMS 1 sets a new value for the NetworkConfigurationPriority Configuration Variable
-via SetVariablesRequest, such that the NetworkConnectionProfile for CSMS 2 becomes first in the
-list and the existing connection to CSMS 1 becomes second in the list.
-**2.** The Charging Station responds with a SetVariablesResponse with status _Accepted_
-**3.** CSMS 1 instructs the Charging Station to perform a Reset OnIdle.
-**4.** The Charging Station reboots and connects via the new primary NetworkConnectionProfile to
-CSMS 2.
-**5 Prerequisites** Use case B09 - Setting a new NetworkConnectionProfile was executed successfully prior to this
-use case
-The data supplied by the CSMS matches the Charging Station’s capabilities
-**6 Postcondition(s)** The Charging Station is connected via a different NetworkConnectionProfile.
-
-
-Operator CSMS 1 CSMS 2 Charging Station
-
-
-Change Network Config
-
-
-SetVariablesRequest(NetworkConfigurationPriority)
-
-
-SetVariablesResponse(status: RebootRequired)
-
-
-ResetRequest(OnIdle)
-
-
-ResetResponse(Accepted)
-
-
-Reboot
-
-
-BootNotificationRequest(...)
-
-
-BootNotificationResponse(...)
-
-_Figure 19. Sequence Diagram: Migrate to new ConnectionProfile_
-
-
-8 Error Handling n/a
-
-Edition 3 FINAL, 2024-05-06 **B. Provisioning**
-
-
-
-9 Remarks As in line with B12 - Reset - With Ongoing Transaction, when there are ongoing transactions, the
-Charging Station waits for these to be finished before performing the Reset and then connecting
-to a different CSMS.
-When an operator wants to perform an immediate switch, he should stop the transactions first.
-
-**B10 - Migrate to new NetworkConnectionProfile - Requirements**
-
-_Table 54. B10 - Requirements_
-
-
-ID Precondition Requirement definition Note
-B10.FR.01 On receipt of a SetVariablesRequest,
-containing Configuration Variable
-NetworkConfigurationPriority
-AND the NetworkProfile slots in the
-message all contain valid
-configurations
-
-
-The Charging Station SHALL send
-SetVariablesResponse with status Accepted , or
-RebootRequired.
-
-
-B10.FR.02 On receipt of a SetVariablesRequest,
-containing Configuration Variable
-NetworkConfigurationPriority
-AND any of the NetworkProfile slots in
-the message does not contain a valid
-configuration
-
-
-The Charging Station SHALL send
-SetVariablesResponse with status Rejected.
-
-
-The optional element
-statusInfo can be used to
-provide more
-information.
-
-B10.FR.03 (^) B10.FR.04 AND
-When connecting fails
-The Charging Station SHALL make the number of
-attempts as configured in
-NetworkProfileConnectionAttempts per
-entry of NetworkConfigurationPriority.
-B10.FR.04 (^) B10.FR.01 OR B09.FR.01 AND
-After a reboot
-The Charging Station SHALL begin connecting to
-the first entry of
-NetworkConfigurationPriority
-B10.FR.05 It is RECOMMENDED to set the Charging Station to
-Inoperative (via ChangeAvailabilityRequest) to
-ensure that no new transactions can be started and
-wait until the transaction message queue in the
-Charging Station is empty before sending the
-ResetRequest. Otherwise the Charging Station
-might send transaction related messages to the
-new CSMS that has not received the start of the
-Transaction, and the old system will miss the ended
-messages. To determine if there are still
-transaction for an ongoing transaction in the queue,
-the getTransactionStatusRequest message can be
-used.
-B10.FR.06 The Charging Station SHALL disconnect from the
-old CSMS, before trying to connect to the new
-CSMS.
-B10.FR.07 (^) B10.FR.03 AND
-All
-NetworkProfileConnectionAtte
-mpts for every entry of
-NetworkConfigurationPriority
-failed.
-The Charging Station SHOULD fallback and start
-'reconnecting' to the NetworkConnectionProfile for
-which the last successful connection was made.
-'reconnecting' in this
-requirement, refers to the
-reconnection mechanism
-described at section 5.3.
-Reconnecting from "Part
-4 - JSON over
-WebSockets
-implementation guide".
-
-==== 2.3. Resetting a Charging Station
-
-==== B11 - Reset - Without Ongoing Transaction
-
-_Table 55. B11 - Reset - Without Ongoing Transaction_
-
-
-No. Type Description
-1 Name Reset - Without Ongoing Transaction
-
-Edition 3 FINAL, 2024-05-06 **B. Provisioning**
-
-
-
-No. Type Description
-2 ID B11
-Functional block B. Provisioning
-3 Objective(s) To enable the CSMS to request a Charging Station to reset itself or an EVSE, while there is no
-ongoing transaction.
-4 Description This use case covers how the CSMS can request the Charging Station to reset itself or an EVSE by
-sending ResetRequest. (If ResetRequest contains an optional paramater evseId , then only a reset
-of the specific EVSE is requested.) This could for example be necessary if the Charging Station is
-not functioning correctly.
-Actors Charging Station, CSMS, CSO
-
-_Scenario description_ (^) **1.** The CSO requests the CSMS to reset the Charging Station or EVSE.
-
-**2.** The CSMS sends ResetRequest requesting the Charging Station to reset itself or EVSE.
-**3.** The CSMS requests for an OnIdle or Immediate reset.
-**4.** The Charging Station responds with ResetResponse, indicating whether the Charging Station is
-able to reset itself or EVSE.
-**5.** The CSMS sends an optional notification to the CSO.
-**6.** Only if no evseId was supplied, then after the reset, the Charging Station will proceed as in use
-case B01.
-_Alternative scenario(s)_ B12 - Reset With Ongoing Transaction
-**5 Prerequisite(s)** No transaction is ongoing.
-
-**6 Postcondition(s)** (^) **Successful postcondition:**
-The Charging Station was able to reset itself or EVSE.
-**Failure postcondition:**
-The Charging Station _not_ was able to reset itself or EVSE.
-Edition 3 FINAL, 2024-05-06 **B. Provisioning**
-
-
-
-CSO
-
-
-CSMS Charging Station
-
-
-No transaction is active
-
-
-alt [Reset Charging Station]
-reset CS
-ResetRequest(OnIdle | Immediate)
-ResetResponse(status)
-
-
-opt [Report all connectors as Unavailable during reset]
-loop [for all connectors of all EVSEs]
-StatusNotificationRequest(Unavailable, ...)
-StatusNotificationResponse()
-
-
-reboot Charging Station
-
-
-Continue B01 - Cold Boot Charging Station
-[Reset EVSE]
-reset EVSE
-ResetRequest(OnIdle | Immediate, evseId)
-ResetResponse(status)
-
-
-opt [Report connectors of EVSE as Unavailable during reset]
-loop [for all connectors of EVSE]
-StatusNotificationRequest(Unavailable, evseId, connectorId)
-StatusNotificationResponse()
-
-
-reset EVSE without reboot
-of Charging Station
-
-
-reset EVSE
-
-
-opt [Report connectors of EVSE as Available]
-loop [for all connectors of EVSE]
-StatusNotificationRequest(Unavailable, evseId, connectorId)
-StatusNotificationResponse()
-
-_Figure 20. Sequence Diagram: Reset Without Transaction_
-
-
-7 Error handling n.a
-
-**8 Remark(s)** (^) Persistent states: for example, EVSE set to _Unavailable_ SHALL persist.
-The Charging Station responds with ResetResponse.
-**B11 - Reset - Without Ongoing Transaction - Requirements**
-_Table 56. B11 - Requirements_
-**ID Precondition Requirement definition**
-B11.FR.01 When the Charging Station receives a
-ResetRequest.
-The Charging Station SHALL respond with a ResetResponse.
-B11.FR.02 If the status was set to _Inoperative_ by the CSMS. After a reboot of the Charging Station, the EVSEs SHALL return
-to the state _Unavailable_ as prior to the reboot.
-B11.FR.03 (^) B11.FR.01
-AND no _evseId_ parameter is supplied
-AND
-ResetResponse was _Accepted_.
-The Charging Station MAY send a
-StatusNotification(Unavailable) and SHALL start a reboot.
-Edition 3 FINAL, 2024-05-06 **B. Provisioning**
-
-
-
-ID Precondition Requirement definition
-B11.FR.04 B11.FR.03 The Charging Station SHALL proceed as described in use case
-B01 - Cold Boot Charging Station.
-B11.FR.05 If the status of an EVSE was Reserved. After a reboot of the Charging Station or resetting of EVSE, the
-EVSE(s) SHALL return to the state Reserved.
-
-B11.FR.06 (^) B11.FR.01
-AND
-For example there is a firmware update ongoing
-that cannot be interrupted.
-The Charging Station SHALL respond with a status _Rejected_.
-B11.FR.07 (^) B11.FR.01
-AND
-Charging Station cannot perform the reset now,
-but has scheduled the reset for later
-The Charging Station SHALL respond with a status _Scheduled_.
-B11.FR.08 (^) B11.FR.01
-AND an _evseId_ parameter is supplied
-AND
-ResetResponse was _Accepted_.
-The Charging Station MAY send a
-StatusNotification(Unavailable) for the EVSE and SHALL start a
-reset of EVSE that is referred to by _evseId_ parameter.
-B11.FR.09 (^) B11.FR.01
-AND an _evseId_ parameter is supplied
-AND
-Charging Station does not support resetting an
-individual EVSE
-The Charging Station SHALL return a ResetResponse _Rejected_
-B11.FR.10 When the Charging Station supports resetting of
-an individual EVSE
-The Charging Station SHOULD set the device model variable
-AllowReset to true for the EVSE.
-Edition 3 FINAL, 2024-05-06 **B. Provisioning**
-
-
-==== B12 - Reset - With Ongoing Transaction.
-
-_Table 57. B12 - Reset - With Ongoing Transaction_
-
-
-No. Type Description
-1 Name Reset - With Ongoing Transaction
-2 ID B12
-Functional block B. Provisioning
-3 Objective(s) To enable the CSMS to request a Charging Station to reset itself or EVSE, while there is an
-ongoing transaction.
-4 Description This use case covers how the CSMS can request the Charging Station to reset itself or an EVSE by
-sending ResetRequest. (If ResetRequest contains an optional paramater evseId , then only a reset
-of the specific EVSE is requested.) This could for example be necessary if the Charging Station is
-not functioning correctly. The CSMS has the possibility to let the Charging Station end all
-transactions itself and reboot or wait until all ongoing transactions are ended normally (by an EV
-user) and then reboot.
-Actors Charging Station, CSMS, CSO
-
-_Scenario description_ (^) **1.** The CSO requests the CSMS to reset the Charging Station or EVSE.
-
-**2.** The CSMS sends ResetRequest requesting the Charging Station to reset itself or EVSE.
-**3a.** On receipt of an OnIdle reset, the Charging Station responds with ResetResponse(Scheduled),
-indicating the Charging Station will try to reset itself or EVSE after all ongoing transactions have
-ended. The Charging Station continues charging and sets all EVSEs (or only the one provided in
-the request, if _evseId_ was supplied) that are Available to status _Unavailable_ , waits until all
-transactions are finished and all TransactionEventRequest (eventType  Ended) messages are
-sent.
-**3b.** On receipt of an Immediate reset, the Charging Station responds with
-ResetResponse(Accepted), indicating the Charging Station will try to reset itself or EVSE. The
-Charging Station attempts to terminate any transaction (or only those running on the EVSE
-provided in the request, if _evseId_ was supplied) in progress, and sending a
-TransactionEventRequest (eventType  Ended) message.
-**4.** Only if no evseId was supplied the Charging Station reboots and returns to a state as just
-having been booted, B01 - Cold Boot Charging Station applies.
-_Alternative scenario(s)_ B11 - Reset Without Ongoing Transaction
-**5 Prerequisite(s)** A transaction is ongoing.
-
-**6 Postcondition(s)** (^) **Successful postcondition:**
-The Charging Station was able to reset itself or EVSE.
-**Failure postcondition:**
-The Charging Station _not_ was able to reset itself or EVSE.
-Edition 3 FINAL, 2024-05-06 **B. Provisioning**
-
-
-===== CSO
-
-
-CSMS Charging Station
-
-
-alt [Reset Charging Station]
-
-
-Transactions active on one or more EVSEs
-
-
-reset CS
-
-
-ResetRequest(OnIdle)
-
-
-ResetResponse(Scheduled)
-
-
-opt [Avoid starting of new transactions
-on free EVSEs]
-loop [for all connectors of Available EVSEs]
-StatusNotificationRequest(Unavailable,...)
-
-
-StatusNotificationResponse(...)
-
-
-Wait for transactions to end,
-and optionally set connector(s)
-to Unavailable when a transaction ends.
-
-
-reboot Charging Station
-
-
-Continue B01 - Cold Boot Charging Station
-[Reset EVSE]
-
-
-Transaction active on EVSE
-
-
-reset CS
-
-
-ResetRequest(OnIdle, evseId)
-
-
-ResetResponse(Scheduled)
-
-
-Wait for transaction to end,
-and optionally set connector(s)
-to Unavailable when the transaction ends.
-
-
-reset EVSE
-
-
-loop [for all connectors of EVSE]
-StatusNotificationRequest(Available, evseId, connectorId)
-
-
-StatusNotificationResponse()
-
-_Figure 21a: Sequence Diagram: Reset OnIdle With Ongoing Transaction_
-
-Edition 3 FINAL, 2024-05-06 **B. Provisioning**
-
-
-
-CSO
-
-
-CSMS Charging Station
-
-
-alt [Reset Charging Station]
-Transactions active on one or more EVSEs
-
-
-reset CS
-ResetRequest(Immediate)
-ResetResponse(Accepted)
-
-
-Terminate all transactions,
-regardless of TxStopPoint.
-
-
-loop [for all stopped transactions]
-TransactionEventRequest(eventType  Ended, stopReason  ImmediateReset,...)
-TransactionEventResponse(...)
-
-
-reboot Charging Station
-
-
-Continue B01 - Cold Boot Charging Station
-[Reset EVSE]
-Transaction active on EVSE
-
-
-reset CS
-ResetRequest(Immediate, evseId)
-ResetResponse(Scheduled)
-
-
-Terminate transaction,
-regardless of TxStopPoint.
-
-
-TransactionEventRequest(eventType  Ended, stopReason  ImmediateReset,...)
-TransactionEventResponse(...)
-reset EVSE
-
-
-loop [for all connectors of EVSE]
-StatusNotificationRequest(Available, evseId, connectorId)
-StatusNotificationResponse()
-
-_Figure 21b: Sequence Diagram: Reset Immediate With Ongoing Transaction_
-
-
-7 Error handling After having accepted the ResetRequest, TransactionEventRequest messages that cannot be
-delivered to the CSMS MUST be queued.
-8 Remark(s) n/a
-
-**B12 - Reset - With Ongoing Transaction - Requirements**
-
-_Table 58. B12 - Requirements_
-
-
-ID Precondition Requirement definition
-B12.FR.01 When the Charging Station receives a
-ResetRequest(OnIdle)
-AND a transaction is ongoing
-
-
-The Charging Station SHALL respond with a
-ResetResponse(Scheduled), to indicate whether the Charging
-Station will attempt to reset itself or EVSE after all transactions
-on Charging Station or EVSE have ended.
-B12.FR.02 When the Charging Station receives a
-ResetRequest(Immediate)
-AND a transaction is ongoing
-
-
-The Charging Station SHALL respond with a
-ResetResponse(Accepted), to indicate whether the Charging
-Station will attempt to reset itself or EVSE.
-
-B12.FR.03 (^) If no _evseId_ is supplied
-AND
-If any transaction is in progress and an OnIdle
-reset is received.
-The transaction of the Charging Station SHALL be terminated
-normally, before the reboot, as in E06 - Stop Transaction.
-Edition 3 FINAL, 2024-05-06 **B. Provisioning**
-
-
-
-ID Precondition Requirement definition
-
-B12.FR.04 (^) If no _evseId_ is supplied
-AND
-If any transaction is in progress and an
-Immediate Reset is received.
-The Charging Station SHALL attempt to terminate any
-transaction in progress and send a TransactionEventRequest
-(eventType  Ended) message before performing a reboot.
-B12.FR.05 If an Immediate Reset without _evseId_ is received
-and the TransactionEventResponse is not
-received within timeout.
-The Charging Station SHALL queue the
-TransactionEventRequest, reboot and resend the
-TransactionEventRequest after the reboot.
-B12.FR.06 If the status was set to _Inoperative_ by the CSMS. After a reboot of the Charging Station or resetting of EVSE, the
-EVSE(s) SHALL return to the state _Unavailable_ as prior to the
-reboot of Charging Station or reset of EVSE.
-B12.FR.07 (^) If an _evseId_ is supplied
-AND
-If a transaction is in progress on the EVSE and
-an OnIdle reset is received.
-The transaction on the EVSE SHALL be terminated normally,
-before the reset, as in E06 - Stop Transaction.
-B12.FR.08 (^) If an _evseId_ is supplied
-AND
-If a transaction is in progress on the EVSE and
-an Immediate Reset is received.
-The Charging Station SHALL attempt to terminate the
-transaction in progress on the EVSE and send a
-TransactionEventRequest (eventType  Ended) message before
-performing a reset.
-B12.FR.09 (^) B12.FR.01
-AND an _evseId_ parameter is supplied
-AND
-Charging Station does not support resetting an
-individual EVSE
-The Charging Station SHALL return a ResetResponse _Rejected_
+.B10 - Migrate to new CSMS
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Migrate to new CSMS, using a different NetworkConnectionProfile.
+|2   |ID              |B10
+|{nbsp} d|_Functional block_ |B. Provisioning
+|3   |Objectives      |After completion of this use case, the Charging Station connects to a new CSMS.
+|4   |Description     |This use case describes how a Charging Station can be instructed to connect to a new CSMS, by changing the order of <<network_connection_profile_type,NetworkConnectionProfiles>> in <<network_configuration_priority,`NetworkConfigurationPriority`>>.
+|{nbsp} d|_Actors_    |Charging Station, CSMS 1, CSMS 2
+|{nbsp} d|_Scenario description_ |A Charging Station supports at least two network configuration slots, that are identified by a number. The available slot numbers are reported by the Charging Station in the _valuesList_ of variable <<network_configuration_priority,NetworkConfigurationPriority>>. +
+  For example: _valuesList_ = "0,1,2" in the base report tells CSMS that three configuration slots, numbered 0, 1 and 2, are available (but not necessarily set). +
+  The _value_ of <<network_configuration_priority,NetworkConfigurationPriority>> reports the order in which network configurations are tried to make a connection. +
+  For example: value  "1,0" means that Charging Station will first try configuration slot 1 and if that fails after the number of attempts configured in <<network_profile_connection_attempts,NetworkProfileConnectionAttempts>>, it will try to connect with configuration slot 0.
+
+  **1.** CSMS 1 sets a new value for the <<network_configuration_priority,`NetworkConfigurationPriority`>> Configuration Variable via <<set_variables_request,SetVariablesRequest>>, such that the NetworkConnectionProfile for CSMS 2 becomes first in the list and the existing connection to CSMS 1 becomes second in the list. +
+  **2.** The Charging Station responds with a SetVariablesResponse with status _Accepted_ +
+  **3.** CSMS 1 instructs the Charging Station to perform a Reset `OnIdle`. +
+  **4.** The Charging Station reboots and connects via the new primary NetworkConnectionProfile to CSMS 2.
+|5   |Prerequisites   |Use case <<setting_a_new_networkconnectionprofile,B09 - Setting a new NetworkConnectionProfile>> was executed successfully prior to this use case +
+  The data supplied by the CSMS matches the Charging Station’s capabilities
+|6   |Postcondition(s) |The Charging Station is connected via a different <<network_connection_profile_type,NetworkConnectionProfiles>>.
+|===
+
+
+.Sequence Diagram: Migrate to new ConnectionProfile
+image::part2/images/figure_19.svg[Sequence Diagram: Migrate to new ConnectionProfile]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error Handling  |n/a
+|8   |Remarks         |As in line with <<reset_with_ongoing_transaction,B12 - Reset - With Ongoing Transaction>>, when there are ongoing transactions, the Charging Station waits for these to be finished before performing the Reset and then connecting to a different CSMS. +
+  When an operator wants to perform an immediate switch, he should stop the transactions first.
+|===
+
+==== B10 - Migrate to new NetworkConnectionProfile - Requirements
+
+.B10 - Requirements
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
+
+|B10.FR.01  |On receipt of a <<set_variables_request,SetVariablesRequest>>, containing Configuration Variable <<network_configuration_priority,`NetworkConfigurationPriority`>> AND the NetworkProfile slots in the message all contain valid configurations |{nbsp}
+  The Charging Station SHALL send <<set_variables_response,SetVariablesResponse>> with status _Accepted_, or _RebootRequired_. |{nbsp}
+|B10.FR.02  |On receipt of a <<set_variables_request,SetVariablesRequest>>, containing Configuration Variable <<network_configuration_priority,`NetworkConfigurationPriority`>> AND any of the NetworkProfile slots in the message does not contain a valid configuration
+  |The Charging Station SHALL send <<set_variables_response,SetVariablesResponse>> with status _Rejected_.
+    |The optional element _statusInfo_ can be used to provide more information.
+|B10.FR.03  |B10.FR.04 AND +
+  When connecting fails
+    |The Charging Station SHALL make the number of attempts as configured in <<network_profile_connection_attempts,`NetworkProfileConnectionAttempts`>> per entry of <<network_configuration_priority,`NetworkConfigurationPriority`>>. |{nbsp}
+|B10.FR.04  |B10.FR.01 OR B09.FR.01 AND +
+  After a reboot
+    |The Charging Station SHALL begin connecting to the first entry of <<network_configuration_priority,`NetworkConfigurationPriority`>> |{nbsp}
+|B10.FR.05  |{nbsp}
+  |It is RECOMMENDED to set the Charging Station to Inoperative (via <<change_availability_request,ChangeAvailabilityRequest>>) to ensure that no new transactions can be started and wait until the transaction message queue in the Charging Station is empty before sending the <<reset_request,ResetRequest>>. Otherwise the Charging Station might send transaction related messages to the new CSMS that has not received the start of the Transaction, and the old system will miss the ended messages. To determine if there are still transaction for an ongoing transaction in the queue, the <<get_transaction_status_request,getTransactionStatusRequest>> message can be used. |{nbsp}
+|B10.FR.06  |{nbsp}
+  |The Charging Station SHALL disconnect from the old CSMS, before trying to connect to the new CSMS.
+    |{nbsp}
+|B10.FR.07  |B10.FR.03 AND +
+  All <<network_profile_connection_attempts,`NetworkProfileConnectionAttempts`>> for every entry of <<network_configuration_priority,`NetworkConfigurationPriority`>> failed.
+    |The Charging Station SHOULD fallback and start 'reconnecting' to the <<network_connection_profile_type,NetworkConnectionProfile>> for which the last successful connection was made.
+      |'reconnecting' in this requirement, refers to the reconnection mechanism described at section 5.3. Reconnecting from "Part 4 - JSON over WebSockets implementation guide".
+|===
+
+:sectnums:
+=== Resetting a Charging Station
+
+:sectnums!:
+[[reset_without_ongoing_transaction]]
+=== B11 - Reset - Without Ongoing Transaction
+
+.B11 - Reset - Without Ongoing Transaction
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Reset - Without Ongoing Transaction
+|2   |ID              |B11
+|{nbsp} d|_Functional block_ |B. Provisioning
+|3   |Objective(s)    |To enable the CSMS to request a Charging Station to reset itself or an EVSE, while there is no ongoing transaction.
+|4   |Description     |This use case covers how the CSMS can request the Charging Station to reset itself or an EVSE by sending <<reset_request,ResetRequest>>. (If <<reset_request,ResetRequest>> contains an optional paramater _evseId_, then only a reset of the specific EVSE is requested.) This could for example be necessary if the Charging Station is not functioning correctly.
+|{nbsp} d|_Actors_    |Charging Station, CSMS, CSO
+|{nbsp} d|_Scenario description_ 
+  |**1.** The CSO requests the CSMS to reset the Charging Station or EVSE. +
+  **2.** The CSMS sends <<reset_request,ResetRequest>> requesting the Charging Station to reset itself or EVSE. +
+  **3.** The CSMS requests for an OnIdle or Immediate reset. +
+  **4.** The Charging Station responds with ResetResponse, indicating whether the Charging Station is +
+  able to reset itself or EVSE. +
+  **5.** The CSMS sends an optional notification to the CSO. +
+  **6.** Only if no evseId was supplied, then after the reset, the Charging Station will proceed as in use case B01.
+|{nbsp} d|_Alternative scenario(s)_ |<<reset_with_ongoing_transaction,B12 - Reset With Ongoing Transaction>>
+|5   |Prerequisite(s) |No transaction is ongoing.
+|6   |Postcondition(s) 
+  |**Successful postcondition:** +
+  The Charging Station was able to reset itself or EVSE.
+
+  **Failure postcondition:** +
+  The Charging Station _not_ was able to reset itself or EVSE.
+|===
+
+.Sequence Diagram: Reset Without Transaction
+image::part2/images/figure_20.svg[Sequence Diagram: Reset Without Transaction]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling  |n.a
+|8   |Remark(s)       |Persistent states: for example, EVSE set to _Unavailable_ SHALL persist.
+
+  The Charging Station responds with <<reset_response,ResetResponse>>.
+|===
+
+==== B11 - Reset - Without Ongoing Transaction - Requirements
+
+.B11 - Requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
+
+|B11.FR.01  |When the Charging Station receives a <<reset_request,ResetRequest>>.
+  |The Charging Station SHALL respond with a <<reset_response,ResetResponse>>.
+|B11.FR.02  |If the status was set to _Inoperative_ by the CSMS.
+  |After a reboot of the Charging Station, the EVSEs SHALL return to the state _Unavailable_ as prior to the reboot.
+|B11.FR.03  |B11.FR.01 +
+  AND no _evseId_ parameter is supplied +
+  AND +
+  <<reset_response,ResetResponse>> was _Accepted_.
+    |The Charging Station MAY send a StatusNotification(Unavailable) and SHALL start a reboot.
+|B11.FR.04  |B11.FR.03            |The Charging Station SHALL proceed as described in use case <<cold_boot_charging_station,B01 - Cold Boot Charging Station>>.
+|B11.FR.05  |If the status of an EVSE was _Reserved_.
+  |After a reboot of the Charging Station or resetting of EVSE, the EVSE(s) SHALL return to the state _Reserved_.
+|B11.FR.06  |B11.FR.01 +
+  AND +
+  For example there is a firmware update ongoing that cannot be interrupted.
+    |The Charging Station SHALL respond with a status _Rejected_.
+|B11.FR.07  |B11.FR.01 +
+  AND +
+  Charging Station cannot perform the reset now, but has scheduled the reset for later
+    |The Charging Station SHALL respond with a status _Scheduled_.
+|B11.FR.08  |B11.FR.01 +
+  AND an _evseId_ parameter is supplied +
+  AND +
+  <<reset_response,ResetResponse>> was _Accepted_.
+    |The Charging Station MAY send a StatusNotification(Unavailable) for the EVSE and SHALL start a reset of EVSE that is referred to by _evseId_ parameter.
+|B11.FR.09  |B11.FR.01 +
+  AND an _evseId_ parameter is supplied +
+  AND +
+  Charging Station does not support resetting an individual EVSE
+    |The Charging Station SHALL return a <<reset_response,ResetResponse>> _Rejected_
+|B11.FR.10  |When the Charging Station supports resetting of an individual EVSE
+    |The Charging Station SHOULD set the device model variable <<allow_reset,AllowReset>> to true for the EVSE.
+|===
+
+<<<
+
+[[reset_with_ongoing_transaction]]
+=== B12 - Reset - With Ongoing Transaction
+
+.B12 - Reset - With Ongoing Transaction
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Reset - With Ongoing Transaction
+|2   |ID              |B12
+|{nbsp} d|_Functional block_ |B. Provisioning
+|3   |Objective(s)    |To enable the CSMS to request a Charging Station to reset itself or EVSE, while there is an ongoing transaction.
+|4   |Description     |This use case covers how the CSMS can request the Charging Station to reset itself or an EVSE by sending <<reset_request,ResetRequest>>. (If <<reset_request,ResetRequest>> contains an optional paramater evseId , then only a reset of the specific EVSE is requested.) This could for example be necessary if the Charging Station is not functioning correctly. The CSMS has the possibility to let the Charging Station end all transactions itself and reboot or wait until all ongoing transactions are ended normally (by an EV user) and then reboot.
+|{nbsp} d|_Actors_    |Charging Station, CSMS, CSO
+|{nbsp} d|_Scenario description_
+  |**1.** The CSO requests the CSMS to reset the Charging Station or EVSE. +
+  **2.** The CSMS sends <<reset_request,ResetRequest>> requesting the Charging Station to reset itself or EVSE. +
+  **3a.** On receipt of an OnIdle reset, the Charging Station responds with <<reset_response,ResetResponse(Scheduled)>>, indicating the Charging Station will try to reset itself or EVSE after all ongoing transactions have ended. The Charging Station continues charging and sets all EVSEs (or only the one provided in the request, if _evseId_ was supplied) that are Available to status _Unavailable_ , waits until all transactions are finished and all <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) messages are sent. +
+  **3b.** On receipt of an Immediate reset, the Charging Station responds with <<reset_response,ResetResponse(Accepted)>>, indicating the Charging Station will try to reset itself or EVSE. The Charging Station attempts to terminate any transaction (or only those running on the EVSE provided in the request, if _evseId_ was supplied) in progress, and sending a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) message. +
+  **4.** Only if no evseId was supplied the Charging Station reboots and returns to a state as just having been booted, <<cold_boot_charging_station,B01 - Cold Boot Charging Station applies>>.
+|{nbsp} d|_Alternative scenario(s)_ |<<reset_without_ongoing_transaction,B11 - Reset Without Ongoing Transaction>>
+|5   |Prerequisite(s) |A transaction is ongoing.
+|6   |Postcondition(s) 
+  |**Successful postcondition:** +
+  The Charging Station was able to reset itself or EVSE.
+
+  **Failure postcondition:** +
+  The Charging Station _not_ was able to reset itself or EVSE.
+|===
+
+.Sequence Diagram: Reset OnIdle With Ongoing Transaction
+image::part2/images/figure_21a.svg[Sequence Diagram: Reset OnIdle With Ongoing Transaction]
+
+.Sequence Diagram: Reset Immediate With Ongoing Transaction
+image::part2/images/figure_21b.svg[Sequence Diagram: Reset Immediate With Ongoing Transaction]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling    |After having accepted the <<reset_request,ResetRequest>>, <<transaction_event_request,TransactionEventRequest>> messages that cannot be delivered to the CSMS MUST be queued.
+|8   |Remark(s)         |n/a
+|===
+
+==== B12 - Reset - With Ongoing Transaction - Requirements
+
+.B12 - Requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
+
+|B12.FR.01  |When the Charging Station receives a <<reset_request,ResetRequest(OnIdle)>> AND a transaction is ongoing
+  |The Charging Station SHALL respond with a <<reset_response,ResetResponse(Scheduled)>>, to indicate whether the Charging Station will attempt to reset itself or EVSE after all transactions on Charging Station or EVSE have ended.
+|B12.FR.02  |When the Charging Station receives a <<reset_request,ResetRequest(Immediate)>> AND a transaction is ongoing
+  |The Charging Station SHALL respond with a <<reset_response,ResetResponse(Accepted)>>, to indicate whether the Charging Station will attempt to reset itself or EVSE.
+|B12.FR.03 |If no _evseId_ is supplied +
+  AND +
+  If any transaction is in progress and an OnIdle reset is received.
+    |The transaction of the Charging Station SHALL be terminated normally, before the reboot, as in <<stop_transaction_options,E06 - Stop Transaction>>.
+|B12.FR.04 |If no _evseId_ is supplied +
+  AND +
+  If any transaction is in progress and an Immediate Reset is received.
+    |The Charging Station SHALL attempt to terminate any transaction in progress and send a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) message before performing a reboot.
+|B12.FR.05 |If an Immediate Reset without _evseId_ is received and the <<transaction_event_response,TransactionEventResponse>> is not received within timeout.
+  |The Charging Station SHALL queue the <<transaction_event_request,TransactionEventRequest>>, reboot and resend the <<transaction_event_request,TransactionEventRequest>> after the reboot.
+|B12.FR.06 |If the status was set to _Inoperative_ by the CSMS.
+  |After a reboot of the Charging Station or resetting of EVSE, the EVSE(s) SHALL return to the state _Unavailable_ as prior to the reboot of Charging Station or reset of EVSE.
+|B12.FR.07 |If an _evseId_ is supplied +
+  AND +
+  If a transaction is in progress on the EVSE and an OnIdle reset is received.
+    |The transaction on the EVSE SHALL be terminated normally, before the reset, as in <<stop_transaction_options,E06 - Stop Transaction>>.
+|B12.FR.08 |If an _evseId_ is supplied +
+  AND +
+  If a transaction is in progress on the EVSE and an Immediate Reset is received.
+    |The Charging Station SHALL attempt to terminate the transaction in progress on the EVSE and send a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) message before performing a reset.
+|B12.FR.09 |B12.FR.01 +
+  AND an _evseId_ parameter is supplied +
+  AND +
+  Charging Station does not support resetting an individual EVSE
+    |The Charging Station SHALL return a <<reset_response,ResetResponse>> _Rejected_
+|===
