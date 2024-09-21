@@ -1,7 +1,8 @@
 = Referenced Components and Variables
 :!chapter-number:
 
-== 1. Controller Components.
+[[controller_components]]
+== Controller Components
 
 This section gives an overview of the 'Controller' components, which are introduced in OCPP 2.0. A controller component can be
 recognized by the 'Ctrlr' suffix and is responsible for the configuration of a certain functionality. Most of the 'Referenced'
@@ -279,7 +280,8 @@ variableCharacteristics dataType integer
 Description This variable is used to report the length of <field> in <message> when it is larger than the length that is defined in
 the standard OCPP message schema.
 
-**2.1.16.** ItemsPerMessageGetReport
+[[items_per_message_get_report]]
+==== ItemsPerMessageGetReport
 
 
 Required yes
@@ -308,7 +310,8 @@ variableAttributes mutability ReadOnly
 variableCharacteristics dataType integer
 Description Maximum number of GetVariableData objects in GetVariablesRequest.
 
-**2.1.18.** BytesPerMessageGetReport
+[[bytes_per_message_get_report]]
+==== BytesPerMessageGetReport
 
 
 Required yes
@@ -1857,7 +1860,8 @@ variableAttributes mutability ReadOnly
 variableCharacteristics dataType MemberList
 Description List of the priorities supported by this Charging Station. Possible values: MessagePriority.
 
-== 2.13. Charging Infrastructure related
+[[charging_infrastructure_related]]
+== Charging Infrastructure related
 
 **2.13.1.** Available
 

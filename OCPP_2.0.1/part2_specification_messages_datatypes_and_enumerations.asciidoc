@@ -1220,7 +1220,8 @@ Response to a NotifyMonitoringRequest message. No fields are defined.
 
 === 1.40. NotifyReport
 
-**1.40.1. NotifyReportRequest**
+[[notify_report_request]]
+==== NotifyReportRequest
 
 This contains the field definition of the NotifyReportRequest PDU sent by the Charging Station to the CSMS.
 
@@ -1240,7 +1241,8 @@ seqNo integer 1..1 Required. Sequence number of this message. First
 message starts at 0.
 reportData ReportDataType 0..* Optional. List of ReportData.
 
-**1.40.2. NotifyReportResponse**
+[[notify_report_response]]
+==== NotifyReportResponse
 
 Response to a NotifyReportRequest message. No fields are defined.
 
@@ -4202,7 +4204,8 @@ and installation will not proceed. (Final failure state)
 InvalidSignature Failure end state. The firmware signature is not valid.
 SignatureVerified Intermediate state. Provide signature successfully verified.
 
-=== 3.34. GenericDeviceModelStatusEnumType
+[[generic_device_model_status_enum_type]]
+=== GenericDeviceModelStatusEnumType
 
 _Enumeration_
 
@@ -4995,7 +4998,8 @@ prepare the Charging Station.
 Rejected Charging Station is not accepted by CSMS. This may happen when the Charging Station id is not known by
 CSMS.
 
-==== 3.70. ReportBaseEnumType
+[[report_base_enum_type]]
+==== ReportBaseEnumType
 
 _Enumeration_
 

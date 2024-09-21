@@ -1,0 +1,30 @@
+@startuml figure_16
+!include style.puml
+
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+note over CSMS, ChargingStation
+  Something triggers the CSMS to request a report from a Charging Station.
+end note
+
+CSMS -> ChargingStation: GetBaseReportRequest(requestId, reportBase)
+activate CSMS
+activate ChargingStation
+
+ChargingStation --> CSMS: GetBaseReportResponse(status)
+deactivate CSMS
+deactivate ChargingStation
+
+loop for each report part
+  ChargingStation -> CSMS: NotifyReportRequest(generatedAt, requestId, tbc, reports,...)
+  activate CSMS
+  activate ChargingStation
+
+  CSMS --> ChargingStation: NotifyReportResponse()
+  deactivate CSMS
+  deactivate ChargingStation
+end 
+
+
+@enduml

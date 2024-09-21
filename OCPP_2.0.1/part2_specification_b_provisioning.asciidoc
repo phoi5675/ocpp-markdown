@@ -501,382 +501,196 @@ image::part2/images/figure_15.svg[Sequence Diagram: Get Variables]
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |No. |Type            |Description
-// TODO:
-1 Name Get Base Report
-2 ID B07
-Functional block B. Provisioning
-3 Objective(s) To give the CSMS the ability to request a predefined report as defined in ReportBase.
-4 Description This use case describes how the CSMS requests a Charging Station to send a predefined report
-as defined in ReportBase. The result will be returned asynchronously in one or more
-NotifyReportRequest messages.
-Actors Charging Station, CSMS
 
-_Scenario description_ (^) **1.** The CSO triggers the CSMS to request a report from a Charging Station.
+|1   |Name            |Get Base Report
+|2   |ID              |B07
+|{nbsp} d|_Functional block_ |B. Provisioning
+|3   |Objective(s)    |To give the CSMS the ability to request a predefined report as defined in <<report_base_enum_type,ReportBase>>.
+|4   |Description     |This use case describes how the CSMS requests a Charging Station to send a predefined report as defined in <<report_base_enum_type,ReportBase>>. The result will be returned asynchronously in one or more <<notify_report_request,NotifyReportRequest>> messages.
+|{nbsp} d|_Actors_    |Charging Station, CSMS
+|{nbsp} d|_Scenario description_ 
+  |**1.** The CSO triggers the CSMS to request a report from a Charging Station. +
+  **2.** The CSMS requests the Charging Station for a report with <<get_base_report_reuqest,GetBaseReportRequest>>. +
+  **3.** The Charging Station responds with <<get_base_report_response,GetBaseReportResponse>>.
+  **4.** The Charging Station asynchronously sends the results in one or more <<notify_report_request,NotifyReportRequest>> messages. +
+  **5.** The CSMS responds with <<notify_report_response,NotifyReportResponse>> for each <<notify_report_request,NotifyReportRequest>>.
+|5    |Prerequisite(s) |n/a
+|6    |Postcondition(s)
+  |**Successful postcondition:** +
+  The Charging Station was able to send the requested report.
 
-**2.** The CSMS requests the Charging Station for a report with GetBaseReportRequest.
-**3.** The Charging Station responds with GetBaseReportResponse.
-**4.** The Charging Station asynchronously sends the results in one or more NotifyReportRequest
-messages.
-**5.** The CSMS responds with NotifyReportResponse for each NotifyReportRequest.
-**5 Prerequisite(s)** n/a
-
-**6 Postcondition(s)** (^) **Successful postcondition:**
-The Charging Station was able to send the requested report.
-**Failure postcondition:**
-The Charging Station was _not_ able to send the requested report.
+  **Failure postcondition:** +
+  The Charging Station was _not_ able to send the requested report.
 |===
 
-CSMS Charging Station
-Something triggers the CSMS to request a report from a Charging Station.
-GetBaseReportRequest(requestId, reportBase)
-GetBaseReportResponse(status)
-loop [for each report part]
-NotifyReportRequest(generatedAt, requestId, tbc, reports,...)
-NotifyReportResponse()
-_Figure 16. Sequence Diagram: Get Base Report_
+.Sequence Diagram: Get Base Report
+image::part2/images/figure_16.svg[Sequence Diagram: Get Base Report]
 
-**7 Error handling** n/a
-**8 Remark(s)** n/a
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling    |n/a
+|8   |Remark(s)         |n/a
+|===
 
 ==== B07 - Get Base Report - Requirements
 
-_Table 48. B07 - Requirements_
-**ID Precondition Requirement definition Note**
-B07.FR.01 When the Charging
-Station receives a
-getBaseReportRequest
-for a supported
-_reportBase_
-AND NOT B07.FR.13
-The Charging Station SHALL send a
-getBaseReportResponse with
-Accepted.
-B07.FR.02 When the Charging
-Station receives a
-getBaseReportRequest
-for a _reportBase_ that is
-not supported
-The Charging Station SHALL send a
-getBaseReportResponse with
-NotSupported.
-Edition 3 FINAL, 2024-05-06 **B. Provisioning**
+.B07 - Requirements
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
 
+|B07.FR.01  |When the Charging Station receives a <<get_base_report_reuqest,getBaseReportRequest>> for a supported _reportBase_ +
+  AND NOT B07.FR.13
+    |The Charging Station SHALL send a <<get_base_report_response,getBaseReportResponse>> with `Accepted`. |{nbsp}
+|B07.FR.02  |When the Charging Station receives a <<get_base_report_reuqest,getBaseReportRequest>> for a _reportBase_ that is not supported
+  |The Charging Station SHALL send a <<get_base_report_response,getBaseReportResponse>> with `NotSupported`. |{nbsp}
+|B07.FR.03  |B07.FR.01 |The Charging Station SHALL send the requested information via one or more <<notify_report_request,NotifyReportRequest>> messages to the CSMS. |{nbsp}
+|B07.FR.04  |B07.FR.01 +
+  AND +
+  The <<get_base_report_reuqest,getBaseReportRequest>> contained a _requestId_
+    |Every <<notify_report_request,NotifyReportRequest>> send for this <<get_base_report_reuqest,getBaseReportRequest>> SHALL contain the same _requestId_. |{nbsp}
+|B07.FR.05  |B07.FR.02 |The Charging Station SHALL NOT send a <<notify_report_request,NotifyReportRequest>> to the CSMS. |{nbsp}
+|B07.FR.07  |B07.FR.01 AND +
+  When _reportBase_ is <<report_base_enum_type,ConfigurationInventory>>
+    |Then the Charging Station SHALL respond with a <<notify_report_request,NotifyReportRequest>> to report on all component-variables that can be set by the operator including their _VariableCharacteristics_. | {nbsp}
+|B07.FR.08  |B07.FR.01 AND +
+  When _reportBase_ is <<report_base_enum_type,FullInventory>>
+    |Then the Charging Station SHALL respond with a <<notify_report_request,NotifyReportRequest>> to report on all component-variables including their _VariableCharacteristics_.
+      |As a minimum the required variables mentioned in <<charging_infrastructure_related,Charging Infrastructure related>> shall be reported as well as the required variables in <<controller_components,Section 1 Controller Components>> that are relevant to each functional block that has been implemented.
+|B07.FR.09  |B07.FR.01 AND +
+  When _reportBase_ is <<report_base_enum_type,SummaryInventory>>
+    |Then the Charging Station SHALL respond with a <<notify_report_request,NotifyReportRequest>> to report on components and variables related to the availability and condition of the Charging Station, notably operationalStatus of the Charging Station, EVSE and Connectors and any error condition.
+      |A (summary) report that lists Components/Variables relating to the Charging Station’s current charging availability, and to any existing problem conditions.
 
-
-ID Precondition Requirement definition Note
-B07.FR.03 B07.FR.01 The Charging Station SHALL send the
-requested information via one or more
-NotifyReportRequest messages to the
-CSMS.
-
-B07.FR.04 (^) B07.FR.01
-AND
-The
-getBaseReportRequest
-contained a _requestId_
-Every NotifyReportRequest send for
-this getBaseReportRequest SHALL
-contain the same _requestId_.
-B07.FR.05 B07.FR.02 The Charging Station SHALL NOT
-send a NotifyReportRequest to the
-CSMS.
-B07.FR.07 (^) B07.FR.01 AND
-When _reportBase_ is
-ConfigurationInventory
-Then the Charging Station SHALL
-respond with a NotifyReportRequest
-to report on all component-variables
-that can be set by the operator
-including their _VariableCharacteristics_.
-B07.FR.08 (^) B07.FR.01 AND
-When _reportBase_ is
-FullInventory
-Then the Charging Station SHALL
-respond with a NotifyReportRequest
-to report on all component-variables
-including their _VariableCharacteristics_.
-As a minimum the required variables mentioned in
-Charging Infrastructure related shall be reported as
-well as the required variables in Section 1 Controller
-Components that are relevant to each functional
-block that has been implemented.
-B07.FR.09 (^) B07.FR.01 AND
-When _reportBase_ is
-SummaryInventory
-Then the Charging Station SHALL
-respond with a NotifyReportRequest
-to report on components and
-variables related to the availability and
-condition of the Charging Station,
-notably operationalStatus of the
-Charging Station, EVSE and
-Connectors and any error condition.
-A (summary) report that lists
-Components/Variables relating to the Charging
-Station’s current charging availability, and to any
-existing problem conditions.
-For the Charging Station Component:
-
-- AvailabilityState.
-For each EVSE Component:
-- AvailabilityState.
-For each Connector Component:
-- AvailabilityState (if known and different from
-EVSE).
-For all Components in an abnormal State:
-- Active (Problem, Tripped, Overload, Fallback)
-variables.
-- Any other diagnostically relevant Variables of the
-Components.
-B07.FR.10 The sequence number contained in
-the seqNo field of the
-NotifyReportRequest is incremental
-per report. So the
-NotifyReportRequest message which
-contains the first report part, SHALL
-have a seqNo with value _0_.
-B07.FR.11 B07.FR.08 All attribute types of a variable, that
-are supported by the Charging Station,
-SHALL be reported, even if they have
-no value (are unset).
-
-
-This allows a CSMS to know which attribute types
-are supported by the Charging Station.
-
-
-B07.FR.12 The Charging Station SHALL support
-at least the base reports:
-ConfigurationInventory and
-FullInventory.
-B07.FR.13 When the Charging
-Station is temporarily
-unable to execute a
-report request
-
-
-The Charging Station SHALL send a
-getBaseReportResponse with
-Rejected.
-
-Edition 3 FINAL, 2024-05-06 **B. Provisioning**
-
-
-
-ID Precondition Requirement definition Note
-B07.FR.14 When a Charging Station
-connects to CSMS for
-the first time OR
-whenever CSMS
-suspects that the device
-model of the Charging
-Station has changed (e.g.
-after a firmware update
-or hardware change)
-
-
-CSMS SHOULD request a
-GetBaseReportRequest with
-reportBase  FullInventory to
-retrieve a complete list of all its device
-model components and variables.
-
-
-It is not mandated, because implementations may
-exist that are based on a known set of charging
-stations with fixed device models that will not
-change.
-
-Edition 3 FINAL, 2024-05-06 **B. Provisioning**
-
+      For the Charging Station Component: +
+      - AvailabilityState. +
+      For each EVSE Component: +
+      - AvailabilityState. +
+      For each Connector Component: +
+      - AvailabilityState (if known and different from EVSE). +
+      For all Components in an abnormal State: +
+      - Active (Problem, Tripped, Overload, Fallback) variables. +
+      - Any other diagnostically relevant Variables of the Components.
+|B07.FR.10  |{nbsp} |The sequence number contained in the seqNo field of the <<notify_report_request,NotifyReportRequest>> is incremental per report. So the <<notify_report_request,NotifyReportRequest>> message which contains the first report part, SHALL have a seqNo with value _0_. |{nbsp}
+|B07.FR.11  |B07.FR.08  |All attribute types of a variable, that are supported by the Charging Station, SHALL be reported, even if they have no value (are unset).
+  |This allows a CSMS to know which attribute types are supported by the Charging Station.
+|B07.FR.12  |{nbsp} |The Charging Station SHALL support at least the base reports: <<report_base_enum_type,ConfigurationInventory>> and <<report_base_enum_type,FullInventory>>. |{nbsp}
+|B07.FR.13  |When the Charging Station is temporarily unable to execute a report request
+  |The Charging Station SHALL send a <<get_base_report_response,getBaseReportResponse>> with `Rejected`. |{nbsp}
+|B07.FR.14  |When a Charging Station connects to CSMS for the first time OR whenever CSMS suspects that the device model of the Charging Station has changed (e.g. after a firmware update or hardware change)
+  |CSMS SHOULD request a <<get_base_report_reuqest,GetBaseReportRequest>> with _reportBase_ = `FullInventory` to retrieve a complete list of all its device model components and variables.
+    |It is not mandated, because implementations may exist that are based on a known set of charging stations with fixed device models that will not change.
+|===
 
 ==== B08 - Get Custom Report
 
-_Table 49. B08 - Get Custom Report_
+.B08 - Get Custom Report
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
+|1   |Name            |Get Custom Report
+|2   |ID              |B08
+|{nbsp} d|_Functional block_  |B. Provisioning
+|3 |Objective(s)      |To give the CSMS the ability to request a report of all Components and Variables limited to those that match ComponentCriteria and/or the list of ComponentVariables.
+|4   |Description     |This use case describes how the CSMS requests a Charging Station to send a report of all Components and Variables limited to those that match ComponentCriteria and/or the list of ComponentVariables. The result will be returned asynchronously in one or more <<notify_report_request,NotifyReportRequest>> messages.
+|{nbsp} d|_Actors_    |Charging Station, CSMS
+|{nbsp} d|_Scenario description_ 
+  |**1.** The CSO triggers the CSMS to request a report from a Charging Station. +
+  **2.** The CSMS requests the Charging Station for a report with a <<get_report_request,GetReportRequest>>. +
+  **3.** The Charging Station responds with a <<get_report_response,GetReportResponse>>. +
+  **4.** The Charging Station asynchronously sends the results in one or more <<notify_report_request,NotifyReportRequest>> messages. +
+  **5.** The CSMS responds with a NotifyReportResponse.
+|5   |Prerequisite(s) |n/a
+|6   |Postcondition(s) 
+  |**Successful postcondition:** +
+  The Charging Station was able to send the requested report.
 
-No. Type Description
-1 Name Get Custom Report
-2 ID B08
-Functional block B. Provisioning
-3 Objective(s) To give the CSMS the ability to request a report of all Components and Variables limited to those
-that match ComponentCriteria and/or the list of ComponentVariables.
-4 Description This use case describes how the CSMS requests a Charging Station to send a report of all
-Components and Variables limited to those that match ComponentCriteria and/or the list of
-ComponentVariables. The result will be returned asynchronously in one or more
-NotifyReportRequest messages.
-Actors Charging Station, CSMS
+  **Failure postcondition:** +
+  The Charging Station was _not_ able to send the requested report.
+|===
 
-_Scenario description_ (^) **1.** The CSO triggers the CSMS to request a report from a Charging Station.
+.Sequence Diagram: Get Custom Report
+image::part2/images/figure_17.svg[Sequence Diagram: Get Custom Report]
 
-**2.** The CSMS requests the Charging Station for a report with a GetReportRequest.
-**3.** The Charging Station responds with a GetReportResponse.
-**4.** The Charging Station asynchronously sends the results in one or more NotifyReportRequest
-messages.
-**5.** The CSMS responds with a NotifyReportResponse.
-**5 Prerequisite(s)** n/a
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling  |n/a
+|8   |Remark(s)       |n/a
+|===
 
-**6 Postcondition(s)** (^) **Successful postcondition:**
-The Charging Station was able to send the requested report.
-**Failure postcondition:**
-The Charging Station was _not_ able to send the requested report.
-CSO
-CSMS Charging Station
-request for a custom report
-GetReportRequest(requestId, componentCriteria, componentVariables)
-GetReportResponse(status)
-loop [for each report part]
-NotifyReportRequest(generatedAt, requestId, tbc, reportData,...)
-NotifyReportResponse()
-_Figure 17. Sequence Diagram: Get Custom Report_
-**7 Error handling** n/a
-**8 Remark(s)** n/a
-**B08 - Get Custom Report - Requirements**
-_Table 50. B08 - Requirements_
-**ID Precondition Requirement definition**
-B08.FR.01 (^) NOT B08.FR.15 AND
-When the Charging Station receives a
-getReportRequest for supported _criteria_
-The Charging Station SHALL send a getReportResponse with
-Accepted
-B08.FR.02 When the Charging Station receives a
-getReportRequest for not supported _criteria_
-The Charging Station SHALL send a getReportResponse with
-NotSupported
-B08.FR.03 B08.FR.01 The Charging Station SHALL send the requested information via
-one or more NotifyReportRequest messages to the CSMS.
-Edition 3 FINAL, 2024-05-06 **B. Provisioning**
+==== B08 - Get Custom Report - Requirements
 
+.B08 - Requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
 
+|B08.FR.01  |NOT B08.FR.15 AND +
+  When the Charging Station receives a <<get_report_request,getReportRequest>> for supported _criteria_
+    |The Charging Station SHALL send a <<get_report_response,getReportResponse>> with <<generic_device_model_status_enum_type,Accepted>>
+|B08.FR.02  |When the Charging Station receives a <<get_report_request,getReportRequest>> for not supported _criteria_
+    |The Charging Station SHALL send a <<get_report_response,getReportResponse>> with <<generic_device_model_status_enum_type,NotSupported>>
+|B08.FR.03  |B08.FR.01            |The Charging Station SHALL send the requested information via one or more <<notify_report_request,NotifyReportRequest>> messages to the CSMS.
+|B08.FR.04  |B08.FR.01 AND +
+  The <<get_report_request,getReportRequest>> contained a _requestId_
+    |Every <<notify_report_request,NotifyReportRequest>> sent for this <<get_report_request,getReportRequest>> SHALL contain the same _requestId_.
+|B08.FR.05  |B08.FR.01 AND +
+  _componentCriteria_ and _componentVariables_ are NOT both empty.
+    |Every <<notify_report_request,NotifyReportRequest>> sent for this <<get_report_request,getReportRequest>> SHALL be limited to the set _componentCriteria_ and _componentVariables_.
+|B08.FR.06  |{nbsp}               |The maximum number of _componentVariables_ in one <<get_report_request,getReportRequest>> message is given by the <<items_per_message_get_report,`ItemsPerMessageGetReport`>> Configuration Variable
+|B08.FR.07  |B08.FR.01 AND +
+  _ComponentCriteria_ contains: _Active_
+    |The Charging Station SHALL report every component that has the variable _Active_ set to _true_, or does not have the _Active_ variable in a <<notify_report_request,NotifyReportRequest>>.
+|B08.FR.08  |B08.FR.01 +
+  AND +
+  _ComponentCriteria_ contains: _Available_
+    |The Charging Station SHALL report every component that has the variable _Available_ set to _true_, or does not have the _Available_ variable, in a <<notify_report_request,NotifyReportRequest>>.
+|B08.FR.09  |B08.FR.01 AND +
+  _ComponentCriteria_ contains: _Enabled_
+    |The Charging Station SHALL report every component that has the variable _Enabled_ set to _true_, or does not have the _Enabled_ variable, in a <<notify_report_request,NotifyReportRequest>>.
+|B08.FR.10  |B08.FR.01 AND +
+  _ComponentCriteria_ contains: _Problem_
+    |The Charging Station SHALL report every component that has the variable _Problem_ set to _true_ in a <<notify_report_request,NotifyReportRequest>>.
+|B08.FR.11  |B08.FR.01 AND +
+  _componentCriteria_ is absent AND +
+  _componentVariables_ is NOT empty.
+    |Every <<notify_report_request,NotifyReportRequest>> sent for this getReportRequest is limited to the set in _componentVariables_.
+|B08.FR.12  |B08.FR.01            |The reported variables in <<notify_report_request,NotifyReportRequest>> SHALL contain _variableCharacteristics_.
+|B08.FR.13  |B08.FR.01 AND +
+  More than one _componentCriteria_ is given.
+    |The Charging Station SHALL report all components that have at least one of the given criteria (logical OR).
+|B08.FR.14  |{nbsp}               |The sequence number contained in the seqNo field of the <<notify_report_request,NotifyReportRequest>> is incremental per report. So the <<notify_report_request,NotifyReportRequest>> message which contains the first report part, SHALL have a seqNo with value _0_.
+|B08.FR.15  |When the Charging Station receives a <<get_report_request,GetReportRequest>> with a combination of criteria which results in an empty result set.
+  |The Charging Station SHALL respond with a <<get_report_response,GetReportResponse>>(_status_=`EmptyResultSet`).
+|B08.FR.16  |When the Charging Station is temporarily unable to execute a report request
+  |The Charging Station SHALL send a <<get_base_report_response,getBaseReportResponse>> with `Rejected`.
+|B08.FR.17  |Charging Station receives a <<get_report_request,GetReportRequest>> with more ComponentVariableType elements than allowed by <<items_per_message_get_report,`ItemsPerMessageGetReport`>>
+  |The Charging Station MAY respond with a CALLERROR(OccurenceConstraintViolation)
+|B08.FR.18  |Charging Station receives a <<get_report_request,GetReportRequest>> with a length of more bytes than allowed by <<bytes_per_message_get_report,`BytesPerMessageGetReport`>>
+  |The Charging Station MAY respond with a CALLERROR(FormatViolation)
+|B08.FR.20  |When Charging Station receives a <<get_report_request,GetReportRequest>> with _componentVariable_ elements in which _variable_ is missing
+  |The Charging Station SHALL report for every _variable_ of the _component_ in _componentVariable_.
+|B08.FR.21  |When Charging Station receives a <<get_report_request,GetReportRequest>> with _componentVariable_ elements in which _variable_ is present, but _instance_ is missing
+  |The Charging Station SHALL report for every instance of the _variable_ of the _component_ in _componentVariable_.
+|B08.FR.22  |B08.FR.11 AND +
+  When Charging Station receives a <<get_report_request,GetReportRequest>> with a _component_ in a _componentVariable_ element that has a _component.evse.id_ , but _component.evse.connector_ is missing
+    |The Charging Station SHALL report the component(s) with this _component.name_, _component.instance_ and _component.evse.id_ for every _component.evse.connector_, whilst taking into account B08.FR.24.
+|B08.FR.23  |B08.FR.11 AND +
+  When Charging Station receives a <<get_report_request,GetReportRequest>> with a _component_ in a _componentVariable_ element that has no _component.evse.id_
+    |The Charging Station SHALL report the component(s) with this _component.name_, _component.instance_ for every _component.evse_ field (including top level component without _component.evse_), whilst taking into account B08.FR.24.
+|B08.FR.24  |B08.FR.11 AND +
+  When Charging Station receives a <<get_report_request,GetReportRequest>> with a _component_ in a _componentVariable_ element that has a value for _component.instance_
+    |The Charging Station SHALL report the component(s) with this _component.name_ for every _component.instance_ field, whilst taking into account B08.FR.22, B08.FR.23.
+|B08.FR.25  |B08.FR.11 AND +
+  When Charging Station receives a <<get_report_request,GetReportRequest>> with a _component_ in a _componentVariable_ element that has no _component.instance_ field
+    |The Charging Station SHALL report the component(s) with this _component.name_ for every _component.instance_ field or the component(s) without _component.instance_ field, whichever is the case, whilst taking into account B08.FR.22, B08.FR.23.
+|===
 
-ID Precondition Requirement definition
+<<<
 
-B08.FR.04 (^) B08.FR.01 AND
-The getReportRequest contained a _requestId_
-Every NotifyReportRequest sent for this getReportRequest
-SHALL contain the same _requestId_.
-B08.FR.05 (^) B08.FR.01 AND
-_componentCriteria_ and _componentVariables_ are
-NOT both empty.
-Every NotifyReportRequest sent for this getReportRequest
-SHALL be limited to the set _componentCriteria_ and
-_componentVariables_.
-B08.FR.06 The maximum number of _componentVariables_ in one
-getReportRequest message is given by the
-ItemsPerMessageGetReport Configuration Variable
-B08.FR.07 (^) B08.FR.01 AND
-_ComponentCriteria_ contains: _Active_
-The Charging Station SHALL report every component that has
-the variable _Active_ set to _true_ , or does not have the _Active_
-variable in a NotifyReportRequest.
-B08.FR.08 (^) B08.FR.01
-AND
-_ComponentCriteria_ contains: _Available_
-The Charging Station SHALL report every component that has
-the variable _Available_ set to _true_ , or does not have the _Available_
-variable, in a NotifyReportRequest.
-B08.FR.09 (^) B08.FR.01 AND
-_ComponentCriteria_ contains: _Enabled_
-The Charging Station SHALL report every component that has
-the variable _Enabled_ set to _true_ , or does not have the _Enabled_
-variable, in a NotifyReportRequest.
-B08.FR.10 (^) B08.FR.01 AND
-_ComponentCriteria_ contains: _Problem_
-The Charging Station SHALL report every component that has
-the variable _Problem_ set to _true_ in a NotifyReportRequest.
-B08.FR.11 (^) B08.FR.01 AND
-_componentCriteria_ is absent AND
-_componentVariables_ is NOT empty.
-Every NotifyReportRequest sent for this getReportRequest is
-limited to the set in _componentVariables_.
-B08.FR.12 B08.FR.01 The reported variables in NotifyReportRequest SHALL contain
-_variableCharacteristics_.
-B08.FR.13 (^) B08.FR.01 AND
-More than one _componentCriteria_ is given.
-The Charging Station SHALL report all components that have at
-least one of the given criteria (logical OR).
-B08.FR.14 The sequence number contained in the seqNo field of the
-NotifyReportRequest is incremental per report. So the
-NotifyReportRequest message which contains the first report
-part, SHALL have a seqNo with value _0_.
-B08.FR.15 When the Charging Station receives a
-GetReportRequest with a combination of criteria
-which results in an empty result set.
-The Charging Station SHALL respond with a
-GetReportResponse( _status_ =EmptyResultSet).
-B08.FR.16 When the Charging Station is temporarily unable
-to execute a report request
-The Charging Station SHALL send a getBaseReportResponse
-with Rejected.
-B08.FR.17 Charging Station receives a GetReportRequest
-with more ComponentVariableType elements
-than allowed by
-ItemsPerMessageGetReport
-The Charging Station MAY respond with a
-CALLERROR(OccurenceConstraintViolation)
-B08.FR.18 Charging Station receives a GetReportRequest
-with a length of more bytes than allowed by
-BytesPerMessageGetReport
-The Charging Station MAY respond with a
-CALLERROR(FormatViolation)
-B08.FR.20 When Charging Station receives a
-GetReportRequest with _componentVariable_
-elements in which _variable_ is missing
-The Charging Station SHALL report for every _variable_ of the
-_component_ in _componentVariable_.
-B08.FR.21 When Charging Station receives a
-GetReportRequest with _componentVariable_
-elements in which _variable_ is present, but
-_instance_ is missing
-The Charging Station SHALL report for every instance of the
-_variable_ of the _component_ in _componentVariable_.
-B08.FR.22 (^) B08.FR.11 AND
-When Charging Station receives a
-GetReportRequest with a _component_ in a
-_componentVariable_ element that has a
-_component.evse.id_ , but
-_component.evse.connector_ is missing
-The Charging Station SHALL report the component(s) with this
-_component.name_ , _component.instance_ and _component.evse.id_
-for every _component.evse.connector_ , whilst taking into account
-B08.FR.24.
-Edition 3 FINAL, 2024-05-06 **B. Provisioning**
-
-
-
-ID Precondition Requirement definition
-
-B08.FR.23 (^) B08.FR.11 AND
-When Charging Station receives a
-GetReportRequest with a _component_ in a
-_componentVariable_ element that has no
-_component.evse.id_
-The Charging Station SHALL report the component(s) with this
-_component.name_ , _component.instance_ for every _component.evse_
-field (including top level component without _component.evse_ ),
-whilst taking into account B08.FR.24.
-B08.FR.24 (^) B08.FR.11 AND
-When Charging Station receives a
-GetReportRequest with a _component_ in a
-_componentVariable_ element that has a value for
-_component.instance_
-The Charging Station SHALL report the component(s) with this
-_component.name_ for every _component.instance_ field, whilst
-taking into account B08.FR.22, B08.FR.23.
-B08.FR.25 (^) B08.FR.11 AND
-When Charging Station receives a
-GetReportRequest with a _component_ in a
-_componentVariable_ element that has no
-_component.instance_ field
-The Charging Station SHALL report the component(s) with this
-_component.name_ for every _component.instance_ field or the
-component(s) without _component.instance_ field, whichever is
-the case, whilst taking into account B08.FR.22, B08.FR.23.
-Edition 3 FINAL, 2024-05-06 **B. Provisioning**
-
-
-==== B09 - Setting a new NetworkConnectionProfile.
-
+=== B09 - Setting a new NetworkConnectionProfile
+// TODO:
 _Table 51. B09 - Setting a new NetworkConnectionProfile_
 
 

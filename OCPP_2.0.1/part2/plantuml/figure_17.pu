@@ -1,0 +1,28 @@
+@startuml figure_17
+!include style.puml
+
+actor "CSO" as CSO
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+CSO -> CSMS: request for a custom report
+
+CSMS -> ChargingStation: GetReportRequest(requestId, componentCriteria, componentVariables)
+activate CSMS
+activate ChargingStation
+
+ChargingStation --> CSMS: GetReportResponse(status)
+deactivate CSMS
+deactivate ChargingStation
+
+loop for each report part
+  ChargingStation -> CSMS: NotifyReportRequest(generatedAt, requestId, tbc, reportData,...)
+  activate CSMS
+  activate ChargingStation
+
+  CSMS --> ChargingStation: NotifyReportResponse()
+  deactivate CSMS
+  deactivate ChargingStation
+end
+
+@enduml
