@@ -16,9 +16,10 @@ may be used to provide more fine grained information to users (e.g. by display m
 Edition 3 FINAL, 2024-05-06 **D. LocalAuthorizationList Management**
 
 
-=== 2. Use cases & Requirements
+==  Use cases & Requirements
 
-==== D01 - Send Local Authorization List
+[[send_local_authorization_list]]
+=== D01 - Send Local Authorization List
 
 _Table 91. D01 - Send Local Authorization List_
 

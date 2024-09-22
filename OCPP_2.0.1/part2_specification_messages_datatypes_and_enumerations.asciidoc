@@ -5,9 +5,10 @@
 [[messages]]
 == Messages
 
-=== 1.1. Authorize
+=== Authorize
 
-**1.1.1. AuthorizeRequest**
+[[authorize_request]]
+==== AuthorizeRequest
 
 This contains the field definition of the AuthorizeRequest PDU sent by the Charging Station to the CSMS.
 
@@ -30,7 +31,8 @@ OCSPRequestDataType 0..4 Optional. Contains the information needed to verify the
 EV Contract Certificate via OCSP. Not needed if
 certificate is provided.
 
-**1.1.2. AuthorizeResponse**
+[[authorize_response]]
+==== AuthorizeResponse
 
 This contains the field definition of the AuthorizeResponse PDU sent by the CSMS to the Charging Station in response to an
 AuthorizeRequest.
@@ -732,7 +734,8 @@ certificateHashDataChain CertificateHashDataChainType 0..* Optional. The Chargin
 information for each available certificate.
 statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
-==== 1.23. GetLocalListVersion
+[[get_local_list_version]]
+==== GetLocalListVersion
 
 Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
 
@@ -1535,9 +1538,11 @@ security event.
 Sent by the CSMS to the Charging Station to confirm the receipt of a SecurityEventNotificationRequest message. No fields are
 defined.
 
-=== 1.50. SendLocalList
+[[send_local_list]]
+=== SendLocalList
 
-**1.50.1. SendLocalListRequest**
+[[send_local_list_request]]
+==== SendLocalListRequest
 
 This contains the field definition of the SendLocalListRequest PDU sent by the CSMS to the Charging Station. If no (empty)
 localAuthorizationList is given and the updateType is Full, all IdTokens are removed from the list. Requesting a Differential update
@@ -1557,7 +1562,8 @@ differential) of this request.
 localAuthorizationList AuthorizationData 0..* Optional. This contains the Local Authorization List
 entries.
 
-**1.50.2. SendLocalListResponse**
+[[send_local_list_response]]
+==== SendLocalListResponse
 
 This contains the field definition of the SendLocalListResponse PDU sent by the Charging Station to the CSMS in response to
 SendLocalListRequest PDU.
@@ -2725,7 +2731,8 @@ variable VariableType 1..1 Required. Variable for which the attribute value is
 requested.
 attributeStatusInfo StatusInfoType 0..1 Optional. Detailed attribute status information.
 
-=== 2.27. IdTokenInfoType
+[[id_token_info_type]]
+=== IdTokenInfoType
 
 _Class_
 
@@ -2757,7 +2764,8 @@ personalMessage MessageContentType 0..1 Optional. Personal message that can be s
 Driver and can be used for tariff information, user
 greetings etc.
 
-=== 2.28. IdTokenType
+[[id_token_type]]
+=== IdTokenType
 
 _Class_
 
@@ -3562,7 +3570,8 @@ Target The target value for this variable.
 MinSet The minimal allowed value for this variable
 MaxSet Thne maximum allowed value for this variable
 
-=== 3.3. AuthorizationStatusEnumType
+[[authorization_status_enum_type]]
+=== AuthorizationStatusEnumType
 
 _Enumeration_
 
@@ -4349,7 +4358,8 @@ SHA256 SHA-256 hash algorithm.
 SHA384 SHA-384 hash algorithm.
 SHA512 SHA-512 hash algorithm.
 
-==== 3.43. IdTokenEnumType
+[[id_token_enum_type]]
+==== IdTokenEnumType
 
 _Enumeration_
 

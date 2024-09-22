@@ -697,9 +697,10 @@ expires without having received the CertificateSignedRequest containing the from
 certificate. When the maximum number of increments is reached, the Charging Station SHALL stop resending the
 SignCertificateRequest, until it is requested by the CSMS using a TriggerMessageRequest.
 
-==== 2.3. Authorization related.
+=== Authorization related
 
-**2.3.1.** AuthEnabled
+[[auth_enabled]]
+==== AuthEnabled
 
 
 Required no
@@ -711,7 +712,8 @@ Description If set to false , then no authorization is done before starting a tr
 idToken was provided, then it will be put in the idToken field of the TransactionEventRequest. If no idToken was
 provided, then idToken in TransactionEventRequest will be left empty and type is set to NoAuthorization.
 
-**2.3.2.** AdditionalInfoItemsPerMessage
+[[additional_info_items_permessage]]
+==== AdditionalInfoItemsPerMessage
 
 
 Required no
@@ -722,10 +724,8 @@ variableCharacteristics dataType integer
 Description Maximum number of AdditionalInfo items that can be sent in one message. This configuration variable only has to
 be implemented when AdditionalInfo is implemented.
 
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
-
-
-**2.3.3.** OfflineTxForUnknownIdEnabled
+[[offline_tx_for_unknown_id_enabled]]
+==== OfflineTxForUnknownIdEnabled
 
 
 Required no
@@ -748,7 +748,8 @@ variableCharacteristics dataType boolean
 Description Whether a remote request to start a transaction in the form of RequestStartTransactionRequest message should
 be authorized beforehand like a local action to start a transaction.
 
-**2.3.5.** LocalAuthorizeOffline
+[[local_authorize_offline]]
+==== `LocalAuthorizeOffline`
 
 
 Required yes
@@ -758,7 +759,8 @@ variableAttributes mutability ReadWrite
 variableCharacteristics dataType boolean
 Description Whether the Charging Station, when Offline , will start a transaction for locally-authorized identifiers.
 
-**2.3.6.** LocalPreAuthorize
+[[local_pre_authorize]]
+==== `LocalPreAuthorize`
 
 
 Required yes
@@ -803,9 +805,10 @@ AuthCacheCtrlr.DisablePostAuthorization is that the latter only disables re-auth
 Accepted in the Authorization Cache or Local Authorization List, whereas AuthCtrlr.DisableRemoteAuthorization
 disables all authorization with CSMS.
 
-==== 2.4. Authorization Cache related.
+=== Authorization Cache related
 
-**2.4.1.** AuthCacheEnabled
+[[auth_cache_enabled]]
+==== AuthCacheEnabled
 
 
 NOTE When the value of this variable is changed, the content of the authorization cache should not be altered.
@@ -828,7 +831,8 @@ variableAttributes mutability ReadOnly
 variableCharacteristics dataType boolean
 Description If this variable exists and reports a value of true , Authorization Cache is supported, but not necessarily enabled.
 
-**2.4.3.** AuthCacheLifeTime
+[[auth_cache_lifetime]]
+==== AuthCacheLifeTime
 
 
 Required no
@@ -879,9 +883,10 @@ variableCharacteristics dataType boolean
 Description When set to true this variable disables the behavior to request authorization for an idToken that is stored in the
 cache with a status other than Accepted, as stated in C10.FR.03 and C12.FR.05.
 
-== 2.5. Local Authorization List Management related
+=== Local Authorization List Management related
 
-**2.5.1.** LocalAuthListEnabled
+[[local_auth_list_enabled]]
+==== LocalAuthListEnabled
 
 
 Required no
@@ -891,7 +896,8 @@ variableAttributes mutability ReadWrite
 variableCharacteristics dataType boolean
 Description If this variable exists and reports a value of true , Local Authorization List is enabled.
 
-**2.5.2.** LocalAuthListEntries
+[[local_auth_list_entries]]
+==== LocalAuthListEntries
 
 
 Required when LocalAuthListAvailable is true
@@ -907,8 +913,8 @@ The maxLimit of this variable SHALL be provided to report the maximum number of 
 the Local Authorization List.
 Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
-
-**2.5.3.** LocalAuthListAvailable
+[[local_auth_list_available]]
+==== LocalAuthListAvailable
 
 
 Required no
@@ -918,7 +924,8 @@ variableAttributes mutability ReadOnly
 variableCharacteristics dataType boolean
 Description If this variable exists and reports a value of true , Local Authorization List is supported.
 
-**2.5.4.** ItemsPerMessageSendLocalList
+[[items_per_message_send_local_list]]
+==== ItemsPerMessageSendLocalList
 
 
 Required when LocalAuthListAvailable is true
@@ -927,7 +934,8 @@ Variable variableName ItemsPerMessage
 variableAttributes mutability ReadOnly
 variableCharacteristics dataType integer
 
-**2.5.5.** BytesPerMessageSendLocalList
+[[bytes_per_message_send_local_list]]
+==== BytesPerMessageSendLocalList
 
 
 Required when LocalAuthListAvailable is true
@@ -1599,7 +1607,8 @@ Station MAY skip sending a NotifyChargingLimitRequest or a TransactionEventReque
 is RECOMMENDED to set this key to a low value. See Smart Charging signals to a Charging Station from multiple
 actors.
 
-== 2.10. Tariff & Cost related
+[[tariff_cost_related]]
+== Tariff & Cost related
 
 **2.10.1.** TariffEnabled
 

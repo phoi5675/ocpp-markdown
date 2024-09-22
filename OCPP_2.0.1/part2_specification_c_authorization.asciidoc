@@ -3,451 +3,212 @@
 
 <<<
 
+:sectnums:
 == Introduction
 
-This Functional Block describes all the authorization-related functionalities, it contains different ways of authorizing a user, online
-and/or offline and the AuthorizeRequest message handling/behavior, Authorization Cache functionality, etc.
+This Functional Block describes all the authorization-related functionalities, it contains different ways of authorizing a user, online and/or offline and the AuthorizeRequest message handling/behavior, Authorization Cache functionality, etc.
 
-When a user wishes to unplug the electric vehicle from the Charging Station, the Charging Station needs to verify that the user is
-either the one that initiated the charging or that the user is in the same group and thus allowed to terminate the charging. Once
-authorized, the Charging Station informs the CSMS that the charging has been stopped.
+When a user wishes to unplug the electric vehicle from the Charging Station, the Charging Station needs to verify that the user is either the one that initiated the charging or that the user is in the same group and thus allowed to terminate the charging. Once authorized, the Charging Station informs the CSMS that the charging has been stopped.
 
-- To improve the experience for users, a Charging Station MAY support local authorization of identifiers, using an
-    Authorization Cache.
-- The LocalAuthorizeOffline Configuration Variable controls whether a Charging Station will authorize a user when
-    _offline_ using the Authorization Cache.
-- The LocalPreAuthorize Configuration Variable controls whether a Charging Station will use the Authorization Cache to
-    start a transaction without performing an authorization with the CSMS.
+. To improve the experience for users, a Charging Station MAY support local authorization of identifiers, using an <<authorization_cache,Authorization Cache>>.
+. The <<local_authorize_offline,`LocalAuthorizeOffline`>> Configuration Variable controls whether a Charging Station will authorize a user when _offline_ using the Authorization Cache.
+. The <<local_pre_authorize,`LocalPreAuthorize`>> Configuration Variable controls whether a Charging Station will use the Authorization Cache to start a transaction without performing an authorization with the CSMS.
 
 === ID Tokens
 
 _This section is normative_
 
-OCPP now makes it possible to use many different types of authorization. Where OCPP 1.x only supported RFID, OCPP now also
-supports things like: credit card, PIN-code, a simple start button etc.
+OCPP now makes it possible to use many different types of authorization. Where OCPP 1.x only supported RFID, OCPP now also supports things like: credit card, PIN-code, a simple start button etc.
 
-An IDTokenType contains the identifier to use for authorization. It is defined as a combination of a case insensitive string and a
-type. Message data elements of the IDTokenType class (including GroupId) MAY contain any data, that is meaningful to a CSMS
-(e.g. for the purpose of identifying the initiator of charging activity), and Charging Stations MUST NOT make any presumptions as to
-the format or content of such data, other than is provided in the description of the IdTokenType (e.g. by assuming that it is a UID-
-like value that must be hex characters only and/or an even number of digits). IdToken data acquired via local token reader hardware
-is usually a (4, 7 or 10 bytes) UID value of a physical IdToken, typically represented as 8, 14 or 20 hexadecimal digit characters.
+An <<id_token_type,IDTokenType>> contains the identifier to use for authorization. It is defined as a combination of a case insensitive string and a type. Message data elements of the <<id_token_type,IDTokenType>> class (including GroupId) MAY contain any data, that is meaningful to a CSMS (e.g. for the purpose of identifying the initiator of charging activity), and Charging Stations MUST NOT make any presumptions as to the format or content of such data, other than is provided in the description of the IdTokenType (e.g. by assuming that it is a UID- like value that must be hex characters only and/or an even number of digits). IdToken data acquired via local token reader hardware is usually a (4, 7 or 10 bytes) UID value of a physical IdToken, typically represented as 8, 14 or 20 hexadecimal digit characters.
 
-NOTE
+[cols="^.^1,10"%autowidth.stretch]
+|===
+s|NOTE |To promote interoperability, based on common practice to date in the case of <<id_token_type,IdTokenType>> data has type: <<id_token_enum_type,_ISO14443_>>, it is RECOMMENDED that such UIDs be represented as hex representations of the UID bytes. According to ISO 14443-3, byte 0 should come first in the hex string. (Most significant nibble of byte 0 first)
+|===
 
+==== Additional Info
 
-To promote interoperability, based on common practice to date in the case of IdTokenType data has type:
-ISO14443 , it is RECOMMENDED that such UIDs be represented as hex representations of the UID bytes. According
-to ISO 14443-3, byte 0 should come first in the hex string. (Most significant nibble of byte 0 first)
+AdditionalInfo can be used to send extra information which can be validated by the CSMS in addition to the regular authorization with _IdToken_.
 
-**1.1.1. Additional Info**
+_AdditionalInfo_ contains one or more custom types, which need to be agreed upon by all parties involved. When AdditionalInfo is implemented the Charging Station SHALL also cache and include _AdditionalInfo_ during regular operations and set the Configuration Variable <<additional_info_items_permessage,`AdditionalInfoItemsPerMessage`>>. When _AdditionalInfo_ is NOT implemented or a not supported _AdditionalInfo.type_ is used, the CSMS/Charging Station MAY ignore the _AdditionalInfo_.
 
-AdditionalInfo can be used to send extra information which can be validated by the CSMS in addition to the regular authorization
-with _IdToken_.
-
-_AdditionalInfo_ contains one or more custom types, which need to be agreed upon by all parties involved. When AdditionalInfo is
-implemented the Charging Station SHALL also cache and include _AdditionalInfo_ during regular operations and set the Configuration
-Variable AdditionalInfoItemsPerMessage. When _AdditionalInfo_ is NOT implemented or a not supported _AdditionalInfo.type_ is
-used, the CSMS/Charging Station MAY ignore the _AdditionalInfo_.
-
-==== 1.2. Group ID Tokens
+=== Group ID Tokens
 
 _This section is normative_
 
-A CSMS has the ability to treat a set of identity tokens as a "group", thereby allowing any one token in the group to start a
-transaction and for the same token, or another token in the same group, to stop the transaction. This supports the common use-
-cases of families or businesses with multiple drivers using one or more shared electric vehicles on a single recharging contract
-account. IDTokenTypes used as "GroupId" may often use a shared central account identifier for the GroupId, instead of a UID of the
-first/master RFID card of an account.
+A CSMS has the ability to treat a set of identity tokens as a "group", thereby allowing any one token in the group to start a transaction and for the same token, or another token in the same group, to stop the transaction. This supports the common use- cases of families or businesses with multiple drivers using one or more shared electric vehicles on a single recharging contract account. <<id_token_type,IdTokenTypes>> used as "GroupId" may often use a shared central account identifier for the GroupId, instead of a UID of the first/master RFID card of an account.
 
-Tokens (idTags) are grouped for authorization purposes by specifying a common group identifier in the optional _groupIdToken_
-element in IdTokenInfo: two IdTokens are considered to be in the same group if their GroupIdTokens match (and they are not
-empty).
+Tokens (idTags) are grouped for authorization purposes by specifying a common group identifier in the optional _groupIdToken_ element in <<id_token_info_type,IdTokenInfo>>: two IdTokens are considered to be in the same group if their GroupIdTokens match (and they are not empty).
 
-NOTE
+[cols="^.^1,10"%autowidth.stretch]
+|===
+s|NOTE 
+Even though the GroupId has the same nominal data type (<<id_token_type,IdTokenType>>) as an idToken, the value of this element may not be in the common format of <<id_token_type,IdTokenTypes>> and/or may not represent an actual valid <<id_token_type,IdTokenType>> (e.g. it may be a common shared "account number"): therefore, the GroupId value SHOULD NOT be used for comparison against a presented Token value (unless it also occurs as an idToken value).
+|===
 
+[[authorization_cache]]
+=== Authorization Cache
 
-Even though the GroupId has the same nominal data type (IdTokenType) as an idToken, the value of this element
-may not be in the common format of IdTokenTypes and/or may not represent an actual valid IdTokenType (e.g. it
-may be a common shared "account number"): therefore, the GroupId value SHOULD NOT be used for comparison
-against a presented Token value (unless it also occurs as an idToken value).
+A Charging Station MAY implement an Authorization Cache that **autonomously** maintains a record of previously presented identifiers that have been successfully authorized by the CSMS. The Authorization Cache can be used to speed up the authorization process at the Charging Station, since using a locally stored cache means that the user does not have to wait for the Charging Station to check the authorization at the CSMS. Operation of the Authorization Cache, when present, is reported (and controlled, where possible) by the <<auth_cache_enabled,`AuthCacheEnabled`>> Configuration Variable. The optional expiration time of general Authorization Cache entries can be set in the Configuration Variable <<auth_cache_lifetime,`AuthCacheLifeTime`>>. If a different expiration time is desired for a specific entry, this can be set in the cacheExpiryDateTime that is returned in iDTokenInfo of, for example, the <<authorize_response,AuthorizeResponse>>.
 
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
+Please refer to the use cases <<store_authorization_data_in_the_authorization_cache,C10 - Store Authorization Data in the Authorization Cache>> and <<start_transaction_cached_id,C12 - Start Transaction - Cached Id>> for more information on how to implement / use the Authorization Cache functionality.
 
+When a Charging Station supports both the Authorization Cache and Tariff information (see: <<tariff_cost_related,Tariff & Cost>>), it should not store the tariff information in the Authorization Cache, since this information could become outdated. +
+A Charging Station MAY support the authorization of _any_ presented identifier when _offline_ , to avoid refusal of charging to bona fide users that cannot be explicitly authorized by <<authorization_cache,Authorization Cache>> entries. This functionality is explained in more detail in <<unknown_offline_authorization,Unknown Offline Authorization>>. +
+It is RECOMMENDED to store personal information in the Authorization Cache securely, e.g. by only storing hashed idTokens in the cache.
 
-==== 1.3. Authorization Cache
+[[local_authorization_list]]
+=== Local Authorization List
 
-A Charging Station MAY implement an Authorization Cache that **autonomously** maintains a record of previously presented
-identifiers that have been successfully authorized by the CSMS. The Authorization Cache can be used to speed up the authorization
-process at the Charging Station, since using a locally stored cache means that the user does not have to wait for the Charging
-Station to check the authorization at the CSMS. Operation of the Authorization Cache, when present, is reported (and controlled,
-where possible) by the AuthCacheEnabled Configuration Variable. The optional expiration time of general Authorization Cache
-entries can be set in the Configuration Variable AuthCacheLifeTime. If a different expiration time is desired for a specific entry,
+The Local Authorization List is a list of identifiers that can be synchronized with the CSMS. It allows authorization of a user when offline and faster (apparent) authorization response time when communication between Charging Station and CSMS is slow. The CSMS can synchronize the list by either sending a complete list of identifiers to replace the Local Authorization List or by sending a list of changes (add, update, delete) to apply to the Local Authorization List. The operations to support this are <<get_local_list_version,GetLocalListVersion>> and <<send_local_list,SendLocalList>>.
 
-this can be set in the cacheExpiryDateTime that is returned in iDTokenInfo of, for example, the AuthorizeResponse.
+This list contains the authorization status of all (or a selection of) identifiers and the corresponding expiration date in _cacheExpiryDateTime_. These values may be used to provide more fine grained information to users (e.g. by display message) during local authorization.
 
-Please refer to the use cases C10 - Store Authorization Data in the Authorization Cache and C12 - Start Transaction - Cached Id for
+Please refer to the use cases <<send_local_authorization_list,D01 - Send Local Authorization List>>, <<offline_authorization_through_local_authorization_list,C13 - Offline Authorization through Local Authorization List>> and <<online_authorization_through_local_authorization_list,C14 - Online Authorization through Local Authorization List>> for more information on how to implement / use the Local Authorization List functionality.
 
-more information on how to implement / use the Authorization Cache functionality.
+[cols="^.^1,10"%autowidth.stretch]
+|===
+s|NOTE|Please note the difference between the <<authorization_cache,Authorization Cache>> and <<local_authorization_list,Local Authorization List>> mechanisms: the <<authorization_cache,Authorization Cache>> is an autonomous mechanism at the Charging Station, whereas the <<local_authorization_list,Local Authorization List>> is a list that is synchronized between CSMS and Charging Station (originating from the CSMS).
+|===
 
-When a Charging Station supports both the Authorization Cache and Tariff information (see: Tariff & Cost), it should not store the
-
-tariff information in the Authorization Cache, since this information could become outdated.
-A Charging Station MAY support the authorization of _any_ presented identifier when _offline_ , to avoid refusal of charging to bona fide
-users that cannot be explicitly authorized by Authorization Cache entries. This functionality is explained in more detail in Unknown
-
-Offline Authorization.
-It is RECOMMENDED to store personal information in the Authorization Cache securely, e.g. by only storing hashed idTokens in the
-cache.
-
-==== 1.4. Local Authorization List
-
-The Local Authorization List is a list of identifiers that can be synchronized with the CSMS. It allows authorization of a user when
-offline and faster (apparent) authorization response time when communication between Charging Station and CSMS is slow. The
-CSMS can synchronize the list by either sending a complete list of identifiers to replace the Local Authorization List or by sending a
-list of changes (add, update, delete) to apply to the Local Authorization List. The operations to support this are GetLocalListVersion
-
-and SendLocalList.
-
-This list contains the authorization status of all (or a selection of) identifiers and the corresponding expiration date in
-_cacheExpiryDateTime_. These values may be used to provide more fine grained information to users (e.g. by display message)
-
-during local authorization.
-
-Please refer to the use cases D01 - Send Local Authorization List, C13 - Offline Authorization through Local Authorization List and
-C14 - Online Authorization through Local Authorization List for more information on how to implement / use the Local Authorization
-List functionality.
-
-NOTE
-
-
-Please note the difference between the Authorization Cache and Local Authorization List mechanisms: the
-Authorization Cache is an autonomous mechanism at the Charging Station, whereas the Local Authorization List
-is a list that is synchronized between CSMS and Charging Station (originating from the CSMS).
-
-NOTE
-
-
-The Authorization Cache and Local Authorization List are distinct logical data structures. When both
-Authorization Cache as well as Local Authorization List are supported, a Charging Station SHALL treat Local
-Authorization List entries as having priority over Authorization Cache entries for the same identifiers.
+[cols="^.^1,10"%autowidth.stretch]
+|===
+s|NOTE|The <<authorization_cache,Authorization Cache>> and <<local_authorization_list,Local Authorization List>> are *distinct* logical data structures. When both <<authorization_cache,Authorization Cache>> as well as <<local_authorization_list,Local Authorization List>> are supported, a Charging Station SHALL treat <<local_authorization_list,Local Authorization List>> entries as having priority over <<authorization_cache,Authorization Cache>> entries for the same identifiers.
+|===
 
 The following Configuration Variables are used by the Charging Station to give information about the Local Authorization List
 
-- LocalAuthListEntries (Also reports the maximum amount of IdTokens in the Local Authorization List)
-- LocalAuthListEnabled
-- LocalAuthListAvailable
-- ItemsPerMessageSendLocalList
-- BytesPerMessageSendLocalList
+- <<local_auth_list_entries,`LocalAuthListEntries`>> (Also reports the maximum amount of IdTokens in the Local Authorization List)
+- <<local_auth_list_enabled,`LocalAuthListEnabled`>>
+- <<local_auth_list_available,`LocalAuthListAvailable`>>
+- <<items_per_message_send_local_list,`ItemsPerMessageSendLocalList`>>
+- <<bytes_per_message_send_local_list,`BytesPerMessageSendLocalList`>>
 
-==== 1.5. Unknown Offline Authorization
+[[unknown_offline_authorization]]
+=== Unknown Offline Authorization
 
-When _offline_ , a Charging Station MAY allow automatic authorization of any "unknown" identifiers that are not found in the Local
-Authorization List and/or Authorization Cache. Operation of the Unknown Offline Authorization capability, when supported, is
-reported (and controlled, where possible) by the OfflineTxForUnknownIdEnabled Configuration Variable. When connection to
-the CSMS is restored, the Charging Station has to send the queued TransactionEventRequest messages. These may contain
-transactions that were authorized _offline_ , as explained in transaction-related message handling. Please refer to C15 - Unknown
-Offline Authorization for the options that the Charging Station has to continue / stop the transaction in this situation.
+When _offline_, a Charging Station MAY allow automatic authorization of any "unknown" identifiers that are not found in the <<local_authorization_list,Local Authorization List>> and/or <<authorization_cache,Authorization Cache>>. Operation of the Unknown Offline Authorization capability, when supported, is reported (and controlled, where possible) by the <<offline_tx_for_unknown_id_enabled,`OfflineTxForUnknownIdEnabled`>> Configuration Variable. When connection to the CSMS is restored, the Charging Station has to send the queued <<transaction_event_request,TransactionEventRequest>> messages. These may contain transactions that were authorized _offline_ , as explained in <<delivering_transaction_related_messages,transaction-related message handling>>. Please refer to <<offline_authorization_of_unknown_id,C15 - Unknown Offline Authorization>> for the options that the Charging Station has to continue / stop the transaction in this situation.
 
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
+<<<
 
+== Use cases & Requirements.
 
-=== 2. Use cases & Requirements.
+=== Authorization options
 
-==== 2.1. Authorization options
+=== C01 - EV Driver Authorization using RFID
 
-==== C01 - EV Driver Authorization using RFID
+.C01 - EV Driver Authorization using RFID
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
-_Table 59. C01 - EV Driver Authorization using RFID_
+|1   |Name            |EV Driver Authorization using RFID
+|2   |ID              |C01
+|{nbsp} d|_Functional block_ |C. Authorization
+|3   |Objective(s)    |To enable the Charging Station to request the CSMS to authorize an EV Driver to start or stop charging.
+|4   |Description     |When a Charging Station needs to charge an EV, it needs to authorize the EV Driver first before the charging can be started or stopped.
+|{nbsp} d|_Actors_    |Charging Station, CSMS, EV Driver
+|{nbsp} d|_Scenario description_ 
+  |**1.** The EV Driver wants to start or stop charging the EV and presents an RFID card. +
+  **2.** The Charging Station sends <<authorize_request,AuthorizeRequest>> to the CSMS to request authorization.
+  **3.** Upon receipt of <<authorize_request,AuthorizeRequest>>, the CSMS responds with <<authorize_response,AuthorizeResponse>>. This response message indicates whether or not the IdToken is accepted by the CSMS.
+|{nbsp} d|_Alternative scenario(s)_ 
+  |<<authorization_using_a_start_button,C02 - Authorization using a start button>> +
+  <<authorization_using_credit_debit_card,C03 - Authorization using credit/debit card>> +
+  <<authorization_using_pin_code,C04 - Authorization using PIN-code>> +
+  <<authorization_for_csms_initiated_transactions,C05 - Authorization for CSMS initiated transactions>> +
+  <<authorization_using_local_id_type,C06 - Authorization using local id type>> +
+  <<authorization_using_contract_certificates,C07 - Authorization using Contract Certificates>> +
+  <<authorization_at_evse_using_iso_15118_external_identification_means_eim,C08 - Authorization at EVSE using ISO 15118 External Identification Means (EIM)>> +
+  <<offline_authorization_of_unknown_id,C15 - Unknown Offline Authorization>>
+|5   |Prerequisite(s) |n/a
+|6   |Postcondition(s)
+  |**Successful postcondition:** +
+  The EV Driver is authorized and can start _or_ stop charging.
 
+  **Failure postcondition:** +
+  If the authorize message is _Invalid_ , _Blocked_ , _Expired_ or _Unknown_ , the EV Driver can _not_ start or stop charging, except in the case where the EV Driver presents the same token used to start the transaction.
+|===
 
-No. Type Description
-1 Name EV Driver Authorization using RFID
-2 ID C01
-Functional block C. Authorization
-3 Objective(s) To enable the Charging Station to request the CSMS to authorize an EV Driver to start or stop
-charging.
-4 Description When a Charging Station needs to charge an EV, it needs to authorize the EV Driver first before
-the charging can be started or stopped.
-Actors Charging Station, CSMS, EV Driver
+.Sequence Diagram: EV Driver Authorization
+image::part2/images/figure_21.svg[Sequence Diagram: EV Driver Authorization]
 
-_Scenario description_ (^) **1.** The EV Driver wants to start or stop charging the EV and presents an RFID card.
-
-**2.** The Charging Station sends AuthorizeRequest to the CSMS to request authorization.
-**3.** Upon receipt of AuthorizeRequest, the CSMS responds with AuthorizeResponse. This response
-message indicates whether or not the IdToken is accepted by the CSMS.
-
-_Alternative scenario(s)_ (^) C02 - Authorization using a start button
-C03 - Authorization using credit/debit card
-C04 - Authorization using PIN-code
-C05 - Authorization for CSMS initiated transactions
-C06 - Authorization using local id type
-C07 - Authorization using Contract Certificates
-C08 - Authorization at EVSE using ISO 15118 External Identification Means (EIM)
-C15 - Unknown Offline Authorization
-**5 Prerequisite(s)** n/a
-**6 Postcondition(s)** (^) **Successful postcondition:**
-The EV Driver is authorized and can start _or_ stop charging.
-**Failure postcondition:**
-If the authorize message is _Invalid_ , _Blocked_ , _Expired_ or _Unknown_ , the EV Driver can _not_ start or
-stop charging, except in the case where the EV Driver presents the same token used to start the
-transaction.
-EV Driver
-Charging Station CSMS
-present RFID(AA12345)
-AuthorizeRequest(idToken(id  AA12345, type  ISO14443))
-AuthorizeResponse(...)
-opt
-notification
-_Figure 21. Sequence Diagram: EV Driver Authorization_
-**7 Error handling** When the Authorization is not 'Accepted', the AuthorizeResponse contains an authorization status
-value indicating the reason for rejection.
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
-
-
-
-8 Remark(s) Assuming idToken is valid for charging and the Charging Station has 3 EVSEs, what is the content
-of idTokenInfo , when idToken is allowed to charge:
-
-. at all EVES: _idTokenInfo.status_  Accepted.
-. at EVSE 1: _idTokenInfo.status_  Accepted, _idTokenInfo.evseId_  [ 1 ].
-. at EVSE 1 + 2: _idTokenInfo.status_  Accepted, _idTokenInfo.evseId_  [ 1, 2 ].
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling |When the Authorization is not 'Accepted', the <<authorize_response,AuthorizeResponse>> contains an authorization status value indicating the reason for rejection.
+|8   |Remark(s)      |Assuming idToken is valid for charging and the Charging Station has 3 EVSEs, what is the content of _idTokenInfo_, when idToken is allowed to charge: +
+. at all EVES: _idTokenInfo.status_ = Accepted. +
+. at EVSE 1: _idTokenInfo.status_ = Accepted, _idTokenInfo.evseId_ = [ 1 ]. +
+. at EVSE 1 + 2: _idTokenInfo.status_ = Accepted, _idTokenInfo.evseId_ = [ 1, 2 ]. +
 . at none of the EVSEs: _idTokenInfo.status=NotAtThisLocation.
+|===
 
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
+<<<
 
-
-**C01 - EV Driver Authorization using RFID - Requirements**
+==== C01 - EV Driver Authorization using RFID - Requirements
 
 _Table 60. C01 - Requirements_
-
-
-ID Precondition Requirement definition Note
-C01.FR.01 Configuration setting AuthEnabled is
-true.
-
-
-The Charging Station SHALL only offer energy after
-authorization.
-C01.FR.02 If an idToken presented by the EV
-Driver is not present in the Local
-Authorization List or Authorization
-Cache
-
-
-The Charging Station SHALL send
-AuthorizeRequest to the CSMS to request
-authorization.
-
-
-C01.FR.03 When an idToken is presented during
-a transaction that has been authorized
-AND
-(a) the presented idToken is the same
-as the idToken that started the
-authorization
-OR
-(b) when the presented idToken is in
-the Local Authorization List or
-Authorization Cache AND is valid AND
-has the same GroupIdToken as the
-IdToken that started the authorization.
-
-
-The Charging Station SHALL end the authorization
-of the transaction, without first sending an
-AuthorizeRequest
-
-
-The idToken that started
-the authorization can
-always be used to end
-the authorization.
-Ending authorization will
-end delivery of energy.
-Depending on the
-TxStopPoint ending of
-the authorization may
-also end the transaction.
-
-
-C01.FR.04 AuthorizeRequest SHALL only be used for the
-authorization of an identifier.
-C01.FR.05 If an IdToken is present in the Local
-Authorization List or Authorization
-Cache.
-
-
-The Charging Station MAY send AuthorizeRequest
-to the CSMS.
-
-
-C01.FR.06 When CSMS receives an
-AuthorizeRequest for an idToken AND
-the idToken has an associated
-groupIdToken.
-
-
-AuthorizeResponse sent by the CSMS to a Charging
-Station SHALL include the associated
-groupIdToken.
-
-
-C01.FR.07 AuthorizeResponse SHALL include an authorization
-status value indicating acceptance or a reason for
-rejection.
-
-
-See
-AuthorizationStatusEnu
-mType for the possible
-reasons of rejection.
-C01.FR.08 If the field: language1 is set AND the
-Charging Station contains messages
-in that language.
-
-
-The Charging Station SHALL show messages to the
-user in language1.
-
-
-C01.FR.09 If the field: language1 is set AND the
-Charging Station does not contain
-messages in that language AND if the
-field: language2 is set AND the
-Charging Station contains messages
-in that language
-
-
-The Charging Station SHALL show messages to the
-user in language2.
-
-
-C01.FR.10 If the field: language1 is not set The field: language2 SHALL NOT be set.
-C01.FR.11 Field: language1 SHALL be different from field
-language2.
-C01.FR.12 It is RECOMMENDED to implement messages in
-English as fall-back.
-C01.FR.13 If both language1 AND language2
-don’t match installed languages in the
-Charging Station
-
-
-It is RECOMMENDED to show messages to the EV
-Driver in English.
-
-
-C01.FR.17 Language SHALL be specified as RFC-4646 tags,
-see: [RFC5646], example: US English is: "en-US".
-
-C01.FR.18 (^) If the IdToken is valid AND
-the EV driver is NOT allowed to charge
-at the type of EVSE(s) this Charging
-Station provides.
-The CSMS SHALL send an AuthorizeResponse with
-idTokenInfo.status _NotAllowedTypeEVSE_.
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
-
-
-
-ID Precondition Requirement definition Note
-C01.FR.19 idToken is allowed for any EVSE of the
-Charging Station
-
-
-The CSMS SHALL send an AuthorizeResponse in
-which idTokenInfo has an empty (or absent) evseId
-list.
-
-
-This will be the most
-common case. Even
-though the idToken might
-be allowed on any EVSE,
-the idTokenInfo.status
-still needs to be
-Accepted before
-charging is allowed.
-C01.FR.20 idToken is allowed for a subset of
-EVSEs of the Charging Station
-
-
-The CSMS SHALL send an AuthorizeResponse in
-which IdTokenInfo has an evseId list with the
-allowed EVSEs.
-
-
-Note the difference
-between validity of an
-idToken and the fact
-whether this (type of)
-token is allowed on an
-EVSE. The
-idTokenInfo.status still
-needs to be Accepted
-before charging is
-allowed.
-C01.FR.21 C01.FR.20 The Charging Station SHALL only allow charging on
-the EVSEs mentioned in the AuthorizeResponse.
-C01.FR.22 idToken is not allowed for any EVSE of
-the Charging Station
-
-
-The CSMS SHALL send an AuthorizeResponse in
-which idTokenInfo.status is NotAtThisLocation
-and evseId list is empty (or absent).
-
-
-Status
-NotAtThisLocation
-needed in order to
-differentiate with the
-situation in which
-idToken is allowed on all
-EVSEs.
-C01.FR.23 When a transaction is still active, that
-had been authorized earlier by an
-idToken, but which is now no longer
-authorized for charging AND
-a new idToken is presented to the
-Charging Station for authorization,
-that differs from the inital idToken
-
-
-The Charging Station SHOULD not allow the
-authorization of a different idToken.
-
-
-Multiple idTokens for a
-transaction are most
-likely not supported by a
-CSMS.
-
-
-C01.FR.24 When a transaction is still active, that
-had been authorized earlier by an
-idToken, but which is now no longer
-authorized for charging AND
-Charging Stations sends an
-AuthorizeRequest for a new idToken,
-that differs from the inital idToken of
-the transaction
-
-
-The CSMS is RECOMMENDED to respond with an
-AuthorizeResponse with idTokenInfo.status =
-NotAtThisTime for this idToken.
-
-
-If a second authorization
-is done by Charging
-Station then CSMS can
-reject the idToken.
-
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
-
-
-==== C02 - Authorization using a start button.
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
+
+|C01.FR.01  |Configuration setting <<auth_enabled,AuthEnabled>> is true.
+  |The Charging Station SHALL only offer energy after authorization. |{nbsp}
+|C01.FR.02  |If an <<id_token_type,idToken>> presented by the EV Driver is not present in the <<local_authorization_list,Local Authorization List>> or <<authorization_cache,Authorization Cache>>
+  |The Charging Station SHALL send <<authorize_request,AuthorizeRequest>> to the CSMS to request authorization. |{nbsp}
+|C01.FR.03  |When an <<id_token_type,idToken>> is presented during a transaction that has been authorized +
+  AND
+  (a) the presented <<id_token_type,idToken>> is the same as the <<id_token_type,idToken>> that started the authorization +
+  OR +
+  (b) when the presented <<id_token_type,idToken>> is in the Local Authorization List or Authorization Cache AND is valid AND has the same GroupIdToken as the IdToken that started the authorization.
+    |The Charging Station SHALL end the authorization of the transaction, without first sending an <<authorize_request,AuthorizeRequest>>
+      |The <<id_token_type,idToken>> that started the authorization can always be used to end the authorization. Ending authorization will end delivery of energy. Depending on the TxStopPoint ending of the authorization may also end the transaction.
+|C01.FR.04  |{nbsp}               |<<authorize_request,AuthorizeRequest>> SHALL only be used for the
+authorization of an identifier. |{nbsp}
+|C01.FR.05  |If an IdToken is present in the <<local_authorization_list,Local Authorization List>> or <<authorization_cache,Authorization Cache>>.
+  |The Charging Station MAY send <<authorize_request,AuthorizeRequest>> to the CSMS. |{nbsp}
+|C01.FR.06  |When CSMS receives an <<authorize_request,AuthorizeRequest>> for an _idToken_ AND +
+  the idToken has an associated <<id_token_info_type,groupIdToken>>.
+    |<<authorize_response,AuthorizeResponse>> sent by the CSMS to a Charging Station SHALL include the associated <<id_token_info_type,groupIdToken>>. |{nbsp}
+|C01.FR.07  |{nbsp}               |<<authorize_response,AuthorizeResponse>> SHALL include an authorization status value indicating acceptance or a reason for rejection.
+  |See <<authorization_status_enum_type,AuthorizationStatusEnumType>> for the possible reasons of rejection.
+|C01.FR.08  |If the field: <<id_token_info_type,language1>> is set AND the Charging Station contains messages in that _language_.
+  |The Charging Station SHALL show messages to the user in *language1*. |{nbsp}
+|C01.FR.09  |If the field: <<id_token_info_type,language1>> is set AND the Charging Station does not contain messages in that language AND if the field: <<id_token_info_type,language2>> is set AND the Charging Station contains messages in that _language_
+  |The Charging Station SHALL show messages to the user in *language2*. |{nbsp}
+|C01.FR.10  |If the field: <<id_token_info_type,language1>> is not set
+  |The field: <<id_token_info_type,language2>> SHALL NOT be set. |{nbsp}
+|C01.FR.11  |{nbsp}               |Field: <<id_token_info_type,language1>> SHALL be different from field <<id_token_info_type,language2>>. |{nbsp}
+|C01.FR.12  |{nbsp}               |It is RECOMMENDED to implement messages in *English* as fall-back. |{nbsp}
+|C01.FR.13  |If both <<id_token_info_type,language1>> AND <<id_token_info_type,language2>> don’t match installed languages in the Charging Station
+  |It is RECOMMENDED to show messages to the EV Driver in *English*. |{nbsp}
+|C01.FR.17  |{nbsp}               |Language SHALL be specified as RFC-4646 tags, see: <<rfc5646,[RFC5646]>>, example: US English is: "en-US". |{nbsp}
+|C01.FR.18  |{nbsp}               |If the IdToken is valid AND +
+  the EV driver is NOT allowed to charge at the type of EVSE(s) this Charging Station provides.
+    |The CSMS SHALL send an AuthorizeResponse with idTokenInfo.status _NotAllowedTypeEVSE_.
+|C01.FR.19  |_idToken_ is allowed for any EVSE of the Charging Station
+  |The CSMS SHALL send an AuthorizeResponse in which _idTokenInfo_ has an empty (or absent) _evseId_ list.
+    |This will be the most common case. Even though the _idToken_ might be allowed on any EVSE, the _idTokenInfo.status_ still needs to be `Accepted` before charging is allowed.
+|C01.FR.20  |_idToken_ is allowed for a subset of EVSEs of the Charging Station
+  |The CSMS SHALL send an AuthorizeResponse in which _IdTokenInfo_ has an _evseId_ list with the allowed EVSEs.
+    |Note the difference between validity of an _idToken_ and the fact whether this (type of) token is allowed on an EVSE. The _idTokenInfo.status_ still needs to be `Accepted` before charging is allowed.
+|C01.FR.21  |C01.FR.20            |The Charging Station SHALL only allow charging on the EVSEs mentioned in the AuthorizeResponse. |{nbsp}
+|C01.FR.22  |_idToken_ is not allowed for any EVSE of the Charging Station
+  |The CSMS SHALL send an AuthorizeResponse in which _idTokenInfo.status_ is `NotAtThisLocation` and evseId list is empty (or absent).
+    Status `NotAtThisLocation` needed in order to differentiate with the situation in which _idToken_ is allowed on all EVSEs.
+|C01.FR.23  |When a transaction is still active, that had been authorized earlier by an <<id_token_type,idToken>>, but which is now no longer authorized for charging AND a new <<id_token_type,idToken>> is presented to the Charging Station for authorization, that *differs* from the inital <<id_token_type,idToken>>
+  |The Charging Station SHOULD not allow the authorization of a different <<id_token_type,idToken>>.
+    |Multiple _idTokens_ for a transaction are most likely not supported by a CSMS.
+|C01.FR.24  |When a transaction is still active, that had been authorized earlier by an <<id_token_type,idToken>>, but which is now no longer authorized for charging AND Charging Stations sends an <<authorize_request,AuthorizeRequest>> for a new <<id_token_type,idToken>>, that *differs* from the inital <<id_token_type,idToken>> of the transaction
+  |The CSMS is RECOMMENDED to respond with an <<authorize_response,AuthorizeResponse>> with _idTokenInfo.status_ = `NotAtThisTime` for this <<id_token_type,idToken>>.
+    |If a second authorization is done by Charging Station then CSMS can reject the _idToken_.
+|===
+
+<<<
+
+[[authorization_using_a_start_button]]
+=== C02 - Authorization using a start button
 
 _Table 61. C02 - Authorization using a start button_
 
@@ -562,8 +323,8 @@ The Charging Station SHALL NOT store the information in its
 Authorization Cache.
 Edition 3 FINAL, 2024-05-06 **C. Authorization**
 
-
-==== C03 - Authorization using credit/debit card
+[[authorization_using_credit_debit_card]]
+=== C03 - Authorization using credit/debit card
 
 _Table 63. C03 - Authorization using credit/debit card_
 
@@ -709,8 +470,8 @@ Authorization Cache.
 
 Edition 3 FINAL, 2024-05-06 **C. Authorization**
 
-
-==== C04 - Authorization using PIN-code
+[[authorization_using_pin_code]]
+=== C04 - Authorization using PIN-code
 
 This is an informative use case, its purpose is to demonstrate the use of the KeyCode id type. An other use of KeyCode is for
 example a licence plate number.
@@ -790,8 +551,8 @@ to enter an incorrect keyCode.
 
 Edition 3 FINAL, 2024-05-06 **C. Authorization**
 
-
-==== C05 - Authorization for CSMS initiated transactions
+[[authorization_for_csms_initiated_transactions]]
+=== C05 - Authorization for CSMS initiated transactions
 
 _Table 67. C05 - Authorization for CSMS initiated transactions_
 
@@ -913,8 +674,8 @@ RequestStartTransactionRequest.
 
 Edition 3 FINAL, 2024-05-06 **C. Authorization**
 
-
-==== C06 - Authorization using local id type
+[[authorization_using_local_id_type]]
+=== C06 - Authorization using local id type
 
 This is an informative use case, its purpose is to demonstrate the use of the Local id type.
 
@@ -1052,7 +813,8 @@ Edition 3 FINAL, 2024-05-06 **C. Authorization**
 
 This authorization section originates from ISO15118-1 for the use of Plug & Charge functionalities.
 
-==== C07 - Authorization using Contract Certificates
+[[authorization_using_contract_certificates]]
+=== C07 - Authorization using Contract Certificates
 
 _Table 71. C07 - Authorization using Contract Certificates_
 
@@ -1069,7 +831,7 @@ _Actors_ Actors: EV, Charging Station, CSMS, OCSP
 _Scenario description_ (^) **15118** :
 See ISO15118-1, use case Description D2, Scenario Description, first 2 bullets, page 26.
 
-===== OCPP :
+==== OCPP :
 
 **3.** The Charging Station sends an AuthorizeRequest message to the CSMS containing the eMAID
 and data needed for an OCSP request with regards to the contract certificate and certificate
@@ -1270,8 +1032,8 @@ _idToken_ is reported as
 invalid.
 Edition 3 FINAL, 2024-05-06 **C. Authorization**
 
-
-==== C08 - Authorization at EVSE using ISO 15118 External Identification Means (EIM)
+[[authorization_at_evse_using_iso_15118_external_identification_means_eim]]
+=== C08 - Authorization at EVSE using ISO 15118 External Identification Means (EIM)
 
 _Table 73. C08 - Authorization at EVSE using ISO 15118 External Identification Means (EIM)_
 
@@ -1290,7 +1052,7 @@ Actors Actors: EV, Charging Station, CSMS
 _Scenario description_ (^) **15118**
 See ISO15118-1, use case Description (Scenarion Description) D4, page 28.
 
-===== OCPP
+==== OCPP
 
 **1.** The Charging Station sends an AuthorizeRequest with an idToken containing the External
 Identification Means (EIM).
@@ -1498,9 +1260,11 @@ TransactionEventResponse from CSMS SHALL include
 groupIdToken.
 Edition 3 FINAL, 2024-05-06 **C. Authorization**
 
+:sectnums:
+=== Authorization Cache
 
-==== 2.4. Authorization Cache
-
+:sectnums!:
+[[store_authorization_data_in_the_authorization_cache]]
 ==== C10 - Store Authorization Data in the Authorization Cache
 
 _Table 77. C10 - Store Authorization Data in Authorization Cache_
@@ -1719,8 +1483,8 @@ The Charging Station SHALL send ClearCacheResponse
 message with the status _Rejected_.
 Edition 3 FINAL, 2024-05-06 **C. Authorization**
 
-
-==== C12 - Start Transaction - Cached Id
+[[start_transaction_cached_id]]
+=== C12 - Start Transaction - Cached Id
 
 _Table 81. C12 - Start Transaction - Cached Id_
 
@@ -1874,9 +1638,10 @@ C12.FR.09 IdTokens that have a groupId equal to
 MasterPassGroupId
 SHALL NOT be allowed to start a transaction.
 
-==== 2.5. Local Authorization list
+=== Local Authorization list
 
-==== C13 - Offline Authorization through Local Authorization List
+[[offline_authorization_through_local_authorization_list]]
+=== C13 - Offline Authorization through Local Authorization List
 
 _Table 83. C13 - Offline Authorization through Local Authorization List_
 
@@ -2056,7 +1821,8 @@ is not authorized,
 because it is not an
 "unknown id".
 
-==== C14 - Online Authorization through Local Authorization List.
+[[online_authorization_through_local_authorization_list]]
+=== C14 - Online Authorization through Local Authorization List
 
 _Table 85. C14 - Online Authorization through Local Authorization List_
 
@@ -2203,12 +1969,10 @@ Authorization List, when
 cacheExpiryDateTime
 has passed.
 
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
+=== Offline Authorization
 
-
-==== 2.6. Offline Authorization
-
-==== C15 - Offline Authorization of unknown Id
+[[offline_authorization_of_unknown_id]]
+=== C15 - Offline Authorization of unknown Id
 
 _Table 87. C15 - Offline Authorization of unknown Id_
 
