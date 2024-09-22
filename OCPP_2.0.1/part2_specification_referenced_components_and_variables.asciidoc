@@ -1026,15 +1026,12 @@ Description With this configuration variable the Charging Station can be configu
 BootNotificationResponse with RegistrationStatus: Accepted. See: Transactions before being accepted by a
 CSMS.
 
-**2.6.4.** TxStartPoint
+[[tx_start_point]]
+==== TxStartPoint
 
 
 Required yes
 Component componentName TxCtrlr
-
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
-
-
 
 Variable variableName TxStartPoint
 variableAttributes mutability ReadOnly or ReadWrite. Choice is up to Charging
@@ -1051,7 +1048,10 @@ Because the possible events don’t always have to come in the same order it is 
 Which ever comes first will then cause a transaction to be started. For example: EVConnected, Authorized would
 mean that a transaction is started when an EV is detected (Cable is connected), or when an EV Driver swipes his
 RFID card en the CSMS successfully authorizes the ID for charging.
-**2.6.5.** TxStopPoint
+
+[[tx_stop_point]]
+==== TxStopPoint
+
 **Required** yes
 **Component componentName** TxCtrlr
 **Variable variableName** TxStopPoint
@@ -1063,8 +1063,12 @@ not required to implement all possible values.
 **Description** (^) Defines when the Charging Station ends a transaction: last transactioneventRequest: eventType  Ended.
 When any event in the given list is no longer valid, the Charging Station SHALL end the transaction.
 The Charging Station SHALL only send the Ended event once for every transaction.
-**2.6.6. TxStartStopPoint values
-2.6.6.1. TxStartPoint values**
+
+[[tx_start_stop_point_values]]
+==== TxStartStopPoint values
+
+===== TxStartPoint values
+
 The following table lists the values allowed for the TxStartPoint variable. These values represent logical steps or events that
 (may) occur during a charging session. When such an event occurs, and it is listed in in the TxStartPoint variable, then this
 marks the start of a transaction.
@@ -1097,7 +1101,8 @@ SignedDataReceived. This TxStartPoint might be applicable
 when legislation exists that only allows a billable transaction to
 start when the first signed meter value has been received.
 
-**2.6.6.2. TxStopPoint values**
+[[tx_stop_point_values]]
+===== TxStopPoint values
 
 The following table lists the values allowed for the TxStopPoint variable. These values represent logical steps or events that
 (may) occur during a charging session. When such an event occurs, and it is listed in in the TxStopPoint variable, then this marks

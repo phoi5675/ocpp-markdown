@@ -228,11 +228,12 @@ RequestStartTransactionRequest with the same remoteStartId.
 Edition 3 FINAL, 2024-05-06 **E. Transactions**
 
 
-=== 2. Use cases & Requirements
+== 2. Use cases & Requirements
 
-==== 2.1. OCPP transaction mechanism
+=== OCPP transaction mechanism
 
-==== E01 - Start Transaction options.
+[[start_transaction_options]]
+=== E01 - Start Transaction options
 
 _Table 96. E01 - Start Transaction_
 

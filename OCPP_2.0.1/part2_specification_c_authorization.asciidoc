@@ -96,6 +96,7 @@ When _offline_, a Charging Station MAY allow automatic authorization of any "unk
 
 === Authorization options
 
+[[ev_driver_authorization_using_rfid]]
 === C01 - EV Driver Authorization using RFID
 
 .C01 - EV Driver Authorization using RFID
@@ -148,7 +149,7 @@ image::part2/images/figure_21.svg[Sequence Diagram: EV Driver Authorization]
 
 ==== C01 - EV Driver Authorization using RFID - Requirements
 
-_Table 60. C01 - Requirements_
+.C01 - Requirements
 [cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
@@ -196,7 +197,7 @@ authorization of an identifier. |{nbsp}
 |C01.FR.21  |C01.FR.20            |The Charging Station SHALL only allow charging on the EVSEs mentioned in the AuthorizeResponse. |{nbsp}
 |C01.FR.22  |_idToken_ is not allowed for any EVSE of the Charging Station
   |The CSMS SHALL send an AuthorizeResponse in which _idTokenInfo.status_ is `NotAtThisLocation` and evseId list is empty (or absent).
-    Status `NotAtThisLocation` needed in order to differentiate with the situation in which _idToken_ is allowed on all EVSEs.
+    Status `NotAtThisLocation` needed in order to differentiate with the situation in which _idToken_ is allowed on all EVSEs. |{nbsp}
 |C01.FR.23  |When a transaction is still active, that had been authorized earlier by an <<id_token_type,idToken>>, but which is now no longer authorized for charging AND a new <<id_token_type,idToken>> is presented to the Charging Station for authorization, that *differs* from the inital <<id_token_type,idToken>>
   |The Charging Station SHOULD not allow the authorization of a different <<id_token_type,idToken>>.
     |Multiple _idTokens_ for a transaction are most likely not supported by a CSMS.
@@ -210,583 +211,333 @@ authorization of an identifier. |{nbsp}
 [[authorization_using_a_start_button]]
 === C02 - Authorization using a start button
 
-_Table 61. C02 - Authorization using a start button_
+.C02 - Authorization using a start button
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
+|1   |Name            |Authorization using a start button
+|2   |ID              |C02
+|{nbsp} d|_Functional block_ |C. Authorization
+|3   |Objective(s)    |Make it possible for a Charging Station that has a start button to start charging.
+|4   |Description     |For some chargers authorization of a user might not be a requirement. A simple charger might have a button instead of a more expensive RFID reader to start charging. When such a Charging Station start charging, it is not needed to send an <<authorize_request,AuthorizeRequest>>. In the <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>), <<id_token_type,IdTokenType>> information needs to be given, which the CSMS then cannot reject.
+|{nbsp} d|_Actors_    |EV Driver, Charging Station, CSMS
+|{nbsp} d|_Scenario description_ 
+  |**1.** The EV Driver plugs in the charging cable between EV and Charging Station. +
+  **2.** The Charging Station sends a <<status_notification_request,StatusNotificationRequest>> and <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>) to notify the CSMS about the cable being plugged in. +
+  **3.** The EV Driver presses the start button to start Charging. +
+  **4.** The Charging Station starts Charging of the EV. +
+  **5.** The Charging Station sends a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>) message with <<id_token_enum_type,IdTokenEnumType: _NoAuthorization_>> to the CSMS to notify the CSMS of the charging that has started. +
+  **6.** Upon receipt of <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>), the CSMS responds with <<transaction_event_response,TransactionEventResponse>> with: IdTokenInfo.status set to _Accepted_
+|{nbsp} d|_Alternative scenario(s)_ 
+  |<<ev_driver_authorization_using_rfid,C01 - EV Driver Authorization using RFID>> +
+  <<authorization_using_credit_debit_card,C03 - Authorization using credit/debit card>> +
+  <<authorization_using_pin_code,C04 - Authorization using PIN-code>> +
+  <<authorization_for_csms_initiated_transactions,C05 - Authorization for CSMS initiated transactions>> +
+  <<authorization_using_local_id_type,C06 - Authorization using local id type>> +
+  <<authorization_using_contract_certificates,C07 - Authorization using Contract Certificates>> +
+  <<authorization_at_evse_using_iso_15118_external_identification_means_eim,C08 - Authorization at EVSE using ISO 15118 External Identification Means (EIM)>> +
+  <<offline_authorization_of_unknown_id,C15 - Unknown Offline Authorization>>
+|5   |Prerequisites     |Charging Station has a start button, instead of an RFID reader to start charging of an EV.
+|6   |Postcondition(s)  |Transaction ongoing on Charging Station, CSMS is aware of transaction.
+|===
 
-No. Type Description
-1 Name Authorization using a start button
-2 ID C02
-Functional block C. Authorization
-3 Objectives Make it possible for a Charging Station that has a start button to start charging.
-4 Description For some chargers authorization of a user might not be a requirement. A simple charger might
-have a button instead of a more expensive RFID reader to start charging. When such a Charging
-Station start charging, it is not needed to send an AuthorizeRequest. In the
-TransactionEventRequest (eventType  Started), IdTokenType information needs to be given,
-which the CSMS then cannot reject.
-Actors EV Driver, Charging Station, CSMS
+.Sequence Diagram: Authorization using a start button
+image::part2/images/figure_22.svg[Sequence Diagram: Authorization using a start button]
 
-_Scenario description_ (^) **1.** The EV Driver plugs in the charging cable between EV and Charging Station.
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error Handling    |n/a
+|8   |Remarks           |The start button might also be a mechanical key or something similar.
 
-**2.** The Charging Station sends a StatusNotificationRequest and TransactionEventRequest
-(eventType  Started) to notify the CSMS about the cable being plugged in.
-**3.** The EV Driver presses the start button to start Charging.
-**4.** The Charging Station starts Charging of the EV.
-**5.** The Charging Station sends a TransactionEventRequest (eventType  Updated) message with
-IdTokenEnumType: _NoAuthorization_ to the CSMS to notify the CSMS of the charging that has
-started.
-**6.** Upon receipt of TransactionEventRequest (eventType  Updated), the CSMS responds with
-TransactionEventResponse with: IdTokenInfo.status set to _Accepted_
+  Note that the start button can even be omitted if the Charging Station is configured to start charging upon cable connection.
 
-_Alternative scenario(s)_ (^) C01 - EV Driver Authorization using RFID
-C03 - Authorization using credit/debit card
-C04 - Authorization using PIN-code
-C05 - Authorization for CSMS initiated transactions
-C06 - Authorization using local id type
-C07 - Authorization using Contract Certificates
-C08 - Authorization at EVSE using ISO 15118 External Identification Means (EIM)
-C15 - Unknown Offline Authorization
-**5 Prerequisites** Charging Station has a start button, instead of an RFID reader to start charging of an EV.
-**6 Postcondition(s)** Transaction ongoing on Charging Station, CSMS is aware of transaction.
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
+  The scenario description and sequence diagram above are based on the Configuration Variable for start transaction being configured as follows: +
+  <<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,EVConnected, Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
+  This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are send. For more details see the use case: <<start_transaction_options,E01 - Start Transaction options>>.
+|===
 
+==== C02 - Authorization using a start button - Requirements
 
+.C02 - Authorization using a start button - Requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
 
-EV Driver
-
-
-Charging Station CSMS
-
-
-Plugin cable
-
-
-StatusNotificationRequest(Occupied)
-
-
-StatusNotificationResponse()
-
-
-TransactionEventRequest(eventType  Started,...)
-
-
-TransactionEventResponse(...)
-
-
-Press Start Button
-
-
-opt [if cable not permanently attached]
-lock connector
-
-
-Start energy offer
-
-
-TransactionEventRequest(eventType  Updated,
-idToken.type  NoAuthorization,...)
-
-
-TransactionEventResponse(idTokenInfo.status  Accepted,...)
-
-
-Unplug cable
-
-_Figure 22. Sequence Diagram: Authorization using a start button_
-
-
-7 Error Handling n/a
-
-**8 Remarks** (^) The start button might also be a mechanical key or something similar.
-Note that the start button can even be omitted if the Charging Station is configured to start
-charging upon cable connection.
-The scenario description and sequence diagram above are based on the Configuration Variable
-for start transaction being configured as follows:
-TxStartPoint: EVConnected, Authorized, DataSigned, PowerPathClosed, EnergyTransfer
-This use-case is also valid for other configurations, but then the transaction might start/stop at
-another moment, which might change the sequence in which message are send. For more details
-see the use case: E01 - Start Transaction options.
-**C02 - Authorization using a start button - Requirements**
-_Table 62. C02 - Authorization using a start button - Requirements_
-**ID. Precondition Requirement definition**
-C02.FR.01 When a transaction is started with a button. The Charging Station SHALL send TransactionEventRequest
-with an IdTokenType of type: NoAuthorization and the field:
-idToken left empty (empty string).
-C02.FR.02 CSMS receives a TransactionEventRequest with
-an IdTokenType of type: NoAuthorization
-The CSMS SHALL respond with a TransactionEventResponse
-with IdTokenInfo.status set Accepted.
-C02.FR.03 If the Charging Station has implemented an
-Authorization Cache AND the Charging Station
-receives IdTokenInfo for an IdTokenType of type
-NoAuthorization in any message
-The Charging Station SHALL NOT store the information in its
-Authorization Cache.
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
+|C02.FR.01  |When a transaction is started with a button.
+  |The Charging Station SHALL send <<transaction_event_request,TransactionEventRequest>> with an <<id_token_type,IdTokenType>> of type: <<id_token_enum_type,NoAuthorization>> and the field: idToken left empty (empty string).
+|C02.FR.02  |CSMS receives a <<transaction_event_request,TransactionEventRequest>> with an <<id_token_type,IdTokenType>> of type: <<id_token_enum_type,NoAuthorization>>
+  |The CSMS SHALL respond with a <<transaction_event_response,TransactionEventResponse>> with IdTokenInfo.status set <<authorization_status_enum_type,Accepted>>.
+|C02.FR.03  |If the Charging Station has implemented an Authorization Cache AND the Charging Station receives <<id_token_info_type,IdTokenInfo>> for an <<id_token_type,IdTokenType>> of type <<id_token_enum_type,NoAuthorization>> in any message
+  |The Charging Station SHALL NOT store the information in its Authorization Cache.
+|===
 
 [[authorization_using_credit_debit_card]]
 === C03 - Authorization using credit/debit card
 
-_Table 63. C03 - Authorization using credit/debit card_
+.C03 - Authorization using credit/debit card
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
-
-No. Type Description
-1 Name Authorization using credit card
-2 ID C03
-Functional block C. Authorization
-3 Objectives Make it possible to start a transaction using a credit card.
-4 Description A Charging Station with a credit/debit card terminal built inside the housing, or belonging to a
-group of Charging Stations that has a central payment terminal/kiosk. An EV Driver uses his card
-to pay for charging. The transaction is authorized by the payment company, the CSMS receives a
-message from the Payment System, and send a RequestStartTransactionRequest to the Charging
-Station to start the transaction.
-Actors EV Driver, Payment System, CSMS, Charging Station
-
-_Scenario description_ (^) **1.** The EV Driver plugs in the Charging Cable
-
-**2.** The Charging Station sends an StatusNotificationRequest and TransactionEventRequest
-(eventType  Started) to notify the CSMS about the cable being plugged in.
-**3.** The Driver uses the credit/debit card terminal to authorize/pay for charging.
-**4.** The terminal communicates with its own server/back-office.
-**5.** The Payment System sends a message to the CSMS authorizing the user.
-**6.** The CSMS generates a unique id to be used as IdToken for this transaction.
-**7.** The CSMS sends a RequestStartTransactionRequest with the generated IdToken to the
-Charging Station.
-**8.** The Charging Station accepts the RequestStartTransactionRequest by sending a
-RequestStartTransactionResponse with Accepted.
-**9.** The Charging Station start Charging of the EV.
-**10.** The Charging Station send an TransactionEventRequest (eventType  Updated) to notify the
-CSMS about the charging having started.
-
-_Alternative scenario(s)_ (^) C01 - EV Driver Authorization using RFID
-C02 - Authorization using a start button
-C04 - Authorization using PIN-code
-C05 - Authorization for CSMS initiated transactions
-C06 - Authorization using local id type
-C07 - Authorization using Contract Certificates
-C08 - Authorization at EVSE using ISO 15118 External Identification Means (EIM)
-C15 - Unknown Offline Authorization
-**5 Prerequisites** Charging Station has a credit/debit card terminal, or belongs to a group of Charging Stations that
+|1   |Name            |Authorization using credit card
+|2   |ID              |C03
+|{nbsp} d|_Functional block_ |C. Authorization
+|3   |Objective(s)    |Make it possible to start a transaction using a credit card.
+|4   |Description     |A Charging Station with a credit/debit card terminal built inside the housing, or belonging to a group of Charging Stations that has a central payment terminal/kiosk. An EV Driver uses his card to pay for charging. The transaction is authorized by the payment company, the CSMS receives a message from the Payment System, and send a <<request_start_transaction_request,RequestStartTransactionRequest>> to the Charging Station to start the transaction.
+|{nbsp} d|_Actors_    |EV Driver, Payment System, CSMS, Charging Station
+|{nbsp} d|_Scenario description_ 
+  |**1.** The EV Driver plugs in the Charging Cable +
+  **2.** The Charging Station sends an <<status_notification_request,StatusNotificationRequest>> and <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>) to notify the CSMS about the cable being plugged in. +
+  **3.** The Driver uses the credit/debit card terminal to authorize/pay for charging. +
+  **4.** The terminal communicates with its own server/back-office. +
+  **5.** The Payment System sends a message to the CSMS authorizing the user. +
+  **6.** The CSMS generates a unique id to be used as IdToken for this transaction. +
+  **7.** The CSMS sends a <<request_start_transaction_request,RequestStartTransactionRequest>> with the generated IdToken to the Charging Station. +
+  **8.** The Charging Station accepts the <<request_start_transaction_request,RequestStartTransactionRequest>> by sending a <<request_start_transaction_response,RequestStartTransactionResponse>> with <<request_start_stop_status_enum_type,Accepted>>. +
+  **9.** The Charging Station start Charging of the EV. +
+  **10.** The Charging Station send an <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>) to notify the CSMS about the charging having started.
+|{nbsp} d|_Alternative scenario(s)_ 
+  |<<ev_driver_authorization_using_rfid,C01 - EV Driver Authorization using RFID>> +
+  <<authorization_using_a_start_button,C02 - Authorization using a start button>> +
+  <<authorization_using_pin_code,C04 - Authorization using PIN-code>> +
+  <<authorization_for_csms_initiated_transactions,C05 - Authorization for CSMS initiated transactions>> +
+  <<authorization_using_local_id_type,C06 - Authorization using local id type>> +
+  <<authorization_using_contract_certificates,C07 - Authorization using Contract Certificates>> +
+  <<authorization_at_evse_using_iso_15118_external_identification_means_eim,C08 - Authorization at EVSE using ISO 15118 External Identification Means (EIM)>> +
+  <<offline_authorization_of_unknown_id,C15 - Unknown Offline Authorization>>
+|5   |Prerequisites     |Charging Station has a credit/debit card terminal, or belongs to a group of Charging Stations that
 has a central payment terminal, to start charging of an EV.
-**6 Postcondition(s)** Transaction ongoing on Charging Station
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
+|6   |Postcondition(s)  |Transaction ongoing on Charging Station
+|===
 
+.Sequence Diagram: Authorization using credit/debit card
+image::part2/images/figure_23.svg[Sequence Diagram: Authorization using credit/debit card]
 
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error Handling    |n/a
+|8   |Remarks           |This use case is an example of how the existing OCPP messages can be used to handle a transaction that is started with a credit/debit card, it is not required to implement a credit/debit card payment solution in this way.
 
-EV Driver
+A Payment System may consist of multiple components handling the authorization of the user. The interface of these components and the communication between the Payment System and CSMS are not in scope of this document.
 
+Stopping a transaction started with a credit/debit card is not defined, this is left to the implementer, this could for example be: Unplugging the cable on the EV side and/or a stop button etc.
 
-Charging Station
-CS-001 CSMS Payment System
+The scenario description and sequence diagram above are based on the Configuration Variable for start transaction being configured as follows: +
+<<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,EVConnected, Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
+This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are send. For more details see the use case: <<start_transaction_options,E01 - Start Transaction options>>.
+|===
 
+==== C03 - Authorization using credit/debit card - Requirements
 
-Plugin cable
-StatusNotificationRequest(Occupied)
-StatusNotificationResponse()
-TransactionEventRequest(eventType  Started, transactionId  AB1234,
-timestamp, evse.id  1,
-evse.connectorId  1, meterValues)
-TransactionEventResponse(...)
-use card
-financial
-transaction
+.C03 - Authorization using credit/debit card - Requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
 
-
-authorized(TransactionReference  1234,
-CS  CS-001, EVSE  1)
-generate unique id()
-result  4444
-
-
-RequestStartTransactionRequest(evseId  1
-idToken(id  4444, type  Central)
-RequestStartTransactionResponse(Accepted)
-
-
-opt [if cable not permanently attached]
-lock connector
-
-
-Start energy offer
-
-
-TransactionEventRequest(eventType  Updated, transactionId  AB1234,
-seqNo  1, timestamp, chargingState  Charging,
-trigger  Authorized, idToken(id  4444, type  Central))
-TransactionEventResponse(idTokenInfo.status  Accepted)
-
-_Figure 23. Sequence Diagram: Authorization using credit/debit card_
-
-
-7 Error Handling n/a
-8 Remarks This use case is an example of how the existing OCPP messages can be used to handle a
-transaction that is started with a credit/debit card, it is not required to implement a credit/debit
-card payment solution in this way.
-
-
-A Payment System may consist of multiple components handling the authorization of the user.
-The interface of these components and the communication between the Payment System and
-CSMS are not in scope of this document.
-
-
-Stopping a transaction started with a credit/debit card is not defined, this is left to the
-implementer, this could for example be: Unplugging the cable on the EV side and/or a stop button
-etc.
-
-
-The scenario description and sequence diagram above are based on the Configuration Variable
-for start transaction being configured as follows:
-TxStartPoint: EVConnected, Authorized, DataSigned, PowerPathClosed, EnergyTransfer
-This use-case is also valid for other configurations, but then the transaction might start/stop at
-another moment, which might change the sequence in which message are send. For more details
-see the use case: E01 - Start Transaction options.
-
-**C03 - Authorization using credit/debit card - Requirements**
-
-_Table 64. C03 - Authorization using credit/debit card - Requirements_
-
-
-ID. Precondition Requirement definition
-C03.FR.01 If the Charging Station receives a
-RequestStartTransactionRequest with an
-IdTokenType of type Central
-
-
-The Charging Station SHALL NOT send an AuthorizeRequest for
-the received IdTokenType.
-
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
-
-
-
-ID. Precondition Requirement definition
-C03.FR.02 If the Charging Station has implemented an
-Authorization Cache AND the Charging Station
-receives IdTokenInfo for an IdTokenType of type
-Central in any message
-
+|C03.FR.01  |If the Charging Station receives a <<request_start_transaction_request,RequestStartTransactionRequest>> with an <<id_token_type,IdTokenType>> of type <<id_token_enum_type,Central>>
+  |The Charging Station SHALL NOT send an <<authorize_request,AuthorizeRequest>> for the received <<id_token_type,IdTokenType>>.
+|C03.FR.02  |If the Charging Station has implemented an Authorization Cache AND the Charging Station
+receives <<id_token_info_type,IdTokenInfo>> for an <<id_token_type,IdTokenType>> of type <<id_token_enum_type,Central>> in any message
 
 The Charging Station SHALL NOT store the information in its
 Authorization Cache.
+|===
 
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
+<<<
 
 [[authorization_using_pin_code]]
 === C04 - Authorization using PIN-code
 
-This is an informative use case, its purpose is to demonstrate the use of the KeyCode id type. An other use of KeyCode is for
-example a licence plate number.
+This is an informative use case, its purpose is to demonstrate the use of the <<id_token_enum_type,KeyCode>> id type. An other use of <<id_token_enum_type,KeyCode>> is for example a licence plate number.
 
-_Table 65. C04 - Authorization using PIN-code_
+.C04 - Authorization using PIN-code
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
+|1   |Name            |Authorization using PIN-code
+|2   |ID              |C04
+|{nbsp} d|_Functional block_ |C. Authorization
+|3   |Objective(s)    |To make it possible for a Charging Station that has a key entry terminal to authorize the PIN-code.
+|4   |Description     |When a Charging Station has a PIN-code entry terminal, an EV driver enters his/her PIN-code. This PIN-code is sent to the CSMS for validation using an <<authorize_request,AuthorizeRequest>>.
+|{nbsp} d|_Actors_    |EV Driver, Charging Station, CSMS
+|{nbsp} d|_Scenario description_
+  |**1.** The EV Driver wants to start or stop charging the EV and enters his/her PIN-code into the terminal. +
+  **2.** The Charging Station sends an <<authorize_request,AuthorizeRequest>> message, with the field: <<id_token_enum_type,IdTokenEnumType>> set to <<id_token_enum_type,_KeyCode_>>, to the CSMS to request authorization. +
+  **3.** Upon receipt of the <<authorize_request,AuthorizeRequest>>, the CSMS responds with an <<authorize_response,AuthorizeResponse>>. This response indicates whether or not the KeyCode is accepted by the CSMS.
+|{nbsp} d|_Alternative scenario(s)_ 
+  |<<ev_driver_authorization_using_rfid,C01 - EV Driver Authorization using RFID>> +
+  <<authorization_using_a_start_button,C02 - Authorization using a start button>> +
+  <<authorization_using_credit_debit_card,C03 - Authorization using credit/debit card>> +
+  <<authorization_for_csms_initiated_transactions,C05 - Authorization for CSMS initiated transactions>> +
+  <<authorization_using_local_id_type,C06 - Authorization using local id type>> +
+  <<authorization_using_contract_certificates,C07 - Authorization using Contract Certificates>> +
+  <<authorization_at_evse_using_iso_15118_external_identification_means_eim,C08 - Authorization at EVSE using ISO 15118 External Identification Means (EIM)>> +
+  <<offline_authorization_of_unknown_id,C15 - Unknown Offline Authorization>>
+|5   |Prerequisites    |Charging Station has a PIN-code entry terminal to start charging of an EV.
+|6   |Postcondition(s) |Transaction ongoing on Charging Station, CSMS is aware of transaction.
+|===
 
-No. Type Description
-1 Name Authorization using PIN-code
-2 ID C04
-Functional block C. Authorization
-3 Objectives To make it possible for a Charging Station that has a key entry terminal to authorize the PIN-code.
-4 Description When a Charging Station has a PIN-code entry terminal, an EV driver enters his/her PIN-code. This
-PIN-code is sent to the CSMS for validation using an AuthorizeRequest.
-Actors EV Driver, Charging Station, CSMS
-Scenario description 1. The EV Driver wants to start or stop charging the EV and enters his/her PIN-code into the
-terminal.
+.Sequence Diagram: Authorization using PIN-code
+image::part2/images/figure_24.svg[Sequence Diagram: Authorization using PIN-code]
 
-**2.** The Charging Station sends an AuthorizeRequest message, with the field: IdTokenEnumType
-set to _KeyCode_ , to the CSMS to request authorization.
-**3.** Upon receipt of the AuthorizeRequest, the CSMS responds with an AuthorizeResponse. This
-response indicates whether or not the KeyCode is accepted by the CSMS.
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error Handling    |n/a
+|8   |Remarks           |When the PIN-code is validated in the Charging Station, instead of the CSMS, use case <<authorization_using_a_start_button,C02 - Authorization using a start button>> applies.
+|===
 
-_Alternative scenario(s)_ (^) C01 - EV Driver Authorization using RFID
-C02 - Authorization using a start button
-C03 - Authorization using credit/debit card
-C05 - Authorization for CSMS initiated transactions
-C06 - Authorization using local id type
-C07 - Authorization using Contract Certificates
-C08 - Authorization at EVSE using ISO 15118 External Identification Means (EIM)
-C15 - Unknown Offline Authorization
-**5 Prerequisites** Charging Station has a PIN-code entry terminal to start charging of an EV.
-**6 Postcondition(s)** Transaction ongoing on Charging Station, CSMS is aware of transaction.
-EV Driver
-Charging Station CSMS
-enter pin-code(1234)
-AuthorizeRequest(idToken(id  1234,
-type  PinCode), ...)
-AuthorizeResponse(idTokenInfo.status  Accepted, ...)
-opt
-notification
-_Figure 24. Sequence Diagram: Authorization using PIN-code_
-**7 Error Handling** n/a
-**8 Remarks** When the PIN-code is validated in the Charging Station, instead of the CSMS, use case C02 -
-Authorization Using a Start button applies.
-**C04 - Authorization using PIN-code - Requirements**
-_Table 66. C04 - Authorization using PIN-code - Requirements_
-**ID. Precondition Requirement definition**
-C04.FR.01 When the CSMS receives an AuthorizeRequest
-with a keyCode that is not valid at this Charging
-Station
-The CSMS SHALL respond with an AuthorizeResponse message
-with status  Invalid.
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
+==== C04 - Authorization using PIN-code - Requirements
 
+.C04 - Authorization using PIN-code - Requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
 
+|C04.FR.01  |When the CSMS receives an <<authorize_request,AuthorizeRequest>> with a keyCode that is not valid at this Charging Station
+  |The CSMS SHALL respond with an <<authorize_response,AuthorizeResponse>> message with <<id_token_info_type,status>> = <<authorization_status_enum_type,Invalid>>.
+|C04.FR.02  |When the CSMS receives an <<authorize_request,AuthorizeRequest>> with a keyCode that is valid and the EV Driver is allowed to charge at this Charging Station
+  |The CSMS SHALL respond with an <<authorize_response,AuthorizeResponse>> message with <<id_token_info_type,status>> = <<authorization_status_enum_type,Accepted>>.
+|C04.FR.03  |{nbsp}               |A Charging Station MAY store keyCodes in the Authorization Cache.
+|C04.FR.04  |If an idToken of type keyCode is used
+  |The Charging Station or CSMS SHALL NOT show the IdToken in any logging. key codes should never appear in logs.
+|C04.FR.05  |{nbsp}               |Language SHALL be specified as RFC-5646 tags, see: <<rfc5646,[RFC5646]>>, for example: US English is: "en-US".
+|C04.FR.06  |If an idToken of type keyCode is used It is RECOMMENDED to take measures to prevent brute force attacks, for example by increasing backoff times after attempts to enter an incorrect keyCode.
+|===
 
-ID. Precondition Requirement definition
-C04.FR.02 When the CSMS receives an AuthorizeRequest
-with a keyCode that is valid and the EV Driver is
-allowed to charge at this Charging Station
-
-
-The CSMS SHALL respond with an AuthorizeResponse message
-with status  Accepted.
-
-
-C04.FR.03 A Charging Station MAY store keyCodes in the Authorization
-Cache.
-C04.FR.04 If an idToken of type keyCode is used The Charging Station or CSMS SHALL NOT show the IdToken in
-any logging. key codes should never appear in logs.
-C04.FR.05 Language SHALL be specified as RFC-5646 tags, see: [RFC5646],
-for example: US English is: "en-US".
-C04.FR.06 If an idToken of type keyCode is used It is RECOMMENDED to take measures to prevent brute force
-attacks, for example by increasing backoff times after attempts
-to enter an incorrect keyCode.
-
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
+<<<
 
 [[authorization_for_csms_initiated_transactions]]
 === C05 - Authorization for CSMS initiated transactions
 
-_Table 67. C05 - Authorization for CSMS initiated transactions_
+.C05 - Authorization for CSMS initiated transactions
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Authorization for CSMS initiated transactions
+|2   |ID              |C05
+|{nbsp} d|_Functional block_  |C. Authorization
+|3   |Objective(s)    |Enable the CSMS to start a transaction on a Charging Station with a server generated IdToken.
+|4   |Description     |When a CSMS needs to start a Transaction on a Charging Station for a Driver that has no RFID, or the RFID is not known. For Example, the EV Driver uses an App to start a transaction. The CSMS needs to determine an IdToken and tell the Charging Station this is not an RFID, so it should not be cached and an authorization is also not needed.
+|{nbsp} d|_Actors_    |EV Driver, CSMS, Charging Station
+|{nbsp} d|_Scenario description_ 
+  |**1.** The EV Driver uses his app to start a charging. +
+  **2.** The app sends a start request to the CSMS. +
+  **3.** The CSMS determines an IdToken. It can generate a unique id to be used as IdToken for this transaction or can use a token that is provided by the app (for example the ID of the contract of the user). +
+  **4.** The CSMS sends a <<request_start_transaction_request,RequestStartTransactionRequest>> with the IdToken from the previous step to the Charging Station. +
+  **5.** The Charging Station accepts the <<request_start_transaction_request,RequestStartTransactionRequest>> by sending a <<request_start_transaction_response,RequestStartTransactionResponse>> with <<request_start_stop_status_enum_type,Accepted>>. +
+  **6.** The Charging Station starts charging and sends a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>) to notify the CSMS that _chargingState_ has changed.
+|{nbsp} d|_Alternative scenario(s)_ 
+  |<<ev_driver_authorization_using_rfid,C01 - EV Driver Authorization using RFID>> +
+  <<authorization_using_a_start_button,C02 - Authorization using a start button>> +
+  <<authorization_using_credit_debit_card,C03 - Authorization using credit/debit card>> +
+  <<authorization_using_pin_code,C04 - Authorization using PIN-code>> +
+  <<authorization_using_local_id_type,C06 - Authorization using local id type>> +
+  <<authorization_using_contract_certificates,C07 - Authorization using Contract Certificates>> +
+  <<authorization_at_evse_using_iso_15118_external_identification_means_eim,C08 - Authorization at EVSE using ISO 15118 External Identification Means (EIM)>> +
+  <<offline_authorization_of_unknown_id,C15 - Unknown Offline Authorization>>
+|5   |Prerequisites     |Cable is plugged in.
+|6   |Postcondition(s)  |Transaction ongoing on Charging Station
+|===
 
 
-No. Type Description
-1 Name Authorization for CSMS initiated transactions
-2 ID C05
-Functional block C. Authorization
-3 Objectives Enable the CSMS to start a transaction on a Charging Station with a server generated IdToken.
-4 Description When a CSMS needs to start a Transaction on a Charging Station for a Driver that has no RFID, or
-the RFID is not known. For Example, the EV Driver uses an App to start a transaction. The CSMS
-needs to determine an IdToken and tell the Charging Station this is not an RFID, so it should not
-be cached and an authorization is also not needed.
-Actors EV Driver, CSMS, Charging Station
+.Sequence Diagram: Authorization for CSMS initiated transactions
+image::part2/images/figure_25.svg[Sequence Diagram: Authorization for CSMS initiated transactions]
 
-_Scenario description_ (^) **1.** The EV Driver uses his app to start a charging.
-
-**2.** The app sends a start request to the CSMS.
-**3.** The CSMS determines an IdToken. It can generate a unique id to be used as IdToken for this
-transaction or can use a token that is provided by the app (for example the ID of the contract of
-the user).
-**4.** The CSMS sends a RequestStartTransactionRequest with the IdToken from the previous step
-to the Charging Station.
-**5.** The Charging Station accepts the RequestStartTransactionRequest by sending a
-RequestStartTransactionResponse with Accepted.
-**6.** The Charging Station starts charging and sends a TransactionEventRequest (eventType =
-Updated) to notify the CSMS that _chargingState_ has changed.
-
-_Alternative scenario(s)_ (^) C01 - EV Driver Authorization using RFID
-C02 - Authorization using a start button
-C03 - Authorization using credit/debit card
-C04 - Authorization using PIN-code
-C06 - Authorization using local id type
-C07 - Authorization using Contract Certificates
-C08 - Authorization at EVSE using ISO 15118 External Identification Means (EIM)
-C15 - Unknown Offline Authorization
-**5 Prerequisites** Cable is plugged in.
-**6 Postcondition(s)** Transaction ongoing on Charging Station
-EV Driver
-APP
-Charging Station
-CS-001 CSMS
-Transaction already started
-at cable plug-in
-Start Charging
-Start Charging (CS-001)
-determine unique id()
-result  4444
-RequestStartTransactionRequest(evseId  1
-idToken(id  4444, type  Central))
-RequestStartTransactionResponse(Accepted)
-TransactionEventRequest(eventType  Updated, transactionId  AB1234,
-evse.id  1, evse.connectorId  1,
-meterValues, timestamp)
-TransactionEventResponse(...)
-_Figure 25. Sequence Diagram: Authorization for CSMS initiated transactions_
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
-
-
-
-7 Error Handling n/a
-8 Remarks IdTokens MAY be (single use) virtual transaction authorization codes or virtual RFID tokens that
-deliberately use a non-standard UID format to avoid possible conflict with real UID values. These
-virtual single use IdTokens are sent with type Central and it is pointless to either cache or
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error Handling    |n/a
+|8   |Remarks           |IdTokens MAY be (single use) virtual transaction authorization codes or virtual RFID tokens that deliberately use a non-standard UID format to avoid possible conflict with real UID values. These virtual single use <<id_token,type,IdTokens>> are sent with <<id_token_enum_type,type>> _Central_ and it is pointless to either cache or
 authorize these tokens.
 
+This use case uses an App as example, but this is not a requirement. This use case is valid for any <<request_start_transaction_request,RequestStartTransactionRequest>> with a server generated IdToken.
 
-This use case uses an App as example, but this is not a requirement. This use case is valid for
-any RequestStartTransactionRequest with a server generated IdToken.
+The scenario description and sequence diagram above are based on the Configuration Variable for start transaction being configured as follows: +
+<<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,EVConnected, Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
+This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are send. For more details see the use case: <<start_transaction_options,E01 - Start Transaction options>>.
 
+This use case assumes that the configuration variable AuthorizeRemoteStart is false. See use cases F01 and F02 for requirements with AuthorizeRemoteStart.
 
-The scenario description and sequence diagram above are based on the Configuration Variable
-for start transaction being configured as follows:
-TxStartPoint: EVConnected, Authorized, DataSigned, PowerPathClosed, EnergyTransfer
-This use-case is also valid for other configurations, but then the transaction might start/stop at
-another moment, which might change the sequence in which message are send. For more details
-see the use case: E01 - Start Transaction options.
+Other <<id_token_enum_type,idTokenTypes>> can also be used to remote start charging, such an eMAID of the user that is provided by the app.
+|===
 
+==== C05 - Authorization for CSMS initiated transactions Requirements
 
-This use case assumes that the configuration variable AuthorizeRemoteStart is false. See use
-cases F01 and F02 for requirements with AuthorizeRemoteStart.
+.C05 - Authorization for CSMS initiated transactions Requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
 
+|C05.FR.01  |If the Charging Station receives a <<request_start_transaction_request,RequestStartTransactionRequest>> with an <<id_token_enum_type,IdTokenType>> of type <<id_token_enum_type,Central>>.
+  |The Charging Station SHALL NOT send an <<authorize_request,AuthorizeRequest>> for the received <<id_token_enum_type,IdTokenType>>.
+|C05.FR.02  |If the Charging Station has implemented an Authorization Cache AND the Charging Station receives <<id_token_info_type,IdTokenInfo>> for an <<id_token_enum_type,IdTokenType>> of type <<id_token_enum_type,Central>> in any message
+  |The Charging Station SHALL NOT store the information in its Authorization Cache.
+|C05.FR.03  |{nbsp}               |The RemoteStartId SHALL be provided at least once in a <<transaction_event_request,TransactionEventRequest>>.
+|C05.FR.04  |{nbsp}               |Language SHALL be specified as RFC-4646 tags, see: <<rfc5646,[RFC5646]>>, example: US English is: "en-US".
+|C05.FR.05  |{nbsp}               |idToken SHALL also be provided once in the first <<transaction_event_request,TransactionEventRequest>> after a <<request_start_transaction_request,RequestStartTransactionRequest>>.
+|===
 
-Other idTokenTypes can also be used to remote start charging, such an eMAID of the user that is
-provided by the app.
-
-**C05 - Authorization for CSMS initiated transactions Requirements**
-
-_Table 68. C05 - Authorization for CSMS initiated transactions Requirements_
-
-
-ID. Precondition Requirement definition
-C05.FR.01 If the Charging Station receives a
-RequestStartTransactionRequest with an
-IdTokenType of type Central.
-
-
-The Charging Station SHALL NOT send an AuthorizeRequest for
-the received IdTokenType.
-
-
-C05.FR.02 If the Charging Station has implemented an
-Authorization Cache AND the Charging Station
-receives IdTokenInfo for an IdTokenType of type
-Central in any message
-
-
-The Charging Station SHALL NOT store the information in its
-Authorization Cache.
-
-
-C05.FR.03 The RemoteStartId SHALL be provided at least once in a
-TransactionEventRequest.
-C05.FR.04 Language SHALL be specified as RFC-4646 tags, see: [RFC5646],
-example: US English is: "en-US".
-C05.FR.05 idToken SHALL also be provided once in the first
-TransactionEventRequest after a
-RequestStartTransactionRequest.
-
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
+<<<
 
 [[authorization_using_local_id_type]]
 === C06 - Authorization using local id type
 
-This is an informative use case, its purpose is to demonstrate the use of the Local id type.
+This is an informative use case, its purpose is to demonstrate the use of the <<id_token_enum_type,Local>> id type.
 
-_Table 69. C06 - Authorization using local id type_
+.C06 - Authorization using local id type
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
+|1   |Name            |Authorization using local id type
+|2   |ID              |C06
+|{nbsp} d|_Functional block_ |C. Authorization
+|3   |Objective(s)    |Enable the Charging Station to start charging with a locally generated IdToken.
+|4   |Description     |When a Charging Station needs to start a Transaction for a Driver that has no RFID, or the RFID is not known. For Example, the EV Driver uses a parking ticket to start charging.
+|{nbsp} d|_Actors_    |EV Driver, Payment Terminal, CSMS, Charging Station
+|{nbsp} d|_Scenario description_ 
+  |**1.** An EV driver drives into a garage, takes a parking ticket at the barrier at the entrance. +
+  **2.** Parks his EV at a Charging Station. +
+  **3.** Plugs in the charging cable. +
+  **4.** Scans/inserts his parking ticket on the Charging Station to start Charging +
+  **5.** EV is charging, driver leaves. +
+  **6.** EV driver returns, inserts parking ticket into a payment kiosk +
+  **7.** Pays for parking and charging +
+  **8.** The Payment terminal/kiosk sends a stop command via the CSMS to the Charging Station. +
+  **9.** EV driver unplugs the charging cable and drives away.
+|{nbsp} d|_Alternative scenario(s)_ 
+  |<<ev_driver_authorization_using_rfid,C01 - EV Driver Authorization using RFID>> +
+  <<authorization_using_a_start_button,C02 - Authorization using a start button>> +
+  <<authorization_using_credit_debit_card,C03 - Authorization using credit/debit card>> +
+  <<authorization_using_pin_code,C04 - Authorization using PIN-code>> +
+  <<authorization_for_csms_initiated_transactions,C05 - Authorization for CSMS initiated transactions>> +
+  <<authorization_using_contract_certificates,C07 - Authorization using Contract Certificates>> +
+  <<authorization_at_evse_using_iso_15118_external_identification_means_eim,C08 - Authorization at EVSE using ISO 15118 External Identification Means (EIM)>> +
+  <<offline_authorization_of_unknown_id,C15 - Unknown Offline Authorization>>
+|5   |Prerequisites     |Integrated parking & charging payment system
+|6   |Postcondition(s)  |The transaction has completed at the Charging Station and Transaction information is available at the CSMS.
+|===
 
-No. Type Description
-1 Name Authorization using local id type
-2 ID C06
-Functional block C. Authorization
-3 Objectives Enable the Charging Station to start charging with a locally generated IdToken.
-4 Description When a Charging Station needs to start a Transaction for a Driver that has no RFID, or the RFID is
-not known. For Example, the EV Driver uses a parking ticket to start charging.
-Actors EV Driver, Payment Terminal, CSMS, Charging Station
+.Sequence Diagram: Authorization using local id type
+image::part2/images/figure_26.svg[Sequence Diagram: Authorization using local id type]
 
-_Scenario description_ (^) **1.** An EV driver drives into a garage, takes a parking ticket at the barrier at the entrance.
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error Handling  |n/a
+|8   |Remarks         |This use case uses an Parking Ticket as example, but this is not a requirement.
 
-**2.** Parks his EV at a Charging Station.
-**3.** Plugs in the charging cable.
-**4.** Scans/inserts his parking ticket on the Charging Station to start Charging
-**5.** EV is charging, driver leaves.
-**6.** EV driver returns, inserts parking ticket into a payment kiosk
-**7.** Pays for parking and charging
-**8.** The Payment terminal/kiosk sends a stop command via the CSMS to the Charging Station.
-**9.** EV driver unplugs the charging cable and drives away.
-
-_Alternative scenario(s)_ (^) C01 - EV Driver Authorization using RFID
-C02 - Authorization using a start button
-C03 - Authorization using credit/debit card
-C04 - Authorization using PIN-code
-C05 - Authorization for CSMS initiated transactions
-C07 - Authorization using Contract Certificates
-C08 - Authorization at EVSE using ISO 15118 External Identification Means (EIM)
-C15 - Unknown Offline Authorization
-**5 Prerequisites** Integrated parking & charging payment system
-**6 Postcondition(s)** The transaction has completed at the Charging Station and Transaction information is available
-at the CSMS.
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
-
-
-
-EV Driver
-
-
-Payment Terminal Charging Station CSMS
-
-
-Plugin cable
-
-
-StatusNotificationRequest(Occupied)
-StatusNotificationResponse()
-TransactionEventRequest(eventType  Started, ...)
-TransactionEventResponse(...)
-present parking ticket(1234)
-AuthorizeRequest(idToken(id  1234, type  Local))
-AuthorizeResponse(...)
-opt
-notification
-
-
-Start Charging
-TransactionEventRequest(eventType  Updated, transactionId  AB1234,
-chargingState  Charging, trigger  Authorized, idToken.id  1234, meterValues, ...)
-TransactionEventResponse(idTokenInfo.status  Accepted, ...)
-
-
-User returns to pick up EV
-present parking
-ticket(1234)
-stop charging(id  1234)
-Match ticketId
-with TransactionId()
-
-
-RequestStopTransactionRequest(transactionId  AB1234)
-RequestStopTransactionResponse(Accepted)
-TransactionEventRequest(eventType  Updated, transactionId  AB1234,
-chargingState  EVConnected, trigger  RemoteStop, idToken.id  1234, meterValues, ...)
-TransactionEventResponse(...)
-get cost(id  1234)
-pay for parking
-and charging
-opt
-notification
-
-
-Unplug cable
-StatusNotificationRequest(Available)
-StatusNotificationResponse()
-TransactionEventRequest(eventType  Ended, transactionId  AB1234, meterValues, ...)
-TransactionEventResponse(...)
-
-_Figure 26. Sequence Diagram: Authorization using local id type_
-
-
-7 Error Handling n/a
-
-**8 Remarks** (^) This use case uses an Parking Ticket as example, but this is not a requirement.
 The communication between the Payment Terminal and the CSMS is outside of scope of OCPP.
-The scenario description and sequence diagram above are based on the Configuration Variable
-for start & stop transaction being configured as follows:
-TxStartPoint: Authorized, DataSigned, PowerPathClosed, EnergyTransfer
-TxStopPoint: ParkingBayOccupancy, EVConnected
-This use-case is also valid for other configurations, but then the transaction might start/stop at
-another moment, which might change the sequence in which message are send. For more details
-see the use cases: E01 - Start Transaction options and E06 - Stop Transaction options.
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
 
+The scenario description and sequence diagram above are based on the Configuration Variable for start & stop transaction being configured as follows: +
+<<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
+<<tx_stop_point,`TxStopPoint`>>: <<tx_start_stop_point_values,ParkingBayOccupancy, EVConnected>> +
+This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are send. For more details see the use cases: <<start_transaction_options,E01 - Start Transaction options>> and <<stop_transaction_options,E06 - Stop Transaction options>>.
+|===
 
-**C06 - Authorization using local id type - Requirements**
+// TODO:
+==== C06 - Authorization using local id type - Requirements
 
 _Table 70. C06 - Authorization using local id type - Requirements_
 

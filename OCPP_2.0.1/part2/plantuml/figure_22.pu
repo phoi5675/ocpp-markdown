@@ -1,0 +1,51 @@
+@startuml figure_22
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+activate EVDriver
+
+EVDriver -> ChargingStation: Plugin cable
+activate ChargingStation
+deactivate EVDriver
+
+ChargingStation -> CSMS: StatusNotificationRequest(Occupied)
+activate CSMS
+
+CSMS --> ChargingStation: StatusNotificationResponse()
+
+ChargingStation -> CSMS: TransactionEventRequest(eventType  Started,...)
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate CSMS
+deactivate ChargingStation
+
+EVDriver -> ChargingStation: Press Start Button
+activate EVDriver
+activate ChargingStation
+
+ChargingStation -[hidden]-> EVDriver: hidden
+deactivate EVDriver
+
+opt if cable not permanently attached
+  ChargingStation -> ChargingStation: lock connector
+end
+
+ChargingStation -> ChargingStation: Start energy offer
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType  Updated, \n\
+    idToken.type  NoAuthorization,...)
+activate ChargingStation
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(idTokenInfo.status  Accepted,...)
+deactivate CSMS
+deactivate ChargingStation
+deactivate ChargingStation
+
+EVDriver -> ChargingStation: Unplug cable
+
+@enduml

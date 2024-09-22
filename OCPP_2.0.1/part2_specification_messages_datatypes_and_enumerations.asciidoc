@@ -5049,10 +5049,8 @@ All monitored Component.Variables in Critical or Alert state shall also be inclu
 Availability, monitoring alerts, and MAY limit problem reporting detail to just the active Problem boolean
 Variable.
 
-Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
-
-
-==== 3.71. RequestStartStopStatusEnumType.
+[[request_start_stop_status_enum_type]]
+==== RequestStartStopStatusEnumType
 
 _Enumeration_
 
