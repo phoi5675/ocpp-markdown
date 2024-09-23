@@ -1,0 +1,69 @@
+@startuml figure_27
+!include style.puml
+
+participant "EV" as EV
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+participant "(Sub)CA" as SubCA 
+
+EV -> ChargingStation: ServiceDiscoveryReq()
+activate EV
+activate ChargingStation
+
+ChargingStation --> EV: ServiceDiscoveryRes(PaymentServiceList: Contract, ExternalPayment)
+deactivate ChargingStation
+
+EV -> ChargingStation: PaymentServiceSelectionReq(paymentOption: Contract)
+activate ChargingStation
+
+ChargingStation --> EV: PaymentServiceSelectionRes()
+deactivate ChargingStation
+
+alt Cached certificate checking
+  EV -> ChargingStation: PaymentDetailsReq(ContractCertificateChain, EMAID)
+  activate ChargingStation
+
+  ChargingStation -> CSMS: AuthorizeRequest(idToken.EMAID, iso15118CertificateHashData[0..4])
+  activate CSMS
+
+  CSMS -> CSMS: check certificate cache()
+
+  CSMS --> ChargingStation: AuthorizeResponse(idTokenInfo, certificateStatus)
+  deactivate CSMS
+
+  ChargingStation --> EV: PaymentDetailsRes(GenChallenge)
+  deactivate ChargingStation
+
+  EV -> ChargingStation: AuthorizationReq(GenChallenge)
+  activate ChargingStation
+
+  ChargingStation --> EV: AuthorizationRes(EVSEProcessing, ResponseCode)
+  deactivate ChargingStation
+  deactivate EV
+else Real-time certificate checking
+  EV -> ChargingStation: PaymentDetailsReq(ContractCertificateChain, EMAID)
+  activate ChargingStation
+
+  ChargingStation -> CSMS: AuthorizeRequest(idToken.EMAID, iso15118CertificateHashData[0..4])
+  activate CSMS
+
+  CSMS -> SubCA: OCSP request()
+  activate SubCA
+
+  ChargingStation --> EV: PaymentDetailsRes(GenChallenge)
+  deactivate ChargingStation
+
+  EV -> ChargingStation: AuthorizationReq(GenChallenge)
+  activate ChargingStation
+
+  SubCA --> CSMS: OCSP response()
+  deactivate SubCA
+
+  CSMS --> ChargingStation: AuthorizeResponse(idTokenInfo, certificateStatus)
+  deactivate CSMS
+
+  ChargingStation --> EV: AuthorizationRes(EVSEProcessing, ResponseCode)
+  deactivate ChargingStation
+end
+
+@enduml

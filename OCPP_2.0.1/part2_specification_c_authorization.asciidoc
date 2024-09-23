@@ -96,6 +96,7 @@ When _offline_, a Charging Station MAY allow automatic authorization of any "unk
 
 === Authorization options
 
+:sectnums!:
 [[ev_driver_authorization_using_rfid]]
 === C01 - EV Driver Authorization using RFID
 
@@ -536,256 +537,144 @@ The scenario description and sequence diagram above are based on the Configurati
 This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are send. For more details see the use cases: <<start_transaction_options,E01 - Start Transaction options>> and <<stop_transaction_options,E06 - Stop Transaction options>>.
 |===
 
-// TODO:
 ==== C06 - Authorization using local id type - Requirements
 
-_Table 70. C06 - Authorization using local id type - Requirements_
+.C06 - Authorization using local id type - Requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
 
+|C06.FR.01  |{nbsp}               |The Charging Station SHALL only offer energy after authorization.
+|C06.FR.02  |If an <<id_token_enum_type,IdTokenType>> with type Local is presented by the EV Driver.
+  |The Charging Station SHALL send <<authorize_request,AuthorizeRequest>> to the CSMS to request authorization.
+|C06.FR.03  |{nbsp}               |<<authorize_request,AuthorizeRequest>> SHOULD only be used for the authorization of an identifier for charging.
+|C06.FR.04  |{nbsp}               |If the CSMS receives an <<authorize_request,AuthorizeRequest>>. it SHALL respond with an <<authorize_response,AuthorizeResponse>> and SHALL include an authorization status value indicating acceptance or a reason for rejection.
+|===
 
-ID Precondition Requirement definition
-C06.FR.01 The Charging Station SHALL only offer energy after
-authorization.
-C06.FR.02 If an IdTokenType with type Local is presented
-by the EV Driver.
+<<<
 
-
-The Charging Station SHALL send AuthorizeRequest to the
-CSMS to request authorization.
-C06.FR.03 AuthorizeRequest SHOULD only be used for the authorization of
-an identifier for charging.
-C06.FR.04 If the CSMS receives an AuthorizeRequest. it SHALL respond with an AuthorizeResponse and SHALL include
-an authorization status value indicating acceptance or a reason
-for rejection.
-
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
-
+:sectnums:
 [[iso_15118_authorization]]
 === ISO 15118 Authorization
 
-This authorization section originates from ISO15118-1 for the use of Plug & Charge functionalities.
+This authorization section originates from <<iso15118_1,ISO15118-1>> for the use of Plug & Charge functionalities.
 
+:sectnums!:
 [[authorization_using_contract_certificates]]
 === C07 - Authorization using Contract Certificates
 
-_Table 71. C07 - Authorization using Contract Certificates_
+.C07 - Authorization using Contract Certificates
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
+|1   |Name            |Authorization using Contract Certificates
+|2   |ID              |C07
+|{nbsp} d|_Functional block_ |C. Authorization
+|{nbsp} d|_Reference_ |<<iso15118_1,ISO15118-1>> D2
+|3   |Objective(s)    |See <<iso15118_1,ISO15118-1>>, use case Objective D2, page 26.
+|4   |Description     |See <<iso15118_1,ISO15118-1>>, use case Description D2 (first bullet), page 26.
+|{nbsp} d|_Actors_    |Actors: EV, Charging Station, CSMS, OCSP
+|{nbsp} d|_Scenario description_ 
+  |**15118**: +
+  See <<iso15118_1,ISO15118-1>>, use case Description D2, Scenario Description, first 2 bullets, page 26.
 
-No. Type Description
-1 Name Authorization using Contract Certificates
-2 ID C07
-Functional block C. Authorization
-Reference ISO15118-1 D2
-3 Objectives See ISO15118-1, use case Objective D2, page 26.
+  **OCPP**: +
+  **3.** The Charging Station sends an <<authorize_request,AuthorizeRequest>> message to the CSMS containing the eMAID and data needed for an OCSP request with regards to the contract certificate and certificate chain. +
+  **4.** The CSMS replies with an agreement or non-agreement, and the certificate status. +
+  **5.** Service starts after successful authorization of the IDs.
+|{nbsp} d|_Alternative scenario(s)_
+  |<<ev_driver_authorization_using_rfid,C01 - EV Driver Authorization using RFID>> +
+  <<authorization_using_a_start_button,C02 - Authorization using a start button>> +
+  <<authorization_using_credit_debit_card,C03 - Authorization using credit/debit card>> +
+  <<authorization_using_pin_code,C04 - Authorization using PIN-code>> +
+  <<authorization_for_csms_initiated_transactions,C05 - Authorization for CSMS initiated transactions>> +
+  <<authorization_using_local_id_type,C06 - Authorization using local id type>> +
+  <<authorization_at_evse_using_iso_15118_external_identification_means_eim,C08 - Authorization at EVSE using ISO 15118 External Identification Means (EIM)>> +
+  <<offline_authorization_of_unknown_id,C15 - Unknown Offline Authorization>>
+|5   |Prerequisites     |A contract Certificate is installed in the EV.
+|6   |Postcondition(s)  |The validity of the Contract Certificate is determined.
+|===
 
-**4 Description** (^) See ISO15118-1, use case Description D2 (first bullet), page 26.
-_Actors_ Actors: EV, Charging Station, CSMS, OCSP
-_Scenario description_ (^) **15118** :
-See ISO15118-1, use case Description D2, Scenario Description, first 2 bullets, page 26.
+.Authorization using Contract Certificates
+image::part2/images/figure_27.svg[Authorization using Contract Certificates]
 
-==== OCPP :
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling |{nbsp}
+|8   |Remark(s)      |In edition 1 of 15118, the message timeout of the PaymentDetailsReq/Res message is 5 seconds. In case certificate verification cannot be completed in that time it is possible to complete this during the AuthorizationReq/Res, which can be extended up to 60 seconds.
 
-**3.** The Charging Station sends an AuthorizeRequest message to the CSMS containing the eMAID
-and data needed for an OCSP request with regards to the contract certificate and certificate
-chain.
-**4.** The CSMS replies with an agreement or non-agreement, and the certificate status.
-**5.** Service starts after successful authorization of the IDs.
+{nbsp}
 
-_Alternative scenario(s)_ (^) C01 - EV Driver Authorization using RFID
-C02 - Authorization using a start button
-C03 - Authorization using credit/debit card
-C04 - Authorization using PIN-code
-C05 - Authorization for CSMS initiated transactions
-C06 - Authorization using local id type
-C08 - Authorization at EVSE using ISO 15118 External Identification Means (EIM)
-C15 - Unknown Offline Authorization
-**5 Prerequisites** A contract Certificate is installed in the EV.
-**6 Postcondition(s)** The validity of the Contract Certificate is determined.
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
+When the Charging Station is offline, it is recommended to omit the payment option for ISO 15118 contract certificates from the ServiceDiscoveryRes and revert to External Identification Means (use case C08), because certificate status cannot be checked.
+|===
 
+==== C07 - Authorization using Contract Certificates - Requirements
 
+.C07 - Requirements
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
 
-EV Charging Station CSMS (Sub)CA
+|C07.FR.01  |When Charging Station is online 
+  |The Charging Station SHALL send an <<authorize_request,AuthorizeRequest>> to the CSMS for validation. |{nbsp}
+|C07.FR.02  |C07.FR.01            |The <<authorize_request,AuthorizeRequest>> SHALL contain the eMAID and data needed for an OCSP request with regards to the contract certificate and certificate chain. |{nbsp}
+|C07.FR.04  |If the CSMS receives an <<authorize_request,AuthorizeRequest>>.
+  |It SHALL respond with an <<authorize_response,AuthorizeResponse>> and SHALL include an authorization status value indicating acceptance or a reason for rejection. |{nbsp}
+|C07.FR.05  |C07.FR.02            |The CSMS SHALL verify validity of the certificate and certificate chain via real-time orcached OCSP data. |{nbsp}
+|C07.FR.06  |C07.FR.01 AND +
+  If Charging Station is not able to validate a contract certificate, because it does not have the associated root certificate AND <<central_contract_validation_allowed,`CentralContractValidationAllowed`>> is _true_
+    |The Charging Station SHALL pass the contract certificate chain to the CSMS in _certificate_ attribute (in PEM format) of <<authorize_request,AuthorizeRequest>> for validation by CSMS. |{nbsp}
+|C07.FR.07  |When Charging Station is offline AND +
+  <<contract_validation_offline,`ContractValidationOffline`>> is _false_
+    |The Charging Station SHALL NOT allow charging. |{nbsp}
+|C07.FR.08  |When Charging Station is offline AND +
+  <<contract_validation_offline,`ContractValidationOffline`>> is _true_
+    |The Charging Station SHALL try to validate the contract certificate locally. |{nbsp}
+|C07.FR.09  |C07.FR.08 AND +
+  Contract certificate is valid AND <<local_authorize_offline,LocalAuthorizeOffline>> is _true_
+    |The Charging Station SHALL lookup the eMAID in <<local_authorization_list,Local Authorization List>> or <<authorization_cache,Authorization Cache>>. |{nbsp}
+|C07.FR.10  |C07.FR.09 AND +
+  eMAID found in <<local_authorization_list,Local Authorization List>>
+    |The Charging Station SHALL behave according to use case <<offline_authorization_through_local_authorization_list,C13 - Offline Authorization through Local Authorization List>>. |{nbsp}
+|C07.FR.11  |C07.FR.09 AND +
+  eMAID found in <<authorization_cache,Authorization Cache>>
+    |The Charging Station SHALL behave according to use case <<start_transaction_cached_id,C12 - Start Transaction - Cached Id>>. |{nbsp}
+|C07.FR.12  |C07.FR.09 AND +
+  eMAID is not found AND +
+  <<offline_tx_for_unknown_id_enabled,`OfflineTxForUnknownIdEnabled`>> = _true_
+    |The Charging Station SHALL allow charging according to use case <<offline_authorization_of_unknown_id,C15 - Offline Authorization of unknown Id>>. |{nbsp}
+|C07.FR.13  |C07.FR.04 AND +
+  the certificate chain (provided in _certificate_ or _iso15118CertificateHashData_) is valid +
+  AND +
+  authorization status of _idToken_ is one of `Blocked`, `Expired`, `Invalid`, `Unknown`
+    |CSMS SHALL return an AuthorizationResponse containing a _certificateStatus_ = `ContractCancelled` and the authorization status in _idTokenInfo.status_.
+      |Certificate is valid, but EMAID is not accepted.
+|C07.FR.14  |C07.FR.04 AND +
+  the certificate chain (provided in _certificate_ or _iso15118CertificateHashData_) is valid +
+  AND +
+  authorization status of _idToken_ is NOT one of `Blocked`, `Expired`, `Invalid`, `Unknown`
+    |CSMS SHALL return an AuthorizationResponse containing a _certificateStatus_ = `Accepted` and the authorization status in _idTokenInfo.status_.
+      |Charging can still not be allowed if _idTokenInfo.status_ is other than `Accepted` (e.g. `ConcurrentTx` or `NotAtThisLocation`).
+|C07.FR.15  |C07.FR.04 AND +
+  the certificate chain (provided in _certificate_ or _iso15118CertificateHashData_) has expired
+    |CSMS SHALL return an AuthorizationResponse containing a _certificateStatus_ = `CertificateExpired` and an _idTokenInfo.status_ = `Expired`
+      |If certificate is expired, then status of _idToken_ is also reported expired.
+|C07.FR.16  |C07.FR.04 AND +
+  the certificate chain (provided in _certificate_ or _iso15118CertificateHashData_) has been revoked
+    |CSMS SHALL return an AuthorizationResponse containing a _certificateStatus_ = `CertificateRevoked` and an _idTokenInfo.status_ = `Invalid`
+      |If certificate is revoked, then status of _idToken_ is reported as invalid.
+|C07.FR.17  |C07.FR.04 AND +
+  the certificate chain (provided in _certificate_ or _iso15118CertificateHashData_) cannot be verified or is invalid
+    |CSMS SHALL return an AuthorizationResponse containing a _certificateStatus_ = `CertChainError` and an _idTokenInfo.status_ = `Invalid`
+      |If certificate is cannot be verified, then status of _idToken_ is reported as invalid.
+|===
 
-
-ServiceDiscoveryReq()
-ServiceDiscoveryRes(PaymentServiceList: Contract, ExternalPayment)
-PaymentServiceSelectionReq(paymentOption: Contract)
-PaymentServiceSelectionRes()
-alt [Cached certificate checking]
-PaymentDetailsReq(ContractCertificateChain, EMAID)
-AuthorizeRequest(idToken.EMAID, iso15118CertificateHashData[0..4])
-check certificate cache()
-
-
-AuthorizeResponse(idTokenInfo, certificateStatus)
-PaymentDetailsRes(GenChallenge)
-AuthorizationReq(GenChallenge)
-AuthorizationRes(EVSEProcessing, ResponseCode)
-[Real-time certificate checking]
-PaymentDetailsReq(ContractCertificateChain, EMAID)
-AuthorizeRequest(idToken.EMAID, iso15118CertificateHashData[0..4])
-OCSP request()
-PaymentDetailsRes(GenChallenge)
-AuthorizationReq(GenChallenge)
-OCSP response()
-AuthorizeResponse(idTokenInfo, certificateStatus)
-AuthorizationRes(EVSEProcessing, ResponseCode)
-
-_Figure 27. Authorization using Contract Certificates_
-
-
-7 Error handling
-8 Remark(s) In edition 1 of 15118, the message timeout of the PaymentDetailsReq/Res message is 5 seconds.
-In case certificate verification cannot be completed in that time it is possible to complete this
-during the AuthorizationReq/Res, which can be extended up to 60 seconds.
-
-
-When the Charging Station is offline, it is recommended to omit the payment option for ISO 15118
-contract certificates from the ServiceDiscoveryRes and revert to External Identification Means
-(use case C08), because certificate status cannot be checked.
-
-**C07 - Authorization using Contract Certificates - Requirements**
-
-_Table 72. C07 - Requirements_
-
-
-ID Precondition Requirement definition Note
-C07.FR.01 When Charging Station is online The Charging Station SHALL send an
-AuthorizeRequest to the CSMS for validation.
-C07.FR.02 C07.FR.01 The AuthorizeRequest SHALL contain the eMAID
-and data needed for an OCSP request with regards
-to the contract certificate and certificate chain.
-C07.FR.04 If the CSMS receives an
-AuthorizeRequest.
-
-
-It SHALL respond with an AuthorizeResponse and
-SHALL include an authorization status value
-indicating acceptance or a reason for rejection.
-C07.FR.05 C07.FR.02 The CSMS SHALL verify validity of the certificate
-and certificate chain via real-time orcached OCSP
-data.
-
-C07.FR.06 (^) C07.FR.01 AND
-If Charging Station is not able to
-validate a contract certificate,
-because it does not have the
-associated root certificate AND
-CentralContractValidationAll
-owed is _true_
-The Charging Station SHALL pass the contract
-certificate chain to the CSMS in _certificate_ attribute
-(in PEM format) of AuthorizeRequest for validation
-by CSMS.
-C07.FR.07 (^) When Charging Station is offline AND
-ContractValidationOffline is
-_false_
-The Charging Station SHALL NOT allow charging.
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
-
-
-
-ID Precondition Requirement definition Note
-
-C07.FR.08 (^) When Charging Station is offline AND
-ContractValidationOffline is
-_true_
-The Charging Station SHALL try to validate the
-contract certificate locally.
-C07.FR.09 (^) C07.FR.08 AND
-Contract certificate is valid AND
-LocalAuthorizeOffline is _true_
-The Charging Station SHALL lookup the eMAID in
-Local Authorization List or Authorization Cache.
-C07.FR.10 (^) C07.FR.09 AND
-eMAID found in Local Authorization
-List
-The Charging Station SHALL behave according to
-use case C13 - Offline Authorization through Local
-Authorization List.
-C07.FR.11 (^) C07.FR.09 AND
-eMAID found in Authorization Cache
-The Charging Station SHALL behave according to
-use case C12 - Start Transaction - Cached Id.
-C07.FR.12 (^) C07.FR.09 AND
-eMAID is not found AND
-OfflineTxForUnknownIdEnabled
- _true_
-The Charging Station SHALL allow charging
-according to use case C15 - Offline Authorization of
-unknown Id.
-C07.FR.13 (^) C07.FR.04 AND
-the certificate chain (provided in
-_certificate_ or
-_iso15118CertificateHashData_ ) is valid
-AND
-authorization status of _idToken_ is one
-of Blocked, Expired, Invalid,
-Unknown
-CSMS SHALL return an AuthorizationResponse
-containing a _certificateStatus_ =
-ContractCancelled and the authorization status
-in _idTokenInfo.status_.
-Certificate is valid, but
-EMAID is not accepted.
-C07.FR.14 (^) C07.FR.04 AND
-the certificate chain (provided in
-_certificate_ or
-_iso15118CertificateHashData_ ) is valid
-AND
-authorization status of _idToken_ is NOT
-one of Blocked, Expired, Invalid,
-Unknown
-CSMS SHALL return an AuthorizationResponse
-containing a _certificateStatus_  Accepted and the
-authorization status in _idTokenInfo.status_.
-Charging can still not be
-allowed if
-_idTokenInfo.status_ is
-other than Accepted
-(e.g. ConcurrentTx or
-NotAtThisLocation).
-C07.FR.15 (^) C07.FR.04 AND
-the certificate chain (provided in
-_certificate_ or
-_iso15118CertificateHashData_ ) has
-expired
-CSMS SHALL return an AuthorizationResponse
-containing a _certificateStatus_ =
-CertificateExpired and an _idTokenInfo.status_
- Expired
-If certificate is expired,
-then status of _idToken_ is
-also reported expired.
-C07.FR.16 (^) C07.FR.04 AND
-the certificate chain (provided in
-_certificate_ or
-_iso15118CertificateHashData_ ) has
-been revoked
-CSMS SHALL return an AuthorizationResponse
-containing a _certificateStatus_ =
-CertificateRevoked and an _idTokenInfo.status_
- Invalid
-If certificate is revoked,
-then status of _idToken_ is
-reported as invalid.
-C07.FR.17 (^) C07.FR.04 AND
-the certificate chain (provided in
-_certificate_ or
-_iso15118CertificateHashData_ ) cannot
-be verified or is invalid
-CSMS SHALL return an AuthorizationResponse
-containing a _certificateStatus_  CertChainError
-and an _idTokenInfo.status_  Invalid
-If certificate is cannot be
-verified, then status of
-_idToken_ is reported as
-invalid.
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
+<<<
 
 [[authorization_at_evse_using_iso_15118_external_identification_means_eim]]
 === C08 - Authorization at EVSE using ISO 15118 External Identification Means (EIM)
-
+// TODO:
 _Table 73. C08 - Authorization at EVSE using ISO 15118 External Identification Means (EIM)_
 
 

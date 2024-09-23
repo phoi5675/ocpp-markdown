@@ -2059,9 +2059,10 @@ instance name even if only one instance of the component exists. It is not requi
 The variable Voltage of ChargingStation has been added to show an example of a multi-instance variable.
 Not all VariableAttributes and VariableCharacteristics are shown in the table.
 
-=== 2.14. ISO 15118 Related
+=== ISO 15118 Related
 
-**2.14.1.** CentralContractValidationAllowed
+[[central_contract_validation_allowed]]
+==== `CentralContractValidationAllowed`
 
 
 Required no
@@ -2072,7 +2073,8 @@ variableCharacteristics dataType boolean
 Description If this variable exists and has the value true , then Charging Station can provide a contract certificate that it cannot
 validate, to the CSMS for validation as part of the AuthorizeRequest.
 
-**2.14.2.** ContractValidationOffline
+[[contract_validation_offline]]
+==== `ContractValidationOffline`
 
 
 Required yes
