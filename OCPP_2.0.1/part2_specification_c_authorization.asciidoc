@@ -674,42 +674,38 @@ When the Charging Station is offline, it is recommended to omit the payment opti
 
 [[authorization_at_evse_using_iso_15118_external_identification_means_eim]]
 === C08 - Authorization at EVSE using ISO 15118 External Identification Means (EIM)
-// TODO:
-_Table 73. C08 - Authorization at EVSE using ISO 15118 External Identification Means (EIM)_
 
+.C08 - Authorization at EVSE using ISO 15118 External Identification Means (EIM)
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
-No. Type Description
-1 Name Authorization at EVSE using ISO 15118 External Identification Means (EIM)
-2 ID C08 / 15118-1 D4
-Functional block C. Authorization
-Reference ISO15118-1 D4
-3 Objectives To authorize the EV via the Charging Station, with help of the CSMS. Also see ISO15118-1, use
-case Objective D4, page 28.
-4 Description The Charging Station sends an AuthorizeRequest message based on information provided by the
-EV. Also see ISO15118-1, use case Description D4 up to and including "NOTE", page 28.
-Actors Actors: EV, Charging Station, CSMS
+|1   |Name            |Authorization at EVSE using ISO 15118 External Identification Means (EIM)
+|2   |ID              |C08 / 15118-1 D4
+|{nbsp} d|_Functional block_ |C. Authorization
+|{nbsp} d|_Reference_ |<<iso15118_1,ISO15118-1>> D4
+|3   |Objective(s)    |To authorize the EV via the Charging Station, with help of the CSMS. Also see <<iso15118_1,ISO15118-1>>, use case Objective D4, page 28.
+|4   |Description     |The Charging Station sends an <<authorize_request,AuthorizeRequest>> message based on information provided by the EV. Also see <<iso15118_1,ISO15118-1>>, use case Description D4 up to and including "NOTE", page 28.
+|{nbsp} d|_Actors_    |Actors: EV, Charging Station, CSMS
+|{nbsp} d|_Scenario description_ 
+  |**15118** +
+  See <<iso15118_1,ISO15118-1>>, use case Description (Scenarion Description) D4, page 28.
 
-_Scenario description_ (^) **15118**
-See ISO15118-1, use case Description (Scenarion Description) D4, page 28.
-
-==== OCPP
-
-**1.** The Charging Station sends an AuthorizeRequest with an idToken containing the External
-Identification Means (EIM).
-**2.** The CSMS responds with an AuthorizeResponse.
-
-_Alternative scenario(s)_ (^) C01 - EV Driver Authorization using RFID
-C02 - Authorization using a start button
-C03 - Authorization using credit/debit card
-C04 - Authorization using PIN-code
-C05 - Authorization for CSMS initiated transactions
-C06 - Authorization using local id type
-C07 - Authorization using Contract Certificates
-C15 - Unknown Offline Authorization
-**5 Prerequisites** Communication between EV and EVSE SHALL be established successfully.
-**6 Postcondition(s)** (^) Authorization is successful. Also see ISO15118-1, use case End conditions D4, page 28.
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
-
+  **OCPP** +
+  **1.** The Charging Station sends an <<authorize_request,AuthorizeRequest>> with an <<id_token_enum_type,idToken>> containing the External Identification Means (EIM). +
+  **2.** The CSMS responds with an <<authorize_response,AuthorizeResponse>>.
+|{nbsp} d|_Alternative scenario(s)_ 
+  |<<ev_driver_authorization_using_rfid,C01 - EV Driver Authorization using RFID>> +
+  <<authorization_using_a_start_button,C02 - Authorization using a start button>> +
+  <<authorization_using_credit_debit_card,C03 - Authorization using credit/debit card>> +
+  <<authorization_using_pin_code,C04 - Authorization using PIN-code>> +
+  <<authorization_for_csms_initiated_transactions,C05 - Authorization for CSMS initiated transactions>> +
+  <<authorization_using_local_id_type,C06 - Authorization using local id type>> +
+  <<authorization_using_contract_certificates,C07 - Authorization using Contract Certificates>> +
+  <<offline_authorization_of_unknown_id,C15 - Unknown Offline Authorization>>
+|5   |Prerequisites     |Communication between EV and EVSE SHALL be established successfully.
+|6   |Postcondition(s)  |Authorization is successful. Also see <<iso15118_1,ISO15118-1>>, use case End conditions D4, page 28.
+|===
 
 
 EV Charging Station CSMS
