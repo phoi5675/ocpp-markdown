@@ -1,0 +1,54 @@
+@startuml figure_28
+!include style.puml
+
+participant "EV" as EV
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+opt Identify first
+  note over ChargingStation
+    User might identify prior to connecting the EV to the EVSE
+  end note
+
+  ChargingStation -> CSMS: AuthorizeRequest(idToken)
+  activate ChargingStation
+  activate CSMS
+
+  CSMS --> ChargingStation: AuthorizeResponse(idTokenInfo)
+  deactivate ChargingStation
+  deactivate CSMS
+end
+
+EV -> ChargingStation: ServiceDiscoveryReq()
+activate EV
+activate ChargingStation
+
+ChargingStation --> EV: ServiceDiscoveryRes(PaymentServiceList: ExternalPayment)
+deactivate ChargingStation
+
+EV -> ChargingStation: PaymentServiceSelectionReq(paymentOption: ExternalPayment)
+activate ChargingStation
+
+ChargingStation --> EV: PaymentServiceSelectionRes()
+deactivate ChargingStation
+
+EV -> ChargingStation: AuthorizationReq()
+activate ChargingStation
+
+opt Identify after plugin
+  note over ChargingStation
+    User might identify after plugging in, sequence time-out is 60 seconds
+  end note
+
+  ChargingStation -> CSMS: AuthorizeRequest(idToken)
+  activate CSMS
+
+  CSMS --> ChargingStation: AuthorizeResponse(idTokenInfo)
+  deactivate CSMS
+end
+
+ChargingStation --> EV: AuthorizationRes()
+deactivate EV
+deactivate ChargingStation
+
+@enduml

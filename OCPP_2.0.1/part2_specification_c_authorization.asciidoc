@@ -33,6 +33,7 @@ AdditionalInfo can be used to send extra information which can be validated by t
 
 _AdditionalInfo_ contains one or more custom types, which need to be agreed upon by all parties involved. When AdditionalInfo is implemented the Charging Station SHALL also cache and include _AdditionalInfo_ during regular operations and set the Configuration Variable <<additional_info_items_permessage,`AdditionalInfoItemsPerMessage`>>. When _AdditionalInfo_ is NOT implemented or a not supported _AdditionalInfo.type_ is used, the CSMS/Charging Station MAY ignore the _AdditionalInfo_.
 
+[[group_id_tokens]]
 === Group ID Tokens
 
 _This section is normative_
@@ -707,141 +708,70 @@ When the Charging Station is offline, it is recommended to omit the payment opti
 |6   |Postcondition(s)  |Authorization is successful. Also see <<iso15118_1,ISO15118-1>>, use case End conditions D4, page 28.
 |===
 
+.Sequence Diagram: Authorization at EVSE using external credentials performed with help of SA.
+image::part2/images/figure_28.svg[Sequence Diagram: Authorization at EVSE using external credentials performed with help of SA.]
 
-EV Charging Station CSMS
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Remark(s)         |Please note that all identification means mentioned in the previous section can be applied to this use case. The only difference is the availability of 15118 communication.
+|===
 
+Source: <<iso15118_1,ISO15118-1>>
 
-Identify first
-User might identify prior to connecting the EV to the EVSE
+==== C08 - Authorization at EVSE using ISO 15118 External Identification Means (EIM) - Requirements
 
+.C08 - Requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
 
-AuthorizeRequest(idToken)
+|C08.FR.01  |{nbsp}               |The Charging Station SHALL send the identification to the CSMS for validation.
+|C08.FR.02  |{nbsp}               |EV Driver SHALL activate the authorization within a specific time after connecting the EV to the EVSE or the EVSE SHALL have an HMI to authorize the restart of the identification process.
+|===
 
+:sectnums:
+=== GroupId
 
-AuthorizeResponse(idTokenInfo)
-
-
-ServiceDiscoveryReq()
-
-
-ServiceDiscoveryRes(PaymentServiceList: ExternalPayment)
-
-
-PaymentServiceSelectionReq(paymentOption: ExternalPayment)
-
-
-PaymentServiceSelectionRes()
-
-
-AuthorizationReq()
-
-
-Identify after plugin
-User might identify after plugging in, sequence time-out is 60 seconds
-
-
-AuthorizeRequest(idToken)
-
-
-AuthorizeResponse(idTokenInfo)
-
-
-AuthorizationRes()
-
-_Figure 28. Sequence Diagram: Authorization at EVSE using external credentials performed with help of SA._
-
-
-7 Remark(s) Please note that all identification means mentioned in the previous section can be applied to this
-use case. The only difference is the availability of 15118 communication.
-
-Source: ISO15118-1
-
-**C08 - Authorization at EVSE using ISO 15118 External Identification Means (EIM) -**
-
-**Requirements**
-
-_Table 74. C08 - Requirements_
-
-
-ID Precondition Requirement definition
-C08.FR.01 The Charging Station SHALL send the identification to the CSMS
-for validation.
-C08.FR.02 EV Driver SHALL activate the authorization within a specific time
-after connecting the EV to the EVSE or the EVSE SHALL have an
-HMI to authorize the restart of the identification process.
-
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
-
-
-==== 2.3. GroupId
-
+:sectnums!:
 ==== C09 - Authorization by GroupId
 
-_Table 75. C09 - Authorization by GroupId_
+.C09 - Authorization by GroupId
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
+|1   |Name            |Authorization by GroupId
+|2   |ID              |C09
+|{nbsp} d|_Functional block_  |C. Authorization
+|3   |Objective(s)    |To enable 2 EV drivers with different IdTokens to be authorized using the same <<group_id_tokens,GroupId>>.
+|4   |Description     |This use cases covers how a Charging Station can authorize an action for an EV Driver based on GroupId information. This could for example be used if 2 people regularly use the same EV: they can use their own IdToken (e.g. RFID card), and can deauthorize transactions that were started with the other idToken (with the same GroupId).
+|{nbsp} d|_Actors_    |Charging Station, CSMS, EV Driver1, EV Driver2
+|{nbsp} d|_Scenario description_ 
+  |**1.** EV Driver 1 presents an IdToken. +
+  **2.** The Charging Station sends <<authorize_request,AuthorizeRequest>> to the CSMS to request authorization. +
+  **3.** Upon receipt of <<authorize_request,AuthorizeRequest>>, the CSMS responds with <<authorize_response,AuthorizeResponse>>. This response message includes the GroupId. +
+  **4.** The Charging Station stores the GroupIdToken with the authorization information of EV Driver 1. +
+  **5.** EV Driver 2 presents an IdToken. +
+  **6.** The Charging Station sends <<authorize_request,AuthorizeRequest>> to the CSMS to request authorization. +
+  **7.** Upon receipt of <<authorize_request,AuthorizeRequest>>, the CSMS responds with <<authorize_response,AuthorizeResponse>>. This response message includes the GroupId. +
+  **8.** Based on the matching GroupId information in both responses, the Charging Station authorizes the action.
+|5   |Prerequisite(s)   |EV Driver 1 and EV Driver 2 have the same GroupId.
+|6   |Postcondition(s)  |GroupId is known by the Charging Station.
+|===
 
-No. Type Description
-1 Name Authorization by GroupId
-2 ID C09
-Functional block C. Authorization
-3 Objective(s) To enable 2 EV drivers with different IdTokens to be authorized using the same GroupId.
-4 Description This use cases covers how a Charging Station can authorize an action for an EV Driver based on
-GroupId information. This could for example be used if 2 people regularly use the same EV: they
-can use their own IdToken (e.g. RFID card), and can deauthorize transactions that were started
-with the other idToken (with the same GroupId).
-Actors Charging Station, CSMS, EV Driver1, EV Driver2
+.Sequence Diagram: Authorization by GroupId
+image::part2/images/figure_29.svg[Sequence Diagram: Authorization by GroupId]
 
-_Scenario description_ (^) **1.** EV Driver 1 presents an IdToken.
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling    |n/a
+|8   |Remark(s)         |<<id_token_type,IdTokenType>> data used as groupId may often use a shared central account identifier for the <<group_id_tokens,GroupId>>, instead of using one of the idTokens belonging to an account. +
+The groupId mechanism as described in this use case also works when using the Authorization Cache, as the groupId is stored in the cache.
+|===
 
-**2.** The Charging Station sends AuthorizeRequest to the CSMS to request authorization.
-**3.** Upon receipt of AuthorizeRequest, the CSMS responds with AuthorizeResponse. This response
-message includes the GroupId.
-**4.** The Charging Station stores the GroupIdToken with the authorization information of EV Driver
-1.
-**5.** EV Driver 2 presents an IdToken.
-**6.** The Charging Station sends AuthorizeRequest to the CSMS to request authorization.
-**7.** Upon receipt of AuthorizeRequest, the CSMS responds with AuthorizeResponse. This response
-message includes the GroupId.
-**8.** Based on the matching GroupId information in both responses, the Charging Station authorizes
-the action.
-**5 Prerequisite(s)** EV Driver 1 and EV Driver 2 have the same GroupId.
-**6 Postcondition(s)** GroupId is known by the Charging Station.
-
-
-EVDriver1 EVDriver2 Charging Station^ CSMS
-present IdToken(001)
-opt [if IdToken is not present in the Local Authorization List or Authorization Cache.]
-AuthorizeRequest(IdToken  001)
-AuthorizeResponse(groupIdToken  123, status)
-opt
-notification
-TransactionEventRequest(eventType  Started, triggerReason  Authorized, ...)
-TransactionEventResponse(...)
-present IdToken(002)
-opt [if the IdToken used for stopping the transaction is different from the IdToken that started the transaction AND NOT (The GroupIdTokens used to start and stop the transaction are present in either the Local Authorization List or Authorization Cache AND
-they are the same).] AuthorizeRequest(IdToken  002)
-AuthorizeResponse(groupIdToken  123, status)
-TransactionEventRequest(eventType  Ended, triggerReason  StopAuthorized, stoppedReason  Local, ...)
-TransactionEventResponse(...)
-opt
-notification
-
-_Figure 29. Sequence Diagram: Authorization by GroupId_
-
-
-7 Error handling n/a
-8 Remark(s) IdTokenType data used as groupId may often use a shared central account identifier for the
-GroupId, instead of using one of the idTokens belonging to an account.
-The groupId mechanism as described in this use case also works when using the Authorization
-Cache, as the groupId is stored in the cache.
-
-**C09 - Authorization by GroupId - Requirements**
+==== C09 - Authorization by GroupId - Requirements
 
 _Table 76. C09 - Requirements_
-
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
-
-
 
 ID Precondition Requirement definition
 C09.FR.02 IdTokens that are part of the same group for authorization

@@ -1,0 +1,55 @@
+@startuml figure_29
+!include style.puml
+
+actor "EVDriver1" as EVDriver1
+actor "EVDriver2" as EVDriver2
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+EVDriver1 -> ChargingStation: present IdToken(001)
+activate ChargingStation
+
+opt if IdToken is not present in the Local Authorization List or Authorization Cache.
+  ChargingStation -> CSMS: AuthorizeRequest(IdToken = 001)
+  activate CSMS
+
+  CSMS --> ChargingStation: AuthorizeResponse(groupIdToken = 123, status)
+  deactivate CSMS
+end
+
+opt
+  ChargingStation --> EVDriver1: notification
+end
+
+ChargingStation -> CSMS: TransactionEventRequest(eventType = Started, triggerReason = Authorized, ...)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate CSMS
+deactivate ChargingStation
+
+EVDriver2 -> ChargingStation: present IdToken(002)
+activate ChargingStation
+
+opt if the IdToken used for stopping the transaction is different from the IdToken that started the transaction AND NOT\n\
+ (The GroupIdTokens used to start and stop the transaction are present in either the Local Authorization List or Authorization Cache AND\n\
+ they are the same).
+
+  ChargingStation -> CSMS: AuthorizeRequest(IdToken = 002)
+  activate CSMS
+
+  CSMS --> ChargingStation: AuthorizeResponse(groupIdToken = 123, status)
+  deactivate CSMS
+end
+
+ChargingStation -> CSMS: TransactionEventRequest(eventType = Ended, triggerReason = StopAuthorized, stoppedReason = Local, ...)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate CSMS
+
+opt 
+  ChargingStation --> EVDriver2: notification
+  deactivate ChargingStation
+end 
+@enduml
