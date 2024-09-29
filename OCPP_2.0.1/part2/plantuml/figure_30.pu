@@ -1,0 +1,33 @@
+@startuml figure_30
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+alt for AuthorizeResponse
+  ChargingStation -> CSMS: AuthorizeRequest(...)
+  activate ChargingStation
+  activate CSMS
+
+  CSMS --> ChargingStation: AuthorizeResponse(idTokenInfo,...)
+  deactivate CSMS
+
+  ChargingStation -> ChargingStation: \
+    Store Authorization Data in\n\
+    Authorization Cache()
+  deactivate ChargingStation
+else for TransactionEventResponse
+  ChargingStation -> CSMS: TransactionEventRequest(...)
+  activate ChargingStation
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse(idTokenInfo,...)
+  deactivate CSMS
+
+  ChargingStation -> ChargingStation: \
+    Store Authorization Data in\n\
+    Authorization Cache()
+  deactivate ChargingStation
+end
+
+@enduml

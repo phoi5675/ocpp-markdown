@@ -613,6 +613,7 @@ temporary suspension of energy transfer
 The Charging Station SHOULD send a TransactionEventRequest with
 chargingState  EVConnected.
 
+[[start_transaction_cable_plugin_first]]
 ==== E02 - Start Transaction - Cable Plugin First
 
 _Table 98. E02 - Start Transaction - Cable Plugin First_

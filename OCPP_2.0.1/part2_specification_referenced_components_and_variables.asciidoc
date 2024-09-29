@@ -771,7 +771,8 @@ variableCharacteristics dataType boolean
 Description Whether the Charging Station, when online, will start a transaction for locally-authorized identifiers without waiting
 for or requesting an AuthorizeResponse from the CSMS.
 
-**2.3.7.** MasterPassGroupId
+[[master_pass_group_id]]
+==== `MasterPassGroupId`
 
 
 Required no
@@ -808,7 +809,7 @@ disables all authorization with CSMS.
 === Authorization Cache related
 
 [[auth_cache_enabled]]
-==== AuthCacheEnabled
+==== `AuthCacheEnabled`
 
 
 NOTE When the value of this variable is changed, the content of the authorization cache should not be altered.
@@ -832,7 +833,7 @@ variableCharacteristics dataType boolean
 Description If this variable exists and reports a value of true , Authorization Cache is supported, but not necessarily enabled.
 
 [[auth_cache_lifetime]]
-==== AuthCacheLifeTime
+==== `AuthCacheLifeTime`
 
 
 Required no
@@ -1141,7 +1142,10 @@ will stop the transaction as soon as EV or EVSE (temporarily)
 suspend the charging.
 **DataSigned** This condition has no meaning as a TxStopPoint and should not
 be used as such.
-**2.6.7.** MaxEnergyOnInvalidId
+
+[[max_energy_on_invalid_id]]
+==== `MaxEnergyOnInvalidId`
+
 **Required** no
 **Component componentName** TxCtrlr
 **Variable variableName** MaxEnergyOnInvalidId
@@ -1152,8 +1156,8 @@ be used as such.
 transaction.
 Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
-
-**2.6.8.** StopTxOnInvalidId
+[[stop_tx_on_invalid_id]]
+==== StopTxOnInvalidId
 
 
 Required yes

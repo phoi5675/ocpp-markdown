@@ -197,13 +197,15 @@ status ChangeAvailabilityStatusEnumType 1..1 Required. This indicates whether th
 able to perform the availability change.
 statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
-==== 1.6. ClearCache
+=== ClearCache
 
-**1.6.1. ClearCacheRequest**
+[[clear_cache_request]]
+==== ClearCacheRequest
 
 This contains the field definition of the ClearCacheRequest PDU sent by the CSMS to the Charging Station. No fields are defined.
 
-**1.6.2. ClearCacheResponse**
+[[clear_cache_response]]
+==== ClearCacheResponse
 
 This contains the field definition of the ClearCacheResponse PDU sent by the Charging Station to the CSMS in response to a
 
@@ -1453,16 +1455,14 @@ e
 This contains the field definition of the ReservationStatusUpdateResponse PDU sent by the CSMS to the Charging Station in
 response to a ReservationStatusUpdateRequest. No fields are defined.
 
-=== 1.47. ReserveNow
+=== ReserveNow
 
-**1.47.1. ReserveNowRequest**
+[[reserve_now_request]]
+==== ReserveNowRequest
 
 This contains the field definition of the ReserveNowRequest PDU sent by the CSMS to the Charging Station.
 
 _Class_
-
-Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
-
 
 
 Field Name Field Type Card. Description
@@ -1475,7 +1475,8 @@ made.
 groupIdToken IdTokenType 0..1 Optional. The group identifier for which the reservation is
 made.
 
-**1.47.2. ReserveNowResponse**
+[[reserve_now_response]]
+==== ReserveNowResponse
 
 This contains the field definition of the ReserveNowResponse PDU sent by the Charging Station to the CSMS in response to
 ReserveNowRequest PDU.

@@ -771,60 +771,37 @@ The groupId mechanism as described in this use case also works when using the Au
 
 ==== C09 - Authorization by GroupId - Requirements
 
-_Table 76. C09 - Requirements_
+.C09 - Requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
 
-ID Precondition Requirement definition
-C09.FR.02 IdTokens that are part of the same group for authorization
-purposes SHALL have a common group identifier in the optional
-groupIdToken element in IdTokenInfo
-C09.FR.03 When a transaction has been authorized/started
-with a certain IdToken.
+|C09.FR.02  |{nbsp}               |IdTokens that are part of the same group for authorization purposes SHALL have a common group identifier in the optional groupIdToken element in <<id_token_info_type,IdTokenInfo>>
+|C09.FR.03  |When a transaction has been authorized/started with a certain IdToken.
+  |An EV Driver with a different, valid IdToken, but with the same groupIdToken SHALL be authorized to stop the transaction.
+|C09.FR.04  |C09.FR.03 AND +
+  If both IdTokens with their corresponding GroupIdTokens are present in either the <<local_authorization_list,Local Authorization List>> or <<authorization_cache,Authorization Cache>>.
+    |The Charging Station MAY send an <<authorize_request,AuthorizeRequest>> to the CSMS.
+|C09.FR.05  |C09.FR.03 AND +
+  (NOT C09.FR.07) AND +
+  If the newly presented IdToken with its corresponding GroupIdToken is not present in either the <<local_authorization_list,Local Authorization List>> or <<authorization_cache,Authorization Cache>>.
+    |The Charging Station SHALL send an <<authorize_request,AuthorizeRequest>> to the CSMS.
+|C09.FR.07  |When an <<id_token_type,idToken>> is presented during a transaction that has been authorized AND +
+  (a) the presented <<id_token_type,idToken>> is the same as the <<id_token_type,idToken>> that started the authorization +
+  OR +
+  (b) when the presented <<id_token_type,idToken>> is in the Local Authorization List or Authorization Cache AND is valid AND has the same GroupIdToken as the IdToken that started the authorization.
+    |The Charging Station SHALL end the authorization of the transaction, without first sending an <<authorize_request,AuthorizeRequest>>
+|C09.FR.09  |If the IdToken in <<authorize_request,AuthorizeRequest>> has an associated groupIdToken
+  |<<authorize_response,AuthorizeResponse>> from CSMS SHALL include <<id_token_info_type,groupIdToken>>.
+|C09.FR.10  |{nbsp}                 |<<authorize_response,AuthorizeResponse>> SHALL include an authorization status value indicating acceptance or a reason for rejection.
+|C09.FR.11  |C09.FR.03 AND +
+  A different IdToken is presented for stopping, which has the same GroupIdToken, but does not have status = `Accepted`
+    |The Charging Station SHALL NOT stop the transaction.
+|C09.FR.12  |If a <<transaction_event_request,TransactionEventRequest>> contains an IdToken and idToken has an associated groupIdToken
+  <<transaction_event_response,TransactionEventResponse>> from CSMS SHALL include <<id_token_info_type,groupIdToken>>.
+|===
 
-
-An EV Driver with a different, valid IdToken, but with the same
-groupIdToken SHALL be authorized to stop the transaction.
-
-C09.FR.04 (^) C09.FR.03 AND
-If both IdTokens with their corresponding
-GroupIdTokens are present in either the Local
-Authorization List or Authorization Cache.
-The Charging Station MAY send an AuthorizeRequest to the
-CSMS.
-C09.FR.05 (^) C09.FR.03 AND
-(NOT C09.FR.07) AND
-If the newly presented IdToken with its
-corresponding GroupIdToken is not present in
-either the Local Authorization List or
-Authorization Cache.
-The Charging Station SHALL send an AuthorizeRequest to the
-CSMS.
-C09.FR.07 When an idToken is presented during a
-transaction that has been authorized AND
-(a) the presented idToken is the same as the
-idToken that started the authorization
-OR
-(b) when the presented idToken is in the Local
-Authorization List or Authorization Cache AND
-is valid AND has the same GroupIdToken as the
-IdToken that started the authorization.
-The Charging Station SHALL end the authorization of the
-transaction, without first sending an AuthorizeRequest
-C09.FR.09 If the IdToken in AuthorizeRequest has an
-associated groupIdToken
-AuthorizeResponse from CSMS SHALL include groupIdToken.
-C09.FR.10 AuthorizeResponse SHALL include an authorization status value
-indicating acceptance or a reason for rejection.
-C09.FR.11 (^) C09.FR.03 AND
-A different IdToken is presented for stopping,
-which has the same GroupIdToken, but does not
-have status  Accepted
-The Charging Station SHALL NOT stop the transaction.
-C09.FR.12 If a TransactionEventRequest contains an
-IdToken and idToken has an associated
-groupIdToken
-TransactionEventResponse from CSMS SHALL include
-groupIdToken.
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
+<<<
 
 :sectnums:
 === Authorization Cache
@@ -833,382 +810,218 @@ Edition 3 FINAL, 2024-05-06 **C. Authorization**
 [[store_authorization_data_in_the_authorization_cache]]
 ==== C10 - Store Authorization Data in the Authorization Cache
 
-_Table 77. C10 - Store Authorization Data in Authorization Cache_
+.C10 - Store Authorization Data in Authorization Cache
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
+|1   |Name            |Store Authorization Data in the Authorization Cache
+|2   |ID              |C10
+|{nbsp} d|_Functional block_  |C. Authorization
+|3   |Objective(s)    |To store all the latest received IdTokens in the Authorization Cache.
+|4   |Description     |This use case covers how the Charging Station autonomously stores a record of previously presented identifiers that have been successfully authorized by the CSMS in the Authorization Cache. (Successfully meaning: a response received on a message containing an IdToken)
+|{nbsp} d|_Actors_    |Charging Station, CSMS
+|{nbsp} d|_Scenario description_ 
+  |**1.** The Charging Station receives a <<authorize_response,AuthorizeResponse>>, <<reserve_now_request,ReserveNowRequest>> or <<transaction_event_response,TransactionEventResponse>> response message from the CSMS. +
+  **2.** The Cache is updated by the Charging Station using all received <<id_token_info_type,IdTokenInfo>> from the response message from the CSMS.
+|{nbsp} d|_Alternative scenario(s)_ |n/a
+|5   |Prerequisite(s) |An Authorization Cache is implemented and and the value of the <<auth_cache_enabled,`AuthCacheEnabled`>> Configuration Variable is set to 'true'.
+|6   |Postcondition(s) 
+  |**Successful postcondition:** +
+  The Charging Station stored the newly received <<id_token_info_type,IdTokenInfo>> data in the Authorization Cache. +
+  **Failure postcondition:** +
+  The Charging Station was _not_ able to store the Authorization Cache.
+|===
 
-No. Type Description
-1 Name Store Authorization Data in the Authorization Cache
-2 ID C10
-Functional block C. Authorization
-3 Objective(s) To store all the latest received IdTokens in the Authorization Cache.
-4 Description This use case covers how the Charging Station autonomously stores a record of previously
-presented identifiers that have been successfully authorized by the CSMS in the Authorization
-Cache. (Successfully meaning: a response received on a message containing an IdToken)
-Actors Charging Station, CSMS
-Scenario description 1. The Charging Station receives a AuthorizeResponse, ReserveNowRequest or
-TransactionEventResponse response message from the CSMS.
+.Sequence Diagram: Store Authorization Data in the Authorization Cache
+image::part2/images/figure_30.svg[Sequence Diagram: Store Authorization Data in the Authorization Cache]
 
-**2.** The Cache is updated by the Charging Station using all received IdTokenInfo from the response
-message from the CSMS.
-_Alternative scenario(s)_ n/a
-**5 Prerequisite(s)** An Authorization Cache is implemented and and the value of the AuthCacheEnabled
-Configuration Variable is set to 'true'.
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling  |n/a
+|8   |Remark(s)       |n/a
+|===
 
-**6 Postcondition(s)** (^) **Successful postcondition:**
-The Charging Station stored the newly received IdTokenInfo data in the Authorization Cache.
-**Failure postcondition:**
-The Charging Station was _not_ able to store the Authorization Cache.
-Charging Station CSMS
-alt [for AuthorizeResponse]
-AuthorizeRequest(...)
-AuthorizeResponse(idTokenInfo,...)
-Store Authorization Data in
-Authorization Cache()
-[for TransactionEventResponse]
-TransactionEventRequest(...)
-TransactionEventResponse(idTokenInfo,...)
-Store Authorization Data in
-Authorization Cache()
-_Figure 30. Sequence Diagram: Store Authorization Data in the Authorization Cache_
-**7 Error handling** n/a
-**8 Remark(s)** n/a
-**C10 - Store Authorization Data in the Authorization Cache - Requirements**
-_Table 78. C10 - Requirements_
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
+==== C10 - Store Authorization Data in the Authorization Cache - Requirements
 
+.C10 - Requirements
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
 
-
-ID Precondition Requirement definition Note
-C10.FR.01 The Authorization Cache SHALL contain all the
-latest received identifiers (regardless of their
-status).
-C10.FR.02 Cache values SHOULD be persistent across reboots
+|C10.FR.01  |{nbsp}               |The Authorization Cache SHALL contain all the latest received identifiers (regardless of their status). |{nbsp}
+|C10.FR.02  |{nbsp}               |Cache values SHOULD be persistent across reboots
 and power outages.
+  |Hence cache values SHOULD be stored in non-volatile memory.
+|C10.FR.03  |When an IdToken is presented that is stored in the Authorization Cache with status other than _Accepted_, and the Charging Station is online.
+  |<<authorize_request,AuthorizeRequest>> SHALL be sent to the CSMS to check the current state of the IdToken.
+    |To check the current state of the identifier.
+|C10.FR.04  |Upon receipt of <<authorize_response,AuthorizeResponse>>.
+  |The Charging Station SHALL update the Authorisation Cache entry.
+    |The update is to be done with the <<id_token_info_type,IdTokenInfo>> value from the response as described under <<authorization_cache,Authorization Cache>>.
+|C10.FR.05  |Upon receipt of <<transaction_event_response,TransactionEventResponse>>.
+  |The Charging Station SHALL update the Authorisation Cache entry.
+    |The update is to be done with the <<id_token_info_type,IdTokenInfo>> value from the response as described under <<authorization_cache,Authorization Cache>>.
+|C10.FR.07  |{nbsp}               |The Charging Station SHALL have a mechanism to accept new cache entries even when it is full, by deleting older entries.
+  |It is suggested to remove any entries with status other than _Accepted_ first, and then the oldest valid entries to make space for the new entry.
+|C10.FR.08  |When IdTokenInfoType does not contain a value for _cacheExpiryDateTime_
+  |The time a token is considered to be present in the cache is determined by the Configuration Variable <<auth_cache_lifetime,`AuthCacheLifeTime`>>. This variable indicates how long it takes until a token expires in the Authorization Cache since it is last used.
+    |This expiry of the cache is **not** the same as the expiration date that is set for the IdToken (e.g. RFID card expiry date).
+|C10.FR.09  |The Charging Station supports <<tariff_cost_related,Tariff & Cost>>
+  |The Charging Station SHALL NOT store the tariff information in the Cache. |{nbsp}
+|C10.FR.10  |When the validity of an Authorization Cache entry expires.
+  |The Authorization Cache entry SHALL be removed from the cache or changed to `Expired`. |{nbsp}
+|C10.FR.11  |{nbsp}               |Whether the Authorization Cache is enabled or disabled SHALL be controlled by the <<auth_cache_enabled,`AuthCacheEnabled`>> Configuration Variable. |{nbsp}
+|C10.FR.12  |{nbsp}               |It is RECOMMENDED to store personal information in the Authorization Cache securely
+    |E.g. by only storing hashed idTokens in the cache.
+|C10.FR.13  |When IdTokenInfoType contains a value for _cacheExpiryDateTime_
+  |The time a token is considered to be present in the cache is determined by _cacheExpiryDateTime_. This variable indicates the date and time after which a token expires in the Authorization Cache.
+    |This expiry of the cache is **not** the same as the expiration date that is set for the IdToken (e.g. RFID card expiry date).
+|===
 
+<<<
 
-Hence cache values
-SHOULD be stored in
-non-volatile memory.
-C10.FR.03 When an IdToken is presented that is
-stored in the Authorization Cache with
-status other than Accepted , and the
-Charging Station is online.
+=== C11 - Clear Authorization Data in Authorization Cache
 
+.C11 - Clear Authorization Data in Authorization Cache
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
-AuthorizeRequest SHALL be sent to the CSMS to
-check the current state of the IdToken.
-
-
-To check the current
-state of the identifier.
-
-
-C10.FR.04 Upon receipt of AuthorizeResponse. The Charging Station SHALL update the
-Authorisation Cache entry.
-
-
-The update is to be done
-with the IdTokenInfo
-value from the response
-as described under
-Authorization Cache.
-C10.FR.05 Upon receipt of
-TransactionEventResponse.
-
-
-The Charging Station SHALL update the
-Authorisation Cache entry.
-
-
-The update is to be done
-with the IdTokenInfo
-value from the response
-as described under
-Authorization Cache.
-C10.FR.07 The Charging Station SHALL have a mechanism to
-accept new cache entries even when it is full, by
-deleting older entries.
-
-
-It is suggested to remove
-any entries with status
-other than Accepted first,
-and then the oldest valid
-entries to make space for
-the new entry.
-C10.FR.08 When IdTokenInfoType does not
-contain a value for
-cacheExpiryDateTime
-
-
-The time a token is considered to be present in the
-cache is determined by the Configuration Variable
-AuthCacheLifeTime. This variable indicates how
-long it takes until a token expires in the
-Authorization Cache since it is last used.
-
-
-This expiry of the cache
-is not the same as the
-expiration date that is set
-for the IdToken (e.g. RFID
-card expiry date).
-C10.FR.09 The Charging Station supports Tariff &
-Cost
-
-
-The Charging Station SHALL NOT store the tariff
-information in the Cache.
-C10.FR.10 When the validity of an Authorization
-Cache entry expires.
-
-
-The Authorization Cache entry SHALL be removed
-from the cache or changed to Expired.
-C10.FR.11 Whether the Authorization Cache is enabled or
-disabled SHALL be controlled by the
-AuthCacheEnabled Configuration Variable.
-C10.FR.12 It is RECOMMENDED to store personal information
-in the Authorization Cache securely
-
-
-E.g. by only storing
-hashed idTokens in the
-cache.
-C10.FR.13 When IdTokenInfoType contains a
-value for cacheExpiryDateTime
-
-
-The time a token is considered to be present in the
-cache is determined by cacheExpiryDateTime. This
-variable indicates the date and time after which a
-token expires in the Authorization Cache.
-
-
-This expiry of the cache
-is not the same as the
-expiration date that is set
-for the IdToken (e.g. RFID
-card expiry date).
-
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
-
-
-==== C11 - Clear Authorization Data in Authorization Cache
-
-_Table 79. C11 - Clear Authorization Data in Authorization Cache_
-
-
-No. Type Description
-1 Name Clear Authorization Data in Authorization Cache
-2 ID C11
-Functional block C. Authorization
-3 Objective(s) To clear all IdTokens in the Authorization Cache.
-4 Description This use case covers how the CSMS can request a Charging Station to clear its Authorization
-Cache.
-Actors Charging Station, CSMS
-Scenario description 1. The CSMS requests the Charging Station to clear its Authorization Cache by sending
-ClearCacheRequest.
-
-**2.** The Charging Station responds with the status _Accepted_.
-**5 Prerequisite(s)** Authorization Cache is supported and enabled by the AuthCacheEnabled Configuration
-Variable.
-
-**6 Postcondition(s)** (^) **Successful postcondition:**
+|1   |Name            |Clear Authorization Data in Authorization Cache
+|2   |ID              |C11
+|{nbsp} d|_Functional block_ |C. Authorization
+|3   |Objective(s)    |To clear all IdTokens in the Authorization Cache.
+|4   |Description     |This use case covers how the CSMS can request a Charging Station to clear its Authorization Cache.
+|{nbsp} d|_Actors_    |Charging Station, CSMS
+|{nbsp} d|_Scenario description_
+  |**1.** The CSMS requests the Charging Station to clear its Authorization Cache by sending <<clear_cache_request,ClearCacheRequest>>. +
+  **2.** The Charging Station responds with the status _Accepted_.
+|5   |Prerequisite(s)  | Authorization Cache is supported and enabled by the <<auth_cache_enabled,`AuthCacheEnabled`>> Configuration Variable.
+|6   |Postcondition(s)
+  |**Successful postcondition:** +
 The Charging Station _Successfully_ cleared the Authorization Cache.
-**Failure postcondition:**
+
+**Failure postcondition:** +
 The Charging Station was _not_ able to clear the Authorization Cache.
-Charging Station CSMS
-ClearCacheRequest()
-ClearCacheResponse(status)
-_Figure 31. Sequence Diagram: Clear Authorization Data in Authorization Cache_
-**7 Error handling** n/a
-**8 Remark(s)** n/a
-**C11 - Clear Authorization Data in Authorization Cache - Requirements**
-_Table 80. C11 - Requirements_
-**ID Precondition Requirement definition**
-C11.FR.01 If the CSMS sends a ClearCacheRequest. The Charging Station SHALL attempt to clear its Authorization
-Cache.
-C11.FR.02 C11.FR.01 The Charging Station SHALL send ClearCacheResponse
-message indicating whether it was able to clear its Authorization
-Cache.
-C11.FR.03 (^) C11.FR.02 AND
-Charging Station successfully cleared its
-Authorization Cache.
-The Charging Station SHALL send ClearCacheResponse
-message with the status _Accepted_.
-C11.FR.04 (^) C11.FR.02 AND
-Configuration variable AuthCacheEnabled is
-false
-The Charging Station SHALL send ClearCacheResponse
-message with the status _Rejected_.
-C11.FR.05 (^) C11.FR.02 AND
-Charging Station failed to clear its Authorization
-Cache.
-The Charging Station SHALL send ClearCacheResponse
-message with the status _Rejected_.
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
+|===
+
+.Sequence Diagram: Clear Authorization Data in Authorization Cache
+image::part2/images/figure_31.svg[Sequence Diagram: Clear Authorization Data in Authorization Cache]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling  |n/a
+|8   |Remark(s)       |n/a
+|===
+
+==== C11 - Clear Authorization Data in Authorization Cache - Requirements
+
+.C11 - Requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
+
+|C11.FR.01  |If the CSMS sends a <<clear_cache_request,ClearCacheRequest>>.
+  |The Charging Station SHALL attempt to clear its Authorization Cache.
+|C11.FR.02  |C11.FR.01            |The Charging Station SHALL send <<clear_cache_response,ClearCacheResponse>> message indicating whether it was able to clear its Authorization Cache.
+|C11.FR.03  |C11.FR.02 AND +
+  Charging Station successfully cleared its +
+  Authorization Cache.
+    |The Charging Station SHALL send <<clear_cache_response,ClearCacheResponse>> message with the status _Accepted_.
+|C11.FR.04  |C11.FR.02 AND +
+  Configuration variable `AuthCacheEnabled` is false
+    |The Charging Station SHALL send <<clear_cache_response,ClearCacheResponse>> message with the status _Rejected_.
+|C11.FR.05  |C11.FR.02 AND +
+  Charging Station failed to clear its Authorization Cache.
+    |The Charging Station SHALL send <<clear_cache_response,ClearCacheResponse>> message with the status _Rejected_.
+|===
+
+<<<
 
 [[start_transaction_cached_id]]
 === C12 - Start Transaction - Cached Id
 
-_Table 81. C12 - Start Transaction - Cached Id_
+.C12 - Start Transaction - Cached Id
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
+|1   |Name            |Start Transaction - Cached Id
+|2   |ID              |C12
+|{nbsp} d|_Functional block_ |C. Authorization
+|3   |Objective(s)    |To enable the EV Driver to Online start a transaction by using the Authorization Cache. So the Charging Station can respond faster, as no <<authorize_request,AuthorizeRequest>> is being sent.
+|4   |Description     |This use case describes how the EV Driver is authorized to start a transaction while the Charging Station uses Cached IdToken.
+|{nbsp} d|_Actors_    |Charging Station, CSMS, EV Driver
+|{nbsp} d|_Scenario description_ 
+  |**1.** The EV Driver plugs in the cable.
+  **2.** The Charging Station starts the transaction. +
+  **3.** The EV Driver presents an IdToken. +
+  **4.** The Charging Station verifies the IdToken with the <<authorization_cache,Authorization Cache>>. +
+  **5.** The Charging Station updates the transaction. +
+  **6.** The Charging Station starts charging. +
+  **7.** <<start_transaction_cable_plugin_first,E02 - Start Transaction - Cable Plugin First>> applies.
+|5   |Prerequisite(s) 
+  |<<auth_cache_enabled,`AuthCacheEnabled`>> = true
+  <<local_pre_authorize,`LocalPreAuthorize`>> = true
+  The Id of the EV Driver is Cached in the <<authorization_cache,Authorization Cache>> +
+  Id is valid
+|6   |Postcondition(s) 
+  |**Successful postcondition:** +
+  The EV Driver is authorized to start a transaction by using the Authorization Cache.
 
-No. Type Description
-1 Name Start Transaction - Cached Id
-2 ID C12
-Functional block C. Authorization
-3 Objective(s) To enable the EV Driver to Online start a transaction by using the Authorization Cache. So the
-Charging Station can respond faster, as no AuthorizeRequest is being sent.
-4 Description This use case describes how the EV Driver is authorized to start a transaction while the Charging
-Station uses Cached IdToken.
-Actors Charging Station, CSMS, EV Driver
+  **Failure postcondition:** +
+  The UserId was not found in the <<authorization_cache,Authorization Cache>> and: +
+  * Online Charging Station: the Charging Station issues an AuthorizeRequest and that fails too. +
+  * In an offline situation, behaviour of the Charging Station is defined by Configuration Variable OfflineTxForUnknownIdEnabled.
+|===
 
-_Scenario description_ (^) **1.** The EV Driver plugs in the cable.
+.Sequence Diagram: Start Transaction - Cached Id
+image::part2/images/figure_32.svg[Sequence Diagram: Start Transaction - Cached Id]
 
-**2.** The Charging Station starts the transaction.
-**3.** The EV Driver presents an IdToken.
-**4.** The Charging Station verifies the IdToken with the Authorization Cache.
-**5.** The Charging Station updates the transaction.
-**6.** The Charging Station starts charging.
-**7.** E02 - Start Transaction - Cable Plugin First applies.
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling |When the Charging Station has an IdToken in the Authorization Cache, which is valid in the Authorization Cache, but is no longer valid in the CSMS: The Charging Station will receive the IdTokenInfo in the <<transaction_event_response,TransactionEventResponse>> which contains the newer invalid status. What happens in such a cases depends on the Configuration Variables: <<max_energy_on_invalid_id,`MaxEnergyOnInvalidId`>> and <<stop_tx_on_invalid_id,StopTxOnInvalidId>>.
+|8   |Remark(s)       |If the Charging Station has implemented an Authorization Cache, then upon receipt of a <<authorize_response,AuthorizeResponse>> message the Charging Station updates the Cache entry.
 
-**5 Prerequisite(s)** (^) AuthCacheEnabled  true
-LocalPreAuthorize  true
-The Id of the EV Driver is Cached in the Authorization Cache
-Id is valid
-**6 Postcondition(s)** (^) **Successful postcondition:**
-The EV Driver is authorized to start a transaction by using the Authorization Cache.
-**Failure postcondition:**
-The UserId was not found in the Authorization Cache and:
-* Online Charging Station: the Charging Station issues an AuthorizeRequest and that fails too.
-* In an offline situation, behaviour of the Charging Station is defined by Configuration Variable
-OfflineTxForUnknownIdEnabled.
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
-
-
-
-EV Driver
-
-
-Charging Station CSMS
-
-
-Plugin cable
-
-
-StatusNotificationRequest(Occupied)
-
-
-StatusNotificationResponse()
-
-
-TransactionEventRequest(eventType  Started,...)
-
-
-TransactionEventResponse(...)
-
-
-Present IdToken
-
-
-check authorization cache()
-
-
-opt
-notification
-
-
-opt [if cable not permanently attached]
-lock connector
-
-
-Start energy offer
-
-
-TransactionEventRequest(eventType  Updated, chargingState  Charging,...)
-
-
-TransactionEventResponse(...)
-
-
-continue E01 - Start Transaction - Cable Plugin First
-
-_Figure 32. Sequence Diagram: Start Transaction - Cached Id_
-
-
-7 Error handling When the Charging Station has an IdToken in the Authorization Cache, which is valid in the
-Authorization Cache, but is no longer valid in the CSMS: The Charging Station will receive the
-IdTokenInfo in the TransactionEventResponse which contains the newer invalid status. What
-happens in such a cases depends on the Configuration Variables: MaxEnergyOnInvalidId and
-StopTxOnInvalidId.
-8 Remark(s) If the Charging Station has implemented an Authorization Cache, then upon receipt of a
-AuthorizeResponse message the Charging Station updates the Cache entry.
-
-
-For a Cached valid IdToken it is not logical to send AuthorizeRequest. The
-TransactioneventResponse message also contains the IdToken information. If the IdToken has
-become no longer valid, the Charging Station will learn this from this TransactioneventResponse.
+For a Cached valid IdToken it is not logical to send <<authorize_request,AuthorizeRequest>>. The <<transaction_event_response,TransactionEventResponse>> message also contains the IdToken information. If the IdToken has become no longer valid, the Charging Station will learn this from this <<transaction_event_response,TransactionEventResponse>>. +
 So if the IdToken is no longer valid, the Charging Station might decide to stop the energy offering,
 and depending on the configuration even stop the transaction.
 
+The scenario description and sequence diagram above are based on the Configuration Variable for start transaction being configured as follows: +
+<<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,EVConnected, Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
+This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are send. For more details see the use case: <<start_transaction_options,E01 - Start Transaction options>>.
+|===
 
-The scenario description and sequence diagram above are based on the Configuration Variable
-for start transaction being configured as follows:
-TxStartPoint: EVConnected, Authorized, DataSigned, PowerPathClosed, EnergyTransfer
-This use-case is also valid for other configurations, but then the transaction might start/stop at
-another moment, which might change the sequence in which message are send. For more details
-see the use case: E01 - Start Transaction options.
+==== C12 - Start Transaction - Cached Id - Requirements
 
-**C12 - Start Transaction - Cached Id - Requirements**
+.C12 - Requirements
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
 
-_Table 82. C12 - Requirements_
+|C12.FR.02  |When an identifier is presented that is stored in the Authorization Cache as _Accepted_.
+  |The Charging Station SHALL send a <<transaction_event_request,TransactionEventRequest>> with idToken to the CSMS. |{nbsp}
+|C12.FR.03  |C12.FR.02            |The CSMS SHALL check the authorization status of the IdToken when processing this <<transaction_event_request,TransactionEventRequest>>. |{nbsp}
+|C12.FR.04  |C12.FR.02 AND +
+  The cable is plugged in.
+    |The Charging Station SHALL start the energy offer. |{nbsp}
+|C12.FR.05  |When an identifier is presented that is stored in the Authorization Cache with status other than _Accepted_, and the Charging Station is online.
+  |The Charging Station SHALL send an <<authorize_request,AuthorizeRequest>> to the CSMS.
+    |To check the current state of the identifier.
+|C12.FR.06  |When <<id_token_info_type,IdTokenInfo>> is received for an identifier in the Cache.
+  |The Authorization Cache SHALL be updated using the received <<id_token_info_type,IdTokenInfo>>. |{nbsp}
+|C12.FR.09  |IdTokens that have a groupId equal to <<master_pass_group_id,`MasterPassGroupId`>>
+  |SHALL NOT be allowed to start a transaction. |{nbsp}
+|===
 
-
-ID Precondition Requirement definition Note
-C12.FR.02 When an identifier is presented that is
-stored in the Authorization Cache as
-Accepted.
-
-
-The Charging Station SHALL send a
-TransactionEventRequest with idToken to the
-CSMS.
-
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
-
-
-
-ID Precondition Requirement definition Note
-C12.FR.03 C12.FR.02 The CSMS SHALL check the authorization status of
-the IdToken when processing this
-TransactionEventRequest.
-
-C12.FR.04 (^) C12.FR.02 AND
-The cable is plugged in.
-The Charging Station SHALL start the energy offer.
-C12.FR.05 When an identifier is presented that is
-stored in the Authorization Cache with
-status other than _Accepted_ , and the
-Charging Station is online.
-The Charging Station SHALL send an
-AuthorizeRequest to the CSMS.
-To check the current
-state of the identifier.
-C12.FR.06 When IdTokenInfo is received for an
-identifier in the Cache.
-The Authorization Cache SHALL be updated using
-the received IdTokenInfo.
-C12.FR.09 IdTokens that have a groupId equal to
-MasterPassGroupId
-SHALL NOT be allowed to start a transaction.
-
+:sectnums:
 === Local Authorization list
 
+:sectnums!:
 [[offline_authorization_through_local_authorization_list]]
 === C13 - Offline Authorization through Local Authorization List
-
+// TODO:
 _Table 83. C13 - Offline Authorization through Local Authorization List_
 
 
