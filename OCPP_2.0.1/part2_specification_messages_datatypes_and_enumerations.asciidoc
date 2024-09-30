@@ -741,13 +741,14 @@ statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
 Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
 
-
-**1.23.1. GetLocalListVersionRequest**
+[[get_local_list_version_request]]
+==== GetLocalListVersionRequest
 
 This contains the field definition of the GetLocalListVersionRequest PDU sent by the CSMS to the Charging Station. No fields are
 defined.
 
-**1.23.2. GetLocalListVersionResponse**
+[[get_local_list_version_response]]
+==== GetLocalListVersionResponse
 
 This contains the field definition of the GetLocalListVersionResponse PDU sent by the Charging Station to CSMS in response to a
 GetLocalListVersionRequest.

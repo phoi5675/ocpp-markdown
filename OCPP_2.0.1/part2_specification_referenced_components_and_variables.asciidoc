@@ -887,7 +887,7 @@ cache with a status other than Accepted, as stated in C10.FR.03 and C12.FR.05.
 === Local Authorization List Management related
 
 [[local_auth_list_enabled]]
-==== LocalAuthListEnabled
+==== `LocalAuthListEnabled`
 
 
 Required no
@@ -898,7 +898,7 @@ variableCharacteristics dataType boolean
 Description If this variable exists and reports a value of true , Local Authorization List is enabled.
 
 [[local_auth_list_entries]]
-==== LocalAuthListEntries
+==== `LocalAuthListEntries`
 
 
 Required when LocalAuthListAvailable is true
