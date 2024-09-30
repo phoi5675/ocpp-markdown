@@ -4947,7 +4947,8 @@ Transaction.Begin Value taken at start of transaction.
 Transaction.End Value taken at end of transaction.
 Trigger Value taken in response to TriggerMessageRequest.
 
-==== 3.67. ReasonEnumType
+[[reason_enum_type]]
+=== ReasonEnumType
 
 _Enumeration_
 

@@ -981,7 +981,7 @@ image::part2/images/figure_32.svg[Sequence Diagram: Start Transaction - Cached I
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error handling |When the Charging Station has an IdToken in the Authorization Cache, which is valid in the Authorization Cache, but is no longer valid in the CSMS: The Charging Station will receive the IdTokenInfo in the <<transaction_event_response,TransactionEventResponse>> which contains the newer invalid status. What happens in such a cases depends on the Configuration Variables: <<max_energy_on_invalid_id,`MaxEnergyOnInvalidId`>> and <<stop_tx_on_invalid_id,StopTxOnInvalidId>>.
+|7   |Error handling |When the Charging Station has an IdToken in the Authorization Cache, which is valid in the Authorization Cache, but is no longer valid in the CSMS: The Charging Station will receive the IdTokenInfo in the <<transaction_event_response,TransactionEventResponse>> which contains the newer invalid status. What happens in such a cases depends on the Configuration Variables: <<max_energy_on_invalid_id,`MaxEnergyOnInvalidId`>> and <<stop_tx_on_invalid_id,`StopTxOnInvalidId`>>.
 |8   |Remark(s)       |If the Charging Station has implemented an Authorization Cache, then upon receipt of a <<authorize_response,AuthorizeResponse>> message the Charging Station updates the Cache entry.
 
 For a Cached valid IdToken it is not logical to send <<authorize_request,AuthorizeRequest>>. The <<transaction_event_response,TransactionEventResponse>> message also contains the IdToken information. If the IdToken has become no longer valid, the Charging Station will learn this from this <<transaction_event_response,TransactionEventResponse>>. +
@@ -1021,684 +1021,312 @@ This use-case is also valid for other configurations, but then the transaction m
 :sectnums!:
 [[offline_authorization_through_local_authorization_list]]
 === C13 - Offline Authorization through Local Authorization List
-// TODO:
-_Table 83. C13 - Offline Authorization through Local Authorization List_
 
+.C13 - Offline Authorization through Local Authorization List
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
-No. Type Description
-1 Name Offline Authorization through Local Authorization List
-2 ID C13
-Functional block C. Authorization
-3 Objective(s) To authorize an idToken by using the Local Authorization List while Offline.
-4 Description This use case describes how to authorize an IdToken, when communication with the CSMS is not
-possible.
+|1   |Name            |Offline Authorization through Local Authorization List
+|2   |ID              |C13
+|{nbsp} d|_Functional block_ |C. Authorization
+|3   |Objective(s)    |To authorize an idToken by using the <<local_authorization_list,Local Authorization List>> while Offline.
+|4   |Description     |This use case describes how to authorize an IdToken, when communication with the CSMS is not possible.
 
+The <<local_authorization_list,Local Authorization List>> is a list of idTokens that can be synchronized with the CSMS. The list contains the authorization status of a selected set of idTokens as managed by the CSMS.
+|{nbsp} d|_Actors_    |EV Driver, Charging Station
+|{nbsp} d|_Scenario description_ 
+  |**1.** The Charging Station is _Offline_ +
+  **2.** The EV Driver presents IdToken. +
+  **3.** The Charging Station checks if the IdToken is known and has status _Accepted_ in the <<local_authorization_list,Local Authorization List>>. +
+  **4.** The Charging Station start charging.
+|5   |Prerequisite(s)
+  |_Local Authorization List_ is available +
+  _Local Authorization List_ is enabled via <<local_auth_list_enabled,`LocalAuthListEnabled`>> +
+  Charging Station is _Offline_
+  The Id of the EV Driver is in the _Local Authorization List_ +
+  Id is valid
+|6   |Postcondition(s) 
+  |**Successful postcondition:** +
+  The Charging Station accepts tokens on the <<local_authorization_list,Local Authorization List>> when it is offline. +
+  **Failure postcondition:** +
+  The Charging Station does not accept tokens on the <<local_authorization_list,Local Authorization List>> when it is offline.
+|===
 
-The Local Authorization List is a list of idTokens that can be synchronized with the CSMS. The list
-contains the authorization status of a selected set of idTokens as managed by the CSMS.
-Actors EV Driver, Charging Station
+.Sequence Diagram: Offline Authorization through Local Authorization List
+image::part2/images/figure_33.svg[Sequence Diagram: Offline Authorization through Local Authorization List]
 
-_Scenario description_ (^) **1.** The Charging Station is _Offline_
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling    |n/a
+|8   |Remark(s)         |n/a
+|===
 
-**2.** The EV Driver presents IdToken.
-**3.** The Charging Station checks if the IdToken is known and has status _Accepted_ in the Local
-Authorization List.
-**4.** The Charging Station start charging.
+==== C13 - Offline Authorization through Local Authorization List - Requirements
 
-**5 Prerequisite(s)** (^) _Local Authorization List_ is available
-_Local Authorization List_ is enabled via LocalAuthListEnabled
-Charging Station is _Offline_
-The Id of the EV Driver is in the _Local Authorization List_
-Id is valid
-**6 Postcondition(s)** (^) **Successful postcondition:**
-The Charging Station accepts tokens on the Local Authorization List when it is offline.
-**Failure postcondition:**
-The Charging Station does not accept tokens on the Local Authorization List when it is offline.
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
+.C13 - Requirements
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
 
-
-
-EV Driver
-
-
-Charging Station
-
-
-connection loss
-
-
-Present IdToken
-
-
-check local authorization list()
-[cached tariff: 0.23/kWh]
-
-
-opt
-notification
-[tariff: 0.23/kWh]
-
-
-lock connector
-
-
-start energy offer
-
-_Figure 33. Sequence Diagram: Offline Authorization through Local Authorization List_
-
-
-7 Error handling n/a
-8 Remark(s) n/a
-
-**C13 - Offline Authorization through Local Authorization List - Requirements**
-
-_Table 84. C13 - Requirements_
-
-
-ID Precondition Requirement definition Note
-C13.FR.01 Where both Authorization Cache and Local
-Authorization List are supported, a Charging Station
-SHALL treat Local Authorization List entries as
-having priority over Authorization Cache entries for
-the same identifiers.
-C13.FR.02 If configuration variable
-OfflineTxForUnknownIdEnabled
-is false AND
-The Charging Station is offline AND
-LocalAuthListSupportsExpiryD
-ateTime does not exist or is false
-
-
-Only identifiers that are present in a Local
-Authorization List that have a status Accepted
-SHALL be allowed to authorize a transaction.
-
-
-This means that
-Charging Station does
-not check for
-cacheExpiryDateTime.
-
-
-C13.FR.03 The Charging Station MAY authorize the IdToken
-locally without involving the CSMS.
-
-
-As described in Local
-Authorization List.
-C13.FR.04 If configuration variable
-OfflineTxForUnknownIdEnabled
-is true AND
-The Charging Station is offline AND
-LocalAuthListSupportsExpiryD
-ateTime does not exist or is false
-
-
-Any identifier that is present in neither the
-Authorization Cache nor the Local Authorization
-List SHALL be allowed to authorize a transaction
-AND
-any identifiers that are present in a Local
-Authorization List that have a status Accepted
-SHALL be allowed to authorize a transaction.
-
-
-This means that
-Charging Station does
-not check for
-cacheExpiryDateTime.
-See also C15.FR.08
-
-
-C13.FR.05 If configuration variable
-OfflineTxForUnknownIdEnabled
-is false AND
-The Charging Station is offline AND
-LocalAuthListSupportsExpiryD
-ateTime  true
-
-
-Only identifiers that are present in a Local
-Authorization List that have a status Accepted and
-for which cacheExpiryDateTime has not passed
-SHALL be allowed to authorize a transaction.
-
-
-When
-cacheExpiryDateTime is
-absent, the idToken will
-not expire in Local
-Authorization List.
-
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
-
-
-
-ID Precondition Requirement definition Note
-C13.FR.06 If configuration variable
-OfflineTxForUnknownIdEnabled
-is true AND
-The Charging Station is offline AND
-LocalAuthListSupportsExpiryD
-ateTime  true
-
-
-Any identifier that is present in neither the
-Authorization Cache nor the Local Authorization
-List SHALL be allowed to authorize a transaction
-AND
-any identifiers that are present in a Local
-Authorization List that have a status Accepted and
-for which cacheExpiryDateTime has not passed
-SHALL be allowed to authorize a transaction.
-
-
-This means that an
-expired token in the
-Local Authorization List
-is not authorized,
-because it is not an
-"unknown id".
+|C13.FR.01  |{nbsp}               |Where both <<authorization_cache,Authorization Cache>> and <<local_authorization_list,Local Authorization List>> are supported, a Charging Station SHALL treat <<local_authorization_list,Local Authorization List>> entries as having priority over <<authorization_cache,Authorization Cache>> entries for the same identifiers. |{nbsp}
+|C13.FR.02  |If configuration variable <<offline_tx_for_unknown_id_enabled,`OfflineTxForUnknownIdEnabled`>> is false AND +
+  The Charging Station is offline AND `LocalAuthListSupportsExpiryDateTime` does not exist or is false
+    |Only identifiers that are present in a <<local_authorization_list,Local Authorization List>> that have a status _Accepted_ SHALL be allowed to authorize a transaction.
+      |This means that Charging Station does not check for _cacheExpiryDateTime_.
+|C13.FR.03  |{nbsp}               |The Charging Station MAY authorize the IdToken locally without involving the CSMS.
+  |As described in <<local_authorization_list,Local Authorization List>>.
+|C13.FR.04  |If configuration variable <<offline_tx_for_unknown_id_enabled,`OfflineTxForUnknownIdEnabled`>> is true AND +
+  The Charging Station is offline AND +
+  `LocalAuthListSupportsExpiryDateTime` does not exist or is false
+    |Any identifier that is present in neither the <<authorization_cache,Authorization Cache>> nor the Local Authorization List SHALL be allowed to authorize a transaction AND +
+    any identifiers that are present in a <<local_authorization_list,Local Authorization List>> that have a status _Accepted_ SHALL be allowed to authorize a transaction.
+      |This means that Charging Station does not check for _cacheExpiryDateTime_. +
+      See also C15.FR.08
+|C13.FR.05  |If configuration variable <<offline_tx_for_unknown_id_enabled,`OfflineTxForUnknownIdEnabled`>> is false AND +
+  The Charging Station is offline AND +
+  `LocalAuthListSupportsExpiryDateTime` = true
+    |Only identifiers that are present in a <<local_authorization_list,Local Authorization List>> that have a status _Accepted_ and for which _cacheExpiryDateTime_ has not passed SHALL be allowed to authorize a transaction.
+      |When _cacheExpiryDateTime_ is absent, the idToken will not expire in <<local_authorization_list,Local Authorization List>>.
+|C13.FR.06  |If configuration variable <<offline_tx_for_unknown_id_enabled,`OfflineTxForUnknownIdEnabled`>> is true AND +
+  The Charging Station is offline AND +
+  `LocalAuthListSupportsExpiryDateTime` = true
+    |Any identifier that is present in neither the <<authorization_cache,Authorization Cache>> nor the <<local_authorization_list,Local Authorization List>> SHALL be allowed to authorize a transaction AND +
+    any identifiers that are present in a <<local_authorization_list,Local Authorization List>> that have a status _Accepted_ and for which `cacheExpiryDateTime` has not passed SHALL be allowed to authorize a transaction.
+      |This means that an expired token in the Local Authorization List is not authorized, because it is not an "unknown id".
+|===
 
 [[online_authorization_through_local_authorization_list]]
 === C14 - Online Authorization through Local Authorization List
 
-_Table 85. C14 - Online Authorization through Local Authorization List_
+.C14 - Online Authorization through Local Authorization List
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
+|1   |Name            |Online Authorization through Local Authorization List
+|2   |ID              |C14
+|{nbsp} d|_Functional block_ |C. Authorization
+|3   |Objective(s)    |To authorize an idToken by using the <<local_authorization_list,Local Authorization List>> while _Online_.
+|4   |Description     |This use case describes how to authorize an IdToken via the <<local_authorization_list,Local Authorization List>> while the Charging Station is online. When online the Charging Station can then locally authorize the IdToken, and is not required to send an AuthorizeRequest for a known IdToken.
+|{nbsp} d|_Actors_    |EV Driver, Charging Station
+|{nbsp} d|_Scenario description_ 
+  |**1.** The EV Driver presents IdToken +
+  **2.** The Charging Station checks if the IdToken is known and has status _Accepted_ in the <<local_authorization_list,Local Authorization List>>. +
+  **3.** If the IdToken is not known, or the IdToken is not _Accepted_ the Charging Station sends an <<authorize_request,AuthorizeRequest>> +
+  **4.** The Charging Station starts charging.
+|5   |Prerequisite(s) 
+  |_Local Authorization List_ is available +
+  _Local Authorization List_ is enabled via <<local_auth_list_enabled,`LocalAuthListEnabled`>> +
+  The Id of the EV Driver is in the _Local Authorization List_ +
+  Id is valid <<local_pre_authorize,`LocalPreAuthorize`>> is set to _true_
+|6   |Postcondition(s) 
+  |**Successful postcondition:** +
+  The Charging Station accepts tokens on the <<local_authorization_list,Local Authorization List>>. +
+  **Failure postcondition:** +
+  The Charging Station does not accept tokens on the <<local_authorization_list,Local Authorization List>>.
+|===
 
-No. Type Description
-1 Name Online Authorization through Local Authorization List
-2 ID C14
-Functional block C. Authorization
-3 Objective(s) To authorize an idToken by using the Local Authorization List while Online.
-4 Description This use case describes how to authorize an IdToken via the Local Authorization List while the
-Charging Station is online. When online the Charging Station can then locally authorize the
-IdToken, and is not required to send an AuthorizeRequest for a known IdToken.
-Actors EV Driver, Charging Station
+.Sequence Diagram: Online Authorization through Local Authorization List
+image::part2/images/figure_34.svg[Sequence Diagram: Online Authorization through Local Authorization List]
 
-_Scenario description_ (^) **1.** The EV Driver presents IdToken
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling    |n/a
+|8   |Remark(s)         |n/a
+|===
 
-**2.** The Charging Station checks if the IdToken is known and has status _Accepted_ in the Local
-Authorization List.
-**3.** If the IdToken is not known, or the IdToken is not _Accepted_ the Charging Station sends an
-AuthorizeRequest
-**4.** The Charging Station starts charging.
+==== C14 - Online Authorization through Local Authorization List - Requirements
 
-**5 Prerequisite(s)** (^) _Local Authorization List_ is available
-_Local Authorization List_ is enabled via LocalAuthListEnabled
-The Id of the EV Driver is in the _Local Authorization List_
-Id is valid LocalPreAuthorize is set to _true_
-**6 Postcondition(s)** (^) **Successful postcondition:**
-The Charging Station accepts tokens on the Local Authorization List.
-**Failure postcondition:**
-The Charging Station does not accept tokens on the Local Authorization List.
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
+.C14 - Requirements
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
 
+|C14.FR.01  |{nbsp}               |Where both <<authorization_cache,Authorization Cache>> and <<local_authorization_list,Local Authorization List>> are supported, a Charging Station SHALL treat <<local_authorization_list,Local Authorization List>> entries as having priority over Authorization Cache entries for the same identifiers. |{nbsp}
+|C14.FR.02  |Identifier presented is in the <<local_authorization_list,Local Authorization List>> with a status `Accepted` AND +
+`LocalAuthListSupportsExpiryDateTime` does not exist or is false
+  |The Charging Station SHALL start charging without sending an <<authorize_request,AuthorizeRequest>>.
+    |This means that Charging Station does not check for _cacheExpiryDateTime_.
+|C14.FR.03 Identifiers presented is in the <<local_authorization_list,Local Authorization List>> with a status OTHER than _Accepted_
+  The Charging Station SHALL send an <<authorize_request,AuthorizeRequest>> to try to authorize this IdToken. |{nbsp}
+|C14.FR.04  |Identifier presented is in the <<local_authorization_list,Local Authorization List>> with a status `Accepted` AND +
+`ocalAuthListSupportsExpiryDateTime` = true AND +
+the _cacheExpiryDateTime_ has not passed
+  |The Charging Station SHALL start charging without sending an <<authorize_request,AuthorizeRequest>>.
+    |When _cacheExpiryDateTime_ is absent, the idToken will not expire in Local Authorization List.
+|C14.FR.05  |Identifier presented is in the <<local_authorization_list,Local Authorization List>> with a status `Accepted` AND +
+`LocalAuthListSupportsExpiryDateTime` = true AND +
+the _cacheExpiryDateTime_ has passed
+  |The Charging Station SHALL send an <<authorize_request,AuthorizeRequest>> to try to authorize this IdToken.
+    |IdToken will be disregarded, as if not present in <<local_authorization_list,Local Authorization List>>, when _cacheExpiryDateTime_ has passed.
+|===
 
-
-EV Driver
-
-
-Charging Station CSMS
-
-
-Present IdToken
-
-
-check local authorization list()
-[cached tariff: 0.23/kWh]
-
-
-alt [IdToken not known or IdToken status not Accepted]
-AuthorizeRequest(IdToken)
-
-
-AuthorizeResponse(Accepted)
-
-
-opt
-notification
-[tariff: 0.23/kWh]
-
-
-lock connector
-
-
-start energy offer
-
-_Figure 34. Sequence Diagram: Online Authorization through Local Authorization List_
-
-
-7 Error handling n/a
-8 Remark(s) n/a
-
-**C14 - Online Authorization through Local Authorization List - Requirements**
-
-_Table 86. C14 - Requirements_
-
-
-ID Precondition Requirement definition Note
-C14.FR.01 Where both Authorization Cache and Local
-Authorization List are supported, a Charging Station
-SHALL treat Local Authorization List entries as
-having priority over Authorization Cache entries for
-the same identifiers.
-C14.FR.02 Identifier presented is in the Local
-Authorization List with a status
-Accepted AND
-LocalAuthListSupportsExpiryD
-ateTime does not exist or is false
-
-
-The Charging Station SHALL start charging without
-sending an AuthorizeRequest.
-
-
-This means that
-Charging Station
-d_cacheExpiryDateTime_
-oes not check for.
-
-
-C14.FR.03 Identifiers presented is in the Local
-Authorization List with a status
-OTHER than Accepted
-
-
-The Charging Station SHALL send an
-AuthorizeRequest to try to authorize this IdToken.
-
-
-C14.FR.04 Identifier presented is in the Local
-Authorization List with a status
-Accepted AND
-LocalAuthListSupportsExpiryD
-ateTime  true AND
-the cacheExpiryDateTime has not
-passed
-
-
-The Charging Station SHALL start charging without
-sending an AuthorizeRequest.
-
-
-When
-cacheExpiryDateTime is
-absent, the idToken will
-not expire in Local
-Authorization List.
-
-
-C14.FR.05 Identifier presented is in the Local
-Authorization List with a status
-Accepted AND
-LocalAuthListSupportsExpiryD
-ateTime  true AND
-the cacheExpiryDateTime has passed
-
-
-The Charging Station SHALL send an
-AuthorizeRequest to try to authorize this IdToken.
-
-
-IdToken will be
-disregarded, as if not
-present in Local
-Authorization List, when
-cacheExpiryDateTime
-has passed.
-
+:sectnums:
 === Offline Authorization
 
+:sectnums!:
 [[offline_authorization_of_unknown_id]]
 === C15 - Offline Authorization of unknown Id
 
-_Table 87. C15 - Offline Authorization of unknown Id_
-
-
-No. Type Description
-1 Name Offline Authorization of unknown Id
-2 ID C15
-Functional block C. Authorization
-Parent use case C12 - Start Transaction - Cached Id
-3 Objective(s) To allow automatic authorization of any "unknown" identifiers that cannot be explicitly authorized
-by Authorization Cache entries.
-4 Description This use case describes the scenario of presented "unknown" identifiers, other than are present in
-an Authorization Cache or Local Cache entry using OfflineTxForUnknownIdEnabled.
-Actors Charging Station, EV Driver
-
-_Scenario description_ (^) **1.** The EV Driver wants to start charging the EV and presents the IdToken.
-
-**2.** The Charging Station checks the Authorization Cache, the IdToken is not present in the
-Authorization Cache.
-**3.** The Charging Station checks the Local Authorization List, the IdToken is not present in the
-Local Authorization List.
-**4.** The Charging Station accepts the unknown IdToken if OfflineTxForUnknownIdEnabled is
-set _True_
-**5.** The Charging Station rejects the unknown IdToken if OfflineTxForUnknownIdEnabled is
-set _False_
-
-_Alternative scenario(s)_ (^) C01 - EV Driver Authorization using RFID
-C02 - Authorization using a start button
-C03 - Authorization using credit/debit card
-C04 - Authorization using PIN-code
-C05 - Authorization for CSMS initiated transactions
-C06 - Authorization using local id type
-C07 - Authorization using Contract Certificates
-C08 - Authorization at EVSE using ISO 15118 External Identification Means (EIM)
-**5 Prerequisite(s)** (^) The Charging Station is _Offline_.
-Unknown IdToken presented (Not in the Authorization Cache and/or Local Authorization List).
-**6 Postcondition(s)** (^) **Successful postcondition:**
-The authorization status in TransactionEventResponse is _Accepted_.
-**Failure postcondition:**
-The authorization status in TransactionEventResponse is _not Accepted_ when
-OfflineTxForUnknownIdEnabled is _True_.
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
-
-
-EV Driver
-
-Charging Station
-
-
-The Charging Station is Offline.
-
-
-present IdToken
-
-
-opt [If enabled]
-check Authorization Cache
-
-
-opt [If implemented & enabled]
-check Local Authorization List
-
-
-IdToken unknown
-
-
-alt [OfflineTxForUnknownIdEnabled()  True]
-accept identifier
-
-
-opt
-notification
-
-
-[OfflineTxForUnknownIdEnabled()  False]
-reject identifier
-
-
-opt
-notification
-
-_Figure 35. Sequence Diagram: Start Transaction - Unknown Offline Authorization_
-
-
-7 Error handling n/a
-8 Remark(s) This applies to all types of identifiers, including an eMAID that is presented as part of an ISO
-15118 contract certificate.
-
-**C15 - Offline Authorization of unknown Id - Requirements**
-
-_Table 88. C15 - Requirements_
-
-
-ID Precondition Requirement definition Note
-C15.FR.01 If the identifier is authorized via
-OfflineTxForUnknownIdEnabled
-
-
-The Charging Station SHALL NOT add the token to
-Authorization Cache
-C15.FR.02 When connection to the CSMS is
-restored
-
-
-The Charging Station SHALL send a
-TransactionEventRequest for any transaction that
-was authorized offline.
-
-
-As explained in
-transaction-related
-message handling
-
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
-
-
-
-ID Precondition Requirement definition Note
-
-C15.FR.03 (^) C15.FR.02 AND
-The authorization status in
-TransactionEventResponse is not
-_Accepted_ AND
-The transaction is still ongoing AND
-StopTxOnInvalidId is _true_ AND
-TxStopPoint does NOT contain:
-(Authorized OR PowerPathClosed OR
-EnergyTransfer)
-The Charging Station SHALL stop the energy
-transfer and send TransactionEventRequest
-(eventType  Updated) with _triggerReason_ set to
-Deauthorized and _chargingState_ set to
-SuspendedEVSE or preferably to EVConnected.
-Since the effect of
-setting _chargingState_ to
-SuspendedEVSE or
-EVConnected both have
-the same effect of not
-delivering any energy, the
-use of SuspendedEVSE
-is still allowed in this
-situation in order to avoid
-breaking existing
-implementations that
-adhere to the original
-requirement.
-Use of SuspendedEVSE
-in this situation will
-become deprecated in
-the next OCPP release.
-C15.FR.04 (^) C15.FR.02 AND
-The authorization status in
-TransactionEventResponse is not
-_Accepted_ AND
-The transaction is still ongoing AND
-StopTxOnInvalidId is _true_ AND
-TxStopPoint does contain:
-(Authorized OR PowerPathClosed OR
-EnergyTransfer)
-The Charging Station SHALL stop the transaction
-and send TransactionEventRequest (eventType =
-Ended) with _triggerReason_ set to _Deauthorized_ and
-stoppedReason set to _DeAuthorized_.
-C15.FR.05 (^) C15.FR.04 AND
-If the Charging Station has the
-possibility to lock the Charging Cable
-The Charging Station SHOULD keep the Charging
-Cable locked until the owner presents his identifier.
-C15.FR.06 (^) C15.FR.02 AND
-The authorization status in
-TransactionEventResponse is not
-_Accepted_ AND
-The transaction is still ongoing AND
-StopTxOnInvalidId is set to _false_
-AND
-MaxEnergyOnInvalidId is not
-implemented or has been exceeded.
-TxStopPoint does NOT contain:
-EnergyTransfer
-The Charging Station SHALL stop the energy
-delivery to the EV immediately and send
-TransactionEventRequest (eventType  Updated)
-with _triggerReason_ set to _ChargingStateChanged_
-and chargingState set to _SuspendedEVSE_
-C15.FR.07 (^) C15.FR.02 AND
-The authorization status in
-TransactionEventResponse is not
-_Accepted_ AND
-The transaction is still ongoing AND
-StopTxOnInvalidId is set to _false_
-AND
-MaxEnergyOnInvalidId is set and
-has NOT been exceeded.
-Energy delivery to the EV SHALL be allowed until
-the amount of energy specified in
-MaxEnergyOnInvalidId has been reached.
-C15.FR.08 When an unknown identifier is
-presented AND
-OfflineTxForUnknownIdEnabled is set
-to _true_
-The Charging Station SHALL accept the presented
-IdToken.
-
-==== 2.7. Master Pass
-
-==== C16 - Stop Transaction with a Master Pass.
-
-_Table 89. C16 - Stop Transaction with a Master Pass_
-
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
-
-
-
-No. Type Description
-1 Name Stop Transaction with a Master Pass
-2 ID C16
-Functional block C. Authorization
-3 Objectives Enable stopping of transactions by use of a Master Pass (for example for: Law Enforcement
-officials).
-4 Description This use case covers how somebody with a Master Pass (User) can stop (selected) ongoing
-transactions, so the cable becomes unlocked. This Master Pass can be configured in:
-MasterPassGroupId.
-Actors Charging Station, CSMS, User
-
-_Scenario description_ (^) **1.** The User (Law Enforcement official) presents his IdToken at the Charging Station.
-
-**2.** The Charging Station sends AuthorizeRequest to the CSMS to request authorization.
-**3.** Upon receipt of AuthorizeRequest, the CSMS responds with AuthorizeResponse. This response
-message contains a GroupId that equals the value of the Configuration Variable
-MasterPassGroupId and the idToken is valid.
-**4a.** If the Charging Station has a UI, then the Charging Station "Shows" the Master Pass UI.
-**5a.** The user selects which transactions to stop.
-**6a.** The Charging Station stops the selected transaction(s) AND sends a
-TransactionEventRequest (eventType  Ended, stopReason  MasterPass) to the CSMS for every
-stopped transaction.
-**7a.** Upon receipt of TransactionEventRequest the CSMS responds with
-TransactionEventResponse.
-**4b.** If the Charging Station does NOT have a UI, then the Charging Station stops all transactions
-AND sends a TransactionEventRequest (eventType  Ended, stopReason  MasterPass) to the
-CSMS for every stopped transaction.
-**5b.** Upon receipt of TransactionEventRequest the CSMS responds with
-TransactionEventResponse.
-_Alternative scenario(s)_ C01 - EV Driver Authorization
-
-**5 Prerequisites** (^) Ongoing Transaction(s)
-Configuration Variable: MasterPassGroupId set.
-Users IdToken has groupId equal to the configured MasterPassGroupId.
-**6 Postcondition(s)** (Selected) transaction(s) stopped.
-Edition 3 FINAL, 2024-05-06 **C. Authorization**
-
-
-
-User
-
-
-Charging Station CSMS
-
-
-one or more transactions are ongoing
-
-
-Present IdToken
-
-
-AuthorizeRequest(...)
-
-
-AuthorizeResponse(GroupId  MasterPassGroupId)
-
-
-alt [if idToken valid]
-alt [if Master Pass UI available]
-show Master Pass UI
-
-
-select transaction(s)
-
-
-loop [for all (selected) transactions]
-stop energy offer
-
-
-alt [if cable not permanently attached]
-unlock connector
-
-
-TransactionEventRequest(eventType  Ended,
-chargingState  EVConnected, stopReason  MasterPass,...)
-
-
-TransactionEventResponse(...)
-
-_Figure 36. Sequence Diagram: Stop Transaction with a Master Pass_
-
-
-7 Error Handling When the user does not make a selection before an acceptable timeout, the Charging Station
-SHALL go back to normal operation.
-8 Remarks The scenario description and sequence diagram above are based on the Configuration Variable
-for stop transaction being configured as follows.
-TxStopPoint: Authorized, DataSigned, PowerPathClosed, EnergyTransfer
-This use-case is also valid for other configurations, but then the transaction might stop at another
-moment, which might change the sequence in which message are send. For more details see the
-use case: E06 - Stop Transaction options
-
-**C16 - Stop Transaction with a Master Pass - Requirements**
-
-_Table 90. C16 - Stop Transaction with a Master Pass - Requirements_
-
-
-ID Precondition Requirement definition
-C16.FR.01 User presents an IdToken that has a groupId
-equal to MasterPassGroupId AND
-The Charging Station has a UI.
-
-
-The Charging Station SHALL "show" the Master Pass UI.
-
-
-C16.FR.02 User presents an IdToken that has a groupId
-equal to MasterPassGroupId AND the
-Charging Station does NOT have a UI.
-
-
-The Charging Station SHALL stop all ongoing transactions.
-
-
-C16.FR.03 IdTokens that have a groupId equal to
-MasterPassGroupId
-
-
-SHALL NOT be allowed to start a transaction.
-
-
-C16.FR.04 IdTokens that have a groupId equal to
-MasterPassGroupId present in the
-Authorization Cache.
-
-
-The Charging Station MAY also allow authorization of "Master
-Pass" tokens based on information in the Authorization Cache.
-
-
-C16.FR.05 IdTokens that have a groupId equal to
-MasterPassGroupId present in the Local
-Authorization List.
-
-
-The Charging Station MAY also allow authorization of "Master
-Pass" tokens based on information in the Local Authorization
-List.
+.C15 - Offline Authorization of unknown Id
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Offline Authorization of unknown Id
+|2   |ID              |C15
+|{nbsp} d|_Functional block_ |C. Authorization
+|{nbsp} d|_Parent use case_ |<<start_transaction_cached_id,C12 - Start Transaction - Cached Id>>
+|3   |Objective(s)    |To allow automatic authorization of any "unknown" identifiers that cannot be explicitly authorized by Authorization Cache entries.
+|4   |Description     |This use case describes the scenario of presented "unknown" identifiers, other than are present in an Authorization Cache or Local Cache entry using <<offline_tx_for_unknown_id_enabled,`OfflineTxForUnknownIdEnabled`>>.
+|{nbsp} d|_Actors_    |Charging Station, EV Driver
+|{nbsp} d|_Scenario description_ 
+  |**1.** The EV Driver wants to start charging the EV and presents the IdToken. +
+  **2.** The Charging Station checks the <<authorization_cache,Authorization Cache>>, the IdToken is not present in the <<authorization_cache,Authorization Cache>>. +
+  **3.** The Charging Station checks the <<local_authorization_list,Local Authorization List>>, the IdToken is not present in the <<local_authorization_list,Local Authorization List>>. +
+  **4.** The Charging Station accepts the unknown IdToken if <<offline_tx_for_unknown_id_enabled,`OfflineTxForUnknownIdEnabled`>> is set _True_ +
+  **5.** The Charging Station rejects the unknown IdToken if <<offline_tx_for_unknown_id_enabled,`OfflineTxForUnknownIdEnabled`>> is set _False_
+|{nbsp} d|_Alternative scenario(s)_ 
+  |<<ev_driver_authorization_using_rfid,C01 - EV Driver Authorization using RFID>> +
+  <<authorization_using_a_start_button,C02 - Authorization using a start button>> +
+  <<authorization_using_credit_debit_card,C03 - Authorization using credit/debit card>> +
+  <<authorization_using_pin_code,C04 - Authorization using PIN-code>> +
+  <<authorization_for_csms_initiated_transactions,C05 - Authorization for CSMS initiated transactions>> +
+  <<authorization_using_local_id_type,C06 - Authorization using local id type>> +
+  <<authorization_using_contract_certificates,C07 - Authorization using Contract Certificates>> +
+  <<authorization_at_evse_using_iso_15118_external_identification_means_eim,C08 - Authorization at EVSE using ISO 15118 External Identification Means (EIM)>>
+|5   |Prerequisite(s) 
+  |The Charging Station is _Offline_. +
+  Unknown IdToken presented (Not in the <<authorization_cache,Authorization Cache>> and/or <<local_authorization_list,Local Authorization List>>).
+|6   |Postcondition(s) 
+  |**Successful postcondition:** +
+  The authorization status in <<transaction_event_response,TransactionEventResponse>> is _Accepted_.
+
+  **Failure postcondition:** +
+  The authorization status in <<transaction_event_response,TransactionEventResponse>> is _not Accepted_ when <<offline_tx_for_unknown_id_enabled,`OfflineTxForUnknownIdEnabled`>> is _True_.
+|===
+
+
+.Sequence Diagram: Start Transaction - Unknown Offline Authorization
+image::part2/images/figure_35.svg[Sequence Diagram: Start Transaction - Unknown Offline Authorization]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling    |n/a
+|8   |Remark(s)         |This applies to all types of identifiers, including an eMAID that is presented as part of an ISO 15118 contract certificate.
+|===
+
+==== C15 - Offline Authorization of unknown Id - Requirements
+
+.C15 - Requirements
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
+
+|C15.FR.01  |If the identifier is authorized via <<offline_tx_for_unknown_id_enabled,`OfflineTxForUnknownIdEnabled`>>
+  |The Charging Station SHALL NOT add the token to <<authorization_cache,Authorization Cache>> |{nbsp}
+|C15.FR.02  |When connection to the CSMS is restored
+  |The Charging Station SHALL send a <<transaction_event_request,TransactionEventRequest>> for any transaction that was authorized _offline_.
+    |As explained in <<delivering_transaction_related_messages,transaction-related message handling>>
+|C15.FR.03  |C15.FR.02 AND +
+  The authorization status in <<transaction_event_response,TransactionEventResponse>> is not _Accepted_ AND +
+  The transaction is still ongoing AND +
+  <<stop_tx_on_invalid_id,`StopTxOnInvalidId`>> is _true_ AND +
+  <<tx_stop_point,`TxStopPoint`>> does NOT contain: +
+  (<<tx_start_stop_point_values,Authorized>> OR <<tx_start_stop_point_values,PowerPathClosed>> OR <<tx_start_stop_point_values,EnergyTransfer>>)
+    |The Charging Station SHALL stop the energy transfer and send <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>) with _triggerReason_ set to `Deauthorized` and _chargingState_ set to `SuspendedEVSE` or preferably to `EVConnected`.
+      |Since the effect of setting _chargingState_ to `SuspendedEVSE` or `EVConnected` both have the same effect of not delivering any energy, the use of `SuspendedEVSE` is still allowed in this situation in order to avoid breaking existing implementations that adhere to the original requirement. +
+      Use of `SuspendedEVSE` in this situation will become deprecated in the next OCPP release.
+|C15.FR.04  |C15.FR.02 AND +
+  The authorization status in <<transaction_event_response,TransactionEventResponse>> is not _Accepted_ AND +
+  The transaction is still ongoing AND +
+  <<stop_tx_on_invalid_id,`StopTxOnInvalidId`>> is _true_ AND +
+  <<tx_stop_point,`TxStopPoint`>> does contain: +
+  (<<tx_start_stop_point_values,Authorized>> OR <<tx_start_stop_point_values,PowerPathClosed>> OR <<tx_start_stop_point_values,EnergyTransfer>>)
+    |The Charging Station SHALL stop the transaction and send <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) with _triggerReason_ set to _Deauthorized_ and <<reason_enum_type,stoppedReason>> set to _DeAuthorized_. |{nbsp}
+|C15.FR.05  |C15.FR.04 AND +
+  If the Charging Station has the possibility to lock the Charging Cable
+    |The Charging Station SHOULD keep the Charging Cable locked until the owner presents his identifier. |{nbsp}
+|C15.FR.06  |C15.FR.02 AND +
+  The authorization status in <<transaction_event_response,TransactionEventResponse>> is not _Accepted_ AND +
+  The transaction is still ongoing AND +
+  <<stop_tx_on_invalid_id,`StopTxOnInvalidId`>> is set to _false_ AND +
+  <<max_energy_on_invalid_id,`MaxEnergyOnInvalidId`>> is not implemented or has been exceeded. +
+  <<tx_stop_point,`TxStopPoint`>> does NOT contain: <<tx_start_stop_point_values,EnergyTransfer>>
+    |The Charging Station SHALL stop the energy delivery to the EV immediately and send <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>) with _triggerReason_ set to _ChargingStateChanged_ and chargingState set to _SuspendedEVSE_ |{nbsp}
+|C15.FR.07  |C15.FR.02 AND +
+  The authorization status in <<transaction_event_response,TransactionEventResponse>> is not _Accepted_ AND +
+  The transaction is still ongoing AND +
+  <<stop_tx_on_invalid_id,`StopTxOnInvalidId`>> is set to _false_ AND +
+  <<max_energy_on_invalid_id,`MaxEnergyOnInvalidId`>> is set and has NOT been exceeded.
+    |Energy delivery to the EV SHALL be allowed until the amount of energy specified in <<max_energy_on_invalid_id,`MaxEnergyOnInvalidId`>> has been reached. |{nbsp}
+|C15.FR.08  |When an unknown identifier is presented AND <<offline_tx_for_unknown_id_enabled,`OfflineTxForUnknownIdEnabled`>> is set to _true_
+  |The Charging Station SHALL accept the presented IdToken. |{nbsp}
+|===
+
+:sectnums:
+=== Master Pass
+
+:sectnums!:
+=== C16 - Stop Transaction with a Master Pass.
+
+.C16 - Stop Transaction with a Master Pass
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Stop Transaction with a Master Pass
+|2   |ID              |C16
+|{nbsp} d|_Functional block_ |C. Authorization
+|3   |Objective(s)    |Enable stopping of transactions by use of a Master Pass (for example for: Law Enforcement officials).
+|4   |Description     |This use case covers how somebody with a Master Pass (User) can stop (selected) ongoing transactions, so the cable becomes unlocked. This Master Pass can be configured in: <<master_pass_group_id,`MasterPassGroupId`>>.
+|{nbsp} d|_Actors_    |Charging Station, CSMS, User
+|{nbsp} d|_Scenario description_ 
+  |**1.** The User (Law Enforcement official) presents his IdToken at the Charging Station. +
+  **2.** The Charging Station sends <<authorize_request,AuthorizeRequest>> to the CSMS to request authorization. +
+  **3.** Upon receipt of <<authorize_request,AuthorizeRequest>>, the CSMS responds with <<authorize_response,AuthorizeResponse>>. This response message contains a GroupId that equals the value of the Configuration Variable <<master_pass_group_id,`MasterPassGroupId`>> and the idToken is valid. +
+  **4a.** If the Charging Station has a UI, then the Charging Station "Shows" the Master Pass UI. +
+  **5a.** The user selects which transactions to stop. +
+  **6a.** The Charging Station stops the selected transaction(s) AND sends a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>, <<reason_enum_type,stopReason = MasterPass>>) to the CSMS for every stopped transaction. +
+  **7a.** Upon receipt of <<transaction_event_request,TransactionEventRequest>> the CSMS responds with <<transaction_event_response,TransactionEventResponse>>. +
+  **4b.** If the Charging Station does NOT have a UI, then the Charging Station stops all transactions AND sends a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>, <<reason_enum_type,stopReason = MasterPass>>) to the CSMS for every stopped transaction. +
+  **5b.** Upon receipt of <<transaction_event_request,TransactionEventRequest>> the CSMS responds with <<transaction_event_response,TransactionEventResponse>>.
+|{nbsp} d|_Alternative scenario(s)_ |<<ev_driver_authorization_using_rfid,C01 - EV Driver Authorization>>
+|5   |Prerequisites 
+  |Ongoing Transaction(s) +
+  Configuration Variable: <<master_pass_group_id,`MasterPassGroupId`>> set. +
+  Users IdToken has groupId equal to the configured <<master_pass_group_id,`MasterPassGroupId`>>.
+|6   |Postcondition(s)  |(Selected) transaction(s) stopped.
+|===
+
+.Sequence Diagram: Stop Transaction with a Master Pass
+image::part2/images/figure_36.svg[Sequence Diagram: Stop Transaction with a Master Pass]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error Handling    |When the user does not make a selection before an acceptable timeout, the Charging Station SHALL go back to normal operation.
+|8   |Remarks           |The scenario description and sequence diagram above are based on the Configuration Variable for stop transaction being configured as follows. +
+  <<tx_stop_point,`TxStopPoint`>>: <<tx_start_stop_point_values,Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
+  This use-case is also valid for other configurations, but then the transaction might stop at another moment, which might change the sequence in which message are send. For more details see the use case: <<stop_transaction_options,E06 - Stop Transaction options>>
+|===
+
+==== C16 - Stop Transaction with a Master Pass - Requirements
+
+.C16 - Stop Transaction with a Master Pass - Requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
+
+|C16.FR.01  |User presents an IdToken that has a groupId equal to <<master_pass_group_id,`MasterPassGroupId`>> AND +
+  The Charging Station has a UI.
+    |The Charging Station SHALL "show" the Master Pass UI.
+|C16.FR.02  |User presents an IdToken that has a groupId equal to <<master_pass_group_id,`MasterPassGroupId`>> AND the Charging Station does NOT have a UI.
+  |The Charging Station SHALL stop all ongoing transactions.
+|C16.FR.03  |IdTokens that have a groupId equal to <<master_pass_group_id,`MasterPassGroupId`>>
+  |SHALL NOT be allowed to start a transaction.
+|C16.FR.04  |IdTokens that have a groupId equal to <<master_pass_group_id,`MasterPassGroupId`>> present in the <<authorization_cache,Authorization Cache>>.
+  |The Charging Station MAY also allow authorization of "Master Pass" tokens based on information in the <<authorization_cache,Authorization Cache>>.
+|C16.FR.05  |IdTokens that have a groupId equal to <<master_pass_group_id,`MasterPassGroupId`>> present in the <<local_authorization_list,Local Authorization List>>.
+  |The Charging Station MAY also allow authorization of "Master Pass" tokens based on information in the <<local_authorization_list,Local Authorization List>>.
+|===

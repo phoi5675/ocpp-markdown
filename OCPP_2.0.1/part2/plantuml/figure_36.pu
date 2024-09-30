@@ -1,0 +1,48 @@
+@startuml figure_36
+!include style.puml
+
+actor "User" as User
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over ChargingStation
+  one or more transactions are ongoing
+end note
+
+User -> ChargingStation: Present IdToken
+activate User
+activate ChargingStation
+
+ChargingStation -> CSMS: AuthorizeRequest(...)
+activate CSMS
+
+CSMS --> ChargingStation: AuthorizeResponse(GroupId = MasterPassGroupId)
+deactivate CSMS
+
+alt if idToken valid
+  alt if Master Pass UI available
+    ChargingStation --> User: show Master Pass UI
+
+    User -> ChargingStation: select transaction(s)
+  end
+  deactivate User
+
+  loop for all (selected) transactions
+    ChargingStation -> ChargingStation: stop energy offer
+
+    alt if cable not permanently attached
+      ChargingStation -> ChargingStation: unlock connector
+    end
+
+    ChargingStation -> CSMS: \
+      TransactionEventRequest(eventType  Ended,\n\
+      chargingState = EVConnected, stopReason = MasterPass,...)
+    activate CSMS
+
+    CSMS --> ChargingStation: TransactionEventResponse(...)
+    deactivate CSMS
+  end
+  deactivate ChargingStation
+end
+
+@enduml

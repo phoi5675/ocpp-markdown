@@ -1,0 +1,33 @@
+@startuml figure_34
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+activate EVDriver
+EVDriver -> ChargingStation: Present IdToken
+activate ChargingStation
+
+ChargingStation -> ChargingStation: \
+  check local authorization list()\
+  \n[cached tariff: 0.23/kWh]
+
+alt IdToken not known or IdToken status not Accepted
+  ChargingStation -> CSMS: AuthorizeRequest(IdToken)
+
+  CSMS -> ChargingStation: AuthorizeResponse(Accepted)
+end
+
+opt 
+  ChargingStation -> EVDriver: \
+    notification\
+    \n[tariff: 0.23/kWh]
+  deactivate EVDriver
+end
+
+ChargingStation -> ChargingStation: lock connector
+
+ChargingStation -> ChargingStation: start energy offer
+
+@enduml

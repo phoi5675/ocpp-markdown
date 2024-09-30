@@ -1,0 +1,37 @@
+@startuml figure_35
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+
+note over EVDriver, ChargingStation
+  The Charging Station is Offline.
+end note
+
+EVDriver -> ChargingStation: present IdToken
+
+opt If enabled
+  ChargingStation -> ChargingStation: check Authorization Cache
+end
+
+opt If implemented & enabled
+  ChargingStation -> ChargingStation: check Local Authorization List
+end
+
+note over ChargingStation
+  IdToken unknown
+end note
+
+alt OfflineTxForUnknownIdEnabled() = True
+  ChargingStation -> ChargingStation: accept identifier
+  opt
+    ChargingStation -> EVDriver: notification
+  end
+else OfflineTxForUnknownIdEnabled() = False
+  ChargingStation -> ChargingStation: reject identifier
+  opt
+    ChargingStation -> EVDriver: notification
+  end
+end
+
+@enduml
