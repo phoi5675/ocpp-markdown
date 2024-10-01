@@ -447,6 +447,7 @@ There are 2 ways a Charging Station can support punctual automated bi-annual cha
 
 Daylight saving time is used for displaying the current time to the EV driver.
 
+[[message_timeouts]]
 === Message Timeouts
 
 _This section is normative._

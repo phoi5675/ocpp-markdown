@@ -134,7 +134,7 @@ This appendix provides a list of all standardized component names for OCPP 2.0.1
 This is the list of Standardized Controller Components for OCPP 2.0.1. and typical Variables that might be associated with them.
 
 
-[cols="^.^1s,10"%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
 |IMPORTANT |This list does not imply that these Components are required, nor does it imply that the listed Variables arerequired for a Component or no other Variables are allowed to be associated with a Component.
 |===
@@ -1675,7 +1675,7 @@ For each reason code, some messages that might typically return them are shown. 
 
 StatusInfo is optional. Any implementation should be able to function properly without StatusInfo, because every message has the response code values that are essential to perform the function. The _reasonCode_ and _additionalInfo_ in StatusInfo are meant to provide more insight on what is happening and maybe allow for some automatic recovery.
 
-[cols="^.^1,10"%autowidth.stretch]
+[cols="^.^1,10",%autowidth.stretch]
 |===
 s|IMPORTANT |The existence of a reason code in this table does not imply a requirement to use it nor does it imply arequirement to any of the mentioned messages.
 |===

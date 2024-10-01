@@ -1,3 +1,4 @@
+[[authorization]]
 = C. Authorization
 :!chapter-number:
 
@@ -22,7 +23,7 @@ OCPP now makes it possible to use many different types of authorization. Where O
 
 An <<id_token_type,IDTokenType>> contains the identifier to use for authorization. It is defined as a combination of a case insensitive string and a type. Message data elements of the <<id_token_type,IDTokenType>> class (including GroupId) MAY contain any data, that is meaningful to a CSMS (e.g. for the purpose of identifying the initiator of charging activity), and Charging Stations MUST NOT make any presumptions as to the format or content of such data, other than is provided in the description of the IdTokenType (e.g. by assuming that it is a UID- like value that must be hex characters only and/or an even number of digits). IdToken data acquired via local token reader hardware is usually a (4, 7 or 10 bytes) UID value of a physical IdToken, typically represented as 8, 14 or 20 hexadecimal digit characters.
 
-[cols="^.^1,10"%autowidth.stretch]
+[cols="^.^1,10",%autowidth.stretch]
 |===
 s|NOTE |To promote interoperability, based on common practice to date in the case of <<id_token_type,IdTokenType>> data has type: <<id_token_enum_type,_ISO14443_>>, it is RECOMMENDED that such UIDs be represented as hex representations of the UID bytes. According to ISO 14443-3, byte 0 should come first in the hex string. (Most significant nibble of byte 0 first)
 |===
@@ -42,7 +43,7 @@ A CSMS has the ability to treat a set of identity tokens as a "group", thereby a
 
 Tokens (idTags) are grouped for authorization purposes by specifying a common group identifier in the optional _groupIdToken_ element in <<id_token_info_type,IdTokenInfo>>: two IdTokens are considered to be in the same group if their GroupIdTokens match (and they are not empty).
 
-[cols="^.^1,10"%autowidth.stretch]
+[cols="^.^1,10",%autowidth.stretch]
 |===
 s|NOTE 
   |Even though the GroupId has the same nominal data type (<<id_token_type,IdTokenType>>) as an idToken, the value of this element may not be in the common format of <<id_token_type,IdTokenTypes>> and/or may not represent an actual valid <<id_token_type,IdTokenType>> (e.g. it may be a common shared "account number"): therefore, the GroupId value SHOULD NOT be used for comparison against a presented Token value (unless it also occurs as an idToken value).
@@ -68,12 +69,12 @@ This list contains the authorization status of all (or a selection of) identifie
 
 Please refer to the use cases <<send_local_authorization_list,D01 - Send Local Authorization List>>, <<offline_authorization_through_local_authorization_list,C13 - Offline Authorization through Local Authorization List>> and <<online_authorization_through_local_authorization_list,C14 - Online Authorization through Local Authorization List>> for more information on how to implement / use the Local Authorization List functionality.
 
-[cols="^.^1,10"%autowidth.stretch]
+[cols="^.^1,10",%autowidth.stretch]
 |===
 s|NOTE|Please note the difference between the <<authorization_cache,Authorization Cache>> and <<local_authorization_list,Local Authorization List>> mechanisms: the <<authorization_cache,Authorization Cache>> is an autonomous mechanism at the Charging Station, whereas the <<local_authorization_list,Local Authorization List>> is a list that is synchronized between CSMS and Charging Station (originating from the CSMS).
 |===
 
-[cols="^.^1,10"%autowidth.stretch]
+[cols="^.^1,10",%autowidth.stretch]
 |===
 s|NOTE|The <<authorization_cache,Authorization Cache>> and <<local_authorization_list,Local Authorization List>> are *distinct* logical data structures. When both <<authorization_cache,Authorization Cache>> as well as <<local_authorization_list,Local Authorization List>> are supported, a Charging Station SHALL treat <<local_authorization_list,Local Authorization List>> entries as having priority over <<authorization_cache,Authorization Cache>> entries for the same identifiers.
 |===

@@ -1028,7 +1028,7 @@ BootNotificationResponse with RegistrationStatus: Accepted. See: Transactions be
 CSMS.
 
 [[tx_start_point]]
-==== TxStartPoint
+==== `TxStartPoint`
 
 
 Required yes
@@ -1051,7 +1051,7 @@ mean that a transaction is started when an EV is detected (Cable is connected), 
 RFID card en the CSMS successfully authorizes the ID for charging.
 
 [[tx_stop_point]]
-==== TxStopPoint
+==== `TxStopPoint`
 
 **Required** yes
 **Component componentName** TxCtrlr

@@ -1,237 +1,172 @@
 = E. Transactions
 :!chapter-number:
 
+<<<
+
+:sectnums:
+:sectnumlevels: 5
 == Introduction
 
-This Functional Block describes the OCPP Transaction related functionalities. Transactions are started/stopped on the Charging
-Station. Note that at most one transaction can be active on an EVSE at any point in time.
+This Functional Block describes the OCPP Transaction related functionalities. Transactions are started/stopped on the Charging Station. Note that at most one transaction can be active on an EVSE at any point in time.
 
 [[flexible_transaction_start_stop]]
 === Flexible transaction start/stop
 
-To support as many business cases as possible, and to prevent sending too many messages when not needed for certain business
-cases, OCPP 2.0.1 supports flexible configuration of the start and stop of a transaction.
+To support as many business cases as possible, and to prevent sending too many messages when not needed for certain business cases, OCPP 2.0.1 supports flexible configuration of the start and stop of a transaction.
 
 For this the following Configuration Variables are defined:
 
-- TxStartPoint
-- TxStopPoint
+- <<tx_start_point,`TxStartPoint`>>
+- <<tx_stop_point,`TxStopPoint`>>
 
-These 2 Configuration Variables make it possible to define when a transaction should start: TransactionEventRequest (eventType =
-Started) and when a transaction should stop: TransactionEventRequest (eventType  Ended)
+These 2 Configuration Variables make it possible to define when a transaction should start: <<transaction_event_request,TransactionEventRequest>> (eventType = Started) and when a transaction should stop: <<transaction_event_request,TransactionEventRequest>> (eventType = Ended)
 
-With the introduction in OCPP 2.0.1 of flexible start/stop points of a transaction, it is important to provide a definition of a
-transaction.
+With the introduction in OCPP 2.0.1 of flexible start/stop points of a transaction, it is important to provide a definition of a transaction.
 
+****
+A transaction is the portion of a charging session that is recorded by CSMS. It is a single time frame with a start and stop time. This information can be used by the operator for billing.
+****
 
-A transaction is the portion of a charging session that is recorded by CSMS. It is a single time frame with a start and stop
-time. This information can be used by the operator for billing.
-
-It is up to the Charging Station Operator to define the values for TxStartPoint and TxStopPoint (unless these are preset as read-only
-values in the charging station), but not all combinations make sense.
+It is up to the Charging Station Operator to define the values for TxStartPoint and TxStopPoint (unless these are preset as read-only values in the charging station), but not all combinations make sense.
 
 The following three variants are most common:
 
-- If connection time is billed, then start and stop points should be EVConnected.
-- If time of use is billed, then the start points should be EVConnected, Authorized and the stop point EVConnected.
-    (Such that upon authorization first, the charger is already seen as 'in use').
-- If charging time is billed, then start and stop points should be PowerPathClosed. (This starts as soon as charger is ready
-    to provide power and stops when authorization is revoked or vehicle disconnected.) Pauses in between (i.e.
-    SuspendedEV(SE)) do not end the transaction. Billing on the amount of energy or power can be done based on the meter
-    values that are collected during the transaction.
+- If connection time is billed, then start and stop points should be `EVConnected`.
+- If time of use is billed, then the start points should be `EVConnected`, Authorized and the stop point `EVConnected`. +
+(Such that upon authorization first, the charger is already seen as 'in use').
+- If charging time is billed, then start and stop points should be `PowerPathClosed`. (This starts as soon as charger is ready to provide power and stops when authorization is revoked or vehicle disconnected.) Pauses in between (i.e. SuspendedEV(SE)) do not end the transaction. Billing on the amount of energy or power can be done based on the meter values that are collected during the transaction.
 
- WARNING
+[cols="^.^1,10",%autowidth.stretch]
+|===
+s|WARNING
+  |Certain combinations of start and stop points can lead to a situation where a started transaction is never stopped. For example: when the start point is `ParkingBayOccupancy` and the stop point is `EVConnected`, then a transaction starts when an EV occupies the parking bay, but when the user never connects the EV, but simply drives away, then the transaction will remain open, because `ParkingBayOccupancy` is not configured as a stop point.
+|===
 
+==== Readonly or Read/Write
 
-Certain combinations of start and stop points can lead to a situation where a started transaction is never
-stopped. For example: when the start point is ParkingBayOccupancy and the stop point is EVConnected,
-then a transaction starts when an EV occupies the parking bay, but when the user never connects the EV, but
-simply drives away, then the transaction will remain open, because ParkingBayOccupancy is not
-configured as a stop point.
+OCPP 2.0.1 supports 2 options for the transaction start/stop Configuration Variables. They can either be: RW (read-write) or R (read-only).
 
-**1.1.1. Readonly or Read/Write**
+When a Charging Station supports RW, the CSO can configure the settings. To support all possible settings, the software in the Charging Station has to be more flexible.
 
-OCPP 2.0.1 supports 2 options for the transaction start/stop Configuration Variables. They can either be: RW (read-write) or R
-(read-only).
+With only R, the settings are fixed in firmware, the CSO can read the settings to learn how a Charging Station will behave, but cannot configure it. This makes for a simpler implementation. When the needs of the target market are well known there might be no need o implement the flexible model.
 
-When a Charging Station supports RW, the CSO can configure the settings. To support all possible settings, the software in the
-Charging Station has to be more flexible.
+==== OCPP 1.6 Transaction compatibility
 
-With only R, the settings are fixed in firmware, the CSO can read the settings to learn how a Charging Station will behave, but cannot
-configure it. This makes for a simpler implementation. When the needs of the target market are well known there might be no need
-to implement the flexible model.
+If transactions similar to OCPP 1.6 are wanted, this section describes how the transaction start and stop point should be configured.
 
-**1.1.2. OCPP 1.6 Transaction compatibility**
+In OCPP 1.x the moment a Charging Station should send StartTransaction.req was not defined very precise, generally this was done when the Charging Station was ready to deliver energy: cable is connected and user is authorized.
 
-If transactions similar to OCPP 1.6 are wanted, this section describes how the transaction start and stop point should be
-configured.
+To support similar transaction start behaviour, the value: _PowerPathClosed_ is to be used. (and for completeness, also add: _EnergyTransfer_
 
-Edition 3 FINAL, 2024-05-06 **E. Transactions**
+.The settings for an OCPP 1.6 compatible transaction
+[cols="<.^2,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Configuration Variable             |Values
 
+|<<tx_start_point,`TxStartPoint`>>  |PowerPathClosed
+|<<tx_stop_point,`TxStopPoint`>>    |EVConnected, Authorized
+|===
 
-In OCPP 1.x the moment a Charging Station should send StartTransaction.req was not defined very precise, generally this was done
-when the Charging Station was ready to deliver energy: cable is connected and user is authorized.
+For stop behavior the _ParkingBayOccupancy_ should not be added, OCPP 1.6 did not support this, and in case of a dual socket charging station where somebody is using the 'opposite' connector, the transaction would then be stopped, while the EV could still be charging.
 
-To support similar transaction start behaviour, the value: _PowerPathClosed_ is to be used. (and for completeness, also add:
-_EnergyTransfer_
-
-_Table 95. The settings for an OCPP 1.6 compatible transaction_
-
-
-Configuration Variable Values
-
-TxStartPoint (^) PowerPathClosed
-TxStopPoint (^) EVConnected, Authorized
-For stop behavior the _ParkingBayOccupancy_ should not be added, OCPP 1.6 did not support this, and in case of a dual socket
-charging station where somebody is using the 'opposite' connector, the transaction would then be stopped, while the EV could still
-be charging.
-
-==== 1.2. TransactionId generation
+=== TransactionId generation
 
 New in OCPP 2.0.1: Transaction IDs are now generated by the Charging Station.
 
-In OCPP 1.x this was done by the CSMS. This had some drawbacks. When a Charging Station was offline it had a transaction which
-did not have a transactionId.
+In OCPP 1.x this was done by the CSMS. This had some drawbacks. When a Charging Station was offline it had a transaction which did not have a transactionId.
 
-The TransactionId generated by a Charging Station has to be unique for this Charging Station. During the lifetime of a Charging
-Station it should never use the same TransactionId twice. Also when the Charging Station is rebooted, power cycled, firmware
-updated, repaired etc.
+The TransactionId generated by a Charging Station has to be unique for this Charging Station. During the lifetime of a Charging Station it should never use the same TransactionId twice. Also when the Charging Station is rebooted, power cycled, firmware updated, repaired etc.
 
 OCPP does not specify an algorithm to use, but it is RECOMMENDED to use UUIDs.
 
 [[delivering_transaction_related_messages]]
 === Delivering transaction-related messages
 
-The primary purpose of TransactionEventRequest messages is to give the CSMS the information that it will later use to bill the
-transaction. To be sure that the CSMS receives all the necessary information for billing a transaction, OCPP uses two mechanisms:
-_retrying_ and _sequence numbers_.
+The primary purpose of <<transaction_event_request,TransactionEventRequest>> messages is to give the CSMS the information that it will later use to bill the transaction. To be sure that the CSMS receives all the necessary information for billing a transaction, OCPP uses two mechanisms: _retrying_ and _sequence numbers_.
 
-**1.3.1. Retrying**
+==== Retrying
 
-The Charging Station sends TransactionEventRequest messages to the CSMS System as soon as possible after the events they
-report on have occurred.
+The Charging Station sends <<transaction_event_request,TransactionEventRequest>> messages to the CSMS System as soon as possible after the events they report on have occurred.
 
-If the Charging Station is offline, or if an error occurs processing the message in transport, the CSMS will be missing billing
-information. In order to repair the missing information in the CSMS, the Charging Station should retry to deliver this information.
-When the Charging Station fails to receive a TransactionEventResponse for a TransactionEventRequest message within the
-message timeout period, the Charging Station should follow the retry procedure described in use case E13 - Transaction-related
-message not accepted by CSMS.
+If the Charging Station is offline, or if an error occurs processing the message in transport, the CSMS will be missing billing information. In order to repair the missing information in the CSMS, the Charging Station should retry to deliver this information. +
+When the Charging Station fails to receive a <<transaction_event_response,TransactionEventResponse>> for a <<transaction_event_request,TransactionEventRequest>> message within the <<message_timeouts,message timeout period>>, the Charging Station should follow the retry procedure described in use case <<e13_transaction_related_message_not_accepted_by_csms,E13 - Transaction-related message not accepted by CSMS>>.
 
-**1.3.2. Sequence numbers**
+==== Sequence numbers
 
-When delivery of TransactionEventRequest messages fails and will be retried later, the result is that TransactionEventRequest
+When delivery of <<transaction_event_request,TransactionEventRequest>> messages fails and will be retried later, the result is that <<transaction_event_request,TransactionEventRequest>>
 messages may arrive in the CSMS in a different order from the one in which the transaction events occurred at the Charging
-Station. This in turn would make it difficult for the CSMS to know if it received all TransactionEventRequest messages about a
+Station. This in turn would make it difficult for the CSMS to know if it received all <<transaction_event_request,TransactionEventRequest>> messages about a
 transaction, which the CSMS may want to know before it starts billing the transaction.
 
-In order to make it possible to know that all TransactionEventRequest messages about a transaction were received, OCPP uses
-_sequence numbers_ in TransactionEventRequest messages. For every EVSE, the Charging Station maintains a counter of the number
-of TransactionEventRequest messages generated about that EVSE. When generating a new TransactionEventRequest message,
-the Charging Station includes the current value of the EVSE’s counter in the **seqNo** field of the request, and then increments the
-counter. With this mechanism, a CSMS can check if it has full information about a transaction by checking that:
+In order to make it possible to know that all <<transaction_event_request,TransactionEventRequest>> messages about a transaction were received, OCPP uses _sequence numbers_ in TransactionEventRequest messages. For every EVSE, the Charging Station maintains a counter of the number of <<transaction_event_request,TransactionEventRequest>> messages generated about that EVSE. When generating a new <<transaction_event_request,TransactionEventRequest>> message, the Charging Station includes the current value of the EVSE’s counter in the **seqNo** field of the request, and then increments the counter. With this mechanism, a CSMS can check if it has full information about a transaction by checking that:
 
-- It received a TransactionEventRequest about the start of the transaction, with a **seqNo** _a_
-- It received a TransactionEventRequest about the stop of the transaction, with a **seqNo** _o_ greater than _a_.
-- It received a TransactionEventRequest about the transaction with **seqNo** _n_ for every integer _n_ between _a_ and _o_
+- It received a <<transaction_event_request,TransactionEventRequest>> about the start of the transaction, with a **seqNo** _a_
+- It received a <<transaction_event_request,TransactionEventRequest>> about the stop of the transaction, with a **seqNo** _o_ greater than _a_.
+- It received a <<transaction_event_request,TransactionEventRequest>> about the transaction with **seqNo** _n_ for every integer _n_ between _a_ and _o_
 
-Edition 3 FINAL, 2024-05-06 **E. Transactions**
-
-
-**1.3.2.1. Sequence number generation**
+===== Sequence number generation
 
 _This section is normative_.
 
-When a transaction starts, the Charging Station SHOULD set the _seqNo_ field for the TransactionEventRequest message to 0.
+When a transaction starts, the Charging Station SHOULD set the _seqNo_ field for the <<transaction_event_request,TransactionEventRequest>> message to 0. +
 (Implementations with a continuously increasing _seqNo_ are still allowed.)
 
-After each TransactionEventRequest Charging Station SHALL increase the _seqNo_ by 1.
+After each <<transaction_event_request,TransactionEventRequest>> Charging Station SHALL increase the _seqNo_ by 1.
 
-==== 1.4. Authorization
+=== Authorization
 
-To simplify the use cases in this functional block, the way an EV Driver is authorized is not part of these use cases. It will simply be
-called something like: "User authorization successful" or "The EV Driver is authorized by the Charging Station and/or CSMS.". This
-may be any way of authorizing an EV Driver. See functional block: C Authorization for all the options and requirements for
-authorization.
+To simplify the use cases in this functional block, the way an EV Driver is authorized is not part of these use cases. It will simply be called something like: "User authorization successful" or "The EV Driver is authorized by the Charging Station and/or CSMS.". This may be any way of authorizing an EV Driver. See functional block: <<authorization,C Authorization>> for all the options and requirements for authorization.
 
-==== 1.5. Clarification for optional fields in TransactionEventRequest
+=== Clarification for optional fields in TransactionEventRequest
 
 _This section is informative._
 
-The TransactionEventRequest contains several optional fields. Some of these fields should only be sent once and should not be
-repeated in every TransactionEventRequest. The following summary points to the requirements related to these optional fields.
+The TransactionEventRequest contains several optional fields. Some of these fields should only be sent once and should not be repeated in every TransactionEventRequest. The following summary points to the requirements related to these optional fields.
 
 **_evse_**
 
-
-(E01.FR.16) The field evse is only provided in the first TransactionEventRequest that occurs after the EV has connected. It is
-not repeated in all future TransactionEventRequests.
+(E01.FR.16) The field _evse_ is only provided in the first TransactionEventRequest that occurs after the EV has connected. It is not repeated in all future TransactionEventRequests.
 
 **_idToken_**
 
-
-(E03.FR.01) The field idToken is provided once in the first TransactionEventRequest that occurs after the transaction has
-been authorized.
-(E07.FR.02) The field idToken is provided once in the TransactionEventRequest that occurs when the authorization of the
-transaction has been ended.
-(C12.FR.02) The above is also the case when authorization was granted because the idToken is present in the authorization
-cache with a Accepted status.
+(E03.FR.01) The field _idToken_ is provided once in the first TransactionEventRequest that occurs after the transaction has been authorized. +
+(E07.FR.02) The field _idToken_ is provided once in the TransactionEventRequest that occurs when the authorization of the transaction has been ended. +
+(C12.FR.02) The above is also the case when authorization was granted because the idToken is present in the authorization cache with a `Accepted` status. +
 (F02.FR.05): The above is also the case when the idToken is provided by a RequestStartTransactionRequest.
 
 **_reservationId_**
 
-
-(E03.FR.03/H01.FR.15) The field reservationId is only provided in the first TransactionEventRequest that occurs when the
-transaction has been authorized by the idToken for which a reservation existed in the charging station.
+(E03.FR.03/H01.FR.15) The field _reservationId_ is only provided in the first TransactionEventRequest that occurs when the transaction has been authorized by the idToken for which a reservation existed in the charging station. +
 (F02.FR.06) The above is also the case when the idToken is provided by a RequestStartTransactionRequest.
 
 **_meterValue_**
 
-
-(E02.FR.09) The TransactionEventRequest( eventType =Started) must contain the meter values that have been configured
-in SampledDataCtrlr.TxStartedMeasurands.
-(E02.FR.10) A TransactionEventRequest( eventType =Updated) must be sent at every interval configured in
-SampledDataCtrlr.TxUpdatedInterval and contain the meter values that have been configured in
-SampledDataCtrlr.TxUpdatedMeasurands. If TxUpdatedMeasurands == 0, then no meter values are sent.
-(E06.FR.11) The TransactionEventRequest( eventType =Ended) must contain the meter values that have been configured in
-SampledDataCtrlr.TxEndedMeasurands. If SampledDataCtrlr.TxEndedInterval == 0, then only the values taken at start and
-end of the transaction are included.
+(E02.FR.09) The TransactionEventRequest(_eventType_=`Started`) must contain the meter values that have been configured in SampledDataCtrlr.TxStartedMeasurands. +
+(E02.FR.10) A TransactionEventRequest(_eventType_=`Updated`) must be sent at every interval configured in SampledDataCtrlr.TxUpdatedInterval and contain the meter values that have been configured in SampledDataCtrlr.TxUpdatedMeasurands. If TxUpdatedMeasurands == 0, then no meter values are sent. +
+(E06.FR.11) The TransactionEventRequest(_eventType_=`Ended`) must contain the meter values that have been configured in SampledDataCtrlr.TxEndedMeasurands. If SampledDataCtrlr.TxEndedInterval == 0, then only the values taken at start and end of the transaction are included.
 
 **_transactionInfo.chargingState_**
 
-
-(E02.FR.13) Whenever the charging state changes, the Charging Station must send a TransactionEventRequest containing
-chargingState. This implies that a TransactionEventRequest( eventType  Started) always has a chargingState , because
-the state goes from non-existent to a value.
-If the change of charging state is the only event, then TransactionEventRequest has a triggerReason =
-ChargingStateChanged, but if a change in charging state occurs together with other events, such as those represented
-by triggerReason CablePluggedIn or (Stop)Authorized, for example, then chargingState can simply be reported as
-part of that message.
-A TransactionEventRequest with triggerReason  ChargingStateChanged must contain chargingState.
-
-Edition 3 FINAL, 2024-05-06 **E. Transactions**
-
+(E02.FR.13) Whenever the charging state changes, the Charging Station must send a TransactionEventRequest containing _chargingState_. This implies that a TransactionEventRequest(_eventType_=`Started`) always has a _chargingState_, because the state goes from non-existent to a value. +
+If the change of charging state is the only event, then TransactionEventRequest has a _triggerReason_ = `ChargingStateChanged`, but if a change in charging state occurs together with other events, such as those represented by _triggerReason_ `CablePluggedIn` or (`Stop`)`Authorized`, for example, then _chargingState_ can simply be reported as part of that message. +
+A TransactionEventRequest with _triggerReason_ = `ChargingStateChanged` must contain _chargingState_.
 
 **_transactionInfo.stoppedReason_**
 
-
-(C15.FR.04, E05.FR.10, E05.FR.08/09, E07.FR.06) The stoppedReason must be provided in the
-TransactionEventRequest( eventType =Ended), unless the value is Local, in which case it may be omitted.
-(F03.FR.03, F03.FR.10, F04.FR.03) The above also applies to transactions that are stopped by a
-RequestStopTransactionRequest, however in this case the stoppedReason value must be Remote.
+(C15.FR.04, E05.FR.10, E05.FR.08/09, E07.FR.06) The _stoppedReason_ must be provided in the TransactionEventRequest(_eventType_=`Ended`), unless the value is `Local`, in which case it may be omitted. +
+(F03.FR.03, F03.FR.10, F04.FR.03) The above also applies to transactions that are stopped by a RequestStopTransactionRequest, however in this case the _stoppedReason_ value must be `Remote`.
 
 **_transactionInfo.remoteStartId_**
 
+(C05.FR.03, F01.FR.25, F02.FR.01) The _remoteStartId_ must be sent in the next TransactionEventRequest after the RequestStartTransactionRequest with the same _remoteStartId_.
 
-(C05.FR.03, F01.FR.25, F02.FR.01) The remoteStartId must be sent in the next TransactionEventRequest after the
-RequestStartTransactionRequest with the same remoteStartId.
+<<<
 
-Edition 3 FINAL, 2024-05-06 **E. Transactions**
-
-
-== 2. Use cases & Requirements
+== Use cases & Requirements
 
 === OCPP transaction mechanism
 
+:sectnums!:
 [[start_transaction_options]]
 === E01 - Start Transaction options
 

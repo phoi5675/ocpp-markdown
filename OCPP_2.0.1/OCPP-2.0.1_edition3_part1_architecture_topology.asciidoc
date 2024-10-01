@@ -87,7 +87,7 @@ To understand the terminology in the OCPP specification, it is important to unde
 .3-tier model as used in OCPP
 image::part1/images/figure_1.svg[3-tier model as used in OCPP]
 
-[cols="^.^1,10"%autowidth.stretch]
+[cols="^.^1,10",%autowidth.stretch]
 |===
 s|NOTE |This section describes the charging infrastructure on a logical level for communication purposes. We do not wish to impose a mapping onto physical hardware. This is a manufacturer’s choice. For example, the EVSE might be integrated into a Charging Station and to look as just a part of that device, but it might just as well have its own casing and live outside of the physical entity Charging Station, for example a charging plaza with 20 EVSEs and Connectors which communicates via 1 modem as 1 Charging Station to the CSMS is seen by OCPP as 1 Charging Station.
 |===
@@ -402,7 +402,7 @@ Whereas a <<multiple_charging_stations_connected_to_csms_via_local_proxy,local p
 .Multiple Charging Stations connected to CSMS via Local Controller
 image::part1/images/figure_9.svg[Multiple Charging Stations connected to CSMS via Local Controller]
 
-[cols="^.^1,10"%autowidth.stretch]
+[cols="^.^1,10",%autowidth.stretch]
 |===
 s|NOTE |Technically this topology can be realized in multiple ways. When using this setup with websockets, this implies that when a Charging Station connects to the Local Controller, it should open a websocket connection with the same address to the CSMS. The advantages of this approach is that the Local Controller can see all the messages and act on it, messages don’t have to wait, firmware updates etc. on the Charging Stations are possible and the CSMS does not need special software. It could (in big installations) lead to a lot of websocket connections between CSMS and LC needed. For further information, please refer to OCPP implementation guide in Part 4.
 |===
