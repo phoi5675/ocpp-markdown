@@ -45,7 +45,7 @@ Tokens (idTags) are grouped for authorization purposes by specifying a common gr
 [cols="^.^1,10"%autowidth.stretch]
 |===
 s|NOTE 
-Even though the GroupId has the same nominal data type (<<id_token_type,IdTokenType>>) as an idToken, the value of this element may not be in the common format of <<id_token_type,IdTokenTypes>> and/or may not represent an actual valid <<id_token_type,IdTokenType>> (e.g. it may be a common shared "account number"): therefore, the GroupId value SHOULD NOT be used for comparison against a presented Token value (unless it also occurs as an idToken value).
+  |Even though the GroupId has the same nominal data type (<<id_token_type,IdTokenType>>) as an idToken, the value of this element may not be in the common format of <<id_token_type,IdTokenTypes>> and/or may not represent an actual valid <<id_token_type,IdTokenType>> (e.g. it may be a common shared "account number"): therefore, the GroupId value SHOULD NOT be used for comparison against a presented Token value (unless it also occurs as an idToken value).
 |===
 
 [[authorization_cache]]
@@ -341,8 +341,7 @@ This use-case is also valid for other configurations, but then the transaction m
   |The Charging Station SHALL NOT send an <<authorize_request,AuthorizeRequest>> for the received <<id_token_type,IdTokenType>>.
 |C03.FR.02  |If the Charging Station has implemented an Authorization Cache AND the Charging Station
 receives <<id_token_info_type,IdTokenInfo>> for an <<id_token_type,IdTokenType>> of type <<id_token_enum_type,Central>> in any message
-
-The Charging Station SHALL NOT store the information in its
+  |The Charging Station SHALL NOT store the information in its
 Authorization Cache.
 |===
 
@@ -405,7 +404,8 @@ image::part2/images/figure_24.svg[Sequence Diagram: Authorization using PIN-code
 |C04.FR.04  |If an idToken of type keyCode is used
   |The Charging Station or CSMS SHALL NOT show the IdToken in any logging. key codes should never appear in logs.
 |C04.FR.05  |{nbsp}               |Language SHALL be specified as RFC-5646 tags, see: <<rfc5646,[RFC5646]>>, for example: US English is: "en-US".
-|C04.FR.06  |If an idToken of type keyCode is used It is RECOMMENDED to take measures to prevent brute force attacks, for example by increasing backoff times after attempts to enter an incorrect keyCode.
+|C04.FR.06  |If an idToken of type keyCode is used
+  |It is RECOMMENDED to take measures to prevent brute force attacks, for example by increasing backoff times after attempts to enter an incorrect keyCode.
 |===
 
 <<<
@@ -798,7 +798,7 @@ The groupId mechanism as described in this use case also works when using the Au
   A different IdToken is presented for stopping, which has the same GroupIdToken, but does not have status = `Accepted`
     |The Charging Station SHALL NOT stop the transaction.
 |C09.FR.12  |If a <<transaction_event_request,TransactionEventRequest>> contains an IdToken and idToken has an associated groupIdToken
-  <<transaction_event_response,TransactionEventResponse>> from CSMS SHALL include <<id_token_info_type,groupIdToken>>.
+  |<<transaction_event_response,TransactionEventResponse>> from CSMS SHALL include <<id_token_info_type,groupIdToken>>.
 |===
 
 <<<
@@ -1148,8 +1148,8 @@ image::part2/images/figure_34.svg[Sequence Diagram: Online Authorization through
 `LocalAuthListSupportsExpiryDateTime` does not exist or is false
   |The Charging Station SHALL start charging without sending an <<authorize_request,AuthorizeRequest>>.
     |This means that Charging Station does not check for _cacheExpiryDateTime_.
-|C14.FR.03 Identifiers presented is in the <<local_authorization_list,Local Authorization List>> with a status OTHER than _Accepted_
-  The Charging Station SHALL send an <<authorize_request,AuthorizeRequest>> to try to authorize this IdToken. |{nbsp}
+|C14.FR.03 |Identifiers presented is in the <<local_authorization_list,Local Authorization List>> with a status OTHER than _Accepted_
+  |The Charging Station SHALL send an <<authorize_request,AuthorizeRequest>> to try to authorize this IdToken. |{nbsp}
 |C14.FR.04  |Identifier presented is in the <<local_authorization_list,Local Authorization List>> with a status `Accepted` AND +
 `ocalAuthListSupportsExpiryDateTime` = true AND +
 the _cacheExpiryDateTime_ has not passed
