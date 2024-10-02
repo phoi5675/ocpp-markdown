@@ -21,7 +21,7 @@ Meter Values MAY be reported in standalone MeterValuesRequest messages.
 
 Edition 3 FINAL, 2024-05-06 **J. MeterValues**
 
-
+[[metervalues_configuration]]
 === 2. Configuration
 
 _This section is normative._

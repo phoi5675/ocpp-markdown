@@ -104,6 +104,7 @@ In order to make it possible to know that all <<transaction_event_request,Transa
 - It received a <<transaction_event_request,TransactionEventRequest>> about the stop of the transaction, with a **seqNo** _o_ greater than _a_.
 - It received a <<transaction_event_request,TransactionEventRequest>> about the transaction with **seqNo** _n_ for every integer _n_ between _a_ and _o_
 
+[[sequence_number_generation]]
 ===== Sequence number generation
 
 _This section is normative_.
@@ -170,383 +171,259 @@ A TransactionEventRequest with _triggerReason_ = `ChargingStateChanged` must con
 [[start_transaction_options]]
 === E01 - Start Transaction options
 
-_Table 96. E01 - Start Transaction_
+.E01 - Start Transaction
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
+|1   |Name            |Start Transaction options
+|2   |ID              |E01
+|{nbsp} d|_Functional block_  |E. Transactions
+|3   |Objective(s)    |To inform the CSMS that a transaction at the Charging Station has started.
+|4   |Description     |This use case describes the different moments a Charging Station can start a transaction (send <<transaction_event_request,TransactionEventRequest>> with <<transaction_event_enum_type,eventType = Started>>), depending on the configuration of the Charging Station.
+|5   d|_Actors_       |Charging Station, CSMS, EV Driver
+d|S1 d|_Scenario objective_ |**To start a transaction when a parking bay occupancy detector detects an "EV".**
+|{nbsp} d|_Scenario description_ 
+  |**1.** The EV Driver parks his "EV" at a Charging Station with a parking bay occupancy detector, which triggers the detector. +
+  **2.** The Charging Station sends a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>) notifying the CSMS about a transaction that has started (even when the driver is not yet known). +
+  **3.** The CSMS responds with a TransactionEventResponse, confirming that the <<transaction_event_request,TransactionEventRequest>> was received.
+|{nbsp} |Prerequisite(s) 
+  |No transaction is ongoing on the EVSE. +
+  Configuration Variable: <<tx_start_point,`TxStartPoint`>> contains: <<tx_start_stop_point_values,ParkingBayOccupancy>>
+|{nbsp} |Postcondition(s) 
+  |**Successful postcondition:** +
+  The transaction is ongoing and the CSMS is _Successfully_ informed.
 
-No. Type Description
-1 Name Start Transaction options
-2 ID E01
-Functional block E. Transactions
-3 Objective(s) To inform the CSMS that a transaction at the Charging Station has started.
-4 Description This use case describes the different moments a Charging Station can start a transaction (send
-TransactionEventRequest with eventType  Started), depending on the configuration of the
-Charging Station.
-5 Actors Charging Station, CSMS, EV Driver
+  **Failure postcondition:**
+  The transaction is _not_ ongoing, _or_ +
+  The CSMS is _not_ informed.
+|===
 
-S1 _Scenario objective_ (^) **To start a transaction when a parking bay occupancy detector detects an "EV".**
-_Scenario description_ **1.** The EV Driver parks his "EV" at a Charging Station with a parking bay occupancy detector,
-which triggers the detector.
+.Sequence Diagram: Start Transaction options - ParkingBayOccupancy
+image::part2/images/figure_39.svg[Sequence Diagram: Start Transaction options - ParkingBayOccupancy]
 
-**2.** The Charging Station sends a TransactionEventRequest (eventType  Started) notifying the
-CSMS about a transaction that has started (even when the driver is not yet known.
-**3.** The CSMS responds with a TransactionEventResponse, confirming that the
-TransactionEventRequest was received.
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|S2  d|_Scenario objective_ |To start a transaction when communication is set up between the Charging Station and an EV +
+  (for example: cable plugged in correctly on both sides)
+|{nbsp} d|_Scenario description_ 
+  |**1.** The Charging Station sets up a connection with the EV. +
+  **2.** The Charging Station sends a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>) notifying the CSMS about a transaction that has started (even when the driver is not yet known). +
+  **3.** The CSMS responds with a <<transaction_event_response,TransactionEventResponse>>, confirming that the <<transaction_event_request,TransactionEventRequest>> was received.
+|{nbsp} |Prerequisite(s) 
+  |No transaction is ongoing on the EVSE. +
+  Configuration Variable: <<tx_start_point,`TxStartPoint`>> contains: <<tx_start_stop_point_values,EVConnected>> (Not: <<tx_start_stop_point_values,ParkingBayOccupancy>>)
+|{nbsp} |Postcondition(s) 
+  |**Successful postcondition:** +
+  The transaction is ongoing and the CSMS is _Successfully_ informed.
 
-**Prerequisite(s)** (^) No transaction is ongoing on the EVSE.
-Configuration Variable: TxStartPoint contains: ParkingBayOccupancy
-**Postcondition(s)** (^) **Successful postcondition:**
-The transaction is ongoing and the CSMS is _Successfully_ informed.
-**Failure postcondition:**
-The transaction is _not_ ongoing, _or_
-The CSMS is _not_ informed.
-EV Driver
-Charging Station CSMS
-EV parked.
-Parking bay
-detector triggers
-TransactionEventRequest(eventType  Started,
-triggerReason  EVDetected)
-TransactionEventResponse()
-_Figure 39. Sequence Diagram: Start Transaction options - ParkingBayOccupancy_
-Edition 3 FINAL, 2024-05-06 **E. Transactions**
+  **Failure postcondition:** +
+  The transaction is _not_ ongoing, _or_ +
+  The CSMS is _not_ informed.
+|===
 
+.Sequence Diagram: Start Transaction options - EVConnected
+image::part2/images/figure_40.svg[Sequence Diagram: Start Transaction options - EVConnected]
 
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|S3  d|_Scenario objective_ |To start a transaction when the EV Driver is authorised to charge.
 
-S2 Scenario objective To start a transaction when communication is set up between the Charging Station and an EV
-(for example: cable plugged in correctly on both sides)
+|{nbsp} d|_Scenario description_ 
+  |**1.** The EV Driver provides his identification +
+  **2.** The Charging Station validates the provided identification (for example via the Authorization Cache or an AuthorizeRequest). +
+  **3.** The Charging Station sends a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>) notifying the CSMS about a transaction that has started. +
+  **4.** The CSMS responds with a <<transaction_event_response,TransactionEventResponse>>, confirming that the <<transaction_event_request,TransactionEventRequest>> was received.
+|{nbsp} |Prerequisite(s) 
+  |No transaction is ongoing on the EVSE. +
+  Configuration Variable: <<tx_start_point,`TxStartPoint`>> contains: <<tx_start_stop_point_values,Authorized>> (Not: <<tx_start_stop_point_values,ParkingBayOccupancy>>).
+|{nbsp} |Postcondition(s) 
+  |**Successful postcondition:** +
+  The transaction is ongoing and the CSMS is _Successfully_ informed.
 
-_Scenario description_ (^) **1.** The Charging Station sets up a connection with the EV.
+  **Failure postcondition:** +
+  The transaction is _not_ ongoing, _or_ +
+  The CSMS is _not_ informed.
+|===
 
-**2.** The Charging Station sends a TransactionEventRequest (eventType  Started) notifying the
-CSMS about a transaction that has started (even when the driver is not yet known).
-**3.** The CSMS responds with a TransactionEventResponse, confirming that the
-TransactionEventRequest was received.
+.Sequence Diagram: Start Transaction options - Authorized
+image::part2/images/figure_41.svg[Sequence Diagram: Start Transaction options - Authorized]
 
-**Prerequisite(s)** (^) No transaction is ongoing on the EVSE.
-Configuration Variable: TxStartPoint contains: EVConnected (Not: ParkingBayOccupancy)
-**Postcondition(s)** (^) **Successful postcondition:**
-The transaction is ongoing and the CSMS is _Successfully_ informed.
-**Failure postcondition:**
-The transaction is _not_ ongoing, _or_
-The CSMS is _not_ informed.
-EV Driver
-Charging Station CSMS
-charging cable plugged in
-TransactionEventRequest(eventType  Started, chargingState  EVConnected,
-triggerReason  CablePluggedIn)
-TransactionEventResponse()
-_Figure 40. Sequence Diagram: Start Transaction options - EVConnected_
-**S3** _Scenario objective_ **To start a transaction when the EV Driver is authorised to charge.**
-_Scenario description_ (^) **1.** The EV Driver provides his identification
-
-**2.** The Charging Station validates the provided identification (for example via the Authorization
-Cache or an AuthorizeRequest).
-**3.** The Charging Station sends a TransactionEventRequest (eventType  Started) notifying the
-CSMS about a transaction that has started.
-**4.** The CSMS responds with a TransactionEventResponse, confirming that the
-TransactionEventRequest was received.
-
-**Prerequisite(s)** (^) No transaction is ongoing on the EVSE.
-Configuration Variable: TxStartPoint contains: Authorized (Not: ParkingBayOccupancy).
-**Postcondition(s)** (^) **Successful postcondition:**
-The transaction is ongoing and the CSMS is _Successfully_ informed.
-**Failure postcondition:**
-The transaction is _not_ ongoing, _or_
-The CSMS is _not_ informed.
-Edition 3 FINAL, 2024-05-06 **E. Transactions**
-
-
-EV Driver
-
-Charging Station CSMS
-
-provides identification
-
-User authorization successful,
-
-
-TransactionEventRequest(eventType  Started,
-triggerReason  Authorized)
-
-TransactionEventResponse()
-
-_Figure 41. Sequence Diagram: Start Transaction options - Authorized_
-
-
-S4 Scenario objective To start a transaction when the meter has provided the first signed meter values before starting
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|S4  d|_Scenario objective_ |To start a transaction when the meter has provided the first signed meter values before starting
 with charging.
 
-_Scenario description_ (^) **1.** The EV Driver plugs in the cable at the Charging Station and the EV.
-
-**2.** The Charging Station request the Meter for a signed value.
-**3**. The Meter provides a signed value (this might take some time).
-**4.** The Charging Station sends a TransactionEventRequest (eventType  Started) notifying the
-CSMS about a transaction that has started.
-**5.** The CSMS responds with a TransactionEventResponse, confirming that the
-TransactionEventRequest was received.
-
-**Prerequisite(s)** (^) No transaction is ongoing on the EVSE.
-Configuration Variable: TxStartPoint contains: DataSigned (Not: ParkingBayOccupancy,
-EVConnected or Authorized).
-The Charging Station has a meter that can sign measured values
-Configuration Variable: SampledDataSignReadings set to _true_.
-**Postcondition(s)** (^) **Successful postcondition:**
-The transaction is ongoing and the CSMS is _Successfully_ informed.
-**Failure postcondition:**
-The transaction is _not_ ongoing, _or_
-The CSMS is _not_ informed.
-Edition 3 FINAL, 2024-05-06 **E. Transactions**
-
-
-EV Driver
-
-Charging Station CSMS
-
-EV Connected.
-
-User authorization successful.
-
-
-get signed meter value
-(might take some time)
-
-
-TransactionEventRequest(eventType  Started,
-triggerReason  SignedDataReceived)
-
-TransactionEventResponse()
-
-_Figure 42. Sequence Diagram: Start Transaction options - DataSigned_
-
-
-S5 Scenario objective To start a transaction when all preconditions have been met to start charging (authorized and
-connected), but energy does not yet have to be transfered.
-
-_Scenario description_ (^) **1.** The EV Driver is authorized by the Charging Station and/or CSMS.
-
-**2.** The Charging Station is connected to the EV.
-**3.** The Charging Station sends a TransactionEventRequest (eventType  Started) notifying the
-CSMS about a transaction that has started.
-**4.** The CSMS responds with a TransactionEventResponse, confirming that the
-TransactionEventRequest was received.
-
-**Prerequisite(s)** (^) No transaction is ongoing on the EVSE.
-Configuration Variable: TxStartPoint contains: PowerPathClosed (Not: ParkingBayOccupancy,
-EVConnected, Authorized or DataSigned).
-Charging Cable plugged in.
-**Postcondition(s)** (^) **Successful postcondition:**
-The transaction is ongoing and the CSMS is _Successfully_ informed.
-**Failure postcondition:**
-The transaction is _not_ ongoing, _or_
-The CSMS is _not_ informed.
-Edition 3 FINAL, 2024-05-06 **E. Transactions**
-
-
-
-EV Driver
-
-
-Charging Station CSMS
-
-
-EV Connected.
-
-
-User authorization successful.
-
-
-TransactionEventRequest(eventType  Started, chargingState  Charging,
-triggerReason  ChargingStateChanged)
-
-
-TransactionEventResponse()
-
-_Figure 43. Sequence Diagram: Start Transaction options - PowerPathClosed_
-
-
-S6 Scenario objective To start a transaction when the energy flow starts.
-
-_Scenario description_ (^) **1.** The EV Driver is authorized by the Charging Station and/or CSMS.
-
-**2.** The Charging Station closes the power relay.
-**3.** The EV starts charging, energy flow starts.
-**4.** The Charging Station sends a TransactionEventRequest (eventType  Started) notifying the
-CSMS about a transaction that has started.
-**5.** The CSMS responds with a TransactionEventResponse, confirming that the
-TransactionEventRequest was received.
-**Prerequisite(s)** Configuration Variable: TxStartPoint contains: EnergyTransfer (Not: ParkingBayOccupancy,
-EVConnected, Authorized, DataSigned or PowerPathClosed).
-
-**Postcondition(s)** (^) **Successful postcondition:**
-The transaction is ongoing and the CSMS is _Successfully_ informed.
-**Failure postcondition:**
-The transaction is _not_ ongoing, _or_
-The CSMS is _not_ informed.
-EV
-Charging Station CSMS
-EV Connected.
-User authorization successful.
-close power relay
-energy transfer
-TransactionEventRequest(eventType  Started, chargingState  Charging,
-triggerReason  ChargingStateChanged)
-TransactionEventResponse()
-_Figure 44. Sequence Diagram: Start Transaction options - EnergyTransfer_
-**7 Error handling** n/a
-**8 Remark(s)** n/a
-Edition 3 FINAL, 2024-05-06 **E. Transactions**
-
-
-**E01 - Start Transaction options - Requirements**
-
-_Table 97. E01 - Requirements_
-
-
-ID Precondition Requirement definition
-E01.FR.01 TxStartPoint contains:
-ParkingBayOccupancy
-AND
-Parking Bay Detector detects an "EV"
-AND
-No transaction has started yet
-
-
-The Charging Station SHALL start a transaction and send a
-TransactionEventRequest (eventType  Started) to the CSMS.
-
-E01.FR.02 (^) TxStartPoint contains: EVConnected
-AND
-The Charging Station has a connection
-with the EV
-AND
-No transaction has started yet on this
-EVSE
-The Charging Station SHALL start a transaction and send a
-TransactionEventRequest (eventType  Started) to the CSMS.
-E01.FR.03 (^) TxStartPoint contains: Authorized
-AND
-The EV Driver is authorized
-AND
-No transaction has started yet
-The Charging Station SHALL start a transaction and send a
-TransactionEventRequest (eventType  Started) to the CSMS.
-E01.FR.04 (^) TxStartPoint contains: DataSigned
-AND
-The Charging Station has a meter that can
-sign measured values
-AND
-Configuration Variable:
-SampledDataSignReadings set to _true_.
-AND
-The Charging Station has retrieved a
-signed meter value
-AND
-No transaction has started yet
-The Charging Station SHALL start a transaction and send a
-TransactionEventRequest (eventType  Started) to the CSMS.
-E01.FR.05 TxStartPoint contains:
-PowerPathClosed
-AND
-The EV Driver is authorized AND
-The Charging Station has connection with
-the EV
-AND
-No transaction has started yet on this
-EVSE
-The Charging Station SHALL start a transaction and send a
-TransactionEventRequest (eventType  Started) to the CSMS.
-E01.FR.06 (^) TxStartPoint contains: EnergyTransfer
-AND
-Energy flow starts
-AND
-No transaction has started yet on this
-EVSE
-The Charging Station SHALL start a transaction and send a
-TransactionEventRequest (eventType  Started) to the CSMS.
-E01.FR.07 When a TransactionEventRequest has to
-be created
-The Charging Station SHALL set the message’s **seqNo** field as specified in
-Sequence Number Generation.
-E01.FR.08 The transactionId generated by the Charging Station MUST be unique for
-each transaction started by that Charging Station, even when the Charging
-Station is rebooted, repaired, firmware is updated etc, it SHALL ensure that
-it never generates the same TransactionId twice.
-Edition 3 FINAL, 2024-05-06 **E. Transactions**
-
-
-
-ID Precondition Requirement definition
-E01.FR.09 When configured to send meter data in the
-TransactionEventRequest (eventType =
-Started), See: Meter Values - Configuration
-AND
-EVSE is known at start of transaction
-
-
-The Charging Station SHALL add the configured measurands to the
-optional meterValue field with context  Transaction.Begin in the
-TransactionEventRequest(eventType  Started) sent to the CSMS to provide
-more details during the transaction.
-
-
-E01.FR.10 After the EV Driver is authorized for this
-transaction
-
-
-The Charging Station SHALL send a TransactionEventRequest that contains
-IdTokenType information.
-E01.FR.11 E01.FR.10 The CSMS SHALL verify the validity of the identifier in
-TransactionEventRequest.
-E01.FR.12 E01.FR.11 The CSMS SHALL send a TransactionEventResponse that includes in
-idTokenInfo an authorization status value and the groupIdToken if one
-exists for the idToken.
-E01.FR.13 This transaction ends a reservation The next TransactionEventRequest SHALL contain the reservationId.
-E01.FR.14 After TransactionEventRequest(eventType
- Started) has been sent for a specific
-EVSE and Connector
-
-
-The Charging Station SHALL NOT start another transaction on a different
-Connector of the same EVSE until this transaction has ended.
-
-
-E01.FR.15 When sending a TransactionEventRequest The Charging Station SHALL set the triggerReason to inform the CSMS
-about what triggered the event. What reason to use is described in the
-description of TriggerReasonEnumType.
-E01.FR.16 After the EV is connected with the
-Charging Station.
-
-
-The next TransactionEventRequest SHALL contain evse.id AND
-evse.connectorId.
-E01.FR.17 When configured to send meter data in the
-TransactionEventRequest (eventType =
-Started), See: Meter Values - Configuration
-AND
-EVSE is not known at start of transaction
-
-
-The Charging Station SHALL add the measurands for eventType  Started
-to the optional meterValue field with context  Transaction.Begin in the
-TransactionEventRequest(eventType  Updated) that occurs when charging
-starts.
-
-
-E01.FR.18 If the charging state changes The Charging Station SHALL send a TransactionEventRequest including the
-chargingState element.
-E01.FR.19 When EV temporarily suspends the energy
-transfer
-
-
-The Charging Station SHOULD send a TransactionEventRequest with
-chargingState  SuspendedEV
-E01.FR.20 E01.FR.19 AND
-The Charging Station is not able to handle
-temporary suspension of energy transfer
-
-
-The Charging Station SHOULD send a TransactionEventRequest with
-chargingState  EVConnected.
+|{nbsp} d|_Scenario description_ 
+  |**1.** The EV Driver plugs in the cable at the Charging Station and the EV. +
+  **2.** The Charging Station request the Meter for a signed value. +
+  **3**. The Meter provides a signed value (this might take some time). +
+  **4.** The Charging Station sends a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>) notifying the CSMS about a transaction that has started. +
+  **5.** The CSMS responds with a <<transaction_event_response,TransactionEventResponse>>, confirming that the <<transaction_event_request,TransactionEventRequest>> was received.
+|{nbsp} |Prerequisite(s) 
+  |No transaction is ongoing on the EVSE. +
+  Configuration Variable: <<tx_start_point,`TxStartPoint`>> contains: <<tx_start_stop_point_values,DataSigned>> (Not: <<tx_start_stop_point_values,ParkingBayOccupancy, EVConnected or Authorized>>). +
+  The Charging Station has a meter that can sign measured values +
+  Configuration Variable: <<sampled_data_sign_readings,`SampledDataSignReadings`>> set to _true_.
+|{nbsp} |Postcondition(s) 
+  |**Successful postcondition:** +
+  The transaction is ongoing and the CSMS is _Successfully_ informed.
+
+  **Failure postcondition:** +
+  The transaction is _not_ ongoing, _or_ +
+  The CSMS is _not_ informed.
+|===
+
+.Sequence Diagram: Start Transaction options - DataSigned
+image::part2/images/figure_42.svg[Sequence Diagram: Start Transaction options - DataSigned]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|S5  d|_Scenario objective_ |To start a transaction when all preconditions have been met to start charging (authorized and connected), but energy does not yet have to be transfered.
+
+|{nbsp} d|_Scenario description_ 
+  |**1.** The EV Driver is authorized by the Charging Station and/or CSMS. +
+  **2.** The Charging Station is connected to the EV. +
+  **3.** The Charging Station sends a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>) notifying the CSMS about a transaction that has started. +
+  **4.** The CSMS responds with a <<transaction_event_response,TransactionEventResponse>>, confirming that the <<transaction_event_request,TransactionEventRequest>> was received.
+|{nbsp} |Prerequisite(s) 
+  |No transaction is ongoing on the EVSE. +
+  Configuration Variable: <<tx_start_point,`TxStartPoint`>> contains: <<tx_start_stop_point_values,PowerPathClosed>> (Not: <<tx_start_stop_point_values,ParkingBayOccupancy, EVConnected, Authorized or DataSigned>>). +
+  Charging Cable plugged in.
+|{nbsp} |Postcondition(s) 
+  |**Successful postcondition:** +
+  The transaction is ongoing and the CSMS is _Successfully_ informed.
+
+  **Failure postcondition:** +
+  The transaction is _not_ ongoing, _or_ +
+  The CSMS is _not_ informed.
+|===
+
+.Sequence Diagram: Start Transaction options - PowerPathClosed
+image::part2/images/figure_43.svg[Sequence Diagram: Start Transaction options - PowerPathClosed]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|S6  d|_Scenario objective_ |To start a transaction when the energy flow starts.
+
+|{nbsp} d|_Scenario description_ 
+  |**1.** The EV Driver is authorized by the Charging Station and/or CSMS. +
+  **2.** The Charging Station closes the power relay. +
+  **3.** The EV starts charging, energy flow starts. +
+  **4.** The Charging Station sends a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>) notifying the CSMS about a transaction that has started. +
+  **5.** The CSMS responds with a <<transaction_event_response,TransactionEventResponse>>, confirming that the <<transaction_event_request,TransactionEventRequest>> was received.
+|{nbsp} |Prerequisite(s) |Configuration Variable: <<tx_start_point,`TxStartPoint`>> contains: <<tx_start_stop_point_values,EnergyTransfer>> (Not: <<tx_start_stop_point_values,ParkingBayOccupancy, EVConnected, Authorized, DataSigned or PowerPathClosed>>).
+|{nbsp} |Postcondition(s) 
+  |**Successful postcondition:** +
+  The transaction is ongoing and the CSMS is _Successfully_ informed.
+
+  **Failure postcondition:** +
+  The transaction is _not_ ongoing, _or_ +
+  The CSMS is _not_ informed.
+|===
+
+.Sequence Diagram: Start Transaction options - EnergyTransfer
+image::part2/images/figure_44.svg[Sequence Diagram: Start Transaction options - EnergyTransfer]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling  |n/a
+|8   |Remark(s)       |n/a
+|===
+
+==== E01 - Start Transaction options - Requirements
+
+.E01 - Requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
+
+|E01.FR.01  |<<tx_start_point,`TxStartPoint`>> contains: +
+  <<tx_start_stop_point_values,ParkingBayOccupancy>> +
+  AND +
+  Parking Bay Detector detects an "EV" +
+  AND +
+  No transaction has started yet
+    |The Charging Station SHALL start a transaction and send a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>) to the CSMS.
+|E01.FR.02  |<<tx_start_point,`TxStartPoint`>> contains: EVConnected +
+  AND +
+  The Charging Station has a connection +
+  with the EV +
+  AND +
+  No transaction has started yet on this + 
+  EVSE
+    |The Charging Station SHALL start a transaction and send a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>) to the CSMS.
+|E01.FR.03  |<<tx_start_point,`TxStartPoint`>> contains: Authorized +
+  AND +
+  The EV Driver is authorized +
+  AND +
+  No transaction has started yet +
+    |The Charging Station SHALL start a transaction and send a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>) to the CSMS.
+|E01.FR.04  |<<tx_start_point,`TxStartPoint`>> contains: DataSigned +
+  AND +
+  The Charging Station has a meter that can +
+  sign measured values +
+  AND +
+  Configuration Variable: +
+  <<sampled_data_sign_readings,`SampledDataSignReadings`>> set to _true_. +
+  AND +
+  The Charging Station has retrieved a +
+  signed meter value +
+  AND +
+  No transaction has started yet
+    |The Charging Station SHALL start a transaction and send a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>) to the CSMS.
+|E01.FR.05  |<<tx_start_point,`TxStartPoint`>> contains: +
+  <<tx_start_stop_point_values,PowerPathClosed>> +
+  AND +
+  The EV Driver is authorized AND +
+  The Charging Station has connection with +
+  the EV +
+  AND +
+  No transaction has started yet on this +
+  EVSE
+    |The Charging Station SHALL start a transaction and send a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>) to the CSMS.
+|E01.FR.06  |<<tx_start_point,`TxStartPoint`>> contains: EnergyTransfer +
+  AND +
+  Energy flow starts +
+  AND +
+  No transaction has started yet on this +
+  EVSE
+    |The Charging Station SHALL start a transaction and send a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>) to the CSMS.
+|E01.FR.07  |When a <<transaction_event_request,TransactionEventRequest>> has to be created
+  |The Charging Station SHALL set the message’s **seqNo** field as specified in << sequence_number_generation,Sequence Number Generation>>.
+|E01.FR.08  |{nbsp}
+  |The transactionId generated by the Charging Station MUST be unique for each transaction started by that Charging Station, even when the Charging Station is rebooted, repaired, firmware is updated etc, it SHALL ensure that it never generates the same TransactionId twice.
+|E01.FR.09  |When configured to send meter data in the <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>), See: Meter Values - Configuration +
+  AND +
+  EVSE is known at start of transaction
+    |The Charging Station SHALL add the configured measurands to the optional meterValue field with _context_ = `Transaction.Begin` in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Started>>) sent to the CSMS to provide more details during the transaction.
+|E01.FR.10  |After the EV Driver is authorized for this transaction
+  |The Charging Station SHALL send a <<transaction_event_request,TransactionEventRequest>> that contains <<id_token_type,IdTokenType>> information.
+|E01.FR.11  |E01.FR.10  
+  |The CSMS SHALL verify the validity of the identifier in <<transaction_event_request,TransactionEventRequest>>.
+|E01.FR.12  |E01.FR.11
+  |The CSMS SHALL send a <<transaction_event_response,TransactionEventResponse>> that includes in _idTokenInfo_ an authorization status value and the _groupIdToken_ if one exists for the _idToken_.
+|E01.FR.13  |This transaction ends a reservation
+  |The next <<transaction_event_request,TransactionEventRequest>> SHALL contain the reservationId.
+|E01.FR.14  |After <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Started>>) has been sent for a specific EVSE and Connector
+  |The Charging Station SHALL NOT start another transaction on a different Connector of the same EVSE until this transaction has ended.
+|E01.FR.15  |When sending a <<transaction_event_request,TransactionEventRequest>>
+  |The Charging Station SHALL set the <<trigger_reason_enum_type,triggerReason>> to inform the CSMS about what triggered the event. What reason to use is described in the description of <<trigger_reason_enum_type,TriggerReasonEnumType>>.
+|E01.FR.16  |After the EV is connected with the Charging Station.
+  |The next <<transaction_event_request,TransactionEventRequest>> SHALL contain _evse.id_ AND +
+  _evse.connectorId_.
+|E01.FR.17  |When configured to send meter data in the <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>), See: <<metervalues_configuration,Meter Values - Configuration>> +
+  AND +
+  EVSE is not known at start of transaction
+    |The Charging Station SHALL add the measurands for _eventType_ = `Started` to the optional meterValue field with context `Transaction.Begin` in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) that occurs when charging starts.
+|E01.FR.18  |If the charging state changes
+  |The Charging Station SHALL send a <<transaction_event_request,TransactionEventRequest>> including the _chargingState_ element.
+|E01.FR.19  |When EV temporarily suspends the energy transfer
+  |The Charging Station SHOULD send a <<transaction_event_request,TransactionEventRequest>> with _chargingState_ = `SuspendedEV`
+|E01.FR.20  |E01.FR.19 AND +
+  The Charging Station is not able to handle temporary suspension of energy transfer
+    |The Charging Station SHOULD send a <<transaction_event_request,TransactionEventRequest>> with _chargingState_ = `EVConnected`.
+|===
 
 [[start_transaction_cable_plugin_first]]
 ==== E02 - Start Transaction - Cable Plugin First

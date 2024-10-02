@@ -1,0 +1,26 @@
+@startuml figure_39
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over EVDriver, ChargingStation
+  EV parked.
+end note
+
+ChargingStation -> ChargingStation: \
+  Parking bay\
+  \ndetector triggers
+activate ChargingStation
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Started,\
+  \ntriggerReason = EVDetected)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse()
+deactivate ChargingStation
+deactivate CSMS
+
+@enduml

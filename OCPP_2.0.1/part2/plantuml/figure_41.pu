@@ -1,0 +1,24 @@
+@startuml figure_41
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+EVDriver -> ChargingStation: provides identification
+activate ChargingStation
+
+note over ChargingStation, CSMS
+  User authorization successful,
+end note
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Started,\
+  \ntriggerReason = Authorized)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse()
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

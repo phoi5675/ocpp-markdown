@@ -1,6 +1,7 @@
 = Referenced Components and Variables
 :!chapter-number:
 
+:sectnums:
 [[controller_components]]
 == Controller Components
 
@@ -1168,7 +1169,7 @@ variableCharacteristics dataType boolean
 Description whether the Charging Station will deauthorize an ongoing transaction when it receives a non- Accepted
 authorization status in TransactionEventResponse for this transaction.
 
-== 2.7. Metering related.
+=== Metering related
 
 **2.7.1.** SampledDataEnabled
 
@@ -1190,8 +1191,8 @@ variableAttributes mutability ReadOnly
 variableCharacteristics dataType boolean
 Description If this variable reports a value of true , Sampled Data is supported.
 
-**2.7.3.** SampledDataSignReadings
-
+[[sampled_data_sign_readings]]
+==== SampledDataSignReadings
 
 Required no
 Component componentName SampledDataCtrlr
