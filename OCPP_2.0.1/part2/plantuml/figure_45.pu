@@ -1,0 +1,56 @@
+@startuml figure_45
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+EVDriver -> ChargingStation: plugin cable
+activate ChargingStation
+
+ChargingStation -> CSMS: StatusNotificationRequest(Occupied)
+activate CSMS
+
+CSMS --> ChargingStation: StatusNotificationResponse()
+deactivate CSMS
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Started, triggerReason = CablePluggedIn, chargingState = EVConnected, \
+  \ntransactionId = AB1234, timestamp, evse.id = 1, evse.connectorId = 1, meterValues, ...)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate CSMS
+deactivate ChargingStation
+
+note over EVDriver, CSMS
+  User authorization successful.
+end note
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Updated, transactionId = AB1234, idToken.id = 1234,\
+  \ntimestamp, triggerReason = Authorized, meterValues, ...)
+activate CSMS
+activate ChargingStation
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate CSMS
+deactivate ChargingStation
+
+alt if cable not permanently attached
+  ChargingStation -> ChargingStation: lock connector
+end
+
+ChargingStation -> ChargingStation: start energy offer
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Updated, transactionId = AB1234, \
+  \ntimestamp, chargingState = Charging, triggerReason = ChargingStateChanged, meterValues, ...)
+activate CSMS
+activate ChargingStation
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

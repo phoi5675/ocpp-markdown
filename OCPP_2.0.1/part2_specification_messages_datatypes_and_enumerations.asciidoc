@@ -3968,7 +3968,8 @@ wResonant Wireless resonant coupled connection (generic)
 Undetermined Yet to be determined (e.g. before plugged in)
 Unknown Unknown; not determinable
 
-=== 3.23. ConnectorStatusEnumType
+[[connector_status_enum_type]]
+=== ConnectorStatusEnumType
 
 _Enumeration_
 
