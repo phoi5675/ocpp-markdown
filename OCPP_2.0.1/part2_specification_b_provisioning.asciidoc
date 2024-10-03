@@ -931,11 +931,14 @@ image::part2/images/figure_20.svg[Sequence Diagram: Reset Without Transaction]
   The Charging Station _not_ was able to reset itself or EVSE.
 |===
 
-.Sequence Diagram: Reset OnIdle With Ongoing Transaction
+:figure-caption!: 
+.Figure 21a: Sequence Diagram: Reset OnIdle With Ongoing Transaction
 image::part2/images/figure_21a.svg[Sequence Diagram: Reset OnIdle With Ongoing Transaction]
 
-.Sequence Diagram: Reset Immediate With Ongoing Transaction
+.Figure 21b: Sequence Diagram: Reset Immediate With Ongoing Transaction
 image::part2/images/figure_21b.svg[Sequence Diagram: Reset Immediate With Ongoing Transaction]
+
+:figure-caption: Figure
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
