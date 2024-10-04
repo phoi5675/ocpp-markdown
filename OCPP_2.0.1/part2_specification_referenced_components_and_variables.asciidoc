@@ -989,7 +989,8 @@ messages.
 
 === Transaction related
 
-**2.6.1.** EVConnectionTimeOut
+[[ev_connection_timeout]]
+==== `EVConnectionTimeOut`
 
 
 Required yes

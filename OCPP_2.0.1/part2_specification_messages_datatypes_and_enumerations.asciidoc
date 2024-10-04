@@ -3828,7 +3828,8 @@ assumed.
 A Amperes (current). The amount of Ampere per phase, not the sum of all phases. It is usually more
 convenient to use this for AC charging.
 
-=== 3.16. ChargingStateEnumType
+[[charging_state_enum_type]]
+=== ChargingStateEnumType
 
 _Enumeration_
 

@@ -1,0 +1,63 @@
+@startuml figure_46
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over EVDriver, CSMS
+  User authorization successful.
+end note
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Started, transactionId = AB1234, triggerReason = Authorized,\
+  \nseqNo = N, timestamp, idToken.id = 1234, ...)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(idTokenInfo.status = Accepted,...)
+
+alt if within ConnectionTimeOut
+  EVDriver -> ChargingStation: plugin cable
+  activate ChargingStation
+
+  ChargingStation -> CSMS: StatusNotificationRequest(Occupied)
+
+  CSMS --> ChargingStation: StatusNotificationResponse()
+
+  ChargingStation -> CSMS: \
+    TransactionEventRequest(eventType = Updated, transactionId = AB1234, seqNo = N + 1,\
+    \ntimestamp, chargingState = EVConnected, triggerReason = CablePluggedIn, ...)
+  
+  CSMS --> ChargingStation: TransactionEventResponse(...)
+  deactivate CSMS
+
+  alt if cable not permanently attached
+    ChargingStation -> ChargingStation: lock connector
+  end
+
+  ChargingStation -> ChargingStation: start energy offer
+
+  ChargingStation -> CSMS: \
+    TransactionEventRequest(eventType = Updated, transactionId = AB1234, seqNo = N + 1,\
+    \ntimestamp, chargingState = Charging, triggerReason = ChargingStateChanged, ...)
+  activate CSMS
+  
+  CSMS --> ChargingStation: TransactionEventResponse(...)
+  deactivate ChargingStation
+  deactivate CSMS
+else if not within Connection Timeout
+  ChargingStation -> CSMS: \
+    TransactionEventRequest(eventType = Ended, triggerReason = EVConnectTimeout, transactionId = AB1234, seqNo = N + 1,\
+    \ntimestamp, meterValues, stoppedReason = Timeout)
+  activate ChargingStation
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse()
+  deactivate ChargingStation
+  deactivate CSMS
+end
+
+opt
+  ChargingStation -> EVDriver: notification
+end 
+@enduml
