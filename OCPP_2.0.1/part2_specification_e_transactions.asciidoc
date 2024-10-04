@@ -640,403 +640,191 @@ This use-case is also valid for other configurations, but then the transaction m
 [[e04_transaction_started_while_charging_station_is_offline]]
 === E04 - Transaction started while Charging Station is offline.
 
-_Table 102. E04 - Transaction started while Charging Station is offline_
+.E04 - Transaction started while Charging Station is offline
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
+|1   |Name            |Transaction started while Charging Station is offline
+|2   |ID              |E04
+|{nbsp} d|_Functional block_  |E. Transactions
+|3   |Objective(s)    |To enable the EV Driver to start a transaction while the Charging Station is _Offline_.
+|4   |Description     |This use case covers how the Charging Station, while _Offline_, is able to start a transaction using the Local Authorization List or the Authorization Cache.
+|{nbsp} d|_Actors_    |Charging Station, CSMS, EV Driver
+|{nbsp} d|_Scenario description_ 
+  |**1.** The transaction starts. +
+  **2.** The <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>) is stored/queued by the Charging Station. +
+  **3.** The connection between Charging Station and CSMS is restored. +
+  **4.** The Charging Station starts to send queued messages +
+  **5.** The stored <<transaction_event_request,TransactionEventRequest>> is sent, notifying the CSMS about the transaction that was started.
+|{nbsp} d|_Alternative scenario(s)_ |<<e10_when_cable_disconnected_on_ev_side_suspended_transaction,E10 - Connection Loss During Transaction>>
+|5   |Prerequisite(s) 
+  |The Charging Station is _Offline_. +
+  The EV Driver is offline/locally authorized by the Charging Station.
+|6   |Postcondition(s) 
+  |**Successful postcondition:** +
+  The <<transaction_event_request,TransactionEventRequest>> has been responded to by the CSMS AND has been removed from the queue of the Charging Station. +
+  **Failure postcondition:** +
+  The <<transaction_event_request,TransactionEventRequest>> was NOT responded to by the CSMS AND remains in the queue of the Charging Station.
+|===
 
-No. Type Description
-1 Name Transaction started while Charging Station is offline
-2 ID E04
-Functional block E. Transactions
-3 Objective(s) To enable the EV Driver to start a transaction while the Charging Station is Offline.
-4 Description This use case covers how the Charging Station, while Offline , is able to start a transaction using
-the Local Authorization List or the Authorization Cache.
-Actors Charging Station, CSMS, EV Driver
+.Sequence Diagram: Transaction started while Charging Station is offline
+image::part2/images/figure_47.svg[Sequence Diagram: Transaction started while Charging Station is offline]
 
-_Scenario description_ (^) **1.** The transaction starts.
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling    |n/a
+|8   |Remark(s)         
+  |The scenario description and sequence diagram above are based on the Configuration Variable for start transaction being configured as follows: +
+  <<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
+  This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are sent. For more details see the use cases: <<start_transaction_options,E01 - Start Transaction options>>.
+|===
 
-**2.** The TransactionEventRequest (eventType  Started) is stored/queued by the Charging Station.
-**3.** The connection between Charging Station and CSMS is restored.
-**4.** The Charging Station starts to send queued messages
-**5.** The stored TransactionEventRequest is sent, notifying the CSMS about the transaction that
-was started.
-_Alternative scenario(s)_ E10 - Connection Loss During Transaction
+==== E04 - Transaction started while Charging Station is offline - Requirements
 
-**5 Prerequisite(s)** (^) The Charging Station is _Offline_.
-The EV Driver is offline/locally authorized by the Charging Station.
-**6 Postcondition(s)** (^) **Successful postcondition:**
-The TransactionEventRequest has been responded to by the CSMS AND has been removed from
-the queue of the Charging Station.
-**Failure postcondition:**
-The TransactionEventRequest was NOT responded to by the CSMS AND remains in the queue of
-the Charging Station.
-Edition 3 FINAL, 2024-05-06 **E. Transactions**
+.E04 - Requirements
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
 
+|E04.FR.01  |When _Offline_.      |The Charging Station MUST queue any <<transaction_event_request,TransactionEventRequest>> messages. |{nbsp}
+|E04.FR.02  |After the connection is restored. 
+  |The Charging Station MUST send queued <<transaction_event_request,TransactionEventRequest>> messages. |{nbsp}
+|E04.FR.03  |E04.FR.02 
+  |The flag: "offline" SHALL be set to TRUE for any <<transaction_event_request,TransactionEventRequest>> that occurred while the Charging Station was offline. |{nbsp}
+|E04.FR.04  |When a <<transaction_event_request,TransactionEventRequest>> has to be created
+  |The Charging Station SHALL set the message’s *seqNo* field as specified in <<sequence_number_generation,Sequence Number Generation>>.
+    |This enables the CSMS to track the completeness of transaction information
+|E04.FR.05  |When configured to send meter data in the <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>), See: <<metervalues_configuration,Meter Values - Configuration>> +
+  AND +
+  EVSE is known at start of transaction
+    |The Charging Station SHALL add the configured measurands to the optional meterValue field with _context_ = `Transaction.Begin` in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Started>>) sent to the CSMS to provide more details during the transaction. |{nbsp}
+|E04.FR.06  |When configured to send meter data in the <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>), See: <<metervalues_configuration,Meter Values - Configuration>> 
+  |The Charging Station SHALL add the configured measurands to the optional meterValue field in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) sent to the CSMS to provide more details during the transaction. |{nbsp}
+|E04.FR.07  |E04.FR.06 +
+  AND +
+  _Offline_ +
+  AND +
+  The Charging Station is running low on memory
+    |The Charging Station MAY drop <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) messages. |{nbsp}
+|E04.FR.08  |E04.FR.07 
+  |When dropping <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) messages, the Charging Station SHALL drop intermediate messages first (1st message, 3th message, 5th message etc.), not start dropping messages from the start or stop adding messages to the queue. |{nbsp}
+|E04.FR.09  |E04.FR.06 +
+  AND +
+  Amount of meter data is too much for 1 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) |{nbsp}
+    |The Charging Station MAY split meter data over
+multiple <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) messages with the same _timestamp_. |{nbsp}
+|E04.FR.10  |<<sampled_data_sign_readings,`SampledDataSignReadings`>> is _true_ 
+  |The Charging Station SHALL retrieve signed meter values and put them in the _signedMeterValue_ field of sampledValues. |{nbsp}
+|E04.FR.11  |When configured to send meter data in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Started>>), See: <<metervalues_configuration,Meter Values - Configuration>> +
+  AND +
+  EVSE is not known at start of transaction
+    |The Charging Station SHALL add the measurands for _eventType_ = `Started` to the optional meterValue field with _context_ = `Transaction.Begin` in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) that occurs when charging starts. |{nbsp}
+|===
 
-EV Driver
-
-Charging Station CSMS
-
-Charging Station is Offline
-
-Offline user authorization successful
-
-opt
-
-notification
-
-lock connector
-
-start energy offer
-
-store TransactionEventRequest(offline  true)
-
-Connection loss can be minutes, but can also be days.
-
-Connection restored.
-
-HeartbeatRequest()
-
-HeartbeatResponse()
-
-send queued message()
-
-loop [for all queued transaction messages]
-
-TransactionEventRequest(offline  true)
-
-TransactionEventResponse(...)
-
-_Figure 47. Sequence Diagram: Transaction started while Charging Station is offline_
-
-Edition 3 FINAL, 2024-05-06 **E. Transactions**
-
-
-
-7 Error handling n/a
-8 Remark(s) The scenario description and sequence diagram above are based on the Configuration Variable
-for start transaction being configured as follows:
-TxStartPoint: Authorized, DataSigned, PowerPathClosed, EnergyTransfer
-This use-case is also valid for other configurations, but then the transaction might start/stop at
-another moment, which might change the sequence in which message are sent. For more details
-see the use cases: E01 - Start Transaction options.
-
-**E04 - Transaction started while Charging Station is offline - Requirements**
-
-_Table 103. E04 - Requirements_
-
-
-ID Precondition Requirement definition Note
-E04.FR.01 When Offline. The Charging Station MUST queue any
-TransactionEventRequest messages.
-E04.FR.02 After the connection is restored. The Charging Station MUST send queued
-TransactionEventRequest messages.
-E04.FR.03 E04.FR.02 The flag: "offline" SHALL be set to TRUE for any
-TransactionEventRequest that occurred while the
-Charging Station was offline.
-E04.FR.04 When a TransactionEventRequest has
-to be created
-
-
-The Charging Station SHALL set the message’s
-seqNo field as specified in Sequence Number
-Generation.
-
-
-This enables the CSMS
-to track the
-completeness of
-transaction information
-E04.FR.05 When configured to send meter data
-in the TransactionEventRequest
-(eventType  Started), See: Meter
-Values - Configuration
-AND
-EVSE is known at start of transaction
-
-
-The Charging Station SHALL add the configured
-measurands to the optional meterValue field with
-context  Transaction.Begin in the
-TransactionEventRequest(eventType  Started)
-sent to the CSMS to provide more details during the
-transaction.
-
-
-E04.FR.06 When configured to send meter data
-in the TransactionEventRequest
-(eventType  Updated), See: Meter
-Values - Configuration
-
-
-The Charging Station SHALL add the configured
-measurands to the optional meterValue field in the
-TransactionEventRequest(eventType  Updated)
-sent to the CSMS to provide more details during the
-transaction.
-
-E04.FR.07 (^) E04.FR.06
-AND
-_Offline_
-AND
-The Charging Station is running low on
-memory
-The Charging Station MAY drop
-TransactionEventRequest(eventType  Updated)
-messages.
-E04.FR.08 E04.FR.07 When dropping TransactionEventRequest
-(eventType  Updated) messages, the Charging
-Station SHALL drop intermediate messages first
-(1st message, 3th message, 5th message etc.), not
-start dropping messages from the start or stop
-adding messages to the queue.
-E04.FR.09 (^) E04.FR.06
-AND
-Amount of meter data is too much for
-1 TransactionEventRequest
-(eventType  Updated)
-The Charging Station MAY split meter data over
-multiple TransactionEventRequest(eventType =
-Updated) messages with the same _timestamp_.
-E04.FR.10 SampledDataSignReadings is _true_ The Charging Station SHALL retrieve signed meter
-values and put them in the _signedMeterValue_ field
-of sampledValues.
-Edition 3 FINAL, 2024-05-06 **E. Transactions**
-
-
-
-ID Precondition Requirement definition Note
-E04.FR.11 When configured to send meter data
-in the TransactionEventRequest
-(eventType  Started), See: Meter
-Values - Configuration
-AND
-EVSE is not known at start of
-transaction
-
-
-The Charging Station SHALL add the measurands
-for eventType  Started to the optional
-meterValue field with context =
-Transaction.Begin in the
-TransactionEventRequest(eventType  Updated)
-that occurs when charging starts.
-
-Edition 3 FINAL, 2024-05-06 **E. Transactions**
+<<<
 
 [[e05_start_transaction_id_not_accepted]]
 === E05 - Start Transaction - Id not Accepted
 
-_Table 104. E05 - Start Transaction - Id not Accepted_
+.E05 - Start Transaction - Id not Accepted
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
+|1   |Name            |Start Transaction - Id not Accepted
+|2   |ID              |E05
+|{nbsp} d|_Functional block_  |E. Transactions
+|3   |Objective(s)    |To enable the Charging Station to suspend a transaction when the IdToken has an AuthorizationStatus that does not allow charging.
+|4   |Description     
+  |This use case covers how the Charging Station wants to start a transaction while the IdToken is not accepted by the CSMS +
+  Because the identifier might have been authorized locally by the Charging Station using outdated information, the CSMS has to validate the <<id_token_type,IdTokenType>> in every <<transaction_event_request,TransactionEventRequest>> message it receives that contains an IdTokenType. When receiving a <<transaction_event_response,TransactionEventResponse>> message with *idTokenInfo* field *status* is not *Accepted*, the Charging Station should stop the energy delivery to the EV.
+|{nbsp} d|_Actors_    |Charging Station, CSMS
+|{nbsp} d|_Scenario description_
+  |**1.** The Charging Station sends <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>) that contains the IdToken provided by the EV Driver. +
+  **2.** The CSMS responds with <<transaction_event_response,TransactionEventResponse>>, with an AuthorizationStatus that does not allow charging. +
+  **3.** The Charging Station suspends the energy offer. (Taking into account: <<max_energy_on_invalid_id,`MaxEnergyOnInvalidId`>>, if supported) +
+  **4.** The Charging Station sends <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>) with trigger _Deauthorized_ and the chargingState _SuspendedEVSE_ and receives <<transaction_event_response,TransactionEventResponse>> from the CSMS.
+|5   |Prerequisite(s) 
+  |The EV Driver is offline/locally authorized by the Charging Station. +
+  The IdToken is not allowed to charge by the CSMS.
+|6   |Postcondition(s) 
+  |**Successful postcondition:** +
+  The transaction is kept ongoing, and the cable remains locked, but no energy is delivered.
 
-No. Type Description
-1 Name Start Transaction - Id not Accepted
-2 ID E05
-Functional block E. Transactions
-3 Objective(s) To enable the Charging Station to suspend a transaction when the IdToken has an
-AuthorizationStatus that does not allow charging.
-4 Description This use case covers how the Charging Station wants to start a transaction while the IdToken is
-not accepted by the CSMS
-Because the identifier might have been authorized locally by the Charging Station using outdated
-information, the CSMS has to validate the IdTokenType in every TransactionEventRequest
-message it receives that contains an IdTokenType. When receiving a TransactionEventResponse
-message with idTokenInfo field status is not Accepted , the Charging Station should stop the
-energy delivery to the EV.
-Actors Charging Station, CSMS
-Scenario description 1. The Charging Station sends TransactionEventRequest (eventType  Started) that contains the
-IdToken provided by the EV Driver.
+  **Failure postcondition:** +
+  n/a
+|===
 
-**2.** The CSMS responds with TransactionEventResponse, with an AuthorizationStatus that does
-not allow charging.
-**3.** The Charging Station suspends the energy offer. (Taking into account:
-MaxEnergyOnInvalidId, if supported)
-**4.** The Charging Station sends TransactionEventRequest (eventType  Updated) with trigger
-_Deauthorized_ and the chargingState _SuspendedEVSE_ and receives TransactionEventResponse
-from the CSMS.
+.Sequence Diagram: Start Transaction - Id not Accepted
+image::part2/images/figure_48.svg[Sequence Diagram: Start Transaction - Id not Accepted]
 
-**5 Prerequisite(s)** (^) The EV Driver is offline/locally authorized by the Charging Station.
-The IdToken is not allowed to charge by the CSMS.
-**6 Postcondition(s)** (^) **Successful postcondition:**
-The transaction is kept ongoing, and the cable remains locked, but no energy is delivered.
-**Failure postcondition:**
-n/a
-Charging Station CSMS
-EV Driver locally authorized by the Charging Station.
-TransactionEventRequest(eventType  Started, transactionId  AB1234, seqNo  N, timestamp,
-evse.id  1, evse.connectorId  1, meterValues,...)
-TransactionEventResponse(idTokenInfo.status  Blocked / Invalid / Expired / Unknown,...)
-stop energy offer
-TransactionEventRequest(eventType  Updated, transactionId  AB1234, seqNo  N + 1, timestamp,
-chargingState  SuspendedEVSE, triggerReason  Deauthorized, meterValues,...)
-TransactionEventResponse(...)
-_Figure 48. Sequence Diagram: Start Transaction - Id not Accepted_
-**7 Error handling** n/a
-Edition 3 FINAL, 2024-05-06 **E. Transactions**
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling    |n/a
 
+|8   |Remark(s) 
+  |The scenario description and sequence diagram above are based on the Configuration Variable for start & stop transaction being configured as follows: +
+  <<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
+  <<tx_stop_point,`TxStopPoint`>>: <<tx_start_stop_point_values,ParkingBayOccupancy, EVConnected>> +
+  This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are sent. For more details see the use cases: <<start_transaction_options,E01 - Start Transaction options>> and <<stop_transaction_options,E06 - Stop Transaction options>>.
+|===
 
+==== E05 - Start Transaction - Id not Accepted - Requirements
 
-8 Remark(s) The scenario description and sequence diagram above are based on the Configuration Variable
-for start & stop transaction being configured as follows:
-TxStartPoint: Authorized, DataSigned, PowerPathClosed, EnergyTransfer
-TxStopPoint: ParkingBayOccupancy, EVConnected
-This use-case is also valid for other configurations, but then the transaction might start/stop at
-another moment, which might change the sequence in which message are sent. For more details
-see the use cases: E01 - Start Transaction options and E06 - Stop Transaction options.
+.E05 - Requirements
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
 
-**E05 - Start Transaction - Id not Accepted - Requirements**
+|E05.FR.01  |{nbsp}
+  |The CSMS MUST verify validity of the identifier in the <<transaction_event_request,TransactionEventRequest>> message.
+    |The identifier might have been authorized locally by the Charging Station using outdated information. The identifier, for instance, may have been blocked since it was added to the Charging Station’s Authorization Cache.
+|E05.FR.02  |E05.FR.01 AND +
+  The authorization status in <<transaction_event_response,TransactionEventResponse>> is not _Accepted_ AND +
+  The transaction is still ongoing AND +
+  <<stop_tx_on_invalid_id,`StopTxOnInvalidId`>> is set to _false_ +
+  AND +
+  <<max_energy_on_invalid_id,`MaxEnergyOnInvalidId`>> is not implemented or has been exceeded. <<tx_stop_point,`TxStopPoint`>> does NOT contain: <<tx_start_stop_point_values,EnergyTransfer>>
+    |The Charging Station SHALL stop the energy delivery to the EV immediately and send <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>) with _triggerReason_ set to _ChargingStateChanged_ and chargingState set to _SuspendedEVSE_
+      |The transaction is not deauthorized, but transfer of energy stops, since `MaxEnergyOnInvalid` Id has been exceeded or is not set. If `TxStopPoint` contains `EnergyTransfer` then this would have ended the transaction.
+|E05.FR.03  |E05.FR.01 AND +
+  The authorization status in <<transaction_event_response,TransactionEventResponse>> is not _Accepted_ AND +
+  The transaction is still ongoing AND +
+  <<stop_tx_on_invalid_id,`StopTxOnInvalidId`>> is set to _false_ +
+  AND +
+  <<max_energy_on_invalid_id,`MaxEnergyOnInvalidId`>> is set and has NOT been exceeded.
+    |Energy delivery to the EV SHALL be allowed until the amount of energy specified in <<max_energy_on_invalid_id,`MaxEnergyOnInvalidId`>> has been reached. |{nbsp}
+|E05.FR.04  |When a <<transaction_event_request,TransactionEventRequest>> has to be created
+  |The Charging Station SHALL set the message’s **seqNo** field as specified in <<sequence_number_generation,Sequence Number Generation>>.
+    |This enables the CSMS to track the completeness of transaction information.
+|E05.FR.05  |When configured to send meter data in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Started>>), See: <<metervalues_configuration,Meter Values - Configuration>> AND +
+  EVSE is known at start of transaction
+    |The Charging Station SHALL add the configured measurands to the optional meterValue field with _context_ = `Transaction.Begin` in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Started>>) sent to the CSMS to provide more details during the transaction. |{nbsp}
+|E05.FR.06  |<<sampled_data_sign_readings,`SampledDataSignReadings`>> is _true_ 
+  |The Charging Station SHALL retrieve signed meter values and put them in the _signedMeterValue_ field of sampledValues. |{nbsp}
+|E05.FR.08  |When configured to send meter data in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Started>>), See: <<metervalues_configuration,Meter Values - Configuration>> AND +
+  EVSE is not known at start of transaction
+    |The Charging Station SHALL add the measurands for _eventType_ = `Started` to the optional meterValue field with _context_ = `Transaction.Begin` in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) that occurs when charging starts. |{nbsp}
+|E05.FR.09  |E05.FR.01 AND +
+  The authorization status in <<transaction_event_response,TransactionEventResponse>> is not _Accepted_ AND +
+  The transaction is still ongoing AND +
+  <<stop_tx_on_invalid_id,`StopTxOnInvalidId`>> is _true_ AND +
+  <<tx_stop_point,`TxStopPoint`>> does NOT contain: (<<tx_start_stop_point_values,Authorized>> OR <<tx_start_stop_point_values,PowerPathClosed>> OR <<tx_start_stop_point_values,EnergyTransfer>>)
+    |The Charging Station SHALL stop the energy transfer and send <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) with _triggerReason_ set to _Deauthorized_ and in the same or next <<transaction_event_request,TransactionEventRequest>> report _chargingState_ set preferably to _EVConnected_ , or alternatively to _SuspendedEVSE_.
+      |If the physical change of charging state in the Charging Station occurs a few seconds or milliseconds later than the trigger _Deauthorized_, then the _chargingState_ change may be reported separately as a _triggerReason_ = _ChargingStateChanged_. Use of charging state _SuspendedEVSE_ that is not followed by _EVConnected_ in this situation will become deprecated in the next OCPP release.
+|E05.FR.10  |E05.FR.01 AND +
+  The authorization status in <<transaction_event_response,TransactionEventResponse>> is not _Accepted_ AND +
+  The transaction is still ongoing AND +
+  <<stop_tx_on_invalid_id,`StopTxOnInvalidId`>> is _true_ AND +
+  <<tx_stop_point,`TxStopPoint`>> does contain: (<<tx_start_stop_point_values,Authorized>> OR <<tx_start_stop_point_values,PowerPathClosed>> OR <<tx_start_stop_point_values,EnergyTransfer>>)
+    |The Charging Station SHALL stop the transaction and send <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) with _triggerReason_ set to _Deauthorized_ and <<reason_enum_type,stoppedReason>> set to _DeAuthorized_. |{nbsp}
+|E05.FR.11  |E05.FR.10 AND +
+  If the Charging Station has the possibility to lock the Charging Cable
+    |The Charging Station SHOULD keep the Charging Cable locked until the owner presents his identifier. |{nbsp}
+|===
 
-_Table 105. E05 - Requirements_
-
-
-ID Precondition Requirement definition Note
-E05.FR.01 The CSMS MUST verify validity of the identifier in
-the TransactionEventRequest message.
-
-
-The identifier might have
-been authorized locally
-by the Charging Station
-using outdated
-information. The
-identifier, for instance,
-may have been blocked
-since it was added to the
-Charging Station’s
-Authorization Cache.
-
-E05.FR.02 (^) E05.FR.01 AND
-The authorization status in
-TransactionEventResponse is not
-_Accepted_ AND
-The transaction is still ongoing AND
-StopTxOnInvalidId is set to _false_
-AND
-MaxEnergyOnInvalidId is not
-implemented or has been exceeded.
-TxStopPoint does NOT contain:
-EnergyTransfer
-The Charging Station SHALL stop the energy
-delivery to the EV immediately and send
-TransactionEventRequest (eventType  Updated)
-with _triggerReason_ set to _ChargingStateChanged_
-and chargingState set to _SuspendedEVSE_
-The transaction is not
-deauthorized, but
-transfer of energy stops,
-since
-MaxEnergyOnInvalid
-Id has been exceeded or
-is not set. If TxStopPoint
-contains
-EnergyTransfer then
-this would have ended
-the transaction.
-E05.FR.03 (^) E05.FR.01 AND
-The authorization status in
-TransactionEventResponse is not
-_Accepted_ AND
-The transaction is still ongoing AND
-StopTxOnInvalidId is set to _false_
-AND
-MaxEnergyOnInvalidId is set and
-has NOT been exceeded.
-Energy delivery to the EV SHALL be allowed until
-the amount of energy specified in
-MaxEnergyOnInvalidId has been reached.
-E05.FR.04 When a TransactionEventRequest has
-to be created
-The Charging Station SHALL set the message’s
-**seqNo** field as specified in Sequence Number
-Generation.
-This enables the CSMS
-to track the
-completeness of
-transaction information.
-E05.FR.05 When configured to send meter data
-in the TransactionEventRequest
-(eventType  Started), See: Meter
-Values - Configuration AND
-EVSE is known at start of transaction
-The Charging Station SHALL add the configured
-measurands to the optional meterValue field with
-_context_  Transaction.Begin in the
-TransactionEventRequest(eventType  Started)
-sent to the CSMS to provide more details during the
-transaction.
-E05.FR.06 SampledDataSignReadings is _true_ The Charging Station SHALL retrieve signed meter
-values and put them in the _signedMeterValue_ field
-of sampledValues.
-E05.FR.08 When configured to send meter data
-in the TransactionEventRequest
-(eventType  Started), See: Meter
-Values - Configuration AND
-EVSE is not known at start of
-transaction
-The Charging Station SHALL add the measurands
-for _eventType_  Started to the optional
-meterValue field with _context_ =
-Transaction.Begin in the
-TransactionEventRequest(eventType  Updated)
-that occurs when charging starts.
-Edition 3 FINAL, 2024-05-06 **E. Transactions**
-
-
-
-ID Precondition Requirement definition Note
-
-E05.FR.09 (^) E05.FR.01 AND
-The authorization status in
-TransactionEventResponse is not
-_Accepted_ AND
-The transaction is still ongoing AND
-StopTxOnInvalidId is _true_ AND
-TxStopPoint does NOT contain:
-(Authorized OR PowerPathClosed OR
-EnergyTransfer)
-The Charging Station SHALL stop the energy
-transfer and send TransactionEventRequest
-(eventType  Updated) with _triggerReason_ set to
-_Deauthorized_ and in the same or next
-TransactionEventRequest report _chargingState_ set
-preferably to _EVConnected_ , or alternatively to
-_SuspendedEVSE_.
-If the physical change of
-charging state in the
-Charging Station occurs
-a few seconds or
-milliseconds later than
-the trigger _Deauthorized_ ,
-then the _chargingState_
-change may be reported
-separately as a
-_triggerReason_ =
-_ChargingStateChanged_.
-Use of charging state
-_SuspendedEVSE_ that is
-not followed by
-_EVConnected_ in this
-situation will become
-deprecated in the next
-OCPP release.
-E05.FR.10 (^) E05.FR.01 AND
-The authorization status in
-TransactionEventResponse is not
-_Accepted_ AND
-The transaction is still ongoing AND
-StopTxOnInvalidId is _true_ AND
-TxStopPoint does contain:
-(Authorized OR PowerPathClosed OR
-EnergyTransfer)
-The Charging Station SHALL stop the transaction
-and send TransactionEventRequest (eventType =
-Ended) with _triggerReason_ set to _Deauthorized_ and
-stoppedReason set to _DeAuthorized_.
-E05.FR.11 (^) E05.FR.10 AND
-If the Charging Station has the
-possibility to lock the Charging Cable
-The Charging Station SHOULD keep the Charging
-Cable locked until the owner presents his identifier.
-Edition 3 FINAL, 2024-05-06 **E. Transactions**
+<<<
 
 [[stop_transaction_options]]
 === E06 - Stop Transaction options
@@ -2027,8 +1815,8 @@ values and put them in the _signedMeterValue_ field
 of sampledValues.
 Edition 3 FINAL, 2024-05-06 **E. Transactions**
 
-
-==== E10 - When cable disconnected on EV-side: Suspend Transaction
+[[e10_when_cable_disconnected_on_ev_side_suspended_transaction]]
+=== E10 - When cable disconnected on EV-side: Suspend Transaction
 
 _Table 114. E10 - When cable disconnected on EV-side: Suspend Transaction_
 

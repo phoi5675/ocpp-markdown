@@ -1,0 +1,32 @@
+@startuml figure_48
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over ChargingStation, CSMS
+  EV Driver locally authorized by the Charging Station.
+end note
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Started, transactionId = AB1234, seqNo = N, timestamp,\
+  \nevse.id = 1, evse.connectorId = 1, meterValues,...)
+activate CSMS
+activate ChargingStation
+
+CSMS --> ChargingStation: \
+  TransactionEventResponse(idTokenInfo.status = Blocked / Invalid / Expired / Unknown,...)
+deactivate CSMS
+
+ChargingStation -> ChargingStation: stop energy offer
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Updated, transactionId = AB1234, seqNo = N + 1, timestamp,\
+  \nchargingState = SuspendedEVSE, triggerReason = Deauthorized, meterValues,...)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

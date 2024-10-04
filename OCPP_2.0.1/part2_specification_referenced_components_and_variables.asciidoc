@@ -1159,7 +1159,7 @@ transaction.
 Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 [[stop_tx_on_invalid_id]]
-==== StopTxOnInvalidId
+==== `StopTxOnInvalidId`
 
 
 Required yes
