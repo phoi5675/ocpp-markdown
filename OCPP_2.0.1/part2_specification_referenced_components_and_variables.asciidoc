@@ -209,7 +209,8 @@ SHALL drop intermediate values first (1st value, 3th value, 5th etc), not start 
 end of the measurements/meter data.
 Default  false
 
-**2.1.10.** MessageAttemptsTransactionEvent
+[[message_attempts_transaction_event]]
+==== `MessageAttemptsTransactionEvent`
 
 
 Required yes
@@ -221,7 +222,8 @@ variableCharacteristics dataType integer
 Description How often the Charging Station should try to submit a TransactionEventRequest message when the CSMS fails to
 process it.
 
-**2.1.11.** MessageAttemptIntervalTransactionEvent
+[[message_attempt_interval_transaction_event]]
+==== MessageAttemptIntervalTransactionEvent
 
 
 Required yes

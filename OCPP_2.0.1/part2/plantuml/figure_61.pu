@@ -1,0 +1,33 @@
+@startuml figure_61
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+activate ChargingStation
+note over ChargingStation, CSMS
+  Charging Station is Offline and a transaction has occurred.
+end note
+
+note over ChargingStation, CSMS
+  Connection restored.
+end note
+
+ChargingStation -> CSMS: HeartbeatRequest()
+activate CSMS
+
+CSMS --> ChargingStation: HeartbeatResponse()
+deactivate CSMS
+
+ChargingStation -> ChargingStation: send queued message()
+
+loop for all queued TransactionEvent messages since connection loss
+  ChargingStation -> CSMS: TransactionEventRequest(transactionId = X, offline = true)
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse()
+  deactivate CSMS
+  deactivate ChargingStation
+end
+
+@enduml

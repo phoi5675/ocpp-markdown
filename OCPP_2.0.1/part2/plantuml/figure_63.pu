@@ -1,0 +1,25 @@
+@startuml figure_63
+!include style.puml
+
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+alt For a specific transaction
+  CSMS -> ChargingStation: GetTransactionStatusRequest(transactionId)
+  activate CSMS
+  activate ChargingStation
+
+  ChargingStation --> CSMS: GetTransactionStatusResponse(ongoing, messagesInQueue)
+  deactivate ChargingStation
+  deactivate CSMS
+else Not for a specific transaction
+  CSMS -> ChargingStation: GetTransactionStatusRequest()
+  activate CSMS
+  activate ChargingStation
+
+  ChargingStation --> CSMS: GetTransactionStatusResponse(messagesInQueue)
+  deactivate CSMS
+  deactivate ChargingStation
+end
+
+@enduml

@@ -1,0 +1,91 @@
+@startuml figure_59
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over EVDriver, CSMS
+  A transaction is ongoing.
+end note
+
+EVDriver -> ChargingStation: unplug cable at car side
+activate ChargingStation
+
+ChargingStation -> ChargingStation: suspend energy offer
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Updated, transactionId = AB1234, seqNo = N + 1,\
+  \ntimestamp, chargingState = SuspendedEV, triggerReason  EVCommunicationLost, meterValues)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse()
+deactivate ChargingStation
+deactivate CSMS
+
+alt if Cable is plugged in
+  EVDriver -> ChargingStation: plugin cable
+  activate ChargingStation
+
+  ChargingStation -> ChargingStation: resume energy offer
+
+  ChargingStation -> CSMS: \
+    TransactionEventRequest(eventType = Updated, transactionId = AB1234, seqNo = N + 2,\
+    \ntimestamp, chargingState = Charging, triggerReason = CablePluggedIn, meterValues)
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse()
+  deactivate ChargingStation
+  deactivate CSMS
+
+  note right of ChargingStation
+    Continue with E02 - Start Transaction - Cable Plugin First from Ref #1.
+  end note
+else if cable not permanently attached.
+  note over EVDriver, CSMS
+    User authorization successful.
+  end note
+
+  ChargingStation -> ChargingStation: unlock connector
+  activate ChargingStation
+
+  ChargingStation -> CSMS: \
+    TransactionEventRequest(eventType = Ended, transactionId = AB1234, seqNo = N + 2,\
+    \ntimestamp, triggerReason = StopAuthorized, meterValues)
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse()
+  deactivate CSMS
+  deactivate ChargingStation
+
+  EVDriver -> ChargingStation: unplug cable
+  activate ChargingStation
+
+  ChargingStation -> CSMS: StatusNotificationRequest(Available)
+  activate CSMS
+
+  CSMS --> ChargingStation: StatusNotificationResponse()
+  deactivate CSMS
+  deactivate ChargingStation
+
+else if cable permanently attached
+  ChargingStation -> ChargingStation: timeout()
+  activate ChargingStation
+
+  ChargingStation -> CSMS: \
+    TransactionEventRequest(eventType = Ended, stoppedReason = Timeout,\
+    \ntransactionId = AB1234, seqNo = N + 2,timestamp, meterValues)
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse()
+  deactivate CSMS
+
+  ChargingStation -> CSMS: StatusNotificationRequest(Available)
+  activate CSMS
+
+  CSMS --> ChargingStation: StatusNotificationResponse()
+  deactivate ChargingStation
+  deactivate CSMS
+end
+
+@enduml

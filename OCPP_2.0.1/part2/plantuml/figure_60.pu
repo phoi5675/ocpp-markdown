@@ -1,0 +1,38 @@
+@startuml figure_60
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+activate ChargingStation
+note over ChargingStation, CSMS
+  A transaction is ongoing.
+end note
+
+note over ChargingStation, CSMS
+  Connection loss.
+end note
+
+opt
+  loop while transaction running
+    ChargingStation -> ChargingStation: store TransactionEventRequest() messages
+  end
+end
+
+note over ChargingStation, CSMS
+  Connection restored.
+end note
+
+loop for all stored TransactionEventRequest() messages
+  ChargingStation -> CSMS: TransactionEventRequest(offline = true)
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse()
+  deactivate CSMS
+end
+
+deactivate ChargingStation
+
+ChargingStation ->o] :Resume regular communication
+
+@enduml

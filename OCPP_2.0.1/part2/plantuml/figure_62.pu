@@ -1,0 +1,31 @@
+@startuml figure_62
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+ChargingStation -> CSMS: transaction related message request()
+
+loop while number of messages sent has not reached MessageAttemptsTransactionEvent
+  alt if message delivered successfully
+    CSMS --> ChargingStation: transaction related message response()
+    activate ChargingStation
+
+    ChargingStation ->o] : Continue processing next message()
+    deactivate ChargingStation
+  else if message not accepted
+    CSMS --> ChargingStation:  failure to process the message()
+    activate ChargingStation
+    
+    ChargingStation -> ChargingStation: \
+      wait number of attempts x \
+      \nMessageAttemptIntervalTransactionEvent seconds
+    
+    ChargingStation -> CSMS: resend message()
+    deactivate ChargingStation
+  end
+end
+
+ChargingStation -> ChargingStation: dispose message()
+
+@enduml
