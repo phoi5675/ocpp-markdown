@@ -536,7 +536,7 @@ The communication between the Payment Terminal and the CSMS is outside of scope 
 The scenario description and sequence diagram above are based on the Configuration Variable for start & stop transaction being configured as follows: +
 <<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
 <<tx_stop_point,`TxStopPoint`>>: <<tx_start_stop_point_values,ParkingBayOccupancy, EVConnected>> +
-This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are send. For more details see the use cases: <<start_transaction_options,E01 - Start Transaction options>> and <<stop_transaction_options,E06 - Stop Transaction options>>.
+This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are send. For more details see the use cases: <<start_transaction_options,E01 - Start Transaction options>> and <<e06_stop_transaction_options,E06 - Stop Transaction options>>.
 |===
 
 ==== C06 - Authorization using local id type - Requirements
@@ -1309,7 +1309,7 @@ image::part2/images/figure_36.svg[Sequence Diagram: Stop Transaction with a Mast
 |7   |Error Handling    |When the user does not make a selection before an acceptable timeout, the Charging Station SHALL go back to normal operation.
 |8   |Remarks           |The scenario description and sequence diagram above are based on the Configuration Variable for stop transaction being configured as follows. +
   <<tx_stop_point,`TxStopPoint`>>: <<tx_start_stop_point_values,Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
-  This use-case is also valid for other configurations, but then the transaction might stop at another moment, which might change the sequence in which message are send. For more details see the use case: <<stop_transaction_options,E06 - Stop Transaction options>>
+  This use-case is also valid for other configurations, but then the transaction might stop at another moment, which might change the sequence in which message are send. For more details see the use case: <<e06_stop_transaction_options,E06 - Stop Transaction options>>
 |===
 
 ==== C16 - Stop Transaction with a Master Pass - Requirements

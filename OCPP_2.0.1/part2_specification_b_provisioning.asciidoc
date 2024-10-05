@@ -960,7 +960,7 @@ image::part2/images/figure_21b.svg[Sequence Diagram: Reset Immediate With Ongoin
 |B12.FR.03 |If no _evseId_ is supplied +
   AND +
   If any transaction is in progress and an OnIdle reset is received.
-    |The transaction of the Charging Station SHALL be terminated normally, before the reboot, as in <<stop_transaction_options,E06 - Stop Transaction>>.
+    |The transaction of the Charging Station SHALL be terminated normally, before the reboot, as in <<e06_stop_transaction_options,E06 - Stop Transaction>>.
 |B12.FR.04 |If no _evseId_ is supplied +
   AND +
   If any transaction is in progress and an Immediate Reset is received.
@@ -972,7 +972,7 @@ image::part2/images/figure_21b.svg[Sequence Diagram: Reset Immediate With Ongoin
 |B12.FR.07 |If an _evseId_ is supplied +
   AND +
   If a transaction is in progress on the EVSE and an OnIdle reset is received.
-    |The transaction on the EVSE SHALL be terminated normally, before the reset, as in <<stop_transaction_options,E06 - Stop Transaction>>.
+    |The transaction on the EVSE SHALL be terminated normally, before the reset, as in <<e06_stop_transaction_options,E06 - Stop Transaction>>.
 |B12.FR.08 |If an _evseId_ is supplied +
   AND +
   If a transaction is in progress on the EVSE and an Immediate Reset is received.

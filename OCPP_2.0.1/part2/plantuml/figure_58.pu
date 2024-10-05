@@ -1,0 +1,46 @@
+@startuml figure_58
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over EVDriver, CSMS
+  A transaction is ongoing.
+end note
+
+EVDriver -> ChargingStation: unplug cable at car side
+activate ChargingStation
+
+ChargingStation -> ChargingStation: suspend energy offer
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Ended, transactionId = AB1234, seqN = N + 1, timestamp,\
+  \ntriggerReason = EVCommunicationLost, stoppedReason = EVDisconnected, meterValues)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse()
+deactivate CSMS
+
+alt if cable not permanently attached & UnlockOnEVSideDisconnect = true
+  ChargingStation -> ChargingStation: unlock connector
+else if cable not permanently attached & UnlockOnEVSideDisconnect = false
+  note over EVDriver, CSMS
+    User authorization successful.
+  end note
+
+  ChargingStation -> ChargingStation: unlock connector
+end
+deactivate ChargingStation
+
+EVDriver -> ChargingStation: Unplug cable
+activate ChargingStation
+
+ChargingStation -> CSMS: StatusNotificationRequest(Available)
+activate CSMS
+
+CSMS --> ChargingStation: StatusNotificationResponse()
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

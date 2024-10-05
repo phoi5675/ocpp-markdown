@@ -240,7 +240,8 @@ dataType integer
 Description How long the Charging Station should wait before resubmitting a TransactionEventRequest message that the
 CSMS failed to process.
 
-**2.1.12.** UnlockOnEVSideDisconnect
+[[unlock_on_ev_side_disconnect]]
+==== `UnlockOnEVSideDisconnect`
 
 
 Required yes
@@ -1004,7 +1005,8 @@ of EV driver to (correctly) insert the charging cable connector(s) into the appr
 Station SHALL go back to the original state, probably: 'Available'. "Starting" might be the swiping of the RFID,
 pressing a start button, a RequestStartTransactionRequest being received etc.
 
-**2.6.2.** StopTxOnEVSideDisconnect
+[[stop_tx_on_ev_side_disconnect]]
+==== `StopTxOnEVSideDisconnect`
 
 
 Required yes

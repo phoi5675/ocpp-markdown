@@ -1,0 +1,52 @@
+@startuml figure_57
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over ChargingStation, CSMS
+  Charging Station is Offline and a transaction is ongoing.
+end note
+
+EVDriver -> ChargingStation: present idToken
+activate ChargingStation
+
+alt if idToken matches or groupId can be validated
+  ChargingStation -> ChargingStation: stop energy offer
+
+  alt if cable not permanently attached
+    ChargingStation -> ChargingStation: unlock connector
+  end
+
+  ChargingStation -> ChargingStation: \
+    Store TransactionEventRequest(eventType = Ended,\
+    \noffline = true)
+  
+  note over ChargingStation, CSMS
+    Connection loss can be minutes, but can also be days.
+  end note
+
+  note over ChargingStation, CSMS
+    Connection restored.
+  end note
+
+  ChargingStation -> CSMS: HeartbeatRequest()
+  activate CSMS
+
+  CSMS --> ChargingStation: HeartbeatResponse()
+  deactivate CSMS
+
+  ChargingStation -> ChargingStation: send queued message()
+
+  ChargingStation -> CSMS: \
+    TransactionEventRequest(eventType = Ended,\
+    \noffline = true)
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse()
+  deactivate ChargingStation
+  deactivate CSMS
+end
+
+@enduml
