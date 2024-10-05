@@ -1,0 +1,94 @@
+@startuml figure_56
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over EVDriver, CSMS
+  User authorization successful.
+end note
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Updated, transactionId = AB1234, seqNo = N + 1, timestamp,\
+  \ntriggerReason = StopAuthorized, idToken.id = 1234)
+activate ChargingStation
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(idTokenInfo.status)
+deactivate ChargingStation
+deactivate CSMS
+
+opt if cable not permanently attached & (same identification or authorized)
+  ChargingStation -> ChargingStation: unlock connector
+end
+
+alt TxStopPoint = Authorized OR PowerPathClosed OR EnergyTransfer
+  ChargingStation -> CSMS: \
+    TransactionEventRequest(eventType = Ended, transactionId = AB1234, seqNo = N + 2, timestamp,\
+    \ntriggerReason = ChargingStateChanged, chargingState = EVConnected, stoppedReason = Local, meterValues)
+  activate ChargingStation
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse()
+  deactivate ChargingStation
+  deactivate CSMS
+else TxStopPoint = EVConnected OR TxStopPoint = ParkingBayOccupancy
+  ChargingStation -> CSMS: \
+    TransactionEventRequest(eventType = Updated, transactionId = AB1234, seqNo = N + 2, timestamp,\
+    \ntriggerReason = ChargingStateChanged, chargingState = EVConnected, meterValues)
+  activate ChargingStation
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse()
+  deactivate CSMS
+  deactivate ChargingStation
+end
+
+EVDriver -> ChargingStation: Unplug cable
+
+ChargingStation -> CSMS: StatusNotificationRequest(Available)
+activate ChargingStation
+activate CSMS
+
+CSMS --> ChargingStation: StatusNotificationResponse()
+deactivate ChargingStation
+deactivate CSMS
+
+alt TxStopPoint = EVConnected
+  ChargingStation -> CSMS: \
+    TransactionEventRequest(eventType = Ended, transactionId = AB1234, seqNo = N + 3, timestamp,\
+    \ntriggerReason = EVCommunicationLost, stoppedReason = Local)
+  activate ChargingStation
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse()
+  deactivate ChargingStation
+  deactivate CSMS
+else TxStopPoint = ParkingBayOccupancy
+  ChargingStation -> CSMS: \
+    TransactionEventRequest(eventType = Updated, transactionId = AB1234, seqNo = N + 3, timestamp,\
+    \ntriggerReason = EVCommunicationLost)
+  activate CSMS
+  activate ChargingStation
+
+  CSMS --> ChargingStation: TransactionEventResponse()
+  deactivate ChargingStation
+  deactivate CSMS
+end
+
+EVDriver -> ChargingStation: Drive out of parking bay
+
+alt TxStopPoint = ParkingBayOccupancyoend
+  ChargingStation -> CSMS: \
+    TransactionEventRequest(eventType = Ended, transactionId = AB1234, seqNo = N + 3, timestamp,\
+    \ntriggerReason = EVDeparted, stoppedReason = Local)
+  activate CSMS
+  activate ChargingStation
+
+  CSMS --> ChargingStation: TransactionEventResponse()
+  deactivate CSMS
+  deactivate ChargingStation
+end
+
+@enduml

@@ -1050,323 +1050,108 @@ image::part2/images/figure_54.svg[Sequence Diagram: Stop Transaction options - A
 
 === E07 - Transaction locally stopped by IdToken
 
-_Table 108. E07 - Transaction locally stopped by IdToken_
+.E07 - Transaction locally stopped by IdToken
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
+|1   |Name            |Transaction locally stopped by IdToken
+|2   |ID              |E07
+|{nbsp} d|_Functional block_ |E. Transactions
+|3   |Objective(s)    |The EV Driver wants to stop an ongoing transaction, by locally presenting his IdToken.
+|4   |Description     |This use case covers how the EV Driver can stop a transaction when he wants to leave the charging station.
+|{nbsp} d|_Actors_    |Charging Station, CSMS, EV Driver
+|{nbsp} d|_Scenario description_ +
+  TxStopPoint = `Authorized` (or `PowerPathClosed`)
+    |**1.** The EV Driver presents IdToken a second time to end charging. +
+  **2.** The Charging Station stops the energy transfer and if the cable is not permanently attached, the Charging Station unlocks the cable. +
+  **3.** The Charging Station sends a <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>) with _triggerReason_ = `StopAuthorized` and _stoppedReason_ = `Local`. +
+  **4.** The CSMS responds with a <<transaction_event_response,TransactionEventResponse>>.
+|{nbsp} d|Alternative scenario(s) +
+  TxStopPoint = `Authorized` (or `PowerPathClosed`)
+    |_Transaction ends with triggerReason=ChargingStateChanged when stopping charging:_
 
-No. Type Description
-1 Name Transaction locally stopped by IdToken
-2 ID E07
-Functional block E. Transactions
-3 Objective(s) The EV Driver wants to stop an ongoing transaction, by locally presenting his IdToken.
-4 Description This use case covers how the EV Driver can stop a transaction when he wants to leave the
-charging station.
-Actors Charging Station, CSMS, EV Driver
+  **1.** The EV Driver presents IdToken a second time to end charging. +
+  **2.** The Charging Station sends a <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) with _triggerReason_ = `StopAuthorized` +
+  **3.** The CSMS responds with a <<transaction_event_response,TransactionEventResponse>>. +
+  **4.** The Charging Station stops the energy transfer and if the cable is not permanently attached, the Charging Station unlocks the cable. +
+  **5.** The Charging Station sends a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) with _triggerReason_ = `ChargingStateChanged`, _transactionInfo.chargingState_ = `EVConnected` +
+  **6.** The CSMS responds with a <<transaction_event_response,TransactionEventResponse>>.
+|5   |Prerequisite(s)   |A transaction is ongoing.
+|6   |Postcondition(s)  
+  |**Successful postcondition:** +
+  The CSMS has received all relevant information about the transaction and the Charging Station is in _Idle_ status. +
+  **Failure postcondition:**  +
+  The transaction is still ongoing or the Charging Station is in Idle status and still holds information about the transaction that it has to deliver to the CSMS.
+|===
 
+.Sequence Diagram: Transaction locally stopped by IdToken with TransactionEventRequest reported strictly by TxStopPoint configuration
+image::part2/images/figure_55.svg[Sequence Diagram: Transaction locally stopped by IdToken with TransactionEventRequest reported strictly by TxStopPoint configuration]
 
-Scenario description
-TxStopPoint =
-Authorized (or
-PowerPathClosed)
+.Sequence Diagram: Transaction locally stopped by IdToken with delayed TransactionEventRequest eventType  Ended for TxStopPoint = Authorized OR PowerPathClosed
+image::part2/images/figure_56.svg[Sequence Diagram: Transaction locally stopped by IdToken with delayed TransactionEventRequest eventType  Ended for TxStopPoint = Authorized OR PowerPathClosed]
 
-**1.** The EV Driver presents IdToken a second time to end charging.
-**2.** The Charging Station stops the energy transfer and if the cable is not permanently attached, the
-Charging Station unlocks the cable.
-**3.** The Charging Station sends a TransactionEventRequest (eventType  Ended) with
-_triggerReason_  StopAuthorized and _stoppedReason_  Local.
-**4.** The CSMS responds with a TransactionEventResponse.
-
-
-Alternative scenario(s)
-TxStopPoint =
-Authorized (or
-PowerPathClosed)
-
-
-Transaction ends with triggerReason=ChargingStateChanged when stopping charging:
-
-**1.** The EV Driver presents IdToken a second time to end charging.
-**2.** The Charging Station sends a TransactionEventRequest (eventType  Updated) with
-_triggerReason_  StopAuthorized
-**3.** The CSMS responds with a TransactionEventResponse.
-**4.** The Charging Station stops the energy transfer and if the cable is not permanently attached, the
-Charging Station unlocks the cable.
-**5.** The Charging Station sends a TransactionEventRequest (eventType  Ended) with
-_triggerReason_  ChargingStateChanged, _transactionInfo.chargingState_  EVConnected
-**6.** The CSMS responds with a TransactionEventResponse.
-**5 Prerequisite(s)** A transaction is ongoing.
-
-Edition 3 FINAL, 2024-05-06 **E. Transactions**
-
-
-
-No. Type Description
-
-**6 Postcondition(s)** (^) **Successful postcondition:**
-The CSMS has received all relevant information about the transaction and the Charging Station is
-in _Idle_ status.
-**Failure postcondition:**
-The transaction is still ongoing or the Charging Station is in Idle status and still holds information
-about the transaction that it has to deliver to the CSMS.
-EV Driver
-Charging Station CSMS
-User authorization successful.
-alt [TxStopPoint  Authorized OR TxStopPoint  PowerPathClosed]
-TransactionEventRequest(eventType  Ended, transactionId  AB1234, seqNo  N + 1, timestamp,
-triggerReason  StopAuthorized, stoppedReason  Local, idToken.id  1234, meterValues)
-TransactionEventResponse(idTokenInfo.status)
-[TxStopPoint  EVConnected OR TxStopPoint  ParkingBayOccupancy OR TxStopPoint  EnergyTransfer]
-TransactionEventRequest(eventType  Updated, transactionId  AB1234, seqNo  N + 1, timestamp,
-triggerReason  StopAuthorized, idToken.id  1234)
-TransactionEventResponse(idTokenInfo.status)
-opt [if cable not permanently attached & (same identification or authorized)]
-unlock connector
-alt [TxStopPoint  EnergyTransfer]
-TransactionEventRequest(eventType  Ended, transactionId  AB1234, seqNo  N + 2, timestamp,
-triggerReason  ChargingStateChanged, chargingState  EVConnected, stoppedReason  Local, meterValues)
-TransactionEventResponse()
-[TxStopPoint  EVConnected OR TxStopPoint  ParkingBayOccupancy]
-TransactionEventRequest(eventType  Updated, transactionId  AB1234, seqNo  N + 1, timestamp,
-triggerReason  ChargingStateChanged, chargingState  EVConnected)
-TransactionEventResponse()
-Unplug cable
-StatusNotificationRequest(Available)
-StatusNotificationResponse()
-alt [TxStopPoint  EVConnected]
-TransactionEventRequest(eventType  Ended, transactionId  AB1234, seqNo  N + 3, timestamp,
-triggerReason  EVCommunicationLost, stoppedReason  Local)
-TransactionEventResponse()
-[TxStopPoint  ParkingBayOccupancy]
-TransactionEventRequest(eventType  Updated, transactionId  AB1234, seqNo  N + 3, timestamp,
-triggerReason  EVCommunicationLost)
-TransactionEventResponse()
-Drive out of parking bay
-alt [TxStopPoint  ParkingBayOccupancy]
-TransactionEventRequest(eventType  Ended, transactionId  AB1234, seqNo  N + 3, timestamp,
-triggerReason  EVDeparted, stoppedReason  Local)
-TransactionEventResponse()
-_Figure 55. Sequence Diagram: Transaction locally stopped by IdToken with TransactionEventRequest reported strictly by TxStopPoint
-configuration_
-Edition 3 FINAL, 2024-05-06 **E. Transactions**
-
-
-
-EV Driver
-
-
-Charging Station CSMS
-
-
-User authorization successful.
-
-
-TransactionEventRequest(eventType  Updated, transactionId  AB1234, seqNo  N + 1, timestamp,
-triggerReason  StopAuthorized, idToken.id  1234)
-TransactionEventResponse(idTokenInfo.status)
-
-
-opt [if cable not permanently attached & (same identification or authorized)]
-unlock connector
-
-
-alt [TxStopPoint  Authorized OR PowerPathClosed OR EnergyTransfer]
-TransactionEventRequest(eventType  Ended, transactionId  AB1234, seqNo  N + 2, timestamp,
-triggerReason  ChargingStateChanged, chargingState  EVConnected, stoppedReason  Local, meterValues)
-TransactionEventResponse()
-[TxStopPoint  EVConnected OR TxStopPoint  ParkingBayOccupancy]
-TransactionEventRequest(eventType  Updated, transactionId  AB1234, seqNo  N + 2, timestamp,
-triggerReason  ChargingStateChanged, chargingState  EVConnected, meterValues)
-TransactionEventResponse()
-
-
-Unplug cable
-StatusNotificationRequest(Available)
-StatusNotificationResponse()
-
-
-alt [TxStopPoint  EVConnected]
-TransactionEventRequest(eventType  Ended, transactionId  AB1234, seqNo  N + 3, timestamp,
-triggerReason  EVCommunicationLost, stoppedReason  Local)
-TransactionEventResponse()
-[TxStopPoint  ParkingBayOccupancy]
-TransactionEventRequest(eventType  Updated, transactionId  AB1234, seqNo  N + 3, timestamp,
-triggerReason  EVCommunicationLost)
-TransactionEventResponse()
-
-
-Drive out of parking bay
-
-
-alt [TxStopPoint  ParkingBayOccupancy]
-TransactionEventRequest(eventType  Ended, transactionId  AB1234, seqNo  N + 3, timestamp,
-triggerReason  EVDeparted, stoppedReason  Local)
-TransactionEventResponse()
-
-_Figure 56. Sequence Diagram: Transaction locally stopped by IdToken with delayed TransactionEventRequest eventType  Ended for
-TxStopPoint  Authorized OR PowerPathClosed_
-
-
-7 Error handling n/a
-
-**8 Remark(s)** (^) The scenario descriptions are based on TxStopPoint containing Authorized or PowerPathClosed.
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling  |n/a
+|8   |Remark(s)       |The scenario descriptions are based on TxStopPoint containing <<tx_start_stop_point_values,Authorized>> or <<tx_start_stop_point_values,PowerPathClosed>>. +
 The sequence diagrams also show behavior for other TxStopPoint values in the alt-blocks.
+
 The CSMS cannot prevent a transaction from stopping.
-**E07 - Transaction locally stopped by IdToken - Requirements**
-_Table 109. E07 - Requirements_
-Edition 3 FINAL, 2024-05-06 **E. Transactions**
+|===
 
+==== E07 - Transaction locally stopped by IdToken - Requirements
 
+.E07 - Requirements
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
 
-ID Precondition Requirement definition Note
-E07.FR.01 When an idToken is presented during
-a transaction that has been authorized
-AND
-(a) the presented idToken is the same
-as the idToken that started the
-authorization
-OR
-(b) when the presented idToken is in
-the Local Authorization List or
-Authorization Cache AND is valid AND
-has the same GroupIdToken as the
-IdToken that started the authorization.
+|E07.FR.01  |When an <<id_token_type,idToken>> is presented during a transaction that has been authorized +
+  AND +
+  (a) the presented <<id_token_type,idToken>> is the same as the <<id_token_type,idToken>> that started the authorization +
+  OR +
+  (b) when the presented <<id_token_type,idToken>> is in the Local Authorization List or
+  Authorization Cache AND is valid AND +
+  has the same GroupIdToken as the IdToken that started the authorization.
+    |The Charging Station SHALL end the authorization of the transaction, without first sending an <<authorize_request,AuthorizeRequest>>
+      |The <<id_token_type,idToken>> that started the authorization can always be used to end the authorization. Ending authorization will end delivery of energy. Depending on the TxStopPoint ending of the authorization may also end the transaction. (See C01.FR.03)
+|E07.FR.02  |E07.FR.01
+  |The Charging Station SHALL send a
+<<transaction_event_request,TransactionEventRequest>> with _triggerReason_ = `StopAuthorized` and SHOULD include the _idToken_ used to stop authorization.
+    |The stopping _idToken_ may differ from the starting _idToken_, when they share the same GroupId.
+|E07.FR.04  |If a transaction is stopped on request of the EV driver at the Charging Station.
+  |Charging Station MAY omit the <<reason_enum_type,stoppedReason>> element from the final TransactionEventRequest with _eventType_ = `Ended`
+    |e.g. EV-driver presented IdToken to stop the transaction or pressed a "stop" button (not the emergency stop). See use case F03 for remotely stopping.
+|E07.FR.05  |If a transaction is stopped on request of the EV driver at the Charging Station.
+  |Charging Station SHOULD use a <<reason_enum_type,stoppedReason>> = `Local` in the final TransactionEventRequest with _eventType_ = `Ended`.
+    |e.g. EV-driver presented IdToken to stop the transaction or pressed a "stop" button (not the emergency stop). See use case F03 for remotely stopping.
+|E07.FR.06  |If a transaction is stopped, but not on request of the EV driver at the Charging Station.
+  |Charging Station SHOULD use the most appropriate
+value from <<reason_enum_type,ReasonEnumType>> for _stoppedReason_ in the final TransactionEventRequest with _eventType_ = `Ended`.
+    |Apart from remotely stopping (`Remote`), CSMS revoking authorization (`DeAuthorized`) or disconnecting the EV (`EVDisconnected`), most other reasons are related to technical faults or energy limitations.
+|E07.FR.07  |As part of the normal transaction termination.
+  |The Charging Station SHALL unlock the cable (if not permanently attached). |{nbsp}
+|E07.FR.08  |When configured to send meter data
+in the <<transaction_event_request,TransactionEventRequest>>
+(<<transaction_event_enum_type,eventType = Ended>>), See: <<metervalues_configuration,Meter Values - Configuration>>
+  |The Charging Station SHALL add the configured measurands to the optional _meterValue_ field with _context_ = `Transaction.End` in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>) sent to the CSMS to provide more details about transaction usage. |{nbsp}
+|E07.FR.09  |E07.FR.08 +
+  AND +
+  The Charging Station is running low on memory
+    |The Charging Station MAY drop meter data in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>) message. |{nbsp}
+|E07.FR.10  |E07.FR.09 
+  |When dropping meter data, the Charging Station SHALL drop intermediate values first (1st value, 3th value, 5th etc), not start dropping values from the start of the list or stop adding values to the list. |{nbsp}
+|E07.FR.11  |When a <<transaction_event_request,TransactionEventRequest>> has to be created
+  |The Charging Station SHALL set the message’s **seqNo** field as specified in <<sequence_number_generation,Sequence Number Generation>>.
+    |This enables the CSMS to track the completeness of transaction information
+|E07.FR.12  |<<sampled_data_sign_readings,`SampledDataSignReadings`>> is _true_
+  |The Charging Station SHALL retrieve signed meter values and put them in the _signedMeterValue_ field of sampledValues. |{nbsp}
+|===
 
+<<<
 
-The Charging Station SHALL end the authorization
-of the transaction, without first sending an
-AuthorizeRequest
-
-
-The idToken that started
-the authorization can
-always be used to end
-the authorization.
-Ending authorization will
-end delivery of energy.
-Depending on the
-TxStopPoint ending of
-the authorization may
-also end the transaction.
-(See C01.FR.03)
-
-
-E07.FR.02 E07.FR.01 The Charging Station SHALL send a
-TransactionEventRequest with triggerReason =
-StopAuthorized and SHOULD include the
-idToken used to stop authorization.
-
-
-The stopping idToken
-may differ from the
-starting idToken , when
-they share the same
-GroupId.
-E07.FR.04 If a transaction is stopped on request
-of the EV driver at the Charging
-Station.
-
-
-Charging Station MAY omit the stoppedReason
-element from the final TransactionEventRequest
-with eventType  Ended
-
-
-e.g. EV-driver presented
-IdToken to stop the
-transaction or pressed a
-"stop" button (not the
-emergency stop).
-See use case F03 for
-remotely stopping.
-E07.FR.05 If a transaction is stopped on request
-of the EV driver at the Charging
-Station.
-
-
-Charging Station SHOULD use a stoppedReason =
-Local in the final TransactionEventRequest with
-eventType  Ended.
-
-
-e.g. EV-driver presented
-IdToken to stop the
-transaction or pressed a
-"stop" button (not the
-emergency stop).
-See use case F03 for
-remotely stopping.
-E07.FR.06 If a transaction is stopped, but not on
-request of the EV driver at the
-Charging Station.
-
-
-Charging Station SHOULD use the most appropriate
-value from ReasonEnumType for stoppedReason in
-the final TransactionEventRequest with eventType =
-Ended.
-
-
-Apart from remotely
-stopping (Remote),
-CSMS revoking
-authorization
-(DeAuthorized) or
-disconnecting the EV
-(EVDisconnected),
-most other reasons are
-related to technical faults
-or energy limitations.
-E07.FR.07 As part of the normal transaction
-termination.
-
-
-The Charging Station SHALL unlock the cable (if
-not permanently attached).
-E07.FR.08 When configured to send meter data
-in the TransactionEventRequest
-(eventType  Ended), See: Meter
-Values - Configuration
-
-
-The Charging Station SHALL add the configured
-measurands to the optional meterValue field with
-context  Transaction.End in the
-TransactionEventRequest(eventType  Ended) sent
-to the CSMS to provide more details about
-transaction usage.
-
-E07.FR.09 (^) E07.FR.08
-AND
-The Charging Station is running low on
-memory
-The Charging Station MAY drop meter data in the
-TransactionEventRequest(eventType  Ended)
-message.
-E07.FR.10 E07.FR.09 When dropping meter data, the Charging Station
-SHALL drop intermediate values first (1st value, 3th
-value, 5th etc), not start dropping values from the
-start of the list or stop adding values to the list.
-E07.FR.11 When a TransactionEventRequest has
-to be created
-The Charging Station SHALL set the message’s
-**seqNo** field as specified in Sequence Number
-Generation.
-This enables the CSMS
-to track the
-completeness of
-transaction information
-Edition 3 FINAL, 2024-05-06 **E. Transactions**
-
-
-
-ID Precondition Requirement definition Note
-E07.FR.12 SampledDataSignReadings is true The Charging Station SHALL retrieve signed meter
-values and put them in the signedMeterValue field
-of sampledValues.
-
-Edition 3 FINAL, 2024-05-06 **E. Transactions**
-
-
-==== E08 - Transaction stopped while Charging Station is offline
+=== E08 - Transaction stopped while Charging Station is offline
 
 _Table 110. E08 - Transaction stopped while Charging Station is offline_
 
