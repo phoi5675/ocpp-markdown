@@ -1,0 +1,26 @@
+@startuml figure_50
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over ChargingStation, CSMS
+  A transaction is ongoing.
+end note
+
+EVDriver -> ChargingStation: unplug charging cable
+activate ChargingStation
+
+ChargingStation -> ChargingStation: stop energy offer
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Ended, chargingState = idle,\
+  \ntriggerReason = EVCommunicationLost, stoppedReason = EVDisconnected)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse()
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

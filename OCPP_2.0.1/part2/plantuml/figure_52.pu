@@ -1,0 +1,20 @@
+@startuml figure_52
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+activate ChargingStation
+
+note over ChargingStation, CSMS
+  A transaction is ongoing.
+end note
+
+ChargingStation -> CSMS: TransactionEventRequest(eventType = Ended, chargingState = EVConnected, ...)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse()
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

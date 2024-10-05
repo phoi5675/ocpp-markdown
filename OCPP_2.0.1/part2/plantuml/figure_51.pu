@@ -1,0 +1,42 @@
+@startuml figure_51
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over ChargingStation
+  TxStopPoint
+  contains "Authorized".
+end note
+
+note over ChargingStation, CSMS
+  User locally authorized by the Charging Station
+end note
+
+ChargingStation -> CSMS: TransactionEventRequest(...)
+activate ChargingStation
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(idTokenInfo.status != Accepted, ...)
+deactivate CSMS
+
+ChargingStation -> ChargingStation: stop energy offer
+
+alt If StopTxOnInvalidId is true
+  ChargingStation -> CSMS: \
+    TransactionEventRequest(eventType = Ended,\n\
+        triggerReason = Deauthorized, stoppedReason = DeAuthorized, ...)
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse(...)
+else If StopTxOnInvalidId is false
+  ChargingStation -> CSMS: \
+    TransactionEventRequest(eventType = Updated,\n\
+        triggerReason = ChargingStateChanged, ...)
+
+  CSMS --> ChargingStation: TransactionEventResponse(...)
+  deactivate CSMS
+  deactivate ChargingStation
+end
+
+@enduml

@@ -1,0 +1,25 @@
+@startuml figure_54
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over ChargingStation, CSMS
+  User authorization successful.
+end note
+
+opt if cable not permanently attached & (same identification or authorized)
+  ChargingStation -> ChargingStation: unlock connector
+end
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Ended, transactionId = AB1234, seqNo = N + 1, timestamp,\
+  \nchargingState = EVConnected, triggerReason = StopAuthorized, idToken.id = 1234, stoppedReason = Local)
+activate CSMS
+
+ChargingStation --> CSMS: \
+  TransactionEventResponse(idTokenInfo.status = Accepted / Blocked / Invalid / Expired)
+deactivate CSMS
+
+@enduml
