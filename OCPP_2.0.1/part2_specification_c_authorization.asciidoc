@@ -257,7 +257,7 @@ image::part2/images/figure_22.svg[Sequence Diagram: Authorization using a start 
 
   The scenario description and sequence diagram above are based on the Configuration Variable for start transaction being configured as follows: +
   <<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,EVConnected, Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
-  This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are send. For more details see the use case: <<start_transaction_options,E01 - Start Transaction options>>.
+  This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are send. For more details see the use case: <<e01_start_transaction_options,E01 - Start Transaction options>>.
 |===
 
 ==== C02 - Authorization using a start button - Requirements
@@ -328,7 +328,7 @@ Stopping a transaction started with a credit/debit card is not defined, this is 
 
 The scenario description and sequence diagram above are based on the Configuration Variable for start transaction being configured as follows: +
 <<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,EVConnected, Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
-This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are send. For more details see the use case: <<start_transaction_options,E01 - Start Transaction options>>.
+This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are send. For more details see the use case: <<e01_start_transaction_options,E01 - Start Transaction options>>.
 |===
 
 ==== C03 - Authorization using credit/debit card - Requirements
@@ -459,7 +459,7 @@ This use case uses an App as example, but this is not a requirement. This use ca
 
 The scenario description and sequence diagram above are based on the Configuration Variable for start transaction being configured as follows: +
 <<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,EVConnected, Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
-This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are send. For more details see the use case: <<start_transaction_options,E01 - Start Transaction options>>.
+This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are send. For more details see the use case: <<e01_start_transaction_options,E01 - Start Transaction options>>.
 
 This use case assumes that the configuration variable AuthorizeRemoteStart is false. See use cases F01 and F02 for requirements with AuthorizeRemoteStart.
 
@@ -536,7 +536,7 @@ The communication between the Payment Terminal and the CSMS is outside of scope 
 The scenario description and sequence diagram above are based on the Configuration Variable for start & stop transaction being configured as follows: +
 <<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
 <<tx_stop_point,`TxStopPoint`>>: <<tx_start_stop_point_values,ParkingBayOccupancy, EVConnected>> +
-This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are send. For more details see the use cases: <<start_transaction_options,E01 - Start Transaction options>> and <<e06_stop_transaction_options,E06 - Stop Transaction options>>.
+This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are send. For more details see the use cases: <<e01_start_transaction_options,E01 - Start Transaction options>> and <<e06_stop_transaction_options,E06 - Stop Transaction options>>.
 |===
 
 ==== C06 - Authorization using local id type - Requirements
@@ -961,7 +961,7 @@ image::part2/images/figure_31.svg[Sequence Diagram: Clear Authorization Data in 
   **4.** The Charging Station verifies the IdToken with the <<authorization_cache,Authorization Cache>>. +
   **5.** The Charging Station updates the transaction. +
   **6.** The Charging Station starts charging. +
-  **7.** <<start_transaction_cable_plugin_first,E02 - Start Transaction - Cable Plugin First>> applies.
+  **7.** <<e02_start_transaction_cable_plugin_first,E02 - Start Transaction - Cable Plugin First>> applies.
 |5   |Prerequisite(s) 
   |<<auth_cache_enabled,`AuthCacheEnabled`>> = true
   <<local_pre_authorize,`LocalPreAuthorize`>> = true
@@ -991,7 +991,7 @@ and depending on the configuration even stop the transaction.
 
 The scenario description and sequence diagram above are based on the Configuration Variable for start transaction being configured as follows: +
 <<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,EVConnected, Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
-This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are send. For more details see the use case: <<start_transaction_options,E01 - Start Transaction options>>.
+This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are send. For more details see the use case: <<e01_start_transaction_options,E01 - Start Transaction options>>.
 |===
 
 ==== C12 - Start Transaction - Cached Id - Requirements

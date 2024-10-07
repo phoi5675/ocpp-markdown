@@ -740,7 +740,8 @@ variableCharacteristics dataType boolean
 Description If this key exists, the Charging Station supports Unknown Offline Authorization. If this key reports a value of true ,
 Unknown Offline Authorization is enabled.
 
-**2.3.4.** AuthorizeRemoteStart
+[[authorize_remote_start]]
+==== `AuthorizeRemoteStart`
 
 
 Required yes

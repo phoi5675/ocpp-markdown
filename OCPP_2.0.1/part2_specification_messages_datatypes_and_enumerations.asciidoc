@@ -2299,7 +2299,8 @@ chargingLimitSource ChargingLimitSourceEnumType 0..4 Optional. For which chargin
 profiles SHALL be reported. If omitted, the Charging
 Station SHALL not filter on chargingLimitSource.
 
-=== 2.10. ChargingProfileType
+[[charging_profile_type]]
+=== ChargingProfileType
 
 _Class_
 

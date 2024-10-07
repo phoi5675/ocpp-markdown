@@ -168,7 +168,7 @@ A TransactionEventRequest with _triggerReason_ = `ChargingStateChanged` must con
 === OCPP transaction mechanism
 
 :sectnums!:
-[[start_transaction_options]]
+[[e01_start_transaction_options]]
 === E01 - Start Transaction options
 
 .E01 - Start Transaction
@@ -425,7 +425,7 @@ image::part2/images/figure_44.svg[Sequence Diagram: Start Transaction options - 
     |The Charging Station SHOULD send a <<transaction_event_request,TransactionEventRequest>> with _chargingState_ = `EVConnected`.
 |===
 
-[[start_transaction_cable_plugin_first]]
+[[e02_start_transaction_cable_plugin_first]]
 ==== E02 - Start Transaction - Cable Plugin First
 
 .E02 - Start Transaction - Cable Plugin First
@@ -475,7 +475,7 @@ image::part2/images/figure_45.svg[Sequence Diagram: Start Transaction - Cable Pl
 
   The scenario description and sequence diagram above are based on the Configuration Variable for start & stop transaction being configured as follows: +
   <<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,EVConnected, Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
-  This use-case is also valid for other configurations, but then the transaction might start at another moment, which might change the sequence in which message are sent. For more details see the use cases: <<start_transaction_options,E01 - Start Transaction options>> and <<e06_stop_transaction_options,E06 - Stop Transaction options>>.
+  This use-case is also valid for other configurations, but then the transaction might start at another moment, which might change the sequence in which message are sent. For more details see the use cases: <<e01_start_transaction_options,E01 - Start Transaction options>> and <<e06_stop_transaction_options,E06 - Stop Transaction options>>.
 |===
 
 ==== E02 - Start Transaction - Cable Plugin First - Requirements
@@ -581,7 +581,7 @@ image::part2/images/figure_46.svg[Sequence Diagram: Start Transaction - IdToken 
 
 The scenario description and sequence diagram above are based on the Configuration Variable for start transaction being configured as follows: +
 <<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
-This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are sent. For more details see the use cases: <<start_transaction_options,E01 - Start Transaction options>>.
+This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are sent. For more details see the use cases: <<e01_start_transaction_options,E01 - Start Transaction options>>.
 |===
 
 ==== E03 - Start Transaction - IdToken First - Requirements
@@ -677,7 +677,7 @@ image::part2/images/figure_47.svg[Sequence Diagram: Transaction started while Ch
 |8   |Remark(s)         
   |The scenario description and sequence diagram above are based on the Configuration Variable for start transaction being configured as follows: +
   <<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
-  This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are sent. For more details see the use cases: <<start_transaction_options,E01 - Start Transaction options>>.
+  This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are sent. For more details see the use cases: <<e01_start_transaction_options,E01 - Start Transaction options>>.
 |===
 
 ==== E04 - Transaction started while Charging Station is offline - Requirements
@@ -766,7 +766,7 @@ image::part2/images/figure_48.svg[Sequence Diagram: Start Transaction - Id not A
   |The scenario description and sequence diagram above are based on the Configuration Variable for start & stop transaction being configured as follows: +
   <<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
   <<tx_stop_point,`TxStopPoint`>>: <<tx_start_stop_point_values,ParkingBayOccupancy, EVConnected>> +
-  This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are sent. For more details see the use cases: <<start_transaction_options,E01 - Start Transaction options>> and <<e06_stop_transaction_options,E06 - Stop Transaction options>>.
+  This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are sent. For more details see the use cases: <<e01_start_transaction_options,E01 - Start Transaction options>> and <<e06_stop_transaction_options,E06 - Stop Transaction options>>.
 |===
 
 ==== E05 - Start Transaction - Id not Accepted - Requirements

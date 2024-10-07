@@ -1,0 +1,72 @@
+@startuml figure_65
+!include style.puml
+
+participant "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+activate EVDriver
+
+EVDriver -> ChargingStation: Plugin cable
+activate ChargingStation
+
+ChargingStation -> CSMS: StatusNotificationRequest(Occupied)
+activate CSMS
+
+CSMS --> ChargingStation: StatusNotificationResponse()
+deactivate CSMS
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Started, triggerReason = CablePluggedIn,\
+  \nchargingState = EVConnected, transactionId = AB1234,\
+  \nevse.id = 1, evse.connectorId = 1, meterValues, ...)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate ChargingStation
+deactivate CSMS
+
+EVDriver -> CSMS: remote start()
+activate CSMS
+
+CSMS -> ChargingStation: RequestStartTransactionRequest(idToken, remoteStartId = 123)
+activate ChargingStation
+
+ChargingStation --> CSMS: RequestStartTransactionResponse(status = Accepted, transactionId = AB1234)
+
+CSMS -> CSMS: \
+  Match remoteStartId\
+  \nwith TransactionId()
+
+opt
+  CSMS -> EVDriver: notification
+  deactivate CSMS
+  deactivate EVDriver
+end
+
+alt AuthorizeRemoteStart = true
+  ChargingStation -> CSMS: AuthorizeRequest(idToken)
+  activate CSMS
+
+  CSMS --> ChargingStation: AuthorizeResponse(idTokenInfo)
+  deactivate CSMS
+end
+
+alt if cable not permanently attached
+  ChargingStation -> ChargingStation: lock connector
+end
+
+ChargingStation -> ChargingStation: start energy offer
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Updated, chargingState = Charging,\
+  \ntriggerReason = RemoteStart, remoteStartId = 123, ...)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate CSMS
+deactivate ChargingStation
+
+ChargingStation ->o] :continue regular transaction
+
+@enduml

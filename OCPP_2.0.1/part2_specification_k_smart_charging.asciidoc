@@ -268,7 +268,7 @@ In internal load balancing scenarios, the Charging Station has one or more local
 limit the power or current to be shared by all EVSEs of the Charging Station. The CSMS SHALL configure
 such a profile with ChargingProfilePurpose set to " ChargingStationMaxProfile ".
 ChargingStationMaxProfile can only be set at Charging Station evseId 0.
-TxProfile A transaction-specific profile with purpose TxProfile overrules the TxDefaultProfile for the duration of
+[[tx_profile]]TxProfile A transaction-specific profile with purpose TxProfile overrules the TxDefaultProfile for the duration of
 the current transaction only or until the TxProfile expires, whichever occurs earlier.
 TxDefaultProfile Default schedules for new transactions that MAY be used to impose charging policies. An example
 could be a policy that prevents charging during the day.
