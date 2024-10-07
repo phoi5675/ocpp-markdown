@@ -2118,7 +2118,7 @@ connectorId >= 0 |1..1 |필수. 여기에는 예약할 커넥터의 ID가 포함
 |===
 |필드 이름 |필드 유형 |카디널리티 |설명
 
-|**status** |<<reservation_status,ReservationStatus>> |1..1 |필수. 예약의 성공 또는 실패를 나타냅니다.
+|**status** |<<h_reservation_status,ReservationStatus>> |1..1 |필수. 예약의 성공 또는 실패를 나타냅니다.
 |===
 
 [[reset_req]]
@@ -3747,7 +3747,7 @@ _Enumeration_
 |**Required/optional** |optional
 |**Accessibility** |R
 |**Type** |boolean
-|**Description** |이 구성 키가 있고 _true_ 로 설정: 충전기가 커넥터 0에서 <<reservations,reservations>>를 지원합니다.
+|**Description** |이 구성 키가 있고 _true_ 로 설정: 충전기가 커넥터 0에서 <<h_reservations,reservations>>를 지원합니다.
 |===
 
 [[smart_charging_profile]]

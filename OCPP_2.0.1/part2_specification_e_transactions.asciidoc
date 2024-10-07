@@ -490,7 +490,7 @@ image::part2/images/figure_45.svg[Sequence Diagram: Start Transaction - Cable Pl
 |E02.FR.02  |E02.FR.01            |The CSMS SHALL send a <<transaction_event_response,TransactionEventResponse>> that includes an authorization status value. |{nbsp}
 |E02.FR.03  |This transaction ends a reservation.
   |The next <<transaction_event_request,TransactionEventRequest>> SHALL contain the reservationId.
-    |See <<reservation,H. Reservation>>.
+    |See <<h_reservation,H. Reservation>>.
 |E02.FR.04  |{nbsp}               |The CSMS SHALL verify the validity of the identifier in <<transaction_event_request,TransactionEventRequest>>.
   |Because the identifier might have been authorized locally by the Charging Station using outdated information.
 |E02.FR.05  |When a cable is plugged in
@@ -596,7 +596,7 @@ This use-case is also valid for other configurations, but then the transaction m
 |E03.FR.02  |E03.FR.01            |The CSMS SHALL send a <<transaction_event_response,TransactionEventResponse>> that includes an authorization status. |{nbsp}
 |E03.FR.03  |This transaction ends a reservation for the specific IdToken.
   |The next <<transaction_event_request,TransactionEventRequest>> SHALL contain the reservationId.
-    |See <<reservation,H. Reservation>>.
+    |See <<h_reservation,H. Reservation>>.
 |E03.FR.05  |When the EV Driver does not plug-in the charging cable before the timeout set by the Configuration Variable: <<ev_connection_timeout,`EVConnectionTimeOut`>> AND TxStopPoint does not contain `ParkingBayOccupancy`
   |The Charging Station SHOULD end the transaction and send a <<transaction_event_request,TransactionEventRequest>> (eventType = Ended, stoppedReason = Timeout, _triggerReason_ = `EVConnectionTimeout`) to the CSMS.
     |This requirement is an additional safety measure to make sure the transaction is ended when the <<ev_connection_timeout,`EVConnectionTimeOut`>> is triggered. However it is up to the CSMS to make sure that sensible TxStartPoint / TxStopPoint combinations are configured. E.g. if Authorized is used as TxStartPoint, it should also be used as TxStopPoint.
@@ -719,7 +719,7 @@ multiple <<transaction_event_request,TransactionEventRequest>>(<<transaction_eve
 |E04.FR.11  |When configured to send meter data in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Started>>), See: <<metervalues_configuration,Meter Values - Configuration>> +
   AND +
   EVSE is not known at start of transaction
-    |The Charging Station SHALL add the measurands for _eventType_ = `Started` to the optional meterValue field with _context_ = `Transaction.Begin` in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) that occurs when charging starts. |{nbsp}
+    |The Charging Station SHALL add the measurands for _eventType_ = `Started` to the optional meterValue field with _context_ = `Transaction.Begin` in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) that occurs when charging starts.
 |===
 
 <<<
@@ -1644,8 +1644,8 @@ As an example, consider a Charging Station that has the value "3" for the <<mess
   |There are scenarios where a CSMS needs to know whether there are still messages for a transaction that need to be delivered. For example: A CSMS receives a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>), it wants to start the billing process for this transaction but detects it is still missing some intermediate messages (it can check this via the sequence number in the messages). It can ask if the Charging Station has still messages in the queue for this transaction with the <<get_transaction_status_request,GetTransactionStatusRequest>> specifying the transactionId. Depending on the result the CSMS might for example: wait for the messages to be delivered, or start the billing process without the information. It may also need to know whether a transaction is still ongoing. If the CSMS wants to know if there are transaction-related messages in the queue at all (not just for a specific transaction), it can send a <<get_transaction_status_request,GetTransactionStatusRequest>> without a transactionId.
 |{nbsp} d|_Actors_    |CSMS, Charging Station
 |{nbsp} d|_Scenario description_ 
-  |**1.** The CSMS sends a <<get_transaction_status_request,GetTransactionStatusRequest>> with or without a transactionId to the Charging Station.
-  |**2.** The Charging Station responds with a <<get_transaction_status_response,GetTransactionStatusResponse>>.
+  |**1.** The CSMS sends a <<get_transaction_status_request,GetTransactionStatusRequest>> with or without a transactionId to the Charging Station. +
+  **2.** The Charging Station responds with a <<get_transaction_status_response,GetTransactionStatusResponse>>.
 |5   |Prerequisites   |The CSMS knows the transactionId of a transaction it wants to know the status of.
 |6   |Postcondition(s) 
   |**Successful postcondition:** +

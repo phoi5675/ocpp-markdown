@@ -1,4 +1,4 @@
-[[reservation]]
+[[h_reservation]]
 = H. Reservation
 :!chapter-number:
 

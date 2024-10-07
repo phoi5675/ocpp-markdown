@@ -1,0 +1,101 @@
+@startuml figure_66
+!include style.puml
+
+participant "External Trigger" as ExternalTrigger
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+note left of ChargingStation
+  TxStartPoint = Authorized
+end note
+
+ExternalTrigger -> CSMS: remote start()
+activate ExternalTrigger
+activate CSMS
+
+CSMS -> ChargingStation: RequestStartTransactionRequest(idToken = ABCD, remoteStartId = 123)
+activate ChargingStation
+
+ChargingStation -> CSMS: RequestStartTransactionResponse(status = Accepted)
+deactivate ChargingStation
+
+opt
+  CSMS -> ExternalTrigger: notification
+  deactivate CSMS
+end
+deactivate ExternalTrigger
+
+opt AuthorizeRemoteStart = true
+  ChargingStation -> CSMS: AuthorizeRequest(idToken = ABCD)
+  activate ChargingStation
+  activate CSMS
+
+  CSMS --> ChargingStation: AuthorizeResponse(idTokenInfo)
+  deactivate CSMS
+  deactivate ChargingStation
+end
+
+note left of ChargingStation
+  Using triggerReason = RemoteStart instead of Authorized! (F02.FR.21)
+end note
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Started, transactionId = AB1234, \
+  \nidToken = ABCD, meterValues, \
+  \ntriggerReason = RemoteStart, remoteStartId = 123, ...)
+activate CSMS
+activate ChargingStation
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate ChargingStation
+deactivate CSMS
+
+alt within ConnectionTimeOut
+  ExternalTrigger -> ChargingStation: Plugin cable
+
+  ChargingStation -> CSMS: StatusNotificationRequest(Occupied)
+  activate ChargingStation
+  activate CSMS
+
+  CSMS --> ChargingStation: StatusNotificationResponse()
+  deactivate ChargingStation
+  deactivate CSMS
+
+  ChargingStation -> CSMS: \
+    TransactionEventRequest(eventType = Updated, chargingState = EVConnected, \
+    \nevse.id = 1, evse.connectorId = 1, triggerReason = CablePluggedIn, ...)
+  activate ChargingStation
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse(...)
+  deactivate CSMS
+  deactivate ChargingStation
+
+  opt if cable not permanently\nattached
+    ChargingStation -> ChargingStation: lock connector
+  end
+
+  ChargingStation -> ChargingStation: start energy offer
+
+  ChargingStation -> CSMS: \
+    TransactionEventRequest(eventType = Updated, chargingState = Charging, \
+    \ntriggerReason = ChargingStateChanged, ...)
+  activate ChargingStation
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse(...)
+  deactivate ChargingStation
+  deactivate CSMS
+else not within ConnectionTimeOut
+  ChargingStation -> CSMS: \
+    TransactionEventRequest(eventType = Ended, stoppedReason = Timeout, \
+    \ntriggerReason = EVConnectTimeout...)
+  activate ChargingStation
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse(...)
+  deactivate ChargingStation
+  deactivate CSMS
+end
+
+@enduml
