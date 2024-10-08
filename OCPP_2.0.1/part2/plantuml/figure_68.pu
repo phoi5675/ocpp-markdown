@@ -1,0 +1,59 @@
+@startuml figure_68
+!include style.puml
+
+participant "External Trigger" as ExternalTrigger
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+ExternalTrigger -> CSMS: remote stop()
+activate ExternalTrigger
+activate CSMS
+
+CSMS -> ChargingStation: RequestStopTransactionRequest(transactionId)
+activate ChargingStation
+
+ChargingStation --> CSMS: RequestStopTransactionResponse(Accepted)
+
+opt
+  CSMS -> ExternalTrigger: notification
+  deactivate CSMS
+end
+
+ChargingStation -> ChargingStation: stop energy offer
+
+opt if cable not permanently attached
+  ChargingStation -> ChargingStation: Unlock connector
+end
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Updated, chargingState = EVConnected,\
+  \ntriggerReason = RemoteStop, ...)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate ChargingStation
+
+opt
+  CSMS -> ExternalTrigger: notification
+  deactivate CSMS
+end
+
+ExternalTrigger -> ChargingStation: Unplug cable
+activate ChargingStation
+
+ChargingStation -> CSMS: StatusNotificationRequest(Available)
+activate CSMS
+
+CSMS --> ChargingStation: StatusNotificationResponse()
+deactivate CSMS
+deactivate ChargingStation
+
+ChargingStation -> CSMS: TransactionEventRequest(eventType = Ended, stoppedReason = Remote, ...)
+activate ChargingStation
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate ChargingStation
+deactivate CSMS
+
+@enduml

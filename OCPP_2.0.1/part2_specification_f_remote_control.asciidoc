@@ -308,183 +308,83 @@ s|NOTE |Requirements of previous use case: <<f01_remote_start_transaction_cable_
 
 <<<
 
-==== F03 - Remote Stop Transaction.
+==== F03 - Remote Stop Transaction
 
-_Table 128. F03 - Remote Stop Transaction_
+.F03 - Remote Stop Transaction
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
+|1   |Name            |Remote Stop Transaction
+|2   |ID              |F03
+|{nbsp} d|_Functional block_ |F. Remote Control
+|3   |Objective(s) 
+  |**1.** To enable a CSO to help an EV Driver who has problems stopping a transaction. _or_ +
+  **2.** Enable mobile apps to control transactions via the CSMS.
+|4   |Description     |This use case describes how the CSMS requests the Charging Station to stop a transaction.
+|{nbsp} d|_Actors_    |Charging Station, CSMS, CSO, EV Driver
+|{nbsp} d|_Scenario description_ 
+  |**1.** An External Trigger triggers a remote stop. +
+  **2.** The CSMS requests a Charging Station to stop a transaction by sending <<request_stop_transaction_request,RequestStopTransactionRequest>> to the Charging Station with the transactionId of the transaction. +
+  **3.** The Charging Station responds with <<request_stop_transaction_response,RequestStopTransactionResponse>> and a status indicating whether it has accepted the request and a transaction with the given transactionId is ongoing and will be stopped. +
+  **4.** Charging is stopped, the Charging Station sends <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>) and, if applicable, unlocks the Connector. +
+  **5.** After the EV Driver unplugs the cable, the Charging Station sends <<status_notification_request,StatusNotificationRequest>> with status _Available_. +
+  **6.** The Charging Station ends the transaction and sends a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = _Ended_>>, <<reason_enum_type,stoppedReason = _Remote_>>) message to the CSMS.
+|5   |Prerequisite(s)  |A transaction is ongoing.
+|6   |Postcondition(s) 
+  |**Successful postcondition:** +
+  The transaction for which a stop was request has ended. +
+  **Failure postcondition:** +
+  The transaction for which a stop was requested is still ongoing.
+|===
 
-No. Type Description
-1 Name Remote Stop Transaction
-2 ID F03
-Functional block F. Remote Control
+.Sequence Diagram: Remote Stop Transaction
+image::part2/images/figure_68.svg[Sequence Diagram: Remote Stop Transaction]
 
-**3 Objective(s)** (^) **1.** To enable a CSO to help an EV Driver who has problems stopping a transaction. _or_
-
-**2.** Enable mobile apps to control transactions via the CSMS.
-**4 Description** This use case describes how the CSMS requests the Charging Station to stop a transaction.
-_Actors_ Charging Station, CSMS, CSO, EV Driver
-
-_Scenario description_ (^) **1.** An External Trigger triggers a remote stop.
-
-**2.** The CSMS requests a Charging Station to stop a transaction by sending
-RequestStopTransactionRequest to the Charging Station with the transactionId of the
-transaction.
-**3.** The Charging Station responds with RequestStopTransactionResponse and a status indicating
-whether it has accepted the request and a transaction with the given transactionId is ongoing and
-will be stopped.
-**4.** Charging is stopped, the Charging Station sends TransactionEventRequest (eventType =
-Updated) and, if applicable, unlocks the Connector.
-**5.** After the EV Driver unplugs the cable, the Charging Station sends StatusNotificationRequest
-with status _Available_.
-**6.** The Charging Station ends the transaction and sends a TransactionEventRequest (eventType =
-_Ended_ , stoppedReason  _Remote_ ) message to the CSMS.
-**5 Prerequisite(s)** A transaction is ongoing.
-
-**6 Postcondition(s)** (^) **Successful postcondition:**
-The transaction for which a stop was request has ended.
-**Failure postcondition:**
-The transaction for which a stop was requested is still ongoing.
-Edition 3 FINAL, 2024-05-06 **F. RemoteControl**
-
-
-
-External Trigger
-
-
-CSMS Charging Station
-
-
-remote stop()
-RequestStopTransactionRequest(transactionId)
-RequestStopTransactionResponse(Accepted)
-
-
-opt
-notification
-
-
-stop energy offer
-
-
-opt [if cable not permanently attached]
-Unlock connector
-
-
-TransactionEventRequest(eventType  Updated, chargingState  EVConnected,
-triggerReason  RemoteStop, ...)
-TransactionEventResponse(...)
-
-
-opt
-notification
-
-
-Unplug cable
-StatusNotificationRequest(Available)
-StatusNotificationResponse()
-TransactionEventRequest(eventType  Ended, stoppedReason  Remote, ...)
-TransactionEventResponse(...)
-
-_Figure 68. Sequence Diagram: Remote Stop Transaction_
-
-
-7 Remark(s) This remote request to stop a transaction is equal to a local action to stop a
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Remark(s)   |This remote request to stop a transaction is equal to a local action to stop a
 transaction.
 
+  The scenario description and sequence diagram above are based on the Configuration Variable for stop transaction being configured as follows. <<tx_stop_point,`TxStopPoint`>>: <<tx_start_stop_point_values,ParkingBayOccupancy, EVConnected>> +
+  This use-case is also valid for other configurations, but then the transaction might stop at another moment, which might change the sequence in which message are send. For more details see the use case: <<e06_stop_transaction_options,E06 - Stop Transaction options>>
+|===
 
-The scenario description and sequence diagram above are based on the Configuration
-Variable for stop transaction being configured as follows.
-TxStopPoint: ParkingBayOccupancy, EVConnected
-This use-case is also valid for other configurations, but then the transaction might stop
-at another moment, which might change the sequence in which message are send. For
-more details see the use case: E06 - Stop Transaction options
+==== F03 - Remote Stop Transaction - Requirements
 
-**F03 - Remote Stop Transaction - Requirements**
+.F03 - Requirements
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
 
-_Table 129. F03 - Requirements_
+|F03.FR.01  |When the CSMS receives a remote stop transaction trigger (For example when terminating using a smartphone app, exceeding a (non local) prepaid credit.)
+  |The CSMS SHALL send a <<request_stop_transaction_request,RequestStopTransactionRequest>> to the Charging Station with the transactionId of the transaction. |{nbsp}
+|F03.FR.02  |F03.FR.01 AND +
+TxStopPoint configuration does not cause transaction to end (E.g. TxStopPoint is NOT `Authorized` or `PowerPathClosed`)
+  |The Charging Station SHALL stop the energy offer and send a <<transaction_event_request,TransactionEventRequest>> (_eventType_ = `Updated`, _triggerReason_ = `RemoteStop`) to the CSMS.
+    |For example when TxStopPoint = `EVConnected` the transaction will not be ended until EV is disconnected.
+|F03.FR.03  |F03.FR.01 AND +
+  TxStopPoint configuration causes transaction to end (E.g. TxStopPoint is `Authorized` or `PowerPathClosed`)
+    |The Charging Station SHALL send a <<transaction_event_request,TransactionEventRequest>> ( _eventType_ = `Ended`, _triggerReason_ = `RemoteStop`, _stoppedReason_ = `Remote`) to the CSMS. |{nbsp}
+|F03.FR.04  |When configured to send meter data in the <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>), See: <<metervalues_configuration,Meter Values - Configuration>>
+  |The Charging Station SHALL add the configured measurands to the optional meterValue field in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>) sent to the CSMS to provide more details about transaction usage. |{nbsp}
+|F03.FR.05  |F03.FR.04 +
+  AND +
+  The Charging Station is running low on memory
+    |The Charging Station MAY drop meter data. |{nbsp}
+|F03.FR.06  |F03.FR.05
+  |When dropping meter data, the Charging Station SHALL drop intermediate values first (1st value, 3th value, 5th etc), not start dropping values from the start of the list or stop adding values to the list. |{nbsp}
+|F03.FR.07  |When the Charging Station receives a <<request_stop_transaction_request,RequestStopTransactionRequest>>
+  |And the TransactionId can be matched to an active transaction; the Charging Station SHALL respond with a <<request_stop_transaction_response,RequestStopTransactionResponse>> with status set to _Accepted_. |{nbsp}
+|F03.FR.08  |When the Charging Station receives a <<request_stop_transaction_request,RequestStopTransactionRequest>>
+  |And the TransactionId cannot be matched to an active transaction; the Charging Station SHALL respond with a <<request_stop_transaction_response,RequestStopTransactionResponse>> with status set to _Rejected_. |{nbsp}
+|F03.FR.09  |When sending a <<transaction_event_request,TransactionEventRequest>>
+  |The Charging Station SHALL set the <<trigger_reason_enum_type,triggerReason>> to inform the CSMS about what triggered the event. What reason to use is described in the description of <<trigger_reason_enum_type,TriggerReasonEnumType>>.
+|===
 
+<<<
 
-ID Precondition Requirement definition Note
-F03.FR.01 When the CSMS receives a remote
-stop transaction trigger (For example
-when terminating using a smartphone
-app, exceeding a (non local) prepaid
-credit.)
-
-
-The CSMS SHALL send a
-RequestStopTransactionRequest to the Charging
-Station with the transactionId of the transaction.
-
-F03.FR.02 (^) F03.FR.01 AND
-TxStopPoint configuration does not
-cause transaction to end (E.g.
-TxStopPoint is NOT Authorized or
-PowerPathClosed)
-The Charging Station SHALL stop the energy offer
-and send a TransactionEventRequest ( _eventType_ =
-Updated, _triggerReason_  RemoteStop) to the
-CSMS.
-For example when
-TxStopPoint =
-EVConnected the
-transaction will not be
-ended until EV is
-disconnected.
-F03.FR.03 (^) F03.FR.01 AND
-TxStopPoint configuration causes
-transaction to end (E.g. TxStopPoint is
-Authorized or PowerPathClosed)
-The Charging Station SHALL send a
-TransactionEventRequest ( _eventType_  Ended,
-_triggerReason_  RemoteStop, _stoppedReason_ =
-Remote) to the CSMS.
-Edition 3 FINAL, 2024-05-06 **F. RemoteControl**
-
-
-
-ID Precondition Requirement definition Note
-F03.FR.04 When configured to send meter data
-in the TransactionEventRequest
-(eventType  Ended), See: Meter
-Values - Configuration
-
-
-The Charging Station SHALL add the configured
-measurands to the optional meterValue field in the
-TransactionEventRequest(eventType  Ended) sent
-to the CSMS to provide more details about
-transaction usage.
-
-F03.FR.05 (^) F03.FR.04
-AND
-The Charging Station is running low on
-memory
-The Charging Station MAY drop meter data.
-F03.FR.06 F03.FR.05 When dropping meter data, the Charging Station
-SHALL drop intermediate values first (1st value, 3th
-value, 5th etc), not start dropping values from the
-start of the list or stop adding values to the list.
-F03.FR.07 When the Charging Station receives a
-RequestStopTransactionRequest
-And the TransactionId can be matched to an active
-transaction; the Charging Station SHALL respond
-with a RequestStopTransactionResponse with
-status set to _Accepted_.
-F03.FR.08 When the Charging Station receives a
-RequestStopTransactionRequest
-And the TransactionId cannot be matched to an
-active transaction; the Charging Station SHALL
-respond with a RequestStopTransactionResponse
-with status set to _Rejected_.
-F03.FR.09 When sending a
-TransactionEventRequest
-The Charging Station SHALL set the triggerReason
-to inform the CSMS about what triggered the event.
-What reason to use is described in the description
-of TriggerReasonEnumType.
-
-==== F04 - Remote Stop ISO 15118 Charging from CSMS
+=== F04 - Remote Stop ISO 15118 Charging from CSMS
 
 _Table 130. F04 - Charging loop with interrupt from the CSMS_
 
@@ -504,12 +404,12 @@ See ISO15118-1, use case Prerequisites F2, page 38.
 **7 Combined scenario
 description**
 
-===== OCPP:
+**OCPP:**
 
 **1.** The CSMS sends a RequestStopTransactionRequest to the Charging Station.
 **2.** The Charging Station responds with a RequestStopTransactionResponse.
 
-===== ISO 15118:
+**ISO 15118:**
 
 **3.** The EV sends a ChargingStatus (in case of AC charging) or CurrentDemandReq (in case of DC
 Charging) PDU to the Charging Station.
