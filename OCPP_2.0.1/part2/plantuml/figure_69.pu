@@ -1,0 +1,34 @@
+@startuml figure_69
+!include style.puml
+
+participant "EV" as EV
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+CSMS -> ChargingStation: RequestStopTransactionRequest(transactionId)
+activate CSMS
+activate ChargingStation
+
+ChargingStation --> CSMS: RequestStopTransactionResponse(Accepted)
+deactivate CSMS
+deactivate ChargingStation
+
+alt if AC Charging
+  EV -> ChargingStation: ChargingStatusReq()
+  activate EV
+  activate ChargingStation
+
+  ChargingStation --> EV: ChargingStatusRes(EVSENotification=StopCharging)
+  deactivate EV
+  deactivate ChargingStation
+else if DC Charging
+  EV -> ChargingStation: CurrentDemandReq()
+  activate EV
+  activate ChargingStation
+
+  ChargingStation --> EV: CurrentDemandRes(EVSENotification=StopCharging)
+  deactivate EV
+  deactivate ChargingStation
+end
+
+@enduml

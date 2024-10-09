@@ -386,61 +386,42 @@ TxStopPoint configuration does not cause transaction to end (E.g. TxStopPoint is
 
 === F04 - Remote Stop ISO 15118 Charging from CSMS
 
-_Table 130. F04 - Charging loop with interrupt from the CSMS_
+.F04 - Charging loop with interrupt from the CSMS
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
+|1   |Name            |Remote Stop ISO 15118 Charging from CSMS
+|2   |ID              |F04
+|{nbsp} d|_Functional block_  |F. Remote Control
+|{nbsp} d|_Reference_ |<<iso15118_1,ISO15118-1>> F2 Charging loop with interrupt from the SECC.
+|3   |Objective(s)    |See <<iso15118_1,ISO15118-1>>, use case Objective F2, page 38.
+|4   |Description     |See <<iso15118_1,ISO15118-1>>, use case Description F2, page 38.
+|{nbsp} d|Actors      |EV, EVSE, Charging Station
+|6   |Prerequisite(s) 
+  |- If authorization according use cases in Functional Block C is applied, it SHALL be finished successfully. +
+  See <<iso15118_1,ISO15118-1>>, use case Prerequisites F2, page 38.
+|7   |Combined scenario description
+  |**OCPP:** +
+  **1.** The CSMS sends a <<request_stop_transaction_request,RequestStopTransactionRequest>> to the Charging Station. +
+  **2.** The Charging Station responds with a <<request_stop_transaction_response,RequestStopTransactionResponse>>.
 
-No. Type Description
+  **ISO 15118:** +
+  **3.** The EV sends a ChargingStatus (in case of AC charging) or CurrentDemandReq (in case of DC Charging) PDU to the Charging Station. +
+  **4.** The Charging Station responds with an EVSENotification = StopCharging.
+|8   |Postcondition(s) |See <<iso15118_1,ISO15118-1>>, use case End conditions F2, page 38.
+|===
 
-**1 Name** (^) Remote Stop ISO 15118 Charging from CSMS
-**2 ID** F04
-_Functional block_ F. Remote Control
-_Reference_ ISO15118-1 F2 Charging loop with interrupt from the SECC.
-**3 Objectives** (^) See ISO15118-1, use case Objective F2, page 38.
-**4 Description** (^) See ISO15118-1, use case Description F2, page 38.
-**5** Actors EV, EVSE, Charging Station
-**6 Prerequisites** - If authorization according use cases in Functional Block C is applied, it SHALL be finished
-successfully.
-See ISO15118-1, use case Prerequisites F2, page 38.
-**7 Combined scenario
-description**
+.Charging loop with interrupt from the Charging Station
+image::part2/images/figure_69.svg[Charging loop with interrupt from the Charging Station]
 
-**OCPP:**
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|9   |Error handling    |n/a
+|10  |Remark(s)         |n/a
+|===
 
-**1.** The CSMS sends a RequestStopTransactionRequest to the Charging Station.
-**2.** The Charging Station responds with a RequestStopTransactionResponse.
-
-**ISO 15118:**
-
-**3.** The EV sends a ChargingStatus (in case of AC charging) or CurrentDemandReq (in case of DC
-Charging) PDU to the Charging Station.
-**4.** The Charging Station responds with an EVSENotification  StopCharging.
-
-**8 Postcondition(s)** (^) See ISO15118-1, use case End conditions F2, page 38.
-Edition 3 FINAL, 2024-05-06 **F. RemoteControl**
-
-
-
-EV Charging Station CSMS
-
-
-RequestStopTransactionRequest(transactionId)
-RequestStopTransactionResponse(Accepted)
-
-
-alt [if AC Charging]
-ChargingStatusReq()
-ChargingStatusRes(EVSENotification=StopCharging)
-[if DC Charging]
-CurrentDemandReq()
-CurrentDemandRes(EVSENotification=StopCharging)
-
-_Figure 69. Charging loop with interrupt from the Charging Station_
-
-
-9 Error handling n/a
-10 Remark(s) n/a
-
-**F04 - Remote Stop ISO 15118 Charging from CSMS - Requirements**
+==== F04 - Remote Stop ISO 15118 Charging from CSMS - Requirements
 
 _These requirements are normative._
 
@@ -469,7 +450,7 @@ the CSMS.
 Cable unlocked if not
 permanently attached.
 
-F04.FR.03 (^) F04.FR.02 AND
+F04.FR.03  F04.FR.02 AND
 When the EV Driver unplugs the cable.
 The Charging Station SHALL send a
 TransactionEventRequest (eventType  _Ended_ ,
@@ -483,7 +464,7 @@ measurands to the optional meterValue field in the
 TransactionEventRequest(eventType  Ended) sent
 to the CSMS to provide more details about
 transaction usage.
-F04.FR.05 (^) F04.FR.04
+F04.FR.05  F04.FR.04
 AND
 The Charging Station is running low on
 memory
@@ -523,9 +504,9 @@ UnlockConnectorResponse.
 **4.** The response message indicates whether the Charging Station was able to unlock its
 Connector.
 
-**5 Prerequisite(s)** (^) No ongoing transaction on the specified connector
+**5 Prerequisite(s)**  No ongoing transaction on the specified connector
 The Charging Station has a connector lock.
-**6 Postcondition(s)** (^) The Charging Station was able to unlock the Connector.
+**6 Postcondition(s)**  The Charging Station was able to unlock the Connector.
 External Trigger
 CSMS Charging Station
 unlock connector
@@ -551,7 +532,7 @@ Edition 3 FINAL, 2024-05-06 **F. RemoteControl**
 
 ID Precondition Requirement definition
 
-F05.FR.02 (^) F05.FR.01
+F05.FR.02  F05.FR.01
 AND
 There is a an authorized transaction ongoing on
 the specified connector.
@@ -559,24 +540,24 @@ The Charging Station SHALL NOT try to unlock the connector (or
 stop the transaction) but use the status:
 OngoingAuthorizedTransaction in the
 UnlockConnectorResponse.
-F05.FR.03 (^) F05.FR.01
+F05.FR.03  F05.FR.01
 AND
 Specified connector unknown.
 The Charging Station SHALL use the status: UnknownConnector
 in the UnlockConnectorResponse.
-F05.FR.04 (^) F05.FR.01
+F05.FR.04  F05.FR.01
 AND
 The Charging Station was able to unlock the
 specified connector.
 The Charging Station SHALL use the status: Unlocked in the
 UnlockConnectorResponse.
-F05.FR.05 (^) F05.FR.01
+F05.FR.05  F05.FR.01
 AND
 The Charging Station was NOT able to unlock
 the specified connector.
 The Charging Station SHALL use the status: UnlockFailed in the
 UnlockConnectorResponse.
-F05.FR.06 (^) F05.FR.01 AND
+F05.FR.06  F05.FR.01 AND
 No cable is connected to the connector.
 The Charging Station SHALL attempt to unlock the connector,
 even if no cable is detected and SHALL return the result of the
@@ -601,14 +582,14 @@ request a Charging Station to send Charging Station-initiated messages. In the r
 indicates which message it wishes to receive.
 Actors Charging Station, CSMS
 
-_Scenario description_ (^) **1.** The CSMS sends a TriggerMessageRequest to the Charging Station.
+_Scenario description_  **1.** The CSMS sends a TriggerMessageRequest to the Charging Station.
 
 **2.** The Charging Station responds with a TriggerMessageResponse, indicating whether it will send
 it or not, by returning _Accepted_ , _Rejected_ or _NotImplemented_.
 **3.** Message, requested by the CSMS, that the Charging Station marked as _Accepted_ , is being sent.
 **5 Prerequisite(s)** The Functional Block _Remote Trigger_ is installed.
 
-**6 Postcondition(s)** (^) **Successful postconditions:**
+**6 Postcondition(s)**  **Successful postconditions:**
 
 **1.** The CSMS has _Successfully_ received a TriggerMessageResponse message.
 **2.** The CSMS has _Successfully_ received a TriggerMessageResponse message with status
@@ -647,7 +628,7 @@ _Figure 72. Sequence Diagram: Trigger Message Example_
 
 7 Error handling n/a
 
-**8 Remark(s)** (^) The TriggerMessage mechanism is not intended to retrieve historic data.
+**8 Remark(s)**  The TriggerMessage mechanism is not intended to retrieve historic data.
 Edition 3 FINAL, 2024-05-06 **F. RemoteControl**
 
 
@@ -661,7 +642,7 @@ F06.FR.01 In the TriggerMessageRequest message, the CSMS
 SHALL indicate which message(s) it wishes to
 receive.
 
-F06.FR.02 (^) F06.FR.01.
+F06.FR.02  F06.FR.01.
 For every such requested message.
 The CSMS MAY indicate to which EVSE this request
 applies.
