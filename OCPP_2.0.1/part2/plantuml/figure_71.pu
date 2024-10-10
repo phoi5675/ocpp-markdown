@@ -1,0 +1,15 @@
+@startuml figure_71
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+CSMS -> ChargingStation: TriggerMessageRequest(requestedMessage, ...)
+activate ChargingStation
+activate CSMS
+
+ChargingStation --> CSMS: TriggerMessageResponse(status)
+deactivate ChargingStation
+deactivate CSMS
+
+@enduml

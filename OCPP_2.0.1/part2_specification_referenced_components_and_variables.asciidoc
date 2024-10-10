@@ -1270,7 +1270,8 @@ variable. This way the CSMS knows which Measurands it can put in the SampledData
 
 If the Charging Station has a meter, recommended to use as default: "Energy.Active.Import.Register"
 
-**2.7.7.** SampledDataTxUpdatedMeasurands
+[[sampled_data_tx_updated_measurands]]
+==== `SampledDataTxUpdatedMeasurands`
 
 
 Required yes
@@ -1330,7 +1331,8 @@ variableAttributes mutability ReadOnly
 variableCharacteristics dataType boolean
 Description If this variable reports a value of true , Aligned Data is supported.
 
-**2.7.11.** AlignedDataMeasurands
+[[aligned_data_measurands]]
+==== `AlignedDataMeasurands`
 
 
 Required yes

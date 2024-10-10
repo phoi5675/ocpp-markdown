@@ -379,7 +379,7 @@ TxStopPoint configuration does not cause transaction to end (E.g. TxStopPoint is
 |F03.FR.08  |When the Charging Station receives a <<request_stop_transaction_request,RequestStopTransactionRequest>>
   |And the TransactionId cannot be matched to an active transaction; the Charging Station SHALL respond with a <<request_stop_transaction_response,RequestStopTransactionResponse>> with status set to _Rejected_. |{nbsp}
 |F03.FR.09  |When sending a <<transaction_event_request,TransactionEventRequest>>
-  |The Charging Station SHALL set the <<trigger_reason_enum_type,triggerReason>> to inform the CSMS about what triggered the event. What reason to use is described in the description of <<trigger_reason_enum_type,TriggerReasonEnumType>>.
+  |The Charging Station SHALL set the <<trigger_reason_enum_type,triggerReason>> to inform the CSMS about what triggered the event. What reason to use is described in the description of <<trigger_reason_enum_type,TriggerReasonEnumType>>. |{nbsp}
 |===
 
 <<<
@@ -520,242 +520,103 @@ image::part2/images/figure_70.svg[Sequence Diagram: Unlock Connector]
     |The Charging Station SHALL attempt to unlock the connector, even if no cable is detected and SHALL return the result of the unlock attempt.
 |===
 
+<<<
+
 :sectnums:
 === Remote Trigger
 
 :sectnums!:
 === F06 - Trigger Message
 
-_Table 134. F06 - Trigger Message_
+.F06 - Trigger Message
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
+|1   |Name            |Trigger Message
+|2   |ID              |F06
+|{nbsp} d|_Functional block_ |F. RemoteControl
+|3   |Objective(s)    |To enable the CSMS to request a Charging Station to send a Charging Station-initiated message.
+|4   |Description     |This use case describes the use of the <<trigger_message_request,TriggerMessageRequest>> message: how a CSMS can request a Charging Station to send Charging Station-initiated messages. In the request the CSMS indicates which message it wishes to receive.
+|{nbsp} d|_Actors_    |Charging Station, CSMS
+|{nbsp} d|_Scenario description_  
+  |**1.** The CSMS sends a <<trigger_message_request,TriggerMessageRequest>> to the Charging Station. +
+  **2.** The Charging Station responds with a <<trigger_message_response,TriggerMessageResponse>>, indicating whether it will send it or not, by returning _Accepted_, _Rejected_ or _NotImplemented_. +
+  **3.** Message, requested by the CSMS, that the Charging Station marked as _Accepted_, is being sent.
+|5   |Prerequisite(s) |The Functional Block _Remote Trigger_ is installed.
+|6   |Postcondition(s) 
+  |**Successful postconditions:** +
+  **1.** The CSMS has _Successfully_ received a <<trigger_message_response,TriggerMessageResponse>> message. +
+  **2.** The CSMS has _Successfully_ received a <<trigger_message_response,TriggerMessageResponse>> message with status _Accepted_ AND has _Successfully_ received the requested message. +
+  **Failure postconditions:** +
+  **1.** The CSMS has NOT received a <<trigger_message_response,TriggerMessageResponse>> message. +
+  **2.** The CSMS has _Successfully_ received a <<trigger_message_response,TriggerMessageResponse>> message with status _Accepted_ AND has NOT received the requested message.
+|===
 
-No. Type Description
-1 Name Trigger Message
-2 ID F06
-Functional block F. RemoteControl
-3 Objective(s) To enable the CSMS to request a Charging Station to send a Charging Station-initiated message.
-4 Description This use case describes the use of the TriggerMessageRequest message: how a CSMS can
-request a Charging Station to send Charging Station-initiated messages. In the request the CSMS
-indicates which message it wishes to receive.
-Actors Charging Station, CSMS
+.Sequence Diagram: Trigger Message
+image::part2/images/figure_71.svg[Sequence Diagram: Trigger Message]
 
-_Scenario description_  **1.** The CSMS sends a TriggerMessageRequest to the Charging Station.
+.Sequence Diagram: Trigger Message Example
+image::part2/images/figure_72.svg[Sequence Diagram: Trigger Message Example]
 
-**2.** The Charging Station responds with a TriggerMessageResponse, indicating whether it will send
-it or not, by returning _Accepted_ , _Rejected_ or _NotImplemented_.
-**3.** Message, requested by the CSMS, that the Charging Station marked as _Accepted_ , is being sent.
-**5 Prerequisite(s)** The Functional Block _Remote Trigger_ is installed.
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling    |n/a
+|8   |Remark(s)         |The TriggerMessage mechanism is not intended to retrieve historic data.
+|===
 
-**6 Postcondition(s)**  **Successful postconditions:**
+==== F06 - Trigger Message - Requirements
 
-**1.** The CSMS has _Successfully_ received a TriggerMessageResponse message.
-**2.** The CSMS has _Successfully_ received a TriggerMessageResponse message with status
-_Accepted_ AND has _Successfully_ received the requested message.
-**Failure postconditions:
-1.** The CSMS has NOT received a TriggerMessageResponse message.
-**2.** The CSMS has _Successfully_ received a TriggerMessageResponse message with status
-_Accepted_ AND has NOT received the requested message.
+.F06 - Requirements
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
 
-
-Charging Station CSMS
-
-
-TriggerMessageRequest(requestedMessage, ...)
-
-
-TriggerMessageResponse(status)
-
-_Figure 71. Sequence Diagram: Trigger Message_
-
-
-Charging Station CSMS
-
-
-TriggerMessageRequest(RequestedMessage: TransactionEvent, evse.id  1, ...)
-
-
-TriggerMessageResponse(Status: Accepted)
-TransactionEventRequest(eventType  Updated, trigger  Trigger, evse.id  1, chargingState  Charging, ...)
-
-
-TransactionEventResponse(...)
-
-_Figure 72. Sequence Diagram: Trigger Message Example_
-
-
-7 Error handling n/a
-
-**8 Remark(s)**  The TriggerMessage mechanism is not intended to retrieve historic data.
-Edition 3 FINAL, 2024-05-06 **F. RemoteControl**
-
-
-**F06 - Trigger Message - Requirements**
-
-_Table 135. F06 - Requirements_
-
-
-ID Precondition Requirement definition Note
-F06.FR.01 In the TriggerMessageRequest message, the CSMS
-SHALL indicate which message(s) it wishes to
-receive.
-
-F06.FR.02  F06.FR.01.
-For every such requested message.
-The CSMS MAY indicate to which EVSE this request
-applies.
-F06.FR.03 F06.FR.02 The requested message SHALL be leading. If the
-specified evseId is not relevant to the message, it
-SHALL be ignored. In such cases the requested
-message SHALL still be sent.
-F06.FR.04 If a Charging Station receives a
-TriggerMessageRequest.
-The Charging Station SHALL first send the
-TriggerMessage response, before sending the
-requested message.
-F06.FR.05 F06.FR.04 In the TriggerMessageResponse the Charging
-Station SHALL indicate whether it will send the
-requested message or not, by returning _Accepted_ or
-_Rejected_.
-It is up to the Charging
-Station if it accepts or
-rejects the request to
-send.
-F06.FR.06 If a Charging Station accepts a
-TriggerMessageRequest with
-_requestedMessage_ set to: _MeterValues_
-The Charging Station SHALL send a
-MeterValuesRequest to the CSMS with the most
-recent measurements for all measurands
-configured in Configuration Variable:
-AlignedDataMeasurands.
-F06.FR.07 If a Charging Station accepts a
-TriggerMessageRequest with
-_requestedMessage_ set to:
-_TransactionEvent_
-The Charging Station SHALL send a
-TransactionEventRequest to the CSMS with
-_triggerReason_  _Trigger_ , _transactionInfo_ with at
-least the _chargingState_ , and _meterValue_ with the
-most recent measurements for all measurands
-configured in Configuration Variable:
-SampledDataTxUpdatedMeasurands.
-F06.FR.08 When the Charging Station receives a
-TriggerMessageRequest with a
-requestedMessage that it has not
-implemented
-The Charging Station SHALL respond with
-TriggerMessageResponse with status
-_NotImplemented_.
-F06.FR.09 The messages it triggers SHALL only give current
-information.
-F06.FR.10 Messages that the Charging Station marks as
-_Accepted_ SHALL be sent.
-E.g. the situation could
-occur that, between
-accepting the request
-and actually sending the
-requested message, that
-same message gets sent
-because of normal
-operations. In such
-cases the message just
-sent MAY be considered
-as complying with the
-request.
-F06.FR.11 If the field evse is relevant but absent
-in the TriggerMessageRequest.
-The Charging Station SHALL interpret this as "for all
-allowed evse values".
-StatusNotifications can
-only be requested for a
-specific connector, see
-F06.FR.12/13
-F06.FR.12 If a Charging Station receives a
-TriggerMessageRequest with
-_requestedMessage_ set to:
-_StatusNotification_ AND
-( _evse_ is omitted OR
-_evse.connectorId_ is omitted )
-The Charging Station MAY respond with a
-TriggerMessageResponse with status _Rejected_.
-StatusNotification
-messages can only be
-requested at connector
-level.
-Edition 3 FINAL, 2024-05-06 **F. RemoteControl**
-
-
-
-ID Precondition Requirement definition Note
-F06.FR.13 When sending a
-TriggerMessageRequest with
-requestedMessage set to:
-StatusNotification
-
-
-The CSMS SHALL set the connectorId field StatusNotification
-messages can only be
-sent at connector level.
-
-
-F06.FR.14 If a Charging Station receives a
-TriggerMessageRequest with
-requestedMessage set to:
-LogStatusNotification AND
-The Charging Station is uploading a
-log file
-
-
-The Charging Station SHALL send a
-LogStatusNotificationRequest to the CSMS with
-status Uploading.
-
-
-F06.FR.15 If a Charging Station receives a
-TriggerMessageRequest with
-requestedMessage set to:
-LogStatusNotification AND
-The Charging Station is NOT
-uploading a log file
-
-
-The Charging Station SHALL send a
-LogStatusNotificationRequest to the CSMS with
-status Idle.
-
-
-F06.FR.16 If a Charging Station receives a
-TriggerMessageRequest with
-requestedMessage set to:
-FirmwareStatusNotification AND
-The Charging Station is not
-performing firmware update related
-tasks.
-
-
-The Charging Station SHALL send a
-FirmwareStatusNotificationRequest to the CSMS
-with status Idle.
-
-
-F06.FR.17 If Charging Station receives a
-TriggerMessageRequest with
-requestedMessage set to:
-BootNotification
-AND the response it received from
-CSMS to the last
-BootNotificationRequest was:
-Accepted
-
-
-Charging Station SHALL respond with a
-TriggerMessageResponse with status Rejected.
-
-
-A trigger to request a
-Charging Station to send
-a BootNotification is only
-meant to be used when
-the BootNotification has
-not yet been accepted.
-
+|F06.FR.01  |{nbsp}
+  |In the <<trigger_message_request,TriggerMessageRequest>> message, the CSMS SHALL indicate which message(s) it wishes to receive. |{nbsp}
+|F06.FR.02  |F06.FR.01. +
+  For every such requested message.
+    |The CSMS MAY indicate to which EVSE this request applies. |{nbsp}
+|F06.FR.03  |F06.FR.02
+  |The requested message SHALL be leading. If the specified evseId is not relevant to the message, it SHALL be ignored. In such cases the requested message SHALL still be sent. |{nbsp}
+|F06.FR.04  |If a Charging Station receives a <<trigger_message_request,TriggerMessageRequest>>.
+  |The Charging Station SHALL first send the TriggerMessage response, before sending the requested message. |{nbsp}
+|F06.FR.05  |F06.FR.04
+  |In the <<trigger_message_response,TriggerMessageResponse>> the Charging Station SHALL indicate whether it will send the requested message or not, by returning _Accepted_ or _Rejected_.
+    |It is up to the Charging Station if it accepts or rejects the request to send.
+|F06.FR.06  |If a Charging Station accepts a <<trigger_message_request,TriggerMessageRequest>> with _requestedMessage_ set to: _MeterValues_
+  |The Charging Station SHALL send a <<metervalues_request,MeterValuesRequest>> to the CSMS with the most recent measurements for all measurands configured in Configuration Variable: <<aligned_data_measurands,`AlignedDataMeasurands`>>. |{nbsp}
+|F06.FR.07  |If a Charging Station accepts a <<trigger_message_request,TriggerMessageRequest>> with _requestedMessage_ set to: _TransactionEvent_
+  |The Charging Station SHALL send a <<transaction_event_request,TransactionEventRequest>> to the CSMS with _triggerReason_ = _Trigger_, _transactionInfo_ with at least the _chargingState_, and _meterValue_ with the most recent measurements for all measurands configured in Configuration Variable: <<sampled_data_tx_updated_measurands,`SampledDataTxUpdatedMeasurands`>>. |{nbsp}
+|F06.FR.08  |When the Charging Station receives a <<trigger_message_request,TriggerMessageRequest>> with a requestedMessage that it has not implemented
+  |The Charging Station SHALL respond with <<trigger_message_response,TriggerMessageResponse>> with status _NotImplemented_. |{nbsp}
+|F06.FR.09  |{nbsp}
+  |The messages it triggers SHALL only give current information. |{nbsp}
+|F06.FR.10  |{nbsp}
+  |Messages that the Charging Station marks as _Accepted_ SHALL be sent.
+    |E.g. the situation could occur that, between accepting the request and actually sending the requested message, that same message gets sent because of normal operations. In such cases the message just sent MAY be considered as complying with the request.
+|F06.FR.11  |If the field evse is relevant but absent in the <<trigger_message_request,TriggerMessageRequest>>.
+  |The Charging Station SHALL interpret this as "for all allowed evse values".
+    |StatusNotifications can only be requested for a specific connector, see F06.FR.12/13
+|F06.FR.12  |If a Charging Station receives a <<trigger_message_request,TriggerMessageRequest>> with _requestedMessage_ set to: _StatusNotification_ AND +
+  (_evse_ is omitted OR +
+  _evse.connectorId_ is omitted)
+    |The Charging Station MAY respond with a <<trigger_message_response,TriggerMessageResponse>> with status _Rejected_.
+      |StatusNotification messages can only be requested at connector level.
+|F06.FR.13  |When sending a <<trigger_message_request,TriggerMessageRequest>> with _requestedMessage_ set to: _StatusNotification_
+  |The CSMS SHALL set the connectorId field
+    |StatusNotification messages can only be sent at connector level.
+|F06.FR.14  |If a Charging Station receives a <<trigger_message_request,TriggerMessageRequest>> with _requestedMessage_ set to: _LogStatusNotification_ AND +
+  The Charging Station is uploading a log file
+    |The Charging Station SHALL send a <<log_status_notification_request,LogStatusNotificationRequest>> to the CSMS with <<upload_log_status_enum_type,status>> _Uploading_. |{nbsp}
+|F06.FR.15  |If a Charging Station receives a <<trigger_message_request,TriggerMessageRequest>> with _requestedMessage_ set to: _LogStatusNotification_ AND +
+  The Charging Station is NOT uploading a log file
+    |The Charging Station SHALL send a <<log_status_notification_request,LogStatusNotificationRequest>> to the CSMS with <<upload_log_status_enum_type,status>> _Idle_. |{nbsp}
+|F06.FR.16  |If a Charging Station receives a <<trigger_message_request,TriggerMessageRequest>> with _requestedMessage_ set to: _FirmwareStatusNotification_ AND +
+  The Charging Station is not performing firmware update related tasks.
+    |The Charging Station SHALL send a <<firmware_status_notification_request,FirmwareStatusNotificationRequest>> to the CSMS with <<upload_log_status_enum_type,status>> _Idle_. |{nbsp}
+|F06.FR.17  |If Charging Station receives a <<trigger_message_request,TriggerMessageRequest>> with _requestedMessage_ set to: _BootNotification_ +
+  AND the response it received from CSMS to the last <<boot_notification_request,BootNotificationRequest>> was: _Accepted_
+    |Charging Station SHALL respond with a <<trigger_message_response,TriggerMessageResponse>> with <<upload_log_status_enum_type,status>> _Rejected_.
+      |A trigger to request a Charging Station to send a BootNotification is only meant to be used when the BootNotification has not yet been accepted.
+|===

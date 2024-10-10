@@ -1,0 +1,23 @@
+@startuml figure_72
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+CSMS -> ChargingStation: TriggerMessageRequest(RequestedMessage: TransactionEvent, evse.id = 1, ...)
+activate ChargingStation
+activate CSMS
+
+ChargingStation --> CSMS: TriggerMessageResponse(Status: Accepted)
+deactivate ChargingStation
+deactivate CSMS
+
+ChargingStation -> CSMS: TransactionEventRequest(eventType = Updated, trigger = Trigger, evse.id = 1, chargingState = Charging, ...)
+activate ChargingStation
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate ChargingStation
+deactivate CSMS
+
+@enduml

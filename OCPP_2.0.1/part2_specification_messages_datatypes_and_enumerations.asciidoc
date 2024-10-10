@@ -461,12 +461,10 @@ status DeleteCertificateStatusEnumType 1..1 Required. Charging Station indicates
 request.
 statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
-==== 1.15. FirmwareStatusNotification
+=== FirmwareStatusNotification
 
-Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
-
-
-**1.15.1. FirmwareStatusNotificationRequest**
+[[firmware_status_notification_request]]
+==== FirmwareStatusNotificationRequest
 
 This contains the field definition of the FirmwareStatusNotificationRequest PDU sent by the Charging Station to the CSMS.
 
@@ -975,9 +973,10 @@ status InstallCertificateStatusEnumType 1..1 Required. Charging Station indicate
 successful.
 statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
-==== 1.31. LogStatusNotification.
+=== LogStatusNotification
 
-**1.31.1. LogStatusNotificationRequest**
+[[log_status_notification_request]]
+==== LogStatusNotificationRequest
 
 This contains the field definition of the LogStatusNotificationRequest PDU sent by the Charging Station to the CSMS.
 
@@ -997,9 +996,10 @@ ongoing.
 This contains the field definition of the LogStatusNotificationResponse PDU sent by the CSMS to the Charging Station in response
 to LogStatusNotificationRequest. No fields are defined.
 
-==== 1.32. MeterValues
+=== MeterValues
 
-**1.32.1. MeterValuesRequest**
+[[metervalues_request]]
+==== MeterValuesRequest
 
 This contains the field definition of the MeterValuesRequest PDU sent by the Charging Station to the CSMS. This message might be
 removed in a future version of OCPP. It will be replaced by Device Management Monitoring events.
@@ -5366,7 +5366,8 @@ AcceptedCanceled Accepted this firmware update request, but in doing this has ca
 InvalidCertificate The certificate is invalid.
 RevokedCertificate Failure end state. The Firmware Signing certificate has been revoked.
 
-==== 3.87. UploadLogStatusEnumType.
+[[upload_log_status_enum_type]]
+=== UploadLogStatusEnumType
 
 _Enumeration_
 
