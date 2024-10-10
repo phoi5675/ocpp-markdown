@@ -425,149 +425,106 @@ image::part2/images/figure_69.svg[Charging loop with interrupt from the Charging
 
 _These requirements are normative._
 
-_Table 131. F04 - Requirements_
+.F04 - Requirements
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
 
+|F04.FR.01  |When the CSMS receives a remote stop transaction trigger (For example when terminating using a smartphone app, exceeding a (non local) prepaid credit.)
+  |The CSMS SHALL send a <<request_stop_transaction_request,RequestStopTransactionRequest>> to the Charging Station with the transactionId of the transaction. |{nbsp}
+|F04.FR.02  |F04.FR.01
+  |The Charging Station SHALL stop the energy offer, unlock the cable and send a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>) to the CSMS.
+    |Cable unlocked if not permanently attached.
+|F04.FR.03  |F04.FR.02 AND +
+  When the EV Driver unplugs the cable.
+    |The Charging Station SHALL send a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = _Ended_>>, <<reason_enum_type,stoppedReason = _Remote_>>) to the CSMS. |{nbsp}
+|F04.FR.04  |When configured to send meter data in the <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>), See: <<metervalues_configuration,Meter Values - Configuration>>
+  |The Charging Station SHALL add the configured measurands to the optional meterValue field in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>) sent to the CSMS to provide more details about transaction usage. |{nbsp}
+|F04.FR.05  |F04.FR.04 +
+  AND +
+  The Charging Station is running low on memory
+    |The Charging Station MAY drop meter data. |{nbsp}
+|F04.FR.06  |F04.FR.05
+  |When dropping meter data, the Charging Station SHALL drop intermediate values first (1st value, 3th value, 5th etc), not start dropping values from the start of the list or stop adding values to the list. |{nbsp}
+|===
 
-ID Precondition Requirement definition Note
-F04.FR.01 When the CSMS receives a remote
-stop transaction trigger (For example
-when terminating using a smartphone
-app, exceeding a (non local) prepaid
-credit.)
+<<<
 
+:sectnums:
+=== Unlock Connector
 
-The CSMS SHALL send a
-RequestStopTransactionRequest to the Charging
-Station with the transactionId of the transaction.
+:sectnums!:
+=== F05 - Remotely Unlock Connector
 
+.F05 - Remotely Unlock Connector
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
-F04.FR.02 F04.FR.01 The Charging Station SHALL stop the energy offer,
-unlock the cable and send a
-TransactionEventRequest (eventType  Updated) to
-the CSMS.
+|1   |Name            |Remotely Unlock Connector
+|2   |ID              |F05
+|{nbsp} d|_Functional block_ |F. RemoteControl
+|3   |Objective(s)    |To enable the CSO to help an EV-driver that has problems unplugging his charging cable because the locked failed after the transaction has ended.
+|4   |Description     |It sometimes happens that a connector of a Charging Station socket does not unlock correctly. +
+This happens most of the time when there is tension on the charging cable. This means the driver cannot unplug his charging cable from the Charging Station. To help a driver, the CSO can send a <<unlock_connector_request,UnlockConnectorRequest>> to the Charging Station. The Charging Station will then try to unlock the connector again.
+|{nbsp} d|_Actors_    |Charging Station, CSMS, External Trigger
+|{nbsp} d|_Scenario description_ 
+  |**1.** An External Trigger (probably the CSO) request the unlocking of a specific connector of a Charging Station. +
+  **2.** The CSMS sends an <<unlock_connector_request,UnlockConnectorRequest>> to the Charging Station. +
+  **3.** Upon receipt of <<unlock_connector_request,UnlockConnectorRequest>>, the Charging Station responds with <<unlock_connector_response,UnlockConnectorResponse>>. +
+  **4.** The response message indicates whether the Charging Station was able to unlock its Connector.
+|5   |Prerequisite(s) |No ongoing transaction on the specified connector +
+  The Charging Station has a connector lock.
+|6   |Postcondition(s) |The Charging Station was able to unlock the Connector.
+|===
 
+.Sequence Diagram: Unlock Connector
+image::part2/images/figure_70.svg[Sequence Diagram: Unlock Connector]
 
-Cable unlocked if not
-permanently attached.
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling  |n/a
+|8   |Remark(s)       |An external trigger, triggering the Unlock command, can be e.g. a Charging Station Operator or an EV Driver app.
 
-F04.FR.03  F04.FR.02 AND
-When the EV Driver unplugs the cable.
-The Charging Station SHALL send a
-TransactionEventRequest (eventType  _Ended_ ,
-stoppedReason  _Remote_ ) to the CSMS.
-F04.FR.04 When configured to send meter data
-in the TransactionEventRequest
-(eventType  Ended), See: Meter
-Values - Configuration
-The Charging Station SHALL add the configured
-measurands to the optional meterValue field in the
-TransactionEventRequest(eventType  Ended) sent
-to the CSMS to provide more details about
-transaction usage.
-F04.FR.05  F04.FR.04
-AND
-The Charging Station is running low on
-memory
-The Charging Station MAY drop meter data.
-F04.FR.06 F04.FR.05 When dropping meter data, the Charging Station
-SHALL drop intermediate values first (1st value, 3th
-value, 5th etc), not start dropping values from the
-start of the list or stop adding values to the list.
-Edition 3 FINAL, 2024-05-06 **F. RemoteControl**
+<<unlock_connector_request,UnlockConnectorRequest>> is intended only for unlocking the cable retention lock on the Connector, not for unlocking a Connector access door.
+|===
 
+==== F05 - Remotely Unlock Connector - Requirements
 
-==== 2.2. Unlock Connector
+.F05 - Requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
 
-==== F05 - Remotely Unlock Connector.
+|F05.FR.01  |Upon receipt of an <<unlock_connector_request,UnlockConnectorRequest>>.
+  |The Charging Station SHALL respond with <<unlock_connector_response,UnlockConnectorResponse>>.
+|F05.FR.02  |F05.FR.01 +
+  AND +
+  There is a an authorized transaction ongoing on the specified connector.
+    |The Charging Station SHALL NOT try to unlock the connector (or stop the transaction) but use the status: `OngoingAuthorizedTransaction` in the <<unlock_connector_response,UnlockConnectorResponse>>.
+|F05.FR.03  |F05.FR.01 +
+  AND +
+  Specified connector unknown.
+    |The Charging Station SHALL use the status: <<unlock_status_enum_type,UnknownConnector>> in the <<unlock_connector_response,UnlockConnectorResponse>>.
+|F05.FR.04  |F05.FR.01 +
+  AND +
+  The Charging Station was able to unlock the specified connector.
+    |The Charging Station SHALL use the status: <<unlock_status_enum_type,Unlocked>> in the <<unlock_connector_response,UnlockConnectorResponse>>.
+|F05.FR.05  |F05.FR.01 +
+  AND +
+  The Charging Station was NOT able to unlock the specified connector.
+    |The Charging Station SHALL use the status: <<unlock_status_enum_type,UnlockFailed>> in the <<unlock_connector_response,UnlockConnectorResponse>>.
+|F05.FR.06  |F05.FR.01 +
+  AND +
+  No cable is connected to the connector.
+    |The Charging Station SHALL attempt to unlock the connector, even if no cable is detected and SHALL return the result of the unlock attempt.
+|===
 
-_Table 132. F05 - Remotely Unlock Connector_
+:sectnums:
+=== Remote Trigger
 
-
-No. Type Description
-1 Name Remotely Unlock Connector
-2 ID F05
-Functional block F. RemoteControl
-3 Objective(s) To enable the CSO to help an EV-driver that has problems unplugging his charging cable because
-the locked failed after the transaction has ended.
-4 Description It sometimes happens that a connector of a Charging Station socket does not unlock correctly.
-This happens most of the time when there is tension on the charging cable. This means the driver
-cannot unplug his charging cable from the Charging Station. To help a driver, the CSO can send a
-UnlockConnectorRequest to the Charging Station. The Charging Station will then try to unlock the
-connector again.
-Actors Charging Station, CSMS, External Trigger
-Scenario description 1. An External Trigger (probably the CSO) request the unlocking of a specific connector of a
-Charging Station.
-
-**2.** The CSMS sends an UnlockConnectorRequest to the Charging Station.
-**3.** Upon receipt of UnlockConnectorRequest, the Charging Station responds with
-UnlockConnectorResponse.
-**4.** The response message indicates whether the Charging Station was able to unlock its
-Connector.
-
-**5 Prerequisite(s)**  No ongoing transaction on the specified connector
-The Charging Station has a connector lock.
-**6 Postcondition(s)**  The Charging Station was able to unlock the Connector.
-External Trigger
-CSMS Charging Station
-unlock connector
-UnlockConnectorRequest(evseId, connectorId)
-unlock connector
-UnlockConnectorResponse(unlocked)
-opt
-notification
-_Figure 70. Sequence Diagram: Unlock Connector_
-**7 Error handling** n/a
-**8 Remark(s)** An external trigger, triggering the Unlock command, can be e.g. a Charging Station Operator or an
-EV Driver app.
-UnlockConnectorRequest is intended only for unlocking the cable retention lock on the Connector,
-not for unlocking a Connector access door.
-**F05 - Remotely Unlock Connector - Requirements**
-_Table 133. F05 - Requirements_
-**ID Precondition Requirement definition**
-F05.FR.01 Upon receipt of an UnlockConnectorRequest. The Charging Station SHALL respond with
-UnlockConnectorResponse.
-Edition 3 FINAL, 2024-05-06 **F. RemoteControl**
-
-
-
-ID Precondition Requirement definition
-
-F05.FR.02  F05.FR.01
-AND
-There is a an authorized transaction ongoing on
-the specified connector.
-The Charging Station SHALL NOT try to unlock the connector (or
-stop the transaction) but use the status:
-OngoingAuthorizedTransaction in the
-UnlockConnectorResponse.
-F05.FR.03  F05.FR.01
-AND
-Specified connector unknown.
-The Charging Station SHALL use the status: UnknownConnector
-in the UnlockConnectorResponse.
-F05.FR.04  F05.FR.01
-AND
-The Charging Station was able to unlock the
-specified connector.
-The Charging Station SHALL use the status: Unlocked in the
-UnlockConnectorResponse.
-F05.FR.05  F05.FR.01
-AND
-The Charging Station was NOT able to unlock
-the specified connector.
-The Charging Station SHALL use the status: UnlockFailed in the
-UnlockConnectorResponse.
-F05.FR.06  F05.FR.01 AND
-No cable is connected to the connector.
-The Charging Station SHALL attempt to unlock the connector,
-even if no cable is detected and SHALL return the result of the
-unlock attempt.
-Edition 3 FINAL, 2024-05-06 **F. RemoteControl**
-
-
-==== 2.3. Remote Trigger
-
-==== F06 - Trigger Message
+:sectnums!:
+=== F06 - Trigger Message
 
 _Table 134. F06 - Trigger Message_
 

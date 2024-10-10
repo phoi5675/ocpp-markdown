@@ -2016,14 +2016,12 @@ status TriggerMessageStatusEnumType 1..1 Required. Indicates whether the Chargin
 send the requested notification or not.
 statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
-=== 1.62. UnlockConnector
+=== UnlockConnector
 
-**1.62.1. UnlockConnectorRequest**
+[[unlock_connector_request]]
+====  UnlockConnectorRequest
 
 This contains the field definition of the UnlockConnectorRequest PDU sent by the CSMS to the Charging Station.
-
-Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
-
 
 _Class_
 
@@ -2034,7 +2032,8 @@ which a connector needs to be unlocked.
 connectorId integer 1..1 Required. This contains the identifier of the connector
 that needs to be unlocked.
 
-**1.62.2. UnlockConnectorResponse**
+[[unlock_connector_response]]
+==== UnlockConnectorResponse
 
 This contains the field definition of the UnlockConnectorResponse PDU sent by the Charging Station to the CSMS in response to an
 UnlockConnectorRequest.
@@ -5300,7 +5299,8 @@ AbnormalCondition An Abnormal Error or Fault Condition has occurred.
 SignedDataReceived Signed data is received from the energy meter.
 ResetCommand CSMS sent a Reset Charging Station command.
 
-==== 3.83. UnlockStatusEnumType
+[[unlock_status_enum_type]]
+==== UnlockStatusEnumType
 
 _Enumeration_
 
