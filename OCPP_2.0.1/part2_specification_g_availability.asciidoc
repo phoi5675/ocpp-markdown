@@ -1,7 +1,10 @@
 = G. Availability
 :!chapter-number:
+:sectnums:
 
-== 1. Introduction
+<<<
+
+== Introduction
 
 This Functional Block specifies how the Charging Station can inform the CSMS of its current availability for starting new
 transactions.
@@ -27,12 +30,12 @@ Obviously, it is also possible to make the Charging Station or a Connector avail
 
 NOTE An overview of the Connectors Statuses can be found in: ConnectorStatusEnumType.
 
-Edition 3 FINAL, 2024-05-06 **G. Availability**
+<<<
 
+=== Use cases & Requirements
 
-=== 2. Use cases & Requirements
-
-==== G01 - Status Notification
+:sectnums!:
+=== G01 - Status Notification
 
 _Table 136. G01 - Status Notification_
 
@@ -78,7 +81,7 @@ yet. So the old StatusNotificationRequest message remains available for use for 
 **G01 - Status Notification - State transition overview for connecting/disconnecting
 Initial Cable plugin Cable unplug**
 Available (^) → Occupied -
-Edition 3 FINAL, 2024-05-06 **G. Availability**
+
 
 
 
@@ -91,13 +94,13 @@ Reserved (^) -
 ( → Occupied, only if authorized
 for reserved IdToken )
 
-===== -
+ -
 
 
 Unavailable - -
 Faulted - -
 
-**G01 - Status Notification - Requirements**
+==== G01 - Status Notification - Requirements
 
 _Table 137. G01 - Requirements_
 
@@ -169,10 +172,9 @@ The Charging Station SHOULD NOT send a
 StatusNotificationRequest for the other connector(s), even
 though they are no longer usable.
 
-Edition 3 FINAL, 2024-05-06 **G. Availability**
+<<<
 
-
-==== G02 - Heartbeat
+=== G02 - Heartbeat
 
 _Table 138. G02 - Heartbeat_
 
@@ -207,7 +209,8 @@ _Figure 74. Sequence Diagram: Heartbeat_
 **8 Remark(s)** With JSON over WebSocket, sending heartbeats is _not_ instrumental to keeping websockets alive,
 since websockets already provide a mechanism for this. However, if the Charging Station uses
 the heartbeat for time synchronization, it is advised to at least send one heartbeat per 24 hours.
-**G02 - Heartbeat - Requirements**
+
+==== G02 - Heartbeat - Requirements
 _Table 139. G02 - Requirements_
 **ID Precondition Requirement definition Note**
 G02.FR.01 When the CSMS responds with
@@ -231,7 +234,7 @@ Charging Station.
 G02.FR.05 It is RECOMMENDED that the Charging Station
 resets its heartbeat interval timer when another
 message has been sent to the CSMS.
-Edition 3 FINAL, 2024-05-06 **G. Availability**
+
 
 
 
@@ -254,10 +257,9 @@ It is RECOMMENDED that the Charging Station
 sends a HeartbeatRequest at least once every 24
 hours to synchronise the clock.
 
-Edition 3 FINAL, 2024-05-06 **G. Availability**
+<<<
 
-
-==== G03 - Change Availability EVSE/Connector
+=== G03 - Change Availability EVSE/Connector
 
 _Table 140. G03 - Change Availability EVSE/Connector_
 
@@ -305,10 +307,8 @@ _Figure 75. Sequence Diagram: Change Availability_
 **7 Error handling** n/a
 **8 Remark(s)** (^) Persistent states, for example:
 EVSE set to _Available_ SHALL persist a reboot.
-Edition 3 FINAL, 2024-05-06 **G. Availability**
 
-
-**G03 - Change Availability EVSE - Requirements**
+==== G03 - Change Availability EVSE - Requirements
 
 _Table 141. G03 - Requirements_
 
@@ -388,10 +388,9 @@ the EVSE back to operative, the connector will remain Inoperative.
 NOTE 2. It is only required to report a status change of a connector. StatusNotificationRequest only supports the
 reporting of connector statuses.
 
-Edition 3 FINAL, 2024-05-06 **G. Availability**
+<<<
 
-
-==== G04 - Change Availability Charging Station
+=== G04 - Change Availability Charging Station
 
 _Table 142. G04 - Change Availability Charging Station_
 
@@ -432,9 +431,10 @@ StatusNotificationResponse()
 _Figure 76. Sequence Diagram: Change Availability Charging Station_
 **7 Error handling** n/a
 **8 Remark(s)** (^) Persistent states: for example, Charging Station set to _Unavailable_ SHALL persist a reboot.
-**G04 - Change Availability Charging Station - Requirements**
+
+==== G04 - Change Availability Charging Station - Requirements
 _Table 143. G04 - Requirements_
-Edition 3 FINAL, 2024-05-06 **G. Availability**
+
 
 
 
@@ -518,10 +518,10 @@ the EVSE back to operative, the connector will remain Inoperative.
 |NOTE |2. It is only required to report a status change of a connector. StatusNotificationRequest only supports the
 reporting of connector statuses.
 |===
-Edition 3 FINAL, 2024-05-06 **G. Availability**
 
+<<<
 
-==== G05 - Lock Failure
+=== G05 - Lock Failure
 
 _Table 144. G05 - Lock Failure_
 
@@ -557,7 +557,8 @@ optional notification
 _Figure 77. Sequence Diagram: Lock Failure_
 **7 Error handling** n/a
 **8 Remark(s)** (^) It is advisable to provide some sort of notification to the EV Driver ("cable cannot be locked").
-**G05 - Lock Failure - Requirements**
+
+==== G05 - Lock Failure - Requirements
 _Table 145. G05 - Requirements_
 **ID Precondition Requirement definition Note**
 G05.FR.01 If the locking of the connector
@@ -569,7 +570,7 @@ _ConnectorPlugRetentionLock_ component with
 variable  Problem, Value  _True_.
 G05.FR.03 G05.FR.02 The CSMS SHALL respond with a
 NotifyEventResponse.
-Edition 3 FINAL, 2024-05-06 **G. Availability**
+
 
 
 
