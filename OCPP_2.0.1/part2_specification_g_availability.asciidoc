@@ -6,29 +6,25 @@
 
 == Introduction
 
-This Functional Block specifies how the Charging Station can inform the CSMS of its current availability for starting new
-transactions.
+This Functional Block specifies how the Charging Station can inform the CSMS of its current availability for starting new transactions.
 
-For the CSO it is important to know if a Charging Station is available for new EVs to be charged. The CSO wants to know this
-information so they can tell EV Drivers whether the Charging Station is available. To know this, the Charging Station should send
-any status changes of itself or one of its EVSEs to the CSMS. See for an example: B04 - Offline Behavior Idle Charging Station.
+For the CSO it is important to know if a Charging Station is available for new EVs to be charged. The CSO wants to know this information so they can tell EV Drivers whether the Charging Station is available. To know this, the Charging Station should send any status changes of itself or one of its EVSEs to the CSMS. See for an example: <<b04_offline_behavior_idle_charging_station,B04 - Offline Behavior Idle Charging Station>>.
 
-For the CSO it is very helpful to know the status of the transaction, therefore the Charging Station can send detailed statuses to the
-CSMS. This can be very useful when helping an EV Driver when he experiences problems during charging.
+For the CSO it is very helpful to know the status of the transaction, therefore the Charging Station can send detailed statuses to the CSMS. This can be very useful when helping an EV Driver when he experiences problems during charging.
 
 When a fault is detected by the Charging Station it can send a message notifying the CSMS about the fault.
 
-When the CSO wants the Charging Station to no longer start new transactions, it can change the availability. For example: they need
-to do maintenance on the Charging Station, and for this reason they don’t want the Charging Station to be in use.
+When the CSO wants the Charging Station to no longer start new transactions, it can change the availability. For example: they need to do maintenance on the Charging Station, and for this reason they don’t want the Charging Station to be in use.
 
-The CSO can also change the availability for one or more EVSEs. For example: A customer calls, complaining about a broken EVSE
-on the Charging Station. The CSO can then set the Connector to unavailable, making it impossible for an EV Driver to use that
+The CSO can also change the availability for one or more EVSEs. For example: A customer calls, complaining about a broken EVSE on the Charging Station. The CSO can then set the Connector to unavailable, making it impossible for an EV Driver to use that
 Connector.
 
 Obviously, it is also possible to make the Charging Station or a Connector available again with a command from the CSMS.
 
-
-NOTE An overview of the Connectors Statuses can be found in: ConnectorStatusEnumType.
+[cols="^.^1,10",%autowidth.stretch]
+|===
+s|NOTE |An overview of the Connectors Statuses can be found in: <<connector_status_enum_type,ConnectorStatusEnumType>>.
+|===
 
 <<<
 

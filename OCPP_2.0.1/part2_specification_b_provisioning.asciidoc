@@ -276,6 +276,7 @@ hardware. +
 
 <<<
 
+[[b04_offline_behavior_idle_charging_station]]
 === B04 - Offline Behavior Idle Charging Station
 
 .B04 - Offline Behavior Idle Charging Station
