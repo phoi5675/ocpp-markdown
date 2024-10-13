@@ -1,0 +1,15 @@
+@startuml figure_73
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+ChargingStation -> CSMS: StatusNotificationRequest(evseId, connectorId, connectorStatus, [timestamp])
+activate CSMS
+activate ChargingStation
+
+CSMS --> ChargingStation: StatusNotificationResponse()
+deactivate ChargingStation
+deactivate CSMS
+
+@enduml

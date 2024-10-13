@@ -1167,9 +1167,10 @@ process the message successfully. It does not imply any
 approval of the charging schedule.
 statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
-==== 1.38. NotifyEvent.
+=== NotifyEvent
 
-**1.38.1. NotifyEventRequest**
+[[notify_event_request]]
+==== NotifyEventRequest
 
 This contains the field definition of the NotifyEventRequest PDU sent by the Charging Station to the CSMS.
 
@@ -1193,7 +1194,8 @@ the Charging Station may decide to group multiple events
 in one notification. For example, when multiple events
 triggered at the same time.
 
-**1.38.2. NotifyEventResponse**
+[[notify_event_response]]
+==== NotifyEventResponse
 
 Response to NotifyEventRequest. No fields are defined.
 

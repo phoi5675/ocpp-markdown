@@ -28,145 +28,96 @@ s|NOTE |An overview of the Connectors Statuses can be found in: <<connector_stat
 
 <<<
 
-=== Use cases & Requirements
+== Use cases & Requirements
 
 :sectnums!:
 === G01 - Status Notification
 
-_Table 136. G01 - Status Notification_
+.G01 - Status Notification
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
+|1   |Name            |Status Notification
+|2   |ID              |G01
+|{nbsp} d|_Functional block_ |G. Availability
+|3   |Objective(s)    |To inform the CSMS about a Connector status change.
+|4   |Description     |This use case covers the functionality that a Charging Station sends a notification to the CSMS to inform the CSMS about a Connector status change.
+|{nbsp} d|_Actors_    |Charging Station, CSMS
+|{nbsp} d|_Scenario description_
+  |**1.** A connector status changed, the Charging Station sends a <<status_notification_request,StatusNotificationRequest>> to the CSMS to inform the CSMS about the new status. +
+  **2.** The CSMS responds with <<status_notification_response,StatusNotificationResponse>> to the Charging Station.
+|{nbsp} d|_Alternative scenario_
+  |**1.** Instead of a <<status_notification_request,StatusNotificationRequest>> a Charging Station can send a <<notify_event_request,NotifyEventRequest>> with _trigger_  `Delta` for _component.name_  "Connector" and the EVSE number in _evse.id_ and the connector number in _evse.connectorId_, and _variable_ = "AvailabilityState" with the value of the new status to the CSMS. +
+  **1a.** Optionally, Charging Station can also include the state of _component_ = "ChargingStation" and _component_ = "EVSE" in the <<notify_event_request,NotifyEventRequest>>. +
+  **2.** The CSMS responds with <<notify_event_response,NotifyEventResponse>> to the Charging Station.
+|5   |Prerequisite(s) |n/a
+|6   |Postcondition(s) 
+  |**Successful postconditions:** +
+  The CSMS is _Successfully_ informed about the status change. +
+  **Failure postconditions:** +
+  n/a
+|===
 
-No. Type Description
-1 Name Status Notification
-2 ID G01
-Functional block G. Availability
-3 Objective(s) To inform the CSMS about a Connector status change.
-4 Description This use case covers the functionality that a Charging Station sends a notification to the CSMS to
-inform the CSMS about a Connector status change.
-Actors Charging Station, CSMS
-Scenario description 1. A connector status changed, the Charging Station sends a StatusNotificationRequest to the
-CSMS to inform the CSMS about the new status.
+.Sequence Diagram: Status Notification
+image::part2/images/figure_73.svg[Sequence Diagram: Status Notification]
 
-**2.** The CSMS responds with StatusNotificationResponse to the Charging Station.
-_Alternative scenario_ **1.** Instead of a StatusNotificationRequest a Charging Station can send a NotifyEventRequest with
-_trigger_  Delta for _component.name_  "Connector" and the EVSE number in _evse.id_ and the
-connector number in _evse.connectorId_ , and _variable_  "AvailabilityState" with the value of the new
-status to the CSMS.
-**1a.** Optionally, Charging Station can also include the state of _component_  "ChargingStation" and
-_component_  "EVSE" in the NotifyEventRequest.
-**2.** The CSMS responds with NotifyEventResponse to the Charging Station.
-**5 Prerequisite(s)** n/a
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling  |n/a
+|8   |Remark(s)       |The Charging Station MAY use the _Unavailable_ status internally for other purposes (e.g. while updating firmware or waiting for an initial _Accepted_ RegistrationStatus). When one of the connectors on an EVSE is Reserved/Occupied, the CSMS has to take care of the status of the other connectors when presenting availability information to another system or user. The CSMS knows which connectors belong to the same EVSE.
 
-**6 Postcondition(s)** (^) **Successful postconditions:**
-The CSMS is _Successfully_ informed about the status change.
-**Failure postconditions:**
-n/a
-Charging Station CSMS
-StatusNotificationRequest(evseId, connectorId, connectorStatus, [timestamp])
-StatusNotificationResponse()
-_Figure 73. Sequence Diagram: Status Notification_
-**7 Error handling** n/a
-**8 Remark(s)** The Charging Station MAY use the _Unavailable_ status internally for other purposes (e.g. while
-updating firmware or waiting for an initial _Accepted_ RegistrationStatus). When one of the
-connectors on an EVSE is Reserved/Occupied, the CSMS has to take care of the status of the
-other connectors when presenting availability information to another system or user. The CSMS
-knows which connectors belong to the same EVSE.
-Notifying a connector status from the Charging Station to the CSMS will be taken over by the new
-Device Management Monitoring feature, however this mechanism has not been proven in the field
-yet. So the old StatusNotificationRequest message remains available for use for now.
-**G01 - Status Notification - State transition overview for connecting/disconnecting
-Initial Cable plugin Cable unplug**
-Available (^) → Occupied -
+Notifying a connector status from the Charging Station to the CSMS will be taken over by the new Device Management Monitoring feature, however this mechanism has not been proven in the field yet. So the old <<status_notification_request,StatusNotificationRequest>> message remains available for use for now.
+|===
 
+==== G01 - Status Notification - State transition overview for connecting/disconnecting
 
+[cols="<.^2,<.^4,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Initial      |Cable plugin             |Cable unplug
 
-
-Initial Cable plugin Cable unplug
-
-Occupied - (^) → Available
-( → Unavailable, if scheduled
-to become Unavailable)
-Reserved (^) -
-( → Occupied, only if authorized
-for reserved IdToken )
-
- -
-
-
-Unavailable - -
-Faulted - -
+|Available    |→ Occupied               |-
+|Occupied     |-                        |→ Available +
+  ( → Unavailable, if scheduled to become Unavailable)
+|Reserved     |- +
+  ( → Occupied, only if authorized for reserved IdToken )
+    |-
+|Unavailable  |-                        |-
+|Faulted      |-                        |-
+|===
 
 ==== G01 - Status Notification - Requirements
 
-_Table 137. G01 - Requirements_
+.G01 - Requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
 
-
-ID Precondition Requirement definition
-G01.FR.01 A Charging Station Connector MUST have one of the valid
-statuses from the ConnectorStatus enumeration.
-G01.FR.02 When an EVSE is set to status Unavailable by a
-ChangeAvailabilityRequest message.
-
-
-The EVSE’s Unavailable status SHALL be persistent across
-reboots.
-G01.FR.03 The connector is Available when an EV is
-connecting
-
-
-The Charging Station SHALL send a StatusNotificationRequest
-with connectorStatus  Occupied
-or a NotifyEventRequest for component  "Connector", variable =
-"AvailabilityState", actualValue  "Occupied" and trigger  "Delta".
-G01.FR.04 The connector is Occupied when an EV is
-disconnecting AND
-connector is not scheduled to become
-Unavailable (G03.FR.05)
-
-
-The Charging Station SHALL send a StatusNotificationRequest
-with connectorStatus  Available when an EV is disconnected
-or a NotifyEventRequest for component  "Connector", variable =
-"AvailabilityState", actualValue  "Available" and trigger  "Delta".
-G01.FR.05 The connector is Occupied when an EV is
-disconnecting AND
-connector is scheduled to become
-Unavailable (G03.FR.05)
-
-
-The Charging Station SHALL send a StatusNotificationRequest
-with connectorStatus  Unavailable when an EV is
-disconnected
-or a NotifyEventRequest for component  "Connector", variable =
-"AvailabilityState", actualValue  "Unavailable" and trigger =
-"Delta".
-G01.FR.06 The connector is Reserved when an EV is
-connecting AND
-EV driver presents an IdToken matching the
-reservation
-
-
-The Charging Station SHALL send a StatusNotificationRequest
-with connectorStatus  Occupied
-or a NotifyEventRequest for component  "Connector", variable =
-"AvailabilityState", actualValue  "Occupied" and trigger  "Delta".
-G01.FR.07 When a ChangeAvailabilityRequest leads to a
-connector status change
-
-
-The Charging Station SHALL send a StatusNotificationRequest
-with the corresponding connectorStatus
-or a NotifyEventRequest for component  "Connector", variable =
-"AvailabilityState", trigger  "Delta" and the corresponding
-actualValue of "AvailabilityState".
-G01.FR.08 When a cable is plugged in to a connector of an
-EVSE AND
-The EVSE has multiple connectors
-
-
-The Charging Station SHOULD NOT send a
-StatusNotificationRequest for the other connector(s), even
-though they are no longer usable.
+|G01.FR.01  |{nbsp}
+  |A Charging Station Connector MUST have one of the valid statuses from the <<connector_status_enum_type,ConnectorStatus>> enumeration.
+|G01.FR.02  |When an EVSE is set to status _Unavailable_ by a <<change_availability_request,ChangeAvailabilityRequest>> message.
+  |The EVSE’s _Unavailable_ status SHALL be persistent across reboots.
+|G01.FR.03  |The connector is `Available` when an EV is connecting
+  |The Charging Station SHALL send a <<status_notification_request,StatusNotificationRequest>> with _connectorStatus_ = `Occupied` +
+  or a <<notify_event_request,NotifyEventRequest>> for _component_ = "Connector", _variable_ = "AvailabilityState", _actualValue_ = "Occupied" and _trigger_ = "Delta".
+|G01.FR.04  |The connector is `Occupied` when an EV is disconnecting AND +
+  connector is not scheduled to become `Unavailable` (G03.FR.05)
+    |The Charging Station SHALL send a <<status_notification_request,StatusNotificationRequest>> with _connectorStatus_ = `Available` when an EV is disconnected or a <<notify_event_request,NotifyEventRequest>> for _component_ = "Connector", _variable_ = "AvailabilityState", _actualValue_ = "Available" and _trigger_ = "Delta".
+|G01.FR.05  |The connector is `Occupied` when an EV is disconnecting AND +
+  connector is scheduled to become `Unavailable` (G03.FR.05)
+    |The Charging Station SHALL send a <<status_notification_request,StatusNotificationRequest>> with _connectorStatus_ = `Unavailable` when an EV is disconnected +
+    or a <<notify_event_request,NotifyEventRequest>> for _component_ = "Connector", _variable_ = "AvailabilityState", _actualValue_ = "Unavailable" and _trigger_ = "Delta".
+|G01.FR.06  |The connector is `Reserved` when an EV is connecting AND +
+  EV driver presents an IdToken matching the reservation
+    |The Charging Station SHALL send a <<status_notification_request,StatusNotificationRequest>> with _connectorStatus_ = `Occupied` +
+    or a <<notify_event_request,NotifyEventRequest>> for _component_ = "Connector", _variable_ = "AvailabilityState", _actualValue_ = "Occupied" and _trigger_ = "Delta".
+|G01.FR.07  |When a <<change_availability_request,ChangeAvailabilityRequest>> leads to a connector status change
+  |The Charging Station SHALL send a <<status_notification_request,StatusNotificationRequest>> with the corresponding _connectorStatus_ +
+  or a <<notify_event_request,NotifyEventRequest>> for _component_ = "Connector", _variable_ = "AvailabilityState", _trigger_ = "Delta" and the corresponding _actualValue_ of "AvailabilityState".
+|G01.FR.08  |When a cable is plugged in to a connector of an EVSE AND +
+  The EVSE has multiple connectors
+    |The Charging Station SHOULD NOT send a <<status_notification_request,StatusNotificationRequest>> for the other connector(s), even though they are no longer usable.
+|===
 
 <<<
 
