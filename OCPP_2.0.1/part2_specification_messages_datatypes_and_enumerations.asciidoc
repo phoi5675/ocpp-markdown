@@ -185,7 +185,8 @@ evse EVSEType 0..1 Optional. Contains Id’s to designate a specific
 EVSE/connector by index numbers. When omitted, the
 message refers to the Charging Station as a whole.
 
-**1.5.2. ChangeAvailabilityResponse**
+[[change_availability_response]]
+==== ChangeAvailabilityResponse
 
 This contains the field definition of the ChangeAvailabilityResponse PDU sent by the Charging Station to the CSMS.
 
@@ -3708,7 +3709,8 @@ Client side certificate used by the Charging Station to connect the the CSMS.
 V2GCertificate Use for certificate for 15118 connections. This means that the certificate should be derived from the V2G
 root.
 
-=== 3.10. ChangeAvailabilityStatusEnumType
+[[change_availability_status_enum_type]]
+=== ChangeAvailabilityStatusEnumType
 
 _Enumeration_
 
@@ -4871,7 +4873,8 @@ The OCPP 2.0 release of OCPP has been deprecated, so this value OCPP20 must now 
 2.0.1 implementations in the NetworkConnectionProfile. Note that OCPP 2.0.1 does have its own Websocket
 subprotocol name: ocpp2.0.1.
 
-==== 3.63. OperationalStatusEnumType
+[[operational_status_enum_type]]
+=== OperationalStatusEnumType
 
 _Enumeration_
 
