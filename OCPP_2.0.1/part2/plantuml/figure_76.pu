@@ -1,0 +1,33 @@
+@startuml figure_76
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+CSMS -> ChargingStation: ChangeAvailabilityRequest(type)
+activate CSMS
+activate ChargingStation
+
+ChargingStation --> CSMS: ChangeAvailabilityResponse(status)
+deactivate CSMS
+deactivate ChargingStation
+
+alt if availability changed
+  alt if a transaction is ongoing
+    note over ChargingStation, CSMS
+      Wait for transaction on EVSE to finish.
+    end note
+  end
+
+  loop for all Connectors 
+    ChargingStation -> CSMS: StatusNotificationRequest(evseId, connectorId, connectorStatus, [timestamp])
+    activate ChargingStation
+    activate CSMS
+
+    CSMS --> ChargingStation: StatusNotificationResponse()
+    deactivate ChargingStation
+    deactivate CSMS
+  end
+end
+
+@enduml

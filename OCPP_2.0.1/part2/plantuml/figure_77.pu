@@ -1,0 +1,30 @@
+@startuml figure_77
+!include style.puml
+
+actor "User" as User
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over ChargingStation
+  Cable plugged in
+end note
+
+note over User, CSMS
+  User authorization successful
+end note
+
+ChargingStation ->o ChargingStation: lock connector attempt failed()
+
+ChargingStation -> CSMS: \
+  NotifyEventRequest(component = ConnectorPlugRetentionLock, \n\
+                variable = Problem, value = true)
+activate CSMS
+activate ChargingStation
+
+CSMS --> ChargingStation: NotifyEventResponse()
+deactivate ChargingStation
+deactivate CSMS
+
+ChargingStation --> User: optional notification
+
+@enduml
