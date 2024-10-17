@@ -1,0 +1,30 @@
+@startuml figure_79
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+activate EVDriver
+EVDriver -> CSMS: reserve
+activate CSMS
+
+CSMS -> ChargingStation: ReserveNowRequest(connectorId, ...)
+activate ChargingStation
+
+ChargingStation --> CSMS: ReserveNowResponse(status = Accepted)
+
+opt
+  CSMS --> EVDriver: notification
+  deactivate CSMS
+  deactivate EVDriver
+end
+
+ChargingStation -> CSMS: StatusNotificationRequest(status  Reserved, ...)
+activate CSMS
+
+CSMS --> ChargingStation: StatusNotificationResponse()
+deactivate ChargingStation
+deactivate CSMS
+
+@enduml

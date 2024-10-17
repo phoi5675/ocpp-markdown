@@ -1437,7 +1437,8 @@ status RequestStartStopStatusEnumType 1..1 Required. Status indicating whether C
 accepts the request to stop a transaction.
 statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
-=== 1.46. ReservationStatusUpdate.
+[[reservation_status_update]]
+=== ReservationStatusUpdate
 
 **1.46.1. ReservationStatusUpdateRequest**
 

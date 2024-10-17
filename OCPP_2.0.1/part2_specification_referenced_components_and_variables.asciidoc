@@ -1461,7 +1461,7 @@ only report the total energy over all phases without reporting the individual ph
 If this variable is absent or false , then the value for each phase is reported, possibly also with a total value
 (depending on the meter).
 
-== 2.8. Reservation related
+=== Reservation related
 
 **2.8.1.** ReservationEnabled
 
@@ -1488,7 +1488,8 @@ variableAttributes mutability ReadOnly
 variableCharacteristics dataType boolean
 Description Whether Reservation is supported.
 
-**2.8.3.** ReservationNonEvseSpecific
+[[reservation_non_evse_specific]]
+==== `ReservationNonEvseSpecific`
 
 
 Required no
