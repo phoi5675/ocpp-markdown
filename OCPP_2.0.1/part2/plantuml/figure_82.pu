@@ -1,0 +1,32 @@
+@startuml figure_82
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+EVDriver -> CSMS: reserve
+activate CSMS
+
+CSMS -> ChargingStation: ReserveNowRequest(connectorId, idToken = TOKEN_A, ...)
+activate ChargingStation
+
+ChargingStation --> CSMS: ReserveNowResponse(status = Accepted)
+deactivate CSMS
+
+opt When a specific EVSE is reserved for this reservation
+  ChargingStation -> CSMS: StatusNotificationRequest(status = Reserved, ...)
+  activate CSMS
+
+  CSMS --> ChargingStation: StatusNotificationResponse()
+  deactivate CSMS
+  deactivate ChargingStation
+end
+
+EVDriver -> ChargingStation: Present IdToken(TOKEN_A)
+activate ChargingStation
+
+ChargingStation ->o] : Continue regular charging session
+deactivate ChargingStation
+
+@enduml

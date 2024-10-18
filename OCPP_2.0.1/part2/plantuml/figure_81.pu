@@ -1,0 +1,28 @@
+@startuml figure_81
+!include style.puml
+
+actor "User" as User
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+User -> CSMS: Cancel reservation
+activate CSMS
+
+CSMS -> ChargingStation: CancelReservationRequest(reservationId)
+activate ChargingStation
+
+ChargingStation --> CSMS: CancelReservationResponse(status = Accepted)
+deactivate CSMS
+deactivate ChargingStation
+
+opt Specific EVSE reserved
+  ChargingStation -> CSMS: StatusNotificationRequest(status = Available)
+  activate CSMS
+  activate ChargingStation
+
+  CSMS --> ChargingStation: StatusNotificationResponse()
+  deactivate ChargingStation
+  deactivate CSMS
+end
+
+@enduml

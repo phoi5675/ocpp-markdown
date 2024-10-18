@@ -1,0 +1,40 @@
+@startuml figure_83
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+EVDriver -> CSMS: reserve
+activate CSMS
+
+CSMS -> ChargingStation: ReserveNowRequest(connectorId, idToken = TOKEN_A, groupIdToken = TOKEN_P)
+activate ChargingStation
+
+ChargingStation --> CSMS: ReserveNowResponse(status = Accepted)
+deactivate CSMS
+
+opt When a specific EVSE is reserved for this reservation
+  ChargingStation -> CSMS: StatusNotificationRequest(status = Reserved, ...)
+  activate CSMS
+
+  CSMS --> ChargingStation: StatusNotificationResponse()
+  deactivate CSMS
+  deactivate ChargingStation
+end
+
+EVDriver -> ChargingStation: Present IdToken(TOKEN_B)
+activate ChargingStation
+
+alt If TOKEN_B is NOT found in the Local Authorization List or Authorization Cache
+  ChargingStation -> CSMS: AuthorizeRequest(idToken = TOKEN_B)
+  activate CSMS
+
+  CSMS --> ChargingStation: AuthorizeResponse(idTokenInfo(groupIdToken = TOKEN_P))
+  deactivate CSMS
+end
+
+ChargingStation ->o] : Continue regular transaction
+deactivate ChargingStation
+
+@enduml
