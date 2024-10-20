@@ -1,0 +1,25 @@
+@startuml figure_85
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over ChargingStation
+  No ongoing transaction
+  for this User
+end note
+
+EVDriver -> ChargingStation: present IdToken
+
+ChargingStation -> CSMS: AuthorizeRequest(idToken = '123456')
+activate CSMS
+
+CSMS --> ChargingStation: \
+  AuthorizeResponse(status = Accepted,\n\
+          PersonalMessage = '0.25/kWh')
+deactivate CSMS
+
+ChargingStation --> EVDriver: tariff: 0.25/kWh
+
+@enduml

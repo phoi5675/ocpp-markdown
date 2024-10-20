@@ -1,0 +1,24 @@
+@startuml figure_86
+!include style.puml
+
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+actor "EV Driver" as EVDriver
+
+note over ChargingStation
+  Ongoing transaction
+end note
+
+loop while transaction ongoing, every Y seconds
+  CSMS -> ChargingStation: CostUpdatedRequest(transactionId, cost = X.XX)
+  activate CSMS
+  activate ChargingStation
+
+  ChargingStation --> CSMS: CostUpdatedResponse()
+  deactivate CSMS
+
+  ChargingStation -> EVDriver: show cost: X.XX
+  deactivate ChargingStation
+end
+
+@enduml

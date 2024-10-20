@@ -1,0 +1,25 @@
+@startuml figure_89
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+
+note over ChargingStation
+  Ongoing transaction
+end note
+
+EVDriver -> ChargingStation: present IdToken
+activate ChargingStation
+
+opt if (id = startId) or (GroupId = GroupId of startId)
+  ChargingStation -> ChargingStation: stop energy offer
+
+  opt if cable not permanently attached
+    ChargingStation -> ChargingStation: unlock connector
+  end
+
+  ChargingStation --> EVDriver: TotalCostFallbackMessage
+  deactivate ChargingStation
+end
+
+@enduml

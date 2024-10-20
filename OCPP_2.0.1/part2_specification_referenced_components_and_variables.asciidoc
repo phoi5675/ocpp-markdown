@@ -1627,7 +1627,7 @@ is RECOMMENDED to set this key to a low value. See Smart Charging signals to a C
 actors.
 
 [[tariff_cost_related]]
-== Tariff & Cost related
+=== Tariff & Cost related
 
 **2.10.1.** TariffEnabled
 
@@ -1654,7 +1654,8 @@ variableAttributes mutability ReadOnly
 variableCharacteristics dataType boolean
 Description Whether Tariff is supported.
 
-**2.10.3.** TariffFallbackMessage
+[[tariff_fallback_message]]
+==== `TariffFallbackMessage`
 
 Required for Charging Stations supporting Tariff Information.
 
@@ -1690,7 +1691,8 @@ variableAttributes mutability ReadOnly
 variableCharacteristics dataType boolean
 Description Whether Cost is supported.
 
-**2.10.6.** TotalCostFallbackMessage
+[[total_cost_fallback_message]]
+==== TotalCostFallbackMessage
 
 Required for Charging Stations supporting Tariff Information.
 
@@ -1698,7 +1700,6 @@ Required for Charging Stations supporting Tariff Information.
 Required yes
 Component componentName TariffCostCtrlr
 
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
 
@@ -1709,7 +1710,8 @@ maxLimit 255
 Description Message to be shown to an EV Driver when the Charging Station cannot retrieve the cost for a transaction at the
 end of the transaction.
 
-**2.10.7.** Currency
+[[currency]]
+==== `Currency`
 
 Required for Charging Stations supporting Tariff Information.
 

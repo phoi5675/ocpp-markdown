@@ -328,9 +328,10 @@ _Class_
 Field Name Field Type Card. Description
 clearMonitoringResult ClearMonitoringResultType 1..* Required. List of result statuses per monitor.
 
-==== 1.11. CostUpdated
+=== CostUpdated
 
-**1.11.1. CostUpdatedRequest**
+[[cost_updated_request]]
+==== CostUpdatedRequest
 
 This contains the field definition of the CostUpdatedRequest PDU sent by the CSMS to the Charging Station. With this request the
 CSMS can send the current cost of a transaction to a Charging Station.
@@ -349,7 +350,8 @@ the currency configured with the configuration Variable:
 transactionId identifierString[0..36] 1..1 Required. Transaction Id of the transaction the current
 cost are asked for.
 
-**1.11.2. CostUpdatedResponse**
+[[cost_updated_response]]
+==== CostUpdatedResponse
 
 This contains the field definition of the CostUpdatedResponse PDU sent by the Charging Station to the CSMS in response to
 CostUpdatedRequest. No fields are defined.

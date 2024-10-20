@@ -1,0 +1,24 @@
+@startuml figure_88
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+activate EVDriver
+EVDriver -> ChargingStation: present IdToken
+activate ChargingStation
+
+alt if Charging Station is offline
+  ChargingStation -> ChargingStation: check authorization cache()
+
+  ChargingStation --> EVDriver: TariffFallbackMessage
+else No specific tariff is available
+  ChargingStation -> CSMS: AuthorizeRequest(idToken)
+
+  CSMS --> ChargingStation: AuthorizeResponse(...)
+
+  ChargingStation --> EVDriver: TariffFallbackMessage
+end
+
+@enduml

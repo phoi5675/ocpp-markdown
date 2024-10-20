@@ -1,0 +1,33 @@
+@startuml figure_87
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over ChargingStation
+  Ongoing transaction
+end note
+
+EVDriver -> ChargingStation: Present IdToken
+
+opt
+  ChargingStation -> EVDriver: notification
+end
+
+note over CSMS
+  TransactionEvent / StatusNotification
+  messages left out for readability
+end note
+
+ChargingStation -> CSMS: TransactionEventRequest(eventType = Ended, ...)
+activate ChargingStation
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse([idTokenInfo], totalCost = X.XX,...)
+
+ChargingStation --> EVDriver: show cost: X.XX
+deactivate ChargingStation
+deactivate CSMS
+
+@enduml
