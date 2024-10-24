@@ -1,0 +1,15 @@
+@startuml figure_91
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+ChargingStation -> CSMS: MeterValuesRequest(evseId, meterValue)
+activate ChargingStation
+activate CSMS
+
+CSMS --> ChargingStation: MeterValuesResponse()
+deactivate ChargingStation
+deactivate CSMS
+
+@enduml

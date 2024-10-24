@@ -1,0 +1,15 @@
+@startuml figure_92
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+ChargingStation -> CSMS: TransactionEventRequest(eventType = Updated, transactionId, meterValues)
+activate ChargingStation
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse()
+deactivate ChargingStation
+deactivate CSMS
+
+@enduml

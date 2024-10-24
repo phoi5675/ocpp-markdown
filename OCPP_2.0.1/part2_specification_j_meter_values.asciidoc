@@ -1,680 +1,406 @@
 = J. MeterValues
 :!chapter-number:
 
-== 1. Introduction
+<<<
 
-This Functional Block describes the functionality that enables a Charging Station to send periodic, possibly clock-aligned
-MeterValues.
+:sectnums:
+== Introduction
 
-The transfer of the MeterValues from the Charging Station to the CSMS will be taken over by the new Device Management
-Monitoring feature, however this mechanism has not been proven in the field yet. So the old MeterValuesRequest message remains
-available for use for now.
+This Functional Block describes the functionality that enables a Charging Station to send periodic, possibly clock-aligned MeterValues.
 
-Extensive metering data relating to transactions can be recorded and transmitted in different ways depending on its intended
-purpose. There are two obvious use cases (but the use of meter values is not limited to these two):
+The transfer of the MeterValues from the Charging Station to the CSMS will be taken over by the new Device Management Monitoring feature, however this mechanism has not been proven in the field yet. So the old <<metervalues_request,MeterValuesRequest>> message remains available for use for now.
 
-- Transaction Meter Values
-- Clock-Aligned Meter Values
+Extensive metering data relating to transactions can be recorded and transmitted in different ways depending on its intended purpose. There are two obvious use cases (but the use of meter values is not limited to these two):
 
-Both types of meter readings MAY be reported in the _meterValue_ element of the TransactionEventRequest message. Clock-Aligned
-Meter Values MAY be reported in standalone MeterValuesRequest messages.
+- <<transaction_meter_values,Transaction Meter Values>>
+- <<clock_aligned_meter_values,Clock-Aligned Meter Values>>
 
-Edition 3 FINAL, 2024-05-06 **J. MeterValues**
+Both types of meter readings MAY be reported in the _meterValue_ element of the <<transaction_event_request,TransactionEventRequest>> message. <<clock_aligned_meter_values,Clock-Aligned Meter Values>> MAY be reported in standalone <<metervalues_request,MeterValuesRequest>> messages.
+
+<<<
 
 [[metervalues_configuration]]
-=== 2. Configuration
+== Configuration
 
 _This section is normative._
 
-==== 2.1. Transaction Meter Values
+[[transaction_meter_values]]
+=== Transaction Meter Values
 
-Frequent (e.g. 1-5 minute interval) meter readings taken and transmitted (usually in "real time") to the CSMS, to allow it to provide
-information updates to the EV user (who is usually not at the Charging Station), via web, app, SMS, etc., as to the progress of the
-transaction. In OCPP, this is called "sampled meter data", as the exact frequency and time of readings is not very significant, as long
-as it is "frequent enough". "Sampled meter data" can be configured with the following Configuration Variables:
+Frequent (e.g. 1-5 minute interval) meter readings taken and transmitted (usually in "real time") to the CSMS, to allow it to provide information updates to the EV user (who is usually not at the Charging Station), via web, app, SMS, etc., as to the progress of the transaction. In OCPP, this is called "sampled meter data", as the exact frequency and time of readings is not very significant, as long as it is "frequent enough". "Sampled meter data" can be configured with the following Configuration Variables:
 
-- SampledDataTxStartedMeasurands
-- SampledDataTxUpdatedMeasurands
-- SampledDataTxUpdatedInterval
-- SampledDataTxEndedMeasurands
-- SampledDataTxEndedInterval
+- <<sampled_data_tx_started_measurands,`SampledDataTxStartedMeasurands`>>
+- <<sampled_data_tx_updated_measurands,`SampledDataTxUpdatedMeasurands`>>
+- <<sampled_data_tx_updated_interval,`SampledDataTxUpdatedInterval`>>
+- <<sampled_data_tx_ended_measurands,`SampledDataTxEndedMeasurands`>>
+- <<sampled_data_tx_ended_interval,`SampledDataTxEndedInterval`>>
 
-SampledDataTxUpdatedInterval is the time (in seconds) between sampling of metering (or other) data, intended to be
-transmitted by TransactionEventRequest (eventType  Updated) messages during a transaction. A value of "0" (numeric zero), by
-convention, is to be interpreted to mean that no sampled data should be transmitted.
+<<sampled_data_tx_updated_interval,`SampledDataTxUpdatedInterval`>> is the time (in seconds) between sampling of metering (or other) data, intended to be transmitted by <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>) messages during a transaction. A value of "0" (numeric zero), by convention, is to be interpreted to mean that no sampled data should be transmitted.
 
-SampledDataTxEndedInterval is the time (in seconds) between sampling of metering (or other) data, intended to be
-transmitted in the TransactionEventRequest (eventType  Ended) message.
+<<sampled_data_tx_ended_interval,`SampledDataTxEndedInterval`>> is the time (in seconds) between sampling of metering (or other) data, intended to be transmitted in the <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) message.
 
-SampledDataTxStartedMeasurands is a comma separated list that prescribes the set of measurands to be included in the
-_meterValues_ field of a TransactionEventRequest (eventType  Started).
+<<sampled_data_tx_started_measurands,`SampledDataTxStartedMeasurands`>> is a comma separated list that prescribes the set of measurands to be included in the _meterValues_ field of a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>).
 
-SampledDataTxUpdatedMeasurands is a comma separated list that prescribes the set of measurands to be included in the
-_meterValues_ field of a TransactionEventRequest (eventType  Updated), every SampledDataTxUpdatedInterval seconds.
+<<sampled_data_tx_updated_measurands,`SampledDataTxUpdatedMeasurands`>> is a comma separated list that prescribes the set of measurands to be included in the _meterValues_ field of a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>), every SampledDataTxUpdatedInterval seconds.
 
-SampledDataTxEndedMeasurands is a comma separated list that prescribes the sampled measurands to be included in the
-_meterValues_ field of a TransactionEventRequest (eventType  Ended), these measurands have to be taken every
-SampledDataTxEndedInterval seconds from the start of the transaction, and will only be sent in the TransactionEventRequest
-(eventType  Ended).
+<<sampled_data_tx_ended_measurands,`SampledDataTxEndedMeasurands`>> is a comma separated list that prescribes the sampled measurands to be included in the _meterValues_ field of a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>), these measurands have to be taken every <<sampled_data_tx_ended_interval,`SampledDataTxEndedInterval`>> seconds from the start of the transaction, and will only be sent in the <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>).
 
 Care should be taken to ensure that the amount of measurands that is expected at the end of a transaction fits in one
-TransactionEventRequest(eventType=Ended) message. Keep the number of measurands in SampledDataTxEndedMeasurands
-to a minimum and configure a large interval in SampledDataTxEndedInterval to keep the number of samples small.
+<<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) message. Keep the number of measurands in <<sampled_data_tx_ended_measurands,`SampledDataTxEndedMeasurands`>> to a minimum and configure a large interval in <<sampled_data_tx_ended_interval,`SampledDataTxEndedInterval`>> to keep the number of samples small.
 
+[cols="^.^1,10",%autowidth.stretch]
+|===
+s|NOTE |Please note: _Transaction related_ MeterValues are never transmitted in <<metervalues_request,MeterValuesRequest>>.
+|===
 
-NOTE Please note: Transaction related MeterValues are never transmitted in MeterValuesRequest.
+[[clock_aligned_meter_values]]
+=== Clock-Aligned Meter Values
 
-==== 2.2. Clock-Aligned Meter Values
-
-Grid Operator might require meter readings to be taken from fiscally certified energy meters, at specific Clock aligned times
-(usually every quarter hour, or half hour).
+Grid Operator might require meter readings to be taken from fiscally certified energy meters, at specific Clock aligned times (usually every quarter hour, or half hour).
 
 "Clock-Aligned Meter Values" can be configured with the following Configuration Variables:
 
-- AlignedDataMeasurands
-- AlignedDataInterval
-- AlignedDataTxEndedMeasurands
-- AlignedDataTxEndedInterval
-- AlignedDataSendDuringIdle
+- <<aligned_data_measurands,`AlignedDataMeasurands`>>
+- <<aligned_data_interval,`AlignedDataInterval`>>
+- <<aligned_data_tx_ended_measurands,`AlignedDataTxEndedMeasurands`>>
+- <<aligned_data_tx_ended_interval,`AlignedDataTxEndedInterval`>>
+- <<aligned_data_send_during_idle,`AlignedDataSendDuringIdle`>>
 
-AlignedDataInterval is the size of the clock-aligned data interval (in seconds). This defines the set of evenly spaced meter
-data aggregation intervals per day, starting at 00:00:00 (midnight), at which time the Charging Station should take measurements
-and send them to the CSMS in a MeterValuesRequest message. A value of "0" (numeric zero), by convention, is to be interpreted to
-mean that no clock-aligned data should be transmitted.
+<<aligned_data_interval,`AlignedDataInterval`>> is the size of the clock-aligned data interval (in seconds). This defines the set of evenly spaced meter data aggregation intervals per day, starting at 00:00:00 (midnight), at which time the Charging Station should take measurements and send them to the CSMS in a <<metervalues_request,MeterValuesRequest>> message. A value of "0" (numeric zero), by convention, is to be interpreted to mean that no clock-aligned data should be transmitted.
 
-AlignedDataTxEndedInterval is the size of the clock-aligned data interval (in seconds). This defines the set of evenly spaced
+<<aligned_data_tx_ended_interval,`AlignedDataTxEndedInterval`>> is the size of the clock-aligned data interval (in seconds). This defines the set of evenly spaced meter data aggregation intervals per day, starting at 00:00:00 (midnight) intended to be transmitted in the <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) message.
 
-Edition 3 FINAL, 2024-05-06 **J. MeterValues**
+For example, a value of 900 (15 minutes) indicates that every day should be broken into 96 15-minute intervals, starting at 0:00 and then measured every 15 minutes: 0:15, 0:30, 0:45, 1:00, 1:15 etc.
 
+<<aligned_data_measurands,`AlignedDataMeasurands`>> is a comma separated list that prescribes the set of measurands to be included in a <<metervalues_request,MeterValuesRequest>> PDU, every <<aligned_data_interval,`AlignedDataInterval`>> seconds.
 
-meter data aggregation intervals per day, starting at 00:00:00 (midnight) intended to be transmitted in the TransactionEventRequest
-(eventType  Ended) message.
+<<aligned_data_tx_ended_measurands,`AlignedDataTxEndedMeasurands`>> is a comma separated list that prescribes the set of clock-aligned periodic measurands to be included in the _meterValue_ elements of <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) PDU for every <<aligned_data_tx_ended_interval,`AlignedDataTxEndedInterval`>> of the transaction.
 
-For example, a value of 900 (15 minutes) indicates that every day should be broken into 96 15-minute intervals, starting at 0:00 and
-then measured every 15 minutes: 0:15, 0:30, 0:45, 1:00, 1:15 etc.
-
-AlignedDataMeasurands is a comma separated list that prescribes the set of measurands to be included in a
-MeterValuesRequest PDU, every AlignedDataInterval seconds.
-
-AlignedDataTxEndedMeasurands is a comma separated list that prescribes the set of clock-aligned periodic measurands to be
-included in the _meterValue_ elements of TransactionEventRequest (eventType  Ended) PDU for every
-AlignedDataTxEndedInterval of the transaction.
-
-AlignedDataSendDuringIdle can be used to only send clock aligned meter values when there are no ongoing transactions.
+<<aligned_data_send_during_idle,`AlignedDataSendDuringIdle`>> can be used to only send clock aligned meter values when there are no ongoing transactions.
 
 
-NOTE Clock-aligned meter values for an EVSE that is involved in a transaction MAY be transmitted in
-TransactionEventRequests with context  Sample.Clock instead of in MeterValuesRequests.
+[cols="^.^1,10",%autowidth.stretch]
+|===
+s|NOTE |Clock-aligned meter values for an EVSE that is involved in a transaction MAY be transmitted in TransactionEventRequests with context  Sample.Clock instead of in MeterValuesRequests.
+|===
 
-==== 2.3. Multiple Locations/Phases.
+=== Multiple Locations/Phases
 
-When a Charging Station can measure the same measurand on multiple locations or phases, all possible locations and/or phases
-SHALL be reported when configured in one of the relevant Configuration Variables.
+When a Charging Station can measure the same measurand on multiple locations or phases, all possible locations and/or phases SHALL be reported when configured in one of the relevant Configuration Variables.
 
-For example: A Charging Station capable of measuring _Current.Import_ on _Inlet_ (all 3 phases) (grid connection) and _Outlet_ (3 phases
-per EVSE on both its EVSEs). _Current.Import_ is set in AlignedDataMeasurands. AlignedDataInterval is set to 900
-(seconds). Then the Charging Station should send: (every 15 minutes)
+For example: A Charging Station capable of measuring _Current.Import_ on _Inlet_ (all 3 phases) (grid connection) and _Outlet_ (3 phases per EVSE on both its EVSEs). _Current.Import_ is set in <<aligned_data_measurands,`AlignedDataMeasurands`>>. <<aligned_data_interval,`AlignedDataInterval`>> is set to 900 (seconds). Then the Charging Station should send: (every 15 minutes)
 
-- a MeterValuesRequest with: evseId  0; with 3 SampledValue elements, one per phase with location  Inlet.
-- a MeterValuesRequest with: evseId  1; with 3 SampledValue elements, one per phase with location  Outlet.
-- a MeterValuesRequest with: evseId  2; with 3 SampledValue elements, one per phase with location  Outlet.
+- a <<metervalues_request,MeterValuesRequest>> with: evseId  0; with 3 SampledValue elements, one per phase with location  Inlet.
+- a <<metervalues_request,MeterValuesRequest>> with: evseId  1; with 3 SampledValue elements, one per phase with location  Outlet.
+- a <<metervalues_request,MeterValuesRequest>> with: evseId  2; with 3 SampledValue elements, one per phase with location  Outlet.
 
-NOTE
+[cols="^.^1,10",%autowidth.stretch]
+|===
+s|NOTE |When the configuration variable <<sampled_data_register_values_without_phases,`SampledDataRegisterValuesWithoutPhases`>> has the value _true_, then meter values of measurand `Energy.Active.Import.Register` will only report the total energy over all phases without reporting the individual phase values.
+|===
 
+=== Signed Meter Values
 
-When the configuration variable SampledDataRegisterValuesWithoutPhases has the value true , then
-meter values of measurand Energy.Active.Import.Register will only report the total energy over all
-phases without reporting the individual phase values.
+OCPP 2.0.1 supports signed meter values. When a Charging Station support signed meter values it can use the Configuration Variables <<aligned_data_sign_readings,`AlignedDataSignReadings`>> and <<sampled_data_sign_readings,`SampledDataSignReadings`>> to report this. The CSMS can then use this same variables to turn the use of signed meter values _on_ or _off_.
 
-==== 2.4. Signed Meter Values
+When enabled the Charging Station shall put the signed meter value in the _SignedMeterValue_ field of the <<sampled_value_type,SampledValue>>.
 
-OCPP 2.0.1 supports signed meter values. When a Charging Station support signed meter values it can use the Configuration
-Variables AlignedDataSignReadings and SampledDataSignReadings to report this. The CSMS can then use this same
-variables to turn the use of signed meter values _on_ or _off_.
-
-When enabled the Charging Station shall put the signed meter value in the _SignedMeterValue_ field of the SampledValue.
-
-==== 2.5. Configuration Examples
+=== Configuration Examples
 
 Below are a few examples of configurations for transaction-related measurands:
 
 **Only sampled energy register values for start/stop at end of transaction**
 
 - SampledDataCtrlr.TxStartedMeasurands and TxUpdatedMeasurands are left empty.
-- SampledDataCtrlr.TxEndedMeasurands  "Energy.Active.Import.Register"
-- SampledDataCtrlr.TxEndedInterval  0
+- SampledDataCtrlr.TxEndedMeasurands = "Energy.Active.Import.Register"
+- SampledDataCtrlr.TxEndedInterval = 0
 
 **Values of energy register at start, during and end of transaction**
 
-- SampledDataCtrlr.TxStartedMeasurands  "Energy.Active.Import.Register"
-- SampledDataCtrlr.TxUpdatedMeasurands  "Energy.Active.Import.Register"
-- SampledDataCtrlr.TxUpdatedInterval  300 (every 5 minutes)
-- SampledDataCtrlr.TxEndedMeasurands  "Energy.Active.Import.Register"
-- SampledDataCtrlr.TxEndedInterval  0
-
-Edition 3 FINAL, 2024-05-06 **J. MeterValues**
-
+- SampledDataCtrlr.TxStartedMeasurands = "Energy.Active.Import.Register"
+- SampledDataCtrlr.TxUpdatedMeasurands = "Energy.Active.Import.Register"
+- SampledDataCtrlr.TxUpdatedInterval = 300 (every 5 minutes)
+- SampledDataCtrlr.TxEndedMeasurands = "Energy.Active.Import.Register"
+- SampledDataCtrlr.TxEndedInterval = 0
 
 **Only clock-aligned register values during and start/stop at end of transction**
 
 - SampledDataCtrlr.TxStartedMeasurands and TxUpdatedMeasurands are left empty.
-- SampledDataCtrlr.TxEndedMeasurands  "Energy.Active.Import.Register"
-- SampledDataCtrlr.TxEndedInterval  0
-- AlignedDataCtrlr.Measurands  "Energy.Active.Import.Register"
-- AlignedDataCtrlr.Interval  300 (every 5 minutes)
-
-Edition 3 FINAL, 2024-05-06 **J. MeterValues**
-
-
-=== 3. Use cases & Requirements
-
-==== 3.1. MeterValues
-
-==== J01 - Sending Meter Values not related to a transaction
-
-_Table 152. J01 - Sending Meter Values not related to a transaction_
-
-
-No. Type Description
-1 Name Sending Meter Values not related to a transaction
-2 ID J01
-Functional block J. Meter Values
-3 Objective(s) To sample the electrical meter or other sensor/transducer hardware to provide information about
-the Charging Stations' Meter Values.
-4 Description The Charging Station samples the electrical meter or other sensor/transducer hardware to
-provide information about its Meter Values. Depending on configuration settings, the Charging
-Station will send Meter Values.
-Actors Charging Station, CSMS
-Scenario description 1. The Charging Station sends a MeterValuesRequest message, for offloading Meter Values to
-the CSMS.
-
-**2.** Upon receipt of a MeterValuesRequest message, the CSMS responds with a
-MeterValuesResponse message.
-
-**5 Prerequisite(s)** (^) The Charging Station is configured to send Meter values every XX seconds.
-No transaction is running.
-**6 Postcondition(s)** (^) **Successful postcondition:**
-n/a
-**Failure postcondition:**
-n/a
-Charging Station CSMS
-MeterValuesRequest(evseId, meterValue)
-MeterValuesResponse()
-_Figure 91. Sequence Diagram: Sending Meter Values_
-**7 Error handling** n/a
-**8 Remark(s)** (^) The phase field is not applicable to all Measurands.
-The phase rotation of a Connector relative to the grid connection can be derived by querying the
-PhaseRotation Configuration Variables of all components in the chain from grid connection up
-to Connector.
-The nature of each sampledValue is determined by the optional Measurand, context, location, unit
-and phase fields.
-The optional SignedMeterValue field can contain digitally signed binary meter value data.
-Edition 3 FINAL, 2024-05-06 **J. MeterValues**
-
-
-**J01 - Sending Meter Values not related to a transaction - Requirements**
-
-_Table 153. J01 - Requirements_
-
-
-ID Precondition Requirement definition Note
-J01.FR.01 The Charging Station MAY sample the energy
-meter (or other sensor/transducer hardware) to
-provide extra information about its Meter Values.
-
-
-It is up to the Charging
-Station when it will send
-Meter Values. This can
-be configured using the
-SetVariablesRequest
-message to data
-acquisition intervals and
-specify data to be
-acquired & reported.
-J01.FR.02 The MeterValuesRequest message SHALL contain
-the id of the EVSE from which samples were taken.
-
-J01.FR.03 (^) J01.FR.02 AND
-The evseId is 0.
-The MeterValuesRequest message SHALL be
-associated with the entire Charging Station.
-J01.FR.04 (^) J01.FR.03 AND
-Measurand is energy related.
-The sample SHALL be taken from the main energy
-meter.
-J01.FR.05 If all captured at the same point in
-time.
-Each MeterValue element SHALL contain a
-timestamp.
-J01.FR.06 If all captured at the same point in
-time.
-Each MeterValue(s) element SHALL contain a set
-of one or more individual SampledValue elements.
-J01.FR.07 The optional measurand field SHALL specify the
-type of value being measured/reported.
-J01.FR.08 The optional context field SHALL specify the
-reason/event triggering the reading.
-J01.FR.09 The optional location field SHALL specify where the
-measurement is taken.
-(e.g. Inlet, Outlet).
-J01.FR.10 The optional phase field SHALL specify to which
-phase or phases of the electric installation the
-value applies.
-J01.FR.11 The Charging Station SHALL report all phase
-number dependent values from the electrical meter
-(or grid connection when absent) point of view.
-J01.FR.13 When reporting phase rotation of a
-component
-The Charging Station SHALL report the phase
-rotation relative to the grid connection
-J01.FR.14 When AlignedDataCtrlr.Interval > 0
-AND
-EVSE for which measurands are sent,
-is not involved in a transaction
-The Charging Station SHALL send a
-MeterValuesRequest message to the CSMS for the
-measurands in AlignedDataCtrlr.Measurands at
-every AlignedDataCtrlr.Interval for all _evseIds_ ,
-locations and phases for which a configured
-measurand is supported.
-It is possible that certain
-measurands are not
-available for every
-location. For example,
-_evseId_  0 (grid meter)
-will not have a
-"Current.Offered" or
-"SoC" measurand.
-See also J01.FR.22
-J01.FR.15 (^) J01.FR.14
-AND
-Amount of measurands is too much
-for 1 MeterValuesRequest
-The Charging Station MAY use multiple
-MeterValuesRequest messages to send all
-measurands.
-J01.FR.17 The timestamp of a MeterValue SHALL apply to all
-its SampledValues.
-J01.FR.18 When CSMS receives a
-MeterValuesRequest
-CSMS SHALL respond with MeterValuesResponse. Failing to respond with
-MeterValuesResponse
-might cause the
-Charging Station to try
-the same message
-again.
-Edition 3 FINAL, 2024-05-06 **J. MeterValues**
-
-
-
-ID Precondition Requirement definition Note
-J01.FR.19 If AlignedDataSendDuringIdle is
-set to true for an EVSE AND
-the specified EVSE has an ongoing
-transaction.
-
-
-The Charging Station SHALL stop sending the clock
-aligned meter values for this EVSE.
-
-
-J01.FR.20 If AlignedDataSendDuringIdle is
-set to true for a Charging Station AND
-the Charging Station has an ongoing
-transaction.
-
-
-The Charging Station SHALL stop sending the clock
-aligned meter values for all EVSEs and the main
-power meter.
-
-
-J01.FR.21 AlignedDataSignReadings is true The Charging Station SHALL retrieve signed meter
-values from components that support data signing
-and put them in the signedMeterValue field.
-J01.FR.22 When AlignedDataCtrlr.Interval > 0
-AND
-EVSE for which measurands are sent,
-is involved in a transaction
-
-
-The Charging Station SHALL send either:
-
-- a MeterValuesRequest message or
-- a TransactionEventRequest with _triggerReason_ =
-Sample.Clock
-to the CSMS for the measurands in
-AlignedDataCtrlr.Measurands at every
-AlignedDataCtrlr.Interval.
-
-
-See also J01.FR.14
-
-Edition 3 FINAL, 2024-05-06 **J. MeterValues**
-
-
-==== J02 - Sending transaction related Meter Values
-
-_Table 154. J02 - Sending transaction related Meter Values_
-
-
-No. Type Description
-1 Name Sending transaction related Meter Values
-2 ID J02
-Functional block J. Meter Values
-3 Objective(s) To sample the energy meter or other sensor/transducer hardware to provide information about
-the Charging Stations' transaction related Meter Values.
-4 Description The Charging Station samples the energy meter or other sensor/transducer hardware to provide
-information about its transaction related Meter Values. Depending on configuration settings, the
-Charging Station will send Meter Values during a transaction.
-Actors Charging Station, CSMS
-Scenario description 1. The Charging Station sends a TransactionEventRequest (eventType  Updated) message, for
-offloading Meter Values to the CSMS.
-
-**2.** Upon receipt of a TransactionEventRequest message, the CSMS responds with a
-TransactionEventResponse message.
-
-**5 Prerequisite(s)** (^) The Charging Station is configured to send Meter Values every XX seconds.
-A transaction is running.
-**6 Postcondition(s)** (^) **Successful postcondition:**
-n/a
-**Failure postcondition:**
-n/a
-Charging Station CSMS
-TransactionEventRequest(eventType  Updated, transactionId, meterValues)
-TransactionEventResponse()
-_Figure 92. Sequence Diagram: Sending transaction related Meter Values_
-**7 Error handling** When _Offline_ , the Charging Station MUST queue any transaction-related messages (Meter Values
-belonging to a transaction) that it would have sent to the CSMS if the Charging Station had been
-online.
-**8 Remark(s)** (^) The phase field is not applicable to all Measurands.
-The phase rotation of a Connector relative to the grid connection can be derived by querying the
-PhaseRotation Configuration Variables of all components in the chain from grid connection up
-to Connector.
-The nature of each sampledValue is determined by the optional Measurand, context, location, unit
-and phase fields.
-The optional SignedMeterValue field can contain digitally signed binary meter value data.
-Edition 3 FINAL, 2024-05-06 **J. MeterValues**
-
-
-**J02 - Sending transaction related Meter Values - Requirements**
-
-_Table 155. J02 - Requirements_
-
-
-ID Precondition Requirement definition Note
-J02.FR.01 The Charging Station MAY sample the energy
-meter (or other sensor/transducer hardware) to
-provide extra information about its Meter Values.
-
-
-It is up to the Charging
-Station when it will send
-Meter Values. This can
-be configured using the
-SetVariablesRequest
-message to data
-acquisition intervals and
-specify data to be
-acquired & reported.
-J02.FR.02 If all captured at the same point in
-time.
-
-
-Each MeterValue element SHALL contain a set of
-one or more individual SampledValue elements.
-J02.FR.03 The optional measurand field SHALL specify the
-type of value being measured/reported.
-J02.FR.04 The optional context field SHALL specify the
-reason/event triggering the reading.
-J02.FR.05 The optional location field SHALL specify where the
-measurement is taken.
-
-
-(e.g. Inlet, Outlet).
-
-
-J02.FR.06 The optional phase field SHALL specify to which
-phase or phases of the electric installation the
-value applies.
-J02.FR.07 The Charging Station SHALL report all phase
-number dependent values from the power meter (or
-grid connection when absent) point of view.
-J02.FR.09 When reporting phase rotation of a
-component
-
-
-The Charging Station SHALL report the phase
-rotation relative to the grid connection.
-J02.FR.10 If a TransactionEventRequest
-message with eventType  Started or
-eventType  Update contains multiple
-meterValue elements, rather than one
-meterValue with one or more
-sampledValue elements
-
-
-All meterValue elements SHALL have a timestamp
-that is within the current sampling interval, i.e.:
-(transaction event timestamp -
-SampledDataTxUpdatedInterval) <
-meterValue.timestamp < transaction event
-timestamp
-
-
-Only for eventType =
-Ended can a
-TransactionEventReques
-t have meter values for
-multiple intervals.
-
-
-J02.FR.11 When
-SampledDataTxUpdatedInterval
-> 0
-
-
-The Charging Station SHALL send a
-TransactionEventRequest(eventType  Updated
-with triggerReason  MeterValuePeriodic with
-the measurands configured in
-SampledDataCtrlr.TxUpdatedMeasurands in the
-meterValue field at every
-SampledDataCtrlr.TxUpdatedInterval.
-
-
-See E01 for sending of
-SampledDataCtrlr.TxStar
-tedMeasurands and E06
-for
-SampledDataCtrlr.TxEnd
-edMeasurands.
-
-J02.FR.12 (^) J02.FR.11
-AND
-_Offline_
-AND
-The Charging Station is running low on
-memory
-The Charging Station MAY drop
-TransactionEventRequest(eventType  Updated)
-messages.
-J02.FR.13 J02.FR.12 When dropping TransactionEventRequest
-(eventType  Updated) messages, the Charging
-Station SHALL drop intermediate messages first
-(1st message, 3th message, 5th message etc.), not
-start dropping messages from the start or stop
-adding messages to the queue.
-J02.FR.14 (^) J02.FR.11
-AND
-Amount of meter data is too much for
-1 TransactionEventRequest
-(eventType  Updated)
-The Charging Station MAY use multiple
-TransactionEventRequest(eventType  Updated)
-messages with the same _timestamp_ to send all
-measurands.
-Edition 3 FINAL, 2024-05-06 **J. MeterValues**
-
-
-
-ID Precondition Requirement definition Note
-J02.FR.16 All "Register" values relating to a single charging
-transaction, or a non-transactional consumer (e.g.
-Charging Station internal power supply, overall
-supply) MUST be monotonically increasing in time.
-
-
-Except in the case of a
-meter replacement. See
-MeasurandEnumType.
-
-
-J02.FR.17 For improved auditability, ".Register" values
-SHOULD be reported exactly as they are directly
-read from a non-volatile register in the electrical
-metering hardware, and SHOULD NOT be re-based
-to zero at the start of transactions
-
-
-This allows any "missing
-energy" between
-sequential transactions,
-due to hardware fault,
-meter replacement, mis-
-wiring, fraud, etc. to be
-identified, by allowing the
-CSMS to confirm that the
-starting register value of
-any transaction is
-identical to the finishing
-register value of the
-preceding transaction on
-the same connector.
-J02.FR.18 The timestamp of a MeterValue SHALL apply to all
-its SampledValues.
-J02.FR.19 When CSMS receives a
-TransactionEventRequest
-
-
-CSMS SHALL respond with
-TransactionEventResponse.
-
-
-Failing to respond with
-TransactionEventRespon
-se might cause the
-Charging Station to try
-the same message
-again.
-J02.FR.20 When configured to send meter data
-in the TransactionEventRequest
-(eventType  Ended) AND
-amount of meter data is too much for
-one TransactionEventRequest
-(eventType  Ended) message
-
-
-Charging Station MAY remove samples until it fits
-in a message. When removing samples, the
-Charging Station SHOULD remove intermediate
-samples first (for example: 2nd sample, 4th
-sample, 6th sample etc.).
-
-
-Samples should be
-removed in a way that it
-does not affect billing.
-See also E06.FR.12.
-
-
-J02.FR.21 SampledDataSignReadings is true The Charging Station SHALL retrieve signed meter
-values from components that support data signing
-and put them in the signedMeterValue field.
-J02.FR.22 Meter values reported in a
-TransactionEventRequest message SHALL all be
-related to EVSE on which the transaction is taking
-place.
-
-==== 3.2. ISO 15118 MeterValue signing.
-
-==== J03 - Charging Loop with metering information exchange
-
-_Table 156. J03 - Charging Loop with metering information exchange_
-
-
-No. Type Description
-1 Name Charging Loop with metering information exchange
-2 ID J03
-Functional block J. Meter Values
-Reference ISO15118-1 F1
-
-**3 Objectives** (^) See ISO15118-1, use case Objective F1, page 37.
-**4 Description** (^) See ISO15118-1, use case Description F1, page 37.
-**5 Prerequisites** - If authorization according use cases in Functional Block C is applied, it SHALL be finished
-successfully.
-See ISO15118-1, use case Prerequisites F1, page 37.
-**6** Actors EV, EVSE, Charging Station
-Edition 3 FINAL, 2024-05-06 **J. MeterValues**
-
-
-
-No. Type Description
-7 Combined scenario
-description
-
-===== 15118
-
-
-1a. The EV sends a ChargingStatusReq (in case of AC charging) message to the Charging Station,
-upon which EVSE returns a ChargingStatusRes containing the meter value from the fiscal meter.
-1b. The EV sends a CurrentDemandReq (in case of DC charging) message to the Charging
-Station, upon which EVSE returns a CurrentDemandRes containing the meter value from the fiscal
-meter.
-
-**2.** The EV sends a MeteringReceiptReq to the Charging Station to acknowledge receipt of the
-meter value.
-
-**8 Postcondition(s)** (^) See ISO15118-1, use case End conditions F1, page 37.
-EV Charging Station CSMS
-15118
-if AC Charging
-ChargingStatusReq()
-ChargingStatusRes(MeterInfoRecord { MeterId,
-[MeterReading], MeterStatus,
-SignedMeterReading, timeStamp },ReceiptRequired: True)
-MeteringReceiptReq(Signature to confirm ChargingStatus Data)
-MeteringReceiptRes()
-OCPP
-TransactionEventRequest(eventType  Updated, transactionID,
-timestamp, chargingState  Charging, Signed metervalues)
-TransactionEventResponse()
-_Figure 93. Charging Loop with metering information exchange_
-**9 Error handling** n/a
-**10 Remark(s)** n/a
-**J03 - Charging Loop with metering information exchange - Requirements**
-_Table 157. J03 - Requirements_
-**ID Precondition Requirement definition Note**
-J03.FR.04 When the Charging Station
-receives ISO 15118 signed
-MeteringReceiptReq message
-from EV
-The Charging Station SHOULD NOT pass the
-meter value from the MeteringReceiptReq
-message to CSMS in a
-TransactionEventRequest (eventType =
-Updated) message. Instead, Charging Station
-sends transaction-related meter values as
-described in use case J02.
-This does not imply that a
-Charging Station cannot require EV
-to send MeteringReceiptReq
-messages. An implementation at a
-Charging Station can be such, that
-every meter value from the fiscal
-meter that is send to CSMS (as per
-use case J02) must first have been
-acknowledged by a
-MeterReceiptReq from the EV.
-
+- SampledDataCtrlr.TxEndedMeasurands = "Energy.Active.Import.Register"
+- SampledDataCtrlr.TxEndedInterval = 0
+- AlignedDataCtrlr.Measurands = "Energy.Active.Import.Register"
+- AlignedDataCtrlr.Interval = 300 (every 5 minutes)
+
+<<<
+
+== Use cases & Requirements
+
+=== MeterValues
+
+:sectnums!:
+=== J01 - Sending Meter Values not related to a transaction
+
+.J01 - Sending Meter Values not related to a transaction
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Sending Meter Values not related to a transaction
+|2   |ID              |J01
+|{nbsp} d|_Functional block_ |J. Meter Values
+|3   |Objective(s)    |To sample the electrical meter or other sensor/transducer hardware to provide information about the Charging Stations' Meter Values.
+|4   |Description     |The Charging Station samples the electrical meter or other sensor/transducer hardware to provide information about its Meter Values. Depending on configuration settings, the Charging Station will send Meter Values.
+|{nbsp} d|_Actors_    |Charging Station, CSMS
+|{nbsp} d|_Scenario description_ 
+  |**1.** The Charging Station sends a <<metervalues_request,MeterValuesRequest>> message, for offloading Meter Values to the CSMS. +
+  **2.** Upon receipt of a <<metervalues_request,MeterValuesRequest>> message, the CSMS responds with a <<meter_values_response,MeterValuesResponse>> message.
+|5   |Prerequisite(s) |The Charging Station is configured to send Meter values every XX seconds. +
+  No transaction is running.
+|6   |Postcondition(s)
+  |**Successful postcondition:** +
+  n/a +
+  **Failure postcondition:** +
+  n/a
+|===
+
+.Sequence Diagram: Sending Meter Values
+image::part2/images/figure_91.svg[Sequence Diagram: Sending Meter Values]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling  |n/a
+|8   |Remark(s)       
+  |The phase field is not applicable to all <<measurand_enum_type,Measurands>>.
+
+  The phase rotation of a Connector relative to the grid connection can be derived by querying the <<phase_rotation,`PhaseRotation`>> Configuration Variables of all components in the chain from grid connection up to Connector.
+
+  The nature of each <<sampled_value_type,sampledValue>> is determined by the optional <<measurand_enum_type,Measurand>>, <<reading_context_enum_type,context>>, <<location_enum_type,location>>, <<sampled_value_type,unit>> and <<phase_enum_type,phase>> fields.
+
+  The optional SignedMeterValue field can contain digitally signed binary meter value data.
+|===
+
+==== J01 - Sending Meter Values not related to a transaction - Requirements
+
+.J01 - Requirements
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
+
+|J01.FR.01  |{nbsp} 
+  |The Charging Station MAY sample the energy meter (or other sensor/transducer hardware) to provide extra information about its Meter Values.
+    |It is up to the Charging Station when it will send Meter Values. This can be configured using the <<set_variables_request,SetVariablesRequest>> message to data acquisition intervals and specify data to be acquired & reported.
+|J01.FR.02  |{nbsp}
+  |The <<metervalues_request,MeterValuesRequest>> message SHALL contain the id of the EVSE from which samples were taken. |{nbsp}
+|J01.FR.03  |J01.FR.02 AND +
+  The evseId is 0.
+    |The <<metervalues_request,MeterValuesRequest>> message SHALL be associated with the entire Charging Station. |{nbsp}
+|J01.FR.04  |J01.FR.03 AND +
+  <<measurand_enum_type,Measurand>> is energy related.
+    |The sample SHALL be taken from the main energy meter. |{nbsp}
+|J01.FR.05  |If all captured at the same point in time.
+  |Each MeterValue element SHALL contain a timestamp. |{nbsp}
+|J01.FR.06  |If all captured at the same point in time.
+  |Each MeterValue(s) element SHALL contain a set of one or more individual SampledValue elements. |{nbsp}
+|J01.FR.07  |{nbsp}
+  |The optional measurand field SHALL specify the type of value being measured/reported. |{nbsp}
+|J01.FR.08  |{nbsp}
+  |The optional context field SHALL specify the reason/event triggering the reading. |{nbsp}
+|J01.FR.09  |{nbsp}
+  |The optional location field SHALL specify where the measurement is taken.
+    |(e.g. Inlet, Outlet).
+|J01.FR.10  |{nbsp}
+  |The optional phase field SHALL specify to which phase or phases of the electric installation the value applies. |{nbsp}
+|J01.FR.11  |{nbsp}
+  |The Charging Station SHALL report all phase number dependent values from the electrical meter (or grid connection when absent) point of view. |{nbsp}
+|J01.FR.13  |When reporting phase rotation of a component
+  |The Charging Station SHALL report the phase rotation relative to the grid connection |{nbsp}
+|J01.FR.14  |When <<aligned_data_interval,AlignedDataCtrlr.Interval>> > 0 +
+  AND +
+  EVSE for which measurands are sent, is not involved in a transaction
+    |The Charging Station SHALL send a <<metervalues_request,MeterValuesRequest>> message to the CSMS for the measurands in <<aligned_data_measurands,AlignedDataCtrlr.Measurands>> at every AlignedDataCtrlr.Interval for all _evseIds_, locations and phases for which a configured measurand is supported.
+      |It is possible that certain measurands are not available for every location. For example, _evseId_ = 0 (grid meter) will not have a "Current.Offered" or "SoC" measurand. See also J01.FR.22
+|J01.FR.15  |J01.FR.14 +
+  AND +
+  Amount of measurands is too much for 1 <<metervalues_request,MeterValuesRequest>>
+    |The Charging Station MAY use multiple <<metervalues_request,MeterValuesRequest>> messages to send all measurands. |{nbsp}
+|J01.FR.17  |{nbsp}
+  |The timestamp of a MeterValue SHALL apply to all its <<sampled_value_type,SampledValues>>. |{nbsp}
+|J01.FR.18  |When CSMS receives a <<metervalues_request,MeterValuesRequest>>
+  |CSMS SHALL respond with <<meter_values_response,MeterValuesResponse>>.
+    |Failing to respond with <<meter_values_response,MeterValuesResponse>> might cause the Charging Station to try the same message again.
+|J01.FR.19  |If `AlignedDataSendDuringIdle` is set to true for an EVSE AND +
+  the specified EVSE has an ongoing transaction.
+    |The Charging Station SHALL stop sending the clock aligned meter values for this EVSE. |{nbsp}
+|J01.FR.20  |If `AlignedDataSendDuringIdle` is set to true for a Charging Station AND the Charging Station has an ongoing transaction.
+  |The Charging Station SHALL stop sending the clock aligned meter values for all EVSEs and the main power meter. |{nbsp}
+|J01.FR.21  |<<aligned_data_sign_readings,`AlignedDataSignReadings`>> is _true_
+  |The Charging Station SHALL retrieve signed meter values from components that support data signing and put them in the _signedMeterValue_ field. |{nbsp}
+|J01.FR.22  |When <<aligned_data_interval,AlignedDataCtrlr.Interval>> > 0 +
+  AND +
+  EVSE for which measurands are sent, is involved in a transaction
+    |The Charging Station SHALL send either: +
+      - a <<metervalues_request,MeterValuesRequest>> message or +
+      - a <<transaction_event_request,TransactionEventRequest>> with _triggerReason_ = `Sample.Clock` +
+      to the CSMS for the measurands in <<aligned_data_measurands,AlignedDataCtrlr.Measurands>> at every AlignedDataCtrlr.Interval.
+        |See also J01.FR.14
+|===
+
+<<<
+
+=== J02 - Sending transaction related Meter Values
+
+.J02 - Sending transaction related Meter Values
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Sending transaction related Meter Values
+|2   |ID              |J02
+|{nbsp} d|_Functional block_  |J. Meter Values
+|3   |Objective(s)    |To sample the energy meter or other sensor/transducer hardware to provide information about the Charging Stations' transaction related Meter Values.
+|4   |Description     |The Charging Station samples the energy meter or other sensor/transducer hardware to provide information about its transaction related Meter Values. Depending on configuration settings, the Charging Station will send Meter Values during a transaction.
+|{nbsp} d|_Actors_    |Charging Station, CSMS
+|{nbsp} d|_Scenario description_ 
+  |**1.** The Charging Station sends a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>) message, for offloading Meter Values to the CSMS. +
+  **2.** Upon receipt of a <<transaction_event_request,TransactionEventRequest>> message, the CSMS responds with a <<transaction_event_response,TransactionEventResponse>> message.
+|5   |Prerequisite(s) |The Charging Station is configured to send Meter Values every XX seconds. +
+  A transaction is running.
+|6   |Postcondition(s) 
+  |**Successful postcondition:** +
+  n/a +
+  **Failure postcondition:** +
+  n/a
+|===
+
+.Sequence Diagram: Sending transaction related Meter Values
+image::part2/images/figure_92.svg[Sequence Diagram: Sending transaction related Meter Values]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling
+  |When _Offline_, the Charging Station MUST queue any transaction-related messages (Meter Values belonging to a transaction) that it would have sent to the CSMS if the Charging Station had been online.
+|8   |Remark(s) 
+  |The phase field is not applicable to all <<measurand_enum_type,Measurands>>.
+
+  The phase rotation of a Connector relative to the grid connection can be derived by querying the <<phase_rotation,`PhaseRotation`>> Configuration Variables of all components in the chain from grid connection up to Connector.
+
+  The nature of each <<sampled_value_type,sampledValue>> is determined by the optional <<measurand_enum_type,Measurand>>, <<reading_context_enum_type,context>>, <<location_enum_type,location>>, <<sampled_value_type,unit>> and <<phase_enum_type,phase>> fields.
+
+  The optional SignedMeterValue field can contain digitally signed binary meter value data.
+|===
+
+==== J02 - Sending transaction related Meter Values - Requirements
+
+.J02 - Requirements
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
+
+|J02.FR.01  |{nbsp}
+  |The Charging Station MAY sample the energy meter (or other sensor/transducer hardware) to provide extra information about its Meter Values.
+    |It is up to the Charging Station when it will send Meter Values. This can be configured using the <<set_variables_request,SetVariablesRequest>> message to data acquisition intervals and specify data to be acquired & reported.
+|J02.FR.02  |If all captured at the same point in time.
+  |Each MeterValue element SHALL contain a set of one or more individual SampledValue elements. |{nbsp}
+|J02.FR.03  |{nbsp}
+  |The optional measurand field SHALL specify the type of value being measured/reported. |{nbsp}
+|J02.FR.04  |{nbsp}
+  |The optional context field SHALL specify the reason/event triggering the reading. |{nbsp}
+|J02.FR.05  |{nbsp}
+  |The optional location field SHALL specify where the measurement is taken.
+    |(e.g. Inlet, Outlet).
+|J02.FR.06  |{nbsp}
+  |The optional phase field SHALL specify to which phase or phases of the electric installation the value applies. |{nbsp}
+|J02.FR.07  |{nbsp}
+  |The Charging Station SHALL report all phase number dependent values from the power meter (or grid connection when absent) point of view. |{nbsp}
+|J02.FR.09  |When reporting phase rotation of a component
+  |The Charging Station SHALL report the phase rotation relative to the grid connection. |{nbsp}
+|J02.FR.10  |If a <<transaction_event_request,TransactionEventRequest>> message with <<transaction_event_enum_type,eventType = Started>> or <<transaction_event_enum_type,eventType = Update>> contains multiple _meterValue_ elements, rather than one _meterValue_ with one or more _sampledValue_ elements
+  |All _meterValue_ elements SHALL have a timestamp that is within the current sampling interval, i.e.: (transaction event timestamp - <<sampled_data_tx_updated_interval,`SampledDataTxUpdatedInterval`>>) < _meterValue.timestamp_ <= transaction event timestamp
+    |Only for _eventType_ = `Ended` can a TransactionEventRequest have meter values for multiple intervals.
+|J02.FR.11  |When <<sampled_data_tx_updated_interval,`SampledDataTxUpdatedInterval`>> > 0
+  |The Charging Station SHALL send a <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) with _triggerReason_ = `MeterValuePeriodic` with the measurands configured in <<sampled_data_tx_updated_interval,SampledDataCtrlr.TxUpdatedMeasurands>> in the meterValue field at every SampledDataCtrlr.TxUpdatedInterval.
+    |See E01 for sending of <<sampled_data_tx_started_measurands,SampledDataCtrlr.TxStartedMeasurands>> and E06 for <<sampled_data_tx_ended_measurands,SampledDataCtrlr.TxEndedMeasurands>>.
+|J02.FR.12  |J02.FR.11 +
+  AND +
+  _Offline_ +
+  AND +
+  The Charging Station is running low on memory
+    |The Charging Station MAY drop <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) messages. |{nbsp}
+|J02.FR.13  |J02.FR.12 
+  |When dropping <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) messages, the Charging Station SHALL drop intermediate messages first (1st message, 3th message, 5th message etc.), not start dropping messages from the start or stop adding messages to the queue. |{nbsp}
+|J02.FR.14  |J02.FR.11 +
+  AND +
+  Amount of meter data is too much for 1 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>)
+    |The Charging Station MAY use multiple <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) messages with the same _timestamp_ to send all measurands. |{nbsp}
+|J02.FR.16  |{nbsp}
+  |All "Register" values relating to a single charging transaction, or a non-transactional consumer (e.g. Charging Station internal power supply, overall supply) MUST be monotonically increasing in time.
+    |Except in the case of a meter replacement. See <<measurand_enum_type,MeasurandEnumType>>.
+|J02.FR.17  |{nbsp}
+  |For improved auditability, ".Register" values SHOULD be reported exactly as they are directly read from a non-volatile register in the electrical metering hardware, and SHOULD NOT be re-based to zero at the start of transactions
+    |This allows any "missing energy" between sequential transactions, due to hardware fault, meter replacement, mis- wiring, fraud, etc. to be identified, by allowing the CSMS to confirm that the starting register value of any transaction is identical to the finishing register value of the preceding transaction on the same connector.
+|J02.FR.18  |{nbsp}
+  |The timestamp of a <<meter_value_type,MeterValue>> SHALL apply to all its <<sampled_value_type,SampledValues>>. |{nbsp}
+|J02.FR.19  |When CSMS receives a <<transaction_event_request,TransactionEventRequest>>
+  |CSMS SHALL respond with <<transaction_event_response,TransactionEventResponse>>.
+    |Failing to respond with <<transaction_event_response,TransactionEventResponse>> might cause the Charging Station to try the same message again.
+|J02.FR.20  |When configured to send meter data in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>) AND +
+  amount of meter data is too much for one <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>) message
+    |Charging Station MAY remove samples until it fits in a message. When removing samples, the Charging Station SHOULD remove intermediate samples first (for example: 2nd sample, 4th sample, 6th sample etc.).
+      |Samples should be removed in a way that it does not affect billing. See also E06.FR.12.
+|J02.FR.21  |<<sampled_data_sign_readings,`SampledDataSignReadings`>> is _true_
+  |The Charging Station SHALL retrieve signed meter values from components that support data signing and put them in the _signedMeterValue_ field. |{nbsp}
+|J02.FR.22  |{nbsp}
+  |Meter values reported in a <<transaction_event_request,TransactionEventRequest>> message SHALL all be related to EVSE on which the transaction is taking place. |{nbsp}
+|===
+
+:sectnums:
+=== ISO 15118 MeterValue signing
+
+:sectnums!:
+=== J03 - Charging Loop with metering information exchange
+
+.J03 - Charging Loop with metering information exchange
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Charging Loop with metering information exchange
+|2   |ID              |J03
+|{nbsp} d|_Functional block_ |J. Meter Values
+|{nbsp} d|_Reference_ |<<iso15118_1,ISO15118-1>> F1
+|3   |Objective(s)    |See <<iso15118_1,ISO15118-1>>, use case Objective F1, page 37.
+|4   |Description     |See <<iso15118_1,ISO15118-1>>, use case Description F1, page 37.
+|5   |Prerequisites
+  |- If authorization according use cases in Functional Block C is applied, it SHALL be finished successfully.
+
+  See <<iso15118_1,ISO15118-1>>, use case Prerequisites F1, page 37.
+|6   d|_Actors_        |EV, EVSE, Charging Station
+|7   |Combined scenario description
+  |**15118**
+
+  **1a.** The EV sends a ChargingStatusReq (in case of AC charging) message to the Charging Station, upon which EVSE returns a ChargingStatusRes containing the meter value from the fiscal meter. +
+  **1b.** The EV sends a CurrentDemandReq (in case of DC charging) message to the Charging Station, upon which EVSE returns a CurrentDemandRes containing the meter value from the fiscal meter. +
+  **2.** The EV sends a MeteringReceiptReq to the Charging Station to acknowledge receipt of the meter value.
+|8   |Postcondition(s) |See <<iso15118_1,ISO15118-1>>, use case End conditions F1, page 37.
+|===
+
+.Charging Loop with metering information exchange
+image::part2/images/figure_93.svg[Charging Loop with metering information exchange]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|9   |Error handling |n/a
+|10  |Remark(s)      |n/a
+|===
+
+==== J03 - Charging Loop with metering information exchange - Requirements
+
+.J03 - Requirements
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
+
+|J03.FR.04  |When the Charging Station receives ISO 15118 signed MeteringReceiptReq message from EV
+  |The Charging Station SHOULD NOT pass the meter value from the MeteringReceiptReq message to CSMS in a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>) message. Instead, Charging Station sends transaction-related meter values as described in use case J02.
+    |This does not imply that a Charging Station cannot require EV to send MeteringReceiptReq messages. An implementation at a Charging Station can be such, that every meter value from the fiscal meter that is send to CSMS (as per use case J02) must first have been acknowledged by a MeterReceiptReq from the EV.
+|===

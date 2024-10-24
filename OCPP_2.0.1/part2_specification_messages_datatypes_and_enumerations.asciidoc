@@ -1020,7 +1020,8 @@ EVSE of the Charging Station. ‘0’ (zero) is used to
 designate the main power meter.
 meterValue MeterValueType 1..* Required. The sampled meter values with timestamps.
 
-**1.32.2. MeterValuesResponse**
+[[meter_values_response]]
+==== MeterValuesResponse
 
 This contains the field definition of the MeterValuesResponse PDU sent by the CSMS to the Charging Station in response to a
 MeterValuesRequest PDU. This message might be removed in a future version of OCPP. It will be replaced by Device Management
@@ -2877,7 +2878,8 @@ display ComponentType 0..1 Optional. When a Charging Station has multiple Displa
 this field can be used to define to which Display this
 message belongs.
 
-=== 2.32. MeterValueType.
+[[meter_value_type]]
+=== MeterValueType
 
 _Class_
 
@@ -3067,7 +3069,8 @@ details for one time interval of the SalesTariff. The
 number of SalesTariffEntry elements is limited by the
 parameter maxScheduleTuples.
 
-=== 2.41. SampledValueType
+[[sampled_value_type]]
+=== SampledValueType
 
 _Class_
 
@@ -4447,7 +4450,8 @@ Accepted exiResponse included. This is no indication whether the update was succ
 processed properly.
 Failed Processing of the message was not successful, no exiResponse included.
 
-==== 3.47. LocationEnumType
+[[location_enum_type]]
+=== LocationEnumType
 
 _Enumeration_
 
@@ -4494,7 +4498,8 @@ will now start the log file upload.
 Rejected Log update request rejected.
 AcceptedCanceled Accepted this log upload, but in doing this has canceled an ongoing log file upload.
 
-==== 3.50. MeasurandEnumType.
+[[measurand_enum_type]]
+=== MeasurandEnumType
 
 _Enumeration_
 
@@ -4893,7 +4898,8 @@ Value Description
 Inoperative Charging Station is not available for charging.
 Operative Charging Station is available for charging.
 
-==== 3.64. PhaseEnumType
+[[phase_enum_type]]
+=== PhaseEnumType
 
 _Enumeration_
 
@@ -4942,7 +4948,8 @@ InvalidChecksum Failure end state. The firmware checksum is not matching.
 ChecksumVerified Intermediate state. The Firmware checksum is successfully verified.
 PublishFailed Publishing the new firmware has failed.
 
-==== 3.66. ReadingContextEnumType.
+[[reading_context_enum_type]]
+=== ReadingContextEnumType
 
 _Enumeration_
 

@@ -1198,7 +1198,7 @@ variableCharacteristics dataType boolean
 Description If this variable reports a value of true , Sampled Data is supported.
 
 [[sampled_data_sign_readings]]
-==== SampledDataSignReadings
+==== `SampledDataSignReadings`
 
 Required no
 Component componentName SampledDataCtrlr
@@ -1209,7 +1209,8 @@ Description If set to true , the Charging Station SHALL include signed meter val
 CSMS. Some Charging Stations might only be able to sign Transaction.Begin and Transaction.End meter
 values. When a Charging Station does not support signed meter values it SHALL NOT report this variable.
 
-**2.7.4.** SampledDataTxEndedMeasurands
+[[sampled_data_tx_ended_measurands]]
+==== `SampledDataTxEndedMeasurands`
 
 
 Required yes
@@ -1233,7 +1234,8 @@ variable. This way the CSMS knows which Measurands it can put in the TxEndedSamp
 
 When left empty, no sampled measurands SHALL be put into the TransactionEventRequest (eventType  Ended).
 
-**2.7.5.** SampledDataTxEndedInterval
+[[sampled_data_tx_ended_interval]]
+==== `SampledDataTxEndedInterval`
 
 
 Required yes
@@ -1252,7 +1254,8 @@ end of a transaction SHALL be transmitted (no intermediate values). A TxEndedInt
 other values may result in a lot of data to be transmitted in the TransactionEventRequest (eventType  Ended)
 message.
 
-**2.7.6.** SampledDataTxStartedMeasurands
+[[sampled_data_tx_started_measurands]]
+==== `SampledDataTxStartedMeasurands`
 
 
 Required yes
@@ -1294,7 +1297,8 @@ variable. This way the CSMS knows which Measurands it can put in the SampledData
 
 If the Charging Station has a meter, recommended to use as default: "Energy.Active.Import.Register"
 
-**2.7.8.** SampledDataTxUpdatedInterval
+[[sampled_data_tx_updated_interval]]
+==== `SampledDataTxUpdatedInterval`
 
 
 Required yes
@@ -1334,7 +1338,6 @@ Description If this variable reports a value of true , Aligned Data is supported
 [[aligned_data_measurands]]
 ==== `AlignedDataMeasurands`
 
-
 Required yes
 Component componentName AlignedDataCtrlr
 Variable variableName Measurands
@@ -1347,10 +1350,8 @@ AlignedDataInterval seconds. For all the allowed values see: Measurand.
 The Charging Station reports the list of supported Measurands in VariableCharacteristicsType.valuesList of this
 variable. This way the CSMS knows which Measurands it can put in the AlignedDataMeasurands.
 
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
-
-
-**2.7.12.** AlignedDataInterval
+[[aligned_data_interval]]
+==== `AlignedDataInterval`
 
 
 Required yes
@@ -1368,7 +1369,8 @@ duration interval value, represented according to the ISO8601 standard.
 A value of "0" (numeric zero), by convention, is to be interpreted to mean that no clock-aligned data should be
 transmitted.
 
-**2.7.13.** AlignedDataSendDuringIdle
+[[aligned_data_send_during_idle]]
+==== `AlignedDataSendDuringIdle`
 
 
 Required no
@@ -1382,7 +1384,8 @@ When an EVSE is specified, it SHALL stop sending the clock aligned meter values 
 ongoing transaction. When no EVSE is specified, it SHALL stop sending the clock aligned meter values when any
 transaction is ongoing on this Charging Station.
 
-**2.7.14.** AlignedDataSignReadings
+[[aligned_data_sign_readings]]
+==== `AlignedDataSignReadings`
 
 
 Required no
@@ -1394,7 +1397,8 @@ Description If set to true , the Charging Station SHALL include signed meter val
 TransactionEventRequest to the CSMS for those measurands defined in AlignedDataTxEndedMeasurands.
 When a Charging Station does not support signed meter values it SHALL NOT report this variable.
 
-**2.7.15.** AlignedDataTxEndedMeasurands
+[[aligned_data_tx_ended_measurands]]
+==== `AlignedDataTxEndedMeasurands`
 
 
 Required yes
@@ -1418,7 +1422,8 @@ variable. This way the CSMS knows which Measurands it can put in the TxEndedAlig
 When left empty, no Clock-aligned measurands SHALL be put into the TransactionEventRequest (eventType =
 Ended).
 
-**2.7.16.** AlignedDataTxEndedInterval
+[[aligned_data_tx_ended_interval]]
+==== `AlignedDataTxEndedInterval`
 
 
 Required yes
@@ -1448,7 +1453,8 @@ valueList Never,OncePerTransaction,EveryMeterValue
 Description This Configuration Variable can be used to configure whether a public key needs to be sent with a signed meter
 value. Note, that the field is required, so it needs to be present as an empty string when the public key is not sent.
 
-**2.7.18.** SampledDataRegisterValuesWithoutPhases
+[[sampled_data_register_values_without_phases]]
+==== `SampledDataRegisterValuesWithoutPhases`
 
 
 Required no
@@ -1954,7 +1960,8 @@ variableCharacteristics dataType string
 Description Value of the type of connector as defined by ConnectorEnumType in "Part 2 - Specification" plus additionally:
 cGBT, cChaoJi, OppCharge.
 
-**2.13.5.** PhaseRotation
+[[phase_rotation]]
+==== `PhaseRotation`
 
 
 Required no

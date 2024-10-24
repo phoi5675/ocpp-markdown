@@ -1,0 +1,33 @@
+@startuml figure_93
+!include style.puml
+
+participant "EV" as EV
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+group 15118
+  group if AC Charging
+    EV -> ChargingStation: ChargingStatusReq()
+
+    ChargingStation --> EV: \
+      ChargingStatusRes(MeterInfoRecord { MeterId, \
+      \n[MeterReading], MeterStatus, \
+      \nSignedMeterReading, timeStamp },ReceiptRequired: True)
+  end
+
+  EV -> ChargingStation: MeteringReceiptReq(Signature to confirm ChargingStatus Data)
+  activate ChargingStation
+
+  ChargingStation --> EV: MeteringReceiptRes()
+end
+
+group OCPP
+  ChargingStation -> CSMS: \
+    TransactionEventRequest(eventType = Updated, transactionID, \n\
+    timestamp, chargingState = Charging, Signed metervalues)
+  
+  CSMS --> ChargingStation: TransactionEventResponse()
+  deactivate ChargingStation
+end
+
+@enduml
