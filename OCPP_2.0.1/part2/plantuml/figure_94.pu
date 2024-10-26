@@ -1,0 +1,44 @@
+@startuml figure_94
+!include component_diagram_style.puml
+
+left to right direction
+
+node "CSMS" as CSMS
+
+folder "Charging Station: CS10" as CS10Folder {
+  node "Charging Station\nCS10" as CS10
+
+  node "EVSE\n1" as CS10_C1
+  node "EVSE\n2" as CS10_C2
+}
+
+folder "Charge Point: CS11" as CS11Folder {
+  node "Charging Station\nCS11" as CS11
+
+  node "EVSE\n2" as CS11_C2
+  node "EVSE\n1" as CS11_C1
+}
+
+actor "EV1" as EV1
+actor "EV2" as EV2
+
+note top of CSMS
+  CSMS sets known physical
+  grid connections limits.
+end note
+
+CSMS -down-> CS10 : OCPP charging profile
+CSMS -down-> CS11 : OCPP charging profile
+
+CS10 -down- CS10_C1
+CS10 -down- CS10_C2
+
+CS11 -down- CS11_C1
+CS11 -down- CS11_C2
+
+CS10_C1 -down[dotted]-> EV1 : Control Pilot signal \
+    \nor ISO 15118
+CS10_C2 -down[dotted]-> EV2 : Control Pilot signal \
+    \nor ISO 15118
+
+@enduml

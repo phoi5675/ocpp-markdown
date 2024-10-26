@@ -1,0 +1,40 @@
+@startuml figure_96
+!include component_diagram_style.puml
+
+left to right direction
+
+node "CSMS" as CSMS
+
+folder "Local group" {
+  node "Local Controller\nCS00" as LocalControllerCS00
+
+  node "Charge Station\nCS03" as CS03
+  node "Charge Station\nCS02" as CS02
+  node "Charge Station\nCS01" as CS01
+
+  actor "EV2" as EV2
+  actor "EV1" as EV1
+
+  note top of LocalControllerCS00
+    Local Controller limits
+    power usage of total
+    group to pre-configured
+    maximum capacity.
+  end note
+}
+
+CSMS -down-> LocalControllerCS00 : OCPP ChargingStationMaxProfile
+
+LocalControllerCS00 -down-> CS03 : OCPP charging profile
+LocalControllerCS00 -down-> CS02 : OCPP charging profile
+LocalControllerCS00 -down- CS01 
+
+CS03 -down[dotted]-> EV2 : Control Pilot signal \
+    \nor ISO 15118
+CS02 -down[dotted]-> EV1 : Control Pilot signal \
+    \nor ISO 15118
+
+CS03 -left[hidden]- CS02
+CS02 -left[hidden]- CS01
+
+@enduml

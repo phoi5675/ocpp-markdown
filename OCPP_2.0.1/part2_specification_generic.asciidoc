@@ -175,6 +175,7 @@ This section contains the terminology that is used throughout this document.
 |User Authentication      |Verification of the identity of the communication partners (e.g., user on the device). Moreover, verification that the communication partners are still alive throughout a session.
 |===
 
+[[iso_15118_and_ocpp_terminology_mapping]]
 ==== ISO 15118 and OCPP terminology mapping
 
 _This section is informative._
