@@ -73,109 +73,68 @@ If a Charging Station is connected both to the outside world as well as to an En
 
 === Introduction
 
-Influencing the charge power or current is based on sending energy transfer limits at specific points in time to a Charging Station.
-Those limits are combined in a ChargingProfile. A ChargingProfile holds the ChargingSchedule which defines a block of charging
-Power or Current limits and can contain a start time and duration. These can be applied to Charging Stations as well as to EVSEs of
-the Charging Stations. In Example ChargingProfile an example of a ChargingProfile is given to illustrate how these charging profiles
-can be used.
+Influencing the charge power or current is based on sending energy transfer limits at specific points in time to a Charging Station. Those limits are combined in a <<charging_profile_type,ChargingProfile>>. A <<charging_profile_type,ChargingProfile>> holds the <<charging_schedule_type,ChargingSchedule>> which defines a block of charging Power or Current limits and can contain a start time and duration. These can be applied to Charging Stations as well as to EVSEs of the Charging Stations. In <<example_charging_profile,Example ChargingProfile>> an example of a <<charging_profile_type,ChargingProfile>> is given to illustrate how these charging profiles can be used.
 
-A CSMS can send a charging profile to a Charging Station using the message SetChargingProfileRequest, in the following
-situations:
+A CSMS can send a charging profile to a Charging Station using the message <<set_charging_profile_request,SetChargingProfileRequest>>, in the following situations:
 
 - At the start of a transaction to set the charging profile for the transaction
 - In a RequestStartTransaction request sent to a Charging Station
 - During a transaction to change the active profile for the transaction
-- Outside the context of a transaction as a separate message to set a charging profile to a local controller, Charging Station,
-    or a default charging profile to an EVSE.
+- Outside the context of a transaction as a separate message to set a charging profile to a local controller, Charging Station, or a default charging profile to an EVSE.
 
-==== 3.2. Charging profile purposes
+[[charging_profile_purpose]]
+=== Charging profile purposes
 
-This section describes a number of types of charging profiles that are supported in OCPP. There are four different types of charging
-profiles, depending on their _purpose_ :
+This section describes a number of types of charging profiles that are supported in OCPP. There are four different types of charging profiles, depending on their _purpose_ :
 
+[cols="<.^2,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ChargingProfile +
+Purpose             |Description
 
-ChargingProfile
-Purpose
+|ChargingStationMaxProfile
+  |In internal load balancing scenarios, the Charging Station has one or more local charging profiles that limit the power or current to be shared by all EVSEs of the Charging Station. The CSMS SHALL configure such a profile with ChargingProfilePurpose set to "_ChargingStationMaxProfile_". +
+  _ChargingStationMaxProfile_ can only be set at Charging Station evseId 0.
+|[[tx_profile]]TxProfile
+  |A transaction-specific profile with purpose TxProfile overrules the <<tx_default_profile,TxDefaultProfile>> for the duration of the current transaction only or until the TxProfile expires, whichever occurs earlier.
+|[[tx_default_profile]]TxDefaultProfile
+  |Default schedules for new transactions that MAY be used to impose charging policies. An example could be a policy that prevents charging during the day.
+|ChargingStationExternal Constraints
+  |When an external system, not the CSMS, sets a charging limit or schedule, the Charging Station uses this purpose to report such a limit/schedule.
+|===
 
+=== Charging profile recurrency
 
-Description
+This section explains the different kinds of charging schedules that can be use in a charging profile, as defined by the value of the attribute _chargingProfileKind_ :
 
+[cols="<.^2,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ChargingProfile +
+Kind                |Description
 
-ChargingStationMaxProfi
-le
+|Absolute
+  |The charging schedule periods are relative to an absolute point in time defined in the schedule. This requires that _startSchedule_ is set to a starting point in time. Use this, for example, to define a schedule that reduces charging between 17:00h and 21:00h, regardless of when charging session was started.
+|Recurring
+  |The charging schedule restarts periodically at the first schedule period. To be most useful, this requires that _startSchedule_ is set to a starting point in time. Use this in combination with _recurrencyKind_ = `Daily`, +
+  for example, to define a schedule that reduces charging between 17:00h and 21:00h every day, regardless of when charging session was started.
+|Relative
+  |Charging schedule periods should start when the EVSE is ready to deliver energy. i.e. when the EV driver is authorized and the EV is connected. When a ChargingProfile is received for a transaction that is already charging, then the charging schedule periods should remain relative to the PowerPathClosed moment. +
+  No value for startSchedule should be supplied.
+|===
 
+=== Stacking charging profiles
 
-In internal load balancing scenarios, the Charging Station has one or more local charging profiles that
-limit the power or current to be shared by all EVSEs of the Charging Station. The CSMS SHALL configure
-such a profile with ChargingProfilePurpose set to " ChargingStationMaxProfile ".
-ChargingStationMaxProfile can only be set at Charging Station evseId 0.
-[[tx_profile]]TxProfile A transaction-specific profile with purpose TxProfile overrules the TxDefaultProfile for the duration of
-the current transaction only or until the TxProfile expires, whichever occurs earlier.
-TxDefaultProfile Default schedules for new transactions that MAY be used to impose charging policies. An example
-could be a policy that prevents charging during the day.
-ChargingStationExternal
-Constraints
+It is allowed to stack charging profiles of the same <<charging_profile_type,ChargingProfile>> purpose in order to describe complex calendars. For example, one can define <<charging_profile_type,ChargingProfile>> of purpose <<tx_default_profile,TxDefaultProfile>> with a duration and recurrence of one week that allows full power or current charging on weekdays from 23:00h to 06:00h and from 00:00h to 24:00h in weekends and reduced power or current charging at other times. On top of that, one can define other <<tx_default_profile,TxDefaultProfiles>> that define exceptions to this rule, for example for holidays.
 
+A <<charging_profile_type,ChargingProfile>> holds a <<charging_schedule_type,ChargingSchedule>> that defines limits for a certain time interval. Precedence of <<charging_schedule_type,ChargingSchedule>>s is determined by the _stackLevel_ of their <<charging_profile_type,ChargingProfile>>. When more than one <<charging_profile_type,ChargingProfile>> with the same <<charging_profile_purpose,chargingProfilePurpose>> is valid, then a <<charging_schedule_type,ChargingSchedule>> of a <<charging_profile_type,ChargingProfile>> with a higher stack level overrules a <<charging_schedule_type,ChargingSchedule>> from a <<charging_profile_type,ChargingProfile>> with a lower stack level.
 
-When an external system, not the CSMS, sets a charging limit or schedule, the Charging Station uses this
-purpose to report such a limit/schedule.
+To avoid conflicts, it is not allowed to have multiple charging profiles with the same _stackLevel_ and same _chargingProfilePurpose_ to be valid on the same EVSE at a given time. Note, that a charging profile for EVSE #0 is considered to be active on all EVSEs!
 
-==== 3.3. Charging profile recurrency
+=== Combining Charging Profile Purposes
 
-This section explains the different kinds of charging schedules that can be use in a charging profile, as defined by the value of the
-attribute _chargingProfileKind_ :
+The Composite Schedule that will guide the charging level is a combination of the prevailing Charging Profiles of the different <<charging_profile_purpose,chargingProfilePurposes>> and stack levels.
 
-
-ChargingProfile
-Kind
-
-
-Description
-
-
-Absolute The charging schedule periods are relative to an absolute point in time defined in the schedule. This
-requires that startSchedule is set to a starting point in time. Use this, for example, to define a schedule
-that reduces charging between 17:00h and 21:00h, regardless of when charging session was started.
-Recurring The charging schedule restarts periodically at the first schedule period. To be most useful, this requires
-that startSchedule is set to a starting point in time. Use this in combination with recurrencyKind  Daily,
-for example, to define a schedule that reduces charging between 17:00h and 21:00h every day,
-regardless of when charging session was started.
-Relative Charging schedule periods should start when the EVSE is ready to deliver energy. i.e. when the EV driver
-is authorized and the EV is connected. When a ChargingProfile is received for a transaction that is
-already charging, then the charging schedule periods should remain relative to the PowerPathClosed
-moment.
-No value for startSchedule should be supplied.
-
-Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
-
-
-==== 3.4. Stacking charging profiles
-
-It is allowed to stack charging profiles of the same ChargingProfile purpose in order to describe complex calendars. For example,
-one can define ChargingProfile of purpose TxDefaultProfile with a duration and recurrence of one week that allows full power or
-current charging on weekdays from 23:00h to 06:00h and from 00:00h to 24:00h in weekends and reduced power or current
-charging at other times. On top of that, one can define other TxDefaultProfiles that define exceptions to this rule, for example for
-holidays.
-
-A ChargingProfile holds a ChargingSchedule that defines limits for a certain time interval. Precedence of ChargingSchedules is
-determined by the _stackLevel_ of their ChargingProfile. When more than one ChargingProfile with the same chargingProfilePurpose
-is valid, then a ChargingSchedule of a ChargingProfile with a higher stack level overrules a ChargingSchedule from a
-ChargingProfile with a lower stack level.
-
-To avoid conflicts, it is not allowed to have multiple charging profiles with the same _stackLevel_ and same _chargingProfilePurpose_ to
-be valid on the same EVSE at a given time. Note, that a charging profile for EVSE #0 is considered to be active on all EVSEs!
-
-==== 3.5. Combining Charging Profile Purposes
-
-The Composite Schedule that will guide the charging level is a combination of the prevailing Charging Profiles of the different
-chargingProfilePurposes and stack levels.
-
-As mentioned before, for each charging profile purpose, at any point in time, the leading charging schedule for that purpose is the
-charging schedule that has a schedule period defined for that time and that belongs to a charging profile with the highest stack
-level that is valid at that time, as determined by their _validFrom_ and _validTo_ parameters. The Composite Schedule is then calculated
-by taking the lowest charging limit (taking the different chargingRateUnits into account) among the leading profiles of the different
-
-purposes for each time interval.
+As mentioned before, for each charging profile purpose, at any point in time, the leading charging schedule for that purpose is the charging schedule that has a schedule period defined for that time and that belongs to a charging profile with the highest stack level that is valid at that time, as determined by their _validFrom_ and _validTo_ parameters. The Composite Schedule is then calculated by taking the lowest charging limit (taking the different <<charging_rate_unit_enum_type,chargingRateUnits>> into account) among the leading profiles of the different purposes for each time interval.
 
 The only exception is when both a TxDefaultProfile and a TxProfile are valid. In that case, the TxProfile will always overrule the
 TxDefaultProfile, hence the Composite Schedule will not take the leading profile of purpose TxDefaultProfile into account in this
@@ -218,8 +177,8 @@ ChargingStationMaxProfile with stackLevel 0, the TxProfile with stackLevel 1 and
 with stackLevel 1. Note that in this situation the TxProfile overrules the TxDefaultProfile.
 Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
 
-
-==== 3.6. Example Charging Profile
+[[example_charging_profile]]
+=== Example Charging Profile
 
 This section is informative.
 

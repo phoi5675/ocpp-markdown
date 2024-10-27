@@ -1591,7 +1591,8 @@ statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
 === 1.51. SetChargingProfile
 
-**1.51.1. SetChargingProfileRequest**
+[[set_charging_profile_request]]
+==== SetChargingProfileRequest
 
 This contains the field definition of the SetChargingProfileRequest PDU sent by the CSMS to the Charging Station. The CSMS uses
 this message to send charging profiles to a Charging Station.
@@ -3818,7 +3819,8 @@ Value Description
 Accepted Request has been accepted and will be executed.
 Rejected Request has not been accepted and will not be executed.
 
-=== 3.15. ChargingRateUnitEnumType
+[[charging_rate_unit_enum_type]]
+=== ChargingRateUnitEnumType
 
 _Enumeration_
 
