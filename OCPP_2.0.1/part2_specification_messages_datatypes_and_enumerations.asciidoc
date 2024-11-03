@@ -1108,7 +1108,8 @@ NotifyDisplayMessagesRequest. No fields are defined.
 
 ==== 1.36. NotifyEVChargingNeeds
 
-**1.36.1. NotifyEVChargingNeedsRequest**
+[[notify_ev_charging_needs_request]]
+==== NotifyEVChargingNeedsRequest
 
 The Charging Station uses this message to communicate the charging needs as calculated by the EV to the CSMS.
 
@@ -1615,7 +1616,8 @@ contains an overal limit for the whole Charging Station.
 chargingProfile ChargingProfileType 1..1 Required. The charging profile to be set at the Charging
 Station.
 
-**1.51.2. SetChargingProfileResponse**
+[[set_charging_profile_response]]
+==== SetChargingProfileResponse
 
 This contains the field definition of the SetChargingProfileResponse PDU sent by the Charging Station to the CSMS in response to
 SetChargingProfileRequest PDU.
@@ -5010,8 +5012,8 @@ Timeout EV not connected within timeout
 
 Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
 
-
-==== 3.68. RecurrencyKindEnumType
+[[recurrency_kind_enum_type]]
+=== RecurrencyKindEnumType
 
 _Enumeration_
 

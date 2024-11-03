@@ -1528,7 +1528,8 @@ variableAttributes mutability ReadOnly
 variableCharacteristics dataType boolean
 Description Whether Smart Charging is supported.
 
-**2.9.3.** ACPhaseSwitchingSupported
+[[ac_phase_switching_supported]]
+==== ACPhaseSwitchingSupported
 
 
 Required no

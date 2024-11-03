@@ -99,7 +99,7 @@ Purpose             |Description
   |A transaction-specific profile with purpose TxProfile overrules the <<tx_default_profile,TxDefaultProfile>> for the duration of the current transaction only or until the TxProfile expires, whichever occurs earlier.
 |[[tx_default_profile]]TxDefaultProfile
   |Default schedules for new transactions that MAY be used to impose charging policies. An example could be a policy that prevents charging during the day.
-|ChargingStationExternal Constraints
+|[[charging_station_external_constraints]]ChargingStationExternalConstraints
   |When an external system, not the CSMS, sets a charging limit or schedule, the Charging Station uses this purpose to report such a limit/schedule.
 |===
 
@@ -312,595 +312,176 @@ To determine how a Charging Station should respond to simultaneous smart chargin
 [[k01_set_charging_profile]]
 === K01 - SetChargingProfile
 
-_Table 159. K01 - Central Smart Charging_
+.K01 - Central Smart Charging
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
+|1   |Name            |SetChargingProfile
+|2   |ID              |K01
+|{nbsp} d|_Functional block_ |K. Smart Charging
+|3   |Objective(s)    |To enable the CSMS to influence the charging power or current drawn from a specific EVSE or the entire Charging Station over a period of time.
+|4   |Description     |The CSMS sends a <<set_charging_profile_request,SetChargingProfileRequest>> to the Charging Station to influence the power or current drawn by EVs. The CSMS calculates a <<charging_schedule_type,ChargingSchedule>> to stay within certain limits, which MAY be imposed by any external system.
+|{nbsp} d|_Actors_    |Charging Station, CSMS, EV
+|{nbsp} d|_Scenario description_
+  |**1.** The CSMS sets charging limits by sending <<set_charging_profile_request,SetChargingProfileRequest>> to the Charging Station. +
+  **2.** The Charging Station responds with <<set_charging_profile_response,SetChargingProfileResponse>>.
+|5   |Prerequisite(s) |n/a
+|6   |Postcondition(s) 
+  |**Successful postcondition:** +
+  The Charging Station _Successfully_ influences the charging power or current of a specific EV,following the <<set_charging_profile_request,SetChargingProfileRequest>> sent by the CSMS.
 
-No. Type Description
-1 Name SetChargingProfile
-2 ID K01
-Functional block K. Smart Charging
-3 Objective(s) To enable the CSMS to influence the charging power or current drawn from a specific EVSE or the
-entire Charging Station over a period of time.
-4 Description The CSMS sends a SetChargingProfileRequest to the Charging Station to influence the power or
-current drawn by EVs. The CSMS calculates a ChargingSchedule to stay within certain limits,
-which MAY be imposed by any external system.
-Actors Charging Station, CSMS, EV
+  **Failure postcondition:** +
+  The Charging Station was _not_ able to influence the charging power or current of a specific EV, following the <<set_charging_profile_request,SetChargingProfileRequest>> sent by the CSMS.
+|===
 
-_Scenario description_  **1.** The CSMS sets charging limits by sending SetChargingProfileRequest to the Charging Station.
+.Sequence Diagram: SetChargingProfile
+image::part2/images/figure_101.svg[Sequence Diagram: SetChargingProfile]
 
-**2.** The Charging Station responds with SetChargingProfileResponse.
-**5 Prerequisite(s)** n/a
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling   |n/a
+|8   |Remark(s)        |n/a
+|===
 
-**6 Postcondition(s)**  **Successful postcondition:**
-The Charging Station _Successfully_ influences the charging power or current of a specific EV,
-following the SetChargingProfileRequest sent by the CSMS.
-**Failure postcondition:**
-The Charging Station was _not_ able to influence the charging power or current of a specific EV,
-following the SetChargingProfileRequest sent by the CSMS.
-CSMS Charging Station
-SetChargingProfileRequest(evseId, chargingProfile)
-SetChargingProfileResponse(Accepted)
-_Figure 101. Sequence Diagram: SetChargingProfile_
-**7 Error handling** n/a
-**8 Remark(s)** n/a
-**K01 - SetChargingProfile - Requirements**
+==== K01 - SetChargingProfile - Requirements
+
 _Table 160. K01 - Requirements_
-**ID Precondition Requirement definition Note**
-K01.FR.01 The CSMS MAY choose to set charging limits to a
-transaction using TxProfile.
-K01.FR.02 The CSMS MAY send a new charging profile for the EVSE
-that SHALL be used as a limit schedule for the EV.
-K01.FR.03 The CSMS SHALL include the _transactionId_ in the
-SetChargingProfileRequest when setting a TxProfile.
-The transactionId is used to
-match the profile to a
-specific transaction.
-K01.FR.04  K01.FR.03 AND
-the given _transactionId_ is
-known
-The Charging Station SHALL apply the sent TxProfile to
-the transaction with the specified _transactionId_.
-Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
-
-
-
-ID Precondition Requirement definition Note
-K01.FR.05 When a
-SetChargingProfileRequest
-with an already known
-ChargingProfile. id is
-received AND
-the existing ChargingProfile
-does NOT have
-chargingProfilePurpose =
-ChargingStationExter
-nalConstraints
-
-
-The Charging Station SHALL replace the existing
-ChargingProfile with the one specified.
-
-
-ChargingStationExternalCon
-straints profile cannot be
-replaced.
-
-
-K01.FR.06 When
-chargingProfilePurpose is
-NOT TxProfile
-
-
-The CSMS SHALL NOT send a ChargingProfile with a
-stackLevel - chargingProfilePurpose - evseId combination
-that already exists in another ChargingProfile (with
-different id ) on the Charging Station and has an
-overlapping validity period.
-
-
-This is to ensure that no two
-charging profiles with same
-stack level and purpose can
-be valid at the same time.
-
-
-K01.FR.07 When the Charging Station
-accepts a
-SetChargingProfileRequest
-
-
-The Charging Station SHALL re-evaluate its collection of
-charging profiles to determine which ChargingProfile will
-become active.
-K01.FR.08 The CSMS MAY send charging profiles to a Charging
-Station that are to be used as default charging profiles.
-K01.FR.09 When a
-SetChargingProfileRequest
-with a TxProfile is received
-AND there is no transaction
-active on the specified EVSE
-
-
-The Charging Station SHALL send a
-SetChargingProfileResponse with status Rejected.
-
-
-K01.FR.10 When validFrom and validTo
-of a ChargingProfile are not
-set
-
-
-The Charging Station SHALL consider the ChargingProfile
-to be valid indefinitely until it is explicitly replaced.
-
-
-K01.FR.11 If ChargingSchedule has a
-duration AND
-ChargingSchedulePeriod. sta
-rtPeriod >=
-ChargingSchedule. duration
-
-
-The Charging Station SHALL not execute the
-ChargingSchedulePeriod, because it is past the duration
-of the ChargingSchedule.
-
-
-K01.FR.12 A ChargingSchedulePeriod remains active until the next
-ChargingSchedulePeriod in the list starts or until
-ChargingSchedule. duration has elapsed.
-K01.FR.13 When recurrencyKind is
-used in combination with a
-ChargingSchedule duration
-shorter than recurrencyKind
-period.
-
-
-The Charging Station SHALL fall back to default behavior
-after ChargingSchedule duration ends.
-
-
-K01.FR.14 When a
-SetChargingProfileRequest
-with a TxDefaultProfile and
-evseId  0 is received AND
-No other TxDefaultProfile
-with the same stackLevel is
-installed on any specific
-EVSE.
-
-
-The Charging Station SHALL apply, but not copy, this
-profile to all EVSEs.
-
-
-A TxDefaultProfile charging
-profile on EVSE #0 is
-“owned by” EVSE #0, but
-has effect on all EVSEs.
-
-
-K01.FR.15 When a
-SetChargingProfileRequest
-with a TxDefaultProfile and
-evseId > 0 is received AND
-No TxDefaultProfile with the
-same stackLevel is installed
-on EVSE #0.
-
-
-The Charging Station SHALL only apply this profile to the
-specified EVSE.
-
-
-K01.FR.16 TxProfile SHALL only be be used with evseId >0.
-K01.FR.17 When more than one ChargingProfile with the same
-chargingProfilePurpose is valid, as determined by their
-validFrom and validTo fields, then a ChargingSchedule
-from a ChargingProfile with a higher stackLevel overrules
-a ChargingSchedule from a ChargingProfile with a lower
-stackLevel.
-
-Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
-
-
-
-ID Precondition Requirement definition Note
-K01.FR.19 The CSMS SHALL NOT set phaseToUse in a
-SetChargingProfileRequest when numberPhases is other
-than 1.
-K01.FR.20 The CSMS SHALL NOT set phaseToUse in a
-SetChargingProfileRequest when the EVSE does not have
-ACPhaseSwitchingSupported defined and set to true.
-K01.FR.21 The optional ChargingSchedule field minChargingRate
-MAY be used by the Charging Station to optimize the
-power distribution between the EVSEs.
-
-
-The parameter informs the
-Local Controller that
-charging below
-minChargingRate is
-inefficient, giving the
-possibility to select another
-balancing strategy.
-K01.FR.22 The CSMS SHALL NOT set chargingProfilePurpose to
-ChargingStationExternalConstraints in a
-SetChargingProfileRequest.
-
-
-This purpose is only used
-when an external system
-has set a charging
-limit/schedule.
-K01.FR.26 When a
-SetChargingProfileRequest
-is received with a value for
-chargingRateUnit , that is not
-configured in the
-configuration variable
-ChargingScheduleChar
-gingRateUnit.
-
-
-Charging Station SHALL respond with
-SetChargingProfileResponse with status Rejected.
-
-
-K01.FR.27 ChargingProfiles set via SetChargingProfileRequest
-SHALL be persistent across reboots/power cycles.
-K01.FR.28 When a
-SetChargingProfileRequest
-is received for an evseId
-that does not exist.
-
-
-Charging Station SHALL respond with
-SetChargingProfileResponse with status Rejected
-
-
-K01.FR.29 When Charging Station does
-not support smart charging.
-
-
-Charging Station SHALL respond with RPC Framework
-CALLERROR: NotSupported or NotImplemented.
-K01.FR.30 chargingProfile has a
-chargingSchedule with
-startSchedule set to a time
-in the future
-
-
-The Charging Station SHALL only start imposing the
-limitation of this schedule as of point in time set by
-startSchedule
-
-
-K01.FR.31 The startPeriod of the first chargingSchedulePeriod in a
-chargingSchedule SHALL always be 0.
-
-K01.FR.32  (K01.FR.14 OR K01.FR.15)
-AND a transaction is active
-on the specified EVSE(s)
-(evseId  0 refers to all
-EVSEs.)
-The Charging Station SHALL continue the transaction on
-the specified EVSE(s), but switch to using the
-new/updated TxDefaultProfile.
-K01.FR.33  K01.FR.03 AND
-the given transactionId is
-not known
-The Charging Station SHALL reject the
-SetChargingProfileRequest.
-K01.FR.34 The CSMS has not received
-a
-NotifyEVChargingNeedsReq
-uest for the current
-transaction, i.e. charging
-session is not using ISO
-15118
-The ChargingProfile in the SetChargingProfileRequest
-SHALL contain only one ChargingScheduleType.
-See use cases K15-K17 for
-ISO 15118 smart charging.
-K01.FR.35 The list of ChargingSchedulePeriod elements in a
-chargingSchedule SHALL be ordered by increasing values
-of ChargingSchedulePeriod. _startPeriod_.
-This means the list is in
-chronological order
-K01.FR.36 When _validFrom_ of a
-ChargingProfile is set
-The Charging Station SHALL consider the ChargingProfile
-to be valid when current time > _validFrom_.
-K01.FR.37 When _validTo_ of a
-ChargingProfile is set
-The Charging Station SHALL consider the ChargingProfile
-to be valid when current time < _validTo_.
-Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
-
-
-
-ID Precondition Requirement definition Note
-K01.FR.38 When
-chargingProfilePurpose =
-ChargingStationMaxPr
-ofile
-
-
-chargingProfileKind SHALL NOT be Relative
-
-
-K01.FR.39 When
-chargingProfilePurpose is
-TxProfile
-
-
-The CSMS SHALL NOT send a ChargingProfile with a
-stackLevel - transactionId combination that already exists
-in another ChargingProfile (with different id ) with purpose
-TxProfile.
-
-
-This is to ensure that no two
-charging profiles with same
-stack level and purpose can
-be valid at the same time.
-K01.FR.40 When chargingProfileKind of
-a ChargingProfile is
-Absolute or Recurring
-
-
-A value for startSchedule SHALL exist in the
-ChargingSchedule of the ChargingProfile.
-
-
-This determines start date-
-time of the schedule and of
-the recurrency sequence.
-K01.FR.41 When chargingProfileKind of
-a ChargingProfile is
-Relative
-
-
-The field startSchedule SHALL be absent in the
-ChargingSchedule of the ChargingProfile.
-
-
-A relative profile starts from
-when the profile is
-activated.
-
-
-K01.FR.42 K01.FR.41 It is RECOMMENDED to make the
-ChargingSchedulePeriods relative to the moment the
-Charging Station is ready to deliver energy. i.e. when the
-EV driver is authorized and the EV is connected.
-
-
-This is the point in a
-transaction where the
-charging station is ready to
-deliver energy. If
-PowerPathClosed is a
-TxStartPoint, then this will
-concur with the start of a
-transaction.
-In the next OCPP version,
-this will become a more
-strict requirement.
-K01.FR.43 When a
-SetChargingProfileRequest
-with a value for
-numberPhases is received
-AND
-the EVSE is of type AC AND
-the Charging Station cannot
-ensure that no more than
-the received numberPhases
-will be used
-
-
-The Charging Station SHALL respond with status =
-Rejected
-
-
-Note that even when for
-example the ChargingProfile
-defines 3 phases and the
-Charging Station is able to
-charge with 3 phases, it is
-not guaranteed that the EV
-or cable are able to charge
-with 3 phases.
-Based on received
-MeterValues the CSMS can
-determine the used number
-of phases.
-Please refer to requirement
-K01.FR.50 and K01.FR.51,
-for correctly calculating the
-limits per phase.
-K01.FR.44 When a
-SetChargingProfileRequest
-with a value for
-numberPhases or
-phaseToUse is received
-AND
-the EVSE is of type DC
-
-
-The Charging Station MAY respond with status =
-Accepted , instead of Rejected and ignore the provided
-values for numberPhases and phaseToUse.
-
-
-K01.FR.45 When a
-SetChargingProfileRequest
-with a value for
-numberPhases is received
-AND
-the EVSE is of type AC AND
-the received numberPhases
-is NOT supported by the
-Charging Station and higher
-than the numberPhases that
-are supported by the
-Charging Station
-
-
-The Charging Station MAY respond with status =
-Accepted , instead of Rejected and impose the limits to a
-lower numberPhases
-
-
-Please refer to requirement
-K01.FR.50 and K01.FR.51,
-for correctly calculating the
-limits per phase.
-
-Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
-
-
-
-ID Precondition Requirement definition Note
-K01.FR.46 When a
-SetChargingProfileRequest
-with numberPhases  1 and
-a value for phaseToUse is
-received AND
-the EVSE is of type AC AND
-the EVSE is capable of
-switching the phase
-connected to the EV, which
-is indicated by
-ACPhaseSwitchingSupporte
-d defined as true OR
-the EVSE is already going to
-use the received
-phaseToUse
-
-
-The Charging Station SHALL use the phase indicated by
-the received phaseToUse to connect to the EV.
-
-
-K01.FR.47 When a
-SetChargingProfileRequest
-with numberPhases  1 and
-phaseToUse is omitted is
-received AND
-the EVSE is of type AC
-
-
-The Charging Station SHALL select the phase on its own.
-
-
-K01.FR.48 When a
-SetChargingProfileRequest
-with a value for phaseToUse
-is received AND
-the EVSE is NOT capable of
-switching the phase
-connected to the EV, which
-is indicated by
-ACPhaseSwitchingSupporte
-d not being implemented or
-defined as false AND
-the EVSE is NOT going to
-use the received
-phaseToUse
-
-
-The Charging Station SHALL respond with status =
-Rejected.
-
-
-K01.FR.49 When a
-SetChargingProfileRequest
-without a value for
-numberPhases is received
-AND
-the EVSE is of type AC
-
-
-The Charging Station SHALL assume numberPhases  3
-as a default value.
-
-
-K01.FR.50 When a
-SetChargingProfileRequest
-with a chargingRateUnit  W
-is received AND
-The ChargingSchedule is
-used for AC charging
-
-
-The Charging Station SHOULD calculate the phase
-current limit via: Current per phase  Power / (Line
-Voltage * Number of Phases).
-
-
-The "Line Voltage" used in
-the calculation is not the
-measured voltage, but the
-set voltage for the area (for
-example, 230 or 110 V). The
-"Number of Phases" is the
-numberPhases from the
-ChargingSchedulePeriod.
-It is usually more
-convenient to use
-chargingRateUnit  A for AC
-charging.
-K01.FR.51 When a
-SetChargingProfileRequest
-with a chargingRateUnit  A
-is received
-
-
-The Charging Station SHALL use the provided limits, to
-limit the amount of Ampere per phase, not the sum of all
-phases.
-
-Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
-
-
-
-ID Precondition Requirement definition Note
-K01.FR.52 When a
-SetChargingProfileRequest
-with a TxDefaultProfile and
-evseId  0 is received AND
-A TxDefaultProfile with the
-same stackLevel is installed
-on a specific EVSE and its
-chargingProfile.id does NOT
-equal the received
-chargingProfile.id
-
-
-The Charging Station SHALL respond with a
-SetChargingProfileResponse with status Rejected and
-optionally with reasonCode  DuplicateProfile.
-
-
-K01.FR.53 When a
-SetChargingProfileRequest
-with a TxDefaultProfile and
-evseId > 0 is received AND
-A TxDefaultProfile with the
-same stackLevel is installed
-on EVSE #0 and its
-chargingProfile.id does NOT
-equal the received
-chargingProfile.id
-
-
-The Charging Station SHALL respond with a
-SetChargingProfileResponse with status Rejected and
-optionally with reasonCode  DuplicateProfile.
-
-==== K02 - Central Smart Charging
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
+
+|K01.FR.01  |{nbsp}
+  |The CSMS MAY choose to set charging limits to a transaction using <<tx_profile,TxProfile>>. |{nbsp}
+|K01.FR.02  |{nbsp}
+  |The CSMS MAY send a new charging profile for the EVSE that SHALL be used as a limit schedule for the EV. |{nbsp}
+|K01.FR.03  |{nbsp}
+  |The CSMS SHALL include the _transactionId_ in the <<set_charging_profile_request,SetChargingProfileRequest>> when setting a <<tx_profile,TxProfile>>.
+    |The transactionId is used to match the profile to a specific transaction.
+|K01.FR.04  |K01.FR.03 AND +
+  the given _transactionId_ is known
+    |The Charging Station SHALL apply the sent <<tx_profile,TxProfile>> to the transaction with the specified _transactionId_. |{nbsp}
+|K01.FR.05  |When a <<set_charging_profile_request,SetChargingProfileRequest>> with an already known <<charging_profile_type,ChargingProfile>>._id_ is received AND the existing <<charging_profile_type,ChargingProfile>> does NOT have <<charging_profile_purpose,chargingProfilePurpose>> = `ChargingStationExternalConstraints`
+  |The Charging Station SHALL replace the existing <<charging_profile_type,ChargingProfile>> with the one specified.
+    |ChargingStationExternalCon straints profile cannot be replaced.
+|K01.FR.06  |When _chargingProfilePurpose_ is NOT `TxProfile`
+  |The CSMS SHALL NOT send a <<charging_profile_type,ChargingProfile>> with a _stackLevel - chargingProfilePurpose - evseId_ combination that already exists in another <<charging_profile_type,ChargingProfile>> (with different _id_) on the Charging Station and has an overlapping validity period.
+    |This is to ensure that no two charging profiles with same stack level and purpose can be valid at the same time.
+|K01.FR.07  |When the Charging Station _accepts_ a <<set_charging_profile_request,SetChargingProfileRequest>>
+  |The Charging Station SHALL re-evaluate its collection of charging profiles to determine which <<charging_profile_type,ChargingProfile>> will become active. |{nbsp}
+|K01.FR.08  |{nbsp}
+  |The CSMS MAY send charging profiles to a Charging Station that are to be used as default charging profiles. |{nbsp}
+|K01.FR.09  |When a <<set_charging_profile_request,SetChargingProfileRequest>> with a <<tx_profile,TxProfile>> is received AND there is no transaction active on the specified EVSE
+  |The Charging Station SHALL send a <<set_charging_profile_response,SetChargingProfileResponse>> with status `Rejected`. |{nbsp}
+|K01.FR.10  |When _validFrom_ and _validTo_ of a <<charging_profile_type,ChargingProfile>> are not set
+  |The Charging Station SHALL consider the <<charging_profile_type,ChargingProfile>> to be valid indefinitely until it is explicitly replaced. |{nbsp}
+|K01.FR.11  |If <<charging_schedule_type,ChargingSchedule>> has a _duration_ AND +
+  <<charging_schedule_period_type,ChargingSchedulePeriod>>._startPeriod_ >= <<charging_schedule_type,ChargingSchedule>>._duration_
+    |The Charging Station SHALL not execute the <<charging_schedule_period_type,ChargingSchedulePeriod>>, because it is past the duration of the <<charging_schedule_type,ChargingSchedule>>. |{nbsp}
+|K01.FR.12  |{nbsp}
+  |A <<charging_schedule_period_type,ChargingSchedulePeriod>> remains active until the next <<charging_schedule_period_type,ChargingSchedulePeriod>> in the list starts or until <<charging_schedule_type,ChargingSchedule>>._duration_ has elapsed. |{nbsp}
+|K01.FR.13  |When <<recurrency_kind_enum_type,recurrencyKind>> is used in combination with a <<charging_schedule_type,ChargingSchedule>> duration shorter than <<recurrency_kind_enum_type,recurrencyKind>> period.
+  |The Charging Station SHALL fall back to default behavior after <<charging_schedule_type,ChargingSchedule>> duration ends. |{nbsp}
+|K01.FR.14  |When a <<set_charging_profile_request,SetChargingProfileRequest>> with a <<tx_default_profile,TxDefaultProfile>> and evseId = 0 is received AND No other <<tx_default_profile,TxDefaultProfile>> with the same stackLevel is installed on any specific EVSE.
+  |The Charging Station SHALL apply, but not copy, this profile to all EVSEs.
+    |A TxDefaultProfile charging profile on EVSE #0 is “owned by” EVSE #0, but has effect on all EVSEs.
+|K01.FR.15  |When a <<set_charging_profile_request,SetChargingProfileRequest>> with a <<tx_default_profile,TxDefaultProfile>> and evseId > 0 is received AND No <<tx_default_profile,TxDefaultProfile>> with the same stackLevel is installed on EVSE #0.
+  |The Charging Station SHALL only apply this profile to the specified EVSE. |{nbsp}
+|K01.FR.16  |{nbsp}
+  |<<tx_profile,TxProfile>> SHALL only be be used with evseId >0. |{nbsp}
+|K01.FR.17  |{nbsp}
+  |When more than one <<charging_profile_type,ChargingProfile>> with the same <<charging_profile_purpose,chargingProfilePurpose>> is valid, as determined by their _validFrom_ and _validTo_ fields, then a <<charging_schedule_type,ChargingSchedule>> from a <<charging_profile_type,ChargingProfile>> with a higher _stackLevel_ overrules a <<charging_schedule_type,ChargingSchedule>> from a <<charging_profile_type,ChargingProfile>> with a lower _stackLevel_. |{nbsp}
+|K01.FR.19  |{nbsp}
+  |The CSMS SHALL NOT set <<charging_schedule_period_type,phaseToUse>> in a <<set_charging_profile_request,SetChargingProfileRequest>> when <<charging_schedule_period_type,numberPhases>> is other than 1. |{nbsp}
+|K01.FR.20  |{nbsp}
+  |The CSMS SHALL NOT set <<charging_schedule_period_type,phaseToUse>> in a <<set_charging_profile_request,SetChargingProfileRequest>> when the EVSE does not have <<ac_phase_switching_supported,ACPhaseSwitchingSupported>> defined and set to true. |{nbsp}
+|K01.FR.21  |{nbsp}
+  |The optional <<charging_schedule_type,ChargingSchedule>> field <<charging_schedule_type,minChargingRate>> MAY be used by the Charging Station to optimize the power distribution between the EVSEs.
+    |The parameter informs the Local Controller that charging below <<charging_schedule_type,minChargingRate>> is inefficient, giving the possibility to select another balancing strategy.
+|K01.FR.22  |{nbsp}
+  |The CSMS SHALL NOT set <<charging_profile_purpose,chargingProfilePurpose>> to <<charging_station_external_constraints,ChargingStationExternalConstraints>> in a <<set_charging_profile_request,SetChargingProfileRequest>>.
+    |This purpose is only used when an external system has set a charging limit/schedule.
+|K01.FR.26  |When a <<set_charging_profile_request,SetChargingProfileRequest>> is received with a value for _chargingRateUnit_, that is not configured in the configuration variable `ChargingScheduleChargingRateUnit`.
+  |Charging Station SHALL respond with <<set_charging_profile_response,SetChargingProfileResponse>> with status `Rejected`. |{nbsp}
+|K01.FR.27  |{nbsp}
+  |ChargingProfiles set via SetChargingProfileRequest SHALL be persistent across reboots/power cycles. |{nbsp}
+|K01.FR.28  |When a <<set_charging_profile_request,SetChargingProfileRequest>> is received for an evseId that does not exist.
+  |Charging Station SHALL respond with <<set_charging_profile_response,SetChargingProfileResponse>> with status `Rejected` |{nbsp}
+|K01.FR.29  |When Charging Station does not support smart charging.
+  |Charging Station SHALL respond with RPC Framework CALLERROR: NotSupported or NotImplemented. |{nbsp}
+|K01.FR.30  |_chargingProfile_ has a _chargingSchedule_ with _startSchedule_ set to a time in the future
+  |The Charging Station SHALL only start imposing the limitation of this schedule as of point in time set by _startSchedule_ |{nbsp}
+|K01.FR.31  |{nbsp}
+  |The _startPeriod_ of the first <<charging_schedule_period_type,chargingSchedulePeriod>> in a <<charging_schedule_type,chargingSchedule>> SHALL always be 0. |{nbsp}
+|K01.FR.32  |(K01.FR.14 OR K01.FR.15) AND a transaction is active on the specified EVSE(s) (evseId = 0 refers to all EVSEs.)
+  |The Charging Station SHALL continue the transaction on the specified EVSE(s), but switch to using the new/updated <<tx_default_profile,TxDefaultProfile>>. |{nbsp}
+|K01.FR.33  |K01.FR.03 AND +
+  the given transactionId is not known
+    |The Charging Station SHALL reject the <<set_charging_profile_request,SetChargingProfileRequest>>. |{nbsp}
+|K01.FR.34  |The CSMS has not received a <<notify_ev_charging_needs_request,NotifyEVChargingNeedsRequest>> for the current transaction, i.e. charging session is not using ISO 15118
+  |The <<charging_profile_type,ChargingProfile>> in the <<set_charging_profile_request,SetChargingProfileRequest>> SHALL contain only one <<charging_schedule_type,ChargingScheduleType>>.
+    |See use cases K15-K17 for ISO 15118 smart charging.
+|K01.FR.35  |{nbsp}
+  |The list of <<charging_schedule_period_type,ChargingSchedulePeriod>> elements in a <<charging_schedule_type,chargingSchedule>> SHALL be ordered by increasing values of <<charging_schedule_period_type,ChargingSchedulePeriod>>._startPeriod_.
+    |This means the list is in chronological order
+|K01.FR.36  |When _validFrom_ of a <<charging_profile_type,ChargingProfile>> is set
+  |The Charging Station SHALL consider the <<charging_profile_type,ChargingProfile>> to be valid when current time >= _validFrom_. |{nbsp}
+|K01.FR.37  |When _validTo_ of a <<charging_profile_type,ChargingProfile>> is set
+  |The Charging Station SHALL consider the <<charging_profile_type,ChargingProfile>> to be valid when current time < _validTo_. |{nbsp}
+|K01.FR.38  |When _chargingProfilePurpose_ = `ChargingStationMaxProfile`
+  |_chargingProfileKind_ SHALL NOT be `Relative` |{nbsp}
+|K01.FR.39  |When _chargingProfilePurpose_ is `TxProfile`
+  |The CSMS SHALL NOT send a <<charging_profile_type,ChargingProfile>> with a _stackLevel - transactionId_ combination that already exists in another <<charging_profile_type,ChargingProfile>> (with different _id_) with purpose `TxProfile`.
+    |This is to ensure that no two charging profiles with same stack level and purpose can be valid at the same time.
+|K01.FR.40  |When _chargingProfileKind_ of a <<charging_profile_type,ChargingProfile>> is `Absolute` or `Recurring`
+  |A value for _startSchedule_ SHALL exist in the <<charging_schedule_type,ChargingSchedule>> of the <<charging_profile_type,ChargingProfile>>.
+    |This determines start datetime of the schedule and of the recurrency sequence.
+|K01.FR.41  |When _chargingProfileKind_ of a <<charging_profile_type,ChargingProfile>> is `Relative`
+  |The field _startSchedule_ SHALL be absent in the <<charging_schedule_type,ChargingSchedule>> of the <<charging_profile_type,ChargingProfile>>.
+    |A relative profile starts from when the profile is activated.
+|K01.FR.42  |K01.FR.41
+  |It is RECOMMENDED to make the <<charging_schedule_period_type,ChargingSchedulePeriods>> relative to the moment the Charging Station is ready to deliver energy. i.e. when the EV driver is authorized and the EV is connected.
+    |This is the point in a transaction where the charging station is ready to deliver energy. If PowerPathClosed is a TxStartPoint, then this will concur with the start of a transaction. In the next OCPP version, this will become a more strict requirement.
+|K01.FR.43  |When a <<set_charging_profile_request,SetChargingProfileRequest>> with a value for numberPhases is received AND the EVSE is of type AC AND the Charging Station cannot ensure that no more than the received numberPhases will be used
+  |The Charging Station SHALL respond with status = `Rejected`
+    |Note that even when for example the <<charging_profile_type,ChargingProfile>> defines 3 phases and the Charging Station is able to charge with 3 phases, it is not guaranteed that the EV or cable are able to charge with 3 phases. +
+    Based on received MeterValues the CSMS can determine the used number of phases. Please refer to requirement K01.FR.50 and K01.FR.51, for correctly calculating the limits per phase.
+|K01.FR.44  |When a <<set_charging_profile_request,SetChargingProfileRequest>> with a value for _numberPhases_ or _phaseToUse_ is received AND +
+  the EVSE is of type DC
+    |The Charging Station MAY respond with status = _Accepted_, instead of Rejected and ignore the provided values for _numberPhases_ and _phaseToUse_. |{nbsp}
+|K01.FR.45  |When a <<set_charging_profile_request,SetChargingProfileRequest>> with a value for _numberPhases_ is received AND +
+  the EVSE is of type AC AND the received _numberPhases_ is NOT supported by the Charging Station and higher than the _numberPhases_ that are supported by the Charging Station
+    |The Charging Station MAY respond with status = _Accepted_, instead of _Rejected_ and impose the limits to a lower _numberPhases_
+      |Please refer to requirement K01.FR.50 and K01.FR.51, for correctly calculating the limits per phase.
+|K01.FR.46  |When a <<set_charging_profile_request,SetChargingProfileRequest>> with _numberPhases = 1_ and a value for _phaseToUse_ is received AND +
+  the EVSE is of type AC AND the EVSE is capable of switching the phase connected to the EV, which is indicated by <<ac_phase_switching_supported,ACPhaseSwitchingSupported>> defined as _true_ OR +
+  the EVSE is already going to use the received _phaseToUse_
+    |The Charging Station SHALL use the phase indicated by the received _phaseToUse_ to connect to the EV. |{nbsp}
+|K01.FR.47  |When a <<set_charging_profile_request,SetChargingProfileRequest>> with _numberPhases = 1_ and _phaseToUse_ is omitted is received AND +
+  the EVSE is of type AC
+    |The Charging Station SHALL select the phase on its own. |{nbsp}
+|K01.FR.48  |When a <<set_charging_profile_request,SetChargingProfileRequest>> with a value for _phaseToUse_ is received AND +
+  the EVSE is NOT capable of switching the phase connected to the EV, which is indicated by <<ac_phase_switching_supported,ACPhaseSwitchingSupported>> not being implemented or defined as _false_ AND +
+  the EVSE is NOT going to use the received _phaseToUse_
+    |The Charging Station SHALL respond with status = _Rejected_. |{nbsp}
+|K01.FR.49  |When a <<set_charging_profile_request,SetChargingProfileRequest>> without a value for _numberPhases_ is received AND +
+  the EVSE is of type AC
+    |The Charging Station SHALL assume numberPhases = 3 as a default value. |{nbsp}
+|K01.FR.50  |When a <<set_charging_profile_request,SetChargingProfileRequest>> with a <<charging_rate_unit_enum_type,chargingRateUnit>> = _W_ is received AND +
+  The ChargingSchedule is used for AC charging
+    |The Charging Station SHOULD calculate the phase current limit via: Current per phase  Power / (Line Voltage * Number of Phases).
+      |The "Line Voltage" used in the calculation is not the measured voltage, but the set voltage for the area (for example, 230 or 110 V). The "Number of Phases" is the numberPhases from the ChargingSchedulePeriod. It is usually more convenient to use <<charging_rate_unit_enum_type,chargingRateUnit>> = _A_ for AC charging.
+|K01.FR.51  |When a <<set_charging_profile_request,SetChargingProfileRequest>> with a <<charging_rate_unit_enum_type,chargingRateUnit>> = _A_ is received
+  |The Charging Station SHALL use the provided limits, to limit the amount of Ampere per phase, not the sum of all phases. |{nbsp}
+|K01.FR.52  |When a <<set_charging_profile_request,SetChargingProfileRequest>> with a <<tx_default_profile,TxDefaultProfile>> and _evseId_ = 0 is received AND +
+  A <<tx_default_profile,TxDefaultProfile>> with the same stackLevel is installed on a specific EVSE and its _chargingProfile.id_ does NOT equal the received _chargingProfile.id_
+    |The Charging Station SHALL respond with a <<set_charging_profile_response,SetChargingProfileResponse>> with status `Rejected` and optionally with _reasonCode_ = `DuplicateProfile`. |{nbsp}
+|K01.FR.53  |When a <<set_charging_profile_request,SetChargingProfileRequest>> with a <<tx_default_profile,TxDefaultProfile>> and _evseId_ > 0 is received AND +
+  A <<tx_default_profile,TxDefaultProfile>> with the same _stackLevel_ is installed on EVSE #0 and its _chargingProfile.id_ does NOT equal the received _chargingProfile.id_
+    |The Charging Station SHALL respond with a <<set_charging_profile_response,SetChargingProfileResponse>> with status `Rejected` and optionally with _reasonCode_ = `DuplicateProfile`. |{nbsp}
+|===
+
+=== K02 - Central Smart Charging
 
 _Table 161. K02 - Central Smart Charging_
 
