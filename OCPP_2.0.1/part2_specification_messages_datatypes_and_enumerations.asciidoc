@@ -655,7 +655,8 @@ requested. When evseid=0, the Charging Station will
 calculate the expected consumption for the grid
 connection.
 
-**1.20.2. GetCompositeScheduleResponse**
+[[get_compositie_schedule_response]]
+==== GetCompositeScheduleResponse
 
 This contains the field definition of the GetCompositeScheduleResponse PDU sent by the Charging Station to the CSMS in
 response to a GetCompositeScheduleRequest.
@@ -1029,9 +1030,10 @@ Monitoring events.
 
 No fields are defined.
 
-==== 1.33. NotifyChargingLimit
+=== NotifyChargingLimit
 
-**1.33.1. NotifyChargingLimitRequest**
+[[notify_charging_limit_request]]
+==== NotifyChargingLimitRequest
 
 The message NotifyChargingLimitRequest can be used to communicate a charging limit, set by an external system on the Charging
 Station (Not installed by the CSO via SetChargingProfileRequest), to the CSMS.
@@ -1144,7 +1146,8 @@ Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
 
 ==== 1.37. NotifyEVChargingSchedule
 
-**1.37.1. NotifyEVChargingScheduleRequest**
+[[notify_ev_charging_schedule_request]]
+==== NotifyEVChargingScheduleRequest
 
 The Charging Station uses this message to communicate the charging schedule as calculated by the EV to the CSMS.
 
@@ -2352,7 +2355,8 @@ chargingSchedules is only allowed for charging profiles of
 purpose TxProfile in the context of an ISO 15118
 charging session.
 
-=== 2.11. ChargingSchedulePeriodType
+[[charging_schedule_period_type]]
+=== ChargingSchedulePeriodType
 
 _Class_
 

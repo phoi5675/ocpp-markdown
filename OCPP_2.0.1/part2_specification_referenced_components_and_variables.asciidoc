@@ -1506,7 +1506,7 @@ variableCharacteristics dataType boolean
 Description If this configuration variable is present and set to true : Charging Station supports Reservation where EVSE id is not
 specified.
 
-== 2.9. Smart Charging related
+=== Smart Charging related
 
 **2.9.1.** SmartChargingEnabled
 
@@ -1596,7 +1596,8 @@ Description Indicates if the Charging Station should include the externally set 
 sends a NotifyChargingLimitRequest message. This might increase the data usage significantly, especially when
 an external system sends new profiles/limits with a short interval. Default is false when omitted.
 
-**2.9.9.** Phases3to1
+[[phases_3_to_1]]
+==== Phases3to1
 
 
 Required no
@@ -1619,7 +1620,8 @@ maxLimit Maximum number of Charging profiles installed at
 any time.
 Description Amount of Charging profiles currently installed on the Charging Station.
 
-**2.9.11.** LimitChangeSignificance
+[[limit_change_significance]]
+==== `LimitChangeSignificance`
 
 
 Required yes

@@ -157,207 +157,160 @@ On the other hand, consider the situation in which for a certain time interval t
 
 This section is informative.
 
-The following data structure describes a daily default profile that limits the power to 6 kW between 08:00h and 20:00h and to 11 kW
-between 00:00h and 08:00h and between 20:00h and 00:00h.
+The following data structure describes a daily default profile that limits the power to 6 kW between 08:00h and 20:00h and to 11 kW between 00:00h and 08:00h and between 20:00h and 00:00h.
 
 
-ChargingProfile
-chargingProfileId 100
-stackLevel 0
-chargingProfilePurpose TxDefaultProfile
-chargingProfileKind Recurring
-recurrencyKind Daily
-chargingSchedule (List of 1 ChargingSchedule elements)
-ChargingSchedule
-duration 86400 ( 24 hours)
-startSchedule 2013-01-01T00:00Z
-chargingRateUnit W
-chargingSchedulePeriod (List of 3 ChargingSchedulePeriod elements)
-ChargingSchedulePeriod
-startPeriod 0 (=00:00)
-limit 11000
-numberPhases 3
-ChargingSchedulePeriod
-startPeriod 28800 (=08:00)
-limit 6000
-numberPhases 3
-ChargingSchedulePeriod
-startPeriod 72000 (=20:00)
-limit 11000
-numberPhases 3
+[cols="<.^1,<.^1,<.^1,<.^1",%autowidth.stretch,frame=all,grid=all]
+|===
+s|ChargingProfile     |{nbsp}             |{nbsp}           |{nbsp}
+|chargingProfileId   s|100                |{nbsp}           |{nbsp}
+|stackLevel          s|0                  |{nbsp}           |{nbsp}
+|chargingProfilePurpose s|TxDefaultProfile |{nbsp}          |{nbsp}
+|chargingProfileKind s|Recurring          |{nbsp}           |{nbsp}
+|recurrencyKind      s|Daily              |{nbsp}           |{nbsp}
+|chargingSchedule    3.+|_(List of 1 <<charging_schedule_type,ChargingSchedule>> elements)_ 
+|{nbsp}              s|ChargingSchedule   |{nbsp}           |{nbsp}
+|{nbsp}               |duration          s|86400 (= 24 hours) |{nbsp}
+|{nbsp}               |startSchedule     s|2013-01-01T00:00Z |{nbsp}
+|{nbsp}               |chargingRateUnit  s|W                |{nbsp}
+|{nbsp}               |chargingSchedulePeriod
+  2.+|(List of 3 <<charging_schedule_period_type,ChargingSchedulePeriod>> elements)
+|{nbsp}               |{nbsp}            s|ChargingSchedulePeriod |{nbsp}
+|{nbsp}               |{nbsp}            s|startPeriod     s|0 (=00:00)
+|{nbsp}               |{nbsp}             |limit           s|11000
+|{nbsp}               |{nbsp}             |numberPhases     |3
+|{nbsp}               |{nbsp}            s|ChargingSchedulePeriod |{nbsp}
+|{nbsp}               |{nbsp}             |startPeriod     s|28800 (=08:00)
+|{nbsp}               |{nbsp}             |limit           s|6000
+|{nbsp}               |{nbsp}             |numberPhases     |3
+|{nbsp}               |{nbsp}            s|ChargingSchedulePeriod |{nbsp}
+|{nbsp}               |{nbsp}             |startPeriod     s|72000 (=20:00)
+|{nbsp}               |{nbsp}             |limit           s|11000
+|{nbsp}               |{nbsp}             |numberPhases     |3
+|===
 
-IMPORTANT
+[cols="^.^1,10",%autowidth.stretch]
+|===
+s|IMPORTANT |The amount of phases used during charging is limited by the capabilities of: The Charging Station, EV and Cable between CS and EV. If any of these three is not capable of 3 phase charging, the EV will be charged using the number of phases that is supported by all three.
+|===
 
+[cols="^.^1,10",%autowidth.stretch]
+|===
+s|IMPORTANT |Switching the number of used phases during a schedule or transaction should be done with care. Some EVs MAY not support this and changing the amount of phases MAY result in physical damage. With the Configuration Variable: <<phases_3_to_1,Phases3to1>> The Charging Station can tell if it supports switching the amount of phases during a transaction.
+|===
 
-The amount of phases used during charging is limited by the capabilities of: The Charging Station, EV and
-Cable between CS and EV. If any of these three is not capable of 3 phase charging, the EV will be charged
-using the number of phases that is supported by all three.
+[cols="^.^1,10",%autowidth.stretch]
+|===
+s|TIP |On days on which daylight saving goes into or out of effect, a special profile might be needed (e.g. for relativeprofiles).
+|===
 
-IMPORTANT
+==== Example Using Stacked Charging Profiles
 
+A CSO wishes to limit charging to 2 kW during the peak hours of the day from 17:00h to 20:00h. This limit does not apply to Sundays and this limit does not apply to Christmas Day either.
 
-Switching the number of used phases during a schedule or transaction should be done with care. Some
-EVs MAY not support this and changing the amount of phases MAY result in physical damage. With the
-Configuration Variable: Phases3to1 The Charging Station can tell if it supports switching the amount of
-phases during a transaction.
-
-
-TIP On days on which daylight saving goes into or out of effect, a special profile might be needed (e.g. for relativeprofiles).
-
-**3.6.1. Example Using Stacked Charging Profiles**
-
-A CSO wishes to limit charging to 2 kW during the peak hours of the day from 17:00h to 20:00h. This limit does not apply to
-
-Sundays and this limit does not apply to Christmas Day either.
-
-If this applies to a large number or charging stations, then it is not practical to delete the charging profile every Sunday and then
-add it again on Monday. A possible solution is to add profiles with higher stack level for the exceptions to the base profile. See the
-following JSON examples where stack levels #2 and #3 are used to define exceptions for Sunday and Christmas.
+If this applies to a large number or charging stations, then it is not practical to delete the charging profile every Sunday and then add it again on Monday. A possible solution is to add profiles with higher stack level for the exceptions to the base profile. See the following JSON examples where stack levels #2 and #3 are used to define exceptions for Sunday and Christmas.
 
 **(1) TxDefaultProfile, stack #1:** time-of-day limitation to 2 kW, recurring every day from 17:00h to 20:00h.
 
-Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
-
-
-
+[,json]
+----
 "chargingProfile": {
-"id": 10, "stackLevel": 1, "chargingProfilePurpose": "TxDefaultProfile",
-"chargingProfileKind": "Recurring", "recurrencyKind": "Daily",
-"chargingSchedule": [ {
-"id": 1, "startSchedule": "2020-01-09T17:00:00", "duration": 1080,
-"chargingRateUnit": "W",
-"chargingSchedulePeriod": [ { "startPeriod": 0, "limit": 2000 } ]
-} ]
+  "id": 10, "stackLevel": 1, "chargingProfilePurpose": "TxDefaultProfile",
+  "chargingProfileKind": "Recurring", "recurrencyKind": "Daily",
+  "chargingSchedule": [ {
+    "id": 1, "startSchedule": "2020-01-09T17:00:00", "duration": 1080,
+    "chargingRateUnit": "W",
+    "chargingSchedulePeriod": [ { "startPeriod": 0, "limit": 2000 } ]
+  } ]
 }
+----
 
 **(2) TxDefaultProfile, stack #2:** overruling Sundays to no limit, recurring every week starting 2020-01-05.
 
-
+[,json]
+----
 "chargingProfile": {
-"id": 11, "stackLevel": 2, "chargingProfilePurpose": "TxDefaultProfile",
-"chargingProfileKind": "Recurring", "recurrencyKind": "Weekly",
-"chargingSchedule": [ {
-"id": 1, "startSchedule": "2020-01-05T00:00:00", "duration": 86400,
-"chargingRateUnit": "W",
-"chargingSchedulePeriod": [ { "startPeriod": 0, "limit": 999999 } ]
-} ]
+  "id": 11, "stackLevel": 2, "chargingProfilePurpose": "TxDefaultProfile",
+  "chargingProfileKind": "Recurring", "recurrencyKind": "Weekly",
+  "chargingSchedule": [ {
+    "id": 1, "startSchedule": "2020-01-05T00:00:00", "duration": 86400,
+    "chargingRateUnit": "W",
+    "chargingSchedulePeriod": [ { "startPeriod": 0, "limit": 999999 } ]
+  } ]
 }
+----
 
 **(3) TxDefaultProfile, stack #3:** overruling Christmas Day 2020 to no limit, fixed date 2020-12-25.
 Note, that this profile is only valid in the year 2020.
 
+[,json]
+----
+  "chargingProfile": {
+    "id": 12, "stackLevel": 3, "chargingProfilePurpose": "TxDefaultProfile",
+    "chargingProfileKind": "Absolute",
+    "validFrom": "2020-01-01T00:00:00", "validTo": "2021-01-01T00:00:00",
+    "chargingSchedule": [ {
+      "id": 1, "startSchedule": "2020-12-25T00:00:00", "duration": 86400,
+      "chargingRateUnit": "W",
+      "chargingSchedulePeriod": [ { "startPeriod": 0, "limit": 999999 } ]
+    } ]
+  }
+----
 
-"chargingProfile": {
-"id": 12, "stackLevel": 3, "chargingProfilePurpose": "TxDefaultProfile",
-"chargingProfileKind": "Absolute",
-"validFrom": "2020-01-01T00:00:00", "validTo": "2021-01-01T00:00:00",
-"chargingSchedule": [ {
-"id": 1, "startSchedule": "2020-12-25T00:00:00", "duration": 86400,
-"chargingRateUnit": "W",
-"chargingSchedulePeriod": [ { "startPeriod": 0, "limit": 999999 } ]
-} ]
-}
+[cols="^.^1,10",%autowidth.stretch]
+|===
+s|NOTE |Normally, when no limits are desired for charging, one will not define a charging schedule period for those hours (see stack level #1 for hours outside 17:00h - 20:00h). However, when overruling a charging schedule by one from a profile with a higher stack level, it is not possible to define a charging schedule period that has no limit. Therefore, the charging schedules for stack #2 and #3 in the above example use a (arbitrary) high value of 999999.
+|===
 
-NOTE
+<<<
 
-
-Normally, when no limits are desired for charging, one will not define a charging schedule period for those hours
-(see stack level #1 for hours outside 17:00h - 20:00h). However, when overruling a charging schedule by one from
-a profile with a higher stack level, it is not possible to define a charging schedule period that has no limit.
-Therefore, the charging schedules for stack #2 and #3 in the above example use a (arbitrary) high value of
-999999.
-
-Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
-
-
-=== 4. Smart Charging Signals to a Charging Station from Multiple Actors
+== Smart Charging Signals to a Charging Station from Multiple Actors
 
 This section is normative.
 
-Within OCPP, multiple mechanism are supported for Smart Charging, i.e. multiple mechanisms are available that can add a limit
-when charging an EV:
+Within OCPP, multiple mechanism are supported for Smart Charging, i.e. multiple mechanisms are available that can add a limit when charging an EV:
 
-1. The CSMS can influence charging by sending a SetChargingProfile message to the Charging Station. See K01 -
-    SetChargingProfile.
-2. The EV can influence charging based on the PlugAndCharge functionality: the ISO 15118 enables EV initiated Charging
-    Limits. See Section 5.3. ISO 15118 based Smart Charging.
-3. Some local input, for example a Home Energy Management System (HEMS) or DSO, can influence the charging, for example
-    via an External Smart Charging Control signal. See K11 - Set / Update External Charging Limit.
-4. A Charging Station can limit charging when it is load balancing when more than 1 EV is charging.
+. The CSMS can influence charging by sending a SetChargingProfile message to the Charging Station. See <<k01_set_charging_profile,K01 - SetChargingProfile>>.
+. The EV can influence charging based on the PlugAndCharge functionality: the ISO 15118 enables EV initiated Charging Limits. See Section <<iso_15118_based_smart_charging,5.3. ISO 15118 based Smart Charging>>.
+. Some local input, for example a Home Energy Management System (HEMS) or DSO, can influence the charging, for example via an External Smart Charging Control signal. See <<k11_set_update_external_charging_limit_with_ongoing_transaction,K11 - Set / Update External Charging Limit>>.
+. A Charging Station can limit charging when it is load balancing when more than 1 EV is charging.
 
-The assumption is that all parties that might be involved in setting limits for charging an EV will use one of the above mechanisms
-directly or indirectly.
+The assumption is that all parties that might be involved in setting limits for charging an EV will use one of the above mechanisms directly or indirectly.
 
-To determine how a Charging Station should respond to simultaneous smart charging signals from multiple actors, the following
-rules should be followed:
+To determine how a Charging Station should respond to simultaneous smart charging signals from multiple actors, the following rules should be followed:
 
-_Table 158. Smart Charging rules for multiple actor situation_
+.Smart Charging rules for multiple actor situation
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
 
+|SC.01      |{nbsp}
+  |At any point in time, the charging limit, which is the result of merging the schedules from external sources and the OCPP charging profiles with the highest stackLevel from each of the purposes ChargingStationMaxProfile, ChargingStationExternalConstraints and TxDefaultProfile (or TxProfile), SHALL be less than or equal to the lowest value of available power or current in any of the merged schedules.
+    |For safety purposes.
+|SC.02      |When the ChargingProfile has changed
+  |The Charging Station SHALL always inform the CSMS.
+    |The message used for this varies depending on the which of the mechanisms mentioned at the start of this section is applicable:
 
-ID Precondition Requirement definition Note
-SC.01 At any point in time, the charging limit, which is
-the result of merging the schedules from
-external sources and the OCPP charging
-profiles with the highest stackLevel from each
-of the purposes ChargingStationMaxProfile,
-ChargingStationExternalConstraints and
-TxDefaultProfile (or TxProfile), SHALL be less
-than or equal to the lowest value of available
-power or current in any of the merged
-schedules.
+    1. n/a
+    2. <<notify_ev_charging_schedule_request,NotifyEVChargingScheduleRequest>>
+    3. <<notify_charging_limit_request,NotifyChargingLimitRequest>>
+    4. <<transaction_event_request,TransactionEventRequest>>
+|SC.03      |{nbsp}
+  |Reporting to the CSMS concerning a changed limit in the ChargingProfile for mechanisms 3 and 4 as described in SC.02 MAY be skipped if the change in the limit is smaller than the percentage defined in the Configuration Variable: <<limit_change_significance,`LimitChangeSignificance`>>.
+    |This is to prevent the Charging Station to send a lot of messages for small fluctuations (e.g. due to HEMS / smart meter input at the Charging Station)
+|SC.04      |{nbsp}
+  |The <<get_compositie_schedule_response,GetCompositeScheduleResponse>> message SHALL always report the expected charging schedule, i.e. the lowest _limit_ for charging. This means that when an EV has a charging limit X and indicates (e.g. using the ISO 15118 protocol) that it will use less energy than offered, amount Y, the Charging Station SHALL report limit Y.
+|===
 
+<<<
 
-For safety purposes.
+== Use cases & Requirements
 
+=== General Smart Charging
 
-SC.02 When the
-ChargingProfile has
-changed
-
-
-The Charging Station SHALL always inform the
-CSMS.
-
-
-The message used for this varies depending
-on the which of the mechanisms mentioned at
-the start of this section is applicable:
-
-1. n/a
-2. NotifyEVChargingScheduleRequest
-3. NotifyChargingLimitRequest
-4. TransactionEventRequest
-SC.03 Reporting to the CSMS concerning a changed
-limit in the ChargingProfile for mechanisms 3
-and 4 as described in SC.02 MAY be skipped if
-the change in the limit is smaller than the
-percentage defined in the Configuration
-Variable: LimitChangeSignificance.
-
-
-This is to prevent the Charging Station to send
-a lot of messages for small fluctuations (e.g.
-due to HEMS / smart meter input at the
-Charging Station)
-
-
-SC.04 The GetCompositeScheduleResponse
-message SHALL always report the expected
-charging schedule, i.e. the lowest limit for
-charging. This means that when an EV has a
-charging limit X and indicates (e.g. using the
-ISO 15118 protocol) that it will use less energy
-than offered, amount Y, the Charging Station
-SHALL report limit Y.
-
-Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
-
-
-=== 5. Use cases & Requirements
-
-==== 5.1. General Smart Charging
-
-==== K01 - SetChargingProfile
+:sectnums!:
+[[k01_set_charging_profile]]
+=== K01 - SetChargingProfile
 
 _Table 159. K01 - Central Smart Charging_
 
@@ -2153,7 +2106,8 @@ Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
 
 ==== 5.2. External Charging Limit based Smart Charging
 
-==== K11 - Set / Update External Charging Limit With Ongoing Transaction
+[[k11_set_update_external_charging_limit_with_ongoing_transaction]]
+=== K11 - Set / Update External Charging Limit With Ongoing Transaction
 
 _Table 179. K11 - Set / update external charging limit with ongoing transaction_
 
@@ -2606,8 +2560,8 @@ K14.FR.06 K14.FR.05 The Local Controller SHALL NOT set chargingProfilePurpose to
 ChargingStationExternalConstraints.
 Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
 
-
-==== 5.3. ISO 15118 based Smart Charging
+[[iso_15118_based_smart_charging]]
+=== ISO 15118 based Smart Charging
 
 ==== K15 - Charging with load leveling based on High Level Communication
 
