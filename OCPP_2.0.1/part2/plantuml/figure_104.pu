@@ -1,0 +1,68 @@
+@startuml figure_104
+!include style.puml
+
+actor "External Trigger" as ExternalTrigger
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+ExternalTrigger -> CSMS: remote start()
+activate ExternalTrigger
+activate CSMS
+
+CSMS -> ChargingStation: RequestStartTransactionRequest(idToken, chargingProfile, remoteStartId = 123)
+activate ChargingStation
+
+ChargingStation --> CSMS: RequestStartTransactionResponse(status = Accepted)
+
+opt
+  CSMS --> ExternalTrigger:notification
+  deactivate CSMS
+  deactivate ExternalTrigger
+end
+
+opt AuthorizeRemoteStart = true
+  ChargingStation -> CSMS: AuthorizeRequest(idToken)
+  activate CSMS
+
+  CSMS --> ChargingStation: AuthorizeResponse(idTokenInfo)
+  deactivate CSMS
+  deactivate ChargingStation
+end
+
+ChargingStation -> CSMS: StatusNotificationRequest(Occupied)
+activate CSMS
+activate ChargingStation
+
+CSMS --> ChargingStation: StatusNotificationResponse()
+deactivate CSMS
+deactivate ChargingStation
+
+alt within ConnectionTimeOut
+  ExternalTrigger -> ChargingStation: Plugin cable
+  activate ExternalTrigger
+  activate ChargingStation
+
+  opt if cable not permanently attached
+    ChargingStation -> ChargingStation: lock connector
+  end
+
+  ChargingStation -> ChargingStation: start energy offer
+
+  opt
+    ChargingStation --> ExternalTrigger: notification
+    deactivate ExternalTrigger
+  end
+
+  ChargingStation -> CSMS: \
+    TransactionEventRequest(eventType = Started, \n\
+    chargingState = Charging, remoteStartId  123, ...)
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse(...)
+  deactivate ChargingStation
+  deactivate CSMS
+
+  ChargingStation ->o] : Continue regular smart charging session
+end
+
+@enduml

@@ -1,0 +1,96 @@
+@startuml figure_102
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "EV" as EV
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over EVDriver, CSMS
+  User authorization successful and transaction is started
+end note
+
+ChargingStation -> EV: set max current(limit)
+activate ChargingStation
+
+ChargingStation -> ChargingStation: switch power on
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Updated, transactionId, \n\
+        chargingState = Charging, ...)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate CSMS
+
+EV -> ChargingStation: start charging()
+activate EV
+
+loop loop Change according to charging profile
+else for each interval period in charging profile 
+  ChargingStation -> ChargingStation: get limit from charging profile():limit
+  note right
+    Charging Station implements charging
+    profile via the Control Pilot
+    signal whenever maximum current
+    needs changing.
+  end note
+
+  ChargingStation -> EV: set max current(limit)
+  deactivate ChargingStation
+
+  opt Change of limits by CSMS
+    ChargingStation -> CSMS: \
+      SetChargingProfileRequest(evseId,chargingProfile.id,[transactionId], \
+      \nchargingProfilePurpose: TxProfile, ChargingProfileKind, RecurrencyKind, ValidFrom, \
+      \nValidTo, ChargingSchedule)
+    activate ChargingStation
+    activate CSMS
+
+    note right of CSMS
+      CSMS decides to
+      change the charging profile.
+    end note
+
+    ChargingStation --> CSMS: SetChargingProfileResponse(Accepted)
+    deactivate CSMS
+  end 
+end
+
+note over EVDriver, CSMS
+  User authorization successful
+end note
+
+ChargingStation --> EV: end charging()
+deactivate EV
+
+ChargingStation -> ChargingStation: switch power off
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Updated, transactionId, \n\
+      chargingState = EVConnected, ...)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate CSMS
+deactivate ChargingStation
+
+EVDriver --> ChargingStation: unplug cable
+activate ChargingStation
+
+ChargingStation -> CSMS: StatusNotificationRequest(Available)
+activate CSMS
+
+CSMS --> ChargingStation: StatusNotificationResponse()
+deactivate CSMS
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Ended, transactionId, timestamp, \n\
+      stopReason, ...)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse([IdTokenInfo])
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

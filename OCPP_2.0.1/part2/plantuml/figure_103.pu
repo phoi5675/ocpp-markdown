@@ -1,0 +1,97 @@
+@startuml figure_103
+!include style.puml
+
+participant "EV" as EV
+participant "Charging Station" as ChargingStation
+participant "Local Controller" as LocalController
+participant "CSMS" as CSMS
+
+note over EV, CSMS
+  User authorization successful and transaction is started
+end note
+
+ChargingStation -> EV: set max current(limit)
+activate ChargingStation
+
+ChargingStation -> ChargingStation: switch power on
+
+EV -> ChargingStation: start charging
+activate EV
+activate LocalController
+
+ChargingStation -> LocalController: \
+  TransactionEventRequest(eventType = Updated, \n\
+    transactionId = AB1234, \n\
+    chargingState = Charging, ...)
+activate CSMS
+
+LocalController -> CSMS: \
+  TransactionEventRequest(eventType = Updated, \n\
+    transactionId = AB1234, \n\
+    chargingState = Charging, ...)
+
+CSMS --> LocalController: TransactionEventResponse(...)
+deactivate CSMS
+
+LocalController --> ChargingStation: TransactionEventResponse(...)
+deactivate LocalController
+
+loop loop Change according to charging profile
+else for each interval period in charging profile
+  ChargingStation -> ChargingStation: get limit from charging profile():limit
+  note right
+    Charging Station implements TxDefaultProfile
+    via the Control Pilot
+    signal whenever maximum current
+    needs changing.
+  end note
+
+  ChargingStation -> EV: set max current(limit)
+
+  opt Change of limits by controller
+    LocalController -> ChargingStation: SetChargingProfileRequest(evseId, csChargingProfiles)
+    activate LocalController
+
+    note right
+      Local Controller decides to
+      change the charging profile.
+    end note
+
+    ChargingStation --> LocalController: SetChargingProfileResponse(Accepted)
+    deactivate LocalController
+    deactivate ChargingStation
+  end
+end
+
+note over EV, CSMS
+  User authorization successful
+end note
+
+ChargingStation --> EV: end charging()
+
+ChargingStation -> ChargingStation: switch power off
+activate ChargingStation
+activate LocalController
+
+ChargingStation -> LocalController: \
+  TransactionEventRequest(eventType = Updated, \n\
+    transactionId = AB1234, \n\
+    chargingState = EVConnected, ...)
+activate CSMS
+
+LocalController -> CSMS: \
+  TransactionEventRequest(eventType = Updated, \n\
+    transactionId = AB1234, \n\
+    chargingState = EVConnected, ...)
+CSMS --> LocalController: TransactionEventResponse(...)
+deactivate CSMS
+
+LocalController --> ChargingStation: TransactionEventResponse(...)
+deactivate LocalController
+deactivate ChargingStation
+
+note over EV, CSMS
+  Transaction is stopped
+end note
+
+@enduml
