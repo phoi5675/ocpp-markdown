@@ -132,6 +132,7 @@ A <<charging_profile_type,ChargingProfile>> holds a <<charging_schedule_type,Cha
 
 To avoid conflicts, it is not allowed to have multiple charging profiles with the same _stackLevel_ and same _chargingProfilePurpose_ to be valid on the same EVSE at a given time. Note, that a charging profile for EVSE #0 is considered to be active on all EVSEs!
 
+[[combining_charging_profile_purposes]]
 === Combining Charging Profile Purposes
 
 The Composite Schedule that will guide the charging level is a combination of the prevailing Charging Profiles of the different <<charging_profile_purpose,chargingProfilePurposes>> and stack levels.
@@ -266,6 +267,7 @@ s|NOTE |Normally, when no limits are desired for charging, one will not define a
 
 <<<
 
+[[smart_charging_signals_to_a_charging_station_from_multiple_actors]]
 == Smart Charging Signals to a Charging Station from Multiple Actors
 
 This section is normative.
@@ -774,317 +776,181 @@ When a ChargingProfile with purpose TxProfile is provided as part of a RequestSt
 
 === K06 - Offline Behavior Smart Charging During Transaction
 
-_Table 169. K06 - Offline Behavior Smart Charging During Transaction_
-
-
-No. Type Description
-1 Name Offline Behavior Smart Charging During Transaction
-2 ID K06
-Functional block K. Smart Charging
-3 Objective(s) To enable the Charging Station to continue to use the current ChargingProfile for the duration of
-the transaction while it is Offline.
-4 Description If a Charging Station goes Offline after having received a transaction-specific ChargingProfile with
-purpose TxProfile, then it continues to use this profile for the duration of the transaction.
-Actors Charging Station, CSMS, EV
-
-_Scenario description_  **1.** The CSMS sends a SetChargingProfileRequest to the Charging Station with a TxProfile.
-
-**2.** The Charging Station responds with a SetChargingProfileResponse.
-**3.** While charging is in progress the EVSE will continuously adapt the maximum current or power
-according to the installed ChargingProfiles.
-**4.** The Charging Station is _Offline_ and operates stand-alone.
-**5.** While charging is in progress the EVSE will continuously adapt the maximum current or power
-according to the already installed ChargingProfiles.
-
-**5 Prerequisite(s)**  A transaction is ongoing.
-The Functional Block _Smart Charging_ is installed.
-Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
-
-
-
-No. Type Description
-
-**6 Postcondition(s)**  **Successful postcondition:**
-The Charging Station continues to use the charging profiles which are available.
-**Failure postcondition:**
-n/a
-EV Driver
-EV Charging Station CSMS
-User authorization successful and transaction is started
-SetChargingProfileRequest(TxProfile, evseId)
-SetChargingProfileResponse(Accepted)
-connection loss
-loop Change according to charging profile
-[for each interval period in charging profile]
-get limit from charging profile():limit
-Charging Station implements charging
-profile via the Control Pilot
-signal whenever maximum current
-needs changing.
-set max current(limit)
-_Figure 105. Sequence Diagram: Offline Behavior Smart Charging_
-**7 Error handling** n/a
-**8 Remark(s)** n/a
-**K06 - Offline Behavior Smart Charging During Transaction - Requirements**
-_Table 170. K06 - Requirements_
-**ID Precondition Requirement definition**
-K06.FR.01 If the Charging Station goes _Offline_
-after having received a transaction-
-specific ChargingProfile with
-purpose TxProfile.
-The Charging Station SHALL continue to use this profile for the duration of
-the transaction.
-K06.FR.02 If the Charging Station goes _Offline_ ,
-without having any charging profiles.
-The Charging Station SHALL execute the transaction as if no constraints
-apply.
-
-==== K07 - Offline Behavior Smart Charging at Start of Transaction
-
-_Table 171. K07 - Offline Behavior Smart Charging at Start of Transaction_
-
-
-No. Type Description
-1 Name Offline Behavior Smart Charging at Start of Transaction
-2 ID K07
-Functional block K. Smart Charging
-3 Objective(s) To enable the Charging Station to continue to use a ChargingProfile for a transaction which is
-started Offline.
-4 Description By setting a TxDefaultProfile on a Charging Station, the CSMS can assure that any transaction,
-which is started while the communication with the CSMS is Offline , uses this profile.
-Actors Charging Station, CSMS, EV, EV Driver
-
-Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
-
-
-
-No. Type Description
-
-_Scenario description_  **1.** The CSMS sends a SetChargingProfileRequest to the Charging Station with a TxDefaultProfile.
-
-**2.** The Charging Station responds with a SetChargingProfileResponse.
-**3.** The Charging Station goes _Offline_ and operates stand-alone.
-**4.** The Charging Station allows automatic authorization of any presented IdToken by either:
-_a._ The Local Authorization List; a list of identifiers that can be synchronized with the CSMS.
-_b._ Authorization Cache entries; which autonomously maintains a record of previously presented
-identifiers that have been successfully authorized by the CSMS. (Successfully meaning: a
-response received on a message containing an IdToken).
-_c._ Configuration Variable: OfflineTxForUnknownIdEnabled  TRUE
-**5.** The transaction is started in the same way as described in E. Transactions.
-**6.** While charging is in progress the EVSE will continuously adapt the maximum current or power
-according to the already installed ChargingProfiles.
-
-**5 Prerequisite(s)**  The Charging Station is _Offline_.
-The Functional Block _Smart Charging_ is installed.
-The IdToken is known in the Local Authorization List, the IdToken is known in the Authorization
-Cache, or unknown offline authorization is enabled.
-**6 Postcondition(s)**  **Successful postcondition:**
-The Charging Station uses the installed TxDefaultProfile which are available for the _Offline_ started
-transaction.
-**Failure postcondition:**
-n/a
-Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
-
-
-
-EV Driver
-
-
-EV Charging Station CSMS
-
-
-SetChargingProfileRequest(TxDefaultProfile, evseId)
-
-
-SetChargingProfileResponse(Accepted)
-
-
-Time period between start of transaction and setting of charging profile can be minutes, but can also be days.
-
-
-connection loss
-
-
-Present IdToken()
-
-
-opt [if supported]
-check local authorization list()
-
-
-opt [if supported]
-Check Authorization Cache()
-
-
-opt
-notification
-
-
-alt [LocalAuthorizeOffline=true & (Id in cache or (Id in local list & Valid)) or (OfflineTxForUnknownIdEnabled=true
-& Id not Invalid in local list)]
-lock connector
-
-
-start energy offer
-
-
-loop Change according to charging profile
-[for each interval period in charging profile]
-
-
-get limit from charging profile():limit
-
-
-Charging Station implements charging
-profile via the Control Pilot
-signal whenever maximum current
-needs changing.
-
-
-set max current(limit)
-
-_Figure 106. Sequence Diagram: Offline Behavior Smart Charging_
-
-
-7 Error handling n/a
-8 Remark(s) See section Combining Charging Profile Purposes for a description on how to combine different
-charging profile purposes.
-
-**K07 - Offline Behavior Smart Charging at Start of Transaction - Requirements**
-
-_Table 172. K07 - Requirements_
-
-
-ID Precondition Requirement definition Note
-K07.FR.01 If a Charging Station goes
-Offline before a transaction
-is started or before a
-transaction-specific
-ChargingProfile with
-purpose TxProfile was
-received.
-
-
-The Charging Station SHALL use the charging profiles
-which are available.
-
-
-With purpose
-TxDefaultProfile for the
-duration of the current
-transaction only.
-
-==== K08 - Get Composite Schedule
-
-_Table 173. K08 - Get Composite Schedule_
-
-Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
-
-
-
-No. Type Description
-1 Name Get Composite Schedule
-2 ID K08
-Functional block K. Smart Charging
-3 Objective(s) To request the Charging Station to report the composite charging schedule.
-4 Description This use cases describes how the CSMS requests the Charging Station to report the Composite
-Charging Schedule, as calculated by the Charging Station, by sending
-GetCompositeScheduleRequest.
-
-
-The CompositeSchedule is the result of the calculation of all active schedules and possible local
-limits present in the Charging Station.
-Actors Charging Station, CSMS
-Scenario description 1. The CSMS requests the Charging Station to report the Composite Charging Schedule by
-sending a GetCompositeScheduleRequest.
-
-**2.** The Charging Station calculates the schedule.
-**3.** The Charging Station responds with a GetCompositeScheduleResponse with the status and
-ChargingSchedule.
-
-**5 Prerequisite(s)**  The Functional Block _Smart Charging_ is installed.
-**6 Postcondition(s)**  **Successful postcondition:**
-The CSMS _Successfully_ received the composite schedule from the Charging Station.
-**Failure postcondition:**
-The CSMS did _not_ receive the composite schedule from the Charging Station.
-CSMS Charging Station
-GetCompositeScheduleRequest(evseId, duration)
-calculate
-schedule
-GetCompositeScheduleResponse(status, schedule)
-_Figure 107. Sequence Diagram: Get Composite Schedule_
-**7 Error handling** n/a
-**8 Remark(s)** Please note that the charging schedule sent by the Charging Station is only indicative for that
-point in time. This schedule might change over time due to external causes (e.g. local balancing
-based on grid connection capacity is active and one EVSE becomes available).
-The Composite Schedule that will guide the charging level is a combination of the prevailing
-Charging Profiles of the different chargingProfilePurposes.
-This Composite Schedule is calculated by taking the minimum value for each time interval (see:
-Smart Charging signals to a Charging Station from multiple actors). Time intervals do not have to
-be of fixed length, nor do they have to be the same for every charging profile purpose. This means
-that a resulting Composite Schedule MAY contain intervals of different lengths.
-The reported schedule, in GetCompositeScheduleResponse, is the result of the calculation of all
-active schedules and possible local limits present in the Charging Station.
-The composite schedule reports the expected power or current the Charging Station expects to
-consume from the grid, for the requested EVSE, during the requested time period.
-When requested for evseid=0, the Charging Station will calculate the total expected consumption
-for the grid connection.
-Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
-
-
-**K08 - Get Composite Schedule - Requirements**
-
-_Table 174. K08 - Requirements_
-
-
-ID Precondition Requirement definition
-K08.FR.01 The CSMS MAY request the Charging Station to report the
-CompositeSchedule by sending GetCompositeScheduleRequest.
-K08.FR.02 Upon receipt of
-GetCompositeScheduleRequest.
-
-
-The Charging Station SHALL calculate the scheduled time intervals, from
-the moment of message receipt up to the Duration (in seconds) and send
-them to the CSMS.
-K08.FR.03 If the evseId in the
-GetCompositeScheduleRequest is
-set to '0'
-
-
-The Charging Station SHALL report the total expected power or current
-the Charging Station expects to consume from the grid during the
-requested time period.
-K08.FR.04 At any point in time, the available power or current in the
-CompositeSchedule, which is the result of merging the schedules of
-charging profiles ChargingStationMaxProfile,
-ChargingStationExternalConstraints and TxDefaultProfile (or TxProfile),
-SHALL be less than or equal to lowest value of available power or current
-in any of the merged schedules.
-K08.FR.05 If the Charging Station is not able to
-report the requested schedule, for
-instance if the evseId is unknown
-
-
-The Charging Station SHALL respond with the status Rejected.
-
-K08.FR.06  K08.FR.02 AND
-When there is no transaction active
-on an EVSE
-The Charging Station SHALL calculate the CompositeSchedule as if there
-is a transaction ongoing on the EVSE that is using the TxDefaultProfile (if
-this profile purpose is set)
-K08.FR.07 When receiving a
-GetCompositeScheduleRequest with
-a chargingRateUnit, which is not
-configured in the configuration
-variable
-ChargingScheduleChargingRat
-eUnit
-The Charging Station SHALL respond with
-GetCompositeScheduleResponse with status Rejected.
-
-==== K09 - Get Charging Profiles
+.K06 - Offline Behavior Smart Charging During Transaction
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Offline Behavior Smart Charging During Transaction
+|2   |ID              |K06
+|{nbsp} d|_Functional block_ |K. Smart Charging
+|3   |Objective(s)    |To enable the Charging Station to continue to use the current <<charging_profile_type,ChargingProfile>> for the duration of the transaction while it is _Offline_.
+|4   |Description     |If a Charging Station goes _Offline_ after having received a transaction-specific <<charging_profile_type,ChargingProfile>> with purpose <<tx_profile,TxProfile>>, then it continues to use this profile for the duration of the transaction.
+|{nbsp} d|_Actors_    |Charging Station, CSMS, EV
+|{nbsp} d|_Scenario description_ 
+  |**1.** The CSMS sends a <<set_charging_profile_request,SetChargingProfileRequest>> to the Charging Station with a <<tx_profile,TxProfile>>. +
+  **2.** The Charging Station responds with a <<set_charging_profile_response,SetChargingProfileResponse>>. +
+  **3.** While charging is in progress the EVSE will continuously adapt the maximum current or power according to the installed <<charging_profile_type,ChargingProfiles>>. +
+  **4.** The Charging Station is _Offline_ and operates stand-alone. +
+  **5.** While charging is in progress the EVSE will continuously adapt the maximum current or power according to the already installed <<charging_profile_type,ChargingProfiles>>.
+|5   |Prerequisite(s) |A transaction is ongoing. +
+  The Functional Block _Smart Charging_ is installed.
+|6   |Postcondition(s) 
+  |**Successful postcondition:** +
+  The Charging Station continues to use the charging profiles which are available.
+
+  **Failure postcondition:**
+  n/a
+|===
+
+.Sequence Diagram: Offline Behavior Smart Charging
+image::part2/images/figure_105.svg[Sequence Diagram: Offline Behavior Smart Charging]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling |n/a
+|8   |Remark(s)      |n/a
+|===
+
+==== K06 - Offline Behavior Smart Charging During Transaction - Requirements
+
+.K06 - Requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
+
+|K06.FR.01  |If the Charging Station goes _Offline_ after having received a transaction- specific <<charging_profile_type,ChargingProfile>> with purpose <<tx_profile,TxProfile>>.
+  |The Charging Station SHALL continue to use this profile for the duration of the transaction.
+|K06.FR.02  |If the Charging Station goes _Offline_, without having any charging profiles.
+  |The Charging Station SHALL execute the transaction as if no constraints apply.
+|===
+
+=== K07 - Offline Behavior Smart Charging at Start of Transaction
+
+.K07 - Offline Behavior Smart Charging at Start of Transaction
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Offline Behavior Smart Charging at Start of Transaction
+|2   |ID              |K07
+|{nbsp} d|_Functional block_ |K. Smart Charging
+|3   |Objective(s)    |To enable the Charging Station to continue to use a <<charging_profile_type,ChargingProfile>> for a transaction which is started _Offline_.
+|4   |Description     |By setting a <<tx_default_profile,TxDefaultProfile>> on a Charging Station, the CSMS can assure that any transaction, which is started while the communication with the CSMS is _Offline_, uses this profile.
+|{nbsp} d|_Actors_    |Charging Station, CSMS, EV, EV Driver
+|{nbsp} d|_Scenario description_
+  |**1.** The CSMS sends a <<set_charging_profile_request,SetChargingProfileRequest>> to the Charging Station with a <<tx_default_profile,TxDefaultProfile>>. +
+  **2.** The Charging Station responds with a <<set_charging_profile_response,SetChargingProfileResponse>>. +
+  **3.** The Charging Station goes _Offline_ and operates stand-alone. +
+  **4.** The Charging Station allows automatic authorization of any presented IdToken by either: +
+  _a._ The Local Authorization List; a list of identifiers that can be synchronized with the CSMS. +
+  _b._ Authorization Cache entries; which autonomously maintains a record of previously presented identifiers that have been successfully authorized by the CSMS. (Successfully meaning: a response received on a message containing an IdToken). +
+  _c._ Configuration Variable: <<offline_tx_for_unknown_id_enabled,OfflineTxForUnknownIdEnabled>> = TRUE +
+  **5.** The transaction is started in the same way as described in <<e_transactions,E. Transactions>>. +
+  **6.** While charging is in progress the EVSE will continuously adapt the maximum current or power according to the already installed <<charging_profile_type,ChargingProfiles>>.
+|5   |Prerequisite(s) | The Charging Station is _Offline_. +
+  The Functional Block _Smart Charging_ is installed. +
+  The IdToken is known in the Local Authorization List, the IdToken is known in the Authorization Cache, or unknown offline authorization is enabled.
+|6   |Postcondition(s) 
+  |**Successful postcondition:** +
+  The Charging Station uses the installed <<tx_default_profile,TxDefaultProfile>> which are available for the _Offline_ started transaction.
+
+  **Failure postcondition:** +
+  n/a
+|===
+
+.Sequence Diagram: Offline Behavior Smart Charging
+image::part2/images/figure_106.svg[Sequence Diagram: Offline Behavior Smart Charging]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling |n/a
+|8   |Remark(s)      |See section <<combining_charging_profile_purposes,Combining Charging Profile Purposes>> for a description on how to combine different charging profile purposes.
+|===
+
+==== K07 - Offline Behavior Smart Charging at Start of Transaction - Requirement
+
+.K07 - Requirements
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
+
+|K07.FR.01  |If a Charging Station goes _Offline_ before a transaction is started or before a transaction-specific <<charging_profile_type,ChargingProfile>> with purpose <<tx_profile,TxProfile>> was received.
+  |The Charging Station SHALL use the charging profiles which are available.
+    |With purpose <<tx_default_profile,TxDefaultProfile>> for the duration of the current transaction only.
+|===
+
+=== K08 - Get Composite Schedule
+
+.K08 - Get Composite Schedule
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Get Composite Schedule
+|2   |ID              |K08
+|{nbsp} d|_Functional block_ |K. Smart Charging
+|3   |Objective(s)    |To request the Charging Station to report the composite charging schedule.
+|4   |Description     |This use cases describes how the CSMS requests the Charging Station to report the Composite Charging Schedule, as calculated by the Charging Station, by sending <<get_composite_schedule_request,GetCompositeScheduleRequest>>.
+
+The <<composite_schedule_type,CompositeSchedule>> is the result of the calculation of all active schedules and possible local limits present in the Charging Station.
+|{nbsp} d|_Actors_    |Charging Station, CSMS
+|{nbsp} d|_Scenario description_
+  |**1.** The CSMS requests the Charging Station to report the Composite Charging Schedule by sending a <<get_composite_schedule_request,GetCompositeScheduleRequest>>. +
+  **2.** The Charging Station calculates the schedule. +
+  **3.** The Charging Station responds with a <<get_compositie_schedule_response,GetCompositeScheduleResponse>> with the status and <<charging_schedule_type,ChargingSchedule>>.
+|5   |Prerequisite(s)  |The Functional Block _Smart Charging_ is installed.
+|6   |Postcondition(s) 
+  |**Successful postcondition:** +
+  The CSMS _Successfully_ received the composite schedule from the Charging Station.
+
+  **Failure postcondition:** +
+  The CSMS did _not_ receive the composite schedule from the Charging Station.
+|===
+
+.Sequence Diagram: Get Composite Schedule
+image::part2/images/figure_107.svg[Sequence Diagram: Get Composite Schedule]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling |n/a
+|8   |Remark(s)      |Please note that the charging schedule sent by the Charging Station is only indicative for that point in time. This schedule might change over time due to external causes (e.g. local balancing based on grid connection capacity is active and one EVSE becomes available).
+
+The Composite Schedule that will guide the charging level is a combination of the prevailing Charging Profiles of the different <<charging_profile_purpose,chargingProfilePurposes>>.
+
+This Composite Schedule is calculated by taking the minimum value for each time interval (see: <<smart_charging_signals_to_a_charging_station_from_multiple_actors,Smart Charging signals to a Charging Station from multiple actors>>). Time intervals do not have to be of fixed length, nor do they have to be the same for every charging profile purpose. This means that a resulting Composite Schedule MAY contain intervals of different lengths.
+
+The reported schedule, in <<get_compositie_schedule_response,GetCompositeScheduleResponse>>, is the result of the calculation of all active schedules and possible local limits present in the Charging Station. +
+The composite schedule reports the expected power or current the Charging Station expects to consume from the grid, for the requested EVSE, during the requested time period. +
+When requested for evseid=0, the Charging Station will calculate the total expected consumption for the grid connection.
+|===
+
+==== K08 - Get Composite Schedule - Requirements
+
+.K08 - Requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
+
+|K08.FR.01  |{nbsp}
+  |The CSMS MAY request the Charging Station to report the
+<<composite_schedule_type,CompositeSchedule>> by sending <<get_composite_schedule_request,GetCompositeScheduleRequest>>.
+|K08.FR.02  |Upon receipt of <<get_composite_schedule_request,GetCompositeScheduleRequest>>.
+  |The Charging Station SHALL calculate the scheduled time intervals, from the moment of message receipt up to the Duration (in seconds) and send them to the CSMS.
+|K08.FR.03  |If the evseId in the <<get_composite_schedule_request,GetCompositeScheduleRequest>> is set to '0'
+  |The Charging Station SHALL report the total expected power or current the Charging Station expects to consume from the grid during the requested time period.
+|K08.FR.04  |{nbsp}
+  |At any point in time, the available power or current in the <<composite_schedule_type,CompositeSchedule>>, which is the result of merging the schedules of charging profiles <<charging_station_max_profile,ChargingStationMaxProfile>>, <<charging_station_external_constraints,ChargingStationExternalConstraints>> and <<tx_default_profile,TxDefaultProfile>> (or <<tx_profile,TxProfile>>), SHALL be less than or equal to lowest value of available power or current in any of the merged schedules.
+|K08.FR.05  |If the Charging Station is not able to report the requested schedule, for instance if the _evseId_ is unknown
+  |The Charging Station SHALL respond with the status `Rejected`.
+|K08.FR.06  |K08.FR.02 AND +
+  When there is no transaction active on an EVSE
+    |The Charging Station SHALL calculate the <<composite_schedule_type,CompositeSchedule>> as if there is a transaction ongoing on the EVSE that is using the TxDefaultProfile (if this profile purpose is set)
+|K08.FR.07  |When receiving a <<get_composite_schedule_request,GetCompositeScheduleRequest>> with a <<charging_rate_unit_enum_type,chargingRateUnit>>, which is not configured in the configuration variable `ChargingScheduleChargingRateUnit`
+  |The Charging Station SHALL respond with <<get_compositie_schedule_response,GetCompositeScheduleResponse>> with status `Rejected`.
+|===
+
+=== K09 - Get Charging Profiles
 
 _Table 175. K09 - Get Charging Profiles_
 

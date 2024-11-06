@@ -1,0 +1,19 @@
+@startuml figure_107
+!include style.puml
+
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+CSMS -> ChargingStation: GetCompositeScheduleRequest(evseId, duration)
+activate ChargingStation
+activate CSMS
+
+ChargingStation -> ChargingStation: \
+  calculate \
+  \nschedule
+
+ChargingStation --> CSMS: GetCompositeScheduleResponse(status, schedule)
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

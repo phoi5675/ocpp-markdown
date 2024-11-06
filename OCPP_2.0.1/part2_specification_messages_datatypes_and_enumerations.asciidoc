@@ -638,9 +638,10 @@ able to process this request and will send
 ReportChargingProfilesRequest messages.
 statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
-==== 1.20. GetCompositeSchedule
+=== GetCompositeSchedule
 
-**1.20.1. GetCompositeScheduleRequest**
+[[get_composite_schedule_request]]
+==== GetCompositeScheduleRequest
 
 This contains the field definition of the GetCompositeScheduleRequest PDU sent by the CSMS to the Charging Station.
 
@@ -2537,7 +2538,8 @@ component ComponentType 1..1 Required. Component for which a report of Variable 
 requested.
 variable VariableType 0..1 Optional. Variable(s) for which the report is requested.
 
-=== 2.18. CompositeScheduleType
+[[composite_schedule_type]]
+=== CompositeScheduleType
 
 _Class_
 

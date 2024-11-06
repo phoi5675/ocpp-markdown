@@ -729,7 +729,7 @@ Description Maximum number of AdditionalInfo items that can be sent in one messa
 be implemented when AdditionalInfo is implemented.
 
 [[offline_tx_for_unknown_id_enabled]]
-==== OfflineTxForUnknownIdEnabled
+==== `OfflineTxForUnknownIdEnabled`
 
 
 Required no
