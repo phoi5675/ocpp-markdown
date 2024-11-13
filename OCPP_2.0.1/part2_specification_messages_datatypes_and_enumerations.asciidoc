@@ -224,9 +224,10 @@ status ClearCacheStatusEnumType 1..1 Required. Accepted if the Charging Station 
 the request, otherwise rejected.
 statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
-==== 1.7. ClearChargingProfile
+=== ClearChargingProfile
 
-**1.7.1. ClearChargingProfileRequest**
+[[clear_charging_profile_request]]
+==== ClearChargingProfileRequest
 
 This contains the field definition of the ClearChargingProfileRequest PDU sent by the CSMS to the Charging Station. The CSMS can
 use this message to clear (remove) either a specific charging profile (denoted by id) or a selection of charging profiles that match
@@ -239,7 +240,8 @@ Field Name Field Type Card. Description
 chargingProfileId integer 0..1 Optional. The Id of the charging profile to clear.
 chargingProfileCriteria ClearChargingProfileType 0..1 Optional. Specifies the charging profile.
 
-**1.7.2. ClearChargingProfileResponse**
+[[clear_charging_profile_response]]
+==== ClearChargingProfileResponse
 
 This contains the field definition of the ClearChargingProfileResponse PDU sent by the Charging Station to the CSMS in response to
 a ClearChargingProfileRequest.
@@ -595,9 +597,10 @@ then base64 encoded. MAY only be omitted when status
 is not Accepted.
 **statusInfo** StatusInfoType 0..1 Optional. Detailed status information.
 
-==== 1.19. GetChargingProfiles
+=== GetChargingProfiles
 
-**1.19.1. GetChargingProfilesRequest**
+[[get_charging_profile_request]]
+==== GetChargingProfilesRequest
 
 The message GetChargingProfilesRequest can be used by the CSMS to request installed charging profiles from the Charging
 Station. The charging profiles will then be reported by the Charging Station via ReportChargingProfilesRequest messages.
@@ -620,7 +623,8 @@ profiles SHALL be reported. Reported charging profiles
 SHALL match the criteria in field chargingProfile.
 chargingProfile ChargingProfileCriterionType 1..1 Required. Specifies the charging profile.
 
-**1.19.2. GetChargingProfilesResponse**
+[[get_charging_profiles_response]]
+==== GetChargingProfilesResponse
 
 This contains the field definition of the GetChargingProfilesResponse PDU sent by the Charging Station to the CSMS in response to
 a GetChargingProfilesRequest.
@@ -1332,7 +1336,8 @@ in response to a PublishFirmwareStatusNotificationRequest.
 
 === 1.43. ReportChargingProfiles
 
-**1.43.1. ReportChargingProfilesRequest**
+[[report_charging_profiles_request]]
+==== ReportChargingProfilesRequest
 
 Reports charging profiles installed in the Charging Station, as requested via a GetChargingProfilesRequest message. The charging
 profile report can be split over multiple ReportChargingProfilesRequest messages, this can be because charging profiles for
@@ -1361,7 +1366,8 @@ Charging Station.
 chargingProfile ChargingProfileType 1..* Required. The charging profile as configured in the
 Charging Station.
 
-**1.43.2. ReportChargingProfilesResponse**
+[[report_charging_profiles_response]]
+==== ReportChargingProfilesResponse
 
 The ReportChargingProfilesResponse message is sent by the CSMS to the Charging Station in response to a
 ReportChargingProfilesRequest. No fields are defined.
@@ -3782,7 +3788,8 @@ authorized and the EV is connected. When a ChargingProfile is received for a tra
 charging, then the charging schedule periods should remain relative to the PowerPathClosed moment.
 No value for startSchedule should be supplied.
 
-=== 3.13. ChargingProfilePurposeEnumType
+[[charging_profile_purpose_enum_type]]
+=== ChargingProfilePurposeEnumType
 
 _Enumeration_
 

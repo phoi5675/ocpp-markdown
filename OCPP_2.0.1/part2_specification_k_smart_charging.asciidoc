@@ -952,276 +952,136 @@ When requested for evseid=0, the Charging Station will calculate the total expec
 
 === K09 - Get Charging Profiles
 
-_Table 175. K09 - Get Charging Profiles_
+.K09 - Get Charging Profiles
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
+|1   |Name            |Get Charging Profile
+|2   |ID              |K09
+|{nbsp} d|_Functional block_ |K. Smart Charging
+|3   |Objectives      |To enable the CSMS to view the Charging Schedules/limits installed in a Charging Station, these can be installed by the CSMS or some other source.
+|4   |Description     |With the <<get_charging_profile_request,GetChargingProfilesRequest>> message the CSMS can ask a Charging Station to report all, or a subset of all the install Charging Profiles from the different possible sources. This can be used for some automatic smart charging control system, or for debug purposes by a CSO.
+|{nbsp} d|_Actors_    |Charging Station, CSMS
+|{nbsp} d|_Scenario description_
+  |**1.** The CSMS asks the Charging Station for the installed charging profiles by sending a <<get_charging_profile_request,GetChargingProfilesRequest>> message. +
+  **2.** The Charging Station responds, indicating if it can report Charging Schedules by sending a <<get_charging_profiles_response,GetChargingProfilesResponse>> message. +
+  **3.** Charging Station sends a number of <<report_charging_profiles_request,ReportChargingProfilesRequest>> messages to CSMS. +
+  **4.** The CSMS acknowledges reception of the reports by sending a <<report_charging_profiles_response,ReportChargingProfilesResponse>> to the Charging Station for every <<report_charging_profiles_request,ReportChargingProfilesRequest>>. +
+|5   |Prerequisites   |n/a
+|6   |Postcondition(s) |The CSMS knows which charging profiles have been installed in the Charging Station that match the requested parameters.
+|===
 
-No. Type Description
-1 Name Get Charging Profile
-2 ID K09
-Functional block K. Smart Charging
-3 Objectives To enable the CSMS to view the Charging Schedules/limits installed in a Charging Station, these
-can be installed by the CSMS or some other source.
-4 Description With the GetChargingProfilesRequest message the CSMS can ask a Charging Station to report all,
-or a subset of all the install Charging Profiles from the different possible sources. This can be
-used for some automatic smart charging control system, or for debug purposes by a CSO.
-Actors Charging Station, CSMS
-Scenario description 1 The CSMS asks the Charging Station for the installed charging profiles by sending a
-GetChargingProfilesRequest message.
-2 The Charging Station responds, indicating if it can report Charging Schedules by sending a
-GetChargingProfilesResponse message.
-3 Charging Station sends a number of ReportChargingProfilesRequest messages to CSMS.
-4 The CSMS acknowledges reception of the reports by sending a
-ReportChargingProfilesResponse to the Charging Station for every
-ReportChargingProfilesRequest.
-5 Prerequisites n/a
-6 Postcondition(s) The CSMS knows which charging profiles have been installed in the Charging Station that match
-the requested parameters.
+.Sequence diagram of the use case "Get Charging Profiles"
+image::part2/images/figure_108.svg[Sequence diagram of the use case "Get Charging Profiles"]
 
-Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error Handling  |When the Charging Station has no charging profiles that match the parameters in the <<get_charging_profile_request,GetChargingProfilesRequest>> the Charging Station SHALL respond with: NoProfiles.
+|8   |Remarks         |The charging profiles report can be split over multiple ReportChargingProfilesRequest messages, this can be because charging profiles for different charging sources need to be reported, or because there is just to much data for one message. To indicate that more reports will follow the flag *tbc* can be used.
+|===
 
+==== K09 - Get Charging Profiles - Requirements
 
+.K09 - Requirements
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
 
-CSMS Charging Station
+|K09.FR.01  |When requestId is set in the <<get_charging_profile_request,GetChargingProfilesRequest>>
+  |The Charging Station SHALL set the requestId in every <<report_charging_profiles_request,ReportChargingProfilesRequest>> that is sent as a result of this <<get_charging_profile_request,GetChargingProfilesRequest>>. |{nbsp}
+|K09.FR.02  |When the charging profiles are reported in more than one <<report_charging_profiles_request,ReportChargingProfilesRequest>>
+  |The Charging Station SHALL set the _tbc_ flag to *true* for all <<report_charging_profiles_request,ReportChargingProfilesRequest>> messages except the last. |{nbsp}
+|K09.FR.03  |{nbsp}
+  |The CSMS SHALL specify in _chargingProfile_ criteria in <<get_charging_profile_request,GetChargingProfilesRequest>> either: +
+  - a (list of) _chargingProfileId(s)_ OR +
+  - one or more of the fields _stackLevel_, +
+  _chargingLimitSource_ , _chargingProfilePurpose_.
+    |These fields are filter values of equal importance, but because a _chargingProfileId_ uniquely identifies a charging profile, the other fields are not needed if _chargingProfileIds_ are used.
+|K09.FR.04  |If _evseId_ is set to a value greater than 0 in the <<get_charging_profile_request,GetChargingProfilesRequest>>
+  |The Charging Station SHALL report the installed charging profiles for the specified EVSE that match all fields in _chargingProfile_. |{nbsp}
+|K09.FR.05  |If _evseId_ is set to 0 in <<get_charging_profile_request,GetChargingProfilesRequest>>
+  |The Charging Station SHALL only report charging profiles installed on the Charging Station itself (the grid connection) that match all fields in _chargingProfile_.
+    |EVSE #0 can have a `ChargingStationMaxProfile`, `ChargingStationExternalConstraints` or a `TxDefaultProfile`. +
+    Note, that a `TxDefaultProfile` is not applied to EVSE #0 but to all individual EVSEs (see K01.FR.14).
+|K09.FR.06  |If _evseId_ is NOT set in the <<get_charging_profile_request,GetChargingProfilesRequest>>
+  |The Charging Station SHALL report all installed charging profiles that match all fields in _chargingProfile_. |{nbsp}
+|===
 
+=== K10 - Clear Charging Profile
 
-GetChargingProfileRequest(requestId  123, chargingProfile,...)
+.K10 - Clear Charging Profile
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
+|1   |Name            |Clear Charging Profile
+|2   |ID              |K10
+|{nbsp} d|_Functional block_ |K. Smart Charging
+|3   |Objective(s)    |To clear some or all of the charging profiles.
+|4   |Description     |If the CSMS wishes to clear some or all of the charging profiles that were previously sent to the Charging Station, then the CSMS sends a <<clear_charging_profile_request,ClearChargingProfileRequest>> to the Charging Station.
+|{nbsp} d|_Actors_    |Charging Station, CSMS
+|{nbsp} d|_Scenario description_  
+  |**1.** The CSMS sends a <<clear_charging_profile_request,ClearChargingProfileRequest>> to the Charging Station. +
+  **2.** The Charging Station responds with a <<clear_charging_profile_response,ClearChargingProfileResponse>> specifying whether it was able to process the request in the status.
+|5   |Prerequisite(s) |One or more ChargingProfiles are installed.
+|6   |Postcondition(s) 
+  |**Successful postcondition:** +
+  The requested charging profiles are _Successfully_ cleared.
 
-GetChargingProfileResponse(status  Accepted)
+  **Failure postcondition:** +
+  The requested charging profiles are _not_ cleared, as no <<charging_profile_type,ChargingProfile>> is found.
+|===
 
+.Sequence Diagram of the use case "Clear Charging Profile"
+image::part2/images/figure_109.svg[Sequence Diagram of the use case "Clear Charging Profile"]
 
-loop [while tbc  true]
-ReportChargingProfilesRequest(requestId  123, ...)
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling |n/a
+|8   |Remark(s)      |n/a
+|===
 
+==== K10 - Clear Charging Profile - Requirements
 
-ReportChargingProfilesResponse()
+.K10 - Requirements
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
 
-_Figure 108. Sequence diagram of the use case "Get Charging Profiles"_
+|K10.FR.01  |If the Charging Station does not have any matching <<charging_profile_type,ChargingProfile>>.
+  |Upon receipt of a <<clear_charging_profile_request,ClearChargingProfileRequest>>, the Charging Station SHALL respond with the status _Unknown_. |{nbsp}
+|K10.FR.02  |{nbsp}
+  |The CSMS SHALL either specify a chargingProfile.id OR include one or more of the fields stackLevel, evseId and chargingProfilePurpose in the <<clear_charging_profile_request,ClearChargingProfileRequest>> to specify which Charging Profiles need to be cleared. |{nbsp}
+|K10.FR.03  |Upon receipt of a <<clear_charging_profile_request,ClearChargingProfileRequest>> with a specified _chargingProfileId_ AND the <<charging_profile_purpose_enum_type,chargingProfilePurpose>> of the referenced <<charging_profile_type,ChargingProfile>> is NOT `ChargingStationExternalConstraints`
+  |The Charging Station SHALL clear the Charging Profile with the matching id and respond with a <<clear_charging_profile_response,ClearChargingProfileResponse>> message with _status_ = `Accepted`. |{nbsp}
+|K10.FR.04  |NOT K10.FR.03 AND +
+  NOT K10.FR.08 AND +
+  Upon receipt of a <<clear_charging_profile_request,ClearChargingProfileRequest>>, with optional values for _evseId_, _chargingProfilePurpose_, _stackLevel_
+    |The Charging Station SHALL clear the <<charging_profile_type,ChargingProfile(s)>> that match (as logical AND) the values in the request, except those for that have <<charging_profile_type,ChargingProfile>> = `ChargingStationExternalConstraints` and respond with a <<clear_charging_profile_response,ClearChargingProfileResponse>> message with _status_ = `Accepted`. |{nbsp}
+|K10.FR.05  |After clearing one or more Charging Profiles.
+  |The Charging Station SHALL recalculate its composite schedule and set the resulting maximum power/current values to all ongoing transactions. |{nbsp}
+|K10.FR.06  |{nbsp}
+  |The CSMS SHALL NOT set <<charging_profile_purpose_enum_type,chargingProfilePurpose>> to <<charging_station_external_constraints,ChargingStationExternalConstraints>> in a <<clear_charging_profile_request,ClearChargingProfileRequest>>. |{nbsp}
+|K10.FR.07  |K10.FR.05 +
+  AND the cleared profile has <<charging_profile_purpose_enum_type,chargingProfilePurpose>> = <<tx_default_profile,TxDefaultProfile>>
+    |The Charging Station SHALL continue any active transaction, that started with a <<tx_default_profile,TxDefaultProfile>>, as if it was started without a <<tx_default_profile,TxDefaultProfile>>. |{nbsp}
+|K10.FR.08  |Upon receipt of a <<clear_charging_profile_request,ClearChargingProfileRequest>>, with optional values for _evseId_, _chargingProfilePurpose_, _stackLevel_ AND +
+  the matched <<charging_profile_type,ChargingProfile(s)>> all have <<charging_profile_type,ChargingProfile>> = `ChargingStationExternalConstraints`
+    |The Charging Station SHALL respond with a <<clear_charging_profile_response,ClearChargingProfileResponse>> message with _status_ = `Unknown`.
+      |Charging profiles for external constraints are disregarded by ClearChargingProfile message.
+|K10.FR.09  |Upon receipt of a <<clear_charging_profile_request,ClearChargingProfileRequest>> with a specified _chargingProfileId_ AND +
+  the <<charging_profile_purpose_enum_type,chargingProfilePurpose>> of the referenced <<charging_profile_type,ChargingProfile>> = `ChargingStationExternalConstraints`
+    |The Charging Station SHALL respond with a <<clear_charging_profile_response,ClearChargingProfileResponse>> message with _status_ = `Unknown`.
+      |Charging profiles for external constraints are disregarded by ClearChargingProfile message.
+|===
 
+<<<
 
-7 Error Handling When the Charging Station has no charging profiles that match the parameters in the
-GetChargingProfilesRequest the Charging Station SHALL respond with: NoProfiles.
-8 Remarks The charging profiles report can be split over multiple ReportChargingProfilesRequest messages,
-this can be because charging profiles for different charging sources need to be reported, or
-because there is just to much data for one message. To indicate that more reports will follow the
-flag tbc can be used.
+:sectnums:
+=== External Charging Limit based Smart Charging
 
-**K09 - Get Charging Profiles - Requirements**
-
-_Table 176. K09 - Requirements_
-
-
-ID Precondition Requirements Note
-K09.FR.01 When requestId is set in the
-GetChargingProfilesRequest
-
-
-The Charging Station SHALL set the requestId in every
-ReportChargingProfilesRequest that is sent as a result of
-this GetChargingProfilesRequest.
-K09.FR.02 When the charging profiles
-are reported in more than
-one
-ReportChargingProfilesReq
-uest
-
-
-The Charging Station SHALL set the tbc flag to true for all
-ReportChargingProfilesRequest messages except the
-last.
-
-
-K09.FR.03 The CSMS SHALL specify in chargingProfile criteria in
-GetChargingProfilesRequest either:
-
-- a (list of) _chargingProfileId(s)_ OR
-- one or more of the fields _stackLevel_ ,
-_chargingLimitSource_ , _chargingProfilePurpose_.
-
-
-These fields are filter values
-of equal importance, but
-because a chargingProfileId
-uniquely identifies a
-charging profile, the other
-fields are not needed if
-chargingProfileIds are used.
-K09.FR.04 If evseId is set to a value
-greater than 0 in the
-GetChargingProfilesRequest
-
-
-The Charging Station SHALL report the installed charging
-profiles for the specified EVSE that match all fields in
-chargingProfile.
-K09.FR.05 If evseId is set to 0 in
-GetChargingProfilesRequest
-
-
-The Charging Station SHALL only report charging profiles
-installed on the Charging Station itself (the grid
-connection) that match all fields in chargingProfile.
-
-
-EVSE #0 can have a
-ChargingStation
-MaxProfile,
-ChargingStation
-ExternalConstraints or
-a TxDefaultProfile.
-Note, that a
-TxDefaultProfile is not
-applied to EVSE #0 but to all
-individual EVSEs (see
-K01.FR.14).
-K09.FR.06 If evseId is NOT set in the
-GetChargingProfilesRequest
-
-
-The Charging Station SHALL report all installed charging
-profiles that match all fields in chargingProfile.
-
-==== K10 - Clear Charging Profile.
-
-_Table 177. K10 - Clear Charging Profile_
-
-
-No. Type Description
-1 Name Clear Charging Profile
-
-Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
-
-
-
-No. Type Description
-2 ID K10
-Functional block K. Smart Charging
-3 Objective(s) To clear some or all of the charging profiles.
-4 Description If the CSMS wishes to clear some or all of the charging profiles that were previously sent to the
-Charging Station, then the CSMS sends a ClearChargingProfileRequest to the Charging Station.
-Actors Charging Station, CSMS
-
-_Scenario description_  **1.** The CSMS sends a ClearChargingProfileRequest to the Charging Station.
-
-**2.** The Charging Station responds with a ClearChargingProfileResponse specifying whether it was
-able to process the request in the status.
-**5 Prerequisite(s)** One or more ChargingProfiles are installed.
-
-**6 Postcondition(s)**  **Successful postcondition:**
-The requested charging profiles are _Successfully_ cleared.
-**Failure postcondition:**
-The requested charging profiles are _not_ cleared, as no ChargingProfile is found.
-Charging Station CSMS
-ClearChargingProfileRequest([id], [evseId], [chargingProfilePurpose], [stackLevel])
-ClearChargingProfileResponse(status)
-_Figure 109. Sequence Diagram of the use case "Clear Charging Profile"_
-**7 Error handling** n/a
-**8 Remark(s)** n/a
-**K10 - Clear Charging Profile - Requirements**
-_Table 178. K10 - Requirements_
-**ID Precondition Requirement definition Note**
-K10.FR.01 If the Charging Station does
-not have any matching
-ChargingProfile.
-Upon receipt of a ClearChargingProfileRequest, the
-Charging Station SHALL respond with the status
-_Unknown_.
-K10.FR.02 The CSMS SHALL either specify a chargingProfile.id OR
-include one or more of the fields stackLevel, evseId and
-chargingProfilePurpose in the
-ClearChargingProfileRequest to specify which Charging
-Profiles need to be cleared.
-K10.FR.03 Upon receipt of a
-ClearChargingProfileReques
-t with a specified
-_chargingProfileId_ AND
-the chargingProfilePurpose
-of the referenced
-ChargingProfile is NOT
-ChargingStationExter
-nalConstraints
-The Charging Station SHALL clear the Charging Profile
-with the matching id and respond with a
-ClearChargingProfileResponse message with _status_ =
-Accepted.
-K10.FR.04  NOT K10.FR.03 AND
-NOT K10.FR.08 AND
-Upon receipt of a
-ClearChargingProfileReques
-t, with optional values for
-_evseId_ ,
-_chargingProfilePurpose_ ,
-_stackLevel_
-The Charging Station SHALL clear the ChargingProfile(s)
-that match (as logical AND) the values in the request,
-except those for that have ChargingProfile =
-ChargingStationExternalConstraints and
-respond with a ClearChargingProfileResponse message
-with _status_  Accepted.
-Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
-
-
-
-ID Precondition Requirement definition Note
-K10.FR.05 After clearing one or more
-Charging Profiles.
-
-
-The Charging Station SHALL recalculate its composite
-schedule and set the resulting maximum power/current
-values to all ongoing transactions.
-K10.FR.06 The CSMS SHALL NOT set chargingProfilePurpose to
-ChargingStationExternalConstraints in a
-ClearChargingProfileRequest.
-
-K10.FR.07  K10.FR.05
-AND the cleared profile has
-chargingProfilePurpose =
-TxDefaultProfile
-The Charging Station SHALL continue any active
-transaction, that started with a TxDefaultProfile, as if it
-was started without a TxDefaultProfile.
-K10.FR.08 Upon receipt of a
-ClearChargingProfileReques
-t, with optional values for
-_evseId_ ,
-_chargingProfilePurpose_ ,
-_stackLevel_ AND
-the matched
-ChargingProfile(s) all have
-ChargingProfile =
-ChargingStationExter
-nalConstraints
-The Charging Station SHALL respond with a
-ClearChargingProfileResponse message with _status_ =
-Unknown.
-Charging profiles for
-external constraints are
-disregarded by
-ClearChargingProfile
-message.
-K10.FR.09 Upon receipt of a
-ClearChargingProfileReques
-t with a specified
-_chargingProfileId_ AND
-the chargingProfilePurpose
-of the referenced
-ChargingProfile =
-ChargingStationExter
-nalConstraints
-The Charging Station SHALL respond with a
-ClearChargingProfileResponse message with _status_ =
-Unknown.
-Charging profiles for
-external constraints are
-disregarded by
-ClearChargingProfile
-message.
-Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
-
-
-==== 5.2. External Charging Limit based Smart Charging
-
+:sectnums!:
 [[k11_set_update_external_charging_limit_with_ongoing_transaction]]
 === K11 - Set / Update External Charging Limit With Ongoing Transaction
 

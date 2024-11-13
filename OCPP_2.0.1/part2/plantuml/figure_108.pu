@@ -1,0 +1,22 @@
+@startuml figure_108
+!include style.puml
+
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+CSMS -> ChargingStation: GetChargingProfileRequest(requestId = 123, chargingProfile,...)
+activate CSMS
+activate ChargingStation
+
+ChargingStation --> CSMS: GetChargingProfileResponse(status = Accepted)
+deactivate CSMS
+
+loop while tbc = true
+  ChargingStation -> CSMS: ReportChargingProfilesRequest(requestId = 123, ...)
+  activate CSMS
+
+  CSMS --> ChargingStation: ReportChargingProfilesResponse()
+  deactivate CSMS
+end
+
+@enduml
