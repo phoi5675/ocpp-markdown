@@ -1054,7 +1054,8 @@ and whether it is grid critical.
 chargingSchedule ChargingScheduleType 0..* Optional. Contains limits for the available power or
 current over time, as set by the external source.
 
-**1.33.2. NotifyChargingLimitResponse**
+[[notify_charging_limit_response]]
+==== NotifyChargingLimitResponse
 
 The NotifyChargingLimitResponse message is sent by the CSMS to the Charging Station in response to a
 NotifyChargingLimitsRequest. No fields are defined.

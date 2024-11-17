@@ -1085,38 +1085,30 @@ image::part2/images/figure_109.svg[Sequence Diagram of the use case "Clear Charg
 [[k11_set_update_external_charging_limit_with_ongoing_transaction]]
 === K11 - Set / Update External Charging Limit With Ongoing Transaction
 
-_Table 179. K11 - Set / update external charging limit with ongoing transaction_
+.K11 - Set / update external charging limit with ongoing transaction
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
-
-No. Type Description
-1 Name Set / Update External Charging Limit With Ongoing Transaction
-2 ID K11
-Functional block K. Smart Charging
-3 Objectives To inform the CSMS of a charging schedule or charging limit imposed by an External Control
-System on the Charging Station with ongoing transaction(s).
-4 Description An External Control System sends a charging limit/schedule to a Charging Station. This limit is
-sent to the CSMS.
-Actors External Control System, Charging Station, CSMS
-
-_Scenario description_  **1.** External control system sends charging limit/schedule to Charging Station.
-
-**2.** Optional: Charging Station calculates new charging schedule.
-**3.** Charging Station adjusts the charging speed of the ongoing transaction(s).
-**4.** If the charging limit changed by more than: LimitChangeSignificance, the Charging
-Station sends a NotifyChargingLimitRequest message to CSMS with optionally the set charging
-limit/schedule.
-**5.** The CSMS responds with NotifyChargingLimitResponse to the Charging Station.
-**6.** If the charging rate changes by more than: LimitChangeSignificance, the Charging
-Station sends a TransactionEventRequest message to inform the CSMS.
-**7.** The CSMS responds with TransactionEventResponse to the Charging Station.
-
-**5 Prerequisites**  Charging Station is not in error state.
-An external system can set/clear a charging limit/schedule on the Charging Station via another
-connection than OCPP.
-**6 Postcondition(s)**  The ongoing transaction will be limited by the received charging limit from the external system.
-The CSMS is informed of the new limit/schedule imposed by the external system.
-Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
-
+|1   |Name            |Set / Update External Charging Limit With Ongoing Transaction
+|2   |ID              |K11
+|{nbsp} d|_Functional block_ |K. Smart Charging
+|3   |Objectives      |To inform the CSMS of a charging schedule or charging limit imposed by an External Control System on the Charging Station with ongoing transaction(s).
+|4   |Description     |An External Control System sends a charging limit/schedule to a Charging Station. This limit is sent to the CSMS.
+|{nbsp} d|_Actors_    |External Control System, Charging Station, CSMS
+|{nbsp} d|_Scenario description_  
+  |**1.** External control system sends charging limit/schedule to Charging Station. +
+  **2.** Optional: Charging Station calculates new charging schedule. +
+  **3.** Charging Station adjusts the charging speed of the ongoing transaction(s). +
+  **4.** If the charging limit changed by more than: <<limit_change_significance,`LimitChangeSignificance`>>, the Charging Station sends a <<notify_charging_limit_request,NotifyChargingLimitRequest>> message to CSMS with optionally the set charging limit/schedule. +
+  **5.** The CSMS responds with <<notify_charging_limit_response,NotifyChargingLimitResponse>> to the Charging Station. +
+  **6.** If the charging rate changes by more than: <<limit_change_significance,`LimitChangeSignificance`>>, the Charging Station sends a <<transaction_event_request,TransactionEventRequest>> message to inform the CSMS. +
+  **7.** The CSMS responds with <<transaction_event_response,TransactionEventResponse>> to the Charging Station.
+|5   |Prerequisites  |Charging Station is not in error state. +
+  An external system can set/clear a charging limit/schedule on the Charging Station via another connection than OCPP.
+|6   |Postcondition(s) |The ongoing transaction will be limited by the received charging limit from the external system. +
+  The CSMS is informed of the new limit/schedule imposed by the external system.
+|===
 
 
 External Control System
