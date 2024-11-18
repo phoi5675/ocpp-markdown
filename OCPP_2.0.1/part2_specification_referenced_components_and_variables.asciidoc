@@ -1583,7 +1583,9 @@ Allowed values: 'A' and 'W'
 Station implementation.
 **variableCharacteristics dataType** boolean
 **Description** Indicates whether a Charging Station should respond to external control signals that influence charging.
-**2.9.8.** NotifyChargingLimitWithSchedules
+
+[[notify_charging_limit_with_schedule]]
+==== `NotifyChargingLimitWithSchedules`
 **Required** no
 **Component componentName** SmartChargingCtrlr
 Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**

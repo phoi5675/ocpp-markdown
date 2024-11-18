@@ -1110,230 +1110,102 @@ image::part2/images/figure_109.svg[Sequence Diagram of the use case "Clear Charg
   The CSMS is informed of the new limit/schedule imposed by the external system.
 |===
 
+.Sequence diagram of the use case "Setting / Updating External Charging Limit with Ongoing Transaction"
+image::part2/images/figure_110.svg[Sequence diagram of the use case "Setting / Updating External Charging Limit with Ongoing Transaction"]
 
-External Control System
-(example DSO) Charging Station CSMS
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error Handling |n/a
+|8   |Remarks        |The external system could, for example, use IEC 61850 [IEC61850-7-420] or OpenADR <<open_adr,[OPENADR]>> to communicate the grid limit to the Charging Station, but this could be any protocol. Furthermore, an example of an external system is given, in this case a DSO that might set an external charging limit in case of grid problems, but this could be any other external system or reason to set a charging limit.
+|===
 
+==== K11 - Set / Update External Charging Limit With Ongoing Transaction - Requirements
 
-loop
-opt [during charging process]
-I/U value
-reactive power factor
+.K11 - Requirements
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
 
+|K11.FR.01  |When an external charging limit/schedule is received during an ongoing transaction
+  |The Charging Station SHALL NOT charge the ongoing transaction faster than this given limit/schedule. |{nbsp}
+|K11.FR.02  |K11.FR.01 +
+  AND +
+  Charging limit changed by more than: <<limit_change_significance,`LimitChangeSignificance`>>
+    |The Charging Station SHALL inform the CSMS of the new charging limit/schedule imposed by the external system by sending a <<notify_charging_limit_request,NotifyChargingLimitRequest>>. |{nbsp}
+|K11.FR.03  |K11.FR.02 +
+  AND +
+  <<notify_charging_limit_with_schedule,EnableNotifyChargingLimitWithSchedules>> is true
+    |The <<notify_charging_limit_request,NotifyChargingLimitRequest>> SHALL contain the charging limits/schedules as set by the external system. |{nbsp}
+|K11.FR.04  |K11.FR.01 +
+  AND +
+  Charging rate changed by more than: <<limit_change_significance,`LimitChangeSignificance`>>
+    |The Charging Station SHALL send a <<transaction_event_request,TransactionEventRequest>> message to the CSMS with <<transaction_event_request,trigger>> = <<trigger_reason_enum_type,ChargingRateChanged>> |{nbsp}
+|K11.FR.05  |K11.FR.02
+  |The Charging Station SHALL NOT set the <<charging_limit_source_enum_type,chargingLimitSource>> to CSO in the <<notify_charging_limit_request,NotifyChargingLimitRequest>>. |{nbsp}
+|K11.FR.06  |When an external charging limit/schedule is received
+  |The Charging Station SHALL use purpose <<charging_station_external_constraints,ChargingStationExternalConstraints>> when reporting about this limit (e.g. in a <<report_charging_profiles_request,ReportChargingProfilesRequest>>).
+    |It is RECOMMENDED to use negative values for the _id_ of a `ChargingStationExternalConstraints` profile, to minimize the risk of a clash with an _id_ that CSMS might use for a (future) charging profile.
+|===
 
-opt [if MeterValues enabled]
-alt [No transaction ongoing]
-MeterValuesRequest(evseId, meterValue)
-MeterValuesResponse()
-[transaction ongoing]
-TransactionEventRequest(eventType  Updated, ...)
-TransactionEventResponse(...)
+=== K12 - Set / Update External Charging Limit Without Ongoing Transaction
 
+.K12 - Set / update external charging limit without ongoing transaction
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
-Set grid limit
+|1   |Name            |Set / Update External Charging Limit Without Ongoing Transaction
+|2   |ID              |K12
+|{nbso} d|_Functional block_ |K. Smart Charging
+|3   |Objectives      |To inform the CSMS of a charging schedule or charging limit imposed by an external system on the Charging Station for new transactions or on the grid connection.
+|4   |Description     |An External Control System sends a charging limit to a Charging Station. This limit is sent to the CSMS.
+|{nbsp} d|_Actors_    |External Control System, Charging Station, CSMS
+|{nbsp} d|_Scenario description_ 
+  |**1.** External Control System sends a charging limit to Charging Station (not during a transaction). +
+  **2.** Optional: Charging Station calculates new charging schedule. +
+  **3.** Charging Station adjusts the charging speed. +
+  **4.** If the charging limit changed by more than: <<limit_change_significance,`LimitChangeSignificance`>>, the Charging Station sends a <<notify_charging_limit_request,NotifyChargingLimitRequest>> message to CSMS with optionally the set charging limit/schedule. +
+  **5.** The CSMS responds with a <<notify_charging_limit_response,NotifyChargingLimitResponse>> to the Charging Station.
+|5   |Prerequisites   |Charging Station is not in error state. +
+  An external system that can set/clear a charging limit/schedule on the Charging Station via another connection than OCPP.
+|6   |Postcondition(s)  |New transactions will be limited by the received charging limit from the external system. +
+  The CSMS is informed of the new limit/schedule imposed by the external system.
+|===
 
+.Sequence diagram of the use case "Set / Update External Charging Limit Without Ongoing Transaction"
+image::part2/images/figure_111.svg[Sequence diagram of the use case "Set / Update External Charging Limit Without Ongoing Transaction"]
 
-opt [if transaction ongoing]
-opt
-recalculate charging schedule
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error Handling  |n/a
+|8   |Remarks         |The external system could, for example, use IEC 61850 <<iec61850_7_420,[IEC61850-7-420]>> or OpenADR <<open_adr,[OPENADR]>> to communicate the grid limit to the Charging Station, but this could be any protocol. Furthermore, an example of an external system is given, in this case a DSO that might set an external charging limit in case of grid problems, but this could be any other external system or reason to set a charging limit.
+|===
 
+==== K12 - Set / Update External Charging Limit Without Ongoing Transaction - Requirements
 
-set charging limit(minimum of all known limits)
+.K12 - Requirements
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
 
+|K12.FR.01  |When an external charging limit/schedule is received while no transactions are ongoing
+  |The total load of all EVSEs SHALL NOT exceed this given limit. |{nbsp}
+|K12.FR.02  |K12.FR.01 +
+  AND +
+  Charging limit changed by more than: <<limit_change_significance,`LimitChangeSignificance`>> 
+    |The Charging Station SHALL inform the CSMS of the new charging limit/schedule imposed by the external system by sending a <<notify_charging_limit_request,NotifyChargingLimitRequest>>. |{nbsp}
+|K12.FR.03  |K12.FR.02 +
+  AND +
+<<notify_charging_limit_with_schedule,`EnableNotifyChargingLimitWithSchedules`>> is true
+  |The <<notify_charging_limit_request,NotifyChargingLimitRequest>> SHALL contain the charging limit/schedule as set by the external system. |{nbsp}
+|K12.FR.04  |K12.FR.02
+  |The Charging Station SHALL NOT set the <<charging_limit_source_enum_type,chargingLimitSource>> to CSO in the <<notify_charging_limit_request,NotifyChargingLimitRequest>>. |{nbsp}
+|K12.FR.05  |When an external charging limit/schedule is received
+  |The Charging Station SHALL use purpose <<charging_station_external_constraints,ChargingStationExternalConstraints>> when reporting about this limit (e.g. in a <<report_charging_profiles_request,ReportChargingProfilesRequest>>).
+    |It is RECOMMENDED to use negative values for the _id_ of a `ChargingStationExternalConstraints` profile, to minimize the risk of a clash with an _id_ that CSMS might use for a (future) charging profile.
+|===
 
-opt [if charging limit changed more than: LimitChangeSignificance]
-NotifyChargingLimitRequest(evseId, chargingSchedule, chargingLimit)
-NotifyChargingLimitResponse()
-
-
-opt [if charging rate changed more than: LimitChangeSignificance]
-TransactionEventRequest(eventType  Updated, trigger  ChargingRateChanged, ...)
-TransactionEventResponse(...)
-
-_Figure 110. Sequence diagram of the use case "Setting / Updating External Charging Limit with Ongoing Transaction"_
-
-
-7 Error Handling n/a
-8 Remarks The external system could, for example, use IEC 61850 [IEC61850-7-420] or OpenADR [OPENADR]
-to communicate the grid limit to the Charging Station, but this could be any protocol. Furthermore,
-an example of an external system is given, in this case a DSO that might set an external charging
-limit in case of grid problems, but this could be any other external system or reason to set a
-charging limit.
-
-**K11 - Set / Update External Charging Limit With Ongoing Transaction -**
-
-**Requirements**
-
-_Table 180. K11 - Requirements_
-
-
-ID Precondition Requirements Note
-K11.FR.01 When an external charging
-limit/schedule is received
-during an ongoing
-transaction
-
-
-The Charging Station SHALL NOT charge the ongoing
-transaction faster than this given limit/schedule.
-
-K11.FR.02  K11.FR.01
-AND
-Charging limit changed by
-more than:
-LimitChangeSignifica
-nce
-The Charging Station SHALL inform the CSMS of the new
-charging limit/schedule imposed by the external system
-by sending a NotifyChargingLimitRequest.
-Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
-
-
-
-ID Precondition Requirements Note
-
-K11.FR.03  K11.FR.02
-AND
-EnableNotifyCharging
-LimitWithSchedules is
-true
-The NotifyChargingLimitRequest SHALL contain the
-charging limits/schedules as set by the external system.
-K11.FR.04  K11.FR.01
-AND
-Charging rate changed by
-more than:
-LimitChangeSignifica
-nce
-The Charging Station SHALL send a
-TransactionEventRequest message to the CSMS with
-trigger  ChargingRateChanged
-K11.FR.05 K11.FR.02 The Charging Station SHALL NOT set the
-chargingLimitSource to CSO in the
-NotifyChargingLimitRequest.
-K11.FR.06 When an external charging
-limit/schedule is received
-The Charging Station SHALL use purpose
-ChargingStationExternalConstraints when reporting
-about this limit (e.g. in a ReportChargingProfilesRequest).
-It is RECOMMENDED to use
-negative values for the _id_ of
-a
-ChargingStationExter
-nalConstraints profile,
-to minimize the risk of a
-clash with an _id_ that CSMS
-might use for a (future)
-charging profile.
-
-==== K12 - Set / Update External Charging Limit Without Ongoing Transaction
-
-_Table 181. K12 - Set / update external charging limit without ongoing transaction_
-
-
-No. Type Description
-1 Name Set / Update External Charging Limit Without Ongoing Transaction
-2 ID K12
-Functional block K. Smart Charging
-3 Objectives To inform the CSMS of a charging schedule or charging limit imposed by an external system on
-the Charging Station for new transactions or on the grid connection.
-4 Description An External Control System sends a charging limit to a Charging Station. This limit is sent to the
-CSMS.
-Actors External Control System, Charging Station, CSMS
-
-_Scenario description_  **1.** External Control System sends a charging limit to Charging Station (not during a transaction).
-
-**2.** Optional: Charging Station calculates new charging schedule.
-**3.** Charging Station adjusts the charging speed.
-**4.** If the charging limit changed by more than: LimitChangeSignificance, the Charging
-Station sends a NotifyChargingLimitRequest message to CSMS with optionally the set charging
-limit/schedule.
-**5.** The CSMS responds with a NotifyChargingLimitResponse to the Charging Station.
-
-**5 Prerequisites**  Charging Station is not in error state.
-An external system that can set/clear a charging limit/schedule on the Charging Station via
-another connection than OCPP.
-**6 Postcondition(s)**  New transactions will be limited by the received charging limit from the external system.
-The CSMS is informed of the new limit/schedule imposed by the external system.
-Edition 3 FINAL, 2024-05-06 **K. SmartCharging**
-
-
-
-External Control System
-(example DSO) Charging Station CSMS
-
-
-Set grid limit
-
-
-opt [if charging limit changed more than: LimitChangeSignificance]
-NotifyChargingLimitRequest(evseId, chargingLimit, chargingSchedule)
-
-
-NotifyChargingLimitResponse()
-
-_Figure 111. Sequence diagram of the use case "Set / Update External Charging Limit Without Ongoing Transaction"_
-
-
-7 Error Handling n/a
-8 Remarks The external system could, for example, use IEC 61850 [IEC61850-7-420] or OpenADR [OPENADR]
-to communicate the grid limit to the Charging Station, but this could be any protocol. Furthermore,
-an example of an external system is given, in this case a DSO that might set an external charging
-limit in case of grid problems, but this could be any other external system or reason to set a
-charging limit.
-
-**K12 - Set / Update External Charging Limit Without Ongoing Transaction -**
-
-**Requirements**
-
-_Table 182. K12 - Requirements_
-
-
-ID Precondition Requirements Note
-K12.FR.01 When an external charging
-limit/schedule is received
-while no transactions are
-ongoing
-
-
-The total load of all EVSEs SHALL NOT exceed this given
-limit.
-
-K12.FR.02  K12.FR.01
-AND
-Charging limit changed by
-more than:
-LimitChangeSignifica
-nce
-The Charging Station SHALL inform the CSMS of the new
-charging limit/schedule imposed by the external system
-by sending a NotifyChargingLimitRequest.
-K12.FR.03  K12.FR.02
-AND
-EnableNotifyCharging
-LimitWithSchedules is
-true
-The NotifyChargingLimitRequest SHALL contain the
-charging limit/schedule as set by the external system.
-K12.FR.04 K12.FR.02 The Charging Station SHALL NOT set the
-chargingLimitSource to CSO in the
-NotifyChargingLimitRequest.
-K12.FR.05 When an external charging
-limit/schedule is received
-The Charging Station SHALL use purpose
-ChargingStationExternalConstraints when reporting
-about this limit (e.g. in a ReportChargingProfilesRequest).
-It is RECOMMENDED to use
-negative values for the _id_ of
-a
-ChargingStationExter
-nalConstraints profile,
-to minimize the risk of a
-clash with an _id_ that CSMS
-might use for a (future)
-charging profile.
-
-==== K13 - Reset / Release External Charging Limit
+=== K13 - Reset / Release External Charging Limit
 
 _Table 183. K13 - Reset / Release External Charging Limit_
 

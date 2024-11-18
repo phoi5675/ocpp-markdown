@@ -1,0 +1,20 @@
+@startuml figure_111
+!include style.puml
+
+participant "External Control System\n(example DSO)" as ECS
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+ECS -> ChargingStation: Set grid limit
+activate ChargingStation
+
+opt if charging limit changed more than: LimitChangeSignificance
+  ChargingStation -> CSMS: NotifyChargingLimitRequest(evseId, chargingLimit, chargingSchedule)
+  activate CSMS
+
+  CSMS --> ChargingStation: NotifyChargingLimitResponse()
+  deactivate ChargingStation
+  deactivate CSMS
+end
+
+@enduml

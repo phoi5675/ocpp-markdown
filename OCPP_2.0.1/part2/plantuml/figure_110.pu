@@ -1,0 +1,66 @@
+@startuml figure_110
+!include style.puml
+
+participant "External Control System\n(example DSO)" as ECS
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+loop
+  opt during charging process
+    ChargingStation -> ECS: I/U value
+    activate ECS
+    activate ChargingStation
+
+    ChargingStation -> ECS: reactive power factor
+    deactivate ECS
+    deactivate ChargingStation
+  end
+
+  opt if MeterValues enabled
+    alt No transaction ongoing
+      ChargingStation -> CSMS: MeterValuesRequest(evseId, meterValue)
+      activate ChargingStation
+      activate CSMS
+
+      CSMS --> ChargingStation: MeterValuesResponse()
+      deactivate ChargingStation
+      deactivate CSMS
+    else transaction ongoing
+      ChargingStation -> CSMS: TransactionEventRequest(eventType = Updated, ...)
+      activate ChargingStation
+      activate CSMS
+
+      CSMS --> ChargingStation: TransactionEventResponse(...)
+      deactivate ChargingStation
+      deactivate CSMS
+    end
+  end
+
+  ECS -> ChargingStation: Set grid limit
+  activate ChargingStation
+
+  opt if transaction ongoing
+    opt
+      ChargingStation -> ChargingStation: recalculate charging schedule
+    end 
+
+    ChargingStation -> ChargingStation: set charging limit(minimum of all known limits)
+  end
+
+  opt if charging limit changed more than: LimitChangeSignificance
+    ChargingStation -> CSMS: NotifyChargingLimitRequest(evseId, chargingSchedule, chargingLimit)
+    activate CSMS
+
+    CSMS --> ChargingStation: NotifyChargingLimitResponse()
+    deactivate CSMS
+  end
+
+  opt if charging rate changed more than: LimitChangeSignificance
+    ChargingStation -> CSMS: TransactionEventRequest(eventType = Updated, trigger = ChargingRateChanged, ...)
+    activate CSMS
+
+    CSMS --> ChargingStation: TransactionEventResponse(...)
+  end
+end
+
+@enduml
