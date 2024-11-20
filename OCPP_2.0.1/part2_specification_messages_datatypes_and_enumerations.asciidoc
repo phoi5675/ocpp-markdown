@@ -2103,9 +2103,10 @@ e
 1..1 Required. Indicates whether the Local Controller
 succeeded in unpublishing the firmware.
 
-=== 1.64. UpdateFirmware
+=== UpdateFirmware
 
-**1.64.1. UpdateFirmwareRequest**
+[[update_firmware_request]]
+==== UpdateFirmwareRequest
 
 This contains the field definition of the UpdateFirmwareRequest PDU sent by the CSMS to the Charging Station.
 
@@ -2132,7 +2133,8 @@ requestId integer 1..1 Required. The Id of this request
 firmware FirmwareType 1..1 Required. Specifies the firmware to be updated on the
 Charging Station.
 
-**1.64.2. UpdateFirmwareResponse**
+[[update_firmware_response]]
+==== UpdateFirmwareResponse
 
 This contains the field definition of the UpdateFirmwareResponse PDU sent by the Charging Station to the CSMS in response to an
 UpdateFirmwareRequest.
@@ -4210,8 +4212,8 @@ Also used as trigger type for a HardWiredNotification.
 **Periodic** Periodic Monitored Variable has been sampled for reporting at the specified interval
 Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
 
-
-=== 3.33. FirmwareStatusEnumType
+[[firmware_status_enum_type]]
+=== FirmwareStatusEnumType
 
 _Enumeration_
 

@@ -1,71 +1,55 @@
 = L. FirmwareManagement
 :!chapter-number:
 
-== 1. Introduction
+<<<
+
+:sectnums:
+== Introduction
 
 This Functional Block describes the functionality that enables a CSO to update the firmware of a Charging Station.
 
-When a Charging Station needs to be updated with new firmware, the CSMS informs the Charging Station of the time at which the
-Charging Station can start downloading the new firmware. The Charging Station SHALL notify the CSMS after each step as it
-downloads and installs the new firmware.
+When a Charging Station needs to be updated with new firmware, the CSMS informs the Charging Station of the time at which the Charging Station can start downloading the new firmware. The Charging Station SHALL notify the CSMS after each step as it downloads and installs the new firmware.
 
-Edition 3 FINAL, 2024-05-06 **L. FirmwareManagement**
+<<<
 
+== Use cases & Requirements
 
-=== 2. Use cases & Requirements
+:sectnums!:
+=== L01 - Secure Firmware Update
 
-==== L01 - Secure Firmware Update
+.L01 - Secure Firmware Update
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
-_Table 192. L01 - Secure Firmware Update_
-
-
-No. Type Description
-1 Name Secure Firmware Update
-2 ID L01
-Functional block L. Firmware Management
-3 Objective(s) Download and install a Secure firmware update.
-4 Description Illustrate how a Charging Station processes a Secure firmware update.
-Actors CSMS, Charging Station, Charging Station Manufacturer
-Scenario description 1. The CSMS sends an UpdateFirmwareRequest message that contains the location of the
-firmware, the time after which it should be retrieved, and information on how many times the
-Charging Station should retry downloading the firmware.
-
-**2.** The Charging Station verifies the validity of the certificate against the Manufacturer root
-certificate.
-**3.** If the certificate is valid, the Charging Station starts downloading the firmware, and sends a
-FirmwareStatusNotificationRequest with status Downloading.
-If the certificate is not valid or could not be verified, the Charging Station aborts the firmware
-update process and sends a UpdateFirmwareResponse with status InvalidCertificate and a
-SecurityEventNotificationRequest with the security event InvalidFirmwareSigningCertificate (See
-part 2 appendices for the full list of security events).
-**4.** If the Firmware successfully downloaded, the Charging Station sends a
-FirmwareStatusNotificationRequest with status Downloaded.
-Otherwise, it sends a FirmwareStatusNotificationRequest with status DownloadFailed.
-**5.** If the verification is successful, the Charging Station sends a
-FirmwareStatusNotificationRequest with status Installing.
-If the verification of the firmware fails or if a signature is missing entirely, the Charging Station
-sends a FirmwareStatusNotificationRequest with status InvalidSignature and a
-SecurityEventNotificationRequest with the security event InvalidFirmwareSignature (See part 2
-appendices for the full list of security events).
-**6.** If the installation is successful, the Charging Station sends a
-FirmwareStatusNotificationRequest with status Installed.
-Otherwise, it sends a FirmwareStatusNotificationRequest with status InstallationFailed.
-_Alternative scenario(s)_ L02 - Non-Secure Firmware Update
-**5 Prerequisite(s)** The Charging Station Manufacturer provided a firmware update.
-
-**6 Postcondition(s)** (^) **Successful postcondition:**
-The firmware is updated and the Charging Station is in _Installed_ status.
-**Failure postconditions:**
-The certificate is not valid or could not be verified and the Charging Station is in _InvalidCertificate_
-status.
-Downloading the firmware failed and the Charging Station is in _DownloadFailed_ status.
-The verification of the firmware’s digital signature failed and the Charging Station is in
-_InvalidSignature_ status.
-The installation of the firmware is not successful and the Charging Station is in _InstallationFailed_
-status.
-Edition 3 FINAL, 2024-05-06 **L. FirmwareManagement**
-
-
+|1   |Name            |Secure Firmware Update
+|2   |ID              |L01
+|{nbsp} d|_Functional block_ |L. Firmware Management
+|3   |Objective(s)    |Download and install a Secure firmware update.
+|4   |Description     |Illustrate how a Charging Station processes a Secure firmware update.
+|{nbsp} d|_Actors_    |CSMS, Charging Station, Charging Station Manufacturer
+|{nbsp} d|_Scenario description_
+  |**1.** The CSMS sends an <<update_firmware_request,UpdateFirmwareRequest>> message that contains the location of the firmware, the time after which it should be retrieved, and information on how many times the Charging Station should retry downloading the firmware. +
+  **2.** The Charging Station verifies the validity of the certificate against the Manufacturer root certificate. +
+  **3.** If the certificate is valid, the Charging Station starts downloading the firmware, and sends a <<firmware_status_notification_request,FirmwareStatusNotificationRequest>> with status <<firmware_status_enum_type,Downloading>>. +
+  If the certificate is not valid or could not be verified, the Charging Station aborts the firmware update process and sends a <<update_firmware_response,UpdateFirmwareResponse>> with status <<firmware_status_enum_type,InvalidCertificate>> and a <<security_event_notification_request,SecurityEventNotificationRequest>> with the security event InvalidFirmwareSigningCertificate (See part 2 appendices for the full list of security events). +
+  **4.** If the Firmware successfully downloaded, the Charging Station sends a <<firmware_status_notification_request,FirmwareStatusNotificationRequest>> with status <<firmware_status_enum_type,Downloaded>>. +
+  Otherwise, it sends a <<firmware_status_notification_request,FirmwareStatusNotificationRequest>> with status <<firmware_status_enum_type,DownloadFailed>>. +
+  **5.** If the verification is successful, the Charging Station sends a <<firmware_status_notification_request,FirmwareStatusNotificationRequest>> with status <<firmware_status_enum_type,Installing>>. +
+  If the verification of the firmware fails or if a signature is missing entirely, the Charging Station sends a <<firmware_status_notification_request,FirmwareStatusNotificationRequest>> with status <<firmware_status_enum_type,InvalidSignature>> and a <<security_event_notification_request,SecurityEventNotificationRequest>> with the security event InvalidFirmwareSignature (See part 2 appendices for the full list of security events). +
+  **6.** If the installation is successful, the Charging Station sends a <<firmware_status_notification_request,FirmwareStatusNotificationRequest>> with status <<firmware_status_enum_type,Installed>>. +
+  Otherwise, it sends a <<firmware_status_notification_request,FirmwareStatusNotificationRequest>> with status <<firmware_status_enum_type,InstallationFailed>>.
+|{nbsp} d|_Alternative scenario(s)_ |<<l02_non_secure_firmware_update,L02 - Non-Secure Firmware Update>>
+|5   |Prerequisite(s)   |The Charging Station Manufacturer provided a firmware update.
+|6   |Postcondition(s) 
+  |**Successful postcondition:** +
+  The firmware is updated and the Charging Station is in _Installed_ status. +
+  **Failure postconditions:** +
+  The certificate is not valid or could not be verified and the Charging Station is in _InvalidCertificate_ status. +
+  Downloading the firmware failed and the Charging Station is in _DownloadFailed_ status. +
+  The verification of the firmware’s digital signature failed and the Charging Station is in _InvalidSignature_ status. +
+  The installation of the firmware is not successful and the Charging Station is in _InstallationFailed_ status.
+|===
 
 Charging Station CSMS
 
@@ -173,7 +157,7 @@ Edition 3 FINAL, 2024-05-06 **L. FirmwareManagement**
 
 7 Error handling n/a
 
-**8 Remark(s)** (^) As an example in this use case the requestId  123, but this could be any value.
+**8 Remark(s)** As an example in this use case the requestId  123, but this could be any value.
 Measures SHOULD be taken to secure the firmware when it is stored on a server or workstation.
 The Charging Station has a required Configuration Variable that reports which file transfer
 protocols it supports: FileTransferProtocols
@@ -264,13 +248,13 @@ or ECSchnorr algorithm for signing,
 and the SHA256 algorithm for
 calculating hash values.
 
-L01.FR.05 (^) L01.FR.04 AND
+L01.FR.05 L01.FR.04 AND
 ( _installDateTime_ is not set OR
 current time > _installDateTime_ )
 The Charging Station SHALL install
 the new firmware as soon as it is able
 to.
-L01.FR.06 (^) L01.FR.05
+L01.FR.06 L01.FR.05
 AND
 The Charging Station has ongoing
 transactions
@@ -281,7 +265,7 @@ transaction is ongoing
 The Charging Station SHALL wait until
 all transactions have ended, before
 commencing installation.
-L01.FR.07 (^) L01.FR.06 or L01.FR.33 AND
+L01.FR.07 L01.FR.06 or L01.FR.33 AND
 configuration variable
 AllowNewSessionsPendingFirmw
 areUpdate is _false_ or does not exist
@@ -365,7 +349,7 @@ FirmwareStatusNotificationRequest
 with status InstallRebooting, before
 rebooting.
 
-L01.FR.16 (^) L01.FR.04 AND
+L01.FR.16 L01.FR.04 AND
 When _installDateTime_ is set to a time
 in the future
 The Charging Station SHALL send a
@@ -381,7 +365,7 @@ UpdateFirmwareRequest
 The Charging Station SHALL validate
 the certificate before accepting the
 message.
-L01.FR.22 (^) L01.FR.21 AND
+L01.FR.22 L01.FR.21 AND
 the certificate is invalid
 The Charging Station SHALL respond
 with UpdateFirmwareResponse with
@@ -442,7 +426,7 @@ Edition 3 FINAL, 2024-05-06 **L. FirmwareManagement**
 
 ID Precondition Requirement definition Note
 
-L01.FR.27 (^) L01.FR.24
+L01.FR.27 L01.FR.24
 AND
 the Charging Station is unable to
 cancel the firmware installation
@@ -508,7 +492,7 @@ can be sure that the new firmware is
 active. This is not guaranteed by
 option (b) when rebooting of the new
 firmware should fail.
-L01.FR.33 (^) L01.FR.05
+L01.FR.33 L01.FR.05
 AND
 The Charging Station has ongoing
 transactions
@@ -519,7 +503,7 @@ The Charging Station SHALL wait until
 all transactions have ended, before
 activating the installed firmware.
 E.g. in case of A/B firmware updates.
-L01.FR.34 (^) L01.FR.04 AND
+L01.FR.34 L01.FR.04 AND
 _installDateTime_ is not set AND
 Charging Station is waiting for a
 transaction to finish
@@ -529,7 +513,8 @@ with status InstallScheduled.
 The case where _installDateTime_ is set
 is covered by L01.FR.16.
 
-==== L02 - Non-Secure Firmware Update
+[[l02_non_secure_firmware_update]]
+=== L02 - Non-Secure Firmware Update
 
 _Table 194. L02 - Non-Secure Firmware Update_
 
@@ -563,7 +548,7 @@ Charging Station should retry downloading the firmware.
 _Alternative scenario(s)_ L01 - Secure Firmware Update
 **5 Prerequisite(s)** The Charging Station Manufacturer provided a firmware update.
 
-**6 Postcondition(s)** (^) **Successful postcondition:**
+**6 Postcondition(s)** **Successful postcondition:**
 Firmware update was successfully installed.
 **Failure postcondition:**
 Firmware update failed.
@@ -664,7 +649,7 @@ Edition 3 FINAL, 2024-05-06 **L. FirmwareManagement**
 
 7 Error handling n/a
 
-**8 Remark(s)** (^) Measures SHOULD be taken to secure the firmware when it is stored on a server or workstation.
+**8 Remark(s)** Measures SHOULD be taken to secure the firmware when it is stored on a server or workstation.
 When migrating to a new version of OCPP it is RECOMMENDED to install a fallback
 NetworkConnectionProfile with the new configuration.
 FTP needs to be able to use Passive FTP, to be able to transverse over as much different
@@ -687,7 +672,7 @@ current time > _installDateTime_ )
 The Charging Station SHALL install
 the new firmware as soon as it is able
 to.
-L02.FR.03 (^) L02.FR.02
+L02.FR.03 L02.FR.02
 AND
 The Charging Station has ongoing
 transactions
@@ -698,7 +683,7 @@ transaction is ongoing
 The Charging Station SHALL wait until
 all transactions have ended, before
 commencing installation.
-L02.FR.04 (^) L02.FR.03 or L02.FR.22 AND
+L02.FR.04 L02.FR.03 or L02.FR.22 AND
 configuration variable
 AllowNewSessionsPendingFirmw
 areUpdate is _false_ or does not exist
@@ -817,7 +802,7 @@ Charging Station SHALL return a
 FirmwareStatusNotificationRequest
 with the last sent status.
 
-L02.FR.18 (^) L02.FR.15
+L02.FR.18 L02.FR.15
 AND
 the Charging Station is unable to
 cancel the firmware installation
@@ -868,7 +853,7 @@ can be sure that the new firmware is
 active. This is not guaranteed by
 option (b) when rebooting of the new
 firmware should fail.
-L02.FR.22 (^) L02.FR.02
+L02.FR.22 L02.FR.02
 AND
 The Charging Station has ongoing
 transactions
@@ -928,7 +913,7 @@ PublishFirmwareStatusNotificationRequest.
 Secure Firmware Update
 **5 Prerequisite(s)** n/a
 
-**6 Postcondition(s)** (^) **Successful postcondition:**
+**6 Postcondition(s)** **Successful postcondition:**
 The firmware is successfully published by the Local Controller.
 **Failure postcondition:**
 The Local Controller could not download the firmware file, and has sent the _DownloadFailed_
@@ -1091,7 +1076,7 @@ firmware.
 
 **5 Prerequisite(s)** A firmware successfully published by the Local Controller.
 
-**6 Postcondition(s)** (^) **Successful postcondition:**
+**6 Postcondition(s)** **Successful postcondition:**
 Firmware file no longer published.
 **Failure postcondition:**
 n/a

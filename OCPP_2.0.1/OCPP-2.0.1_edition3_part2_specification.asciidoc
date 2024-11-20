@@ -25,7 +25,6 @@ This document is made available under the _*Creative Commons Attribution-NoDeriv
 
 <<<
 
-
 include::part2_specification_generic.asciidoc[]
 
 <<<
