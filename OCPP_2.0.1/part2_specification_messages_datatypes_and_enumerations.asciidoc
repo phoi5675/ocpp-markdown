@@ -289,9 +289,10 @@ status ClearMessageStatusEnumType 1..1 Required. Returns whether the Charging St
 able to remove the message.
 statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
-==== 1.9. ClearedChargingLimit
+=== ClearedChargingLimit
 
-**1.9.1. ClearedChargingLimitRequest**
+[[cleared_charging_limit_request]]
+==== ClearedChargingLimitRequest
 
 This contains the field definition of the ClearedChargingLimitRequest PDU sent by the Charging Station to the CSMS.
 
@@ -302,7 +303,8 @@ Field Name Field Type Card. Description
 chargingLimitSource ChargingLimitSourceEnumType 1..1 Required. Source of the charging limit.
 evseId integer 0..1 Optional. EVSE Identifier.
 
-**1.9.2. ClearedChargingLimitResponse**
+[[cleared_charging_limit_response]]
+==== ClearedChargingLimitResponse
 
 This contains the field definition of the ClearedChargingLimitResponse PDU sent by the CSMS to the Charging Station. No fields are
 defined.
@@ -1130,7 +1132,8 @@ EV is connected. EvseId may not be 0.
 chargingNeeds ChargingNeedsType 1..1 Required. The characteristics of the energy delivery
 required.
 
-**1.36.2. NotifyEVChargingNeedsResponse**
+[[notify_ev_charging_needs_response]]
+==== NotifyEVChargingNeedsResponse
 
 Response to a NotifyEVChargingNeedsRequest.
 
@@ -1169,7 +1172,8 @@ notification applies to an EVSE. EvseId must be > 0.
 chargingSchedule ChargingScheduleType 1..1 Required. Planned energy consumption of the EV over
 time. Always relative to timeBase.
 
-**1.37.2. NotifyEVChargingScheduleResponse**
+[[notify_ev_charging_schedule_response]]
+==== NotifyEVChargingScheduleResponse
 
 Response to a NotifyEVChargingScheduleRequest message.
 

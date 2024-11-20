@@ -1,0 +1,92 @@
+@startuml figure_116
+!include style.puml
+
+participant "EV" as EV
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+loop Charging in progress...
+  alt if AC Charging
+    EV -> ChargingStation: ChargingStatusReq()
+    activate EV
+    activate ChargingStation
+
+    ChargingStation --> EV: ChargingStatusRes()
+    deactivate EV
+    deactivate ChargingStation
+  else if DC Charging
+    EV -> ChargingStation: CurrentDemandReq()
+    activate EV
+    activate ChargingStation
+
+    ChargingStation --> EV: CurrentDemandRes()
+    deactivate EV
+    deactivate ChargingStation
+  end
+
+  ChargingStation -> CSMS: TransactionEventRequest(eventType = Updated,...)
+  activate ChargingStation
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse(...)
+  deactivate ChargingStation
+  deactivate CSMS
+end
+
+group EV proposes new schedule
+  EV -> ChargingStation: PowerDeliveryReq(Renegotiate)
+  activate EV
+  activate ChargingStation
+
+  ChargingStation --> EV: PowerDeliveryRes(OK) 
+  deactivate ChargingStation
+
+  note right
+    Power delivery may be halted
+  end note
+
+  EV -> ChargingStation: ChargeParameterDiscoveryReq(EnergyTransferMode, EVChargeParam)
+  activate ChargingStation
+
+  ChargingStation -> CSMS: NotifyEVChargingNeedsRequest(evseId, chargingNeeds)
+  activate CSMS
+
+  CSMS --> ChargingStation: NotifyEVChargingNeedsResponse(Accepted)
+
+  CSMS -> CSMS: calculate new profile
+
+  CSMS -> ChargingStation: SetChargingProfileRequest(evseId, chargingProfile)
+
+  ChargingStation --> CSMS: SetChargingProfileResponse(Accepted)
+  deactivate CSMS
+
+  ChargingStation --> EV: ChargeParameterDiscoveryRes(SAScheduleList) 
+  deactivate ChargingStation
+
+  note right
+    Charging Station supplies charging profile as SASchedule
+  end note
+
+  EV -> ChargingStation: PowerDeliveryReq(Start, ChargingProfile, EVPowerDeliveryParam)
+  activate ChargingStation
+
+  ChargingStation --> EV: PowerDeliveryRes(OK)  
+  deactivate ChargingStation
+  deactivate EV
+
+  note right
+    Power delivery continues
+  end note
+
+  opt If EV provides a charging schedule
+    ChargingStation -> CSMS :NotifyEVChargingScheduleRequest(evseId, chargingSchedule)
+    activate ChargingStation
+    activate CSMS
+
+    CSMS --> ChargingStation: NotifyEVChargingScheduleResponse(Accepted)
+    deactivate ChargingStation
+    deactivate CSMS
+  end
+end
+
+@enduml

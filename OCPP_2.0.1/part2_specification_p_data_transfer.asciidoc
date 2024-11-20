@@ -45,9 +45,10 @@ turning to this option to add functionality.
 Edition 3 FINAL, 2024-05-06 **P. DataTransfer**
 
 
-=== 2. Use cases & Requirements
+== 2. Use cases & Requirements
 
-==== P01 - Data Transfer to the Charging Station
+[[p01_data_transfer_to_the_charging_station]]
+=== P01 - Data Transfer to the Charging Station
 
 _Table 246. P01 - Data Transfer to the Charging Station_
 

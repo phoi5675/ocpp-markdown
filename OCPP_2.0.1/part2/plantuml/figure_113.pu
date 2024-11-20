@@ -1,0 +1,53 @@
+@startuml figure_113
+!include style.puml
+
+participant "External Control System" as ECS
+participant "Local Controller" as LocalController
+participant "Charging Stations" as ChargingStation
+participant "CSMS" as CSMS
+
+ECS -> LocalController: Set grid limit
+
+LocalController -> CSMS: NotifyChargingLimitsRequest(chargingLimitSource, [chargingLimitGridCritical],...)
+activate LocalController
+activate CSMS
+
+CSMS --> LocalController: NotifyChargingLimitsResponse()
+deactivate LocalController
+deactivate CSMS
+
+note over LocalController
+  Recalculate Charging Schedules
+end note
+
+loop All affected EVSEs
+  LocalController -> ChargingStation: SetChargingProfileRequest(evseId, chargingProfile)
+  activate LocalController
+  activate ChargingStation
+
+  ChargingStation --> LocalController: SetChargingProfileResponse(status)
+  deactivate LocalController
+  deactivate ChargingStation
+end
+
+ECS -> LocalController: Release grid limit
+
+LocalController -> CSMS: ClearedChargingLimitRequest(chargingLimitSource,...)
+activate LocalController
+activate CSMS
+
+CSMS --> LocalController: ClearedChargingLimitResponse()
+deactivate LocalController
+deactivate CSMS
+
+loop All affected EVSE's
+  LocalController -> ChargingStation: ClearChargingProfileRequest(...)
+  activate LocalController
+  activate ChargingStation
+
+  ChargingStation --> LocalController: ClearChargingProfileResponse(status)
+  deactivate LocalController
+  deactivate ChargingStation
+end 
+
+@enduml

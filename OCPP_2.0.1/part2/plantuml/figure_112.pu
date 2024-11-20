@@ -1,0 +1,33 @@
+@startuml figure_112
+!include style.puml
+
+participant "External Control System\n(example DSO)" as ECS
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+ECS -> ChargingStation: release grid limit
+activate ECS
+activate ChargingStation
+
+opt if transaction ongoing
+  opt
+    ChargingStation -> ChargingStation: recalculate charging schedule
+  end
+
+  ChargingStation -> ChargingStation: release charging limit
+end
+
+ChargingStation -> CSMS: ClearedChargingLimitRequest(evseId, chargingLimitSource)
+activate CSMS
+
+CSMS --> ChargingStation: ClearedChargingLimitResponse()
+deactivate CSMS
+
+opt if charging rate changed more than: LimitChangeSignificance
+  ChargingStation -> CSMS: TransactionEventRequest(eventType = Updated, trigger = ChargingRateChanged, ...)
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse(...)
+end
+
+@enduml
