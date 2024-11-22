@@ -1,0 +1,15 @@
+@startuml figure_129
+!include style.puml
+
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+CSMS -> ChargingStation: InstallCertificateRequest(certificateType, certificate)
+activate CSMS
+activate ChargingStation
+
+ChargingStation --> CSMS: InstallCertificateResponse(installCertificateStatus)
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

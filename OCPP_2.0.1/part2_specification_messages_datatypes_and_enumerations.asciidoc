@@ -444,9 +444,10 @@ data anyType 0..1 Optional. Data without specified length or format, in
 response to request.
 statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
-==== 1.14. DeleteCertificate
+=== DeleteCertificate
 
-**1.14.1. DeleteCertificateRequest**
+[[delete_certificate_request]]
+==== DeleteCertificateRequest
 
 Used by the CSMS to request deletion of an installed certificate on a Charging Station.
 
@@ -457,7 +458,8 @@ Field Name Field Type Card. Description
 certificateHashData CertificateHashDataType 1..1 Required. Indicates the certificate of which deletion is
 requested.
 
-**1.14.2. DeleteCertificateResponse**
+[[delete_certificate_response]]
+==== DeleteCertificateResponse
 
 Response to a DeleteCertificateRequest.
 
@@ -494,9 +496,10 @@ firmware update ongoing.
 This contains the field definition of the FirmwareStatusNotificationResponse PDU sent by the CSMS to the Charging Station in
 response to a FirmwareStatusNotificationRequest. No fields are defined.
 
-==== 1.16. Get15118EVCertificate
+=== Get15118EVCertificate
 
-**1.16.1. Get15118EVCertificateRequest**
+[[get_15118_ev_certificate_request]]
+==== Get15118EVCertificateRequest
 
 This message is sent by the Charging Station to the CSMS if an ISO 15118 vehicle selects the service Certificate installation. NOTE:
 This message is based on CertificateInstallationReq Res from ISO 15118 2.
@@ -513,7 +516,8 @@ installed or updated.
 exiRequest string[0..5600] 1..1 Required. Raw CertificateInstallationReq request from EV,
 Base64 encoded.
 
-**1.16.2. Get15118EVCertificateResponse**
+[[get_15118_ev_certificate_response]]
+==== Get15118EVCertificateResponse
 
 Response message from CSMS to Charging Station containing the status and optionally new certificate. NOTE: This message is
 based on CertificateInstallationReq Res from ISO 15118-2.
@@ -570,9 +574,10 @@ pe
 able to accept this request.
 statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
-==== 1.18. GetCertificateStatus
+=== GetCertificateStatus
 
-**1.18.1. GetCertificateStatusRequest**
+[[get_certificate_status_request]]
+==== GetCertificateStatusRequest
 
 This contains the field definition of the GetCertificateStatusRequest PDU sent by the Charging Station to the CSMS.
 
@@ -583,7 +588,8 @@ Field Name Field Type Card. Description
 ocspRequestData OCSPRequestDataType 1..1 Required. Indicates the certificate of which the status is
 requested.
 
-**1.18.2. GetCertificateStatusResponse**
+[[get_certificate_status_response]]
+==== GetCertificateStatusResponse
 
 This contains the field definition of the GetCertificateStatusResponse PDU sent by the CSMS to the Charging Station.
 
@@ -716,9 +722,10 @@ Messages that match the request criteria in the
 GetDisplayMessagesRequest
 statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
-==== 1.22. GetInstalledCertificateIds.
+=== GetInstalledCertificateIds
 
-**1.22.1. GetInstalledCertificateIdsRequest**
+[[get_installed_certificate_ids_request]]
+==== GetInstalledCertificateIdsRequest
 
 Used by the CSMS to request an overview of the installed certificates on a Charging Station.
 
@@ -729,7 +736,8 @@ Field Name Field Type Card. Description
 certificateType GetCertificateIdUseEnumType 0..* Optional. Indicates the type of certificates requested.
 When omitted, all certificate types are requested.
 
-**1.22.2. GetInstalledCertificateIdsResponse**
+[[get_installed_certificate_ids_response]]
+==== GetInstalledCertificateIdsResponse
 
 Response to a GetInstalledCertificateIDsRequest.
 
@@ -974,7 +982,8 @@ Field Name Field Type Card. Description
 certificateType InstallCertificateUseEnumType 1..1 Required. Indicates the certificate type that is sent.
 certificate string[0..5500] 1..1 Required. A PEM encoded X.509 certificate.
 
-**1.30.2. InstallCertificateResponse**
+[[install_certificate_response]]
+==== InstallCertificateResponse
 
 The response to a InstallCertificateRequest, sent by the Charging Station to the CSMS.
 
@@ -2262,7 +2271,8 @@ certificate(s).
 certificateHashData CertificateHashDataType 1..1 Required. Information to identify a certificate.
 childCertificateHashData CertificateHashDataType 0..4 Optional. Information to identify the child certificate(s).
 
-=== 2.6. CertificateHashDataType
+[[certificate_hash_data_type]]
+=== CertificateHashDataType
 
 _Class_
 
@@ -4296,7 +4306,8 @@ Value Description
 Accepted Request has been accepted and will be executed.
 Rejected Request has not been accepted and will not be executed.
 
-=== 3.36. GetCertificateIdUseEnumType.
+[[get_certificate_id_use_enum_type]]
+=== GetCertificateIdUseEnumType
 
 _Enumeration_
 
@@ -4444,7 +4455,8 @@ Accepted The installation of the certificate succeeded.
 Rejected The certificate is invalid and/or incorrect OR the CSO tries to install more certificates than allowed.
 Failed The certificate is valid and correct, but there is another reason the installation did not succeed.
 
-==== 3.45. InstallCertificateUseEnumType
+[[install_certificate_use_enum_type]]
+===  InstallCertificateUseEnumType
 
 _Enumeration_
 

@@ -783,6 +783,7 @@ image::part2/images/figure_19.svg[Sequence Diagram: Migrate to new ConnectionPro
   When an operator wants to perform an immediate switch, he should stop the transactions first.
 |===
 
+[[migrate_to_new_network_connection_profile_requirements]]
 ==== B10 - Migrate to new NetworkConnectionProfile - Requirements
 
 .B10 - Requirements

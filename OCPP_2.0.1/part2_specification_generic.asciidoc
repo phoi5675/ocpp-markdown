@@ -256,6 +256,7 @@ This section contains the abbreviations that are used throughout this document.
 |WAN            |Wide Area Network.
 |===
 
+[[iso_15118_abbreviations]]
 ==== ISO 15118 Abbreviations
 
 This section contains the abbreviations from ISO 15118 that are used in this document.

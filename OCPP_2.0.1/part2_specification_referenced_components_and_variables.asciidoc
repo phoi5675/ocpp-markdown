@@ -171,7 +171,7 @@ available profile slots for the network configuration profiles SHALL be reported
 this Variable.
 
 [[network_profile_connection_attempts]]
-==== NetworkProfileConnectionAttempts
+==== `NetworkProfileConnectionAttempts`
 
 
 Required yes
@@ -625,7 +625,8 @@ variableAttributes mutability ReadOnly
 variableCharacteristics dataType integer
 Description This configuration variable is used to report the security profile used by the Charging Station.
 
-**2.2.6.** AdditionalRootCertificateCheck
+[[additional_root_certificate_check]]
+==== `AdditionalRootCertificateCheck`
 
 
 Required no
