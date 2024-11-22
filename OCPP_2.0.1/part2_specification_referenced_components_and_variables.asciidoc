@@ -100,7 +100,8 @@ variableCharacteristics dataType integer
 Description Indicates the configuration profile the station uses at that moment to connect to the network. This configuration
 variable only has to be implemented when NetworkConnectionProfile is implemented.
 
-**2.1.2.** AllowNewSessionsPendingFirmwareUpdate
+[[allow_new_sessions_pending_firmware_update]]
+==== `AllowNewSessionsPendingFirmwareUpdate`
 
 
 Required no
@@ -133,7 +134,8 @@ other tasks when the message did not arrive due to communication errors or softw
 timeout setting in a Charging Station can be configured in the messageTimeout field in the
 NetworkConnectionProfile.
 
-**2.1.4.** FileTransferProtocols
+[[file_transfer_protocols]]
+==== `FileTransferProtocols`
 
 
 Required yes

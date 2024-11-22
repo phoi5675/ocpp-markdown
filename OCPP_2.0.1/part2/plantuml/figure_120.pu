@@ -1,0 +1,54 @@
+@startuml figure_120
+!include style.puml
+
+participant "Local Controller" as LocalController
+participant "CSMS" as CSMS
+
+CSMS -> LocalController: PublishFirmwareRequest()
+activate LocalController
+activate CSMS
+
+LocalController -> CSMS: PublishFirmwareResponse()
+deactivate CSMS
+
+LocalController -> CSMS: PublishFirmwareStatusNotificationRequest(status = Downloading)
+activate CSMS
+
+CSMS -> LocalController: PublishFirmwareStatusNotificationResponse()
+deactivate CSMS
+
+LocalController ->o LocalController: Download firmware
+
+note over LocalController
+  Downloading firmware
+end note
+
+LocalController -> CSMS: PublishFirmwareStatusNotificationRequest(status = Downloaded)
+activate CSMS
+
+CSMS -> LocalController: PublishFirmwareStatusNotificationResponse()
+deactivate CSMS
+
+LocalController ->o LocalController: Verify checksum
+
+note over LocalController
+  Verify MD5 checksum
+end note
+
+LocalController -> CSMS: PublishFirmwareStatusNotificationRequest(status = ChecksumVerified)
+activate CSMS
+
+CSMS -> LocalController: PublishFirmwareStatusNotificationResponse()
+deactivate CSMS
+
+note over LocalController
+  Publish FW on publish URL
+end note
+
+LocalController -> CSMS: FirmwareStatusNotificationRequest(status = Published, location)
+activate CSMS
+
+CSMS -> LocalController: FirmwareStatusNotificationResponse()
+deactivate CSMS
+
+@enduml

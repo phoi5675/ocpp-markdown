@@ -52,3 +52,11 @@ skinparam circle {
   BorderColor BASE_COLOR
   BackgroundColor white
 }
+
+' State diagram
+skinparam State {
+  BackgroundColor BASE_COLOR
+  BorderColor #000000
+  FontColor #ffffff
+  FontName FONT_NAME
+}

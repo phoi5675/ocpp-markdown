@@ -325,6 +325,7 @@ image::part2/images/figure_4.svg[Sequence Diagram: TLS with Client Side Certific
 state (use case B02) after which it SHALL immediately execute <<update_charging_station_certificate_by_request_of_csms,A02 - Update Charging Station Certificate by request of CSMS>> to renew the certificate.
 |===
 
+[[keys_used_in_ocpp]]
 === Keys used in OCPP
 
 _This section is normative._

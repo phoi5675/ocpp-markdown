@@ -488,7 +488,8 @@ update. This field is mandatory, unless the message was
 triggered by a TriggerMessageRequest AND there is no
 firmware update ongoing.
 
-**1.15.2. FirmwareStatusNotificationResponse**
+[[firmware_status_notification_response]]
+==== FirmwareStatusNotificationResponse
 
 This contains the field definition of the FirmwareStatusNotificationResponse PDU sent by the CSMS to the Charging Station in
 response to a FirmwareStatusNotificationRequest. No fields are defined.
@@ -1278,7 +1279,8 @@ Response to a NotifyReportRequest message. No fields are defined.
 
 === 1.41. PublishFirmware
 
-**1.41.1. PublishFirmwareRequest**
+[[publish_firmware_request]]
+==== PublishFirmwareRequest
 
 This contains the field definition of the PublishFirmwareRequest PDU sent by the CSMS to the Local Controller.
 
@@ -1304,7 +1306,8 @@ be attempted. If this field is not present, it is left to
 Charging Station to decide how long to wait between
 attempts.
 
-**1.41.2. PublishFirmwareResponse**
+[[publish_firmware_response]]
+==== PublishFirmwareResponse
 
 This contains the field definition of the PublishFirmwareResponse PDU sent by the Local Controller to the CSMS in response to a
 PublishFirmwareRequest.
@@ -1318,7 +1321,8 @@ statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
 === 1.42. PublishFirmwareStatusNotification
 
-**1.42.1. PublishFirmwareStatusNotificationRequest**
+[[publish_firmware_status_notification_request]]
+==== PublishFirmwareStatusNotificationRequest
 
 This contains the field definition of the PublishFirmwareStatusNotificationRequest PDU sent by the Charging Station to the CSMS.
 
@@ -2076,7 +2080,8 @@ statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
 === 1.63. UnpublishFirmware
 
-**1.63.1. UnpublishFirmwareRequest**
+[[unpublish_firmware_request]]
+==== UnpublishFirmwareRequest
 
 This contains the field definition of the UnpublishFirmwareRequest PDU sent by the CSMS to the Charging Station.
 
@@ -2087,7 +2092,8 @@ Field Name Field Type Card. Description
 checksum identifierString[0..32] 1..1 Required. The MD5 checksum over the entire firmware
 file as a hexadecimal string of length 32.
 
-**1.63.2. UnpublishFirmwareResponse**
+[[unpublish_firmware_response]]
+==== UnpublishFirmwareResponse
 
 This contains the field definition of the UnpublishFirmwareResponse PDU sent by the Charging Station to the CSMS in response to
 a UnpublishFirmwareRequest.

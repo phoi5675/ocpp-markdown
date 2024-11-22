@@ -1,0 +1,113 @@
+@startuml figure_117
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+CSMS -> ChargingStation: UpdateFirmwareRequest(requestId = 123)
+activate CSMS
+activate ChargingStation
+
+ChargingStation --> CSMS: UpdateFirmwareResponse()
+deactivate CSMS
+
+ChargingStation ->o ChargingStation: Verify certificate
+
+note over ChargingStation
+  Waiting for retrieveDate...
+end note
+
+ChargingStation -> CSMS: FirmwareStatusNotificationRequest(status = Downloading, requestId = 123)
+activate CSMS
+
+CSMS --> ChargingStation: FirmwareStatusNotificationResponse()
+deactivate CSMS
+
+ChargingStation ->o ChargingStation: Download firmware
+
+note over ChargingStation
+  Downloading firmware...
+end note
+
+ChargingStation -> CSMS: FirmwareStatusNotificationRequest(status = Downloaded, requestId = 123)
+activate CSMS
+
+CSMS --> ChargingStation: FirmwareStatusNotificationResponse()
+deactivate CSMS
+
+ChargingStation ->o ChargingStation: Verify signature
+
+ChargingStation -> CSMS: FirmwareStatusNotificationRequest(status = SignatureVerified, requestId = 123)
+activate CSMS
+
+CSMS --> ChargingStation: FirmwareStatusNotificationResponse()
+deactivate CSMS
+deactivate ChargingStation
+
+note over ChargingStation
+  Waiting for transactions to finish...
+end note
+
+note right of ChargingStation
+  It is not fixed in what order the
+  FirmwareStatusNotificationRequests
+  are sent and in what order rebooting
+  takes place.
+end note
+
+opt if reboot required before installing firmware
+  ChargingStation -> CSMS: FirmwareStatusNotificationRequest(status = InstallRebooting, requestId = 123)
+  activate ChargingStation
+  activate CSMS
+
+  CSMS --> ChargingStation: FirmwareStatusNotificationResponse()
+  deactivate CSMS
+
+  ChargingStation ->o ChargingStation: Reboot
+
+  note over ChargingStation
+    Rebooting...
+  end note 
+end
+
+ChargingStation -> CSMS: FirmwareStatusNotificationRequest(status = Installing, requestId = 123)
+activate CSMS
+
+CSMS --> ChargingStation: FirmwareStatusNotificationResponse()
+deactivate CSMS
+
+ChargingStation ->o ChargingStation: Install firmware
+
+note over ChargingStation
+  Installing...
+end note
+
+opt if reboot required after installing to activate firmware
+  ChargingStation -> CSMS: FirmwareStatusNotificationRequest(status = InstallRebooting, requestId = 123)
+  activate ChargingStation
+  activate CSMS
+
+  CSMS --> ChargingStation: FirmwareStatusNotificationResponse()
+  deactivate CSMS
+
+  ChargingStation ->o ChargingStation: Reboot
+
+  note over ChargingStation
+    Rebooting... 
+  end note
+end
+
+ChargingStation -> CSMS: FirmwareStatusNotificationRequest(status = Installed, requestId = 123)
+activate CSMS
+
+CSMS --> ChargingStation: FirmwareStatusNotificationResponse()
+deactivate CSMS
+deactivate ChargingStation
+
+opt
+  note over ChargingStation
+    Rebooting...
+  end note
+end
+
+@enduml

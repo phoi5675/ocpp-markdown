@@ -1,0 +1,42 @@
+@startuml figure_118
+!include style.puml
+
+[*] --> Idle
+
+Idle -> DownloadScheduled: Retrieve date/time in future
+
+Idle -> Downloading
+
+DownloadScheduled -down[hidden]-> Downloading
+
+Downloading --> DownloadScheduled: Failed to download firmware, waiting for retryInterval to try again
+DownloadScheduled --> Downloading
+
+Downloading -> DownloadPaused: Temporarily suspended
+DownloadPaused -> Downloading
+
+Downloading -> DownloadFailed: Firmware not downloaded
+
+Downloading --> Downloaded: Downloading firmware
+Downloaded -> InvalidSignature: Invalid firmware signature
+
+Downloaded --> SignatureVerified: Valid firmware signature
+SignatureVerified -> InstallScheduled: Installation date/time in futrure
+InstallScheduled -> InstallRebooting_1
+SignatureVerified -> InstallRebooting_1: Installation requires reboot first
+
+InstallScheduled --> Installing
+SignatureVerified --> Installing: Install immediately
+InstallRebooting_1 --> Installing
+
+Installing -> InstallVerificationFailed: Varification of the firmware failed
+Installing -> InstallationFailed: Installation failed
+
+Installing --> InstallRebooting_2
+InstallRebooting_2 -up-> InstallationFailed: Installation failed
+
+Installing --> Installed: Installation successful
+InstallRebooting_2 --> Installed: Installation successful
+
+
+@enduml
