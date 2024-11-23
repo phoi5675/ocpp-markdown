@@ -1,423 +1,241 @@
 = N. Diagnostics
 :!chapter-number:
 
-== 1. Introduction
+:sectnums:
+== Introduction
 
-This Functional Block describes the diagnostics functionality of OCPP. This functionality enables remote diagnostics of problems
-with a Charging Station. A Charging Station can be requested to upload a file with diagnostics information (optionally limited to a
-specified interval).
+This Functional Block describes the diagnostics functionality of OCPP. This functionality enables remote diagnostics of problems with a Charging Station. A Charging Station can be requested to upload a file with diagnostics information (optionally limited to a specified interval).
 
-Edition 3 FINAL, 2024-05-06 **N. Diagnostics**
+<<<
 
+== Use cases & Requirements
 
-=== 2. Use cases & Requirements
+=== Logging
 
-==== 2.1. Logging
+:sectnums!:
+=== N01 - Retrieve Log Information
 
-==== N01 - Retrieve Log Information
+.N01 - Retrieve Log Information
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
-_Table 214. N01 - Retrieve Log Information_
+|1   |Name            |Retrieve Log
+|2   |ID              |N01
+|{nbsp} d|_Functional block_ |N. Diagnostics
+|3   |Objective(s)    |To enable the CSMS retrieving of log information from a Charging Station.
+|4   |Description     |This use case covers the functionality of getting log information from a Charging Station. The CSMS can request a Charging Station to upload a file with log information to a given location (URL). The format of this log file is not prescribed. The Charging Station uploads a log file and gives information about the status of the upload by sending status notifications to the CSMS.
+|{nbsp} d|_Actors_    |Charging Station, CSMS
+|{nbsp} d|_Scenario description_ 
+  |**1.** The CSMS sends a <<get_log_request,GetLogRequest>> to the Charging Station. +
+  **2.** The Charging Station responds with a <<get_log_response,GetLogResponse>>. +
+  **3.** The Charging Station sends a <<log_status_notification_request,LogStatusNotificationRequest>> with the status Uploading +
+  **4.** The CSMS responds with a <<log_status_notification_response,LogStatusNotificationResponse>> acknowledging the status update +
+  request. +
+  **5.** Uploading of the diagnostics files. +
+  **6.** The Charging Station sends <<log_status_notification_request,LogStatusNotificationRequest>> with the status Uploaded. +
+  **7.** The CSMS responds with <<log_status_notification_response,LogStatusNotificationResponse>>, acknowledging the status update request.
+|5   |Prerequisite(s)
+  |- Diagnostics information is available for upload. +
+  - URL to upload file to is reachable and exists.
+|6  |Postcondition(s)
+  |**Successful postcondition:** +
+  Log file successfully uploaded.
 
+  **Failure postcondition:** +
+  Log file not successfully uploaded and failed.
+|===
 
-No. Type Description
-1 Name Retrieve Log
-2 ID N01
-Functional block N. Diagnostics
-3 Objective(s) To enable the CSMS retrieving of log information from a Charging Station.
-4 Description This use case covers the functionality of getting log information from a Charging Station. The
-CSMS can request a Charging Station to upload a file with log information to a given location
-(URL). The format of this log file is not prescribed. The Charging Station uploads a log file and
-gives information about the status of the upload by sending status notifications to the CSMS.
-Actors Charging Station, CSMS
+.Sequence Diagram: Get Diagnostics
+image::part2/images/figure_131.svg[Sequence Diagram: Get Diagnostics]
 
-_Scenario description_ (^) **1.** The CSMS sends a GetLogRequest to the Charging Station.
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling |When the upload fails and the transfer protocol supports "resume" the Charging Station is RECOMMENDED to try to resume before aborting the upload.
+|8   |Remark(s)      |As an example in this use case the requestId = 123, but this could be any value.
 
-**2.** The Charging Station responds with a GetLogResponse.
-**3.** The Charging Station sends a LogStatusNotificationRequest with the status Uploading
-**4.** The CSMS responds with a LogStatusNotificationResponse acknowledging the status update
-request.
-**5.** Uploading of the diagnostics files.
-**6.** The Charging Station sends LogStatusNotificationRequest with the status Uploaded.
-**7.** The CSMS responds with LogStatusNotificationResponse, acknowledging the status update
-request.
+When a Charging Station is requested to upload a log file, the CSMS supplies in the request an URL where the Charging Station SHALL upload the file. The URL also contains the protocol which must be used to upload the file.
 
-**5 Prerequisite(s)** (^) - Diagnostics information is available for upload.
+It is recommended that the log file is uploaded via FTP or FTPS. FTP(S) is better optimized for large binary data than HTTP. Also FTP(S) has the ability to resume uploads. In case an upload is interrupted, the Charging Station can resume uploading after the part it already has uploaded. The FTP URL is of format: _ftp://User:password@host:port/path_ in which the parts _User:password@_, _:password_ or _:port_ may be excluded.
 
-- URL to upload file to is reachable and exists.
+The Charging Station has a required Configuration Variable that reports which file transfer protocols it supports: <<file_transfer_protocols,`FileTransferProtocols`>>
 
-**6 Postcondition(s)** (^) **Successful postcondition:**
-Log file successfully uploaded.
-**Failure postcondition:**
-Log file not successfully uploaded and failed.
-Charging Station CSMS
-GetLogRequest(logType)
-GetLogResponse(fileName)
-Uploading log file...
-LogStatusNotificationRequest(status  Uploading, requestId  123)
-LogStatusNotificationResponse()
-Uploaded log file...
-LogStatusNotificationRequest(status  Uploaded, requestId  123)
-LogStatusNotificationResponse()
-_Figure 131. Sequence Diagram: Get Diagnostics_
-**7 Error handling** When the upload fails and the transfer protocol supports "resume" the Charging Station is
-RECOMMENDED to try to resume before aborting the upload.
-Edition 3 FINAL, 2024-05-06 **N. Diagnostics**
-
-
-**8 Remark(s)** (^) As an example in this use case the requestId  123, but this could be any value.
-When a Charging Station is requested to upload a log file, the CSMS supplies in the request an
-URL where the Charging Station SHALL upload the file. The URL also contains the protocol which
-must be used to upload the file.
-It is recommended that the log file is uploaded via FTP or FTPS. FTP(S) is better optimized for
-large binary data than HTTP. Also FTP(S) has the ability to resume uploads. In case an upload is
-interrupted, the Charging Station can resume uploading after the part it already has uploaded. The
-FTP URL is of format: _ftp:_ // _User_ : _password_ @ _host_ : _port_ / _path_ in which the parts _User_ : _password_ @,
-: _password_ or : _port_ may be excluded.
-The Charging Station has a required Configuration Variable that reports which file transfer
-protocols it supports: FileTransferProtocols
 The format of the log file is not prescribed.
-FTP needs to be able to use Passive FTP, to be able to transverse over as much different
-typologies as possible.
-**N01 - Retrieve Log Information - Requirements**
-_Table 215. N01 - Requirements_
-**ID Precondition Requirement definition Note**
-N01.FR.01 Upon receipt of a GetLogRequest AND
-if the requested log information is
-available
-The Charging Station SHALL respond with a
-GetLogResponse stating the name of the file and
-status _Accepted_.
-N01.FR.02 N01.FR.01 The Charging Station SHALL start uploading a
-single log file to the specified location
-N01.FR.03 (^) N01.FR.02
-AND
-The GetLogRequest contained
-logType _SecurityLog_
-The Charging Station SHALL upload its security log
-N01.FR.04 (^) N01.FR.02
-AND
-The GetLogRequest contained
-logType _DiagnosticsLog_
-The Charging Station SHALL upload its diagnostics.
-N01.FR.05 Upon receipt of a GetLogRequest AND
-if the requested log information is
-NOT available
-The Charging Station SHALL respond with a
-GetLogResponse WITH status _Rejected_.
-N01.FR.07 Every LogStatusNotificationRequest sent for a log
-upload SHALL contain the same requestId as the
-GetLogRequest that started this log upload.
-N01.FR.08 When uploading a log document is
-started
-The Charging Station SHALL send a
-LogStatusNotificationRequest with status
-_Uploading_.
-N01.FR.09 When a log document is uploaded
-successfully
-The Charging Station SHALL send a
-LogStatusNotificationRequest with status
-_Uploaded_.
-N01.FR.10 When uploading a log document failed The Charging Station SHALL send a
-LogStatusNotificationRequest with status
-UploadFailure, BadMessage,
-PermissionDenied OR
-NotSupportedOperation.
-It is RECOMMENDED to
-send the status only after
-all retry attempts have
-failed.
-A Charging Station MAY
-send a new Uploading
-status upon each retry
-attempt.
-Edition 3 FINAL, 2024-05-06 **N. Diagnostics**
 
+FTP needs to be able to use Passive FTP, to be able to transverse over as much different typologies as possible.
+|===
 
+==== N01 - Retrieve Log Information - Requirements
 
-ID Precondition Requirement definition Note
-N01.FR.12 When a Charging Station is
-assembling or uploading the log file
-AND
-the Charging Station receives a new
-GetLogRequest
+.N01 - Requirements
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
 
+|N01.FR.01  |Upon receipt of a <<get_log_request,GetLogRequest>> AND +
+  if the requested log information is available
+    |The Charging Station SHALL respond with a <<get_log_response,GetLogResponse>> stating the name of the file and status _Accepted_. |{nbsp}
+|N01.FR.02  |N01.FR.01
+  |The Charging Station SHALL start uploading a single log file to the specified location |{nbsp}
+|N01.FR.03  |N01.FR.02 +
+  AND +
+  The <<get_log_request,GetLogRequest>> contained logType _SecurityLog_
+    |The Charging Station SHALL upload its security log |{nbsp}
+|N01.FR.04  |N01.FR.02 +
+  AND +
+  The <<get_log_request,GetLogRequest>> contained logType _DiagnosticsLog_
+    |The Charging Station SHALL upload its diagnostics. |{nbsp}
+|N01.FR.05  |Upon receipt of a <<get_log_request,GetLogRequest>> AND +
+  if the requested log information is NOT available
+    |The Charging Station SHALL respond with a <<get_log_response,GetLogResponse>> WITH status _Rejected_. |{nbsp}
+|N01.FR.07  |{nbsp}
+  |Every <<log_status_notification_request,LogStatusNotificationRequest>> sent for a log upload SHALL contain the same requestId as the <<get_log_request,GetLogRequest>> that started this log upload. |{nbsp}
+|N01.FR.08  |When uploading a log document is started
+  |The Charging Station SHALL send a <<log_status_notification_request,LogStatusNotificationRequest>> with status _Uploading_. |{nbsp}
+|N01.FR.09  |When a log document is uploaded successfully
+  |The Charging Station SHALL send a <<log_status_notification_request,LogStatusNotificationRequest>> with status _Uploaded_. |{nbsp}
+|N01.FR.10  |When uploading a log document failed
+  |The Charging Station SHALL send a <<log_status_notification_request,LogStatusNotificationRequest>> with status `UploadFailure`, `BadMessage`, `PermissionDenied` OR +
+  `NotSupportedOperation`.
+    |It is RECOMMENDED to send the status only after all retry attempts have failed. A Charging Station MAY send a new `Uploading` status upon each retry attempt.
+|N01.FR.12  |When a Charging Station is assembling or uploading the log file AND +
+  the Charging Station receives a new <<get_log_request,GetLogRequest>>
+    |The Charging Station SHOULD cancel the ongoing log file upload AND respond with status _AcceptedCanceled_. |{nbsp}
+|N01.FR.13  |{nbsp}
+  |The field requestId in <<log_status_notification_request,LogStatusNotificationRequest>> is mandatory, unless the message was triggered by a <<trigger_message_request,TriggerMessageRequest>> AND there is no log upload ongoing. |{nbsp}
+|N01.FR.14  |{nbsp}
+  |It is RECOMMENDED that Charging Station and CSMS support at least HTTP(s) as transport mechanism for the log file upload
+    |HTTP transport is most likely to be supported, since it is also used for OCPP messaging.
+|N01.FR.15  |{nbsp}
+  |Charging Station SHALL at least support the CSMS trust chain for secure transports |{nbsp}
+|N01.FR.16  |{nbsp}
+  |It is RECOMMENDED that Charging Station supports the usual CAs provided by the operating system
+    |The log file storage of CSMS may be a cloud service operated separately from the CSMS itself and not part of the CSMS trustchain.
+|N01.FR.17  |When CSMS requires basic authorization for the upload
+  |CSMS is RECOMMENDED to require a different basic authorization password for the upload, then the one used for OCPP connectivity.
+    |This is to avoid leaking the OCPP password to 3rd parties if the log file storage is a different system. +
+    Basic authorization can be added to the URL as follows: +
+    _http://username:password_@csms.org/logs
+|N01.FR.18  |{nbsp}
+  |Is is RECOMMENDED that CSMS accepts both PUT and POST requests for uploads from Charging Station. |{nbsp}
+|N01.FR.19  |When Charging Station uses a HTTP(s) POST request to upload the log file
+  |Charging Station SHALL provide at least the following attributes: `Content-Type:` (e.g. application/octet-stream) and `Content-Disposition:` with a specification of the filename.
+    |For example: +
+    Content-Type: application/octet-stream +
+    Content-Disposition: form-data; +
+    name="uploadedfile"; +
+    filename="logfile_20210420.zip"
+|N01.FR.20  |N01.FR.12 AND +
+  Charging Station cancels the log file upload
+    |The Charging Station SHALL send a <<log_status_notification_request,LogStatusNotificationRequest>> with _status_ = `AcceptedCanceled`.
+      |N01.FR.12 is a "SHOULD" requirement. Only send status notification when requirement is executed.
+|===
 
-The Charging Station SHOULD cancel the ongoing
-log file upload AND respond with status
-AcceptedCanceled.
+:sectnums:
+=== Configure Monitoring
 
+[cols="^.^1,10",%autowidth.stretch]
+|===
+s|NOTE |For managing the monitoring of a Charging Station a basic understanding of Device Model concepts is essential. These concepts are explained in "OCPP 2.0.1: Part 1 - Architecture & Topology", chapter 4.
+|===
 
-N01.FR.13 The field requestId in LogStatusNotificationRequest
-is mandatory, unless the message was triggered by
-a TriggerMessageRequest AND there is no log
-upload ongoing.
-N01.FR.14 It is RECOMMENDED that Charging Station and
-CSMS support at least HTTP(s) as transport
-mechanism for the log file upload
+:sectnums!:
+=== N02 - Get Monitoring report
 
+.N02 - Get Monitoring Report
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
 
-HTTP transport is most
-likely to be supported,
-since it is also used for
-OCPP messaging.
-N01.FR.15 Charging Station SHALL at least support the CSMS
-trust chain for secure transports
-N01.FR.16 It is RECOMMENDED that Charging Station
-supports the usual CAs provided by the operating
-system
+|1   |Name            |Get Monitoring Report
+|2   |ID              |N02
+|{nbsp} d|_Functional block_ |N. Diagnostics
+|3   |Objective(s)    |To give the CSMS the ability to retrieve a report about configured monitoring settings per component and variable.
+|4   |Description     |This use case describes how the CSMS requests the Charging Station to send a report about configured monitoring settings per component and variable. Optionally, this list can be filtered on monitoringCriteria and componentVariables.
+|{nbsp} d|_Actors_    |Charging Station, CSMS, CSO
+|{nbsp} d|_Scenario description_
+  |**1.** The CSO triggers the CSMS to request a monitoring report from a Charging Station. +
+  **2.** The CSMS sends a <<get_monitoring_report_request,GetMonitoringReportRequest>> to the Charging Station. +
+  **3.** The Charging Station responds with a <<get_monitoring_report_response,GetMonitoringReportResponse>>. +
+  **4.** The Charging Station sends a <<notify_monitoring_report_request,NotifyMonitoringReportRequest>> to the CSMS. +
+  **5.** The CSMS responds with a <<notify_monitoring_report_response,NotifyMonitoringReportResponse>>. +
+  **6.** Steps #4 and #5 are repeated until all data of the monitoring report has been sent.
+|5   |Prerequisite(s)   |Charging Station supports Monitoring
+|6   |Postcondition(s)  |The CSMS received a report about the configured monitoring settings.
+|===
 
+.Sequence Diagram: Get Monitoring Report
+image::part2/images/figure_132.svg[Sequence Diagram: Get Monitoring Report]
 
-The log file storage of
-CSMS may be a cloud
-service operated
-separately from the
-CSMS itself and not part
-of the CSMS trustchain.
-N01.FR.17 When CSMS requires basic
-authorization for the upload
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling |n/a
+|8   |Remark(s)      |n/a
+|===
 
+==== N02 - Get Monitoring Report - Requirements
 
-CSMS is RECOMMENDED to require a different
-basic authorization password for the upload, then
-the one used for OCPP connectivity.
+.N02 - Requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
 
+|N02.FR.01  |NOT N02.FR.10 AND +
+  When the Charging Station receives a <<get_monitoring_report_request,GetMonitoringReportRequest>> for supported _monitoringCriteria_ OR without _monitoringCriteria_
+    |The Charging Station SHALL send a <<get_monitoring_report_response,GetMonitoringReportResponse>> with <<generic_status_enum_type,Accepted>>.
+|N02.FR.02  |When the Charging Station receives a <<get_monitoring_report_request,GetMonitoringReportRequest>> for not supported _monitoringCriteria_
+  |The Charging Station SHALL send a <<get_monitoring_report_response,GetMonitoringReportResponse>> with <<generic_status_enum_type,NotSupported>>.
+|N02.FR.03  |N02.FR.01
+  |The Charging Station SHALL send the requested information via one or more <<notify_monitoring_report_request,NotifyMonitoringReportRequest>> messages to the CSMS.
+|N02.FR.04  |N02.FR.01 AND +
+  The <<get_monitoring_report_request,GetMonitoringReportRequest>> contained a _requestId_
+    |Every <<notify_monitoring_report_request,NotifyMonitoringReportRequest>> sent for this <<get_monitoring_report_request,GetMonitoringReportRequest>> SHALL contain the same _requestId_.
+|N02.FR.05  |N02.FR.01 AND +
+  _monitoringCriteria_ and _componentVariables_ are NOT both empty.
+    |The set of monitors reported in one or more <<notify_monitoring_report_request,NotifyMonitoringReportRequest>> messages is limited to the set defined by _monitoringCriteria_ and _componentVariables_.
+|N02.FR.06  |N02.FR.01 AND +
+  _monitoringCriteria_ is NOT empty AND +
+  _componentVariables_ is empty.
+    |The set of monitors reported in one or more <<notify_monitoring_report_request,NotifyMonitoringReportRequest>> messages is limited to the set defined by _monitoringCriteria_.
+|N02.FR.07  |{nbsp}
+  |The maximum number of componentVariables in one <<get_monitoring_report_request,GetMonitoringReportRequest>> message is given by the <<items_per_message_get_report,`ItemsPerMessageGetReport`>> Configuration Variable
+|N02.FR.08  |N02.FR.01 AND +
+  _monitoringCriteria_ is absent AND +
+  _componentVariables_ is NOT empty.
+    |The set of monitors reported in one or more <<notify_monitoring_report_request,NotifyMonitoringReportRequest>> messages is limited to the set defined by _componentVariables_.
+|N02.FR.09  |{nbsp}
+  |The sequence number contained in the seqNo field of the <<notify_monitoring_report_request,NotifyMonitoringReportRequest>> is incremental per report. So the <<notify_monitoring_report_request,NotifyMonitoringReportRequest>> message which contains the first report part, SHALL have a seqNo with value _0_.
+|N02.FR.10  |When the Charging Station receives a <<get_monitoring_report_request,GetMonitoringReportRequest>> with a combination of criteria which results in an empty result set.
+  |The Charging Station SHALL respond with a <<get_monitoring_report_response,GetMonitoringReportResponse>>( _status_=`EmptyResultSet`).
+|N02.FR.11  |N02.FR.01 AND +
+  _monitoringCriteria_ is empty AND +
+  _componentVariables_ is empty.
+    |The set of all existing monitors is reported in one or more <<notify_monitoring_report_request,NotifyMonitoringReportRequest>> messages.
+|N02.FR.12  |If _monitoringCriteria_ contains `ThresholdMonitoring`
+  |All monitors with _type_ = `UpperThreshold` or _type_ = `LowerThreshold` are reported.
+|N02.FR.13  |If _monitoringCriteria_ contains `DeltaMonitoring`
+  |All monitors with _type_ = `Delta` are reported.
+|N02.FR.14  |If _monitoringCriteria_ contains `PeriodicMonitoring`
+  |All monitors with _type_ = `Periodic` or _type_ = `PeriodicClockAligned` are reported.
+|N02.FR.16  |When Charging Station receives a <<get_monitoring_report_request,GetMonitoringReportRequest>> with _componentVariable_ elements in which _variable_ is missing
+  |The Charging Station SHALL report for every _variable_ of the _component_ in _componentVariable_.
+|N02.FR.17  |When Charging Station receives a <<get_monitoring_report_request,GetMonitoringReportRequest>> with _componentVariable_ elements in which _variable_ is present, but _instance_ is missing
+  |The Charging Station SHALL report for every instance of the _variable_ of the _component_ in _componentVariable_.
+|N02.FR.18  |N02.FR.11 AND +
+  When Charging Station receives a <<get_monitoring_report_request,GetMonitoringReportRequest>> with a _component_ in a _componentVariable_ element that has a _component.evse.id_, but _component.evse.connector_ is missing
+    |The Charging Station SHALL report the component(s) with this _component.name_, _component.instance_ and _component.evse.id_ for every _component.evse.connector_ , whilst taking into account N02.FR.20.
+|N02.FR.19  |N02.FR.11 AND +
+  When Charging Station receives a <<get_monitoring_report_request,GetMonitoringReportRequest>> with a _component_ in a _componentVariable_ element that has no _component.evse.id_
+    |The Charging Station SHALL report the component(s) with this _component.name_, _component.instance_ for every _component.evse_ field (including top level component without _component.evse_), whilst taking into account N02.FR.20.
+|N02.FR.20  |N02.FR.11 AND +
+  When Charging Station receives a <<get_monitoring_report_request,GetMonitoringReportRequest>> with a _component_ in a _componentVariable_ element that has a value for _component.instance_
+    |The Charging Station SHALL report the component(s) with this _component.name_ for every _component.instance_ field, whilst taking into account N02.FR.18, N02.FR.19.
+|N02.FR.21  |N02.FR.11 AND +
+  When Charging Station receives a <<get_monitoring_report_request,GetMonitoringReportRequest>> with a _component_ in a _componentVariable_ element that has no _component.instance_ field
+    |The Charging Station SHALL report the component(s) with this _component.name_ for every _component.instance_ field or the component(s) without _component.instance_ field, whichever is the case, whilst taking into account N02.FR.18, N02.FR.19.
+|===
 
-This is to avoid leaking
-the OCPP password to
-3rd parties if the log file
-storage is a different
-system.
-Basic authorization can
-be added to the URL as
-follows:
-http:// username:passwor
-d @csms.org/logs
-N01.FR.18 Is is RECOMMENDED that CSMS accepts both PUT
-and POST requests for uploads from Charging
-Station.
-N01.FR.19 When Charging Station uses a
-HTTP(s) POST request to upload the
-log file
-
-
-Charging Station SHALL provide at least the
-following attributes: Content-Type: (e.g.
-application/octet-stream) and Content-
-Disposition: with a specification of the
-filename.
-
-
-For example:
-Content-Type:
-application/octet-stream
-Content-Disposition:
-form-data;
-name="uploadedfile";
-filename="logfile_202104
-20.zip"
-
-N01.FR.20 (^) N01.FR.12 AND
-Charging Station cancels the log file
-upload
-The Charging Station SHALL send a
-LogStatusNotificationRequest with _status_ =
-AcceptedCanceled.
-N01.FR.12 is a "SHOULD"
-requirement. Only send
-status notification when
-requirement is executed.
-
-==== 2.2. Configure Monitoring
-
-NOTE
-
-
-For managing the monitoring of a Charging Station a basic understanding of Device Model concepts is essential.
-These concepts are explained in "OCPP 2.0.1: Part 1 - Architecture & Topology", chapter 4.
-
-==== N02 - Get Monitoring report
-
-_Table 216. N02 - Get Monitoring Report_
-
-
-No. Type Description
-1 Name Get Monitoring Report
-2 ID N02
-Functional block N. Diagnostics
-
-Edition 3 FINAL, 2024-05-06 **N. Diagnostics**
-
-
-
-No. Type Description
-3 Objective(s) To give the CSMS the ability to retrieve a report about configured monitoring settings per
-component and variable.
-4 Description This use case describes how the CSMS requests the Charging Station to send a report about
-configured monitoring settings per component and variable. Optionally, this list can be filtered on
-monitoringCriteria and componentVariables.
-Actors Charging Station, CSMS, CSO
-
-_Scenario description_ (^) **1.** The CSO triggers the CSMS to request a monitoring report from a Charging Station.
-
-**2.** The CSMS sends a GetMonitoringReportRequest to the Charging Station.
-**3.** The Charging Station responds with a GetMonitoringReportResponse.
-**4.** The Charging Station sends a NotifyMonitoringReportRequest to the CSMS.
-**5.** The CSMS responds with a NotifyMonitoringReportResponse.
-**6.** Steps #4 and #5 are repeated until all data of the monitoring report has been sent.
-**5 Prerequisite(s)** Charging Station supports Monitoring
-**6 Postcondition(s)** The CSMS received a report about the configured monitoring settings.
-
-
-CSO
-
-
-CSMS Charging Station
-
-
-request for a monitoring report
-GetMonitoringReportRequest(requestId, monitoringCriteria, componentVariables)
-GetMonitoringReportResponse(status)
-
-
-loop [for each report part]
-NotifyMonitoringReportRequest(generatedAt, requestId, tbc, reports)
-NotifyMonitoringReportResponse()
-
-_Figure 132. Sequence Diagram: Get Monitoring Report_
-
-
-7 Error handling n/a
-8 Remark(s) n/a
-
-**N02 - Get Monitoring Report - Requirements**
-
-_Table 217. N02 - Requirements_
-
-
-ID Precondition Requirement definition
-
-N02.FR.01 (^) NOT N02.FR.10 AND
-When the Charging Station receives a
-getMonitoringReportRequest for supported
-_monitoringCriteria_ OR without _monitoringCriteria_
-The Charging Station SHALL send a
-getMonitoringReportResponse with Accepted.
-N02.FR.02 When the Charging Station receives a
-getMonitoringReportRequest for not supported
-_monitoringCriteria_
-The Charging Station SHALL send a
-getMonitoringReportResponse with NotSupported.
-N02.FR.03 N02.FR.01 The Charging Station SHALL send the requested information via
-one or more notifyMonitoringReportRequest messages to the
-CSMS.
-N02.FR.04 (^) N02.FR.01 AND
-The getMonitoringReportRequest contained a
-_requestId_
-Every notifyMonitoringReportRequest sent for this
-getMonitoringReportRequest SHALL contain the same _requestId_.
-N02.FR.05 (^) N02.FR.01 AND
-_monitoringCriteria_ and _componentVariables_ are
-NOT both empty.
-The set of monitors reported in one or more
-notifyMonitoringReportRequest messages is limited to the set
-defined by _monitoringCriteria_ and _componentVariables_.
-N02.FR.06 (^) N02.FR.01 AND
-_monitoringCriteria_ is NOT empty AND
-_componentVariables_ is empty.
-The set of monitors reported in one or more
-notifyMonitoringReportRequest messages is limited to the set
-defined by _monitoringCriteria_.
-Edition 3 FINAL, 2024-05-06 **N. Diagnostics**
-
-
-
-ID Precondition Requirement definition
-N02.FR.07 The maximum number of componentVariables in one
-getMonitoringReportRequest message is given by the
-ItemsPerMessageGetReport Configuration Variable
-
-N02.FR.08 (^) N02.FR.01 AND
-_monitoringCriteria_ is absent AND
-_componentVariables_ is NOT empty.
-The set of monitors reported in one or more
-notifyMonitoringReportRequest messages is limited to the set
-defined by _componentVariables_.
-N02.FR.09 The sequence number contained in the seqNo field of the
-NotifyMonitoringReportRequest is incremental per report. So the
-NotifyMonitoringReportRequest message which contains the
-first report part, SHALL have a seqNo with value _0_.
-N02.FR.10 When the Charging Station receives a
-GetMonitoringReportRequest with a
-combination of criteria which results in an
-empty result set.
-The Charging Station SHALL respond with a
-GetMonitoringReportResponse( _status_ =EmptyResultSet).
-N02.FR.11 (^) N02.FR.01 AND
-_monitoringCriteria_ is empty AND
-_componentVariables_ is empty.
-The set of all existing monitors is reported in one or more
-notifyMonitoringReportRequest messages.
-N02.FR.12 If _monitoringCriteria_ contains
-ThresholdMonitoring
-All monitors with _type_  UpperThreshold or _type_ =
-LowerThreshold are reported.
-N02.FR.13 If _monitoringCriteria_ contains
-DeltaMonitoring
-All monitors with _type_  Delta are reported.
-N02.FR.14 If _monitoringCriteria_ contains
-PeriodicMonitoring
-All monitors with _type_  Periodic or _type_ =
-PeriodicClockAligned are reported.
-N02.FR.16 When Charging Station receives a
-GetMonitoringReportRequest with
-_componentVariable_ elements in which _variable_ is
-missing
-The Charging Station SHALL report for every _variable_ of the
-_component_ in _componentVariable_.
-N02.FR.17 When Charging Station receives a
-GetMonitoringReportRequest with
-_componentVariable_ elements in which _variable_ is
-present, but _instance_ is missing
-The Charging Station SHALL report for every instance of the
-_variable_ of the _component_ in _componentVariable_.
-N02.FR.18 (^) N02.FR.11 AND
-When Charging Station receives a
-GetMonitoringReportRequest with a _component_
-in a _componentVariable_ element that has a
-_component.evse.id_ , but
-_component.evse.connector_ is missing
-The Charging Station SHALL report the component(s) with this
-_component.name_ , _component.instance_ and _component.evse.id_
-for every _component.evse.connector_ , whilst taking into account
-N02.FR.20.
-N02.FR.19 (^) N02.FR.11 AND
-When Charging Station receives a
-GetMonitoringReportRequest with a _component_
-in a _componentVariable_ element that has no
-_component.evse.id_
-The Charging Station SHALL report the component(s) with this
-_component.name_ , _component.instance_ for every _component.evse_
-field (including top level component without _component.evse_ ),
-whilst taking into account N02.FR.20.
-N02.FR.20 (^) N02.FR.11 AND
-When Charging Station receives a
-GetMonitoringReportRequest with a _component_
-in a _componentVariable_ element that has a value
-for _component.instance_
-The Charging Station SHALL report the component(s) with this
-_component.name_ for every _component.instance_ field, whilst
-taking into account N02.FR.18, N02.FR.19.
-N02.FR.21 (^) N02.FR.11 AND
-When Charging Station receives a
-GetMonitoringReportRequest with a _component_
-in a _componentVariable_ element that has no
-_component.instance_ field
-The Charging Station SHALL report the component(s) with this
-_component.name_ for every _component.instance_ field or the
-component(s) without _component.instance_ field, whichever is
-the case, whilst taking into account N02.FR.18, N02.FR.19.
-
-==== N03 - Set Monitoring Base
+=== N03 - Set Monitoring Base
 
 _Table 218. N03 - Set Monitoring Base_
 
@@ -440,7 +258,7 @@ manufacturer of the Charging Station to define which monitoring settings are act
 FactoryDefault and HardWiredOnly.
 Actors Charging Station, CSMS, CSO
 
-_Scenario description_ (^) **1.** The CSO triggers the CSMS to request a Charging Station to set a monitoring base.
+_Scenario description_ **1.** The CSO triggers the CSMS to request a Charging Station to set a monitoring base.
 
 **2.** The CSMS sends a SetMonitoringBaseRequest to the Charging Station.
 **3.** The Charging Station responds with a SetMonitoringBaseResponse.
@@ -448,7 +266,7 @@ _Scenario description_ (^) **1.** The CSO triggers the CSMS to request a Chargin
 **6 Postcondition(s)** The Charging Station activated the set of monitoring settings, as denoted by the value of
 **MonitoringBase**.
 
-===== CSO
+CSO
 
 
 CSMS Charging Station
@@ -500,7 +318,7 @@ monitoringBase
 Then the Charging Station SHALL send a
 setMonitoringBaseResponse with NotSupported.
 
-N03.FR.03 (^) N03.FR.01 AND
+N03.FR.03 N03.FR.01 AND
 When the Charging Station received a
 setMonitoringBaseRequest with _monitoringBase_
 All
@@ -513,7 +331,7 @@ Edition 3 FINAL, 2024-05-06 **N. Diagnostics**
 
 ID Precondition Requirement definition
 
-N03.FR.04 (^) N03.FR.01 AND
+N03.FR.04 N03.FR.01 AND
 When the Charging Station received a
 setMonitoringBaseRequest with _monitoringBase_
 FactoryDefault
@@ -521,7 +339,7 @@ Then the Charging Station SHALL delete all custom monitors
 (including overruled pre-configured monitors) and activate the
 default monitoring settings as recommended by the
 manufacturer.
-N03.FR.05 (^) N03.FR.01 AND
+N03.FR.05 N03.FR.01 AND
 When the Charging Station received a
 setMonitoringBaseRequest with _monitoringBase_
 HardWiredOnly
@@ -545,12 +363,12 @@ on Variables. Multiple triggers can be set for upper or lower thresholds, delta 
 reporting.
 Actors Charging Station, CSMS, CSO
 
-_Scenario description_ (^) **1.** The CSO triggers the CSMS to request a Charging Station to set a variable monitoring setting.
+_Scenario description_ **1.** The CSO triggers the CSMS to request a Charging Station to set a variable monitoring setting.
 
 **2.** The CSMS sends a SetVariableMonitoringRequest to the Charging Station.
 **3.** The Charging Station responds with a SetVariableMonitoringResponse.
 
-**5 Prerequisite(s)** (^) Charging Station supports Monitoring
+**5 Prerequisite(s)** Charging Station supports Monitoring
 The specific Variable supports Monitoring
 **6 Postcondition(s)** The Charging Station activated the set of monitoring triggers on the Variables.
 CSO
@@ -560,7 +378,7 @@ SetVariableMonitoringRequest(MonitoringData)
 SetVariableMonitoringResponse(setMonitoringResult)
 _Figure 134. Sequence Diagram: Set Variable Monitoring_
 **7 Error handling** n/a
-**8 Remark(s)** (^) All variableMonitoring settings are persistent across reboot.
+**8 Remark(s)** All variableMonitoring settings are persistent across reboot.
 A variableMonitoring setting is persistent after a firmware update, if the monitored variable still
 exists and it is still monitor-able. Otherwise the variableMonitoring setting is removed.
 **N04 - Set Variable Monitoring - Requirements**
@@ -754,7 +572,7 @@ More information can be
 provided in the optional
 statusInfo element.
 
-N04.FR.15 (^) N04.FR.12 AND
+N04.FR.15 N04.FR.12 AND
 The replaced VariableMonitor
 belonged to the
 'PreconfiguredMonitors'.
@@ -785,7 +603,7 @@ decimal or integer), since
 the monitor is triggered
 by every change of the
 Variable.
-N04.FR.18 (^) N04.FR.12 AND
+N04.FR.18 N04.FR.12 AND
 The _id_ in the
 SetVariableMonitoringRequest refers
 to a HardWiredMonitor
@@ -835,7 +653,7 @@ events, by setting a severity level limit.
 **6 Postcondition(s)** The Charging Station restricted the reporting of monitoring events by NotifyEventRequest to only
 those wanted by the user.
 
-===== CSO
+CSO
 
 
 CSMS Charging Station
@@ -1011,7 +829,7 @@ to the CSMS.
 
 **2.** The CSMS responds with a NotifyEventResponse.
 
-**5 Prerequisite(s)** (^) The Charging Station has active monitoring settings.
+**5 Prerequisite(s)** The Charging Station has active monitoring settings.
 The monitoring setting(s) might have been configured explicitly via a SetVariableMonitoring
 message or it might be "hard-wired" in the Charging Station’s firmware.
 **6 Postcondition(s)** The Charging Station notified the CSMS about the monitoring events.
@@ -1056,7 +874,7 @@ Edition 3 FINAL, 2024-05-06 **N. Diagnostics**
 
 ID Precondition Requirement definition Note
 
-N07.FR.04 (^) When a monitor is triggered AND
+N07.FR.04 When a monitor is triggered AND
 The severity number of the monitor is
 equal to or lower than the severity
 number set in the Configuration
@@ -1068,7 +886,7 @@ The Charging Station is _offline_
 The Charging Station SHALL queue this
 NotifyEventRequest and deliver it when it is back
 online.
-N07.FR.05 (^) When a monitor is triggered AND
+N07.FR.05 When a monitor is triggered AND
 another event caused this event
 The Charging Station MAY include the _eventId_ of
 the other event in the _cause_ field of the eventData
@@ -1078,7 +896,7 @@ SHALL contain the Component, Variable and
 _variableMonitoringId_ that caused the event.
 N07.FR.07 When a monitor is triggered The Charging Station SHALL set the _seqNo_ of the
 first NotifyEventRequest sent for this event to 0.
-N07.FR.10 (^) When a monitor is triggered AND
+N07.FR.10 When a monitor is triggered AND
 A variableMonitoring setting has been
 set on a write-only variable.
 The actualField of the NotifyEventRequest SHALL
@@ -1106,7 +924,7 @@ configured threshold.
 The Charging Station SHALL send a
 NotifyEventRequest with an eventData with the
 attribute _cleared_ is true.
-N07.FR.15 (^) When a monitor is triggered AND
+N07.FR.15 When a monitor is triggered AND
 The _severity_ of the monitor is greater
 than the monitoring severity level set
 in a SetMonitoringLevelRequest by the
@@ -1203,7 +1021,7 @@ periodic to the CSMS.
 
 **2.** The CSMS responds with a NotifyEventResponse.
 
-**5 Prerequisite(s)** (^) The Charging Station has active monitoring settings.
+**5 Prerequisite(s)** The Charging Station has active monitoring settings.
 The monitoring setting(s) might have been configured explicitly via a SetVariableMonitoring
 message or it might be "hard-wired" in the Charging Station’s firmware.
 **6 Postcondition(s)** The Charging Station notified the CSMS about the monitoring events.
@@ -1228,7 +1046,7 @@ _Table 229. N08 - Requirements_
 ID Precondition Requirement definition
 N08.FR.02 When the CSMS receives an NotifyEventRequest The CSMS SHALL respond with an empty NotifyEventResponse.
 
-N08.FR.03 (^) N08.FR.06 OR N08.FR.07
+N08.FR.03 N08.FR.06 OR N08.FR.07
 AND
 The severity number of the monitor is equal to
 or lower than the severity number set in the
@@ -1239,11 +1057,11 @@ AND
 The Charging Station is _offline_
 The Charging Station SHALL queue this NotifyEventRequest and
 deliver it when it is back online.
-N08.FR.04 (^) N08.FR.06 OR N08.FR.07 AND
+N08.FR.04 N08.FR.06 OR N08.FR.07 AND
 This NotifyEventRequest is the first or only
 report part.
 The Charging Station SHALL set _seqNo_ to 0.
-N08.FR.05 (^) N08.FR.06 OR N08.FR.07 AND
+N08.FR.05 N08.FR.06 OR N08.FR.07 AND
 When the variableMonitoring setting which
 triggered the event is either of type Periodic or
 PeriodicClockAligned
@@ -1363,7 +1181,7 @@ customer by including either an idToken,
 customerCertificate or customerIdentifier in the
 CustomerInformationRequest.
 
-N09.FR.05 (^) N09.FR.02 AND
+N09.FR.05 N09.FR.02 AND
 the Charging Station has information
 stored about the customer referred to
 by the customer identifier
@@ -1371,7 +1189,7 @@ The Charging Station SHALL send the requested
 information via one or more
 NotifyCustomerInformationRequest messages to
 the CSMS.
-N09.FR.06 (^) N09.FR.02 AND
+N09.FR.06 N09.FR.02 AND
 the Charging Station has no
 information stored about the
 customer referred to by the customer
@@ -1505,7 +1323,7 @@ To prevent problems with
 Local Authorization List
 versions.
 
-N10.FR.03 (^) N10.FR.01 AND
+N10.FR.03 N10.FR.01 AND
 receiving a
 CustomerInformationRequest with the
 clear flag set to _true_ and the report
@@ -1531,7 +1349,7 @@ Edition 3 FINAL, 2024-05-06 **N. Diagnostics**
 
 ID Precondition Requirement definition Note
 
-N10.FR.04 (^) N10.FR.01 AND
+N10.FR.04 N10.FR.01 AND
 receiving a
 CustomerInformationRequest with the
 clear flag set to _true_ and the report
@@ -1550,7 +1368,7 @@ request.
 The Charging Station SHALL respond with a
 CustomerInformationResponse with status
 _Rejected_
-N10.FR.06 (^) N10.FR.01 AND
+N10.FR.06 N10.FR.01 AND
 receiving a
 CustomerInformationRequest with the
 clear flag set to _true_ , the report flag

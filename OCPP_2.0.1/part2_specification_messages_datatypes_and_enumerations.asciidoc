@@ -779,9 +779,10 @@ Field Name Field Type Card. Description
 versionNumber integer 1..1 Required. This contains the current version number of the
 local authorization list in the Charging Station.
 
-==== 1.24. GetLog
+=== GetLog
 
-**1.24.1. GetLogRequest**
+[[get_log_request]]
+==== GetLogRequest
 
 This contains the field definition of the GetLogRequest PDU sent by the CSMS to the Charging Station.
 
@@ -804,7 +805,8 @@ attempts.
 log LogParametersType 1..1 Required. This field specifies the requested log and the
 location to which the log should be sent.
 
-**1.24.2. GetLogResponse**
+[[get_log_response]]
+==== GetLogResponse
 
 This contains the field definition of the GetLogResponse PDU sent by the Charging Station to the CSMS in response to a
 GetLogRequest.
@@ -820,12 +822,12 @@ be uploaded. This field is not present when no logging
 information is available.
 statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
-==== 1.25. GetMonitoringReport
+=== GetMonitoringReport
 
 Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
 
-
-**1.25.1. GetMonitoringReportRequest**
+[[get_monitoring_report_request]]
+==== GetMonitoringReportRequest
 
 This contains the field definition of the GetMonitoringReportRequest PDU sent by the CSMS to the Charging Station.
 
@@ -839,7 +841,8 @@ which a monitoring report is requested
 componentVariable ComponentVariableType 0..* Optional. This field specifies the components and
 variables for which a monitoring report is requested.
 
-**1.25.2. GetMonitoringReportResponse**
+[[get_monitoring_report_response]]
+==== GetMonitoringReportResponse
 
 This contains the field definition of the GetMonitoringReportResponse PDU sent by the Charging Station to the CSMS.
 
@@ -1013,7 +1016,8 @@ mandatory, unless the message was triggered by a
 TriggerMessageRequest AND there is no log upload
 ongoing.
 
-**1.31.2. LogStatusNotificationResponse**
+[[log_status_notification_response]]
+==== LogStatusNotificationResponse
 
 This contains the field definition of the LogStatusNotificationResponse PDU sent by the CSMS to the Charging Station in response
 to LogStatusNotificationRequest. No fields are defined.
@@ -1231,9 +1235,10 @@ Response to NotifyEventRequest. No fields are defined.
 Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
 
 
-=== 1.39. NotifyMonitoringReport
+=== NotifyMonitoringReport
 
-**1.39.1. NotifyMonitoringReportRequest**
+[[notify_monitoring_report_request]]
+==== NotifyMonitoringReportRequest
 
 This contains the field definition of the NotifyMonitoringRequest PDU sent by the Charging Station to the CSMS.
 
@@ -1254,7 +1259,8 @@ generated at the Charging Station.
 monitor MonitoringDataType 0..* Optional. List of MonitoringData containing monitoring
 settings.
 
-**1.39.2. NotifyMonitoringReportResponse**
+[[notify_monitoring_report_response]]
+==== NotifyMonitoringReportResponse
 
 Response to a NotifyMonitoringRequest message. No fields are defined.
 
@@ -4288,7 +4294,8 @@ Rejected Request has not been accepted and will not be executed.
 NotSupported The content of the request message is not supported.
 EmptyResultSet If the combination of received criteria result in an empty result set.
 
-=== 3.35. GenericStatusEnumType
+[[generic_status_enum_type]]
+=== GenericStatusEnumType
 
 _Enumeration_
 
