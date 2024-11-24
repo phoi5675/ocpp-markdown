@@ -1,0 +1,18 @@
+@startuml figure_135
+!include style.puml
+
+actor "CSO" as CSO
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+CSO -> CSMS : request to set a monitoring severity level
+
+CSMS -> ChargingStation: SetMonitoringLevelRequest(severity)
+activate CSMS
+activate ChargingStation
+
+ChargingStation --> CSMS: SetMonitoringLevelResponse(status)
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml
