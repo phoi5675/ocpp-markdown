@@ -1,0 +1,1328 @@
+[[authorization]]
+= C. Authorization
+:!chapter-number:
+
+<<<
+
+:sectnums:
+== Introduction
+
+이 기능 블록은 모든 인증 관련 기능을 설명하며, 사용자 인증을 위한 다양한 방법(온라인 및/또는 오프라인)과 AuthorizeRequest 메시지 처리/동작, 인증 캐시 기능 등을 포함합니다.
+
+사용자가 전기차를 충전기에서 분리하려고 할 때, 충전기는 사용자가 충전을 시작한 사람인지 또는 동일한 그룹에 속해 있어 충전을 종료할 수 있는 권한이 있는지를 확인해야 합니다. 권한이 확인되면, 충전기는 CSMS에 충전이 중지되었음을 알립니다.
+
+. 사용자 경험을 향상시키기 위해, 충전기는 <<authorization_cache,Authorization Cache>>를 사용하여 식별자의 로컬 인증을 지원할 수 있습니다.
+. <<local_authorize_offline,`LocalAuthorizeOffline`>>구성 변수는 충전기가 _오프라인 상태_ 에서 인증 캐시를 사용하여 사용자를 인증할지 여부를 결정합니다.
+. <<local_pre_authorize,`LocalPreAuthorize`>>구성 변수는 충전기가 CSMS와의 인증을 수행하지 않고 인증 캐시를 사용하여 충전을 시작할지 여부를 결정합니다.
+
+=== ID Tokens
+
+_이 섹션은 규범적입니다._
+
+OCPP는 이제 다양한 유형의 인증을 사용할 수 있게 되었습니다. OCPP 1.X는 RFID만 지원했지만, 이제 OCPP는 신용카드, PIN 코드, 즉시 시작 버튼등도 지원합니다.
+
+<<id_token_type,IDTokenType>>에는 인증에 사용할 식별자가 포함되어 있습니다. 이는 대/소문자를 구분하지 않는 문자열과 형식의 조합으로 정의됩니다. <<id_token_type,IDTokenType>> 클래스의 메시지 데이터 요소(GroupId 포함)는 CSMS에 의미 있는 모든 데이터(예: 충전 활동의 시작자를 식별하기 위한 목적)를 포함할 수 있으며(MAY) 충전기는 IdTokenType의 설명에 제공된 것 외에 이러한 데이터의 형식이나 내용에 대해 어떠한 추정도 해서는 안 됩니다(예: UID와 같은 값으로 가정하여 16진수 문자만 포함하거나 짝수 자릿수여야 한다고 가정하는 것). 로컬 토큰 판독기 하드웨어를 통해 획득한 IdToken 데이터는 일반적으로 물리적 IdToken의 (4, 7 또는 10바이트) UID 값으로, 일반적으로 8, 14 또는 20개의 16진수 문자로 표시됩니다.
+
+[cols="^.^1,10",%autowidth.stretch]
+|===
+s|NOTE |상호 운용성을 촉진하기 위하여 <<id_token_type,IdTokenType>> 데이터 유형이 <<id_token_enum_type,_ISO14443_>>인 경우 현재까지의 일반적인 관행에 따라, 이러한 UID를 UID바이트의 16진수 표현으로 나타내는것을 권장합니다. ISO 14443-3에 따르면 바이트 0은 16진수 문자열 가장 앞에 와야 합니다. (최상위 니블의 바이트에 0이 먼저)
+|===
+
+==== Additional Info
+
+AdditionalInfo는 _IdToken_ 을 사용한 일반적인 인증 외에도 CSMS에서 유효성을 검증될 수 있는 추가 정보를 전송하는데 사용될 수 있습니다.
+
+
+_AdditionalInfo_ 에는 관련된 모든 당사자가 동의해야하는 하나 이상의 사용자 지정 형식이 포함되어 있습니다. AdditionalInfo가 구현된다면 충전기는 일반 작동 중 _AdditionalInfo_ 를 캐싱하고 포함해야 하며 구성 변수 <<additional_info_items_permessage,`AdditionalInfoItemsPerMessage`>>를 설정해야 합니다. _AdditionalInfo_ 가 구현되지 않았거나, 지원하지 않는 _AdditionalInfo.type_ 가 사용될 경우, CSMS/충전기는 _AdditionalInfo_ 를 무시할 수(MAY) 있습니다.
+
+[[group_id_tokens]]
+=== Group ID Tokens
+
+_이 섹션은 규범적입니다_
+
+CSMS는 일련의 신원 토큰을 "그룹"으로 취급할 수 있는 기능을 가지고 있어, 그룹 내의 어떤 토큰이든 트랜잭션을 시작하고 동일한 토큰 또는 동일한 그룹 내의 다른 토큰이 트랜잭션을 종료할 수 있습니다. 이는 여러 운전자가 하나 이상의 공유 전기차를 단일 충전 계약 계정으로 사용하는 가족이나 비즈니스의 일반적인 유즈케이스를 지원합니다. "GroupId"로 사용되는 <<id_token_type,IdTokenTypes>>는 종종 계정의 첫 번째/주 RFID 카드의 UID 대신 GroupId를 위한 공유 중앙 계정 식별자를 사용할 수 있습니다.
+
+토큰(idTags)은 <<id_token_info_type,IdTokenInfo>>의 선택적 _groupIdToken_ 요소에 공통 그룹 식별자를 지정하여 인증 목적으로 그룹화됩니다. 두 개의 IdTokens이 GroupIdTokens가 일치하고 비어 있지 않은 경우 동일한 그룹에 속하는 것으로 간주됩니다.
+
+[cols="^.^1,10",%autowidth.stretch]
+|===
+s|참고 
+  |GroupId는 idToken과 동일한 명목 데이터 유형(<<id_token_type,IdTokenType>>)을 가지고 있지만, 이 요소의 값은 <<id_token_type,IdTokenTypes>>의 일반 형식에 있지 않거나 실제 유효한 <<id_token_type,IdTokenType>>을 나타내지 않을 수 있습니다(예: 공통 공유 "계정 번호"일 수 있음): 따라서 GroupId 값은 제시된 토큰 값과 비교하는 데 사용해서는 안 됩니다(동일한 값이 idToken 값으로 발생하지 않는 한).
+|===
+
+[[authorization_cache]]
+=== Authorization Cache
+
+충전기는 CSMS에서 성공적으로 승인된 이전에 제시된 식별자의 기록을 **자율적으로** 유지하는 인증 캐시를 구현할 수 있습니다. 인증 캐시는 충전기에서 인증 프로세스를 가속화하는 데 사용할 수 있습니다. 로컬에 저장된 캐시를 사용하면 사용자가 충전기가 CSMS에서 권한을 확인할 때까지 기다릴 필요가 없기 때문입니다. 인증 캐시가 있는 경우 작동은 <<auth_cache_enabled,`AuthCacheEnabled`>> 구성 변수에 의해 보고되고(가능한 경우 제어됨) 일반 인증 캐시 항목의 선택적 만료 시간은 구성 변수 <<auth_cache_lifetime,`AuthCacheLifeTime`>>에서 설정할 수 있습니다. 특정 항목에 대해 다른 만료 시간이 필요한 경우, 예를 들어 <<authorize_response,AuthorizeResponse>>의 iDTokenInfo에서 반환되는 cacheExpiryDateTime에서 이를 설정할 수 있습니다.
+
+인증 캐시 기능을 구현/사용하는 방법에 대한 자세한 내용은 유즈케이스 <<store_authorization_data_in_the_authorization_cache,C10 - 인증 캐시에 인증 데이터 저장>> 및 <<start_transaction_cached_id,C12 - 거래 시작 - 캐시된 ID>>를 참조하세요.
+
+충전기가 인증 캐시와 관세 정보를 모두 지원하는 경우(참조: <<tariff_cost_related,Tariff & Cost>>), 관세 정보를 인증 캐시에 저장해서는 안 됩니다. 이 정보가 오래될 수 있기 때문입니다. +
+충전기는 <<authorization_cache,Authorization Cache>> 항목으로 명시적으로 승인할 수 없는 진짜 사용자에게 충전하는 것을 거부하지 않기 위해 _오프라인_ 일 때  제시된 _모든_ 식별자의 승인을 지원할 수 있습니다. 이 기능은 <<unknown_offline_authorization,Unknown Offline Authorization>>에서 더 자세히 설명합니다. +
+인증 캐시의 개인 정보를 안전하게 저장하는 것을 권장합니다.(예: 캐시에 해시된 idToken만 저장).
+
+[[local_authorization_list]]
+=== Local Authorization List
+
+로컬 인증 목록은 CSMS와 동기화할 수 있는 식별자 목록입니다. 오프라인일 때 사용자를 승인하고 충전기와 CSMS 간의 통신이 느릴 때 (겉보기에) 승인 응답 시간을 더 빠르게 할 수 있습니다. CSMS는 로컬 인증 목록을 대체할 식별자의 전체 목록을 보내거나 로컬 인증 목록에 적용할 변경 사항(추가, 업데이트, 삭제) 목록을 보내 목록을 동기화할 수 있습니다. 이를 지원하는 작업은 <<get_local_list_version,GetLocalListVersion>> 및 <<send_local_list,SendLocalList>>입니다.
+
+이 목록에는 모든(또는 일부) 식별자의 인증 상태와 _cacheExpiryDateTime_ 의 해당 만료 날짜가 포함되어 있습니다. 이러한 값은 로컬 인증 중에 사용자에게 보다 세부적인 정보를 제공하는 데 사용될 수 있습니다(예: 표시 메시지).
+
+로컬 인증 목록 기능을 구현/사용하는 방법에 대한 자세한 내용은 <<send_local_authorization_list,D01 - 로컬 인증 목록 보내기>>, <<offline_authorization_through_local_authorization_list,C13 - 로컬 인증 목록을 통한 오프라인 인증>> 및 <<online_authorization_through_local_authorization_list,C14 - 로컬 인증 목록을 통한 온라인 인증>> 유즈케이스를 참조하세요.
+
+[cols="^.^1,10",%autowidth.stretch]
+|===
+s|참고|<<authorization_cache,Authorization Cache>>와 <<local_authorization_list,Local Authorization List>> 메커니즘의 차이점에 유의하세요. <<authorization_cache,Authorization Cache>>는 충전기에서 자율적인 메커니즘인 반면, <<local_authorization_list,Local Authorization List>>는 CSMS와 충전기(CSMS에서 시작) 간에 동기화되는 목록입니다.
+|===
+
+[cols="^.^1,10",%autowidth.stretch]
+|===
+s|참고|<<authorization_cache,Authorization Cache>>와 <<local_authorization_list,Local Authorization List>>는 *별개의* 논리적 데이터 구조입니다. <<authorization_cache,Authorization Cache>>와 <<local_authorization_list,Local Authorization List>>가 모두 지원되는 경우 충전기는 <<local_authorization_list,Local Authorization List>> 항목을 <<authorization_cache,Authorization Cache>> 항목보다 우선시해야 합니다.
+|===
+
+다음 구성 변수는 충전기에서 로컬 인증 목록에 대한 정보를 제공하는 데 사용됩니다.
+
+- <<local_auth_list_entries,`LocalAuthListEntries`>> (로컬 인증 목록에 있는 최대 IdToken 수를 보고합니다)
+- <<local_auth_list_enabled,`LocalAuthListEnabled`>>
+- <<local_auth_list_available,`LocalAuthListAvailable`>>
+- <<items_per_message_send_local_list,`ItemsPerMessageSendLocalList`>>
+- <<bytes_per_message_send_local_list,`BytesPerMessageSendLocalList`>>
+
+[[unknown_offline_authorization]]
+=== Unknown Offline Authorization
+
+_오프라인_ 일 때 충전기는 <<local_authorization_list,Local Authorization List>> 및/또는 <<authorization_cache,Authorization Cache>>에서 찾을 수 없는 "알 수 없는" 식별자의 자동 인증을 허용할 수 있습니다.알 수 없는 오프라인 인증 기능이 지원되는 경우 작동은 <<offline_tx_for_unknown_id_enabled,`OfflineTxForUnknownIdEnabled`>> 구성 변수에 의해 보고되고 가능한 경우 제어됩니다. CSMS에 대한 연결이 복구되면 충전기는 대기 중인 <<transaction_event_request,TransactionEventRequest>> 메시지를 보내야 합니다. 여기에는 <<delivering_transaction_related_messages,transaction-related message handling>>에서 설명한 대로 _오프라인_ 에서 승인된 충전이 포함될 수 있습니다. 이 상황에서 충전기가 거래를 계속하거나 중지해야 하는 옵션은 <<offline_authorization_of_unknown_id,C15 - 알 수 없는 오프라인 인증>>를 참조하세요.
+
+<<<
+
+== Use cases & Requirements
+
+=== Authorization options
+
+:sectnums!:
+[[ev_driver_authorization_using_rfid]]
+=== C01 - EV Driver Authorization using RFID
+
+.C01 - EV Driver Authorization using RFID
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|번호 |유형 |설명
+
+|1 |이름 |RFID를 사용한 EV 운전자 인증
+|2 |ID |C01
+|{nbsp} d|_기능 블록_ |C. 인증
+|3 |목표 |충전기가 CSMS에 EV 운전자에게 충전을 시작하거나 중지하도록 권한을 부여하도록 요청해야 합니다.
+|4 |설명 |충전기가 EV를 충전해야 하는 경우 충전을 시작하거나 중지하기 전에 먼저 EV 운전자에게 권한을 부여해야 합니다.
+|{nbsp} d|_Actors_ |충전기, CSMS, EV 운전자
+|{nbsp} d|_시나리오 설명_
+|**1.** EV 운전자가 EV 충전을 시작하거나 중지하고 싶어하며 RFID 카드를 제시합니다. +
+**2.** 충전기가 <<authorize_request,AuthorizeRequest>>를 CSMS로 보내 인증을 요청합니다.
+**3.** <<authorize_request,AuthorizeRequest>>를 수신하면 CSMS가 <<authorize_response,AuthorizeResponse>>로 응답합니다. 이 응답 메시지는 IdToken이 CSMS에서 수락되는지 여부를 나타냅니다.
+|{nbsp} d|_대체 시나리오_
+|<<authorization_using_a_start_button, C02 - 시작 버튼을 사용한 인증>> +
+<<authorization_using_credit_debit_card, C03 - 신용/직불 카드를 사용한 인증>> +
+<<authorization_using_pin_code, C04 - PIN 코드를 사용한 인증>> +
+<<authorization_for_csms_initiated_transactions, C05 - CSMS에서 시작한 거래에 대한 인증>> +
+<<authorization_using_local_id_type, C06 - 로컬 ID 타입을 사용한 인증>> +
+<<authorization_using_contract_certificates, C07 - 계약 인증서를 사용한 인증>> +
+<<authorization_at_evse_using_iso_15118_external_identification_means_eim, C08 - ISO 15118 외부를 사용한 EVSE에서의 인증 식별 수단(EIM)>> +
+<<offline_authorization_of_unknown_id,C15 - 알 수 없는 오프라인 인증>>
+|5 |필수 조건 |해당 없음
+|6 |사후 조건
+|**성공 사후 조건:** +
+EV 운전자가 인증되었으며 충전을 시작하거나 중지할 수 있습니다.
+
+**실패 사후 조건:** +
+인증 메시지가 _Invalid_, _Blocked_, _Expired_ 또는 _Unknown_ 인 경우 EV 운전자는 충전을 시작하거나 중지할 수 없습니다. 단, EV 운전자가 충전을 시작하는 데 사용된 것과 동일한 토큰을 제시하는 경우는 예외입니다.
+|===
+
+.Sequence Diagram: EV Driver Authorization
+image::part2/images/figure_21.svg[Sequence Diagram: EV Driver Authorization]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7 |오류 처리 |인증이 '승인됨'이 아닌 경우 <<authorize_response,AuthorizeResponse>>에는 거부 이유를 나타내는 인증 상태 값이 포함됩니다.
+|8 |비고 |충전에 idToken이 유효하고 충전기에 EVSE가 3개 있다고 가정할 때 idToken이 충전을 허용할 때 _idTokenInfo_의 내용은 무엇입니까? +
+. EVES에서: _idTokenInfo.status_ = 승인됨. +
+. EVSE 1에서: _idTokenInfo.status_ = 승인됨, _idTokenInfo.evseId_ = [ 1 ]. +
+. EVSE 1 + 2에서: _idTokenInfo.status_ = Accepted, _idTokenInfo.evseId_ = [ 1, 2 ]. +
+. EVSE 중 어느 것도 아님: _idTokenInfo.status=NotAtThisLocation.
+|===
+
+<<<
+
+==== C01 - EV Driver Authorization using RFID - Requirements
+
+.C01 - 요구 사항
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID |전제 조건 |요구 사항 정의 |참고
+
+|C01.FR.01 |구성 설정 <<auth_enabled,AuthEnabled>>가 참입니다.
+|충전기는 인증 후에만 에너지를 제공해야 합니다. |{nbsp}
+|C01.FR.02 |EV 운전자가 제시한 <<id_token_type,idToken>>이 <<local_authorization_list,Local Authorization List>> 또는 <<authorization_cache,Authorization Cache>>에 없는 경우
+|충전기는 CSMS에 <<authorize_request,AuthorizeRequest>>를 보내 승인을 요청해야 합니다. |{nbsp}
+|C01.FR.03 |<<id_token_type,idToken>>이 인증된 충전 중에 제시될 때 +
+AND
+(a) 제시된 <<id_token_type,idToken>>이 인증을 시작한 <<id_token_type,idToken>>과 동일한 경우 +
+OR +
+(b) 제시된 <<id_token_type,idToken>>이 로컬 인증 목록 또는 인증 캐시에 있고 유효하며 인증을 시작한 IdToken과 동일한 GroupIdToken을 갖는 경우.
+|충전소는 <<authorize_request,AuthorizeRequest>>를 먼저 보내지 않고 충전 종료를 승인해야 합니다.
+|인증을 시작한 <<id_token_type,idToken>>은 항상 인증을 종료하는 데 사용할 수 있습니다. 종료 승인을 하면 충전이 종료됩니다. TxStopPoint에 따라 종료 인증을하면 충전이 종료될 수도 있습니다.
+|C01.FR.04 |{nbsp} |<<authorize_request,AuthorizeRequest>>는 식별자의
+인증에만 사용해야 합니다. |{nbsp}
+|C01.FR.05 |<<local_authorization_list,Local Authorization List>> 또는 <<authorization_cache,Authorization Cache>>에 IdToken이 있는 경우.
+|충전기는 <<authorize_request,AuthorizeRequest>>를 CSMS로 보낼 수 있습니다.(MAY) |{nbsp}
+|C01.FR.06 |CSMS가 _idToken_ 에 대한 <<authorize_request,AuthorizeRequest>>를 수신하고 +
+idToken에 연관된 <<id_token_info_type,groupIdToken>>이 있는 경우.|CSMS에서 충전기로 보낸 <<authorize_response,AuthorizeResponse>>에는 <<id_token_info_type,groupIdToken>>이 포함될 수 있습니다. |{nbsp}
+|C01.FR.07 |{nbsp} |<<authorize_response,AuthorizeResponse>>에는 승인 또는 거부 이유를 나타내는 인증 상태 값이 포함되어야 합니다.
+|거부 가능한 이유는 <<authorization_status_enum_type,AuthorizationStatusEnumType>>을 참조하세요.
+|C01.FR.08 |필드 <<id_token_info_type,language1>>이 설정되어 있고 충전기에 해당 _언어_ 로 된 메시지가 있는 경우.
+|충전기는 사용자에게 *언어1* 로 메시지를 표시해야 합니다. |{nbsp}
+|C01.FR.09 |필드 <<id_token_info_type,language1>>이 설정되어 있고 충전기에 해당 언어로 된 메시지가 없고 필드 <<id_token_info_type,language2>>가 설정되어 있고 충전기에 해당 _언어_ 로 된 메시지가 있는 경우
+|충전기는 사용자에게 *언어2* 로 메시지를 표시해야 합니다. |{nbsp}
+|C01.FR.10 |필드 <<id_token_info_type,language1>>이 설정되어 있지 않은 경우
+|필드 <<id_token_info_type,language2>>는 설정되지 않아야 합니다. |{nbsp}
+|C01.FR.11 |{nbsp} |필드 <<id_token_info_type,language1>>은 필드 <<id_token_info_type,language2>>와 달라야 합니다. |{nbsp}
+|C01.FR.12 |{nbsp} |대체로 *영어* 로 메시지를 구현하는 것을 권장합니다. |{nbsp}
+|C01.FR.13 |<<id_token_info_type,language1>>과 <<id_token_info_type,language2>>가 충전기에 설치된 언어와 일치하지 않는 경우
+|EV 운전자에게 *영어* 로 메시지를 표시하는 것을 권장합니다. |{nbsp}
+|C01.FR.17 |{nbsp} |언어는 RFC-4646 태그로 지정해야 합니다. 참조: <<rfc5646,[RFC5646]>>, 예: 미국 영어는 "en-US"입니다. |{nbsp}
+|C01.FR.18 |IdToken이 유효하고 +
+EV 운전자가 이 충전기에서 제공하는 EVSE 유형에서 충전할 수 없는 경우.
+|CSMS는 idTokenInfo.status _NotAllowedTypeEVSE_ 를 사용하여 AuthorizeResponse를 보내야 합니다. |{nbsp}
+|C01.FR.19 |_idToken_ 은 충전기의 모든 EVSE에서 허용 경우.
+|CSMS는 _idTokenInfo_에 빈(또는 없는) _evseId_ 목록이 있는 AuthorizeResponse를 보내야 합니다.
+|가장 일반적인 경우입니다. _idToken_ 은 모든 EVSE에서 ​​허용될 수 있지만 여전히 충전이 허용되기 전에 _idTokenInfo.status_가 `Accepted`여야 합니다.
+|C01.FR.20 |_idToken_ 이 충전기의 EVSE 하위 집합에서 허용될 경우.
+|CSMS는 _IdTokenInfo_ 에 허용된 EVSE가 있는 _evseId_ 목록이 있는 AuthorizeResponse를 보내야 합니다.
+|_idToken_의 유효성과 이 (유형의) 토큰이 EVSE에서 ​​허용되는지 여부의 차이에 유의하십시오. 충전이 허용되기 전에 _idTokenInfo.status_가 여전히 `Accepted`여야 합니다.
+|C01.FR.21 |C01.FR.20 |충전기는 AuthorizeResponse에 언급된 EVSE에서만 충전을 허용해야 합니다. |{nbsp}
+|C01.FR.22 |_idToken_ 은 충전기의 어떤 EVSE에도 허용되지 않습니다.
+|CSMS는 _idTokenInfo.status_ 가 `NotAtThisLocation`이고 evseId 목록이 비어 있거나 없는(또는 없는) AuthorizeResponse를 보내야 합니다.
+|_idToken_ 이 모든 EVSE에서 ​​허용되는 상황과 구별하기 위해 `NotAtThisLocation` 상태가 필요합니다.
+|C01.FR.23 |충전이 아직 활성화되어 있고, 이전에 <<id_token_type,idToken>>에 의해 승인되었지만, 이제는 더 이상 충전이 승인되지 않고, 새로운 <<id_token_type,idToken>>이 승인을 위해 충전기에 제시되었으며, 이는 초기 <<id_token_type,idToken>>과 *다를경우*
+|충전기는 다른 <<id_token_type,idToken>>의 인증을 허용해서는 안 됩니다.
+|충전에 대한 여러 _idToken_ 은 CSMS에서 지원되지 않을 가능성이 큽니다.
+|C01.FR.24 |충전이 아직 활성화되어 있고, 이전에 <<id_token_type,idToken>>에 의해 승인되었지만, 이제는 더 이상 충전이 승인되지 않았고 충전기에서 거래의 초기 <<id_token_type,idToken>>과 *다른* 새 <<id_token_type,idToken>>에 대한 <<authorize_request,AuthorizeRequest>>를 보내는 경우
+|CSMS는 이 <<id_token_type,idToken>>에 대해 _idTokenInfo.status_ = `NotAtThisTime`인 <<authorize_response,AuthorizeResponse>>로 응답하는 것을 권장합니다.
+|충전기에서 두 번째 인증을 하는 경우 CSMS는 _idToken_ 을 거부할 수 있습니다.
+|===
+<<<
+// TODO
+[[authorization_using_a_start_button]]
+=== C02 - 시작 버튼을 사용한 인증
+
+.C02 - 시작 버튼을 사용한 인증
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|번호 |유형 |설명
+
+|1 |이름 |시작 버튼을 사용한 인증
+|2 |ID |C02
+|{nbsp} d|_기능 블록_ |C. 인증
+|3 |목표 |시작 버튼이 있는 충전기가 충전을 시작할 수 있도록 합니다.
+|4 |설명 |일부 충전기의 경우 사용자 인증이 필요하지 않을 수 있습니다. 간단한 충전기에는 충전을 시작하기 위해 더 비싼 RFID 리더 대신 버튼이 있을 수 있습니다. 이러한 충전기가 충전을 시작하면 <<authorize_request,AuthorizeRequest>>를 보낼 필요가 없습니다. <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Started>>)에서 <<id_token_type,IdTokenType>> 정보를 제공해야 하며, CSMS는 이를 거부할 수 없습니다.
+|{nbsp} d|_Actors_ |EV 운전자, 충전기, CSMS
+|{nbsp} d|_시나리오 설명_
+|**1.** EV 운전자가 EV와 충전기 사이에 충전 케이블을 꽂습니다. +
+**2.** 충전기가 <<status_notification_request,StatusNotificationRequest>>와 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Started>>)를 보내 케이블이 꽂혔다는 사실을 CSMS에 알립니다. +
+**3.** EV 운전자가 시작 버튼을 눌러 충전을 시작합니다. +
+**4.** 충전기가 EV 충전을 시작합니다. +
+**5.** 충전기가 <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>) 메시지를 <<id_token_enum_type,IdTokenEnumType: _NoAuthorization_>>과 함께 CSMS에 보내 충전이 시작되었음을 알립니다. +
+**6.** <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>)를 수신하면 CSMS는 <<transaction_event_response,TransactionEventResponse>>로 응답합니다. IdTokenInfo.status가 _Accepted_로 설정됨
+|{nbsp} d|_대체 시나리오(들)_
+|<<ev_driver_authorization_using_rfid,C01 - RFID를 사용한 EV 운전자 인증>> +
+<<authorization_using_credit_debit_card,C03 - 신용/직불 카드를 사용한 인증>> +
+<<authorization_using_pin_code,C04 - PIN 코드를 사용한 인증>> +
+<<authorization_for_csms_initiated_transactions,C05 - CSMS에서 시작한 거래에 대한 인증>> +
+<<authorization_using_local_id_type,C06 - 로컬 ID 유형을 사용한 승인>> +
+<<authorization_using_contract_certificates,C07 - 계약 인증서를 사용한 승인>> +
+<<authorization_at_evse_using_iso_15118_external_identification_means_eim,C08 - ISO 15118 외부 식별 수단(EIM)을 사용한 EVSE 승인>> +
+<<offline_authorization_of_unknown_id,C15 - 알 수 없는 오프라인 승인>>
+|5 |필수 조건 |충전기에는 RFID 리더 대신 EV 충전을 시작할 수 있는 시작 버튼이 있습니다.
+|6 |사후 조건 |충전기에서 거래가 진행 중이며 CSMS에서 거래를 인식합니다.
+|===
+
+.시퀀스 다이어그램: 시작 버튼을 사용한 인증
+image::part2/images/figure_22.svg[시퀀스 다이어그램: 시작 버튼을 사용한 인증]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7 |오류 처리 |n/a
+|8 |주의 |시작 버튼은 기계식 키 또는 이와 유사한 것일 수도 있습니다.
+
+충전 스테이션이 케이블 연결 시 충전을 시작하도록 구성된 경우 시작 버튼을 생략할 수도 있습니다.
+
+위의 시나리오 설명과 시퀀스 다이어그램은 시작 트랜잭션을 위한 구성 변수가 다음과 같이 구성되는 것을 기반으로 합니다. +
+<<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,EVConnected, Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
+이 유즈케이스는 다른 구성에도 유효하지만 트랜잭션이 다른 순간에 시작/중지될 수 있으며, 이는 메시지가 전송되는 순서를 변경할 수 있습니다. 자세한 내용은 유즈케이스를 참조하세요. <<e01_start_transaction_options,E01 - Start Transaction options>>.
+|===
+
+==== C02 - Authorization using a start button - Requirements
+
+.C02 - Authorization using a start button - Requirements
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID |전제 조건 |요구 사항 정의
+
+|C02.FR.01 |버튼으로 거래가 시작될 때.
+|충전기는 <<id_token_type,IdTokenType>> 유형: <<id_token_enum_type,NoAuthorization>> 및 필드: idToken이 비어 있는(빈 문자열) <<transaction_event_request,TransactionEventRequest>>를 보내야 합니다.
+|C02.FR.02 |CSMS는 <<id_token_type,IdTokenType>> 유형 <<id_token_enum_type,NoAuthorization>>을 갖는 <<transaction_event_request,TransactionEventRequest>>를 수신합니다.
+|CSMS는 IdTokenInfo.status가 <<authorization_status_enum_type,Accepted>>로 설정된 <<transaction_event_response,TransactionEventResponse>>로 응답해야 합니다.
+|C02.FR.03 |충전기가 인증 캐시를 구현했고 충전기가 모든 메시지에서 <<id_token_type,IdTokenType>> 유형 <<id_token_enum_type,NoAuthorization>>에 대한 <<id_token_info_type,IdTokenInfo>>를 수신하는 경우
+|충전기는 인증 캐시에 정보를 저장해서는 안 됩니다.
+|===
+
+[[authorization_using_credit_debit_card]]
+=== C03 - 신용/직불 카드를 사용한 승인
+
+.C03 - 신용/직불 카드를 사용한 승인
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|번호 |유형 |설명
+
+|1 |이름 |신용 카드를 사용한 승인
+|2 |ID |C03
+|{nbsp} d|_기능 블록_ |C. 승인
+|3 |목표 |신용 카드를 사용하여 거래를 시작할 수 있도록 합니다.
+|4 |설명 |하우징 내부에 신용/직불 카드 단말기가 내장된 충전기 또는 중앙 결제 단말기/키오스크가 있는 충전기 그룹에 속하는 충전기. EV 운전자가 카드를 사용하여 충전 비용을 지불합니다. 거래는 결제 회사에서 승인되고, CSMS는 결제 시스템으로부터 메시지를 받고, <<request_start_transaction_request,RequestStartTransactionRequest>>를 충전기로 보내 거래를 시작합니다.
+|{nbsp} d|_Actors_ |EV 운전자, 결제 시스템, CSMS, 충전기
+|{nbsp} d|_시나리오 설명_
+|**1.** EV 운전자가 충전 케이블을 꽂습니다. +
+**2.** 충전기가 <<status_notification_request,StatusNotificationRequest>>와 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Started>>)를 보내 케이블이 꽂혔다는 것을 CSMS에 알립니다. +
+**3.** 운전자가 신용/직불 카드 단말기를 사용하여 충전을 승인/지불합니다. +
+**4.** 단말기가 자체 서버/백오피스와 통신합니다. +
+**5.** 결제 시스템이 CSMS에 사용자 권한을 부여하는 메시지를 보냅니다. +
+**6.** CSMS가 이 거래에 대한 IdToken으로 사용할 고유한 ID를 생성합니다. +
+**7.** CSMS가 생성된 IdToken과 함께 <<request_start_transaction_request,RequestStartTransactionRequest>>를 충전기로 보냅니다. +
+**8.** 충전기는 <<request_start_transaction_response,RequestStartTransactionResponse>>를 <<request_start_stop_status_enum_type,Accepted>>와 함께 보내 <<request_start_transaction_request,RequestStartTransactionRequest>>를 수락합니다. +
+**9.** 충전기가 EV 충전을 시작합니다. +
+**10.** 충전기는 <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>)를 보내 CSMS에 충전이 시작되었음을 알립니다.
+|{nbsp} d|_대체 시나리오_
+|<<ev_driver_authorization_using_rfid,C01 - RFID를 사용한 EV 운전자 인증>> +
+<<authorization_using_a_start_button,C02 - 시작 버튼을 사용한 인증>> +
+<<authorization_using_pin_code,C04 - PIN 코드를 사용한 인증>> +
+<<authorization_for_csms_initiated_transactions,C05 - CSMS에서 시작한 거래에 대한 인증>> +
+<<authorization_using_local_id_type,C06 - 로컬 ID 유형을 사용한 인증>> +
+<<authorization_using_contract_certificates,C07 - 계약 인증서를 사용한 인증>> +
+<<authorization_at_evse_using_iso_15118_external_identification_means_eim,C08 - ISO 15118 외부 식별을 사용한 EVSE에서의 인증 수단(EIM)>> +
+<<offline_authorization_of_unknown_id,C15 - 알 수 없는 오프라인 승인>>
+|5 |필수 조건 |충전기에 신용/직불 카드 단말기가 있거나, 중앙 결제 단말기가 있는 충전기 그룹에 속해야 합니다.
+전기 자동차 충전을 시작합니다.
+|6 |사후 조건 |충전기에서 진행 중인 거래
+|===
+
+.시퀀스 다이어그램: 신용/직불 카드를 사용한 승인
+image::part2/images/figure_23.svg[시퀀스 다이어그램: 신용/직불 카드를 사용한 승인]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7 |오류 처리 |n/a
+|8 |설명 |이 유즈케이스는 기존 OCPP 메시지를 사용하여 신용/직불 카드로 시작된 거래를 처리하는 방법의 예이며, 이런 방식으로 신용/직불 카드 결제 솔루션을 구현할 필요는 없습니다.
+
+결제 시스템은 사용자 승인을 처리하는 여러 구성 요소로 구성될 수 있습니다. 이러한 구성 요소의 인터페이스와 결제 시스템과 CSMS 간의 통신은 이 문서의 범위에 포함되지 않습니다.
+
+신용/직불 카드로 시작된 거래를 중단하는 것은 정의되지 않았으며, 이는 구현자에게 맡겨져 있으며, 예를 들어 EV 측의 케이블 분리 및/또는 정지 버튼 등이 될 수 있습니다.
+
+위의 시나리오 설명과 시퀀스 다이어그램은 시작 거래를 위한 구성 변수가 다음과 같이 구성된 것을 기반으로 합니다. +
+<<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,EVConnected, Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
+이 유즈케이스는 다른 구성에도 유효하지만, 그러면 거래가 다른 순간에 시작/중지될 수 있으며, 이는 메시지를 보내는 순서를 변경할 수 있습니다. 자세한 내용은 유즈케이스 <<e01_start_transaction_options,E01 - Start Transaction options>>를 참조하세요.
+|===
+
+==== C03 - 신용/직불 카드를 사용한 승인 - 요구 사항
+
+.C03 - 신용/직불 카드를 사용한 승인 - 요구 사항
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID |전제 조건 |요구 사항 정의
+
+|C03.FR.01 |충전기가 <<id_token_type,IdTokenType>> 유형 <<id_token_enum_type,Central>>을 가진 <<request_start_transaction_request,RequestStartTransactionRequest>>를 수신하는 경우
+|충전기는 수신된 <<id_token_type,IdTokenType>>에 대해 <<authorize_request,AuthorizeRequest>>를 보내서는 안 됩니다.
+|C03.FR.02 |충전기가 인증 캐시를 구현했고 충전기가
+모든 메시지에서 <<id_token_info_type,IdTokenInfo>>를 <<id_token_enum_type,Central>> 유형의 <<id_token_type,IdTokenType>>에 대해 수신하는 경우
+|충전기는 권한을 부여하는 캐시에 정보를 저장해서는 안 됩니다.
+|===
+
+<<<
+
+[[authorization_using_pin_code]]
+=== C04 - PIN 코드를 사용한 인증
+
+이것은 정보적인 유즈케이스이며, <<id_token_enum_type,KeyCode>> ID 유형의 사용을 보여주는 것이 목적입니다. <<id_token_enum_type,KeyCode>>의 다른 유즈케이스는 예를 들어 차량 번호판입니다.
+
+.C04 - PIN 코드를 사용한 승인
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|번호 |유형 |설명
+
+|1 |이름 |PIN 코드를 사용한 승인
+|2 |ID |C04
+|{nbsp} d|_기능 블록_ |C. 승인
+|3 |목표 |키 입력 단말기가 있는 충전기에서 PIN 코드를 승인할 수 있도록 합니다.
+|4 |설명 |충전기에 PIN 코드 입력 단말기가 있는 경우 EV 운전자는 PIN 코드를 입력합니다. 이 PIN 코드는 <<authorize_request,AuthorizeRequest>>를 사용하여 검증을 위해 CSMS로 전송됩니다.
+|{nbsp} d|_Actors_ |EV 운전자, 충전기, CSMS
+|{nbsp} d|_시나리오 설명_
+|**1.** EV 운전자가 EV 충전을 시작하거나 중지하고 싶어서 단말기에 PIN 코드를 입력합니다. +
+**2.** 충전기가 <<authorize_request,AuthorizeRequest>> 메시지를 CSMS로 전송합니다. 이 메시지의 필드는 <<id_token_enum_type,IdTokenEnumType>>이며, <<id_token_enum_type,_KeyCode_>>로 설정되어 승인을 요청합니다. +
+**3.** <<authorize_request,AuthorizeRequest>>를 수신하면 CSMS가 <<authorize_response,AuthorizeResponse>>로 응답합니다. 이 응답은 CSMS가 KeyCode를 수락하는지 여부를 나타냅니다.
+|{nbsp} d|_대체 시나리오_
+|<<ev_driver_authorization_using_rfid,C01 - RFID를 사용한 EV 운전자 인증>> +
+<<authorization_using_a_start_button,C02 - 시작 버튼을 사용한 인증>> +
+<<authorization_using_credit_debit_card,C03 - 신용/직불 카드를 사용한 인증>> +
+<<authorization_for_csms_initiated_transactions,C05 - CSMS에서 시작한 거래에 대한 인증>> +
+<<authorization_using_local_id_type,C06 - 로컬 ID 유형을 사용한 인증>> +
+<<authorization_using_contract_certificates,C07 - 계약 인증서를 사용한 인증>> +
+<<authorization_at_evse_using_iso_15118_external_identification_means_eim,C08 - ISO를 사용한 EVSE에서의 인증 15118 외부 식별 수단(EIM)>> +
+<<offline_authorization_of_unknown_id,C15 - 알 수 없는 오프라인 승인>>
+|5 |필수 조건 |충전기에 EV 충전을 시작하기 위한 PIN 코드 입력 단말기가 있어야 합니다.
+|6 |사후 조건(들) ​​|충전기에서 거래가 진행 중이며 CSMS가 거래를 인식하고 있습니다.
+|===
+
+.시퀀스 다이어그램: PIN 코드를 사용한 인증
+image::part2/images/figure_24.svg[시퀀스 다이어그램: PIN 코드를 사용한 인증]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7 |오류 처리 |해당 없음
+|8 |주의 |CSMS 대신 충전기에서 PIN 코드가 검증되면 유즈케이스 <<authorization_using_a_start_button,C02 - 시작 버튼을 사용한 인증>>이 적용됩니다.
+|===
+
+==== C04 - PIN 코드를 사용한 승인 - 요구 사항
+
+.C04 - PIN 코드를 사용한 승인 - 요구 사항
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID |전제 조건 |요구 사항 정의
+
+|C04.FR.01 |CSMS가 이 충전기에서 유효하지 않은 키 코드가 포함된 <<authorize_request,AuthorizeRequest>>를 수신하는 경우
+|CSMS는 <<id_token_info_type,status>> = <<authorization_status_enum_type,Invalid>>인 <<authorize_response,AuthorizeResponse>> 메시지로 응답해야 합니다.
+|C04.FR.02 |CSMS가 유효한 키 코드가 포함된 <<authorize_request,AuthorizeRequest>>를 수신하고 EV 운전자가 이 충전기에서 충전할 수 있는 경우
+|CSMS는 <<authorize_response,AuthorizeResponse>> 메시지로 <<id_token_info_type,status>> = <<authorization_status_enum_type,Accepted>>로 응답해야 합니다.
+|C04.FR.03 |{nbsp} |충전기는 키 코드를 인증 캐시에 저장할 수 있습니다.
+|C04.FR.04 |키 코드 유형의 idToken이 사용되는 경우
+|충전기 또는 CSMS는 어떠한 로깅에도 IdToken을 표시해서는 안 됩니다. 키 코드는 로그에 나타나지 않아야 합니다.
+|C04.FR.05 |{nbsp} |언어는 RFC-5646 태그로 지정해야 합니다. <<rfc5646,[RFC5646]>> 참조, 예를 들어 미국 영어는 "en-US"입니다.
+|C04.FR.06 |keyCode 유형의 idToken을 사용하는 경우
+|무차별 대입 공격을 방지하기 위한 조치를 취하는 것이 좋습니다. 예를 들어 잘못된 keyCode를 입력하려고 시도한 후 백오프 시간을 늘리는 것이 좋습니다.
+|===
+
+<<<
+
+[[authorization_for_csms_initiated_transactions]]
+=== C05 - CSMS에서 시작한 거래에 대한 인증
+
+.C05 - CSMS에서 시작한 거래에 대한 인증
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|아니요. |유형 |설명
+
+|1 |이름 |CSMS에서 시작된 거래에 대한 인증
+|2 |ID |C05
+|{nbsp} d|_기능 블록_ |C. 인증
+|3 |목표 |CSMS가 서버에서 생성한 IdToken으로 충전기에서 거래를 시작할 수 있도록 합니다.
+|4 |설명 |CSMS가 RFID가 없는 운전자를 위해 충전기에서 거래를 시작해야 하거나 RFID를 알 수 없는 경우입니다. 예를 들어, EV 운전자가 앱을 사용하여 거래를 시작합니다. CSMS는 IdToken을 확인하고 충전기에 이것이 RFID가 아니므로 캐시되지 않아야 하며 인증도 필요하지 않습니다.
+|{nbsp} d|_행위자_ |EV 운전자, CSMS, 충전기
+|{nbsp} d|_시나리오 설명_
+|**1.** EV 운전자가 앱을 사용하여 충전을 시작합니다. +
+**2.** 앱이 CSMS에 시작 요청을 보냅니다. +
+**3.** CSMS는 IdToken을 결정합니다. 이 거래에 대한 IdToken으로 사용할 고유한 ID를 생성하거나 앱에서 제공하는 토큰(예: 사용자 계약의 ID)을 사용할 수 있습니다. +
+**4.** CSMS는 이전 단계의 IdToken과 함께 <<request_start_transaction_request,RequestStartTransactionRequest>>를 충전기로 보냅니다. +
+**5.** 충전기는 <<request_start_transaction_response,RequestStartTransactionResponse>>를 <<request_start_stop_status_enum_type,Accepted>>와 함께 보내 <<request_start_transaction_request,RequestStartTransactionRequest>>를 수락합니다. +
+**6.** 충전기는 충전을 시작하고 <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>)를 보내 CSMS에 _chargingState_가 변경되었음을 알립니다.
+|{nbsp} d|_대체 시나리오_
+|<<ev_driver_authorization_using_rfid,C01 - RFID를 사용한 EV 운전자 인증>> +
+<<authorization_using_a_start_button,C02 - 시작 버튼을 사용한 인증>> +
+<<authorization_using_credit_debit_card,C03 - 신용/직불 카드를 사용한 인증>> +
+<<authorization_using_pin_code,C04 - PIN 코드를 사용한 인증>> +
+<<authorization_using_local_id_type,C06 - 로컬 ID 유형을 사용한 인증>> +
+<<authorization_using_contract_certificates,C07 - 계약 인증서를 사용한 인증>> +
+<<authorization_at_evse_using_iso_15118_external_identification_means_eim,C08 - ISO 15118 외부 식별 수단을 사용한 EVSE 인증 (EIM)>> +
+<<offline_authorization_of_unknown_id,C15 - 알 수 없는 오프라인 권한>>
+|5 |필수 조건 |케이블이 연결되어 있습니다.
+|6 |사후 조건(들) ​​|충전 스테이션에서 거래가 진행 중입니다.
+|===
+
+
+.시퀀스 다이어그램: CSMS에서 시작된 거래에 대한 인증
+image::part2/images/figure_25.svg[시퀀스 다이어그램: CSMS에서 시작된 거래에 대한 인증]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7 |오류 처리 |n/a
+|8 |주의 |IdTokens는 실제 UID 값과의 충돌 가능성을 피하기 위해 비표준 UID 형식을 의도적으로 사용하는 (단일 사용) 가상 거래 인증 코드 또는 가상 RFID 토큰일 수 있습니다. 이러한 가상 단일 사용 <<id_token,type,IdTokens>>는 <<id_token_enum_type,type>> _Central_과 함께 전송되며 이러한 토큰을 캐시하거나
+인증하는 것은 무의미합니다.
+
+이 유즈케이스는 앱을 예로 사용하지만 이는 필수 사항이 아닙니다. 이 유즈케이스는 서버에서 생성한 IdToken이 있는 모든 <<request_start_transaction_request,RequestStartTransactionRequest>>에 유효합니다.
+
+위의 시나리오 설명과 시퀀스 다이어그램은 시작 트랜잭션을 위한 구성 변수가 다음과 같이 구성되는 것을 기반으로 합니다. +
+<<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,EVConnected, Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
+이 유즈케이스는 다른 구성에도 유효하지만 트랜잭션이 다른 순간에 시작/중지될 수 있으며, 이는 메시지가 전송되는 순서를 변경할 수 있습니다. 자세한 내용은 유즈케이스 <<e01_start_transaction_options,E01 - Start Transaction options>>를 참조하세요.
+
+이 유즈케이스는 구성 변수 AuthorizeRemoteStart가 false라고 가정합니다. AuthorizeRemoteStart에 대한 요구 사항은 유즈케이스 F01 및 F02를 참조하세요.
+
+다른 <<id_token_enum_type,idTokenTypes>>도 원격으로 충전을 시작하는 데 사용할 수 있습니다. 앱에서 제공하는 사용자의 eMAID가 그 예입니다.
+|===
+
+==== C05 - CSMS에서 시작한 거래에 대한 승인 요구 사항
+
+.C05 - CSMS에서 시작한 거래에 대한 승인 요구 사항
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID |전제 조건 |요구 사항 정의
+
+|C05.FR.01 |충전기에서 <<id_token_enum_type,IdTokenType>>이 <<id_token_enum_type,Central>> 유형인 <<request_start_transaction_request,RequestStartTransactionRequest>>를 수신하는 경우.
+|충전기는 수신된 <<id_token_enum_type,IdTokenType>>에 대해 <<authorize_request,AuthorizeRequest>>를 보내서는 안 됩니다.
+|C05.FR.02 |충전기가 인증 캐시를 구현했고 충전기가 모든 메시지에서 <<id_token_enum_type,Central>> 유형의 <<id_token_enum_type,IdTokenType>>에 대해 <<id_token_info_type,IdTokenInfo>>를 수신하는 경우
+|충전기는 인증 캐시에 정보를 저장해서는 안 됩니다.
+|C05.FR.03 |{nbsp} |RemoteStartId는 <<transaction_event_request,TransactionEventRequest>>에서 최소 한 번 제공되어야 합니다.
+|C05.FR.04 |{nbsp} |언어는 RFC-4646 태그로 지정해야 합니다. 참조: <<rfc5646,[RFC5646]>>, 예: 미국 영어는 "en-US"입니다.
+|C05.FR.05 |{nbsp} |idToken은 <<request_start_transaction_request,RequestStartTransactionRequest>> 다음에 첫 번째 <<transaction_event_request,TransactionEventRequest>>에서도 한 번 제공해야 합니다.
+|===
+
+<<<
+
+[[authorization_using_local_id_type]]
+=== C06 - 로컬 ID 유형을 사용한 인증
+
+이것은 유익한 유즈케이스이며, <<id_token_enum_type,Local>> ID 유형의 사용을 보여주는 것이 목적입니다.
+
+.C06 - 로컬 ID 유형을 사용한 인증
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|번호 |유형 |설명
+
+|1 |이름 |로컬 ID 유형을 사용한 인증
+|2 |ID |C06
+|{nbsp} d|_기능 블록_ |C. 인증
+|3 |목표 |충전기가 로컬에서 생성된 ID 토큰으로 충전을 시작할 수 있도록 합니다.
+|4 |설명 |충전기가 RFID가 없는 운전자를 위해 거래를 시작해야 하거나 RFID를 알 수 없는 경우입니다. 예를 들어, EV 운전자가 주차 티켓을 사용하여 충전을 시작합니다.
+|{nbsp} d|_행위자_ |EV 운전자, 결제 단말기, CSMS, 충전기
+|{nbsp} d|_시나리오 설명_
+|**1.** EV 운전자가 차고로 운전하여 입구의 차단기에서 주차 티켓을 받습니다. +
+**2.** 충전기에 EV를 주차합니다. +
+**3.** 충전 케이블을 꽂습니다. +
+**4.** 충전기에서 주차권을 스캔/삽입하여 충전을 시작합니다. +
+**5.** EV가 충전 중이고 운전자가 떠납니다. +
+**6.** EV 운전자가 돌아와 주차권을 결제 키오스크에 삽입합니다. +
+**7.** 주차 및 충전 비용을 지불합니다. +
+**8.** 결제 단말기/키오스크가 CSMS를 통해 충전기로 정지 명령을 보냅니다. +
+**9.** EV 운전자가 충전 케이블을 뽑고 출발합니다.
+|{nbsp} d|_대체 시나리오_
+|<<ev_driver_authorization_using_rfid, C01 - RFID를 사용한 EV 운전자 인증>> +
+<<authorization_using_a_start_button, C02 - 시작 버튼을 사용한 인증>> +
+<<authorization_using_credit_debit_card, C03 - 신용/직불 카드를 사용한 인증>> +
+<<authorization_using_pin_code, C04 - PIN 코드를 사용한 인증>> +
+<<authorization_for_csms_initiated_transactions, C05 - CSMS에서 시작한 거래에 대한 인증>> +
+<<authorization_using_contract_certificates, C07 - 계약 인증서를 사용한 인증>> +
+<<authorization_at_evse_using_iso_15118_external_identification_means_eim, C08 - ISO 15118 외부를 사용한 EVSE 인증 식별 수단(EIM)>> +
+<<offline_authorization_of_unknown_id,C15 - 알 수 없는 오프라인 승인>>
+|5 |필수 조건 |통합 주차 및 충전 결제 시스템
+|6 |사후 조건(들) ​​|충전기에서 거래가 완료되었고 거래 정보가 CSMS에서 사용 가능합니다.
+|===
+
+.시퀀스 다이어그램: 로컬 ID 유형을 사용한 승인
+image::part2/images/figure_26.svg[시퀀스 다이어그램: 로컬 ID 유형을 사용한 승인]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7 |오류 처리 |해당 없음
+|8 |비고 |이 유즈케이스에서는 주차 위반 딱지를 예로 사용하지만 이는 필수 사항이 아닙니다.
+
+결제 단말기와 CSMS 간의 통신은 OCPP 범위를 벗어납니다.
+
+위의 시나리오 설명과 시퀀스 다이어그램은 시작 및 중지 트랜잭션에 대한 구성 변수가 다음과 같이 구성된 것을 기반으로 합니다. +
+<<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
+<<tx_stop_point,`TxStopPoint`>>: <<tx_start_stop_point_values,ParkingBayOccupancy, EVConnected>> +
+이 유즈케이스는 다른 구성에도 유효하지만 트랜잭션이 다른 순간에 시작/중지될 수 있으며, 이는 메시지가 전송되는 순서를 변경할 수 있습니다. 자세한 내용은 유즈케이스를 참조하세요. <<e01_start_transaction_options,E01 - 시작 트랜잭션 옵션>> 및 <<e06_stop_transaction_options,E06 - 중지 트랜잭션 옵션>>.
+|===
+
+==== C06 - 로컬 ID 유형을 사용한 인증 - 요구 사항
+
+.C06 - 로컬 ID 유형을 사용한 인증 - 요구 사항
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID |전제 조건 |요구 사항 정의
+
+|C06.FR.01 |{nbsp} |충전기는 인증 후에만 에너지를 제공해야 합니다.
+|C06.FR.02 |EV 운전자가 로컬 유형의 <<id_token_enum_type,IdTokenType>>을 제시하는 경우.
+|충전기는 <<authorize_request,AuthorizeRequest>>를 CSMS로 보내 권한을 요청해야 합니다.
+|C06.FR.03 |{nbsp} |<<authorize_request,AuthorizeRequest>>는 충전 식별자의 인증에만 사용해야 합니다.
+|C06.FR.04 |{nbsp} |CSMS가 <<authorize_request,AuthorizeRequest>>를 수신하면 <<authorize_response,AuthorizeResponse>>로 응답해야 하며 수락 또는 거부 이유를 나타내는 인증 상태 값을 포함해야 합니다.
+|===
+
+<<<
+
+:sectnums:
+[[iso_15118_authorization]]
+=== ISO 15118 인증
+
+이 인증 섹션은 Plug & Charge 기능 사용을 위해 <<iso15118_1,ISO15118-1>>에서 유래되었습니다.
+
+:sectnums!:
+[[authorization_using_contract_certificates]]
+=== C07 - 계약 인증서를 사용한 인증
+
+.C07 - 계약 인증서를 사용한 인증
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|번호 |유형 |설명
+
+|1 |이름 |계약 인증서를 사용한 인증
+|2 |ID |C07
+|{nbsp} d|_기능 블록_ |C. 인증
+|{nbsp} d|_참조_ |<<iso15118_1,ISO15118-1>> D2
+|3 |목표 |<<iso15118_1,ISO15118-1>> 참조, 유즈케이스 목표 D2, 26페이지.
+|4 |설명 |<<iso15118_1,ISO15118-1>> 참조, 유즈케이스 설명 D2(첫 번째 글머리 기호), 26페이지.
+|{nbsp} d|_Actors_ |Actors: EV, 충전기, CSMS, OCSP
+|{nbsp} d|_시나리오 설명_
+|**15118**: +
+<<iso15118_1,ISO15118-1>> 참조, 유즈케이스 설명 D2, 시나리오 설명, 처음 2개의 글머리 기호, 26페이지.
+
+**OCPP**: +
+**3.** 충전기는 <<authorize_request,AuthorizeRequest>> 메시지를 CSMS로 보내는데, 여기에는 계약 인증서 및 인증서 체인과 관련된 OCSP 요청에 필요한 eMAID 및 데이터가 포함됩니다. +
+**4.** CSMS는 동의 또는 비동의, 인증서 상태로 응답합니다. +
+**5.** ID의 성공적인 인증 후 서비스가 시작됩니다.
+|{nbsp} d|_대체 시나리오_
+|<<ev_driver_authorization_using_rfid,C01 - RFID를 사용한 EV 운전자 인증>> +
+<<authorization_using_a_start_button,C02 - 시작 버튼을 사용한 인증>> +
+<<authorization_using_credit_debit_card,C03 - 신용/직불 카드를 사용한 인증>> +
+<<authorization_using_pin_code,C04 - PIN 코드를 사용한 인증>> +
+<<authorization_for_csms_initiated_transactions,C05 - CSMS에서 시작한 거래에 대한 인증>> +
+<<authorization_using_local_id_type,C06 - 로컬 ID 유형을 사용한 인증>> +
+<<authorization_at_evse_using_iso_15118_external_identification_means_eim,C08 - ISO 15118 외부를 사용한 EVSE 인증 식별 수단(EIM)>> +
+<<offline_authorization_of_unknown_id,C15 - 알 수 없는 오프라인 승인>>
+|5 |필수 조건 |EV에 계약 인증서가 설치되어 있습니다.
+|6 |사후 조건(들) ​​|계약 인증서의 유효성이 결정됩니다.
+|===
+
+.계약 인증서를 사용한 승인
+image::part2/images/figure_27.svg[계약 인증서를 사용한 승인]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7 |오류 처리 |{nbsp}
+|8 |참고 사항 |15118의 1번째 버전에서 PaymentDetailsReq/Res 메시지의 메시지 시간 초과는 5초입니다. 해당 시간 내에 인증서 검증을 완료할 수 없는 경우 AuthorizationReq/Res 동안 완료할 수 있으며, 최대 60초까지 연장할 수 있습니다.
+
+{nbsp}
+
+충전기가 오프라인인 경우 ServiceDiscoveryRes에서 ISO 15118 계약 인증서에 대한 지불 옵션을 생략하고 외부 식별 수단(유즈케이스 C08)으로 되돌리는 것이 좋습니다. 인증서 상태를 확인할 수 없기 때문입니다.
+|===
+
+==== C07 - 계약 인증서를 사용한 승인 - 요구 사항
+
+.C07 - 요구 사항
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID |전제 조건 |요구 사항 정의 |참고
+
+|C07.FR.01 |충전기가 온라인일 때
+|충전기는 <<authorize_request,AuthorizeRequest>>를 CSMS에 보내서 검증을 받아야 합니다. |{nbsp}
+|C07.FR.02 |C07.FR.01 |<<authorize_request,AuthorizeRequest>>에는 계약 인증서 및 인증서 체인과 관련된 OCSP 요청에 필요한 eMAID 및 데이터가 포함되어야 합니다. |{nbsp}
+|C07.FR.04 |CSMS가 <<authorize_request,AuthorizeRequest>>를 수신하는 경우.
+|<<authorize_response,AuthorizeResponse>>로 응답하고 수락 또는 거부 이유를 나타내는 인증 상태 값을 포함해야 합니다. |{nbsp}
+|C07.FR.05 |C07.FR.02 |CSMS는 실시간 orcached OCSP 데이터를 통해 인증서 및 인증서 체인의 유효성을 확인해야 합니다. |{nbsp}
+|C07.FR.06 |C07.FR.01 AND +
+충전기가 연관된 루트 인증서가 없어서 계약 인증서를 검증할 수 없고 <<central_contract_validation_allowed,`CentralContractValidationAllowed`>>가 _true_인 경우
+|충전기는 CSMS에서 검증하기 위해 <<authorize_request,AuthorizeRequest>>의 _certificate_ 속성(PEM 형식)에서 계약 인증서 체인을 CSMS에 전달해야 합니다. |{nbsp}
+|C07.FR.07 |충전기가 오프라인이고 +
+<<contract_validation_offline,`ContractValidationOffline`>>가 _false_인 경우
+|충전기는 충전을 허용하지 않아야 합니다. |{nbsp}
+|C07.FR.08 |충전기가 오프라인이고 +
+<<contract_validation_offline,`ContractValidationOffline`>>이 _참_인 경우
+|충전기는 계약 인증서를 로컬에서 검증하려고 시도해야 합니다. |{nbsp}
+|C07.FR.09 |C07.FR.08 AND +
+계약 증명서가 유효하고 <<local_authorize_offline,LocalAuthorizeOffline>>이 _참_입니다.
+|충전기는 <<local_authorization_list,Local Authorization List>> 또는 <<authorization_cache,Authorization Cache>>에서 eMAID를 조회해야 합니다. |{nbsp}
+|C07.FR.10 |C07.FR.09 AND +
+<<local_authorization_list,Local Authorization List>>에서 eMAID를 찾았습니다.
+|충전기는 유즈케이스 <<offline_authorization_through_local_authorization_list,C13 - Offline Authorization through Local Authorization List>>에 따라 동작해야 합니다. |{nbsp}
+|C07.FR.11 |C07.FR.09 및 +
+<<authorization_cache,Authorization Cache>>에서 eMAID가 발견됨
+|충전기는 유즈케이스 <<start_transaction_cached_id,C12 - Start Transaction - Cached Id>>에 따라 동작해야 합니다. |{nbsp}
+|C07.FR.12 |C07.FR.09 및 +
+eMAID가 발견되지 않음 및 +
+<<offline_tx_for_unknown_id_enabled,`OfflineTxForUnknownIdEnabled`>> = _true_
+|충전기는 유즈케이스 <<offline_authorization_of_unknown_id,C15 - Offline Authorization of unknown Id>>에 따라 충전을 허용해야 합니다. |{nbsp}
+|C07.FR.13 |C07.FR.04 AND +
+인증서 체인(_certificate_ 또는 _iso15118CertificateHashData_에 제공됨)이 유효합니다. +
+AND +
+_idToken_의 인증 상태가 `Blocked`, `Expired`, `Invalid`, `Unknown` 중 하나입니다.
+|CSMS는 _certificateStatus_ = `ContractCancelled` 및 _idTokenInfo.status_의 인증 상태를 포함하는 AuthorizationResponse를 반환해야 합니다.
+|인증서는 유효하지만 EMAID는 허용되지 않습니다.
+|C07.FR.14 |C07.FR.04 AND +
+인증서 체인(_certificate_ 또는 _iso15118CertificateHashData_에 제공됨)이 유효합니다 +
+AND +
+_idToken_의 인증 상태가 `Blocked`, `Expired`, `Invalid`, `Unknown` 중 하나가 아닙니다
+|CSMS는 _certificateStatus_ = `Accepted` 및 _idTokenInfo.status_의 인증 상태를 포함하는 AuthorizationResponse를 반환해야 합니다.
+|_idTokenInfo.status_가 `Accepted`가 아닌 경우(예: `ConcurrentTx` 또는 `NotAtThisLocation`)에도 요금 청구가 허용되지 않습니다.
+|C07.FR.15 |C07.FR.04 AND +
+인증서 체인(_certificate_ 또는 _iso15118CertificateHashData_에서 제공)이 만료되었습니다.
+|CSMS는 _certificateStatus_ = `CertificateExpired` 및 _idTokenInfo.status_ = `Expired`를 포함하는 AuthorizationResponse를 반환해야 합니다.
+|인증서가 만료된 경우 _idToken_의 상태도 만료됨으로 보고됩니다.
+|C07.FR.16 |C07.FR.04 AND +
+인증서 체인(_certificate_ 또는 _iso15118CertificateHashData_에 제공됨)이 해지되었습니다.
+|CSMS는 _certificateStatus_ = `CertificateRevoked` 및 _idTokenInfo.status_ = `Invalid`를 포함하는 AuthorizationResponse를 반환해야 합니다.
+|인증서가 해지된 경우 _idToken_의 상태가 무효로 보고됩니다.
+|C07.FR.17 |C07.FR.04 AND +
+인증서 체인(_certificate_ 또는 _iso15118CertificateHashData_에 제공됨)을 확인할 수 없거나 유효하지 않음
+|CSMS는 _certificateStatus_ = `CertChainError` 및 _idTokenInfo.status_ = `Invalid`를 포함하는 AuthorizationResponse를 반환해야 함
+|인증서를 확인할 수 없는 경우 _idToken_의 상태가 유효하지 않음으로 보고됨
+|===
+
+<<<
+
+[[authorization_at_evse_using_iso_15118_external_identification_means_eim]]
+=== C08 - ISO 15118 외부 식별 수단(EIM)을 사용한 EVSE에서의 승인
+
+.C08 - ISO 15118 외부 식별 수단(EIM)을 사용한 EVSE에서의 승인
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|번호 |유형 |설명
+
+|1 |이름 |ISO 15118 외부 식별 수단(EIM)을 사용한 EVSE에서의 승인
+|2 |ID |C08 / 15118-1 D4
+|{nbsp} d|_기능 블록_ |C. 인증
+|{nbsp} d|_참조_ |<<iso15118_1,ISO15118-1>> D4
+|3 |목표 |CSMS의 도움을 받아 충전기를 통해 EV를 인증합니다. 또한 <<iso15118_1,ISO15118-1>>, 유즈케이스 목표 D4, 28페이지를 참조하세요.
+|4 |설명 |충전기는 EV에서 제공한 정보에 따라 <<authorize_request,AuthorizeRequest>> 메시지를 보냅니다. 또한 <<iso15118_1,ISO15118-1>>, 유즈케이스 설명 D4에서 "참고"까지, 28페이지를 참조하세요.
+|{nbsp} d|_Actors_ |Actors: EV, 충전기, CSMS
+|{nbsp} d|_시나리오 설명_
+|**15118** +
+<<iso15118_1,ISO15118-1>>, 유즈케이스 설명(시나리오 설명) D4, 28페이지를 참조하세요.
+
+**OCPP** +
+**1.** 충전기는 <<authorize_request,AuthorizeRequest>>를 <<id_token_enum_type,idToken>>과 함께 보냅니다. 여기에는 외부 식별 수단(EIM)이 포함됩니다. +
+**2.** CSMS는 <<authorize_response,AuthorizeResponse>>로 응답합니다.
+|{nbsp} d|_대체 시나리오_
+|<<ev_driver_authorization_using_rfid,C01 - RFID를 사용한 EV 운전자 인증>> +
+<<authorization_using_a_start_button,C02 - 시작 버튼을 사용한 인증>> +
+<<authorization_using_credit_debit_card,C03 - 신용/직불 카드를 사용한 인증>> +
+<<authorization_using_pin_code,C04 - PIN 코드를 사용한 인증>> +
+<<authorization_for_csms_initiated_transactions,C05 - CSMS에서 시작한 거래에 대한 인증>> +
+<<authorization_using_local_id_type,C06 - 로컬 ID 유형을 사용한 인증>> +
+<<authorization_using_contract_certificates,C07 - 계약 인증서를 사용한 인증>> +
+<<offline_authorization_of_unknown_id,C15 - 알 수 없는 오프라인 인증>>
+|5 |필수 조건 |EV와 EVSE 간의 통신은 성공적으로 설정되어야 합니다.
+|6 |사후 조건 |인증가 성공적입니다. 또한 <<iso15118_1,ISO15118-1>>, 유즈케이스 종료 조건 D4, 28페이지를 참조하세요.
+|===
+
+.시퀀스 다이어그램: SA의 도움으로 수행된 외부 자격 증명을 사용한 EVSE에서의 인증.
+image::part2/images/figure_28.svg[시퀀스 다이어그램: SA의 도움으로 수행된 외부 자격 증명을 사용한 EVSE에서의 인증.]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7 |참고 사항 |이전 섹션에서 언급한 모든 식별 수단은 이 유즈케이스에 적용될 수 있습니다. 유일한 차이점은 15118 통신의 가용성입니다.
+|===
+
+출처: <<iso15118_1,ISO15118-1>>
+
+==== C08 - ISO 15118 외부 식별 수단(EIM)을 사용한 EVSE에서의 승인 - 요구 사항
+
+.C08 - 요구 사항
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID |전제 조건 |요구 사항 정의
+
+|C08.FR.01 |{nbsp} |충전기는 확인을 위해 CSMS에 식별 정보를 보내야 합니다.
+|C08.FR.02 |{nbsp} |EV 운전자는 EV를 EVSE에 연결한 후 특정 시간 내에 승인을 활성화해야 하거나 EVSE는 HMI를 통해 식별 프로세스를 다시 시작하도록 승인해야 합니다.
+|===
+
+:sectnums:
+=== GroupId
+
+:sectnums!:
+==== C09 - GroupId에 의한 인증
+
+.C09 - GroupId에 의한 인증
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|번호 |유형 |설명
+
+|1 |이름 |GroupId에 의한 인증
+|2 |ID |C09
+|{nbsp} d|_기능 블록_ |C. 인증
+|3 |목표 |다른 IdToken을 가진 2명의 EV 운전자가 동일한 <<group_id_tokens,GroupId>>를 사용하여 권한을 부여받을 수 있도록 합니다.
+|4 |설명 |이 유즈케이스는 충전기가 GroupId 정보를 기반으로 EV 운전자의 작업을 어떻게 승인할 수 있는지 다룹니다. 예를 들어 2명이 정기적으로 동일한 EV를 사용하는 경우 이를 사용할 수 있습니다. 즉, 각자의 IdToken(예: RFID 카드)을 사용할 수 있으며, 다른 idToken(동일한 GroupId)으로 시작된 거래를 승인 취소할 수 있습니다.
+|{nbsp} d|_Actors_ |충전기, CSMS, EV Driver1, EV Driver2
+|{nbsp} d|_시나리오 설명_
+|**1.** EV Driver 1이 IdToken을 제시합니다. +
+**2.** 충전기가 <<authorize_request,AuthorizeRequest>>를 CSMS로 보내 승인을 요청합니다. +
+**3.** <<authorize_request,AuthorizeRequest>>를 수신하면 CSMS가 <<authorize_response,AuthorizeResponse>>로 응답합니다. 이 응답 메시지에는 GroupId가 포함됩니다. +
+**4.** 충전기는 EV 드라이버 1의 권한 정보와 함께 GroupIdToken을 저장합니다. +
+**5.** EV 드라이버 2는 IdToken을 제시합니다. +
+**6.** 충전기는 <<authorize_request,AuthorizeRequest>>를 CSMS로 보내 권한을 요청합니다. +
+**7.** <<authorize_request,AuthorizeRequest>>를 수신하면 CSMS는 <<authorize_response,AuthorizeResponse>>로 응답합니다. 이 응답 메시지에는 GroupId가 포함됩니다. +
+**8.** 두 응답의 일치하는 GroupId 정보를 기반으로 충전기는 작업을 승인합니다.
+|5 |필수 조건 |EV 드라이버 1과 EV 드라이버 2는 동일한 GroupId를 갖습니다.
+|6 |사후 조건 |충전기는 GroupId를 알고 있습니다.
+|===
+
+.시퀀스 다이어그램: GroupId에 의한 인증
+image::part2/images/figure_29.svg[시퀀스 다이어그램: GroupId에 의한 인증]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7 |오류 처리 |n/a
+|8 |주의 |<<id_token_type,IdTokenType>> 데이터는 groupId로 사용되며, 계정에 속한 idToken 중 하나를 사용하는 대신 <<group_id_tokens,GroupId>>에 대한 공유 중앙 계정 식별자를 사용하는 경우가 많습니다. +
+이 유즈케이스에서 설명한 groupId 메커니즘은 groupId가 캐시에 저장되므로 인증 캐시를 사용할 때도 작동합니다.
+|===
+
+==== C09 - GroupId에 의한 인증 - 요구 사항
+
+.C09 - 요구 사항
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID |전제 조건 |요구 사항 정의
+
+|C09.FR.02 |{nbsp} |인증 목적으로 동일한 그룹에 속하는 IdToken은 <<id_token_info_type,IdTokenInfo>>의 선택적 groupIdToken 요소에 공통 그룹 식별자를 가져야 합니다.
+|C09.FR.03 |특정 IdToken으로 거래가 승인/시작된 경우.
+|다른 유효한 IdToken을 가지고 있지만 동일한 groupIdToken을 가진 EV 운전자는 거래를 중지할 수 있는 권한이 있어야 합니다.
+|C09.FR.04 |C09.FR.03 AND +
+두 IdToken과 해당 GroupIdToken이 <<local_authorization_list,Local Authorization List>> 또는 <<authorization_cache,Authorization Cache>>에 모두 있는 경우.
+|충전기는 <<authorize_request,AuthorizeRequest>>를 CSMS로 보낼 수 있습니다.
+|C09.FR.05 |C09.FR.03 AND +
+(C09.FR.07 아님) AND +
+새로 제시된 IdToken과 해당 GroupIdToken이 <<local_authorization_list,Local Authorization List>> 또는 <<authorization_cache,Authorization Cache>>에 없는 경우.
+|충전기는 <<authorize_request,AuthorizeRequest>>를 CSMS로 보내야 합니다.
+|C09.FR.07 |<<id_token_type,idToken>>이 승인된 거래 중에 제시되고 +
+(a) 제시된 <<id_token_type,idToken>>이 승인을 시작한 <<id_token_type,idToken>>과 동일한 경우 +
+또는 +
+(b) 제시된 <<id_token_type,idToken>>이 로컬 승인 목록 또는 승인 캐시에 있고 유효하며 승인을 시작한 IdToken과 동일한 GroupIdToken을 갖는 경우
+|충전기는 먼저 <<authorize_request,AuthorizeRequest>>를 보내지 않고 거래 승인을 종료해야 합니다.
+|C09.FR.09 |<<authorize_request,AuthorizeRequest>>의 IdToken에 연관된 groupIdToken이 있는 경우
+|CSMS의 <<authorize_response,AuthorizeResponse>>에는 <<id_token_info_type,groupIdToken>>이 포함되어야 합니다.
+|C09.FR.10 |{nbsp} |<<authorize_response,AuthorizeResponse>>에는 수락 또는 거부 이유를 나타내는 승인 상태 값이 포함되어야 합니다.
+|C09.FR.11 |C09.FR.03 AND +
+동일한 GroupIdToken을 가지고 있지만 상태 = `Accepted`가 아닌 다른 IdToken이 중지를 위해 제시된 경우
+|충전기는 거래를 중지해서는 안 됩니다.
+|C09.FR.12 | <<transaction_event_request,TransactionEventRequest>>에 IdToken이 포함되어 있고 idToken에 연관된 groupIdToken이 있는 경우
+|CSMS의 <<transaction_event_response,TransactionEventResponse>>에는 <<id_token_info_type,groupIdToken>>이 포함되어야 합니다.
+|===
+
+<<<
+
+:sectnums:
+=== 인증 캐시
+
+:sectnums!:
+[[store_authorization_data_in_the_authorization_cache]]
+==== C10 - 인증 캐시에 인증 데이터 저장
+
+.C10 - 인증 캐시에 인증 데이터 저장
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|번호 |유형 |설명
+
+|1 |이름 |권한 캐시에 권한 데이터를 저장합니다.
+|2 |ID |C10
+|{nbsp} d|_기능 블록_ |C. 권한
+|3 |목표 |권한 캐시에 가장 최근에 수신된 모든 IdToken을 저장합니다.
+|4 |설명 |이 유즈케이스는 충전기가 CSMS에서 성공적으로 인증된 이전에 제시된 식별자의 기록을 인증 캐시에 자율적으로 저장하는 방법을 다룹니다. (성공적인 의미: IdToken이 포함된 메시지에 대한 응답 수신)
+|{nbsp} d|_Actors_ |충전기, CSMS
+|{nbsp} d|_시나리오 설명_
+|**1.** 충전기는 CSMS로부터 <<authorize_response,AuthorizeResponse>>, <<reserve_now_request,ReserveNowRequest>> 또는 <<transaction_event_response,TransactionEventResponse>> 응답 메시지를 수신합니다. +
+**2.** 충전기는 CSMS의 응답 메시지에서 수신된 모든 <<id_token_info_type,IdTokenInfo>>를 사용하여 캐시를 업데이트합니다.
+
+|{nbsp} d|_대체 시나리오_ |해당 없음
+|5 |필수 조건 |인증 캐시가 구현되고 <<auth_cache_enabled,`AuthCacheEnabled`>> 구성 변수의 값이 'true'로 설정됩니다.
+|6 |사후 조건
+|**성공한 사후 조건:** +
+충전기는 새로 수신한 <<id_token_info_type,IdTokenInfo>> 데이터를 인증 캐시에 저장했습니다. +
+**실패한 사후 조건:** +
+충전기는 인증 캐시를 저장할 수 _없었습니다_.
+|===
+
+.시퀀스 다이어그램: 인증 캐시에 인증 데이터 저장
+image::part2/images/figure_30.svg[시퀀스 다이어그램: 인증 캐시에 인증 데이터 저장]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7 |오류 처리 |n/a
+|8 |비고(들) |n/a
+|===
+
+==== C10 - 인증 캐시에 인증 데이터 저장 - 요구 사항
+
+.C10 - 요구 사항
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID |전제 조건 |요구 사항 정의 |참고
+
+|C10.FR.01 |{nbsp} |권한 캐시는 모든 최신 수신 식별자를 포함해야 합니다(상태와 관계없이). |{nbsp}
+|C10.FR.02 |{nbsp} |캐시 값은 재부팅 및 정전 시에도 지속되어야 합니다.
+|따라서 캐시 값은 비휘발성 메모리에 저장되어야 합니다.
+|C10.FR.03 |_Accepted_가 아닌 상태로 권한 캐시에 저장된 IdToken이 제시되고 충전기가 온라인인 경우.
+|<<authorize_request,AuthorizeRequest>>는 IdToken의 현재 상태를 확인하기 위해 CSMS로 전송되어야 합니다.
+|식별자의 현재 상태를 확인하기 위해.
+|C10.FR.04 |<<authorize_response,AuthorizeResponse>>를 수신하면.
+|충전기는 권한 캐시 항목을 업데이트해야 합니다.
+|업데이트는 <<authorization_cache,Authorization Cache>>에서 설명한 대로 응답의 <<id_token_info_type,IdTokenInfo>> 값으로 수행해야 합니다.
+|C10.FR.05 |<<transaction_event_response,TransactionEventResponse>>를 수신하면 됩니다.
+|충전기는 인증 캐시 항목을 업데이트해야 합니다.
+|업데이트는 <<authorization_cache,Authorization Cache>>에서 설명한 대로 응답의 <<id_token_info_type,IdTokenInfo>> 값으로 수행해야 합니다.
+|C10.FR.07 |{nbsp} |충전기는 가득 찼을 때에도 이전 항목을 삭제하여 새 캐시 항목을 수락하는 메커니즘을 가져야 합니다.
+|먼저 _Accepted_가 아닌 상태를 가진 항목을 제거한 다음 가장 오래된 유효한 항목을 제거하여 새 항목을 위한 공간을 확보하는 것이 좋습니다.
+|C10.FR.08 |IdTokenInfoType에 _cacheExpiryDateTime_ 값이 없는 경우
+|토큰이 캐시에 있는 것으로 간주되는 시간은 구성 변수 <<auth_cache_lifetime,`AuthCacheLifeTime`>>에 의해 결정됩니다. 이 변수는 토큰이 마지막으로 사용된 이후 인증 캐시에서 만료될 때까지 걸리는 시간을 나타냅니다.
+|캐시의 이 만료는 **IdToken에 설정된 만료 날짜(예: RFID 카드 만료 날짜)와 같지 않습니다**.
+|C10.FR.09 |충전기는 <<tariff_cost_related,Tariff & Cost>>를 지원합니다. |충전기는 캐시에 관세 정보를 저장해서는 안 됩니다. |{nbsp}
+|C10.FR.10 |인증 캐시 항목의 유효 기간이 만료되는 경우.
+|인증 캐시 항목은 캐시에서 제거되거나 `만료됨`으로 변경되어야 합니다. |{nbsp}
+|C10.FR.11 |{nbsp} |인증 캐시가 활성화되거나 비활성화되는지 여부는 <<auth_cache_enabled,`AuthCacheEnabled`>> 구성 변수에 의해 제어되어야 합니다. |{nbsp}
+|C10.FR.12 |{nbsp} |개인 정보를 인증 캐시에 안전하게 저장하는 것이 좋습니다.
+|예를 들어, 캐시에 해시된 idToken만 저장합니다.
+|C10.FR.13 |IdTokenInfoType에 _cacheExpiryDateTime_ 값이 포함된 경우
+|토큰이 캐시에 있는 것으로 간주되는 시간은 _cacheExpiryDateTime_에 의해 결정됩니다. 이 변수는 토큰이 인증 캐시에서 만료되는 날짜와 시간을 나타냅니다.
+|캐시의 이 만료는 **IDToken에 설정된 만료 날짜**(예: RFID 카드 만료 날짜)와 **같지 않습니다**.
+|===
+
+<<<
+
+=== C11 - 인증 캐시의 인증 데이터 지우기
+
+.C11 - 인증 캐시의 인증 데이터 지우기
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|번호 |유형 |설명
+
+|1 |이름 |인증 캐시의 인증 데이터 지우기
+|2 |ID |C11
+|{nbsp} d|_기능 블록_ |C. 인증
+|3 |목표 |인증 캐시의 모든 IDToken을 지웁니다.
+|4 |설명 |이 유즈케이스는 CSMS가 충전기에 인증 캐시를 지우도록 요청하는 방법을 다룹니다.
+|{nbsp} d|_Actors_ |충전기, CSMS
+|{nbsp} d|_시나리오 설명_
+|**1.** CSMS가 충전기에 <<clear_cache_request,ClearCacheRequest>>를 보내 인증 캐시를 지우도록 요청합니다. +
+**2.** 충전기가 _Accepted_ 상태로 응답합니다.
+|5 |필수 조건 | 인증 캐시는 <<auth_cache_enabled,`AuthCacheEnabled`>> 구성 변수에 의해 지원되고 활성화됩니다.
+|6 |사후 조건
+|**성공한 사후 조건:** +
+충전기가 인증 캐시를 _성공적으로_ 지웠습니다.
+
+**실패한 사후 조건:** +
+충전기가 인증 캐시를 지울 수 _없었습니다_.
+|===
+
+.시퀀스 다이어그램: 인증 캐시에서 인증 데이터 지우기
+image::part2/images/figure_31.svg[시퀀스 다이어그램: 인증 캐시에서 인증 데이터 지우기]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7 |오류 처리 |n/a
+|8 |주의 |n/a
+|===
+
+==== C11 - 인증 캐시에서 인증 데이터 지우기 - 요구 사항
+
+.C11 - 요구 사항
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID |전제 조건 |요구 사항 정의
+
+|C11.FR.01 |CSMS가 다음을 보내는 경우 <<clear_cache_request,ClearCacheRequest>>.
+|충전기는 인증 캐시를 지우려고 시도해야 합니다.
+|C11.FR.02 |C11.FR.01 |충전기는 인증 캐시를 지울 수 있는지 여부를 나타내는 <<clear_cache_response,ClearCacheResponse>> 메시지를 보내야 합니다.
+|C11.FR.03 |C11.FR.02 AND +
+충전기가 인증 캐시를 성공적으로 지웠습니다.
+|충전기는 <<clear_cache_response,ClearCacheResponse>> 메시지를 _Accepted_ 상태로 보냅니다.
+|C11.FR.04 |C11.FR.02 AND +
+구성 변수 `AuthCacheEnabled`는 false입니다.
+|충전기는 <<clear_cache_response,ClearCacheResponse>> 메시지를 _Rejected_ 상태로 보냅니다.
+|C11.FR.05 |C11.FR.02 AND +
+충전기가 권한 캐시를 지우지 못했습니다.
+|충전기는 <<clear_cache_response,ClearCacheResponse>> 메시지를 _거부됨_ 상태로 보내야 합니다.
+|===
+
+<<<
+
+[[start_transaction_cached_id]]
+=== C12 - 거래 시작 - 캐시된 ID
+
+.C12 - 거래 시작 - 캐시된 ID
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|번호 |유형 |설명
+
+|1 |이름 |거래 시작 - 캐시된 ID
+|2 |ID |C12
+|{nbsp} d|_기능 블록_ |C. 인증
+|3 |목표 |EV 운전자가 인증 캐시를 사용하여 온라인에서 거래를 시작할 수 있도록 합니다. 그러면 충전기가 더 빨리 응답할 수 있습니다. <<authorize_request,AuthorizeRequest>>가 전송되지 않기 때문입니다.
+|4 |설명 |이 유즈케이스는 충전기가 캐시된 IdToken을 사용하는 동안 EV 운전자가 거래를 시작하도록 권한을 부여하는 방법을 설명합니다.
+|{nbsp} d|_Actors_ |충전기, CSMS, EV 운전자
+|{nbsp} d|_시나리오 설명_
+|**1.** EV 운전자가 케이블을 꽂습니다.
+**2.** 충전기가 거래를 시작합니다. +
+**3.** EV 운전자가 IdToken을 제시합니다. +
+**4.** 충전기가 <<authorization_cache,Authorization Cache>>로 IdToken을 확인합니다. +
+**5.** 충전기가 거래를 업데이트합니다. +
+**6.** 충전기가 충전을 시작합니다. +
+**7.** <<e02_start_transaction_cable_plugin_first,E02 - Start Transaction - Cable Plugin First>>가 적용됩니다.
+|5 |필수 조건
+|<<auth_cache_enabled,`AuthCacheEnabled`>> = true
+<<local_pre_authorize,`LocalPreAuthorize`>> = true
+EV 드라이버의 ID가 <<authorization_cache,Authorization Cache>>에 캐시됨 +
+ID가 유효함
+|6 |사후 조건
+|**성공한 사후 조건:** +
+EV 드라이버가 권한 캐시를 사용하여 거래를 시작할 권한이 부여됨.
+
+**실패 사후 조건:** +
+<<authorization_cache,Authorization Cache>>에서 사용자 ID를 찾을 수 없음: +
+* 온라인 충전기: 충전기가 AuthorizeRequest를 발행하고 이 역시 실패함. +
+* 오프라인 상황에서 충전기의 동작은 구성 변수 OfflineTxForUnknownIdEnabled에 의해 정의됩니다.
+|===
+
+.시퀀스 다이어그램: 시작 트랜잭션 - 캐시된 ID
+image::part2/images/figure_32.svg[시퀀스 다이어그램: 시작 트랜잭션 - 캐시된 ID]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7 |오류 처리 |충전기에 인증 캐시에 IdToken이 있고 인증 캐시에서는 유효하지만 CSMS에서는 더 이상 유효하지 않은 경우: 충전기는 <<transaction_event_response,TransactionEventResponse>>에서 IdTokenInfo를 수신하며 여기에는 최신 무효 상태가 포함됩니다. 이런 경우 발생하는 일은 구성 변수 <<max_energy_on_invalid_id,`MaxEnergyOnInvalidId`>> 및 <<stop_tx_on_invalid_id,`StopTxOnInvalidId`>>에 따라 달라집니다.
+|8 |참고 |충전기에서 인증 캐시를 구현한 경우 <<authorize_response,AuthorizeResponse>> 메시지를 수신하면 충전기가 캐시 항목을 업데이트합니다.
+
+캐시된 유효한 IdToken의 경우 <<authorize_request,AuthorizeRequest>>를 보내는 것은 논리적이지 않습니다. <<transaction_event_response,TransactionEventResponse>> 메시지에도 IdToken 정보가 포함되어 있습니다. IdToken이 더 이상 유효하지 않게 되면 충전기는 이 <<transaction_event_response,TransactionEventResponse>>에서 이를 알게 됩니다. +
+따라서 IdToken이 더 이상 유효하지 않으면 충전기에서 에너지 제공을 중단하기로 결정할 수 있으며
+구성에 따라 거래를 중단할 수도 있습니다.
+
+위의 시나리오 설명과 시퀀스 다이어그램은 시작 거래를 위한 구성 변수가 다음과 같이 구성된 것을 기반으로 합니다. +
+<<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,EVConnected, Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
+이 유즈케이스는 다른 구성에도 유효하지만 거래가 다른 순간에 시작/중지될 수 있으며, 이는 메시지가 전송되는 순서를 변경할 수 있습니다. 자세한 내용은 유즈케이스를 참조하세요. <<e01_start_transaction_options,E01 - Start Transaction options>>.
+|===
+
+==== C12 - 거래 시작 - 캐시된 ID - 요구 사항
+
+.C12 - 요구 사항
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID |전제 조건 |요구 사항 정의 |참고
+
+|C12.FR.02 |승인 캐시에 _승인됨_으로 저장된 식별자가 제시될 때.
+|충전기는 idToken이 포함된 <<transaction_event_request,TransactionEventRequest>>를 CSMS로 보내야 합니다. |{nbsp}
+|C12.FR.03 |C12.FR.02 |CSMS는 이 <<transaction_event_request,TransactionEventRequest>>를 처리할 때 IdToken의 승인 상태를 확인해야 합니다. |{nbsp}
+|C12.FR.04 |C12.FR.02 AND +
+케이블이 연결되어 있습니다.
+|충전기는 에너지 제공을 시작해야 합니다. |{nbsp}
+|C12.FR.05 |_Accepted_가 아닌 상태로 인증 캐시에 저장된 식별자가 제시되고 충전기가 온라인 상태인 경우.
+|충전기는 CSMS에 <<authorize_request,AuthorizeRequest>>를 보내야 합니다.
+|식별자의 현재 상태를 확인하기 위해.
+|C12.FR.06 |캐시의 식별자에 대해 <<id_token_info_type,IdTokenInfo>>를 수신한 경우.
+|인증 캐시는 수신된 <<id_token_info_type,IdTokenInfo>>를 사용하여 업데이트해야 합니다. |{nbsp}
+|C12.FR.09 |<<master_pass_group_id,`MasterPassGroupId`>>와 같은 groupId를 갖는 IdToken
+|트랜잭션을 시작할 수 없습니다. |{nbsp}
+|===
+
+:sectnums:
+=== 로컬 인증 목록
+
+:sectnums!:
+[[offline_authorization_through_local_authorization_list]]
+=== C13 - 로컬 인증 목록을 통한 오프라인 인증
+
+.C13 - 로컬 인증 목록을 통한 오프라인 인증
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|번호 |유형 |설명
+
+|1 |이름 |로컬 인증 목록을 통한 오프라인 인증
+|2 |ID |C13
+|{nbsp} d|_기능 블록_ |C. 인증
+|3 |목표 |오프라인 상태에서 <<local_authorization_list,Local Authorization List>>를 사용하여 idToken을 인증합니다.
+|4 |설명 |이 유즈케이스는 CSMS와 통신할 수 없는 경우 IdToken을 인증하는 방법을 설명합니다.
+
+<<local_authorization_list,Local Authorization List>>는 CSMS와 동기화할 수 있는 idToken 목록입니다. 이 목록에는 CSMS에서 관리하는 선택된 idToken 세트의 인증 상태가 포함됩니다.
+|{nbsp} d|_Actors_ |EV 운전자, 충전기
+|{nbsp} d|_시나리오 설명_
+|**1.** 충전기가 _오프라인_입니다. +
+**2.** EV 운전자가 IdToken을 제시합니다. +
+**3.** 충전기는 IdToken이 알려져 있고 <<local_authorization_list,Local Authorization List>>에서 _Accepted_ 상태인지 확인합니다. +
+**4.** 충전기가 충전을 시작합니다.
+|5 |필수 조건
+|_로컬 인증 목록_을 사용할 수 있음 +
+_로컬 인증 목록_이 <<local_auth_list_enabled,`LocalAuthListEnabled`>>를 통해 활성화됨 +
+충전기가 _오프라인_됨_
+EV 운전자의 ID가 _로컬 인증 목록_에 있음 +
+ID가 유효함
+|6 |사후 조건
+|**성공 사후 조건:** +
+충전기가 오프라인일 때 <<local_authorization_list,Local Authorization List>>의 토큰을 허용합니다. +
+**실패 사후 조건:** +
+충전기가 오프라인일 때 <<local_authorization_list,Local Authorization List>>의 토큰을 허용하지 않습니다.
+|===
+
+.시퀀스 다이어그램: 로컬 인증 목록을 통한 오프라인 인증
+image::part2/images/figure_33.svg[시퀀스 다이어그램: 로컬 인증 목록을 통한 오프라인 인증]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7 |오류 처리 |n/a
+|8 |비고(들) |n/a
+|===
+
+==== C13 - 로컬 인증 목록을 통한 오프라인 인증 - 요구 사항
+
+.C13 - 요구 사항
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID |전제 조건 |요구 사항 정의 |참고
+
+|C13.FR.01 |{nbsp} |<<authorization_cache,Authorization Cache>>와 <<local_authorization_list,Local Authorization List>>가 모두 지원되는 경우 충전기는 <<local_authorization_list,Local Authorization List>> 항목을 동일한 식별자에 대한 <<authorization_cache,Authorization Cache>> 항목보다 우선시해야 합니다. |{nbsp}
+|C13.FR.02 |구성 변수 <<offline_tx_for_unknown_id_enabled,`OfflineTxForUnknownIdEnabled`>>가 거짓이고 +
+충전기가 오프라인이고 `LocalAuthListSupportsExpiryDateTime`이 존재하지 않거나 거짓인 경우
+|<<local_authorization_list,Local Authorization List>>에 있는 식별자 중 상태가 _Accepted_인 식별자만 거래를 승인할 수 있습니다.
+|이는 충전기가 _cacheExpiryDateTime_을 확인하지 않는다는 것을 의미합니다.
+|C13.FR.03 |{nbsp} |충전기는 CSMS를 포함하지 않고 로컬에서 IdToken을 승인할 수 있습니다.
+|<<local_authorization_list,Local Authorization List>>에 설명된 대로.
+|C13.FR.04 |구성 변수 <<offline_tx_for_unknown_id_enabled,`OfflineTxForUnknownIdEnabled`>>가 참이고 +
+충전기가 오프라인이고 +
+`LocalAuthListSupportsExpiryDateTime`이 존재하지 않거나 거짓인 경우
+|<<authorization_cache,Authorization Cache>>와 로컬 인증 목록에 없는 식별자는 거래를 승인할 수 있어야 하며 +
+<<local_authorization_list,Local Authorization List>>에 있는 _Accepted_ 상태의 식별자는 거래를 승인할 수 있어야 합니다.
+|즉, 충전기는 _cacheExpiryDateTime_을 확인하지 않습니다. +
+C15.FR.08도 참조하세요.
+|C13.FR.05 |구성 변수 <<offline_tx_for_unknown_id_enabled,`OfflineTxForUnknownIdEnabled`>>가 거짓이고 +
+충전기가 오프라인이고 +
+`LocalAuthListSupportsExpiryDateTime` = true
+|<<local_authorization_list,Local Authorization List>>에 있는 식별자 중 상태가 _Accepted_이고 _cacheExpiryDateTime_이 지나지 않은 식별자만 거래를 승인할 수 있습니다.
+|_cacheExpiryDateTime_이 없는 경우 idToken은 <<local_authorization_list,Local Authorization List>>에서 만료되지 않습니다.
+|C13.FR.06 |구성 변수 <<offline_tx_for_unknown_id_enabled,`OfflineTxForUnknownIdEnabled`>>가 참이고 +
+충전기가 오프라인이고 +
+`LocalAuthListSupportsExpiryDateTime` = 참
+|<<authorization_cache,Authorization Cache>>와 <<local_authorization_list,Local Authorization List>>에 없는 식별자는 거래를 승인하도록 허용되어야 하며 +
+<<local_authorization_list,Local Authorization List>>에 있는 식별자 중 상태가 _Accepted_이고 `cacheExpiryDateTime`이 지나지 않은 식별자는 거래를 승인하도록 허용되어야 합니다.
+|즉, 로컬 승인 목록에서 만료된 토큰은 "알 수 없는 ID"가 아니기 때문에 승인되지 않습니다.
+|===
+
+[[online_authorization_through_local_authorization_list]]
+=== C14 - 로컬 인증 목록을 통한 온라인 인증
+
+.C14 - 로컬 인증 목록을 통한 온라인 인증
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|번호 |유형 |설명
+
+|1 |이름 |로컬 인증 목록을 통한 온라인 인증
+|2 |ID |C14
+|{nbsp} d|_기능 블록_ |C. 인증
+|3 |목표 |_온라인_ 동안 <<local_authorization_list,Local Authorization List>>를 사용하여 idToken을 인증합니다.
+|4 |설명 |이 유즈케이스는 충전기가 온라인일 때 <<local_authorization_list,Local Authorization List>>를 통해 IdToken을 인증하는 방법을 설명합니다. 온라인일 때 충전기는 IdToken을 로컬로 인증할 수 있으며 알려진 IdToken에 대한 AuthorizeRequest를 보낼 필요가 없습니다.
+|{nbsp} d|_Actors_ |EV 운전자, 충전기
+|{nbsp} d|_시나리오 설명_
+|**1.** EV 운전자가 IdToken을 제시합니다. +
+**2.** 충전기는 IdToken이 알려져 있고 <<local_authorization_list,Local Authorization List>>에서 _Accepted_ 상태인지 확인합니다. +
+**3.** IdToken이 알려지지 않았거나 IdToken이 _Accepted_가 아니면 충전기는 <<authorize_request,AuthorizeRequest>>를 보냅니다. +
+**4.** 충전기가 충전을 시작합니다.
+|5 |필수 조건
+|_로컬 인증 목록_을 사용할 수 있음 +
+_로컬 인증 목록_이 <<local_auth_list_enabled,`LocalAuthListEnabled`>>를 통해 활성화됨 +
+EV 드라이버의 ID가 _로컬 인증 목록_에 있음 +
+ID가 유효함 <<local_pre_authorize,`LocalPreAuthorize`>>가 _true_로 설정됨
+|6 |사후 조건
+|**성공 사후 조건:** +
+충전기가 <<local_authorization_list,Local Authorization List>>에서 토큰을 허용합니다. +
+**실패 사후 조건:** +
+충전기가 <<local_authorization_list,Local Authorization List>>에서 토큰을 허용하지 않습니다.
+|===
+
+.시퀀스 다이어그램: 로컬 인증 목록을 통한 온라인 인증
+image::part2/images/figure_34.svg[시퀀스 다이어그램: 로컬 인증 목록을 통한 온라인 인증]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7 |오류 처리 |n/a
+|8 |비고(들) |n/a
+|===
+
+==== C14 - 로컬 인증 목록을 통한 온라인 인증 - 요구 사항
+
+.C14 - 요구 사항
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID |전제 조건 |요구 사항 정의 |참고
+
+|C14.FR.01 |{nbsp} |여기서 <<authorization_cache,Authorization Cache>>와 <<local_authorization_list,Local Authorization List>>가 모두 지원되는 경우 충전기는 <<local_authorization_list,Local Authorization List>> 항목을 동일한 식별자에 대한 Authorization Cache 항목보다 우선시해야 합니다. |{nbsp}
+|C14.FR.02 |제시된 식별자가 <<local_authorization_list,Local Authorization List>>에 `Accepted` 상태로 있고 +
+`LocalAuthListSupportsExpiryDateTime`이 존재하지 않거나 거짓입니다. |충전기는 <<authorize_request,AuthorizeRequest>>를 보내지 않고 충전을 시작해야 합니다.
+|즉, 충전기는 _cacheExpiryDateTime_을 확인하지 않습니다.
+|C14.FR.03 |제시된 식별자가 <<local_authorization_list,Local Authorization List>>에 있고 상태가 _Accepted_가 아닌 경우
+|충전기는 <<authorize_request,AuthorizeRequest>>를 보내 이 IdToken을 승인하려고 시도해야 합니다. |{nbsp}
+|C14.FR.04 |제시된 식별자가 <<local_authorization_list,Local Authorization List>>에 있고 상태가 `Accepted`이고 +
+`ocalAuthListSupportsExpiryDateTime` = true이고 +
+_cacheExpiryDateTime_이 지나지 않았습니다.
+|충전기는 <<authorize_request,AuthorizeRequest>>를 보내지 않고 충전을 시작해야 합니다.
+|_cacheExpiryDateTime_이 없는 경우 idToken은 로컬 승인 목록에서 만료되지 않습니다.
+|C14.FR.05 |제시된 식별자는 <<local_authorization_list,Local Authorization List>>에 있으며 상태가 `Accepted`이고 +
+`LocalAuthListSupportsExpiryDateTime` = true이고 +
+_cacheExpiryDateTime_이 경과했습니다.
+|충전기는 <<authorize_request,AuthorizeRequest>>를 보내 이 IdToken을 승인하려고 시도해야 합니다.
+|_cacheExpiryDateTime_이 경과하면 <<local_authorization_list,Local Authorization List>>에 없는 것처럼 IdToken이 무시됩니다.
+|===
+
+:sectnums:
+=== 오프라인 인증
+
+:sectnums!:
+[[offline_authorization_of_unknown_id]]
+=== C15 - 알 수 없는 ID의 오프라인 인증
+
+.C15 - 알 수 없는 ID의 오프라인 인증
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|번호 |유형 |설명
+
+|1 |이름 |알 수 없는 ID의 오프라인 인증
+|2 |ID |C15
+|{nbsp} d|_기능 블록_ |C. 인증
+|{nbsp} d|_부모 유즈케이스_ |<<start_transaction_cached_id,C12 - Start Transaction - Cached Id>>
+|3 |목표 |인증 캐시 항목에서 명시적으로 인증할 수 없는 "알 수 없는" 식별자의 자동 인증를 허용합니다.
+|4 |설명 |이 유즈케이스는 <<offline_tx_for_unknown_id_enabled,`OfflineTxForUnknownIdEnabled`>>를 사용하여 인증 캐시 또는 로컬 캐시 항목에 있는 것 외에 "알 수 없는" 식별자를 제시하는 시나리오를 설명합니다.
+|{nbsp} d|_행위자_ |충전기, EV 운전자
+|{nbsp} d|_시나리오 설명_
+|**1.** EV 운전자가 EV 충전을 시작하고 IdToken을 제시합니다. +
+**2.** 충전기가 <<authorization_cache,Authorization Cache>>를 확인하는데, IdToken이 <<authorization_cache,Authorization Cache>>에 없습니다. +
+**3.** 충전기가 <<local_authorization_list,Local Authorization List>>를 확인하는데, IdToken이 <<local_authorization_list,Local Authorization List>>에 없습니다. +
+**4.** 충전기는 <<offline_tx_for_unknown_id_enabled,`OfflineTxForUnknownIdEnabled`>>가 _True_로 설정된 경우 알 수 없는 IdToken을 수락합니다. +
+**5.** 충전기는 <<offline_tx_for_unknown_id_enabled,`OfflineTxForUnknownIdEnabled`>>가 _False_로 설정된 경우 알 수 없는 IdToken을 거부합니다.
+|{nbsp} d|_대체 시나리오(들)_
+|<<ev_driver_authorization_using_rfid,C01 - RFID를 사용한 EV 운전자 인증>> +
+<<authorization_using_a_start_button,C02 - 시작 버튼을 사용한 인증>> +
+<<authorization_using_credit_debit_card,C03 - 신용/직불 카드를 사용한 인증>> +
+<<authorization_using_pin_code,C04 - RFID를 사용한 인증 PIN 코드>> +
+<<authorization_for_csms_initiated_transactions,C05 - CSMS에서 시작된 거래에 대한 승인>> +
+<<authorization_using_local_id_type,C06 - 로컬 ID 유형을 사용한 승인>> +
+<<authorization_using_contract_certificates,C07 - 계약 인증서를 사용한 승인>> +
+<<authorization_at_evse_using_iso_15118_external_identification_means_eim,C08 - ISO 15118 외부 식별 수단(EIM)을 사용한 EVSE에서 ​​승인>>
+|5 |필수 조건(들) ​​
+|충전기가 _오프라인_입니다. +
+알 수 없는 IdToken이 제시됨(<<authorization_cache,Authorization Cache>> 및/또는 <<local_authorization_list,Local Authorization List>>에 없음).
+|6 |사후 조건(들) ​​
+|**성공한 사후 조건:** +
+<<transaction_event_response,TransactionEventResponse>>의 인증 상태가 _Accepted_입니다.
+
+**실패한 사후 조건:** +
+<<offline_tx_for_unknown_id_enabled,`OfflineTxForUnknownIdEnabled`>>가 _True_일 때 <<transaction_event_response,TransactionEventResponse>>의 인증 상태가 _Not Accepted_입니다.
+|===
+
+
+.시퀀스 다이어그램: 시작 트랜잭션 - 알 수 없는 오프라인 인증
+image::part2/images/figure_35.svg[시퀀스 다이어그램: 시작 트랜잭션 - 알 수 없는 오프라인 인증]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7 |오류 처리 |해당 없음
+|8 |참고 |이는 ISO 15118 계약 인증서의 일부로 제시된 eMAID를 포함한 모든 유형의 식별자에 적용됩니다.
+|===
+
+==== C15 - 알 수 없는 ID의 오프라인 승인 - 요구 사항
+
+.C15 - 요구 사항
+[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID |전제 조건 |요구 사항 정의 |참고
+
+|C15.FR.01 |식별자가 <<offline_tx_for_unknown_id_enabled,`OfflineTxForUnknownIdEnabled`>>를 통해 승인된 경우
+|충전기는 토큰을 <<authorization_cache,Authorization Cache>>에 추가해서는 안 됩니다 |{nbsp}
+|C15.FR.02 |CSMS와의 연결이 복구된 경우
+|충전기는 _오프라인_으로 승인된 모든 거래에 대해 <<transaction_event_request,TransactionEventRequest>>를 보내야 합니다.
+|<<delivering_transaction_related_messages,transaction-related message handling>>에서 설명한 대로
+|C15.FR.03 |C15.FR.02 AND +
+<<transaction_event_response,TransactionEventResponse>>의 승인 상태가 _Accepted_가 아닙니다. AND +
+거래가 아직 진행 중입니다. AND +
+<<stop_tx_on_invalid_id,`StopTxOnInvalidId`>>가 _true_입니다. AND +
+<<tx_stop_point,`TxStopPoint`>>에는 다음이 포함되지 않습니다. +
+(<<tx_start_stop_point_values,Authorized>> 또는 <<tx_start_stop_point_values,PowerPathClosed>> 또는 <<tx_start_stop_point_values,EnergyTransfer>>)
+|충전기는 에너지 전송을 중지하고 보내야 합니다. <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>) _triggerReason_을 `Deauthorized`로 설정하고 _chargingState_를 `SuspendedEVSE` 또는 바람직하게는 `EVConnected`로 설정합니다.
+|_chargingState_를 `SuspendedEVSE` 또는 `EVConnected`로 설정하는 효과는 모두 에너지를 전달하지 않는다는 동일한 효과가 있으므로, 원래 요구 사항을 준수하는 기존 구현을 중단하지 않기 위해 이 상황에서도 `SuspendedEVSE`를 사용할 수 있습니다. +
+이 상황에서 `SuspendedEVSE`를 사용하는 것은 다음 OCPP 릴리스에서 더 이상 사용되지 않습니다.
+|C15.FR.04 |C15.FR.02 AND +
+<<transaction_event_response,TransactionEventResponse>>의 승인 상태가 _Accepted_가 아닙니다 AND +
+거래가 아직 진행 중입니다 AND +
+<<stop_tx_on_invalid_id,`StopTxOnInvalidId`>>가 _true_이고 AND +
+<<tx_stop_point,`TxStopPoint`>>에 다음이 포함됩니다. +
+(<<tx_start_stop_point_values,Authorized>> 또는 <<tx_start_stop_point_values,PowerPathClosed>> 또는 <<tx_start_stop_point_values,EnergyTransfer>>)
+|충전기는 거래를 중지하고 <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>)를 다음과 함께 전송해야 합니다. _triggerReason_이 _Deauthorized_로 설정되고 <<reason_enum_type,stoppedReason>>이 _DeAuthorized_로 설정되었습니다. |{nbsp}
+|C15.FR.05 |C15.FR.04 및 +
+충전기에서 충전 케이블을 잠글 수 있는 경우
+|충전기는 소유자가 식별자를 제시할 때까지 충전 케이블을 잠근 상태로 유지해야 합니다. |{nbsp}
+|C15.FR.06 |C15.FR.02 및 +
+<<transaction_event_response,TransactionEventResponse>>의 승인 상태가 _Accepted_가 아닙니다. 및 +
+거래가 아직 진행 중입니다. 및 +
+<<stop_tx_on_invalid_id,`StopTxOnInvalidId`>>가 _false_로 설정되었습니다. 및 +
+<<max_energy_on_invalid_id,`MaxEnergyOnInvalidId`>>가 구현되지 않았거나 초과되었습니다. +
+<<tx_stop_point,`TxStopPoint`>>에는 다음이 포함되지 않습니다. <<tx_start_stop_point_values,EnergyTransfer>>
+|충전기는 EV로의 에너지 공급을 즉시 중단하고 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>)를 보내야 합니다. 이때 _triggerReason_은 _ChargingStateChanged_로, chargingState는 _SuspendedEVSE_로 설정해야 합니다. |{nbsp}
+|C15.FR.07 |C15.FR.02 및 +
+<<transaction_event_response,TransactionEventResponse>>의 승인 상태가 _Accepted_가 아니고 +
+거래가 아직 진행 중이고 +
+<<stop_tx_on_invalid_id,`StopTxOnInvalidId`>>가 _false_로 설정되고 +
+<<max_energy_on_invalid_id,`MaxEnergyOnInvalidId`>>가 설정되었으며 초과되지 않았습니다.
+|EV에 대한 에너지 전달은 <<max_energy_on_invalid_id,`MaxEnergyOnInvalidId`>>에 지정된 에너지 양에 도달할 때까지 허용되어야 합니다. |{nbsp}
+|C15.FR.08 |알 수 없는 식별자가 제시되고 <<offline_tx_for_unknown_id_enabled,`OfflineTxForUnknownIdEnabled`>>가 _true_로 설정된 경우
+|충전기는 제시된 IdToken을 수락해야 합니다. |{nbsp}
+|===
+
+:sectnums:
+=== 마스터 패스
+
+:sectnums!:
+=== C16 - 마스터 패스로 거래 중지
+
+.C16 - 마스터 패스로 거래 중지
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|번호 |유형 |설명
+
+|1 |이름 |마스터 패스로 거래 중지
+|2 |ID |C16
+|{nbsp} d|_기능 블록_ |C. 인증
+|3 |목표 |마스터 패스를 사용하여 거래를 중단할 수 있도록 합니다(예: 법 집행 기관).
+|4 |설명 |이 유즈케이스는 마스터 패스(사용자)가 있는 사람이 진행 중인 거래를 중단(선택)하여 케이블이 잠금 해제되는 방법을 다룹니다. 이 마스터 패스는 <<master_pass_group_id,`MasterPassGroupId`>>에서 구성할 수 있습니다.
+|{nbsp} d|_행위자_ |충전기, CSMS, 사용자
+|{nbsp} d|_시나리오 설명_
+|**1.** 사용자(법 집행 기관)가 충전기에 자신의 IdToken을 제시합니다. +
+**2.** 충전기가 <<authorize_request,AuthorizeRequest>>를 CSMS로 보내 권한을 요청합니다. +
+**3.** <<authorize_request,AuthorizeRequest>>를 수신하면 CSMS는 <<authorize_response,AuthorizeResponse>>로 응답합니다. 이 응답 메시지에는 구성 변수 <<master_pass_group_id,`MasterPassGroupId`>>의 값과 동일한 GroupId가 포함되어 있으며 idToken이 유효합니다. +
+**4a.** 충전기에 UI가 있는 경우 충전기는 마스터 패스 UI를 "표시"합니다. +
+**5a.** 사용자는 중지할 거래를 선택합니다. +
+**6a.** 충전기는 선택한 거래를 중지하고 중지된 모든 거래에 대해 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>, <<reason_enum_type,stopReason = MasterPass>>)를 CSMS로 보냅니다. +
+**7a.** <<transaction_event_request,TransactionEventRequest>>를 수신하면 CSMS는 <<transaction_event_response,TransactionEventResponse>>로 응답합니다. +
+**4b.** 충전기에 UI가 없는 경우 충전기는 모든 거래를 중지하고 중지된 모든 거래에 대해 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>, <<reason_enum_type,stopReason = MasterPass>>)를 CSMS로 보냅니다. +
+**5b.** <<transaction_event_request,TransactionEventRequest>>를 수신하면 CSMS는 <<transaction_event_response,TransactionEventResponse>>로 응답합니다.
+|{nbsp} d|_대체 시나리오_ |<<ev_driver_authorization_using_rfid,C01 - EV Driver Authorization>>
+|5 |필수 조건
+|진행 중인 거래 +
+구성 변수: <<master_pass_group_id,`MasterPassGroupId`>> 설정됨. +
+사용자 IdToken에 구성된 <<master_pass_group_id,`MasterPassGroupId`>>와 동일한 그룹 ID가 있습니다.
+|6 |사후 조건 |(선택된) 거래가 중단되었습니다.
+|===
+
+.시퀀스 다이어그램: 마스터 패스로 거래 중지
+image::part2/images/figure_36.svg[시퀀스 다이어그램: 마스터 패스로 거래 중지]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7 |오류 처리 |사용자가 허용 가능한 시간 초과 전에 선택을 하지 않으면 충전기는 정상 작동으로 돌아가야 합니다.
+|8 |주의 |위의 시나리오 설명과 시퀀스 다이어그램은 거래 중지를 위한 구성 변수가 다음과 같이 구성되는 것을 기반으로 합니다. +
+<<tx_stop_point,`TxStopPoint`>>: <<tx_start_stop_point_values,Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
+이 유즈케이스는 다른 구성에도 유효하지만, 그러면 트랜잭션이 다른 순간에 중지될 수 있으며, 이는 메시지가 전송되는 순서를 변경할 수 있습니다. 자세한 내용은 유즈케이스를 참조하세요: <<e06_stop_transaction_options,E06 - Stop Transaction options>>
+|===
+
+==== C16 - 마스터 패스로 거래 중지 - 요구 사항
+
+.C16 - 마스터 패스로 거래 중지 - 요구 사항
+[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID |전제 조건 |요구 사항 정의
+
+|C16.FR.01 |사용자가 <<master_pass_group_id,`MasterPassGroupId`>>와 같은 그룹 ID를 가진 IdToken을 제시하고 +
+충전기에 UI가 있습니다.
+|충전기는 마스터 패스 UI를 "표시"해야 합니다.
+|C16.FR.02 |사용자가 <<master_pass_group_id,`MasterPassGroupId`>>와 같은 그룹 ID를 가진 IdToken을 제시하고 충전기에 UI가 없습니다.
+|충전기는 진행 중인 모든 거래를 중지해야 합니다.
+|C16.FR.03 | <<master_pass_group_id,`MasterPassGroupId`>>와 같은 groupId를 갖는 IdToken
+|거래를 시작할 수 없습니다.
+|C16.FR.04 | <<authorization_cache,Authorization Cache>>에 있는 <<master_pass_group_id,`MasterPassGroupId`>>와 같은 groupId를 갖는 IdToken.
+|충전기는 <<authorization_cache,Authorization Cache>>에 있는 정보를 기반으로 "마스터 패스" 토큰의 승인을 허용할 수도 있습니다.
+|C16.FR.05 | <<local_authorization_list,Local Authorization List>>에 있는 <<master_pass_group_id,`MasterPassGroupId`>>와 같은 groupId를 갖는 IdToken.
+|충전기는 <<local_authorization_list,Local Authorization List>>의 정보에 따라 "마스터 패스" 토큰의 승인을 허용할 수도 있습니다.
+|===
