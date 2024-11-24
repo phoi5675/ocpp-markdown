@@ -153,7 +153,7 @@ image::part2/images/figure_21.svg[Sequence Diagram: EV Driver Authorization]
 ==== C01 - EV Driver Authorization using RFID - Requirements
 
 .C01 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -263,7 +263,7 @@ image::part2/images/figure_22.svg[Sequence Diagram: Authorization using a start 
 ==== C02 - Authorization using a start button - Requirements
 
 .C02 - Authorization using a start button - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -334,7 +334,7 @@ This use-case is also valid for other configurations, but then the transaction m
 ==== C03 - Authorization using credit/debit card - Requirements
 
 .C03 - Authorization using credit/debit card - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -393,7 +393,7 @@ image::part2/images/figure_24.svg[Sequence Diagram: Authorization using PIN-code
 ==== C04 - Authorization using PIN-code - Requirements
 
 .C04 - Authorization using PIN-code - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -469,7 +469,7 @@ Other <<id_token_enum_type,idTokenTypes>> can also be used to remote start charg
 ==== C05 - Authorization for CSMS initiated transactions Requirements
 
 .C05 - Authorization for CSMS initiated transactions Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -542,7 +542,7 @@ This use-case is also valid for other configurations, but then the transaction m
 ==== C06 - Authorization using local id type - Requirements
 
 .C06 - Authorization using local id type - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -614,7 +614,7 @@ When the Charging Station is offline, it is recommended to omit the payment opti
 ==== C07 - Authorization using Contract Certificates - Requirements
 
 .C07 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -722,7 +722,7 @@ Source: <<iso15118_1,ISO15118-1>>
 ==== C08 - Authorization at EVSE using ISO 15118 External Identification Means (EIM) - Requirements
 
 .C08 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -773,7 +773,7 @@ The groupId mechanism as described in this use case also works when using the Au
 ==== C09 - Authorization by GroupId - Requirements
 
 .C09 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -846,7 +846,7 @@ image::part2/images/figure_30.svg[Sequence Diagram: Store Authorization Data in 
 ==== C10 - Store Authorization Data in the Authorization Cache - Requirements
 
 .C10 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -919,7 +919,7 @@ image::part2/images/figure_31.svg[Sequence Diagram: Clear Authorization Data in 
 ==== C11 - Clear Authorization Data in Authorization Cache - Requirements
 
 .C11 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -997,7 +997,7 @@ This use-case is also valid for other configurations, but then the transaction m
 ==== C12 - Start Transaction - Cached Id - Requirements
 
 .C12 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -1066,7 +1066,7 @@ image::part2/images/figure_33.svg[Sequence Diagram: Offline Authorization throug
 ==== C13 - Offline Authorization through Local Authorization List - Requirements
 
 .C13 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -1140,7 +1140,7 @@ image::part2/images/figure_34.svg[Sequence Diagram: Online Authorization through
 ==== C14 - Online Authorization through Local Authorization List - Requirements
 
 .C14 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -1221,7 +1221,7 @@ image::part2/images/figure_35.svg[Sequence Diagram: Start Transaction - Unknown 
 ==== C15 - Offline Authorization of unknown Id - Requirements
 
 .C15 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -1315,7 +1315,7 @@ image::part2/images/figure_36.svg[Sequence Diagram: Stop Transaction with a Mast
 ==== C16 - Stop Transaction with a Master Pass - Requirements
 
 .C16 - Stop Transaction with a Master Pass - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 

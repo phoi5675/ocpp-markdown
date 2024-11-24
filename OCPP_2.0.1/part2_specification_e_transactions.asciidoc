@@ -335,7 +335,7 @@ image::part2/images/figure_44.svg[Sequence Diagram: Start Transaction options - 
 ==== E01 - Start Transaction options - Requirements
 
 .E01 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -482,7 +482,7 @@ image::part2/images/figure_45.svg[Sequence Diagram: Start Transaction - Cable Pl
 ==== E02 - Start Transaction - Cable Plugin First - Requirements
 
 .E02 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -588,7 +588,7 @@ This use-case is also valid for other configurations, but then the transaction m
 ==== E03 - Start Transaction - IdToken First - Requirements
 
 .E03 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -684,7 +684,7 @@ image::part2/images/figure_47.svg[Sequence Diagram: Transaction started while Ch
 ==== E04 - Transaction started while Charging Station is offline - Requirements
 
 .E04 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -773,7 +773,7 @@ image::part2/images/figure_48.svg[Sequence Diagram: Start Transaction - Id not A
 ==== E05 - Start Transaction - Id not Accepted - Requirements
 
 .E05 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -989,7 +989,7 @@ image::part2/images/figure_54.svg[Sequence Diagram: Stop Transaction options - A
 
 .E06 - Requirements
 .E01 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -1105,7 +1105,7 @@ The CSMS cannot prevent a transaction from stopping.
 ==== E07 - Transaction locally stopped by IdToken - Requirements
 
 .E07 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -1197,7 +1197,7 @@ image::part2/images/figure_57.svg[Sequence Diagram: Transaction stopped while Ch
 ==== E08 - Transaction stopped while Charging Station is offline - Requirements
 
 .E08 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -1289,7 +1289,7 @@ image::part2/images/figure_58.svg[Sequence Diagram: When cable disconnected on E
 ==== E09 - When cable disconnected on EV-side: Stop Transaction - Requirements
 
 .E09 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -1394,7 +1394,7 @@ image::part2/images/figure_59.svg[Sequence Diagram: When cable disconnected on E
 ==== E10 - When cable disconnected on EV-side: Suspend Transaction - Requirements
 
 .E10 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -1461,7 +1461,7 @@ image::part2/images/figure_60.svg[Sequence Diagram: Connection Loss During Trans
 ==== E11 - Connection Loss During Transaction - Requirements
 
 .E11 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -1535,7 +1535,7 @@ image::part2/images/figure_61.svg[Sequence Diagram: Inform CSMS of an Offline Oc
 ==== E12 - Inform CSMS of an Offline Occurred Transaction - Requirements
 
 .E12 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -1610,7 +1610,7 @@ image::part2/images/figure_62.svg[Sequence Diagram: Transaction-related message 
 ==== E13 - Transaction-related message not accepted by CSMS - Requirements
 
 .E13 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -1668,7 +1668,7 @@ image::part2/images/figure_63.svg[Sequence Diagram: Check transaction status]
 ==== E14 - Check transaction status - Requirements
 
 .E14 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -1748,7 +1748,7 @@ Source: <<iso15118_1,ISO15118-1>>
 ==== E15 - End of charging process - Requirements
 
 .E15 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 

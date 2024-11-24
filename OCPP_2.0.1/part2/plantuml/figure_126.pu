@@ -1,0 +1,20 @@
+@startuml figure_126
+!include style.puml
+
+participant "EV" as EV
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+EV -> ChargingStation: CertificateUpdateReq()
+
+ChargingStation -> CSMS: Get15118EVCertificateRequest(15118SchemaVersion, update, exiRequest)
+activate ChargingStation
+activate CSMS
+
+CSMS --> ChargingStation: Get15118EVCertificateResponse(status, exiResponse)
+deactivate ChargingStation
+deactivate CSMS
+
+ChargingStation --> EV: CertificateUpdateRes()
+
+@enduml

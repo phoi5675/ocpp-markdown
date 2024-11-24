@@ -1,0 +1,41 @@
+@startuml figure_124
+!include style.puml
+
+participant "EV" as EV
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+opt for caching
+  ChargingStation -> CSMS: GetCertificateStatusRequest(ocspRequestData)
+  activate ChargingStation
+  activate CSMS
+
+  CSMS --> ChargingStation: GetCertificateStatusResponse(status, ocspResult)
+  deactivate ChargingStation
+  deactivate CSMS
+end
+
+note over EV
+  The TLS Start will include a list of all known
+  V2G Root Certificates by the EV
+end note 
+
+EV -> ChargingStation: startTLS(ListOfRootCertificates)
+
+note over ChargingStation
+  The TLS response will include OCSP revocation status information on the CSO Sub-CA certificates.
+end note
+
+ChargingStation -> EV: StartTLSresponse()
+
+note over EV
+  For readability reasons, some intermediate messages
+  are not displayed here.
+end note
+
+note over EV
+  The EV sends its Contact Certificate and MO Sub-CA
+  certificates to the Charging Station.
+end note
+
+@enduml

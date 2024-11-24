@@ -67,7 +67,7 @@ image::part2/images/figure_85.svg[Sequence Diagram: Show EV Driver-specific tari
 ==== I01 - Show EV Driver-specific Tariff Information - Requirements
 
 .I01 - Show EV Driver-specific Tariff Information - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -118,7 +118,7 @@ image::part2/images/figure_86.svg[Sequence Diagram: Show EV Driver Running Total
 ==== I02 - Show EV Driver Running Total Cost During Charging - Requirements
 
 .I02 - Show EV Driver Running Total Cost During Charging - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -179,7 +179,7 @@ image::part2/images/figure_87.svg[Sequence Diagram: Show EV Driver Final Total C
 ==== I03 - Show EV Driver Final Total Cost After Charging - Requirements
 
 .I03 - Show EV Driver Final Total Cost After Charging - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -239,7 +239,7 @@ image::part2/images/figure_88.svg[Sequence Diagram: Show Fallback Tariff Informa
 ==== I04 - Show Fallback Tariff Information - Requirements
 
 .I04 - Show Fallback Tariff Information - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -290,7 +290,7 @@ image::part2/images/figure_89.svg[Sequence Diagram: Show Fallback Total Cost Mes
 ==== I05 - Show Fallback Total Cost Message - Requirements
 
 .I05 - Show Fallback Total Cost Message - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -344,7 +344,7 @@ image::part2/images/figure_90.svg[Sequence Diagram: Update Tariff Information Du
 ==== I06 - Update Tariff Information During Transaction - Requirements
 
 .I06 - Update Tariff Information During Transaction - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 

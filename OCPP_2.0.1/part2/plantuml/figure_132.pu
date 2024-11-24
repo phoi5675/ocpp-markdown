@@ -1,0 +1,29 @@
+@startuml figure_132
+!include style.puml
+
+actor "CSO" as CSO
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+CSO -> CSMS: request for a monitoring report
+
+CSMS -> ChargingStation: GetMonitoringReportRequest(requestId, monitoringCriteria, componentVariables)
+activate CSMS
+activate ChargingStation
+
+ChargingStation --> CSMS: GetMonitoringReportResponse(status)
+deactivate CSMS
+deactivate ChargingStation
+
+loop for each report part
+  ChargingStation -> CSMS: NotifyMonitoringReportRequest(generatedAt, requestId, tbc, reports)
+  activate CSMS
+  activate ChargingStation
+
+  CSMS --> ChargingStation: NotifyMonitoringReportResponse()
+  deactivate CSMS
+  deactivate ChargingStation
+end
+
+
+@enduml

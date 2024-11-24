@@ -89,7 +89,7 @@ Notifying a connector status from the Charging Station to the CSMS will be taken
 ==== G01 - Status Notification - Requirements
 
 .G01 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -158,7 +158,7 @@ image::part2/images/figure_74.svg[Sequence Diagram: Heartbeat]
 === G02 - Heartbeat - Requirements
 
 .G02 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -226,7 +226,7 @@ image::part2/images/figure_75.svg[Sequence Diagram: Change Availability]
 ==== G03 - Change Availability EVSE - Requirements
 
 .G03 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -311,7 +311,7 @@ image::part2/images/figure_76.svg[Sequence Diagram: Change Availability Charging
 ==== G04 - Change Availability Charging Station - Requirements
 
 .G04 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -384,7 +384,7 @@ image::part2/images/figure_77.svg[Sequence Diagram: Lock Failure]
 ==== G05 - Lock Failure - Requirements
 
 .G05 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 

@@ -1,0 +1,18 @@
+@startuml figure_134
+!include style.puml
+
+actor "CSO" as CSO
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+CSO -> CSMS : request to set a monitoring setting for a variable
+
+CSMS -> ChargingStation: SetVariableMonitoringRequest(MonitoringData)
+activate CSMS
+activate ChargingStation
+
+ChargingStation --> CSMS: SetVariableMonitoringResponse(setMonitoringResult)
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

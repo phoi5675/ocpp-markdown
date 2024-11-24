@@ -182,7 +182,7 @@ image::part2/images/figure_91.svg[Sequence Diagram: Sending Meter Values]
 ==== J01 - Sending Meter Values not related to a transaction - Requirements
 
 .J01 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -292,7 +292,7 @@ image::part2/images/figure_92.svg[Sequence Diagram: Sending transaction related 
 ==== J02 - Sending transaction related Meter Values - Requirements
 
 .J02 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -396,7 +396,7 @@ image::part2/images/figure_93.svg[Charging Loop with metering information exchan
 ==== J03 - Charging Loop with metering information exchange - Requirements
 
 .J03 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 

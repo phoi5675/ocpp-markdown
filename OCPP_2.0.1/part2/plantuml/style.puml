@@ -60,3 +60,15 @@ skinparam State {
   FontColor #ffffff
   FontName FONT_NAME
 }
+
+' Deployment diagram
+skinparam Agent {
+  BackgroundColor BASE_COLOR
+  BorderColor #000000
+  FontColor #ffffff
+  FontName FONT_NAME
+}
+
+skinparam Rectangle {
+  FontName FONT_NAME
+}

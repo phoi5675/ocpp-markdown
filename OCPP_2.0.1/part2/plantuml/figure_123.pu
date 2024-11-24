@@ -1,0 +1,73 @@
+@startuml figure_123
+!include style.puml
+
+agent "V2G Root" as V2GRoot
+agent "OEM Root CA" as OEMRootCA
+agent "MO Root CA" as MORootCA
+
+agent "Prov Sub-CA 1" as ProvSubCA1
+agent "OCSP Signer\nCertificate" as OCSPSignerCertificate
+agent "CSO Sub-CA 1" as CSOSubCA1
+agent "OEM Sub-CA 1" as OEMSubCA1
+agent "MO Sub-CA 1" as MOSubCA1
+
+agent "Prov Sub-CA 2" as ProvSubCA2
+agent "OCSP Signer\nCertificate" as OCSPSignerCertificate2
+agent "CSO Sub-CA 2" as CSOSubCA2
+agent "OEM Sub-CA 2" as OEMSubCA2
+agent "MO Sub-CA 2" as MOSubCA2
+
+rectangle "Provisioning\nService" as ProvisioningService {
+  agent "Leaf Prov\nCertificate" as LeafProvCertificate
+}
+
+rectangle EVSE {
+  agent "EVSE Leaf\nCertificate" as EVSELeafCertificate
+}
+
+rectangle Vehicle {
+  agent "OEM Prov\nCertificate" as OEMProvCertificate
+  agent "Contract\nCertificate" as ContractCertificate
+}
+
+agent "SalesTariff" as SalesTariff
+
+V2GRoot -right[hidden]- OEMRootCA
+OEMRootCA -right[hidden]- MORootCA
+
+ProvSubCA1 -right[hidden]- OCSPSignerCertificate
+
+V2GRoot --> ProvSubCA1
+V2GRoot --> OCSPSignerCertificate
+V2GRoot --> CSOSubCA1
+V2GRoot ..> OEMSubCA1
+V2GRoot ..> MOSubCA1
+
+OEMRootCA --> OEMSubCA1
+
+MORootCA --> MOSubCA1
+
+OCSPSignerCertificate -> CSOSubCA1: Signs\nOCSP\nResponse
+
+ProvSubCA1 --> ProvSubCA2
+
+CSOSubCA1 --> OCSPSignerCertificate2
+OCSPSignerCertificate2 -> CSOSubCA2: Signs\nOCSP\nResposne
+
+CSOSubCA1 --> CSOSubCA2
+
+OEMSubCA1 --> OEMSubCA2
+
+MOSubCA1 --> MOSubCA2
+
+ProvSubCA2 --> LeafProvCertificate
+
+CSOSubCA2 --> EVSELeafCertificate
+
+OEMSubCA2 --> OEMProvCertificate
+
+MOSubCA2 --> ContractCertificate
+
+MOSubCA2 --> SalesTariff: Signs
+
+@enduml

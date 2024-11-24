@@ -79,7 +79,7 @@ image::part2/images/figure_118.svg[Firmware status transitions]
 ==== L01 - Secure Firmware Update - Requirements
 
 .L01 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -231,7 +231,7 @@ FTP needs to be able to use Passive FTP, to be able to transverse over as much d
 ==== L02 - Non-Secure Firmware Update - Requirements
 
 .L02 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -350,7 +350,7 @@ image::part2/images/figure_120.svg[Sequence Diagram: showing publishing of firmw
 ==== L03 - Publish Firmware file on Local Controller - Requirements
 
 .L03 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -396,7 +396,7 @@ image::part2/images/figure_120.svg[Sequence Diagram: showing publishing of firmw
 |4   |Description     |Stop serving a firmware update to connected Charging Stations.
 |{nbsp} d|_Actors_    |Local Controller, CSMS
 |{nbsp} d|_Scenario description_
-  **1.** The CSMS sends an <<unpublish_firmware_request,UnpublishFirmwareRequest>> to instruct the local controller to unpublish the firmware. +
+  |**1.** The CSMS sends an <<unpublish_firmware_request,UnpublishFirmwareRequest>> to instruct the local controller to unpublish the firmware. +
   **2.** The Local Controller unpublishes the firmware. +
   **3.** The local Controller responds with an <<unpublish_firmware_response,UnpublishFirmwareResponse>>.
 |5   |Prerequisite(s) |A firmware successfully published by the Local Controller.
@@ -419,7 +419,7 @@ image::part2/images/figure_121.svg[Sequence Diagram: Unpublishing a firmware fil
 ==== L04 - Unpublish Firmware file on Local Controller - Requirements
 
 .L04 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 

@@ -1,0 +1,19 @@
+@startuml figure_138
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+loop Each time the periodic value of a monitoring setting has been reached
+  loop For each report part
+    ChargingStation -> CSMS: NotifyEventRequest(generatedAt, tbc, seqNo, eventData)
+    activate ChargingStation
+    activate CSMS
+
+    CSMS --> ChargingStation: NotifyEventResponse()
+    deactivate ChargingStation
+    deactivate CSMS
+  end
+end
+
+@enduml

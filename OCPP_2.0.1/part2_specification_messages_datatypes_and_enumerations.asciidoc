@@ -309,9 +309,10 @@ evseId integer 0..1 Optional. EVSE Identifier.
 This contains the field definition of the ClearedChargingLimitResponse PDU sent by the CSMS to the Charging Station. No fields are
 defined.
 
-==== 1.10. ClearVariableMonitoring.
+=== ClearVariableMonitoring
 
-**1.10.1. ClearVariableMonitoringRequest**
+[[clear_variable_monitoring_request]]
+==== ClearVariableMonitoringRequest
 
 This contains the field definition of the ClearVariableMonitoringRequest PDU sent by the CSMS to the Charging Station.
 
@@ -322,7 +323,8 @@ Field Name Field Type Card. Description
 id integer 1..* Required. List of the monitors to be cleared, identified by
 there Id.
 
-**1.10.2. ClearVariableMonitoringResponse**
+[[clear_variable_monitoring_response]]
+==== ClearVariableMonitoringResponse
 
 This contains the field definition of the ClearVariableMonitoringResponse PDU sent by the Charging Station to the CSMS.
 
@@ -360,11 +362,12 @@ cost are asked for.
 This contains the field definition of the CostUpdatedResponse PDU sent by the Charging Station to the CSMS in response to
 CostUpdatedRequest. No fields are defined.
 
-==== 1.12. CustomerInformation
+=== CustomerInformation
 
 This contains the field definition of the CustomerInformationRequest PDU sent by the CSMS to the Charging Station.
 
-**1.12.1. CustomerInformationRequest**
+[[customer_information_request]]
+==== CustomerInformationRequest
 
 _Class_
 
@@ -393,7 +396,8 @@ refers to. One of the possible identifiers
 (customerIdentifier, customerIdToken or
 customerCertificate) should be in the request message.
 
-**1.12.2. CustomerInformationResponse**
+[[customer_information_response]]
+==== CustomerInformationResponse
 
 _Class_
 
@@ -444,9 +448,10 @@ data anyType 0..1 Optional. Data without specified length or format, in
 response to request.
 statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
-==== 1.14. DeleteCertificate
+=== DeleteCertificate
 
-**1.14.1. DeleteCertificateRequest**
+[[delete_certificate_request]]
+==== DeleteCertificateRequest
 
 Used by the CSMS to request deletion of an installed certificate on a Charging Station.
 
@@ -457,7 +462,8 @@ Field Name Field Type Card. Description
 certificateHashData CertificateHashDataType 1..1 Required. Indicates the certificate of which deletion is
 requested.
 
-**1.14.2. DeleteCertificateResponse**
+[[delete_certificate_response]]
+==== DeleteCertificateResponse
 
 Response to a DeleteCertificateRequest.
 
@@ -494,9 +500,10 @@ firmware update ongoing.
 This contains the field definition of the FirmwareStatusNotificationResponse PDU sent by the CSMS to the Charging Station in
 response to a FirmwareStatusNotificationRequest. No fields are defined.
 
-==== 1.16. Get15118EVCertificate
+=== Get15118EVCertificate
 
-**1.16.1. Get15118EVCertificateRequest**
+[[get_15118_ev_certificate_request]]
+==== Get15118EVCertificateRequest
 
 This message is sent by the Charging Station to the CSMS if an ISO 15118 vehicle selects the service Certificate installation. NOTE:
 This message is based on CertificateInstallationReq Res from ISO 15118 2.
@@ -513,7 +520,8 @@ installed or updated.
 exiRequest string[0..5600] 1..1 Required. Raw CertificateInstallationReq request from EV,
 Base64 encoded.
 
-**1.16.2. Get15118EVCertificateResponse**
+[[get_15118_ev_certificate_response]]
+==== Get15118EVCertificateResponse
 
 Response message from CSMS to Charging Station containing the status and optionally new certificate. NOTE: This message is
 based on CertificateInstallationReq Res from ISO 15118-2.
@@ -570,9 +578,10 @@ pe
 able to accept this request.
 statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
-==== 1.18. GetCertificateStatus
+=== GetCertificateStatus
 
-**1.18.1. GetCertificateStatusRequest**
+[[get_certificate_status_request]]
+==== GetCertificateStatusRequest
 
 This contains the field definition of the GetCertificateStatusRequest PDU sent by the Charging Station to the CSMS.
 
@@ -583,7 +592,8 @@ Field Name Field Type Card. Description
 ocspRequestData OCSPRequestDataType 1..1 Required. Indicates the certificate of which the status is
 requested.
 
-**1.18.2. GetCertificateStatusResponse**
+[[get_certificate_status_response]]
+==== GetCertificateStatusResponse
 
 This contains the field definition of the GetCertificateStatusResponse PDU sent by the CSMS to the Charging Station.
 
@@ -716,9 +726,10 @@ Messages that match the request criteria in the
 GetDisplayMessagesRequest
 statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
-==== 1.22. GetInstalledCertificateIds.
+=== GetInstalledCertificateIds
 
-**1.22.1. GetInstalledCertificateIdsRequest**
+[[get_installed_certificate_ids_request]]
+==== GetInstalledCertificateIdsRequest
 
 Used by the CSMS to request an overview of the installed certificates on a Charging Station.
 
@@ -729,7 +740,8 @@ Field Name Field Type Card. Description
 certificateType GetCertificateIdUseEnumType 0..* Optional. Indicates the type of certificates requested.
 When omitted, all certificate types are requested.
 
-**1.22.2. GetInstalledCertificateIdsResponse**
+[[get_installed_certificate_ids_response]]
+==== GetInstalledCertificateIdsResponse
 
 Response to a GetInstalledCertificateIDsRequest.
 
@@ -771,9 +783,10 @@ Field Name Field Type Card. Description
 versionNumber integer 1..1 Required. This contains the current version number of the
 local authorization list in the Charging Station.
 
-==== 1.24. GetLog
+=== GetLog
 
-**1.24.1. GetLogRequest**
+[[get_log_request]]
+==== GetLogRequest
 
 This contains the field definition of the GetLogRequest PDU sent by the CSMS to the Charging Station.
 
@@ -796,7 +809,8 @@ attempts.
 log LogParametersType 1..1 Required. This field specifies the requested log and the
 location to which the log should be sent.
 
-**1.24.2. GetLogResponse**
+[[get_log_response]]
+==== GetLogResponse
 
 This contains the field definition of the GetLogResponse PDU sent by the Charging Station to the CSMS in response to a
 GetLogRequest.
@@ -812,12 +826,12 @@ be uploaded. This field is not present when no logging
 information is available.
 statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
-==== 1.25. GetMonitoringReport
+=== GetMonitoringReport
 
 Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
 
-
-**1.25.1. GetMonitoringReportRequest**
+[[get_monitoring_report_request]]
+==== GetMonitoringReportRequest
 
 This contains the field definition of the GetMonitoringReportRequest PDU sent by the CSMS to the Charging Station.
 
@@ -831,7 +845,8 @@ which a monitoring report is requested
 componentVariable ComponentVariableType 0..* Optional. This field specifies the components and
 variables for which a monitoring report is requested.
 
-**1.25.2. GetMonitoringReportResponse**
+[[get_monitoring_report_response]]
+==== GetMonitoringReportResponse
 
 This contains the field definition of the GetMonitoringReportResponse PDU sent by the Charging Station to the CSMS.
 
@@ -974,7 +989,8 @@ Field Name Field Type Card. Description
 certificateType InstallCertificateUseEnumType 1..1 Required. Indicates the certificate type that is sent.
 certificate string[0..5500] 1..1 Required. A PEM encoded X.509 certificate.
 
-**1.30.2. InstallCertificateResponse**
+[[install_certificate_response]]
+==== InstallCertificateResponse
 
 The response to a InstallCertificateRequest, sent by the Charging Station to the CSMS.
 
@@ -1004,7 +1020,8 @@ mandatory, unless the message was triggered by a
 TriggerMessageRequest AND there is no log upload
 ongoing.
 
-**1.31.2. LogStatusNotificationResponse**
+[[log_status_notification_response]]
+==== LogStatusNotificationResponse
 
 This contains the field definition of the LogStatusNotificationResponse PDU sent by the CSMS to the Charging Station in response
 to LogStatusNotificationRequest. No fields are defined.
@@ -1063,11 +1080,12 @@ current over time, as set by the external source.
 The NotifyChargingLimitResponse message is sent by the CSMS to the Charging Station in response to a
 NotifyChargingLimitsRequest. No fields are defined.
 
-==== 1.34. NotifyCustomerInformation
+=== NotifyCustomerInformation
 
 This contains the field definition of the NotifyCustomerInformationRequest PDU sent by the Charging Station to the CSMS.
 
-**1.34.1. NotifyCustomerInformationRequest**
+[[notify_customer_information_request]]
+==== NotifyCustomerInformationRequest
 
 _Class_
 
@@ -1088,8 +1106,8 @@ requestId integer 1..1 Required. The Id of the request.
 
 Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
 
-
-**1.34.2. NotifyCustomerInformationResponse**
+[[notify_customer_information_response]]
+==== NotifyCustomerInformationResponse
 
 ==== 1.35. NotifyDisplayMessages
 
@@ -1222,9 +1240,10 @@ Response to NotifyEventRequest. No fields are defined.
 Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
 
 
-=== 1.39. NotifyMonitoringReport
+=== NotifyMonitoringReport
 
-**1.39.1. NotifyMonitoringReportRequest**
+[[notify_monitoring_report_request]]
+==== NotifyMonitoringReportRequest
 
 This contains the field definition of the NotifyMonitoringRequest PDU sent by the Charging Station to the CSMS.
 
@@ -1245,7 +1264,8 @@ generated at the Charging Station.
 monitor MonitoringDataType 0..* Optional. List of MonitoringData containing monitoring
 settings.
 
-**1.39.2. NotifyMonitoringReportResponse**
+[[notify_monitoring_report_response]]
+==== NotifyMonitoringReportResponse
 
 Response to a NotifyMonitoringRequest message. No fields are defined.
 
@@ -1680,7 +1700,8 @@ statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
 === 1.53. SetMonitoringBase
 
-**1.53.1. SetMonitoringBaseRequest**
+[[set_monitoring_base_request]]
+==== SetMonitoringBaseRequest
 
 This contains the field definition of the SetMonitoringBaseRequest PDU sent by the CSMS to the Charging Station.
 
@@ -1693,7 +1714,8 @@ Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
 Field Name Field Type Card. Description
 monitoringBase MonitoringBaseEnumType 1..1 Required. Specify which monitoring base will be set
 
-**1.53.2. SetMonitoringBaseResponse**
+[[set_monitoring_base_response]]
+==== SetMonitoringBaseResponse
 
 This contains the field definition of the SetMonitoringBaseResponse PDU sent by the Charging Station to the CSMS in response to a
 SetMonitoringBaseRequest.
@@ -1710,9 +1732,10 @@ pe
 able to accept the request.
 statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
-=== 1.54. SetMonitoringLevel
+=== SetMonitoringLevel
 
-**1.54.1. SetMonitoringLevelRequest**
+[[set_monitoring_level_request]]
+==== SetMonitoringLevelRequest
 
 This contains the field definition of the SetMonitoringLevelRequest PDU sent by the CSMS to the Charging Station.
 
@@ -1761,7 +1784,8 @@ required.
 Indicates information useful to developers for debugging,
 not useful during operations.
 
-**1.54.2. SetMonitoringLevelResponse**
+[[set_monitoring_level_response]]
+==== SetMonitoringLevelResponse
 
 This contains the field definition of the SetMonitoringLevelResponse PDU sent by the Charging Station to the CSMS in response to
 a SetMonitoringLevelRequest.
@@ -1802,9 +1826,11 @@ Field Name Field Type Card. Description
 status SetNetworkProfileStatusEnumType 1..1 Required. Result of operation.
 statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
-=== 1.56. SetVariableMonitoring
+[[set_varaible_monitoring]]
+=== SetVariableMonitoring
 
-**1.56.1. SetVariableMonitoringRequest**
+[[set_variable_monitoring_request]]
+==== SetVariableMonitoringRequest
 
 This contains the field definition of the SetVariableMonitoringRequest PDU sent by the CSMS to the Charging Station.
 
@@ -1815,7 +1841,8 @@ Field Name Field Type Card. Description
 setMonitoringData SetMonitoringDataType 1..* Required. List of MonitoringData containing monitoring
 settings.
 
-**1.56.2. SetVariableMonitoringResponse**
+[[set_variable_monitoring_response]]
+==== SetVariableMonitoringResponse
 
 This contains the field definition of the SetVariableMonitoringResponse PDU sent by the Charging Station to the CSMS in response
 to a SetVariableMonitoringRequest.
@@ -2262,7 +2289,8 @@ certificate(s).
 certificateHashData CertificateHashDataType 1..1 Required. Information to identify a certificate.
 childCertificateHashData CertificateHashDataType 0..4 Optional. Information to identify the child certificate(s).
 
-=== 2.6. CertificateHashDataType
+[[certificate_hash_data_type]]
+=== CertificateHashDataType
 
 _Class_
 
@@ -2641,7 +2669,8 @@ the battery fully charged. (possible values: 0 - 100)
 bulkSoC integer, 0 <  val <  100 0..1 Optional. Percentage of SoC at which the EV considers a
 fast charging process to end. (possible values: 0 - 100)
 
-=== 2.22. EventDataType.
+[[event_data_type]]
+=== EventDataType
 
 _Class_
 
@@ -3128,7 +3157,8 @@ sign/encoding method information.
 unitOfMeasure UnitOfMeasureType 0..1 Optional. Represents a UnitOfMeasure including a
 multiplier
 
-=== 2.42. SetMonitoringDataType
+[[set_monitoring_data_type]]
+=== SetMonitoringDataType
 
 _Class_
 
@@ -3194,7 +3224,8 @@ not useful during operations.
 component ComponentType 1..1 Required. Component for which monitor is set.
 variable VariableType 1..1 Required. Variable for which monitor is set.
 
-=== 2.43. SetMonitoringResultType
+[[set_monitoring_result_type]]
+=== SetMonitoringResultType
 
 _Class_
 
@@ -3936,7 +3967,8 @@ Value Description
 Accepted Request successfully executed: message cleared.
 Unknown Given message (based on the id) not known.
 
-=== 3.20. ClearMonitoringStatusEnumType
+[[clear_monitoring_status_enum_type]]
+=== ClearMonitoringStatusEnumType
 
 _Enumeration_
 
@@ -4203,7 +4235,8 @@ Triggered by a monitor, which is preconfigured by the manufacturer.
 CustomMonitor Triggered by a monitor, which is set with the setvariablemonitoringrequest message by the Charging Station
 Operator.
 
-=== 3.32. EventTriggerEnumType
+[[event_trigger_enum_type]]
+=== EventTriggerEnumType
 
 _Enumeration_
 
@@ -4278,7 +4311,8 @@ Rejected Request has not been accepted and will not be executed.
 NotSupported The content of the request message is not supported.
 EmptyResultSet If the combination of received criteria result in an empty result set.
 
-=== 3.35. GenericStatusEnumType
+[[generic_status_enum_type]]
+=== GenericStatusEnumType
 
 _Enumeration_
 
@@ -4296,7 +4330,8 @@ Value Description
 Accepted Request has been accepted and will be executed.
 Rejected Request has not been accepted and will not be executed.
 
-=== 3.36. GetCertificateIdUseEnumType.
+[[get_certificate_id_use_enum_type]]
+=== GetCertificateIdUseEnumType
 
 _Enumeration_
 
@@ -4444,7 +4479,8 @@ Accepted The installation of the certificate succeeded.
 Rejected The certificate is invalid and/or incorrect OR the CSO tries to install more certificates than allowed.
 Failed The certificate is valid and correct, but there is another reason the installation did not succeed.
 
-==== 3.45. InstallCertificateUseEnumType
+[[install_certificate_use_enum_type]]
+===  InstallCertificateUseEnumType
 
 _Enumeration_
 
@@ -4773,8 +4809,8 @@ To trigger PublishFirmwareStatusNotification.
 
 Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
 
-
-==== 3.55. MonitorEnumType
+[[monitor_enum_type]]
+=== MonitorEnumType
 
 _Enumeration_
 
@@ -4800,7 +4836,8 @@ Triggers an event notice every monitorValue seconds interval, starting from the 
 after this monitor was set. For example, a monitorValue of 900 will trigger event notices at 0, 15, 30 and 45
 minutes after the hour, every hour.
 
-==== 3.56. MonitoringBaseEnumType
+[[monitoring_base_enum_type]]
+==== MonitoringBaseEnumType
 
 _Enumeration_
 
@@ -5191,7 +5228,8 @@ Accepted Local Authorization List successfully updated.
 Failed Failed to update the Local Authorization List.
 VersionMismatch Version number in the request for a differential update is less or equal then version number of current list.
 
-==== 3.77. SetMonitoringStatusEnumType.
+[[set_monitoring_status_enum_type]]
+=== SetMonitoringStatusEnumType
 
 _Enumeration_
 
