@@ -258,7 +258,7 @@ Source: <<iso15118_1,ISO15118-1>>
 ==== M01 - Certificate installation - Requirements
 
 .M01 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -315,7 +315,7 @@ Source: <<iso15118_1,ISO15118-1>>
 ==== M02 - Certificate Update - Requirements
 
 .M02 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -358,7 +358,7 @@ image::part2/images/figure_127.svg[Retrieve list of available certificates from 
 ==== M03 - Retrieve list of available certificates from a Charging Station - Requirements
 
 .M03 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -415,7 +415,7 @@ image::part2/images/figure_128.svg[Delete Installed Certificate]
 ==== M04 - Delete a specific certificate from a Charging Station - Requirements
 
 .M04 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -485,7 +485,7 @@ It is allowed to have multiple certificates of the same type installed.
 ==== M05 - Install CA certificate in a Charging Station - Requirements
 
 .M05 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -576,7 +576,7 @@ _responderURL_ is required in OCPP, while it is optional in ISO 15118. Without a
 ==== M06 - Get V2G Charging Station Certificate status - Requirements
 
 .M06 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 

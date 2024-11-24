@@ -56,7 +56,7 @@ This section defines the different OCPP security profiles and their requirement.
 ==== Generic Security Profile requirements
 
 .Generic Security Profile requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition       |Requirement definition
 |A00.FR.001 |{nbsp}             |The Charging Station and CSMS SHALL only use one security profile at a time
@@ -99,7 +99,7 @@ image::part2/images/figure_2.svg[Sequence Diagram: HTTP Basic Authentication seq
 ==== Unsecured Transport with Basic Authentication Profile - Requirements
 
 .Security Profile 1 - Unsecured Transport with Basic Authentication - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition     |Requirement definition
 
@@ -155,7 +155,7 @@ Please note, that the encoding of the basic authentication password in OCPP 2.0.
 ==== TLS with Basic Authentication Profile - Requirements
 
 .Security Profile 2 - TLS with Basic Authentication - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -247,7 +247,7 @@ image::part2/images/figure_4.svg[Sequence Diagram: TLS with Client Side Certific
 ==== TLS with Client Side Certificates Profile - Requirements
 
 .Security Profile 3 - TLS with Client Side Certificates - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -348,7 +348,7 @@ OCPP uses a number of public private key pairs for its security, see below Table
 _This section is normative._
 
 .Certificate Properties requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -392,7 +392,7 @@ The OCPP protocol supports the use of two separate certificate hierarchies:
 The CSMS can update the CSO root certificates stored on the Charging Station using the <<install_certificate_request,InstallCertificateRequest>> message.
 
 .Certificate Hierarchy requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -421,7 +421,7 @@ Different methods are recommended for certificate revocation, see below Table.
 |===
 
 .Certificate Revocation requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -449,7 +449,7 @@ _This section is normative._
 Unique credentials should be used to authenticate each Charging Station to the CSMS, whether they are the password used for HTTP Basic Authentication (see <<unsecured_transport_with_basic_authentication_profile_1,Charging Station Authentication>>) or the Charging Station certificate. These unique credentials have to be put on the Charging Station at some point during manufacturing or installation.
 
 .Certificate Installation requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -507,7 +507,7 @@ image::part2/images/figure_5.svg[Update Charging Station Password for HTTP Basic
 ==== A01 - Update Charging Station Password for HTTP Basic Authentication - Requirements
 
 .A01 - Update Charging Station Password for HTTP Basic Authentication - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -609,7 +609,7 @@ image::part2/images/figure_6.svg[Update Charging Station Certificate]
 ==== A02 - Update Charging Station Certificate by request of CSMS - Requirements
 
 .A02 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -697,7 +697,7 @@ It is NOT RECOMMENDED to let the Charging Station retry when the certificate is 
 ==== A03 - Update Charging Station Certificate initiated by the Charging Station - Requirements
 
 .A03 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -772,7 +772,7 @@ image::part2/images/figure_8.svg[Security Event Notification]
 ==== A04 - Security Event Notification - Requirements
 
 .A04 - Security Event Notification - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 |A04.FR.01  |When a _critical_ security event happens
@@ -822,7 +822,7 @@ image::part2/images/figure_9.svg[Upgrade Charging Station Security Profile]
 ==== - Upgrade Charging Station Security Profile - Requirements
 
 .A05 - Upgrade Charging Station Security Profile
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 

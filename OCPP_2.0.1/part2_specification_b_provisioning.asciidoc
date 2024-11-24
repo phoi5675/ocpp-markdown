@@ -81,7 +81,7 @@ image::part2/images/figure_10.svg[Sequence Diagram: Cold Boot Charging Station]
 === B01 - Cold Boot Charging Station - Requirements
 
 .B01 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -172,7 +172,7 @@ image::part2/images/figure_11.svg[Sequence Diagram: Cold Boot Charging Station -
 ==== B02 - Cold Boot Charging Station - Pending - Requirements
 
 .B02 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -249,7 +249,7 @@ hardware. +
 ==== B03 - Cold Boot Charging Station - Rejected - Requirements
 
 .B03 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -313,7 +313,7 @@ image::part2/images/figure_13.svg[Sequence Diagram: Offline Behavior Idle Chargi
 ==== B04 - Offline Behavior Idle Charging Station - Requirements
 
 .B04 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -375,7 +375,7 @@ image::part2/images/figure_14.svg[Sequence Diagram: Set Variables]
 ==== B05 - Set Variables - Requirements
 
 .B05 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -450,7 +450,7 @@ image::part2/images/figure_15.svg[Sequence Diagram: Get Variables]
 ==== B06 - Get Variables - Requirements
 
 .B06 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -536,7 +536,7 @@ image::part2/images/figure_16.svg[Sequence Diagram: Get Base Report]
 ==== B07 - Get Base Report - Requirements
 
 .B07 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -623,7 +623,7 @@ image::part2/images/figure_17.svg[Sequence Diagram: Get Custom Report]
 ==== B08 - Get Custom Report - Requirements
 
 .B08 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -727,7 +727,7 @@ image::part2/images/figure_18.svg[Sequence Diagram: Set Network Connection Profi
 ==== B09 - Setting a new NetworkConnectionProfile - Requirements
 
 .B09 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -787,7 +787,7 @@ image::part2/images/figure_19.svg[Sequence Diagram: Migrate to new ConnectionPro
 ==== B10 - Migrate to new NetworkConnectionProfile - Requirements
 
 .B10 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -863,7 +863,7 @@ image::part2/images/figure_20.svg[Sequence Diagram: Reset Without Transaction]
 ==== B11 - Reset - Without Ongoing Transaction - Requirements
 
 .B11 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -951,7 +951,7 @@ image::part2/images/figure_21b.svg[Sequence Diagram: Reset Immediate With Ongoin
 ==== B12 - Reset - With Ongoing Transaction - Requirements
 
 .B12 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 

@@ -77,7 +77,7 @@ image::part2/images/figure_65.svg[Sequence Diagram: Remote Start Transaction - C
 ==== F01 - Remote Start Transaction - Cable Plugin First - Requirements
 
 .F01 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -216,7 +216,7 @@ image::part2/images/figure_67.svg[Sequence Diagram: Remote Start Transaction - R
 
 ==== F02 - Remote Start Transaction - Remote Start First - Requirements
 .F02 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -353,7 +353,7 @@ transaction.
 ==== F03 - Remote Stop Transaction - Requirements
 
 .F03 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -426,7 +426,7 @@ image::part2/images/figure_69.svg[Charging loop with interrupt from the Charging
 _These requirements are normative._
 
 .F04 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -492,7 +492,7 @@ image::part2/images/figure_70.svg[Sequence Diagram: Unlock Connector]
 ==== F05 - Remotely Unlock Connector - Requirements
 
 .F05 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -568,7 +568,7 @@ image::part2/images/figure_72.svg[Sequence Diagram: Trigger Message Example]
 ==== F06 - Trigger Message - Requirements
 
 .F06 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 

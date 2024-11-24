@@ -68,7 +68,7 @@ FTP needs to be able to use Passive FTP, to be able to transverse over as much d
 ==== N01 - Retrieve Log Information - Requirements
 
 .N01 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -176,7 +176,7 @@ image::part2/images/figure_132.svg[Sequence Diagram: Get Monitoring Report]
 ==== N02 - Get Monitoring Report - Requirements
 
 .N02 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -272,7 +272,7 @@ When the set of pre-configured monitors for `All` and `FactoryDefault` is the sa
 ==== N03 - Set Monitoring Base - Requirements
 
 .N03 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -327,7 +327,7 @@ image::part2/images/figure_134.svg[Sequence Diagram: Set Variable Monitoring]
 ==== N04 - Set Variable Monitoring - Requirements
 
 .N04 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -424,7 +424,7 @@ image::part2/images/figure_135.svg[Sequence Diagram: Set Monitoring Level]
 ==== N05 - Set Monitoring Level - Requirements
 
 .N05 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -469,7 +469,7 @@ image::part2/images/figure_136.svg[Sequence Diagram: Clear / Remove Monitoring]
 ==== N06 - Clear / Remove Monitoring - Requirements
 
 .N06 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -531,7 +531,7 @@ This problem can be prevented, while still adhering to the specification, by not
 ==== N07 - Alert Event - Requirements
 
 .N07 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -580,7 +580,7 @@ This problem can be prevented, while still adhering to the specification, by not
 |N07.FR.19  |When there is a monitor with type <<monitor_enum_type,Delta>> on a Component/Variable combination AND +
   the Variable is NOT of a numeric type AND +
   the Actual value (attributeType Actual) of the Variable has changed since the time that this monitor was set or since the last time this event notice was sent, whichever was last (Note: For variables that are not numeric, like boolean, string or enumerations, a monitor of type <<monitor_enum_type,Delta>> will trigger an event notice whenever the variable changes, regardless of the value of _monitorValue_)
-    |The Charging Station SHALL send a <<notify_event_request,NotifyEventRequest>> with trigger <<monitor_enum_type,Delta>> for the triggered monitor.
+    |The Charging Station SHALL send a <<notify_event_request,NotifyEventRequest>> with trigger <<monitor_enum_type,Delta>> for the triggered monitor. |{nbsp}
 |===
 
 === N08 - Periodic Event
@@ -616,7 +616,7 @@ image::part2/images/figure_138.svg[Sequence Diagram: Periodic Event]
 ==== N08 - Periodic Event - Requirements
 
 .N08 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -682,7 +682,7 @@ image::part2/images/figure_139.svg[Sequence Diagram: Get Customer Information]
 ==== N09 - Get Customer Information - Requirements
 
 .N09 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -746,7 +746,7 @@ image::part2/images/figure_140.svg[Sequence Diagram: Clear Customer Information]
 ==== N10 - Clear Customer Information - Requirements
 
 .N10 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
