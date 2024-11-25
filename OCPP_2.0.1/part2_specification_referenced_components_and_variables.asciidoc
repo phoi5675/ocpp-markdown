@@ -1848,7 +1848,7 @@ variableAttributes mutability ReadOnly
 variableCharacteristics dataType integer
 Description Shows the currently used MonitoringLevel. Valid values are severity levels of SetMonitoringLevelRequest: 0-9.
 
-== 2.12. Display Message related
+=== Display Message related
 
 **2.12.1.** DisplayMessageEnabled
 
@@ -1870,7 +1870,8 @@ variableAttributes mutability ReadOnly
 variableCharacteristics dataType boolean
 Description Whether Display Message is supported.
 
-**2.12.3.** NumberOfDisplayMessages
+[[number_of_display_messages]]
+==== `NumberOfDisplayMessages`
 
 
 Required yes
@@ -1884,7 +1885,8 @@ SetDisplayMessageRequest.
 Description Amount of different messages that are currently configured in this Charging Station, via
 SetDisplayMessageRequest
 
-**2.12.4.** DisplayMessageSupportedFormats
+[[display_message_supported_formats]]
+==== DisplayMessageSupportedFormats
 
 
 Required yes
@@ -1896,8 +1898,8 @@ Description List of message formats supported by this Charging Station. Possible
 
 Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
-
-**2.12.5.** DisplayMessageSupportedPriorities
+[[display_message_supported_priorities]]
+==== DisplayMessageSupportedPriorities
 
 
 Required yes

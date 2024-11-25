@@ -1,5 +1,4 @@
 {
-  "asciidoc.antora.enableAntoraSupport": false,
   "asciidoc.preview.style": ".ocpp_styles.css",
   "editor.formatOnSave": false,
   "markdownlint.config": {

@@ -258,9 +258,10 @@ pe
 execute the request.
 statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
-==== 1.8. ClearDisplayMessage
+=== ClearDisplayMessage
 
-**1.8.1. ClearDisplayMessageRequest**
+[[clear_display_message_request]]
+==== ClearDisplayMessageRequest
 
 This contains the field definition of the ClearDisplayMessageRequest PDU sent by the CSMS to the Charging Station. The CSMS
 asks the Charging Station to clear a display message that has been configured in the Charging Station to be cleared/removed. See
@@ -273,7 +274,8 @@ Field Name Field Type Card. Description
 id integer 1..1 Required. Id of the message that SHALL be removed
 from the Charging Station.
 
-**1.8.2. ClearDisplayMessageResponse**
+[[clear_display_message_response]]
+==== ClearDisplayMessageResponse
 
 This contains the field definition of the ClearDisplayMessageResponse PDU sent by the Charging Station to the CSMS in a response
 to a ClearDisplayMessageRequest. See also O05 - Clear a Display Message.
@@ -693,9 +695,10 @@ statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
 
 
-==== 1.21. GetDisplayMessages
+=== GetDisplayMessages
 
-**1.21.1. GetDisplayMessagesRequest**
+[[get_display_messages_request]]
+==== GetDisplayMessagesRequest
 
 _Class_
 
@@ -711,7 +714,8 @@ Display Messages with the given priority only.
 state MessageStateEnumType 0..1 Optional. If provided the Charging Station shall return
 Display Messages with the given state only.
 
-**1.21.2. GetDisplayMessagesResponse**
+[[get_display_messages_response]]
+==== GetDisplayMessagesResponse
 
 _Class_
 
@@ -1109,9 +1113,10 @@ Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
 [[notify_customer_information_response]]
 ==== NotifyCustomerInformationResponse
 
-==== 1.35. NotifyDisplayMessages
+=== NotifyDisplayMessages
 
-**1.35.1. NotifyDisplayMessagesRequest**
+[[notify_display_messages_request]]
+==== NotifyDisplayMessagesRequest
 
 This contains the field definition of the NotifyDisplayMessagesRequest PDU sent by the Charging Station to the CSMS.
 
@@ -1128,7 +1133,8 @@ when omitted is false.
 messageInfo MessageInfoType 0..* Optional. The requested display message as configured
 in the Charging Station.
 
-**1.35.2. NotifyDisplayMessagesResponse**
+[[notify_display_messages_response]]
+==== NotifyDisplayMessagesResponse
 
 The NotifyDisplayMessagesResponse message is sent by the CSMS to the Charging Station in response to a
 NotifyDisplayMessagesRequest. No fields are defined.
@@ -1671,7 +1677,8 @@ statusInfo StatusInfoType 0..1 Optional. Detailed status information.
 
 === 1.52. SetDisplayMessage.
 
-**1.52.1. SetDisplayMessageRequest**
+[[set_display_message_request]]
+==== SetDisplayMessageRequest
 
 This contains the field definition of the SetDisplayMessageRequest PDU sent by the CSMS to the Charging Station. The CSMS asks
 the Charging Station to configure a new display message that the Charging Station will display (in the future). See also O01 - Set
@@ -1684,7 +1691,8 @@ Field Name Field Type Card. Description
 message MessageInfoType 1..1 Required. Message to be configured in the Charging
 Station, to be displayed.
 
-**1.52.2. SetDisplayMessageResponse**
+[[set_display_message_response]]
+==== SetDisplayMessageResponse
 
 This contains the field definition of the SetDisplayMessageResponse PDU sent by the Charging Station to the CSMS in a response
 to a SetDisplayMessageRequest. See also O01 - Set Display Message, O02 - Set Display Message for Transaction and O06 -
@@ -2897,7 +2905,8 @@ language string[0..8] 0..1 Optional. Message language identifier. Contains a
 language code as defined in [RFC5646].
 content string[0..512] 1..1 Required. Message contents.
 
-=== 2.31. MessageInfoType
+[[message_info_type]]
+=== MessageInfoType
 
 _Class_
 
@@ -4156,7 +4165,8 @@ Failed The Charging Station either failed to remove the certificate or rejected 
 reject the request to prevent the deletion of a certificate, if it is the last one from its certificate type.
 NotFound Requested resource not found.
 
-=== 3.29. DisplayMessageStatusEnumType.
+[[display_message_status_enum_type]]
+=== DisplayMessageStatusEnumType
 
 _Enumeration_
 
@@ -4704,7 +4714,8 @@ SoC State of charge of charging vehicle in percentage
 For _location_  Inlet and _evseId_  0: voltage at charging station grid connection.
 For _location_  Outlet and _evseId_ > 0: voltage at EVSE outlet towards the EV.
 
-==== 3.51. MessageFormatEnumType
+[[message_format_enum_type]]
+=== MessageFormatEnumType
 
 _Enumeration_
 
@@ -4722,8 +4733,8 @@ UTF8 Message content is UTF-8 formatted.
 
 Edition 3 FINAL, 2024-05-06 **Messages, Datatypes & Enumerations**
 
-
-==== 3.52. MessagePriorityEnumType
+[[message_priority_enum_type]]
+=== MessagePriorityEnumType
 
 _Enumeration_
 
@@ -4740,7 +4751,8 @@ InFront Show this message in front of the normal cycle of messages. When more me
 be shown, they SHALL be cycled.
 NormalCycle Show this message in the cycle of messages.
 
-==== 3.53. MessageStateEnumType
+[[message_state_enum_type]]
+=== MessageStateEnumType
 
 _Enumeration_
 
