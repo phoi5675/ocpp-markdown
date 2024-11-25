@@ -104,6 +104,7 @@ _Class_
   |1..1 |Required. Id of the reservation to cancel.
 |===
 
+[[cancel_reservation_response]]
 ==== CancelReservationResponse
 
 This contains the field definition of the CancelReservationResponse PDU sent by the Charging Station to the CSMS in response to a <<cancel_reservation_request,CancelReservationRequest>>.
@@ -2236,6 +2237,7 @@ ACChargingParametersType is used by: <<charging_needs_type,Common:ChargingNeedsT
   |1..1 |Required. Maximum voltage supported by the electric vehicle
 |===
 
+[[additional_info_type]]
 === AdditionalInfoType
 
 _Class_
@@ -2255,6 +2257,7 @@ AdditionalInfoType is used by: <<id_token_type,Common:IdTokenType>>
   This is a custom type, so the implementation needs to be agreed upon by all involved parties.
 |===
 
+[[apn_type]]
 === APNType
 
 _Class_
@@ -2832,76 +2835,52 @@ GetVariableResultType is used by: <<get_variables_response,GetVariablesResponse>
 
 _Class_
 
-Contains status information about an identifier. It is advised to not stop charging for a token that expires during charging, as
-ExpiryDate is only used for caching purposes. If ExpiryDate is not given, the status has no end date.
+Contains status information about an identifier. It is advised to not stop charging for a token that expires during charging, as ExpiryDate is only used for caching purposes. If ExpiryDate is not given, the status has no end date.
 
-IdTokenInfoType is used by: Common:AuthorizationData , AuthorizeResponse , TransactionEventResponse
-
+IdTokenInfoType is used by: <<authorization_data,Common:AuthorizationData>>, <<authorize_response,AuthorizeResponse>>, <<transaction_event_response,TransactionEventResponse>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|status |<<authorization_status_enum_type,AuthorizationStatusEnumType>>
+  |1..1 |Required. Current status of the ID Token.
+|cacheExpiryDateTime |dateTime
+  |0..1 |Optional. Date and Time after which the token must be considered invalid.
+|chargingPriority |integer
+  |0..1 |Optional. Priority from a business point of view. Default priority is 0, The range is from -9 to 9. Higher values indicate a higher priority. The chargingPriority in <<transaction_event_response,TransactionEventResponse>> overrules this one.
+|language1 |string[0..8]
+  |0..1 |Optional. Preferred user interface language of identifier user. Contains a language code as defined in <<rfc5646,[RFC5646]>>.
+|evseId |integer
+  |0..* |Optional. Only used when the IdToken is only valid for one or more specific EVSEs, not for the entire Charging Station.
+|language2 |string[0..8]
+  |0..1 |Optional. Second preferred user interface language of identifier user. Don’t use when language1 is omitted, has to be different from language1. Contains a language code as defined in <<rfc5646,[RFC5646]>>.
+|groupIdToken |<<id_token_type,IdTokenType>>
+  |0..1 |Optional. This contains the group identifier.
+|personalMessage |<<message_content_type,MessageContentType>>
+  |0..1 |Optional. Personal message that can be shown to the EV Driver and can be used for tariff information, user greetings etc.
 |===
-status AuthorizationStatusEnumType 1..1 Required. Current status of the ID Token.
-cacheExpiryDateTime dateTime 0..1 Optional. Date and Time after which the token must be
-considered invalid.
-chargingPriority integer 0..1 Optional. Priority from a business point of view. Default
-priority is 0, The range is from -9 to 9. Higher values
-indicate a higher priority. The chargingPriority in
-TransactionEventResponse overrules this one.
-language1 string[0..8] 0..1 Optional. Preferred user interface language of identifier
-user. Contains a language code as defined in [RFC5646].
-evseId integer 0..* Optional. Only used when the IdToken is only valid for
-one or more specific EVSEs, not for the entire Charging
-Station.
-language2 string[0..8] 0..1 Optional. Second preferred user interface language of
-identifier user. Don’t use when language1 is omitted, has
-to be different from language1. Contains a language
-code as defined in [RFC5646].
-groupIdToken IdTokenType 0..1 Optional. This contains the group identifier.
-personalMessage MessageContentType 0..1 Optional. Personal message that can be shown to the EV
-Driver and can be used for tariff information, user
-greetings etc.
 
 [[id_token_type]]
 === IdTokenType
 
 _Class_
 
-Contains a case insensitive identifier to use for the authorization and the type of authorization to support multiple forms of
-identifiers.
+Contains a case insensitive identifier to use for the authorization and the type of authorization to support multiple forms of identifiers.
 
-IdTokenType is used by: Common:AuthorizationData , Common:IdTokenInfoType , RequestStartTransactionRequest ,
-AuthorizeRequest , TransactionEventRequest , ReserveNowRequest , CustomerInformationRequest
-
+IdTokenType is used by: <<authorization_data,Common:AuthorizationData>>, <<id_token_info_type,Common:IdTokenInfoType>>, <<request_start_transaction_request,RequestStartTransactionRequest>>, <<authorize_request,AuthorizeRequest>>, <<transaction_event_request,TransactionEventRequest>>, <<reserve_now_request,ReserveNowRequest>>, <<customer_information_request,CustomerInformationRequest>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|idToken  |identifierString[0..36]
+  |1..1 |Required. IdToken is case insensitive. Might hold the hidden id of an RFID tag, but can for example also contain a UUID.
+|type |<<id_token_enum_type,IdTokenEnumType>>
+  |1..1 |Required. Enumeration of possible idToken types.
+|additionalInfo |<<additional_info_type,AdditionalInfoType>>
+  |0..* |Optional. AdditionalInfo can be used to send extra information which can be validated by the CSMS in addition to the regular authorization with _IdToken_. _AdditionalInfo_ contains one or more custom types, which need to be agreed upon by all parties involved. When AdditionalInfo is NOT implemented or a not supported AdditionalInfo.type is used, the CSMS/Charging Station MAY ignore the AdditionalInfo.
 |===
-idToken identifierString[0..36] 1..1 Required. IdToken is case insensitive. Might hold the
-hidden id of an RFID tag, but can for example also
-contain a UUID.
-type IdTokenEnumType 1..1 Required. Enumeration of possible idToken types.
-
-
-
-
-[cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
-|===
-|Field Name     |Field Type             |Card. |Description
-
-|===
-additionalInfo AdditionalInfoType 0..* Optional. AdditionalInfo can be used to send extra
-information which can be validated by the CSMS in
-addition to the regular authorization with IdToken.
-AdditionalInfo contains one or more custom types, which
-need to be agreed upon by all parties involved. When
-AdditionalInfo is NOT implemented or a not supported
-AdditionalInfo.type is used, the CSMS/Charging Station
-MAY ignore the AdditionalInfo.
 
 [[log_parameters_type]]
 === LogParametersType
@@ -2910,20 +2889,19 @@ _Class_
 
 Generic class for the configuration of logging entries.
 
-LogParametersType is used by: GetLogRequest
-
+LogParametersType is used by: <<get_log_request,GetLogRequest>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|remoteLocation |string[0..512]
+  |1..1 |Required. The URL of the location at the remote system where the log should be stored.
+|oldestTimestamp |dateTime
+  |0..1 |Optional. This contains the date and time of the oldest logging information to include in the diagnostics.
+|latestTimestamp |dateTime
+  |0..1 |Optional. This contains the date and time of the latest logging information to include in the diagnostics.
 |===
-remoteLocation string[0..512] 1..1 Required. The URL of the location at the remote system
-where the log should be stored.
-oldestTimestamp dateTime 0..1 Optional. This contains the date and time of the oldest
-logging information to include in the diagnostics.
-latestTimestamp dateTime 0..1 Optional. This contains the date and time of the latest
-logging information to include in the diagnostics.
 
 [[message_content_type]]
 === MessageContentType
@@ -2932,18 +2910,19 @@ _Class_
 
 Contains message details, for a message to be displayed on a Charging Station.
 
-MessageContentType is used by: Common:IdTokenInfoType , Common:MessageInfoType , TransactionEventResponse
-
+MessageContentType is used by: <<id_token_info_type,Common:IdTokenInfoType>>, <<message_info_type,Common:MessageInfoType>>, <<transaction_event_response,TransactionEventResponse>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|format |<<message_format_enum_type,MessageFormatEnumType>>
+  |1..1 |Required. Format of the message.
+|language |string[0..8]
+  |0..1 |Optional. Message language identifier. Contains a language code as defined in <<rfc5646,[RFC5646]>>.
+|content |string[0..512]
+  |1..1 |Required. Message contents.
 |===
-format MessageFormatEnumType 1..1 Required. Format of the message.
-language string[0..8] 0..1 Optional. Message language identifier. Contains a
-language code as defined in [RFC5646].
-content string[0..512] 1..1 Required. Message contents.
 
 [[message_info_type]]
 === MessageInfoType
@@ -2952,63 +2931,48 @@ _Class_
 
 Contains message details, for a message to be displayed on a Charging Station.
 
-MessageInfoType is used by: SetDisplayMessageRequest , NotifyDisplayMessagesRequest
-
-
-[cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
-|===
-|Field Name     |Field Type             |Card. |Description
-
-|===
-id integer 1..1 Required. Unique id within an exchange context. It is
-defined within the OCPP context as a positive Integer
-value (greater or equal to zero).
-priority MessagePriorityEnumType 1..1 Required. With what priority should this message be
-shown
-state MessageStateEnumType 0..1 Optional. During what state should this message be
-shown. When omitted this message should be shown in
-any state of the Charging Station.
-startDateTime dateTime 0..1 Optional. From what date-time should this message be
-shown. If omitted: directly.
-
-
-
+MessageInfoType is used by: <<set_display_message_request,SetDisplayMessageRequest>>, <<notify_display_messages_request,NotifyDisplayMessagesRequest>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|id |integer
+  |1..1 |Required. Unique id within an exchange context. It is defined within the OCPP context as a positive Integer value (greater or equal to zero).
+|priority |<<message_priority_enum_type,MessagePriorityEnumType>>
+  |1..1 |Required. With what priority should this message be shown
+|state |<<message_state_enum_type,MessageStateEnumType>>
+  |0..1 |Optional. During what state should this message be shown. When omitted this message should be shown in any state of the Charging Station.
+|startDateTime |dateTime
+  |0..1 |Optional. From what date-time should this message be shown. If omitted: directly.
+|endDateTime |dateTime
+  |0..1 |Optional. Until what date-time should this message be shown, after this date/time this message SHALL be removed.
+|transactionId |identifierString[0..36]
+  |0..1 |Optional. During which transaction shall this message be shown. Message SHALL be removed by the Charging Station after transaction has ended.
+|message |<<message_content_type,MessageContentType>>
+  |1..1 |Required. Contains message details for the message to be displayed on a Charging Station.
+|display |<<component_type,ComponentType>>
+  |0..1 |Optional. When a Charging Station has multiple Displays, this field can be used to define to which Display this message belongs.
 |===
-endDateTime dateTime 0..1 Optional. Until what date-time should this message be
-shown, after this date/time this message SHALL be
-removed.
-transactionId identifierString[0..36] 0..1 Optional. During which transaction shall this message be
-shown. Message SHALL be removed by the Charging
-Station after transaction has ended.
-message MessageContentType 1..1 Required. Contains message details for the message to
-be displayed on a Charging Station.
-display ComponentType 0..1 Optional. When a Charging Station has multiple Displays,
-this field can be used to define to which Display this
-message belongs.
 
 [[meter_value_type]]
 === MeterValueType
 
 _Class_
 
-Collection of one or more sampled values in MeterValuesRequest and TransactionEvent. All sampled values in a MeterValue are
-sampled at the same point in time.
+Collection of one or more sampled values in MeterValuesRequest and TransactionEvent. All sampled values in a MeterValue are sampled at the same point in time.
 
-MeterValueType is used by: MeterValuesRequest , TransactionEventRequest
-
+MeterValueType is used by: <<metervalues_request,MeterValuesRequest>>, <<transaction_event_request,TransactionEventRequest>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|timestamp |dateTime
+  |1..1 |Required. Timestamp for measured value(s).
+|sampledValue |<<sampled_value_type,SampledValueType>>
+  |1..* |Required. One or more measured values
 |===
-timestamp dateTime 1..1 Required. Timestamp for measured value(s).
-sampledValue SampledValueType 1..* Required. One or more measured values
 
 [[modem_type]]
 === ModemType
@@ -3017,18 +2981,17 @@ _Class_
 
 Defines parameters required for initiating and maintaining wireless communication with other devices.
 
-ModemType is used by: BootNotificationRequest.ChargingStationType
-
+ModemType is used by: <<charging_station_type,BootNotificationRequest.ChargingStationType>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|iccid |identifierString[0..20]
+  |0..1 |Optional. This contains the ICCID of the modem’s SIM card.
+|imsi |identifierString[0..20]
+  |0..1 |Optional. This contains the IMSI of the modem’s SIM card.
 |===
-iccid identifierString[0..20] 0..1 Optional. This contains the ICCID of the modem’s SIM
-card.
-imsi identifierString[0..20] 0..1 Optional. This contains the IMSI of the modem’s SIM
-card.
 
 [[monitoring_data_type]]
 === MonitoringDataType
@@ -3037,21 +3000,19 @@ _Class_
 
 Class to hold parameters of SetVariableMonitoring request.
 
-MonitoringDataType is used by: NotifyMonitoringReportRequest
-
+MonitoringDataType is used by: <<notify_monitoring_report_request,NotifyMonitoringReportRequest>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|component |<<component_type,ComponentType>>
+  |1..1 |Required. Component for which monitoring report was requested.
+|variable |<<variable_type,VariableType>>
+  |1..1 |Required. Variable for which monitoring report was requested.
+|variableMonitoring |<<variable_monitoring_type,VariableMonitoringType>>
+  |1..* |Required. List of monitors for this Component-Variable pair.
 |===
-component ComponentType 1..1 Required. Component for which monitoring report was
-requested.
-variable VariableType 1..1 Required. Variable for which monitoring report was
-requested.
-variableMonitoring VariableMonitoringType 1..* Required. List of monitors for this Component-Variable
-pair.
-
 
 [[network_connection_profile_type]]
 === NetworkConnectionProfileType
@@ -3060,85 +3021,72 @@ _Class_
 
 The NetworkConnectionProfile defines the functional and technical parameters of a communication link.
 
-NetworkConnectionProfileType is used by: SetNetworkProfileRequest
-
+NetworkConnectionProfileType is used by: <<set_network_profile_request,SetNetworkProfileRequest>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|ocppVersion |<<ocpp_version_enum_type,OCPPVersionEnumType>>
+  |1..1 |Required. Defines the OCPP version used for this communication function. +
+  This field is ignored, since the OCPP version to use is determined during the websocket handshake.
+|ocppTransport |<<ocpp_transport_enum_type,OCPPTransportEnumType>>
+  |1..1 |Required. Defines the transport protocol (e.g. SOAP or JSON). Note: SOAP is not supported in OCPP 2.0, but is supported by other versions of OCPP.
+|ocppCsmsUrl |string[0..512]
+  |1..1 |Required. URL of the CSMS(s) that this Charging Station communicates with, without the Charging Station identity part. +
+  The SecurityCtrlr.Identity field is appended to _ocppCsmsUrl_ to provide the full websocket URL
+|messageTimeout |integer
+  |1..1 |Required. Duration in seconds before a message send by the Charging Station via this network connection timesout. The best setting depends on the underlying network and response times of the CSMS. If you are looking for a some guideline: use 30 seconds as a starting point.
+|securityProfile |integer
+  |1..1 |Required. This field specifies the security profile used when connecting to the CSMS with this NetworkConnectionProfile.
+|ocppInterface |<<ocpp_interface_enum_type,OCPPInterfaceEnumType>>  
+  |1..1 |Required. Applicable Network Interface. +
+  Charging Station is allowed to use a different network interface to connect if the given one does not work
+|vpn |<<vpn_type,VPNType>>
+  |0..1 |Optional. Settings to be used to set up the VPN connection
+|apn |<<apn_type,APNType>>
+  |0..1 |Optional. Collection of configuration data needed to make a data-connection over a cellular network.
 |===
-ocppVersion OCPPVersionEnumType 1..1 Required. Defines the OCPP version used for this
-communication function.
-This field is ignored, since the OCPP version to use is
-determined during the websocket handshake.
-ocppTransport OCPPTransportEnumType 1..1 Required. Defines the transport protocol (e.g. SOAP or
-JSON). Note: SOAP is not supported in OCPP 2.0, but is
-supported by other versions of OCPP.
-ocppCsmsUrl string[0..512] 1..1 Required. URL of the CSMS(s) that this Charging Station
-communicates with, without the Charging Station identity
-part.
-The SecurityCtrlr.Identity field is appended to
-ocppCsmsUrl to provide the full websocket URL
-messageTimeout integer 1..1 Required. Duration in seconds before a message send by
-the Charging Station via this network connection times-
-out. The best setting depends on the underlying network
-and response times of the CSMS. If you are looking for a
-some guideline: use 30 seconds as a starting point.
-securityProfile integer 1..1 Required. This field specifies the security profile used
-when connecting to the CSMS with this
-NetworkConnectionProfile.
-
-**ocppInterface** OCPPInterfaceEnumType 1..1 (^) Required. Applicable Network Interface.
-Charging Station is allowed to use a different network
-interface to connect if the given one does not work
-**vpn** VPNType 0..1 Optional. Settings to be used to set up the VPN
-connection
-**apn** APNType 0..1 Optional. Collection of configuration data needed to
-make a data-connection over a cellular network.
 
 [[ocsp_request_data_type]]
 === OCSPRequestDataType
 
 _Class_
 
-OCSPRequestDataType is used by: AuthorizeRequest , GetCertificateStatusRequest
-
+OCSPRequestDataType is used by: <<authorize_request,AuthorizeRequest>>, <<get_certificate_status_request,GetCertificateStatusRequest>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|hashAlgorithm |<<hash_algorithm_enum_type,HashAlgorithmEnumType>>
+  |1..1 |Required. Used algorithms for the hashes provided.
+|issuerNameHash |identifierString[0..128]
+  |1..1 |Required. The hash of the issuer’s distinguished name (DN), that must be calculated over the DER encoding of the issuer’s name field in the certificate being checked.
+|issuerKeyHash |string[0..128]
+  |1..1 |Required. The hash of the DER encoded public key: the value (excluding tag and length) of the subject public key field in the issuer’s certificate.
+|serialNumber |identifierString[0..40]
+  |1..1 |Required. The string representation of the hexadecimal value of the serial number without the prefix "0x" and without leading zeroes.
+|responderURL |string[0..512]
+  |1..1 |Required. This contains the responder URL (Case insensitive).
 |===
-hashAlgorithm HashAlgorithmEnumType 1..1 Required. Used algorithms for the hashes provided.
-issuerNameHash identifierString[0..128] 1..1 Required. The hash of the issuer’s distinguished name
-(DN), that must be calculated over the DER encoding of
-the issuer’s name field in the certificate being checked.
-issuerKeyHash string[0..128] 1..1 Required. The hash of the DER encoded public key: the
-value (excluding tag and length) of the subject public key
-field in the issuer’s certificate.
-serialNumber identifierString[0..40] 1..1 Required. The string representation of the hexadecimal
-value of the serial number without the prefix "0x" and
-without leading zeroes.
-responderURL string[0..512] 1..1 Required. This contains the responder URL (Case
-insensitive).
 
-
-
-=== 2.37. RelativeTimeIntervalType
+[[relative_time_interval_type]]
+=== RelativeTimeIntervalType
 
 _Class_
 
-RelativeTimeIntervalType is used by: Common:SalesTariffEntryType
-
+RelativeTimeIntervalType is used by: <<sales_tariff_entry_type,Common:SalesTariffEntryType>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|start |integer
+  |1..1 |Required. Start of the interval, in seconds from NOW.
+|duration |integer
+  |0..1 |Optional. Duration of the interval, in seconds.
 |===
-start integer 1..1 Required. Start of the interval, in seconds from NOW.
-duration integer 0..1 Optional. Duration of the interval, in seconds.
 
 [[report_data_type]]
 === ReportDataType
@@ -3147,82 +3095,66 @@ _Class_
 
 Class to report components, variables and variable attributes and characteristics.
 
-ReportDataType is used by: NotifyReportRequest
-
+ReportDataType is used by: <<notify_report_request,NotifyReportRequest>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|component |<<component_type,ComponentType>>
+  |1..1 |Required. Component for which a report of Variable is requested.
+|variable |<<variable_type,VariableType>>
+  |1..1 |Required. Variable for which report is requested.
+|variableAttribute |<<variable_attribute_type,VariableAttributeType>>
+  |1..4 |Required. Attribute data of a variable.
+|variableCharacteristics |<<variable_characteristics_type,VariableCharacteristicsType>>
+  |0..1 |Optional. Fixed read-only parameters of a variable.
 |===
-component ComponentType 1..1 Required. Component for which a report of Variable is
-requested.
-variable VariableType 1..1 Required. Variable for which report is requested.
-variableAttribute VariableAttributeType 1..4 Required. Attribute data of a variable.
-variableCharacteristics VariableCharacteristicsType 0..1 Optional. Fixed read-only parameters of a variable.
 
-=== 2.39. SalesTariffEntryType.
+[[sales_tariff_entry_type]]
+=== SalesTariffEntryType
 
 _Class_
 
-SalesTariffEntryType is used by: Common:SalesTariffType
-
+SalesTariffEntryType is used by: <<sales_tariff_type,Common:SalesTariffType>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|ePriceLevel |integer, 0 < = val
+  |0..1 |Optional. Defines the price level of this SalesTariffEntry (referring to NumEPriceLevels). Small values for the EPriceLevel represent a cheaper TariffEntry. Large values for the EPriceLevel represent a more expensive TariffEntry.
+|relativeTimeInterval |<<relative_time_interval_type,RelativeTimeIntervalType>>
+  |1..1 |Required. Defines the time interval the SalesTariffEntry is valid for, based upon relative times.
+|consumptionCost |<<consumption_cost_type,ConsumptionCostType>>
+  |0..3 |Optional. Defines additional means for further relative price information and/or alternative costs.
 |===
-ePriceLevel integer, 0 <  val 0..1 Optional. Defines the price level of this SalesTariffEntry
-(referring to NumEPriceLevels). Small values for the
-EPriceLevel represent a cheaper TariffEntry. Large values
-for the EPriceLevel represent a more expensive
-TariffEntry.
-relativeTimeInterval RelativeTimeIntervalType 1..1 Required. Defines the time interval the SalesTariffEntry is
-valid for, based upon relative times.
-consumptionCost ConsumptionCostType 0..3 Optional. Defines additional means for further relative
-price information and/or alternative costs.
 
 [[sales_tariff_type]]
 === SalesTariffType
 
 _Class_
 
+[cols="^.^1,10",%autowidth.stretch]
+|===
+s|NOTE |This dataType is based on dataTypes from <<iso15118_2,ISO 15118-2>>.
+|===
 
-NOTE This dataType is based on dataTypes from ISO 15118-2.
-
-SalesTariffType is used by: Common:ChargingScheduleType
-
+SalesTariffType is used by: <<charging_schedule_type,Common:ChargingScheduleType>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|id |integer
+  |1..1 |Required. SalesTariff identifier used to identify one sales tariff. An SAID remains a unique identifier for one schedule throughout a charging session.
+|salesTariffDescription |string[0..32]
+  |0..1 |Optional. A human readable title/short description of the sales tariff e.g. for HMI display purposes.
+|numEPriceLevels |integer
+  |0..1 |Optional. Defines the overall number of distinct price levels used across all provided SalesTariff elements.
+|salesTariffEntry |<<sales_tariff_entry_type,SalesTariffEntryType>>
+  |1..1024 |Required. Encapsulating element describing all relevant details for one time interval of the SalesTariff. The number of SalesTariffEntry elements is limited by the parameter maxScheduleTuples.
 |===
-id integer 1..1 Required. SalesTariff identifier used to identify one sales
-tariff. An SAID remains a unique identifier for one
-schedule throughout a charging session.
-salesTariffDescription string[0..32] 0..1 Optional. A human readable title/short description of the
-sales tariff e.g. for HMI display purposes.
-
-
-
-
-[cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
-|===
-|Field Name     |Field Type             |Card. |Description
-
-|===
-numEPriceLevels integer 0..1 Optional. Defines the overall number of distinct price
-levels used across all provided SalesTariff elements.
-salesTariffEntry SalesTariffEntryType 1..102
-4
-
-
-Required. Encapsulating element describing all relevant
-details for one time interval of the SalesTariff. The
-number of SalesTariffEntry elements is limited by the
-parameter maxScheduleTuples.
 
 [[sampled_value_type]]
 === SampledValueType
@@ -3231,33 +3163,29 @@ _Class_
 
 Single sampled value in MeterValues. Each value can be accompanied by optional fields.
 
-To save on mobile data usage, default values of all of the optional fields are such that. The value without any additional fields will
-be interpreted, as a register reading of active import energy in Wh (Watt-hour) units.
+To save on mobile data usage, default values of all of the optional fields are such that. The value without any additional fields will be interpreted, as a register reading of active import energy in Wh (Watt-hour) units.
 
-SampledValueType is used by: Common:MeterValueType
-
+SampledValueType is used by: <<meter_value_type,Common:MeterValueType>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|value |decimal
+  |1..1 |Required. Indicates the measured value.
+|context |<<reading_context_enum_type,ReadingContextEnumType>>
+  |0..1 |Optional. Type of detail value: start, end or sample. Default = "Sample.Periodic"
+|measurand |<<measurand_enum_type,MeasurandEnumType>>
+  |0..1 |Optional. Type of measurement. Default = "Energy.Active.Import.Register"
+|phase |<<phase_enum_type,PhaseEnumType>>
+  |0..1 |Optional. Indicates how the measured value is to be interpreted. For instance between L1 and neutral (L1-N) Please note that not all values of phase are applicable to all Measurands. When phase is absent, the measured value is interpreted as an overall value.
+|location |<<location_enum_type,LocationEnumType>>
+  |0..1 |Optional. Indicates where the measured value has been sampled. Default = "Outlet"
+|signedMeterValue |<<signed_meter_value_type,SignedMeterValueType>>
+  |0..1 |Optional. Contains the MeterValueSignature with sign/encoding method information.
+|unitOfMeasure |<<unit_of_measure_type,UnitOfMeasureType>>
+  |0..1 |Optional. Represents a UnitOfMeasure including a multiplier
 |===
-value decimal 1..1 Required. Indicates the measured value.
-context ReadingContextEnumType 0..1 Optional. Type of detail value: start, end or sample.
-Default  "Sample.Periodic"
-measurand MeasurandEnumType 0..1 Optional. Type of measurement. Default =
-"Energy.Active.Import.Register"
-phase PhaseEnumType 0..1 Optional. Indicates how the measured value is to be
-interpreted. For instance between L1 and neutral (L1-N)
-Please note that not all values of phase are applicable to
-all Measurands. When phase is absent, the measured
-value is interpreted as an overall value.
-location LocationEnumType 0..1 Optional. Indicates where the measured value has been
-sampled. Default  "Outlet"
-signedMeterValue SignedMeterValueType 0..1 Optional. Contains the MeterValueSignature with
-sign/encoding method information.
-unitOfMeasure UnitOfMeasureType 0..1 Optional. Represents a UnitOfMeasure including a
-multiplier
 
 [[set_monitoring_data_type]]
 === SetMonitoringDataType
@@ -3266,72 +3194,49 @@ _Class_
 
 Class to hold parameters of SetVariableMonitoring request.
 
-SetMonitoringDataType is used by: SetVariableMonitoringRequest
-
-
-[cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
-|===
-|Field Name     |Field Type             |Card. |Description
-
-|===
-id integer 0..1 Optional. An id SHALL only be given to replace an existing
-monitor. The Charging Station handles the generation of
-id’s for new monitors.
-transaction boolean 0..1 Optional. Monitor only active when a transaction is
-ongoing on a component relevant to this transaction.
-Default  false.
-value decimal 1..1 Required. Value for threshold or delta monitoring. For
-Periodic or PeriodicClockAligned this is the interval in
-seconds.
-type MonitorEnumType 1..1 Required. The type of this monitor, e.g. a threshold, delta
-or periodic monitor.
-
-
-
+SetMonitoringDataType is used by: <<set_variable_monitoring_request,SetVariableMonitoringRequest>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|id |integer
+  |0..1 |Optional. An id SHALL only be given to replace an existing monitor. The Charging Station handles the generation of id’s for new monitors.
+|transaction |boolean
+  |0..1 |Optional. Monitor only active when a transaction is ongoing on a component relevant to this transaction. Default = false.
+|value |decimal
+  |1..1 |Required. Value for threshold or delta monitoring. For Periodic or PeriodicClockAligned this is the interval in seconds.
+|type |<<monitor_enum_type,MonitorEnumType>>
+  |1..1 |Required. The type of this monitor, e.g. a threshold, delta or periodic monitor.
+|severity |integer
+  |1..1 |Required. The severity that will be assigned to an event that is triggered by this monitor. The severity range is 0-9, with 0 as the highest and 9 as the lowest severity level.
+
+  The severity levels have the following meaning: +
+  *0-Danger* +
+  Indicates lives are potentially in danger. Urgent attention is needed and action should be taken immediately. +
+  *1-Hardware Failure* +
+  Indicates that the Charging Station is unable to continue regular operations due to Hardware issues. Action is required. +
+  *2-System Failure* +
+  Indicates that the Charging Station is unable to continue regular operations due to software or minor hardware issues. Action is required. +
+  *3-Critical* +
+  Indicates a critical error. Action is required. +
+  *4-Error* +
+  Indicates a non-urgent error. Action is required. +
+  *5-Alert* +
+  Indicates an alert event. Default severity for any type of monitoring event. +
+  *6-Warning* +
+  Indicates a warning event. Action may be required. +
+  *7-Notice* +
+  Indicates an unusual event. No immediate action is required. +
+  *8-Informational* +
+  Indicates a regular operational event. May be used for reporting, measuring throughput, etc. No action is required. +
+  *9-Debug* +
+  Indicates information useful to developers for debugging, not useful during operations.
+|component |<<component_type,ComponentType>>
+  |1..1 |Required. Component for which monitor is set.
+|variable |<<variable_type,VariableType>>
+  |1..1 |Required. Variable for which monitor is set.
 |===
-severity integer 1..1 Required. The severity that will be assigned to an event
-that is triggered by this monitor. The severity range is 0-9,
-with 0 as the highest and 9 as the lowest severity level.
-
-
-The severity levels have the following meaning:
-0-Danger
-Indicates lives are potentially in danger. Urgent attention
-is needed and action should be taken immediately.
-1-Hardware Failure
-Indicates that the Charging Station is unable to continue
-regular operations due to Hardware issues. Action is
-required.
-2-System Failure
-Indicates that the Charging Station is unable to continue
-regular operations due to software or minor hardware
-issues. Action is required.
-3-Critical
-Indicates a critical error. Action is required.
-4-Error
-Indicates a non-urgent error. Action is required.
-5-Alert
-Indicates an alert event. Default severity for any type of
-monitoring event.
-6-Warning
-Indicates a warning event. Action may be required.
-7-Notice
-Indicates an unusual event. No immediate action is
-required.
-8-Informational
-Indicates a regular operational event. May be used for
-reporting, measuring throughput, etc. No action is
-required.
-9-Debug
-Indicates information useful to developers for debugging,
-not useful during operations.
-component ComponentType 1..1 Required. Component for which monitor is set.
-variable VariableType 1..1 Required. Variable for which monitor is set.
 
 [[set_monitoring_result_type]]
 === SetMonitoringResultType
@@ -3340,143 +3245,118 @@ _Class_
 
 Class to hold result of SetVariableMonitoring request.
 
-SetMonitoringResultType is used by: SetVariableMonitoringResponse
-
-
-[cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
-|===
-|Field Name     |Field Type             |Card. |Description
-
-|===
-id integer 0..1 Optional. Id given to the VariableMonitor by the Charging
-Station. The Id is only returned when status is accepted.
-Installed VariableMonitors should have unique id’s but
-the id’s of removed Installed monitors should have
-unique id’s but the id’s of removed monitors MAY be
-reused.
-status SetMonitoringStatusEnumType 1..1 Required. Status is OK if a value could be returned.
-Otherwise this will indicate the reason why a value could
-not be returned.
-type MonitorEnumType 1..1 Required. The type of this monitor, e.g. a threshold, delta
-or periodic monitor.
-
-
-
+SetMonitoringResultType is used by: <<set_variable_monitoring_response,SetVariableMonitoringResponse>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
-|===
-severity integer 1..1 Required. The severity that will be assigned to an event
-that is triggered by this monitor. The severity range is 0-9,
-with 0 as the highest and 9 as the lowest severity level.
+|id |integer
+  |0..1 |Optional. Id given to the VariableMonitor by the Charging Station. The Id is only returned when status is accepted. Installed VariableMonitors should have unique id’s but the id’s of removed Installed monitors should have unique id’s but the id’s of removed monitors MAY be reused.
+|status |<<set_monitoring_status_enum_type,SetMonitoringStatusEnumType>>
+  |1..1 |Required. Status is OK if a value could be returned. Otherwise this will indicate the reason why a value could not be returned.
+|type |<<monitor_enum_type,MonitorEnumType>>
+  |1..1 |Required. The type of this monitor, e.g. a threshold, delta or periodic monitor.
+|severity |integer
+  |1..1 |Required. The severity that will be assigned to an event that is triggered by this monitor. The severity range is 0-9, with 0 as the highest and 9 as the lowest severity level.
 
-
-The severity levels have the following meaning:
-0-Danger
-Indicates lives are potentially in danger. Urgent attention
-is needed and action should be taken immediately.
-1-Hardware Failure
-Indicates that the Charging Station is unable to continue
-regular operations due to Hardware issues. Action is
-required.
-2-System Failure
-Indicates that the Charging Station is unable to continue
-regular operations due to software or minor hardware
-issues. Action is required.
-3-Critical
-Indicates a critical error. Action is required.
-4-Error
-Indicates a non-urgent error. Action is required.
-5-Alert
-Indicates an alert event. Default severity for any type of
-monitoring event.
-6-Warning
-Indicates a warning event. Action may be required.
-7-Notice
-Indicates an unusual event. No immediate action is
-required.
-8-Informational
-Indicates a regular operational event. May be used for
-reporting, measuring throughput, etc. No action is
-required.
-9-Debug
-Indicates information useful to developers for debugging,
-not useful during operations.
-component ComponentType 1..1 Required. Component for which status is returned.
-variable VariableType 1..1 Required. Variable for which status is returned.
+  The severity levels have the following meaning: +
+  *0-Danger* +
+  Indicates lives are potentially in danger. Urgent attention is needed and action should be taken immediately. +
+  *1-Hardware Failure* +
+  Indicates that the Charging Station is unable to continue regular operations due to Hardware issues. Action is required. +
+  *2-System Failure* +
+  Indicates that the Charging Station is unable to continue regular operations due to software or minor hardware issues. Action is required. +
+  *3-Critical* +
+  Indicates a critical error. Action is required. +
+  *4-Error* +
+  Indicates a non-urgent error. Action is required. +
+  *5-Alert* +
+  Indicates an alert event. Default severity for any type of monitoring event. +
+  *6-Warning* +
+  Indicates a warning event. Action may be required. +
+  *7-Notice* +
+  Indicates an unusual event. No immediate action is required. +
+  *8-Informational* +
+  Indicates a regular operational event. May be used for reporting, measuring throughput, etc. No action is required. +
+  *9-Debug* +
+  Indicates information useful to developers for debugging, not useful during operations.
+|component |<<component_type,ComponentType>>
+  |1..1 |Required. Component for which status is returned.
+|variable |<<variable_type,VariableType>>
+  |1..1 |Required. Variable for which status is returned.
 |statusInfo |<<status_info_type,StatusInfoType>>
   |0..1 |Optional. Detailed status information.
+|===
 
 [[set_variable_data_type]]
 === SetVariableDataType
 
 _Class_
 
-SetVariableDataType is used by: SetVariablesRequest
-
+SetVariableDataType is used by: <<set_variables_request,SetVariablesRequest>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|attributeType |<<attribute_enum_type,AttributeEnumType>>
+  |0..1 |Optional. Type of attribute: Actual, Target, MinSet, MaxSet. Default is Actual when omitted.
+|attributeValue |string[0..1000]
+  |1..1 |Required. Value to be assigned to attribute of variable. +
+  The value is allowed to be an empty string (""). +
+  The Configuration Variable <<configuration_value_size,ConfigurationValueSize>> can be used to limit SetVariableData.attributeValue and VariableCharacteristics.valueList. The max size of these values will always remain equal.
+|component |<<component_type,ComponentType>>
+  |1..1 |Required. The component for which the variable data is set.
+|variable |<<variable_type,VariableType>>
+  |1..1 |Required. Specifies the that needs to be set.
 |===
-attributeType AttributeEnumType 0..1 Optional. Type of attribute: Actual, Target, MinSet,
-MaxSet. Default is Actual when omitted.
-attributeValue string[0..1000] 1..1 Required. Value to be assigned to attribute of variable.
-The value is allowed to be an empty string ("").
-The Configuration Variable ConfigurationValueSize can
-be used to limit SetVariableData.attributeValue and
-VariableCharacteristics.valueList. The max size of these
-values will always remain equal.
-component ComponentType 1..1 Required. The component for which the variable data is
-set.
-variable VariableType 1..1 Required. Specifies the that needs to be set.
 
 [[set_variable_result_type]]
 === SetVariableResultType
 
 _Class_
 
-SetVariableResultType is used by: SetVariablesResponse
-
+SetVariableResultType is used by: <<set_variables_response,SetVariablesResponse>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|attributeType |<<attribute_enum_type,AttributeEnumType>>
+  |0..1 |Optional. Type of attribute: Actual, Target, MinSet, MaxSet. Default is Actual when omitted.
+|attributeStatus |<<set_variable_status_enum_type,SetVariableStatusEnumType>>
+  |1..1 |Required. Result status of setting the variable.
+|component |<<component_type,ComponentType>>
+  |1..1 |Required. The component for which result is returned.
+|variable |<<variable_type,VariableType>> 
+  |1..1 |Required. The variable for which the result is returned.
+|attributeStatusInfo |<<status_info_type,StatusInfoType>>
+  |0..1 |Optional. Detailed attribute status information.
 |===
-attributeType AttributeEnumType 0..1 Optional. Type of attribute: Actual, Target, MinSet,
-MaxSet. Default is Actual when omitted.
-attributeStatus SetVariableStatusEnumType 1..1 Required. Result status of setting the variable.
-component ComponentType 1..1 Required. The component for which result is returned.
-variable VariableType 1..1 Required. The variable for which the result is returned.
-attributeStatusInfo StatusInfoType 0..1 Optional. Detailed attribute status information.
 
-=== 2.46. SignedMeterValueType.
+[[signed_meter_value_type]]
+=== SignedMeterValueType
 
 _Class_
 
 Represent a signed version of the meter value.
 
-SignedMeterValueType is used by: Common:SampledValueType
-
+SignedMeterValueType is used by: <<sampled_value_type,Common:SampledValueType>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|signedMeterData |string[0..2500] 
+  |1..1 |Required. Base64 encoded, contains the signed data which might contain more then just the meter value. It can contain information like timestamps, reference to a customer etc.
+|signingMethod |string[0..50] 
+  |1..1 |Required. Method used to create the digital signature.
+|encodingMethod |string[0..50]
+  |1..1 |Required. Method used to encode the meter values before applying the digital signature algorithm.
+|publicKey |string[0..2500]
+  |1..1 |Required. Base64 encoded, sending depends on configuration variable _PublicKeyWithSignedMeterValue_.
 |===
-signedMeterData string[0..2500] 1..1 Required. Base64 encoded, contains the signed data
-which might contain more then just the meter value. It
-can contain information like timestamps, reference to a
-customer etc.
-signingMethod string[0..50] 1..1 Required. Method used to create the digital signature.
-encodingMethod string[0..50] 1..1 Required. Method used to encode the meter values
-before applying the digital signature algorithm.
-publicKey string[0..2500] 1..1 Required. Base64 encoded, sending depends on
-configuration variable PublicKeyWithSignedMeterValue.
 
 [[status_info_type]]
 === StatusInfoType
@@ -3485,240 +3365,171 @@ _Class_
 
 Element providing more information about the status.
 
-StatusInfoType is used by: Common:ClearMonitoringResultType , BootNotificationResponse , CancelReservationResponse ,
-TriggerMessageResponse , UnlockConnectorResponse , UpdateFirmwareResponse , ClearDisplayMessageResponse ,
-Get15118EVCertificateResponse , GetCompositeScheduleResponse , ChangeAvailabilityResponse , GetLogResponse ,
-ClearChargingProfileResponse , NotifyEVChargingNeedsResponse , ClearCacheResponse , NotifyEVChargingScheduleResponse ,
-RequestStartTransactionResponse , RequestStopTransactionResponse , SetChargingProfileResponse ,
-SetDisplayMessageResponse , SetNetworkProfileResponse , SignCertificateResponse , DataTransferResponse ,
-CertificateSignedResponse , DeleteCertificateResponse , GetChargingProfilesResponse , GetInstalledCertificateIdsResponse ,
-InstallCertificateResponse , GetBaseReportResponse , GetMonitoringReportResponse , GetReportResponse ,
-GetVariablesResponse.GetVariableResultType , ReserveNowResponse , SetMonitoringBaseResponse ,
-SetMonitoringLevelResponse , SetVariableMonitoringResponse.SetMonitoringResultType ,
-SetVariablesResponse.SetVariableResultType , PublishFirmwareResponse , GetCertificateStatusResponse , ResetResponse ,
-GetDisplayMessagesResponse , CustomerInformationResponse , SendLocalListResponse
-
+StatusInfoType is used by: <<clear_monitoring_result_type,Common:ClearMonitoringResultType>>, <<boot_notification_response,BootNotificationResponse>>, <<cancel_reservation_response,CancelReservationResponse>>, <<trigger_message_response,TriggerMessageResponse>>, <<unlock_connector_response,UnlockConnectorResponse>>, <<update_firmware_response,UpdateFirmwareResponse>>, <<clear_display_message_response,ClearDisplayMessageResponse>>,<<get_15118_ev_certificate_response,Get15118EVCertificateResponse>>, <<get_compositie_schedule_response,GetCompositeScheduleResponse>>, <<change_availability_response,ChangeAvailabilityResponse>>, <<get_log_response,GetLogResponse>>, <<clear_charging_profile_response,ClearChargingProfileResponse>>, <<notify_ev_charging_needs_response,NotifyEVChargingNeedsResponse>>, <<clear_cache_response,ClearCacheResponse>>, <<notify_ev_charging_schedule_response,NotifyEVChargingScheduleResponse>>, <<request_start_transaction_response,RequestStartTransactionResponse>>, <<request_stop_transaction_response,RequestStopTransactionResponse>>, <<set_charging_profile_response,SetChargingProfileResponse>>,<<set_display_message_response,SetDisplayMessageResponse>>, <<set_network_profile_response,SetNetworkProfileResponse>>, <<sign_certificate_response,SignCertificateResponse>>, <<data_transfer_response,DataTransferResponse>>, <<certificate_signed_response,CertificateSignedResponse>>, <<delete_certificate_response,DeleteCertificateResponse>>, <<get_charging_profiles_response,GetChargingProfilesResponse>>, <<get_installed_certificate_ids_response,GetInstalledCertificateIdsResponse>>, <<install_certificate_response,InstallCertificateResponse>>, <<get_base_report_response,GetBaseReportResponse>>, <<get_monitoring_report_response,GetMonitoringReportResponse>>, <<get_report_response,GetReportResponse>>, <<get_variable_result_type,GetVariablesResponse.GetVariableResultType>>, <<reserve_now_response,ReserveNowResponse>>, <<set_monitoring_base_response,SetMonitoringBaseResponse>>, <<set_monitoring_level_response,SetMonitoringLevelResponse>>, <<set_monitoring_result_type,SetVariableMonitoringResponse.SetMonitoringResultType>>, <<set_variable_result_type,SetVariablesResponse.SetVariableResultType>>, <<publish_firmware_response,PublishFirmwareResponse>>, <<get_certificate_status_response,GetCertificateStatusResponse>>, <<reset_response,ResetResponse>>, <<get_display_messages_response,GetDisplayMessagesResponse>>, <<customer_information_response,CustomerInformationResponse>>, <<send_local_list_response,SendLocalListResponse>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|reasonCode |string[0..20]
+  |1..1 |Required. A predefined code for the reason why the status is returned in this response. The string is case-insensitive.
+|additionalInfo |string[0..512] 
+  |0..1 |Optional. Additional text to provide detailed information.
 |===
-reasonCode string[0..20] 1..1 Required. A predefined code for the reason why the
-status is returned in this response. The string is case-
-insensitive.
-additionalInfo string[0..512] 0..1 Optional. Additional text to provide detailed information.
-
 
 [[transaction_type]]
 === TransactionType
 
 _Class_
 
-TransactionType is used by: TransactionEventRequest
-
+TransactionType is used by: <<transaction_event_request,TransactionEventRequest>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|transactionId |identifierString[0..36]
+  |1..1 |Required. This contains the Id of the transaction.
+|chargingState |<<charging_state_enum_type,ChargingStateEnumType>>
+  |0..1 |Optional. Current charging state, is required when state has changed.
+|timeSpentCharging |integer
+  |0..1 |Optional. Contains the total time that energy flowed from EVSE to EV during the transaction (in seconds). Note that timeSpentCharging is smaller or equal to the duration of the transaction.
+|stoppedReason |<<reason_enum_type,ReasonEnumType>> 
+  |0..1 |Optional. The _stoppedReason_ is the reason/event that initiated the process of stopping the transaction. It will normally be the user stopping authorization via card (Local or MasterPass) or app (Remote), but it can also be CSMS revoking authorization (DeAuthorized), or disconnecting the EV when TxStopPoint = EVConnected (EVDisconnected). Most other reasons are related to technical faults or energy limitations. MAY only be omitted when _stoppedReason_ is "Local"
+|remoteStartId |integer
+  |0..1 |Optional. The ID given to remote start request (<<request_start_transaction_request,RequestStartTransactionRequest>>). This enables to CSMS to match the started transaction to the given start request.
 |===
-transactionId identifierString[0..36] 1..1 Required. This contains the Id of the transaction.
-chargingState ChargingStateEnumType 0..1 Optional. Current charging state, is required when state
-has changed.
-timeSpentCharging integer 0..1 Optional. Contains the total time that energy flowed from
-EVSE to EV during the transaction (in seconds). Note that
-timeSpentCharging is smaller or equal to the duration of
-the transaction.
-stoppedReason ReasonEnumType 0..1 Optional. The <i>stoppedReason </i>is the reason/event
-that initiated the process of stopping the transaction. It
-will normally be the user stopping authorization via card
-(Local or MasterPass) or app (Remote), but it can also be
-CSMS revoking authorization (DeAuthorized), or
-disconnecting the EV when TxStopPoint  EVConnected
-(EVDisconnected). Most other reasons are related to
-technical faults or energy limitations. MAY only be
-omitted when <i>stoppedReason </i>is "Local"
-remoteStartId integer 0..1 Optional. The ID given to remote start request
-(RequestStartTransactionRequest. This enables to CSMS
-to match the started transaction to the given start
-request.
 
-=== 2.49. UnitOfMeasureType
+[[unit_of_measure_type]]
+=== UnitOfMeasureType
 
 _Class_
 
 Represents a UnitOfMeasure with a multiplier
 
-UnitOfMeasureType is used by: Common:SampledValueType
-
+UnitOfMeasureType is used by: <<sampled_value_type,Common:SampledValueType>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|unit |string[0..20]
+  |0..1 |Optional. Unit of the value. Default = "Wh" if the (default) measurand is an "Energy" type. This field SHALL use a value from the list Standardized Units of Measurements in Part 2 Appendices. If an applicable unit is available in that list, otherwise a "custom" unit might be used.
+|multiplier |integer
+  |0..1 |Optional. Multiplier, this value represents the exponent to base 10. I.e. multiplier 3 means 10 raised to the 3rd power. Default is 0.
 |===
-unit string[0..20] 0..1 Optional. Unit of the value. Default  "Wh" if the (default)
-measurand is an "Energy" type. This field SHALL use a
-value from the list Standardized Units of Measurements
-in Part 2 Appendices. If an applicable unit is available in
-that list, otherwise a "custom" unit might be used.
-multiplier integer 0..1 Optional. Multiplier, this value represents the exponent to
-base 10. I.e. multiplier 3 means 10 raised to the 3rd
-power. Default is 0.
 
-=== 2.50. VariableAttributeType
+[[variable_attribute_type]]
+=== VariableAttributeType
 
 _Class_
 
 Attribute data of a variable.
 
-VariableAttributeType is used by: NotifyReportRequest.ReportDataType
-
-
-[cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
-|===
-|Field Name     |Field Type             |Card. |Description
-
-|===
-type AttributeEnumType 0..1 Optional. Attribute: Actual, MinSet, MaxSet, etc. Defaults
-to Actual if absent.
-
-
-
+VariableAttributeType is used by: <<report_data_type,NotifyReportRequest.ReportDataType>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|type |<<attribute_enum_type,AttributeEnumType>>
+  |0..1 |Optional. Attribute: Actual, MinSet, MaxSet, etc. Defaults to Actual if absent.
+|value |string[0..2500]
+  |0..1 |Optional. Value of the attribute. May only be omitted when mutability is set to 'WriteOnly'.
+
+  The Configuration Variable <<reporting_value_size,ReportingValueSize>> can be used to limit GetVariableResult.attributeValue, VariableAttribute.value and EventData.actualValue. The max size of these values will always remain equal.
+|mutability |<<mutability_enum_type,MutabilityEnumType>>
+  |0..1 |Optional. Defines the mutability of this attribute. Default is ReadWrite when omitted.
+|persistent |boolean
+  |0..1 |Optional. If true, value will be persistent across system reboots or power down. Default when omitted is false.
+|constant |boolean
+  |0..1 |Optional. If true, value that will never be changed by the Charging Station at runtime. Default when omitted is false.
 |===
-value string[0..2500] 0..1 Optional. Value of the attribute. May only be omitted
-when mutability is set to 'WriteOnly'.
 
-
-The Configuration Variable ReportingValueSize can be
-used to limit GetVariableResult.attributeValue,
-VariableAttribute.value and EventData.actualValue. The
-max size of these values will always remain equal.
-mutability MutabilityEnumType 0..1 Optional. Defines the mutability of this attribute. Default
-is ReadWrite when omitted.
-persistent boolean 0..1 Optional. If true, value will be persistent across system
-reboots or power down. Default when omitted is false.
-constant boolean 0..1 Optional. If true, value that will never be changed by the
-Charging Station at runtime. Default when omitted is
-false.
-
-=== 2.51. VariableCharacteristicsType
+[[variable_characteristics_type]]
+=== VariableCharacteristicsType
 
 _Class_
 
 Fixed read-only parameters of a variable.
 
-VariableCharacteristicsType is used by: NotifyReportRequest.ReportDataType
-
+VariableCharacteristicsType is used by: <<report_data_type,NotifyReportRequest.ReportDataType>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|unit |string[0..16]
+  |0..1 |Optional. Unit of the variable. When the transmitted value has a unit, this field SHALL be included.
+|dataType |<<data_enum_type,DataEnumType>>
+  |1..1 |Required. Data type of this variable.
+|minLimit |decimal
+  |0..1 |Optional. Minimum possible value of this variable.
+|maxLimit |decimal
+  |0..1 |Optional. Maximum possible value of this variable. When the datatype of this Variable is String, OptionList, SequenceList or MemberList, this field defines the maximum length of the (CSV) string.
+|valuesList |string[0..1000]
+  |0..1 |Optional. Mandatory when _dataType_ = OptionList,
+  MemberList or SequenceList. _valuesList_ specifies the allowed values for the type.
+
+  * OptionList: The (Actual) Variable value must be a single value from the reported (CSV) enumeration list.
+
+  * MemberList: The (Actual) Variable value may be an (unordered) (sub-)set of the reported (CSV) valid values list.
+
+  * SequenceList: The (Actual) Variable value may be an ordered (priority, etc) (sub-)set of the reported (CSV) valid values.
+
+  This is a comma separated list.
+
+  The Configuration Variable <<configuration_value_size,ConfigurationValueSize>> can be used to limit SetVariableData.attributeValue and VariableCharacteristics.valueList. The max size of these values will always remain equal.
+|supportsMonitoring |boolean
+  |1..1 |Required. Flag indicating if this variable supports monitoring.
 |===
-unit string[0..16] 0..1 Optional. Unit of the variable. When the transmitted value
-has a unit, this field SHALL be included.
-dataType DataEnumType 1..1 Required. Data type of this variable.
-minLimit decimal 0..1 Optional. Minimum possible value of this variable.
-maxLimit decimal 0..1 Optional. Maximum possible value of this variable. When
-the datatype of this Variable is String, OptionList,
-SequenceList or MemberList, this field defines the
-maximum length of the (CSV) string.
-valuesList string[0..1000] 0..1 Optional. Mandatory when dataType  OptionList,
-MemberList or SequenceList. valuesList specifies the
-allowed values for the type.
 
-
-* OptionList: The (Actual) Variable value must be a single
-value from the reported (CSV) enumeration list.
-
-
-* MemberList: The (Actual) Variable value may be an
-(unordered) (sub-)set of the reported (CSV) valid values
-list.
-
-
-* SequenceList: The (Actual) Variable value may be an
-ordered (priority, etc) (sub-)set of the reported (CSV) valid
-values.
-
-
-This is a comma separated list.
-
-
-The Configuration Variable ConfigurationValueSize can
-be used to limit SetVariableData.attributeValue and
-VariableCharacteristics.valueList. The max size of these
-values will always remain equal.
-supportsMonitoring boolean 1..1 Required. Flag indicating if this variable supports
-monitoring.
-
-
-
-=== 2.52. VariableMonitoringType
+[[variable_monitoring_type]]
+=== VariableMonitoringType
 
 _Class_
 
 A monitoring setting for a variable.
 
-VariableMonitoringType is used by: NotifyMonitoringReportRequest.MonitoringDataType
-
+VariableMonitoringType is used by: <<monitoring_data_type,NotifyMonitoringReportRequest.MonitoringDataType>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|id |integer
+  |1..1 |Required. Identifies the monitor.
+|transaction |boolean
+  |1..1 |Required. Monitor only active when a transaction is ongoing on a component relevant to this transaction.
+|value |decimal
+  |1..1 |Required. Value for threshold or delta monitoring. For Periodic or PeriodicClockAligned this is the interval in seconds.
+|type |<<monitor_enum_type,MonitorEnumType>>
+  |1..1 |Required. The type of this monitor, e.g. a threshold, delta or periodic monitor.
+|severity |integer
+  |1..1 |Required. The severity that will be assigned to an event that is triggered by this monitor. The severity range is 0-9, with 0 as the highest and 9 as the lowest severity level.
+
+  The severity levels have the following meaning: +
+  *0-Danger* +
+  Indicates lives are potentially in danger. Urgent attention is needed and action should be taken immediately. +
+  *1-Hardware Failure* +
+  Indicates that the Charging Station is unable to continue regular operations due to Hardware issues. Action is required. +
+  *2-System Failure* +
+  Indicates that the Charging Station is unable to continue regular operations due to software or minor hardware issues. Action is required. +
+  *3-Critical* +
+  Indicates a critical error. Action is required. +
+  *4-Error* +
+  Indicates a non-urgent error. Action is required. +
+  *5-Alert* +
+  Indicates an alert event. Default severity for any type of monitoring event. +
+  *6-Warning* +
+  Indicates a warning event. Action may be required. +
+  *7-Notice* +
+  Indicates an unusual event. No immediate action is required. +
+  *8-Informational* +
+  Indicates a regular operational event. May be used for reporting, measuring throughput, etc. No action is required. +
+  *9-Debug* +
+  Indicates information useful to developers for debugging, not useful during operations.
 |===
-id integer 1..1 Required. Identifies the monitor.
-transaction boolean 1..1 Required. Monitor only active when a transaction is
-ongoing on a component relevant to this transaction.
-value decimal 1..1 Required. Value for threshold or delta monitoring. For
-Periodic or PeriodicClockAligned this is the interval in
-seconds.
-type MonitorEnumType 1..1 Required. The type of this monitor, e.g. a threshold, delta
-or periodic monitor.
-severity integer 1..1 Required. The severity that will be assigned to an event
-that is triggered by this monitor. The severity range is 0-9,
-with 0 as the highest and 9 as the lowest severity level.
-
-
-The severity levels have the following meaning:
-0-Danger
-Indicates lives are potentially in danger. Urgent attention
-is needed and action should be taken immediately.
-1-Hardware Failure
-Indicates that the Charging Station is unable to continue
-regular operations due to Hardware issues. Action is
-required.
-2-System Failure
-Indicates that the Charging Station is unable to continue
-regular operations due to software or minor hardware
-issues. Action is required.
-3-Critical
-Indicates a critical error. Action is required.
-4-Error
-Indicates a non-urgent error. Action is required.
-5-Alert
-Indicates an alert event. Default severity for any type of
-monitoring event.
-6-Warning
-Indicates a warning event. Action may be required.
-7-Notice
-Indicates an unusual event. No immediate action is
-required.
-8-Informational
-Indicates a regular operational event. May be used for
-reporting, measuring throughput, etc. No action is
-required.
-9-Debug
-Indicates information useful to developers for debugging,
-not useful during operations.
 
 [[variable_type]]
 === VariableType
@@ -3727,53 +3538,42 @@ _Class_
 
 Reference key to a component-variable.
 
-VariableType is used by: Common:ComponentVariableType , GetVariablesRequest.GetVariableDataType ,
-
-
-
-GetVariablesResponse.GetVariableResultType , NotifyMonitoringReportRequest.MonitoringDataType ,
-NotifyReportRequest.ReportDataType , SetVariableMonitoringRequest.SetMonitoringDataType ,
-SetVariableMonitoringResponse.SetMonitoringResultType , SetVariablesRequest.SetVariableDataType ,
-SetVariablesResponse.SetVariableResultType , NotifyEventRequest.EventDataType
-
+VariableType is used by: <<component_variable_type,Common:ComponentVariableType>>, <<get_variable_data_type,GetVariablesRequest.GetVariableDataType>>, <<get_variable_result_type,GetVariablesResponse.GetVariableResultType>>, <<monitoring_data_type,NotifyMonitoringReportRequest.MonitoringDataType>>, <<report_data_type,NotifyReportRequest.ReportDataType>>, <<set_monitoring_data_type,SetVariableMonitoringRequest.SetMonitoringDataType>>, <<set_monitoring_result_type,SetVariableMonitoringResponse.SetMonitoringResultType>>, <<set_variable_data_type,SetVariablesRequest.SetVariableDataType>>, <<set_variable_result_type,SetVariablesResponse.SetVariableResultType>>, <<event_data_type,NotifyEventRequest.EventDataType>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|name |identifierString[0..50]
+  |1..1 |Required. Name of the variable. Name should be taken from the list of standardized variable names whenever possible. Case Insensitive. strongly advised to use Camel Case.
+|instance |identifierString[0..50]
+  |0..1 |Optional. Name of instance in case the variable exists as multiple instances. Case Insensitive. strongly advised to use Camel Case.
 |===
-name identifierString[0..50] 1..1 Required. Name of the variable. Name should be taken
-from the list of standardized variable names whenever
-possible. Case Insensitive. strongly advised to use Camel
-Case.
-instance identifierString[0..50] 0..1 Optional. Name of instance in case the variable exists as
-multiple instances. Case Insensitive. strongly advised to
-use Camel Case.
 
-=== 2.54. VPNType.
+[[vpn_type]]
+=== VPNType
 
 _Class_
 
 VPN Configuration settings
 
-VPNType is used by: SetNetworkProfileRequest.NetworkConnectionProfileType
-
+VPNType is used by: <<network_connection_profile_type,SetNetworkProfileRequest.NetworkConnectionProfileType>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|server |string[0..512] |1..1 |Required. VPN Server Address
+|user |string[0..20] |1..1 |Required. VPN User
+|group |string[0..20] |0..1 |Optional. VPN group.
+|password |string[0..20] |1..1 |Required. VPN Password.
+|key |string[0..255] |1..1 |Required. VPN shared secret.
+|type |<<vpn_enum_type,VPNEnumType>> |1..1 |Required. Type of VPN
 |===
-server string[0..512] 1..1 Required. VPN Server Address
-user string[0..20] 1..1 Required. VPN User
-group string[0..20] 0..1 Optional. VPN group.
-password string[0..20] 1..1 Required. VPN Password.
-key string[0..255] 1..1 Required. VPN shared secret.
-type VPNEnumType 1..1 Required. Type of VPN
 
+<<<
 
-
-== 3. Enumerations.
+== Enumerations
 
 [[apn_authentication_enum_type]]
 === APNAuthenticationEnumType
@@ -4279,7 +4079,8 @@ Accepted The Charging Station accepted the message.
 Rejected When the Charging Station is in a state where it cannot process this request.
 Invalid In a request to the Charging Station no reference to a customer is included.
 
-=== 3.26. DataEnumType
+[[data_enum_type]]
+=== DataEnumType
 
 _Enumeration_
 
@@ -4417,7 +4218,7 @@ EventTriggerEnumType is used by: notifyEvent:NotifyEventRequest.EventDataType
 
 Value Description
 
-**Alerting** (^) Monitored variable has passed an Lower or Upper Threshold.
+**Alerting** Monitored variable has passed an Lower or Upper Threshold.
 Also used as trigger type for a HardWiredNotification.
 **Delta** Delta Monitored Variable value has changed by more than specified amount
 **Periodic** Periodic Monitored Variable has been sampled for reporting at the specified interval
@@ -4706,7 +4507,7 @@ Body Measurement inside body of Charging Station (e.g. Temperature).
 Cable Measurement taken from cable between EV and Charging Station.
 EV Measurement taken by EV.
 
-**Inlet** (^) For the Charging Station ( _evseId_  0): measurement at network ("grid") inlet connection.
+**Inlet** For the Charging Station ( _evseId_  0): measurement at network ("grid") inlet connection.
 For measurements with _evseId_ > 0, these are measurements taken at the EVSE inlet (This can be useful for a
 DC charger).
 **Outlet** Measurement at a Connector. Default value.
@@ -4873,7 +4674,7 @@ Instantaneous reactive power imported by EV. (var or kvar)
 
 SoC State of charge of charging vehicle in percentage
 
-**Voltage** (^) Instantaneous DC or AC RMS supply voltage.
+**Voltage** Instantaneous DC or AC RMS supply voltage.
 For _location_  Inlet and _evseId_  0: voltage at charging station grid connection.
 For _location_  Outlet and _evseId_ > 0: voltage at EVSE outlet towards the EV.
 
@@ -5042,7 +4843,8 @@ Report variables and components with a monitor of type UpperThreshold or LowerTh
 DeltaMonitoring Report variables and components with a monitor of type Delta.
 PeriodicMonitoring Report variables and components with a monitor of type Periodic or PeriodicClockAligned.
 
-==== 3.58. MutabilityEnumType
+[[mutability_enum_type]]
+=== MutabilityEnumType
 
 _Enumeration_
 
@@ -5068,7 +4870,8 @@ Accepted A schedule will be provided momentarily.
 Rejected Service not available.
 Processing The CSMS is gathering information to provide a schedule.
 
-==== 3.60. OCPPInterfaceEnumType.
+[[ocpp_interface_enum_type]]
+=== OCPPInterfaceEnumType
 
 _Enumeration_
 
@@ -5087,7 +4890,8 @@ Wireless1 Use wireless connection 1
 Wireless2 Use wireless connection 2
 Wireless3 Use wireless connection 3
 
-==== 3.61. OCPPTransportEnumType
+[[ocpp_transport_enum_type]]
+=== OCPPTransportEnumType
 
 _Enumeration_
 
@@ -5100,7 +4904,8 @@ Value Description
 JSON Use JSON over WebSockets for transport of OCPP PDU’s
 SOAP Use SOAP for transport of OCPP PDU’s
 
-==== 3.62. OCPPVersionEnumType
+[[ocpp_version_enum_type]]
+=== OCPPVersionEnumType
 
 _Enumeration_
 
@@ -5119,7 +4924,7 @@ OCPP16 OCPP version 1.6
 
 Value Description
 
-**OCPP20** (^) OCPP version 2.0
+**OCPP20** OCPP version 2.0
 The OCPP 2.0 release of OCPP has been deprecated, so this value OCPP20 must now be used for OCPP
 2.0.1 implementations in the NetworkConnectionProfile. Note that OCPP 2.0.1 does have its own Websocket
 subprotocol name: ocpp2.0.1.
@@ -5655,7 +5460,8 @@ UploadFailure Failed to upload the requested file.
 Uploading File is being uploaded.
 AcceptedCanceled On-going log upload is canceled and new request to upload log has been accepted.
 
-==== 3.88. VPNEnumType.
+[[vpn_enum_type]]
+=== VPNEnumType
 
 _Enumeration_
 

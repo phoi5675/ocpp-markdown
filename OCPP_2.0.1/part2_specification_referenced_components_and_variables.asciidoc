@@ -339,7 +339,8 @@ variableAttributes mutability ReadOnly
 variableCharacteristics dataType integer
 Description Message Size (in bytes) - puts constraint on GetVariablesRequest message size.
 
-**2.1.20.** ConfigurationValueSize
+[[configuration_value_size]]
+==== `ConfigurationValueSize`
 
 
 Required no
