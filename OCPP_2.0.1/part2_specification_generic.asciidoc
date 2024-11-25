@@ -355,7 +355,7 @@ In OCPP, system actors are covering functions or devices.
 |[[ocpp_security_21]][21]   |Eekelen, M. van, Poll, E., Hubbers, E., Vieira, B., Broek, F. van den: An end-to-end security design for smart EV-charging for Enexis and ElaadNL by LaQuSo1. December 2, 2014. https://www.elaad.nl/smart-charging-end2end-security-design/
 |[[ocpp_security_22]][22]   |(^) RFC 2986. PKCS #10: Certification Request Syntax Specification, Version 1.7. https://www.ietf.org/rfc/rfc2986.txt
 |[[ocpp_security_23]][23]   |(^) RSA-PSS. https://tools.ietf.org/html/rfc8017
-|[[ocpp_security_24]][24]   |Santesson, et al. "X.509 Internet Public Key Infrastructure Online Certificate Status Protocol - OCSP" RFC 6960. June
+|[[ocpp_security_24]][24]   |Santesson, et al. "X.509 Internet Public Key Infrastructure Online Certificate Status Protocol - OCSP" RFC 6960. June 2013
 |[[ocpp_security_25]][[rfc2818]][25]   |(^) RFC 2818. HTTP Over TLS. https://tools.ietf.org/html/rfc2818
 |===
 

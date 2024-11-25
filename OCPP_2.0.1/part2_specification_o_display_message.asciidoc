@@ -299,6 +299,7 @@ image::part2/images/figure_144.svg[Get a specific DisplayMessages sequence diagr
 
 <<<
 
+[[o05_clear_a_display_message]]
 === O05 - Clear a DisplayMessage
 
 .O05 - Clear a DisplayMessage
