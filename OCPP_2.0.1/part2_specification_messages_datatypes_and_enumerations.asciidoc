@@ -435,7 +435,8 @@ implementation).
 vendorId string[0..255] 1..1 Required. This identifies the Vendor specific
 implementation
 
-**1.13.2. DataTransferResponse**
+[[data_transfer_response]]
+==== DataTransferResponse
 
 This contains the field definition of the DataTransferResponse PDU sent by the Charging Station to the CSMS or vice versa in
 response to a DataTransferRequest.
