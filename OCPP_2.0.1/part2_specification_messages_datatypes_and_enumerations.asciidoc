@@ -159,6 +159,7 @@ _Class_
   |0..1 |Optional. Detailed status information.
 |===
 
+[[change_availability]]
 === ChangeAvailability
 
 [[change_availability_request]]
@@ -1532,6 +1533,7 @@ _Class_
 
 This contains the field definition of the ReservationStatusUpdateResponse PDU sent by the CSMS to the Charging Station in response to a ReservationStatusUpdateRequest. No fields are defined.
 
+[[reserve_now]]
 === ReserveNow
 
 [[reserve_now_request]]
@@ -1973,6 +1975,7 @@ _Class_
   |0..1 |Optional. Detailed status information.
 |===
 
+[[status_notification]]
 === StatusNotification
 
 [[status_notification_request]]
@@ -2066,6 +2069,7 @@ _Class_
   |0..1 |Optional. This can contain updated personal message that can be shown to the EV Driver. This can be used to provide updated tariff information.
 |===
 
+[[trigger_message]]
 === TriggerMessage
 
 [[trigger_message_request]]
@@ -3580,30 +3584,34 @@ VPNType is used by: <<network_connection_profile_type,SetNetworkProfileRequest.N
 
 _Enumeration_
 
-APNAuthenticationEnumType is used by: setNetworkProfile:SetNetworkProfileRequest.APNType
+APNAuthenticationEnumType is used by: <<apn_type,setNetworkProfile:SetNetworkProfileRequest.APNType>>
 
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
 
-Value Description
-CHAP Use CHAP authentication
-NONE Use no authentication
-PAP Use PAP authentication
-AUTO Sequentially try CHAP, PAP, NONE.
+|CHAP     |Use CHAP authentication
+|NONE     |Use no authentication
+|PAP      |Use PAP authentication
+|AUTO     |Sequentially try CHAP, PAP, NONE.
+|===
 
 [[attribute_enum_type]]
 === AttributeEnumType
 
 _Enumeration_
 
-AttributeEnumType is used by: Common:VariableAttributeType , getVariables:GetVariablesRequest.GetVariableDataType ,
-getVariables:GetVariablesResponse.GetVariableResultType , setVariables:SetVariablesRequest.SetVariableDataType ,
-setVariables:SetVariablesResponse.SetVariableResultType
+AttributeEnumType is used by: <<variable_attribute_type,Common:VariableAttributeType>>, <<get_variable_data_type,getVariables:GetVariablesRequest.GetVariableDataType>>, <<get_variable_result_type,getVariables:GetVariablesResponse.GetVariableResultType>>, <<set_variable_data_type,setVariables:SetVariablesRequest.SetVariableDataType>>, <<set_variable_result_type,setVariables:SetVariablesResponse.SetVariableResultType>>
 
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
 
-Value Description
-Actual The actual value of the variable.
-Target The target value for this variable.
-MinSet The minimal allowed value for this variable
-MaxSet Thne maximum allowed value for this variable
+|Actual   |The actual value of the variable.
+|Target   |The target value for this variable.
+|MinSet   |The minimal allowed value for this variable
+|MaxSet   |Thne maximum allowed value for this variable
+|===
 
 [[authorization_status_enum_type]]
 === AuthorizationStatusEnumType
@@ -3612,27 +3620,23 @@ _Enumeration_
 
 Status of an authorization response.
 
-AuthorizationStatusEnumType is used by: Common:IdTokenInfoType
+AuthorizationStatusEnumType is used by: <<id_token_info_type,Common:IdTokenInfoType>>
 
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
 
-Value Description
-Accepted Identifier is allowed for charging.
-Blocked Identifier has been blocked. Not allowed for charging.
-ConcurrentTx Identifier is already involved in another transaction and multiple transactions are not allowed. (Only relevant
-for the response to a transactionEventRequest(eventType=Started).)
-Expired Identifier has expired. Not allowed for charging.
-Invalid Identifier is invalid. Not allowed for charging.
-NoCredit Identifier is valid, but EV Driver doesn’t have enough credit to start charging. Not allowed for charging.
-NotAllowedTypeEVS
-E
-
-
-Identifier is valid, but not allowed to charge at this type of EVSE.
-
-
-NotAtThisLocation Identifier is valid, but not allowed to charge at this location.
-NotAtThisTime Identifier is valid, but not allowed to charge at this location at this time.
-Unknown Identifier is unknown. Not allowed for charging.
+|Accepted     |Identifier is allowed for charging.
+|Blocked    |Identifier has been blocked. Not allowed for charging.
+|ConcurrentTx     |Identifier is already involved in another transaction and multiple transactions are not allowed. (Only relevant for the response to a transactionEventRequest(eventType=Started).)
+|Expired    |Identifier has expired. Not allowed for charging.
+|Invalid    |Identifier is invalid. Not allowed for charging.
+|NoCredit     |Identifier is valid, but EV Driver doesn’t have enough credit to start charging. Not allowed for charging.
+|NotAllowedTypeEVSE     |Identifier is valid, but not allowed to charge at this type of EVSE.
+|NotAtThisLocation    |Identifier is valid, but not allowed to charge at this location.
+|NotAtThisTime    |Identifier is valid, but not allowed to charge at this location at this time.
+|Unknown    |Identifier is unknown. Not allowed for charging.
+|===
 
 [[authorize_certificate_status_enum_type]]
 === AuthorizeCertificateStatusEnumType
@@ -3641,45 +3645,42 @@ _Enumeration_
 
 Status of the EV Contract certificate.
 
+AuthorizeCertificateStatusEnumType is used by: <<authorize_response,authorize:AuthorizeResponse>>
 
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
 
-AuthorizeCertificateStatusEnumType is used by: authorize:AuthorizeResponse
-
-
-Value Description
-Accepted Positive response
-SignatureError <not used>
-CertificateExpired If the contract certificate in the AuthorizeRequest is expired.
-CertificateRevoked If the Charging Station or CSMS determine (via a CRL or OCSP response) that the contract certificate in the
-AuthorizeRequest is marked as revoked.
-NoCertificateAvailab
-le
-
-
-<not used>
-
-
-CertChainError If the contract certificate contained in the AuthorizeRequest message is not valid.
-ContractCancelled If the EMAID provided by EVCC is invalid, unknown, expired or blocked.
+|Accepted |Positive response
+|SignatureError |<not used>
+|CertificateExpired |If the contract certificate in the AuthorizeRequest is expired.
+|CertificateRevoked |If the Charging Station or CSMS determine (via a CRL or OCSP response) that the contract certificate in the AuthorizeRequest is marked as revoked.
+|NoCertificateAvailable |<not used>
+|CertChainError |If the contract certificate contained in the AuthorizeRequest message is not valid.
+|ContractCancelled |If the EMAID provided by EVCC is invalid, unknown, expired or blocked.
+|===
 
 [[boot_reason_enum_type]]
 === BootReasonEnumType
 
 _Enumeration_
 
-BootReasonEnumType is used by: bootNotification:BootNotificationRequest
+BootReasonEnumType is used by: <<boot_notification_request,bootNotification:BootNotificationRequest>>
 
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
 
-Value Description
-ApplicationReset The Charging Station rebooted due to an application error.
-FirmwareUpdate The Charging Station rebooted due to a firmware update.
-LocalReset The Charging Station rebooted due to a local reset command.
-PowerUp The Charging Station powered up and registers itself with the CSMS.
-RemoteReset The Charging Station rebooted due to a remote reset command.
-ScheduledReset The Charging Station rebooted due to a scheduled reset command.
-Triggered Requested by the CSMS via a TriggerMessage
-Unknown The boot reason is unknown.
-Watchdog The Charging Station rebooted due to an elapsed watchdog timer.
+|ApplicationReset |The Charging Station rebooted due to an application error.
+|FirmwareUpdate |The Charging Station rebooted due to a firmware update.
+|LocalReset |The Charging Station rebooted due to a local reset command.
+|PowerUp |The Charging Station powered up and registers itself with the CSMS.
+|RemoteReset |The Charging Station rebooted due to a remote reset command.
+|ScheduledReset |The Charging Station rebooted due to a scheduled reset command.
+|Triggered |Requested by the CSMS via a <<trigger_message,TriggerMessage>>
+|Unknown |The boot reason is unknown.
+|Watchdog |The Charging Station rebooted due to an elapsed watchdog timer.
+|===
 
 [[cancel_reservation_status_enum_type]]
 === CancelReservationStatusEnumType
@@ -3688,58 +3689,60 @@ _Enumeration_
 
 Status in CancelReservationResponse.
 
-CancelReservationStatusEnumType is used by: cancelReservation:CancelReservationResponse
+CancelReservationStatusEnumType is used by: <<cancel_reservation_response,cancelReservation:CancelReservationResponse>>
 
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
 
-Value Description
-Accepted Reservation for the identifier has been canceled.
-Rejected Reservation could not be canceled, because there is no reservation active for the identifier.
+|Accepted |Reservation for the identifier has been canceled.
+|Rejected |Reservation could not be canceled, because there is no reservation active for the identifier.
+|===
 
 [[certificate_action_enum_type]]
 === CertificateActionEnumType
 
 _Enumeration_
 
-CertificateActionEnumType is used by: get15118EVCertificate:Get15118EVCertificateRequest
+CertificateActionEnumType is used by: <<get_15118_ev_certificate_request,get15118EVCertificate:Get15118EVCertificateRequest>>
 
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
 
-Value Description
-Install Install the provided certificate.
-Update Update the provided certificate.
-
-
+|Install  |Install the provided certificate.
+|Update   |Update the provided certificate.
+|===
 
 [[certificate_signed_status_enum_type]]
 === CertificateSignedStatusEnumType
 
 _Enumeration_
 
-CertificateSignedStatusEnumType is used by: certificateSigned:CertificateSignedResponse
+CertificateSignedStatusEnumType is used by: <<certificate_signed_response,certificateSigned:CertificateSignedResponse>>
 
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
 
-Value Description
-Accepted Signed certificate is valid.
-Rejected Signed certificate is invalid.
-
+|Accepted |Signed certificate is valid.
+|Rejected |Signed certificate is invalid.
+|===
 
 [[certificate_signing_use_enum_type]]
 === CertificateSigningUseEnumType
 
 _Enumeration_
 
-CertificateSigningUseEnumType is used by: signCertificate:SignCertificateRequest , certificateSigned:CertificateSignedRequest
+CertificateSigningUseEnumType is used by: <<sign_certificate_request,signCertificate:SignCertificateRequest>>, <<certificate_signed_request,certificateSigned:CertificateSignedRequest>>
 
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
 
-Value Description
-ChargingStationCert
-ificate
-
-
-Client side certificate used by the Charging Station to connect the the CSMS.
-
-
-V2GCertificate Use for certificate for 15118 connections. This means that the certificate should be derived from the V2G
-root.
+|ChargingStationCertificate |Client side certificate used by the Charging Station to connect the the CSMS.
+|V2GCertificate |Use for certificate for 15118 connections. This means that the certificate should be derived from the V2G root.
+|===
 
 [[change_availability_status_enum_type]]
 === ChangeAvailabilityStatusEnumType
@@ -3748,13 +3751,16 @@ _Enumeration_
 
 Status returned in response to ChangeAvailabilityRequest.
 
-ChangeAvailabilityStatusEnumType is used by: changeAvailability:ChangeAvailabilityResponse
+ChangeAvailabilityStatusEnumType is used by: <<change_availability_response,changeAvailability:ChangeAvailabilityResponse>>
 
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
 
-Value Description
-Accepted Request has been accepted and will be executed.
-Rejected Request has not been accepted and will not be executed.
-Scheduled Request has been accepted and will be executed when transaction(s) in progress have finished.
+|Accepted   |Request has been accepted and will be executed.
+|Rejected   |Request has not been accepted and will not be executed.
+|Scheduled  |Request has been accepted and will be executed when transaction(s) in progress have finished.
+|===
 
 [[charging_limit_source_enum_type]]
 === ChargingLimitSourceEnumType
@@ -3763,17 +3769,17 @@ _Enumeration_
 
 Enumeration for indicating from which source a charging limit originates.
 
-ChargingLimitSourceEnumType is used by: notifyChargingLimit:NotifyChargingLimitRequest.ChargingLimitType ,
-clearedChargingLimit:ClearedChargingLimitRequest ,
-getChargingProfiles:GetChargingProfilesRequest.ChargingProfileCriterionType ,
-reportChargingProfiles:ReportChargingProfilesRequest
+ChargingLimitSourceEnumType is used by: <<notify_charging_limit_request,notifyChargingLimit:NotifyChargingLimitRequest.ChargingLimitType>>, <<cleared_charging_limit_request,clearedChargingLimit:ClearedChargingLimitRequest>>, <<charging_profile_criterion_type,getChargingProfiles:GetChargingProfilesRequest.ChargingProfileCriterionType>>, <<report_charging_profiles_request,reportChargingProfiles:ReportChargingProfilesRequest>>
 
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
 
-Value Description
-EMS Indicates that an Energy Management System has sent a charging limit.
-Other Indicates that an external source, not being an EMS or system operator, has sent a charging limit.
-SO Indicates that a System Operator (DSO or TSO) has sent a charging limit.
-CSO Indicates that the CSO has set this charging profile.
+|EMS      |Indicates that an Energy Management System has sent a charging limit.
+|Other    |Indicates that an external source, not being an EMS or system operator, has sent a charging limit.
+|SO       |Indicates that a System Operator (DSO or TSO) has sent a charging limit.
+|CSO      |Indicates that the CSO has set this charging profile.
+|===
 
 [[charging_profile_kind_enum_type]]
 === ChargingProfileKindEnumType
@@ -3782,20 +3788,16 @@ _Enumeration_
 
 Kind of charging profile.
 
+ChargingProfileKindEnumType is used by: <<charging_profile_type,Common:ChargingProfileType>>
 
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
 
-ChargingProfileKindEnumType is used by: Common:ChargingProfileType
-
-
-Value Description
-Absolute Schedule periods are relative to a fixed point in time defined in the schedule. This requires that startSchedule
-is set to a starting point in time.
-Recurring The schedule restarts periodically at the first schedule period. To be most useful, this requires that
-startSchedule is set to a starting point in time.
-Relative Charging schedule periods should start when the EVSE is ready to deliver energy. i.e. when the EV driver is
-authorized and the EV is connected. When a ChargingProfile is received for a transaction that is already
-charging, then the charging schedule periods should remain relative to the PowerPathClosed moment.
-No value for startSchedule should be supplied.
+|Absolute   |Schedule periods are relative to a fixed point in time defined in the schedule. This requires that startSchedule is set to a starting point in time.
+|Recurring  |The schedule restarts periodically at the first schedule period. To be most useful, this requires that startSchedule is set to a starting point in time.
+|Relative   |Charging schedule periods should start when the EVSE is ready to deliver energy. i.e. when the EV driver is authorized and the EV is connected. When a ChargingProfile is received for a transaction that is already charging, then the charging schedule periods should remain relative to the PowerPathClosed moment. No value for _startSchedule_ should be supplied.
+|===
 
 [[charging_profile_purpose_enum_type]]
 === ChargingProfilePurposeEnumType
@@ -3804,31 +3806,19 @@ _Enumeration_
 
 Purpose of the charging profile.
 
-ChargingProfilePurposeEnumType is used by: Common:ChargingProfileType ,
-clearChargingProfile:ClearChargingProfileRequest.ClearChargingProfileType ,
-getChargingProfiles:GetChargingProfilesRequest.ChargingProfileCriterionType
+ChargingProfilePurposeEnumType is used by: <<charging_profile_type,Common:ChargingProfileType>>, <<clear_charging_profile_type,clearChargingProfile:ClearChargingProfileRequest.ClearChargingProfileType>>, <<charging_profile_criterion_type,getChargingProfiles:GetChargingProfilesRequest.ChargingProfileCriterionType>>
 
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
 
-Value Description
-ChargingStationExte
-rnalConstraints
-
-
-Additional constraints that will be incorporated into a local power schedule. Only valid for a Charging Station.
-Therefore evse.Id MUST be 0 in the SetChargingProfileRequest message.
-ChargingStationMax
-Profile
-
-
-Configuration for the maximum power or current available for an entire Charging Station.
-
-
-TxDefaultProfile Default profile that can be configured in the Charging Station. When a new transaction is started, this profile
-SHALL be used, unless it was a transaction that was started by a RequestStartTransactionRequest with a
-ChargingProfile that is accepted by the Charging Station.
-TxProfile Profile with constraints to be imposed by the Charging Station on the current transaction, or on a new
-transaction when this is started via a RequestStartTransactionRequest with a ChargingProfile. A profile with
-this purpose SHALL cease to be valid when the transaction terminates.
+|ChargingStationExternalConstraints
+  |Additional constraints that will be incorporated into a local power schedule. Only valid for a Charging Station. +
+  Therefore evse.Id MUST be 0 in the SetChargingProfileRequest message.
+|ChargingStationMaxProfile |Configuration for the maximum power or current available for an entire Charging Station.
+|TxDefaultProfile |Default profile that can be configured in the Charging Station. When a new transaction is started, this profile SHALL be used, unless it was a transaction that was started by a RequestStartTransactionRequest with a ChargingProfile that is accepted by the Charging Station.
+|TxProfile |Profile with constraints to be imposed by the Charging Station on the current transaction, or on a new transaction when this is started via a RequestStartTransactionRequest with a ChargingProfile. A profile with this purpose SHALL cease to be valid when the transaction terminates.
+|===
 
 [[charging_profile_status_enum_type]]
 === ChargingProfileStatusEnumType
@@ -3837,12 +3827,15 @@ _Enumeration_
 
 Status returned in response to SetChargingProfileRequest.
 
-ChargingProfileStatusEnumType is used by: setChargingProfile:SetChargingProfileResponse
+ChargingProfileStatusEnumType is used by: <<set_charging_profile_response,setChargingProfile:SetChargingProfileResponse>>
 
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
 
-Value Description
-Accepted Request has been accepted and will be executed.
-Rejected Request has not been accepted and will not be executed.
+|Accepted |Request has been accepted and will be executed.
+|Rejected |Request has not been accepted and will not be executed.
+|===
 
 [[charging_rate_unit_enum_type]]
 === ChargingRateUnitEnumType
@@ -3851,21 +3844,16 @@ _Enumeration_
 
 Unit in which a charging schedule is defined.
 
-ChargingRateUnitEnumType is used by: Common:ChargingScheduleType , Common:CompositeScheduleType ,
-getCompositeSchedule:GetCompositeScheduleRequest
+ChargingRateUnitEnumType is used by: <<charging_schedule_type,Common:ChargingScheduleType>>, <<composite_schedule_type,Common:CompositeScheduleType>>, <<get_composite_schedule_request,getCompositeSchedule:GetCompositeScheduleRequest>>
 
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
 
-
-
-Value Description
-W Watts (power). This is the TOTAL allowed charging power. If used for AC Charging, the phase current should
-be calculated via: Current per phase  Power / (Line Voltage * Number of Phases). The "Line Voltage" used in
-the calculation is not the measured voltage, but the set voltage for the area (hence, 230 of 110 volt). The
-"Number of Phases" is the numberPhases from the ChargingSchedulePeriod. It is usually more convenient to
-use this for DC charging. Note that if numberPhases in a ChargingSchedulePeriod is absent, 3 SHALL be
+|W |Watts (power). This is the TOTAL allowed charging power. If used for AC Charging, the phase current should be calculated via: Current per phase = Power / (Line Voltage * Number of Phases). The "Line Voltage" used in the calculation is not the measured voltage, but the set voltage for the area (hence, 230 of 110 volt). The "Number of Phases" is the numberPhases from the ChargingSchedulePeriod. It is usually more convenient to use this for DC charging. Note that if numberPhases in a ChargingSchedulePeriod is absent, 3 SHALL be
 assumed.
-A Amperes (current). The amount of Ampere per phase, not the sum of all phases. It is usually more
-convenient to use this for AC charging.
+|A |Amperes (current). The amount of Ampere per phase, not the sum of all phases. It is usually more convenient to use this for AC charging.
+|===
 
 [[charging_state_enum_type]]
 === ChargingStateEnumType
@@ -3874,20 +3862,18 @@ _Enumeration_
 
 The state of the charging process.
 
-ChargingStateEnumType is used by: transactionEvent:TransactionEventRequest.TransactionType
+ChargingStateEnumType is used by: <<transaction_type,transactionEvent:TransactionEventRequest.TransactionType>>
 
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
 
-Value Description
-Charging The contactor of the Connector is closed and energy is flowing to between EVSE and EV.
-EVConnected There is a connection between EV and EVSE, in case the protocol used between EV and the Charging Station
-can detect a connection, the protocol needs to detect this for the state to become active. The connection
-can either be wired or wireless.
-SuspendedEV When the EV is connected to the EVSE and the EVSE is offering energy but the EV is not taking any energy.
-SuspendedEVSE When the EV is connected to the EVSE but the EVSE is not offering energy to the EV, e.g. due to a smart
-charging restriction, local supply power constraints, or when charging has stopped because of the
-authorization status in the response to a transactionEventRequest indicating that charging is not allowed
-etc.
-Idle There is no connection between EV and EVSE.
+|Charging |The contactor of the Connector is closed and energy is flowing to between EVSE and EV.
+|EVConnected |There is a connection between EV and EVSE, in case the protocol used between EV and the Charging Station can detect a connection, the protocol needs to detect this for the state to become active. The connection can either be wired or wireless.
+|SuspendedEV |When the EV is connected to the EVSE and the EVSE is offering energy but the EV is not taking any energy.
+|SuspendedEVSE |When the EV is connected to the EVSE but the EVSE is not offering energy to the EV, e.g. due to a smart charging restriction, local supply power constraints, or when charging has stopped because of the authorization status in the response to a transactionEventRequest indicating that charging is not allowed etc.
+|Idle |There is no connection between EV and EVSE.
+|===
 
 [[clear_cache_status_enum_type]]
 === ClearCacheStatusEnumType
@@ -3896,12 +3882,15 @@ _Enumeration_
 
 Status returned in response to ClearCacheRequest.
 
-ClearCacheStatusEnumType is used by: clearCache:ClearCacheResponse
+ClearCacheStatusEnumType is used by: <<clear_cache_response,clearCache:ClearCacheResponse>>
 
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
 
-Value Description
-Accepted Command has been executed.
-Rejected Command has not been executed.
+|Accepted |Command has been executed.
+|Rejected |Command has not been executed.
+|===
 
 [[clear_charging_profile_status_enum_type]]
 === ClearChargingProfileStatusEnumType
@@ -3910,55 +3899,65 @@ _Enumeration_
 
 Status returned in response to ClearChargingProfileRequest.
 
-ClearChargingProfileStatusEnumType is used by: clearChargingProfile:ClearChargingProfileResponse
+ClearChargingProfileStatusEnumType is used by: <<clear_charging_profile_response,clearChargingProfile:ClearChargingProfileResponse>>
 
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
 
-Value Description
-Accepted Request has been accepted and will be executed.
-Unknown No Charging Profile(s) were found matching the request.
+|Accepted |Request has been accepted and will be executed.
+|Unknown  |No Charging Profile(s) were found matching the request.
+|===
 
 [[clear_message_status_enum_type]]
 === ClearMessageStatusEnumType
 
 _Enumeration_
 
-
-
 Result for a ClearDisplayMessageRequest as used in a ClearDisplayMessageResponse.
 
-ClearMessageStatusEnumType is used by: clearDisplayMessage:ClearDisplayMessageResponse
+ClearMessageStatusEnumType is used by: <<clear_display_message_response,clearDisplayMessage:ClearDisplayMessageResponse>>
 
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
 
-Value Description
-Accepted Request successfully executed: message cleared.
-Unknown Given message (based on the id) not known.
+|Accepted |Request successfully executed: message cleared.
+|Unknown  |Given message (based on the id) not known.
+|===
 
 [[clear_monitoring_status_enum_type]]
 === ClearMonitoringStatusEnumType
 
 _Enumeration_
 
-ClearMonitoringStatusEnumType is used by: Common:ClearMonitoringResultType
+ClearMonitoringStatusEnumType is used by: <<clear_monitoring_result_type,Common:ClearMonitoringResultType>>
 
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
 
-Value Description
-Accepted Monitor successfully cleared.
-Rejected Clearing of monitor rejected.
-NotFound Monitor Id is not found.
+|Accepted |Monitor successfully cleared.
+|Rejected |Clearing of monitor rejected.
+|NotFound |Monitor Id is not found.
+|===
 
 [[component_criterion_enum_type]]
 === ComponentCriterionEnumType
 
 _Enumeration_
 
-ComponentCriterionEnumType is used by: getReport:GetReportRequest
+ComponentCriterionEnumType is used by: <<get_report_request,getReport:GetReportRequest>>
 
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
 
-Value Description
-Active Components that are active, i.e. having Active  1
-Available Components that are available, i.e. having Available  1
-Enabled Components that are enabled, i.e. having Enabled  1
-Problem Components that reported a problem, i.e. having Problem  1
+|Active |Components that are active, i.e. having _Active_ = 1
+|Available |Components that are available, i.e. having _Available_ = 1
+|Enabled |Components that are enabled, i.e. having _Enabled_ = 1
+|Problem |Components that reported a problem, i.e. having _Problem_ = 1
+|===
 
 [[connector_enum_type]]
 === ConnectorEnumType
@@ -3966,136 +3965,116 @@ Problem Components that reported a problem, i.e. having Problem  1
 _Enumeration_
 
 Allowed values of ConnectorCode.
+[cols="^.^1,10",%autowidth.stretch]
+|===
+s|NOTE |This enumeration does not attempt to include every possible power connector type worldwide as an individual type, but to specifically define those that are known to be in use (or likely to be in use) in the Charging Stations using the OCPP protocol. In particular, many of the very large number of domestic electrical sockets designs in use in many countries are excluded, unless there is evidence that they are or are likely to be approved for use on Charging Stations in some jurisdictions (e.g. as secondary connectors for charging light EVs such as electric scooters). These light connector types can be represented with the enumeration value Other1PhMax16A. Similarly, any single phase connector not otherwise enumerated that is rated for 16A or over should be reported as Other1PhOver16A. All 3 phase connector types not explicitly enumerated should be represented as Other3Ph.
+|===
 
-NOTE
+ConnectorEnumType is used by: <<reserve_now_request,reserveNow:ReserveNowRequest>>
 
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
 
-This enumeration does not attempt to include every possible power connector type worldwide as an individual
-type, but to specifically define those that are known to be in use (or likely to be in use) in the Charging Stations
-using the OCPP protocol. In particular, many of the very large number of domestic electrical sockets designs in
-use in many countries are excluded, unless there is evidence that they are or are likely to be approved for use on
-Charging Stations in some jurisdictions (e.g. as secondary connectors for charging light EVs such as electric
-scooters). These light connector types can be represented with the enumeration value Other1PhMax16A.
-Similarly, any single phase connector not otherwise enumerated that is rated for 16A or over should be reported
-as Other1PhOver16A. All 3 phase connector types not explicitly enumerated should be represented as Other3Ph.
-
-ConnectorEnumType is used by: reserveNow:ReserveNowRequest
-
-
-Value Description
-cCCS1 Combined Charging System 1 (captive cabled) a.k.a. Combo 1
-cCCS2 Combined Charging System 2 (captive cabled) a.k.a. Combo 2
-cG105 JARI G105-1993 (captive cabled) a.k.a. CHAdeMO
-cTesla Tesla Connector (captive cabled)
-cType1 IEC62196-2 Type 1 connector (captive cabled) a.k.a. J1772
-cType2 IEC62196-2 Type 2 connector (captive cabled) a.k.a. Mennekes connector
-s309-1P-16A 16A 1 phase IEC60309 socket
-
-
-
-
-Value Description
-s309-1P-32A 32A 1 phase IEC60309 socket
-s309-3P-16A 16A 3 phase IEC60309 socket
-s309-3P-32A 32A 3 phase IEC60309 socket
-sBS1361 UK domestic socket a.k.a. 13Amp
-sCEE-7-7 CEE 7/7 16A socket. May represent 7/4 & 7/5 a.k.a Schuko
-sType2 IEC62196-2 Type 2 socket a.k.a. Mennekes connector
-sType3 IEC62196-2 Type 2 socket a.k.a. Scame
-Other1PhMax16A Other single phase (domestic) sockets not mentioned above, rated at no more than 16A. CEE7/17, AS3112,
-NEMA 5-15, NEMA 5-20, JISC8303, TIS166, SI 32, CPCS-CCC, SEV1011, etc.
-Other1PhOver16A Other single phase sockets not mentioned above (over 16A)
-Other3Ph Other 3 phase sockets not mentioned above. NEMA14-30, NEMA14-50.
-Pan Pantograph connector
-wInductive Wireless inductively coupled connection (generic)
-wResonant Wireless resonant coupled connection (generic)
-Undetermined Yet to be determined (e.g. before plugged in)
-Unknown Unknown; not determinable
+|cCCS1 |Combined Charging System 1 (captive cabled) a.k.a. Combo 1
+|cCCS2 |Combined Charging System 2 (captive cabled) a.k.a. Combo 2
+|cG105 |JARI G105-1993 (captive cabled) a.k.a. CHAdeMO
+|cTesla |Tesla Connector (captive cabled)
+|cType1 |IEC62196-2 Type 1 connector (captive cabled) a.k.a. J1772
+|cType2 |IEC62196-2 Type 2 connector (captive cabled) a.k.a. Mennekes connector
+|s309-|1P-16A 16A 1 phase IEC60309 socket
+|s309-|1P-32A 32A 1 phase IEC60309 socket
+|s309-|3P-16A 16A 3 phase IEC60309 socket
+|s309-|3P-32A 32A 3 phase IEC60309 socket
+|sBS1361 |UK domestic socket a.k.a. 13Amp
+|sCEE-|7-7 CEE 7/7 16A socket. May represent 7/4 & 7/5 a.k.a Schuko
+|sType2 |IEC62196-2 Type 2 socket a.k.a. Mennekes connector
+|sType3 |IEC62196-2 Type 2 socket a.k.a. Scame
+|Other1PhMax16A |Other single phase (domestic) sockets not mentioned above, rated at no more than 16A. CEE7/17, AS3112,
+|NEMA |5-15, NEMA 5-20, JISC8303, TIS166, SI 32, CPCS-CCC, SEV1011, etc.
+|Other1PhOver16A |Other single phase sockets not mentioned above (over 16A)
+|Other3Ph |Other 3 phase sockets not mentioned above. NEMA14-30, NEMA14-50.
+|Pan |Pantograph connector
+|wInductive |Wireless inductively coupled connection (generic)
+|wResonant |Wireless resonant coupled connection (generic)
+|Undetermined |Yet to be determined (e.g. before plugged in)
+|Unknown |Unknown; not determinable
+|===
 
 [[connector_status_enum_type]]
 === ConnectorStatusEnumType
 
 _Enumeration_
 
-A status can be reported for the Connector of an EVSE of a Charging Station. States considered Operative are: Available, Reserved
-and Occupied. States considered Inoperative are: Unavailable, Faulted.
+A status can be reported for the Connector of an EVSE of a Charging Station. States considered Operative are: Available, Reserved and Occupied. States considered Inoperative are: Unavailable, Faulted.
 
-ConnectorStatusEnumType is used by: statusNotification:StatusNotificationRequest
+ConnectorStatusEnumType is used by: <<status_notification_request,statusNotification:StatusNotificationRequest>>
 
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
 
-Value Description
-Available When a Connector becomes available for a new User (Operative)
-Occupied When a Connector becomes occupied, so it is not available for a new EV driver. (Operative)
-Reserved When a Connector becomes reserved as a result of ReserveNow command (Operative)
-Unavailable When a Connector becomes unavailable as the result of a Change Availability command or an event upon
-which the Charging Station transitions to unavailable at its discretion. Upon receipt of ChangeAvailability
-message command, the status MAY change immediately or the change MAY be scheduled. When
-scheduled, StatusNotification SHALL be send when the availability change becomes effective (Inoperative)
-Faulted When a Connector (or the EVSE or the entire Charging Station it belongs to) has reported an error and is not
-available for energy delivery. (Inoperative).
+|Available |When a Connector becomes available for a new User (Operative)
+|Occupied |When a Connector becomes occupied, so it is not available for a new EV driver. (Operative)
+|Reserved |When a Connector becomes reserved as a result of <<reserve_now,ReserveNow>> command (Operative)
+|Unavailable |When a Connector becomes unavailable as the result of a Change Availability command or an event upon which the Charging Station transitions to unavailable at its discretion. Upon receipt of <<change_availability,ChangeAvailability>> message command, the status MAY change immediately or the change MAY be scheduled. When scheduled, <<status_notification,StatusNotification>> SHALL be send when the availability change becomes effective (Inoperative)
+|Faulted |When a Connector (or the EVSE or the entire Charging Station it belongs to) has reported an error and is not available for energy delivery. (Inoperative).
+|===
 
 [[cost_kind_enum_type]]
 === CostKindEnumType
 
 _Enumeration_
 
-CostKindEnumType is used by: Common:CostType
+CostKindEnumType is used by: <<cost_type,Common:CostType>>
 
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
 
-Value Description
-CarbonDioxideEmiss
-ion
-
-
-Absolute value. Carbon Dioxide emissions, in grams per kWh.
-
-
-RelativePricePercen
-tage
-
-
-Relative value. Price per kWh, as percentage relative to the maximum price stated in any of all tariffs
-indicated to the EV.
-RenewableGeneratio
-nPercentage
-
-
-Relative value. Percentage of renewable generation within total generation.
+|CarbonDioxideEmission |Absolute value. Carbon Dioxide emissions, in grams per kWh.
+|RelativePricePercentage |Relative value. Price per kWh, as percentage relative to the maximum price stated in any of all tariffs indicated to the EV.
+|RenewableGenerationPercentage |Relative value. Percentage of renewable generation within total generation.
+|===
 
 [[customer_information_status_enum_type]]
 === CustomerInformationStatusEnumType
 
 _Enumeration_
 
-
-
 Status in CancelReservationResponse.
 
-CustomerInformationStatusEnumType is used by: customerInformation:CustomerInformationResponse
+CustomerInformationStatusEnumType is used by: <<customer_information_response,customerInformation:CustomerInformationResponse>>
 
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
 
-Value Description
-Accepted The Charging Station accepted the message.
-Rejected When the Charging Station is in a state where it cannot process this request.
-Invalid In a request to the Charging Station no reference to a customer is included.
+|Accepted |The Charging Station accepted the message.
+|Rejected |When the Charging Station is in a state where it cannot process this request.
+|Invalid  |In a request to the Charging Station no reference to a customer is included.
+|===
 
 [[data_enum_type]]
 === DataEnumType
 
 _Enumeration_
 
-DataEnumType is used by: Common:VariableCharacteristicsType
+DataEnumType is used by: <<variable_characteristics_type,Common:VariableCharacteristicsType>>
 
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
 
-Value Description
-string This variable is of the type string.
-decimal This variable is of the type decimal.
-integer This variable is of the type integer.
-dateTime DateTime following the [RFC3339] specification.
-boolean This variable is of the type boolean.
-OptionList Supported/allowed values for a single choice, enumerated, text variable.
-SequenceList Supported/allowed values for an ordered sequence variable.
-MemberList Supported/allowed values for a mathematical set variable.
+|string |This variable is of the type string.
+|decimal |This variable is of the type decimal.
+|integer |This variable is of the type integer.
+|dateTime |DateTime following the <<rfc3339,[RFC3339]>> specification.
+|boolean |This variable is of the type boolean.
+|OptionList |Supported/allowed values for a single choice, enumerated, text variable.
+|SequenceList |Supported/allowed values for an ordered sequence variable.
+|MemberList |Supported/allowed values for a mathematical set variable.
+|===
 
 [[data_transfer_status_enum_type]]
 === DataTransferStatusEnumType
@@ -4104,28 +4083,33 @@ _Enumeration_
 
 Status in DataTransferResponse.
 
-DataTransferStatusEnumType is used by: dataTransfer:DataTransferResponse
+DataTransferStatusEnumType is used by: <<data_transfer_response,dataTransfer:DataTransferResponse>>
 
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
 
-Value Description
-Accepted Message has been accepted and the contained request is accepted.
-Rejected Message has been accepted but the contained request is rejected.
-UnknownMessageId Message could not be interpreted due to unknown messageId string.
-UnknownVendorId Message could not be interpreted due to unknown vendorId string.
+|Accepted |Message has been accepted and the contained request is accepted.
+|Rejected |Message has been accepted but the contained request is rejected.
+|UnknownMessageId |Message could not be interpreted due to unknown messageId string.
+|UnknownVendorId |Message could not be interpreted due to unknown vendorId string.
+|===
 
 [[delete_certificate_status_enum_type]]
 === DeleteCertificateStatusEnumType
 
 _Enumeration_
 
-DeleteCertificateStatusEnumType is used by: deleteCertificate:DeleteCertificateResponse
+DeleteCertificateStatusEnumType is used by: <<delete_certificate_response,deleteCertificate:DeleteCertificateResponse>>
 
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
 
-Value Description
-Accepted Normal successful completion (no errors).
-Failed The Charging Station either failed to remove the certificate or rejected the request. A Charging Station may
-reject the request to prevent the deletion of a certificate, if it is the last one from its certificate type.
-NotFound Requested resource not found.
+|Accepted |Normal successful completion (no errors).
+|Failed |The Charging Station either failed to remove the certificate or rejected the request. A Charging Station may reject the request to prevent the deletion of a certificate, if it is the last one from its certificate type.
+|NotFound |Requested resource not found.
+|===
 
 [[display_message_status_enum_type]]
 === DisplayMessageStatusEnumType
@@ -4139,7 +4123,11 @@ Result for a SetDisplayMessageRequest as used in a SetDisplayMessageResponse.
 DisplayMessageStatusEnumType is used by: setDisplayMessage:SetDisplayMessageResponse
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Accepted Request to display message accepted.
 NotSupportedMessa
 geFormat
@@ -4173,7 +4161,11 @@ Enumeration of energy transfer modes.
 EnergyTransferModeEnumType is used by: Common:ChargingNeedsType
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 DC DC charging.
 AC_single_phase AC single phase charging according to IEC 62196.
 AC_two_phase AC two phase charging according to IEC 62196.
@@ -4189,7 +4181,11 @@ Specifies the event notification type of the message.
 EventNotificationEnumType is used by: notifyEvent:NotifyEventRequest.EventDataType
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 HardWiredNotificati
 on
 
@@ -4216,7 +4212,11 @@ _Enumeration_
 EventTriggerEnumType is used by: notifyEvent:NotifyEventRequest.EventDataType
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 
 **Alerting** Monitored variable has passed an Lower or Upper Threshold.
 Also used as trigger type for a HardWiredNotification.
@@ -4239,7 +4239,11 @@ A value with "Successful end state" in the description, is an end state, update 
 FirmwareStatusEnumType is used by: firmwareStatusNotification:FirmwareStatusNotificationRequest
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Downloaded Intermediate state. New firmware has been downloaded by Charging Station.
 DownloadFailed Failure end state. Charging Station failed to download firmware.
 Downloading Intermediate state. Firmware is being downloaded.
@@ -4277,7 +4281,11 @@ getMonitoringReport:GetMonitoringReportResponse , getReport:GetReportResponse ,
 setMonitoringBase:SetMonitoringBaseResponse
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Accepted Request has been accepted and will be executed.
 Rejected Request has not been accepted and will not be executed.
 NotSupported The content of the request message is not supported.
@@ -4297,7 +4305,11 @@ notifyEVChargingSchedule:NotifyEVChargingScheduleResponse , signCertificate:Sign
 setMonitoringLevel:SetMonitoringLevelResponse , publishFirmware:PublishFirmwareResponse
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Accepted Request has been accepted and will be executed.
 Rejected Request has not been accepted and will not be executed.
 
@@ -4310,7 +4322,11 @@ GetCertificateIdUseEnumType is used by: Common:CertificateHashDataChainType ,
 getInstalledCertificateIds:GetInstalledCertificateIdsRequest
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 V2GRootCertificate Use for certificate of the V2G Root.
 MORootCertificate Use for certificate from an eMobility Service provider. To support PnC charging with contracts from service
 providers that not derived their certificates from the V2G root.
@@ -4336,7 +4352,11 @@ _Enumeration_
 GetCertificateStatusEnumType is used by: getCertificateStatus:GetCertificateStatusResponse
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Accepted Successfully retrieved the OCSP certificate status.
 Failed Failed to retrieve the OCSP certificate status.
 
@@ -4348,7 +4368,11 @@ _Enumeration_
 GetChargingProfileStatusEnumType is used by: getChargingProfiles:GetChargingProfilesResponse
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Accepted Normal successful completion (no errors).
 NoProfiles No ChargingProfiles found that match the information in the GetChargingProfilesRequest.
 
@@ -4360,7 +4384,11 @@ _Enumeration_
 GetDisplayMessagesStatusEnumType is used by: getDisplayMessages:GetDisplayMessagesResponse
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Accepted Request accepted, there are Display Messages found that match all the requested criteria. The Charging
 Station will send NotifyDisplayMessagesRequest messages to report the requested Display Messages.
 Unknown No messages found that match the given criteria.
@@ -4374,7 +4402,11 @@ _Enumeration_
 GetInstalledCertificateStatusEnumType is used by: getInstalledCertificateIds:GetInstalledCertificateIdsResponse
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Accepted Normal successful completion (no errors).
 NotFound Requested resource not found.
 
@@ -4386,7 +4418,11 @@ _Enumeration_
 GetVariableStatusEnumType is used by: getVariables:GetVariablesResponse.GetVariableResultType
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Accepted Variable successfully set.
 Rejected Request is rejected.
 UnknownComponen
@@ -4411,7 +4447,11 @@ _Enumeration_
 HashAlgorithmEnumType is used by: Common:CertificateHashDataType , Common:OCSPRequestDataType
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 SHA256 SHA-256 hash algorithm.
 SHA384 SHA-384 hash algorithm.
 SHA512 SHA-512 hash algorithm.
@@ -4426,7 +4466,11 @@ Allowable values of the **IdTokenType** field.
 IdTokenEnumType is used by: Common:IdTokenType
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Central A centrally, in the CSMS (or other server) generated id (for example used for a remotely started transaction
 that is activated by SMS). No format defined, might be a UUID.
 eMAID Electro-mobility account id as defined in ISO 15118
@@ -4448,7 +4492,11 @@ _Enumeration_
 InstallCertificateStatusEnumType is used by: installCertificate:InstallCertificateResponse
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Accepted The installation of the certificate succeeded.
 Rejected The certificate is invalid and/or incorrect OR the CSO tries to install more certificates than allowed.
 Failed The certificate is valid and correct, but there is another reason the installation did not succeed.
@@ -4461,7 +4509,11 @@ _Enumeration_
 InstallCertificateUseEnumType is used by: installCertificate:InstallCertificateRequest
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 V2GRootCertificate Use for certificate of the V2G Root, a V2G Charging Station Certificate MUST be derived from one of the
 installed V2GRootCertificate certificates.
 MORootCertificate Use for certificate from an eMobility Service provider. To support PnC charging with contracts from service
@@ -4487,7 +4539,11 @@ _Enumeration_
 Iso15118EVCertificateStatusEnumType is used by: get15118EVCertificate:Get15118EVCertificateResponse
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Accepted exiResponse included. This is no indication whether the update was successful, just that the message was
 processed properly.
 Failed Processing of the message was not successful, no exiResponse included.
@@ -4502,7 +4558,11 @@ Allowable values of the optional "location" field of a value element.
 LocationEnumType is used by: Common:SampledValueType
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Body Measurement inside body of Charging Station (e.g. Temperature).
 Cable Measurement taken from cable between EV and Charging Station.
 EV Measurement taken by EV.
@@ -4520,7 +4580,11 @@ _Enumeration_
 LogEnumType is used by: getLog:GetLogRequest
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 DiagnosticsLog This contains the field definition of a diagnostics log file
 SecurityLog Sent by the CSMS to the Charging Station to request that the Charging Station uploads the security log.
 
@@ -4534,7 +4598,11 @@ Generic message response status
 LogStatusEnumType is used by: getLog:GetLogResponse
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Accepted Accepted this log upload. This does not mean the log file is uploaded is successfully, the Charging Station
 will now start the log file upload.
 Rejected Log update request rejected.
@@ -4569,7 +4637,11 @@ transaction on the same connector.
 MeasurandEnumType is used by: Common:SampledValueType
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Current.Export Instantaneous current flow from EV
 Current.Import Instantaneous current flow to EV
 Current.Offered Maximum current offered to EV
@@ -4589,7 +4661,11 @@ electrical meter measuring energy imported (from the grid supply).
 
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Energy.Reactive.Exp
 ort.Register
 
@@ -4688,7 +4764,11 @@ Format of a message to be displayed on the display of the Charging Station.
 MessageFormatEnumType is used by: Common:MessageContentType
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 ASCII Message content is ASCII formatted, only printable ASCII allowed.
 HTML Message content is HTML formatted.
 URI Message content is URI that Charging Station should download and use to display. for example a HTML
@@ -4706,7 +4786,11 @@ Priority with which a message should be displayed on a Charging Station.
 MessagePriorityEnumType is used by: Common:MessageInfoType , getDisplayMessages:GetDisplayMessagesRequest
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 AlwaysFront Show this message always in front. Highest priority, don’t cycle with other messages. When a newer
 message with this MessagePriority is received, this message is replaced. No Charging Station own message
 may override this message.
@@ -4724,7 +4808,11 @@ State of the Charging Station during which a message SHALL be displayed.
 MessageStateEnumType is used by: Common:MessageInfoType , getDisplayMessages:GetDisplayMessagesRequest
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Charging Message only to be shown while the Charging Station is charging.
 Faulted Message only to be shown while the Charging Station is in faulted state.
 Idle Message only to be shown while the Charging Station is idle (not charging).
@@ -4741,7 +4829,11 @@ Type of request to be triggered by trigger messages.
 MessageTriggerEnumType is used by: triggerMessage:TriggerMessageRequest
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 BootNotification To trigger BootNotification.
 LogStatusNotificatio
 n
@@ -4793,7 +4885,11 @@ setVariableMonitoring:SetVariableMonitoringRequest.SetMonitoringDataType ,
 setVariableMonitoring:SetVariableMonitoringResponse.SetMonitoringResultType
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 UpperThreshold Triggers an event notice when the actual value of the Variable rises above monitorValue
 LowerThreshold Triggers an event notice when the actual value of the Variable drops below monitorValue.
 Delta Triggers an event notice when the actual value has changed more than plus or minus monitorValue since the
@@ -4818,7 +4914,11 @@ _Enumeration_
 MonitoringBaseEnumType is used by: setMonitoringBase:SetMonitoringBaseRequest
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 All Activate all pre-configured monitors.
 FactoryDefault Activate the default monitoring settings as recommended by the manufacturer. This is a subset of all pre-
 configured monitors.
@@ -4832,7 +4932,11 @@ _Enumeration_
 MonitoringCriterionEnumType is used by: getMonitoringReport:GetMonitoringReportRequest
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 ThresholdMonitorin
 g
 
@@ -4851,7 +4955,11 @@ _Enumeration_
 MutabilityEnumType is used by: Common:VariableAttributeType
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 ReadOnly This variable is read-only.
 WriteOnly This variable is write-only.
 ReadWrite This variable is read-write.
@@ -4865,7 +4973,11 @@ _Enumeration_
 NotifyEVChargingNeedsStatusEnumType is used by: notifyEVChargingNeeds:NotifyEVChargingNeedsResponse
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Accepted A schedule will be provided momentarily.
 Rejected Service not available.
 Processing The CSMS is gathering information to provide a schedule.
@@ -4880,7 +4992,11 @@ Enumeration of network interfaces.
 OCPPInterfaceEnumType is used by: setNetworkProfile:SetNetworkProfileRequest.NetworkConnectionProfileType
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Wired0 Use wired connection 0
 Wired1 Use wired connection 1
 Wired2 Use wired connection 2
@@ -4900,7 +5016,11 @@ Enumeration of OCPP transport mechanisms. SOAP is currently not a valid value fo
 OCPPTransportEnumType is used by: setNetworkProfile:SetNetworkProfileRequest.NetworkConnectionProfileType
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 JSON Use JSON over WebSockets for transport of OCPP PDU’s
 SOAP Use SOAP for transport of OCPP PDU’s
 
@@ -4914,7 +5034,11 @@ Enumeration of OCPP versions.
 OCPPVersionEnumType is used by: setNetworkProfile:SetNetworkProfileRequest.NetworkConnectionProfileType
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 OCPP12 OCPP version 1.2
 OCPP15 OCPP version 1.5
 OCPP16 OCPP version 1.6
@@ -4922,7 +5046,11 @@ OCPP16 OCPP version 1.6
 
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 
 **OCPP20** OCPP version 2.0
 The OCPP 2.0 release of OCPP has been deprecated, so this value OCPP20 must now be used for OCPP
@@ -4939,7 +5067,11 @@ Requested availability change.
 OperationalStatusEnumType is used by: changeAvailability:ChangeAvailabilityRequest
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Inoperative Charging Station is not available for charging.
 Operative Charging Station is available for charging.
 
@@ -4954,7 +5086,11 @@ Measurands.
 PhaseEnumType is used by: Common:SampledValueType
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 L1 Measured on L1
 L2 Measured on L2
 L3 Measured on L3
@@ -4976,7 +5112,11 @@ Status for when publishing a Firmware.
 PublishFirmwareStatusEnumType is used by: publishFirmwareStatusNotification:PublishFirmwareStatusNotificationRequest
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Idle
 DownloadScheduled Intermediate state. Downloading of new firmware has been scheduled.
 Downloading Intermediate state. Firmware is being downloaded.
@@ -4988,7 +5128,11 @@ DownloadPaused Intermediate state. Downloading has been paused.
 
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 InvalidChecksum Failure end state. The firmware checksum is not matching.
 ChecksumVerified Intermediate state. The Firmware checksum is successfully verified.
 PublishFailed Publishing the new firmware has failed.
@@ -5003,7 +5147,11 @@ Values of the context field.
 ReadingContextEnumType is used by: Common:SampledValueType
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Interruption.Begin Value taken at start of interruption.
 Interruption.End Value taken when resuming after interruption.
 Other Value for any other situations.
@@ -5023,7 +5171,11 @@ Reason for stopping a transaction.
 ReasonEnumType is used by: transactionEvent:TransactionEventRequest.TransactionType
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 DeAuthorized The transaction was stopped because of the authorization status in the response to a
 transactionEventRequest.
 EmergencyStop Emergency stop button was used.
@@ -5056,7 +5208,11 @@ _Enumeration_
 RecurrencyKindEnumType is used by: Common:ChargingProfileType
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Daily The schedule restarts every 24 hours, at the same time as in the startSchedule.
 Weekly The schedule restarts every 7 days, at the same time and day-of-the-week as in the startSchedule.
 
@@ -5070,7 +5226,11 @@ Result of registration in response to BootNotificationRequest.
 RegistrationStatusEnumType is used by: bootNotification:BootNotificationResponse
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Accepted Charging Station is accepted by the CSMS.
 Pending CSMS is not yet ready to accept the Charging Station. CSMS may send messages to retrieve information or
 prepare the Charging Station.
@@ -5085,7 +5245,11 @@ _Enumeration_
 ReportBaseEnumType is used by: getBaseReport:GetBaseReportRequest
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 ConfigurationInvent
 ory
 
@@ -5128,7 +5292,11 @@ RequestStartStopStatusEnumType is used by: requestStartTransaction:RequestStartT
 requestStopTransaction:RequestStopTransactionResponse
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Accepted Command will be executed.
 Rejected Command will not be executed.
 
@@ -5140,7 +5308,11 @@ _Enumeration_
 ReservationUpdateStatusEnumType is used by: reservationStatusUpdate:ReservationStatusUpdateRequest
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Expired The reservation is expired.
 Removed The reservation is removed.
 
@@ -5154,7 +5326,11 @@ Status in ReserveNowResponse.
 ReserveNowStatusEnumType is used by: reserveNow:ReserveNowResponse
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Accepted Reservation has been made.
 Faulted Reservation has not been made, because evse, connectors or specified connector are in a faulted state.
 Occupied Reservation has not been made. The evse or the specified connector is occupied.
@@ -5172,7 +5348,11 @@ Type of reset requested.
 ResetEnumType is used by: reset:ResetRequest
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Immediate Immediate reset of the Charging Station.
 OnIdle Delay reset until no more transactions are active.
 
@@ -5188,7 +5368,11 @@ Result of ResetRequest.
 ResetStatusEnumType is used by: reset:ResetResponse
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Accepted Command will be executed.
 Rejected Command will not be executed.
 Scheduled Reset command is scheduled, Charging Station is busy with a process that cannot be interrupted at the
@@ -5204,7 +5388,11 @@ Type of update for SendLocalListRequest.
 SendLocalListStatusEnumType is used by: sendLocalList:SendLocalListResponse
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Accepted Local Authorization List successfully updated.
 Failed Failed to update the Local Authorization List.
 VersionMismatch Version number in the request for a differential update is less or equal then version number of current list.
@@ -5217,7 +5405,11 @@ _Enumeration_
 SetMonitoringStatusEnumType is used by: setVariableMonitoring:SetVariableMonitoringResponse.SetMonitoringResultType
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Accepted Monitor successfully set.
 UnknownComponen
 t
@@ -5247,7 +5439,11 @@ Possible values of SetNetworkProfileStatus as used in SetNetworkProfileResponse.
 SetNetworkProfileStatusEnumType is used by: setNetworkProfile:SetNetworkProfileResponse
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Accepted Setting new data successful
 Rejected Setting new data rejected
 Failed Setting new data failed
@@ -5262,7 +5458,11 @@ SetVariableStatusEnumType is used by: setVariables:SetVariablesResponse.SetVaria
 
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Accepted Variable successfully set.
 Rejected Request is rejected.
 UnknownComponen
@@ -5290,7 +5490,11 @@ _Enumeration_
 TransactionEventEnumType is used by: transactionEvent:TransactionEventRequest
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Ended Last event of a transaction
 Started First event of a transaction.
 Updated Transaction event in between 'Started' and 'Ended'.
@@ -5305,7 +5509,11 @@ Status in TriggerMessageResponse.
 TriggerMessageStatusEnumType is used by: triggerMessage:TriggerMessageResponse
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Accepted Requested message will be sent.
 Rejected Requested message will not be sent.
 NotImplemented Requested message cannot be sent because it is either not implemented or unknown.
@@ -5320,7 +5528,11 @@ Reason that triggered a transactionEventRequest.
 TriggerReasonEnumType is used by: transactionEvent:TransactionEventRequest
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Authorized Charging is authorized, by any means. Might be an RFID, or other authorization means.
 CablePluggedIn Cable is plugged in and EVDetected.
 ChargingRateChang
@@ -5353,7 +5565,11 @@ MeterValueClock Needed to send a clock aligned meter value
 
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 MeterValuePeriodic Needed to send a periodic meter value
 TimeLimitReached Maximum time of charging reached. For example: in a pre-paid charging solution
 Trigger Requested by the CSMS via a TriggerMessageRequest.
@@ -5377,7 +5593,11 @@ Status in response to UnlockConnectorRequest.
 UnlockStatusEnumType is used by: unlockConnector:UnlockConnectorResponse
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Unlocked Connector has successfully been unlocked.
 UnlockFailed Failed to unlock the connector.
 OngoingAuthorizedT
@@ -5399,7 +5619,11 @@ Status for when publishing a Firmware.
 UnpublishFirmwareStatusEnumType is used by: unpublishFirmware:UnpublishFirmwareResponse
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 DownloadOngoing Intermediate state. Firmware is being downloaded.
 NoFirmware There is no published file.
 Unpublished Successful end state. Firmware file no longer being published.
@@ -5412,7 +5636,11 @@ _Enumeration_
 UpdateEnumType is used by: sendLocalList:SendLocalListRequest
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Differential Indicates that the current Local Authorization List must be updated with the values in this message.
 Full Indicates that the current Local Authorization List must be replaced by the values in this message.
 
@@ -5427,7 +5655,11 @@ Generic message response status
 UpdateFirmwareStatusEnumType is used by: updateFirmware:UpdateFirmwareResponse
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 Accepted Accepted this firmware update request. This does not mean the firmware update is successful, the Charging
 Station will now start the firmware update process.
 Rejected Firmware update request rejected.
@@ -5443,7 +5675,11 @@ _Enumeration_
 UploadLogStatusEnumType is used by: logStatusNotification:LogStatusNotificationRequest
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 BadMessage A badly formatted packet or other protocol incompatibility was detected.
 Idle The Charging Station is not uploading a log file. Idle SHALL only be used when the message was triggered by
 a TriggerMessageRequest.
@@ -5470,7 +5706,11 @@ Enumeration of VPN Types.
 VPNEnumType is used by: setNetworkProfile:SetNetworkProfileRequest.VPNType
 
 
-Value Description
+[cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|Value    |Description
+
+|===
 IKEv2 IKEv2 VPN
 IPSec IPSec VPN
 L2TP L2TP VPN
