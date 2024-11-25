@@ -1411,7 +1411,7 @@ _Class_
 
 |requestId |integer
   |1..1 |Required. Id used to match the <<get_charging_profile_request,GetChargingProfilesRequest>> message with the resulting ReportChargingProfilesRequest messages. When the CSMS provided a requestId in the <<get_charging_profile_request,GetChargingProfilesRequest>>, this field SHALL contain the same value.
-|chargingLimitSource ||<<charging_limit_source_enum_type,ChargingLimitSourceEnumType>>
+|chargingLimitSource |<<charging_limit_source_enum_type,ChargingLimitSourceEnumType>>
   |1..1 |Required. Source that has installed this charging profile.
 |tbc |boolean
   |0..1 |Optional. To Be Continued. Default value when omitted: false. false indicates that there are no further messages as part of this report.
@@ -2213,91 +2213,77 @@ _Class_
 
 == Datatypes
 
-=== 2.1. ACChargingParametersType
+[[ac_charging_parameters_type]]
+=== ACChargingParametersType
 
 _Class_
 
 EV AC charging parameters.
 
-ACChargingParametersType is used by: Common:ChargingNeedsType
-
+ACChargingParametersType is used by: <<charging_needs_type,Common:ChargingNeedsType>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|energyAmount |integer
+  |1..1 |Required. Amount of energy requested (in Wh). This includes energy required for preconditioning.
+|evMinCurrent |integer
+  |1..1 |Required. Minimum current (amps) supported by the electric vehicle (per phase).
+|evMaxCurrent |integer
+  |1..1 |Required. Maximum current (amps) supported by the electric vehicle (per phase). Includes cable capacity.
+|evMaxVoltage |integer
+  |1..1 |Required. Maximum voltage supported by the electric vehicle
 |===
-energyAmount integer 1..1 Required. Amount of energy requested (in Wh). This
-includes energy required for preconditioning.
-evMinCurrent integer 1..1 Required. Minimum current (amps) supported by the
-electric vehicle (per phase).
-evMaxCurrent integer 1..1 Required. Maximum current (amps) supported by the
-electric vehicle (per phase). Includes cable capacity.
-evMaxVoltage integer 1..1 Required. Maximum voltage supported by the electric
-vehicle
 
-=== 2.2. AdditionalInfoType
+=== AdditionalInfoType
 
 _Class_
 
-Contains a case insensitive identifier to use for the authorization and the type of authorization to support multiple forms of
-identifiers.
+Contains a case insensitive identifier to use for the authorization and the type of authorization to support multiple forms of identifiers.
 
-AdditionalInfoType is used by: Common:IdTokenType
-
+AdditionalInfoType is used by: <<id_token_type,Common:IdTokenType>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|additionalIdToken |identifierString[0..36]
+  |1..1 |Required. This field specifies the additional IdToken.
+|type |string[0..50]
+|1..1 |Required. This defines the type of the additionalIdToken. +
+  This is a custom type, so the implementation needs to be agreed upon by all involved parties.
 |===
-additionalIdToken identifierString[0..36] 1..1 Required. This field specifies the additional IdToken.
-type string[0..50] 1..1 Required. This defines the type of the additionalIdToken.
-This is a custom type, so the implementation needs to be
-agreed upon by all involved parties.
 
-=== 2.3. APNType.
+=== APNType
 
 _Class_
 
 Collection of configuration data needed to make a data-connection over a cellular network.
 
-==== NOTE
+[cols="^.^1,10",%autowidth.stretch]
+|===
+s|NOTE |When asking a GSM modem to dial in, it is possible to specify which mobile operator should be used. This can be done with the mobile country code (MCC) in combination with a mobile network code (MNC). Example: If your preferred network is Vodafone Netherlands, the MCC=204 and the MNC=04 which means the key PreferredNetwork = 20404 Some modems allows to specify a preferred network, which means, if this network is not available, a different network is used. If you specify UseOnlyPreferredNetwork and this network is not available, the modem will not dial in.
+|===
 
-
-When asking a GSM modem to dial in, it is possible to specify which mobile operator should be used. This can be
-done with the mobile country code (MCC) in combination with a mobile network code (MNC). Example: If your
-preferred network is Vodafone Netherlands, the MCC=204 and the MNC=04 which means the key
-PreferredNetwork  20404 Some modems allows to specify a preferred network, which means, if this network is
-not available, a different network is used. If you specify UseOnlyPreferredNetwork and this network is not
-available, the modem will not dial in.
-
-APNType is used by: SetNetworkProfileRequest.NetworkConnectionProfileType
-
+APNType is used by: <<network_connection_profile_type,SetNetworkProfileRequest.NetworkConnectionProfileType>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|apn |string[0..512]
+  |1..1 |Required. The Access Point Name as an URL.
+|apnUserName |string[0..20] |0..1 |Optional. APN username.
+|apnPassword |string[0..20] |0..1 |Optional. APN Password.
+|simPin |integer |0..1 |Optional. SIM card pin code.
+|preferredNetwork |identifierString[0..6]
+  |0..1 |Optional. Preferred network, written as MCC and MNC concatenated. See note.
+|useOnlyPreferredNetwork |boolean
+  |0..1 |Optional. Default: false. Use only the preferred Network, do not dial in when not available. See Note.
+|apnAuthentication |<<apn_authentication_enum_type,APNAuthenticationEnumType>>
+  |1..1 |Required. Authentication method.
 |===
-apn string[0..512] 1..1 Required. The Access Point Name as an URL.
-apnUserName string[0..20] 0..1 Optional. APN username.
-apnPassword string[0..20] 0..1 Optional. APN Password.
-simPin integer 0..1 Optional. SIM card pin code.
-preferredNetwork identifierString[0..6] 0..1 Optional. Preferred network, written as MCC and MNC
-concatenated. See note.
-
-
-
-
-[cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
-|===
-|Field Name     |Field Type             |Card. |Description
-
-|===
-useOnlyPreferredNetwork boolean 0..1 Optional. Default: false. Use only the preferred Network,
-do not dial in when not available. See Note.
-apnAuthentication APNAuthenticationEnumType 1..1 Required. Authentication method.
 
 [[authorization_data]]
 === AuthorizationData
@@ -2306,103 +2292,94 @@ _Class_
 
 Contains the identifier to use for authorization.
 
-AuthorizationData is used by: SendLocalListRequest
-
+AuthorizationData is used by: <<send_local_list_request,SendLocalListRequest>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|idTokenInfo <<id_token_info_type,IdTokenInfoType>>
+  |0..1 |Optional. Required when UpdateType is Full. This contains information about authorization status, expiry and group id. For a Differential update the following applies: If this element is present, then this entry SHALL be added or updated in the Local Authorization List. If this element is absent, the entry for this IdToken in the Local Authorization List SHALL be deleted.
+|idToken <<id_token_type,IdTokenType>>
+  |1..1 |Required. This contains the identifier which needs to be stored for authorization.
 |===
-idTokenInfo IdTokenInfoType 0..1 Optional. Required when UpdateType is Full. This
-contains information about authorization status, expiry
-and group id. For a Differential update the following
-applies: If this element is present, then this entry SHALL
-be added or updated in the Local Authorization List. If
-this element is absent, the entry for this IdToken in the
-Local Authorization List SHALL be deleted.
-idToken IdTokenType 1..1 Required. This contains the identifier which needs to be
-stored for authorization.
 
 [[certificate_hash_data_chain_type]]
 === CertificateHashDataChainType
 
 _Class_
 
-CertificateHashDataChainType is used by: GetInstalledCertificateIdsResponse
-
+CertificateHashDataChainType is used by: <<get_installed_certificate_ids_response,GetInstalledCertificateIdsResponse>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|certificateType |<<get_certificate_id_use_enum_type,GetCertificateIdUseEnumType>>
+  |1..1 |Required. Indicates the type of the requested certificate(s).
+|certificateHashData |<<certificate_hash_data_type,CertificateHashDataType>>
+  |1..1 |Required. Information to identify a certificate.
+|childCertificateHashData |<<certificate_hash_data_type,CertificateHashDataType>>
+  |0..4 |Optional. Information to identify the child certificate(s).
 |===
-certificateType GetCertificateIdUseEnumType 1..1 Required. Indicates the type of the requested
-certificate(s).
-certificateHashData CertificateHashDataType 1..1 Required. Information to identify a certificate.
-childCertificateHashData CertificateHashDataType 0..4 Optional. Information to identify the child certificate(s).
 
 [[certificate_hash_data_type]]
 === CertificateHashDataType
 
 _Class_
 
-CertificateHashDataType is used by: Common:CertificateHashDataChainType , DeleteCertificateRequest ,
-CustomerInformationRequest
-
+CertificateHashDataType is used by: <<certificate_hash_data_chain_type,Common:CertificateHashDataChainType>>, <<delete_certificate_request,DeleteCertificateRequest>>, <<customer_information_request,CustomerInformationRequest>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|hashAlgorithm |<<hash_algorithm_enum_type,HashAlgorithmEnumType>>
+  |1..1 |Required. Used algorithms for the hashes provided.
+|issuerNameHash |identifierString[0..128]
+  |1..1 |Required. The hash of the issuer’s distinguished name (DN), that must be calculated over the DER encoding of the issuer’s name field in the certificate being checked.
+|issuerKeyHash |string[0..128]
+  |1..1 |Required. The hash of the DER encoded public key: the value (excluding tag and length) of the subject public key field in the issuer’s certificate.
+|serialNumber |identifierString[0..40]
+  |1..1 |Required. The string representation of the hexadecimal value of the serial number without the prefix "0x" and without leading zeroes.
 |===
-hashAlgorithm HashAlgorithmEnumType 1..1 Required. Used algorithms for the hashes provided.
-issuerNameHash identifierString[0..128] 1..1 Required. The hash of the issuer’s distinguished name
-(DN), that must be calculated over the DER encoding of
-the issuer’s name field in the certificate being checked.
-issuerKeyHash string[0..128] 1..1 Required. The hash of the DER encoded public key: the
-value (excluding tag and length) of the subject public key
-field in the issuer’s certificate.
-serialNumber identifierString[0..40] 1..1 Required. The string representation of the hexadecimal
-value of the serial number without the prefix "0x" and
-without leading zeroes.
 
 [[charging_limit_type]]
 === ChargingLimitType
 
 _Class_
 
-
-
-ChargingLimitType is used by: NotifyChargingLimitRequest
-
+ChargingLimitType is used by: <<notify_charging_limit_request,NotifyChargingLimitRequest>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|chargingLimitSource |<<charging_limit_source_enum_type,ChargingLimitSourceEnumType>>
+  |1..1 |Required. Represents the source of the charging limit.
+|isGridCritical |boolean 
+  |0..1 |Optional. Indicates whether the charging limit is critical for the grid.
 |===
-chargingLimitSource ChargingLimitSourceEnumType 1..1 Required. Represents the source of the charging limit.
-isGridCritical boolean 0..1 Optional. Indicates whether the charging limit is critical
-for the grid.
 
 [[charging_needs_type]]
 === ChargingNeedsType
 
 _Class_
 
-ChargingNeedsType is used by: NotifyEVChargingNeedsRequest
-
+ChargingNeedsType is used by: <<notify_ev_charging_needs_request,NotifyEVChargingNeedsRequest>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|requestedEnergyTransfer |<<energy_transfer_mode_enum_type,EnergyTransferModeEnumType>>
+  |1..1 |Required. Mode of energy transfer requested by the EV.
+|departureTime |dateTime |0..1 Optional. Estimated departure time of the EV.
+|acChargingParameters |<<ac_charging_parameters_type,ACChargingParametersType>>
+  |0..1 |Optional. EV AC charging parameters.
+|dcChargingParameters |<<dc_charging_parameters_type,DCChargingParametersType>>
+  |0..1 |Optional. EV DC charging parameters
 |===
-requestedEnergyTransfer EnergyTransferModeEnumType 1..1 Required. Mode of energy transfer requested by the EV.
-departureTime dateTime 0..1 Optional. Estimated departure time of the EV.
-acChargingParameters ACChargingParametersType 0..1 Optional. EV AC charging parameters.
-dcChargingParameters DCChargingParametersType 0..1 Optional. EV DC charging parameters
 
 [[charging_profile_criterion_type]]
 === ChargingProfileCriterionType
@@ -2411,27 +2388,21 @@ _Class_
 
 A ChargingProfile consists of ChargingSchedule, describing the amount of power or current that can be delivered per time interval.
 
-ChargingProfileCriterionType is used by: GetChargingProfilesRequest
-
+ChargingProfileCriterionType is used by: <<get_charging_profile_request,GetChargingProfilesRequest>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|chargingProfilePurpose |<<charging_profile_purpose_enum_type,ChargingProfilePurposeEnumType>>
+  |0..1 |Optional. Defines the purpose of the schedule transferred by this profile
+|stackLevel |integer
+  |0..1 |Optional. Value determining level in hierarchy stack of profiles. Higher values have precedence over lower values. Lowest level is 0.
+|chargingProfileId |integer
+  |0..* |Optional. List of all the chargingProfileIds requested. Any ChargingProfile that matches one of these profiles will be reported. If omitted, the Charging Station SHALL not filter on chargingProfileId. This field SHALL NOT contain more ids than set in <<charging_profile_entries,ChargingProfileEntries.maxLimit>>
+|chargingLimitSource |<<charging_limit_source_enum_type,ChargingLimitSourceEnumType>>
+  |0..4 |Optional. For which charging limit sources, charging profiles SHALL be reported. If omitted, the Charging Station SHALL not filter on chargingLimitSource.
 |===
-chargingProfilePurpose ChargingProfilePurposeEnumType 0..1 Optional. Defines the purpose of the schedule transferred
-by this profile
-stackLevel integer 0..1 Optional. Value determining level in hierarchy stack of
-profiles. Higher values have precedence over lower
-values. Lowest level is 0.
-chargingProfileId integer 0..* Optional. List of all the chargingProfileIds requested. Any
-ChargingProfile that matches one of these profiles will be
-reported. If omitted, the Charging Station SHALL not filter
-on chargingProfileId. This field SHALL NOT contain more
-ids than set in ChargingProfileEntries.maxLimit
-chargingLimitSource ChargingLimitSourceEnumType 0..4 Optional. For which charging limit sources, charging
-profiles SHALL be reported. If omitted, the Charging
-Station SHALL not filter on chargingLimitSource.
 
 [[charging_profile_type]]
 === ChargingProfileType
@@ -2440,48 +2411,31 @@ _Class_
 
 A ChargingProfile consists of ChargingSchedule, describing the amount of power or current that can be delivered per time interval.
 
-ChargingProfileType is used by: RequestStartTransactionRequest , SetChargingProfileRequest , ReportChargingProfilesRequest
-
-
-[cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
-|===
-|Field Name     |Field Type             |Card. |Description
-
-|===
-id integer 1..1 Required. Id of ChargingProfile.
-stackLevel integer 1..1 Required. Value determining level in hierarchy stack of
-profiles. Higher values have precedence over lower
-values. Lowest level is 0.
-chargingProfilePurpose ChargingProfilePurposeEnumType 1..1 Required. Defines the purpose of the schedule
-transferred by this profile
-chargingProfileKind ChargingProfileKindEnumType 1..1 Required. Indicates the kind of schedule.
-
-
-
+ChargingProfileType is used by: <<request_start_transaction_request,RequestStartTransactionRequest>>, <<set_charging_profile_request,SetChargingProfileRequest>>, <<report_charging_profiles_request,ReportChargingProfilesRequest>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|id |integer
+  |1..1 |Required. Id of ChargingProfile.
+|stackLevel |integer
+  |1..1 |Required. Value determining level in hierarchy stack of profiles. Higher values have precedence over lower values. Lowest level is 0.
+|chargingProfilePurpose |<<charging_profile_purpose_enum_type,ChargingProfilePurposeEnumType>>
+  |1..1 |Required. Defines the purpose of the schedule transferred by this profile
+|chargingProfileKind |<<charging_profile_kind_enum_type,ChargingProfileKindEnumType>>
+  |1..1 |Required. Indicates the kind of schedule.
+|recurrencyKind |<<recurrency_kind_enum_type,RecurrencyKindEnumType>>
+  |0..1 |Optional. Indicates the start point of a recurrence.
+|validFrom |dateTime
+  |0..1 |Optional. Point in time at which the profile starts to be valid. If absent, the profile is valid as soon as it is received by the Charging Station.
+|validTo |dateTime
+  |0..1 |Optional. Point in time at which the profile stops to be valid. If absent, the profile is valid until it is replaced by another profile.
+|transactionId |identifierString[0..36]
+  |0..1 |Optional. SHALL only be included when ChargingProfilePurpose is set to TxProfile in a SetChargingProfileRequest. The transactionId is used to match the profile to a specific transaction.
+|chargingSchedule |<<charging_schedule_type,ChargingScheduleType>>
+  |1..3 |Required. Schedule that contains limits for the available power or current over time. In order to support ISO 15118 schedule negotiation, it supports at most three schedules with associated tariff to choose from. Having multiple _chargingSchedules_ is only allowed for charging profiles of purpose `TxProfile` in the context of an ISO 15118 charging session.
 |===
-recurrencyKind RecurrencyKindEnumType 0..1 Optional. Indicates the start point of a recurrence.
-validFrom dateTime 0..1 Optional. Point in time at which the profile starts to be
-valid. If absent, the profile is valid as soon as it is
-received by the Charging Station.
-validTo dateTime 0..1 Optional. Point in time at which the profile stops to be
-valid. If absent, the profile is valid until it is replaced by
-another profile.
-transactionId identifierString[0..36] 0..1 Optional. SHALL only be included when
-ChargingProfilePurpose is set to TxProfile in a
-SetChargingProfileRequest. The transactionId is used to
-match the profile to a specific transaction.
-chargingSchedule ChargingScheduleType 1..3 Required. Schedule that contains limits for the available
-power or current over time. In order to support ISO 15118
-schedule negotiation, it supports at most three schedules
-with associated tariff to choose from. Having multiple
-chargingSchedules is only allowed for charging profiles of
-purpose TxProfile in the context of an ISO 15118
-charging session.
 
 [[charging_schedule_period_type]]
 === ChargingSchedulePeriodType
@@ -2490,34 +2444,23 @@ _Class_
 
 Charging schedule period structure defines a time period in a charging schedule.
 
-ChargingSchedulePeriodType is used by: Common:ChargingScheduleType , Common:CompositeScheduleType
-
+ChargingSchedulePeriodType is used by: <<charging_schedule_type,Common:ChargingScheduleType>>, <<composite_schedule_type,Common:CompositeScheduleType>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|startPeriod |integer
+  |1..1 |Required. Start of the period, in seconds from the start of schedule. The value of StartPeriod also defines the stop time of the previous period.
+|limit |decimal
+  |1..1 |Required. Charging rate limit during the schedule period, in the applicable chargingRateUnit, for example in Amperes (A) or Watts (W). Accepts at most one digit fraction (e.g. 8.1).
+|numberPhases |integer
+  |0..1 |Optional. The number of phases that can be used for charging. +
+  For a DC EVSE this field should be omitted. +
+  For an AC EVSE a default value of numberPhases = 3 will be assumed if the field is absent.
+|phaseToUse |integer
+  |0..1 |Optional. Values: 1..3, Used if numberPhases=1 and if the EVSE is capable of switching the phase connected to the EV, i.e. ACPhaseSwitchingSupported is defined and true. It’s not allowed unless both conditions above are true. If both conditions are true, and phaseToUse is omitted, the Charging Station / EVSE will make the selection on its own.
 |===
-startPeriod integer 1..1 Required. Start of the period, in seconds from the start of
-schedule. The value of StartPeriod also defines the stop
-time of the previous period.
-limit decimal 1..1 Required. Charging rate limit during the schedule period,
-in the applicable chargingRateUnit, for example in
-Amperes (A) or Watts (W). Accepts at most one digit
-fraction (e.g. 8.1).
-numberPhases integer 0..1 Optional. The number of phases that can be used for
-charging.
-For a DC EVSE this field should be omitted.
-For an AC EVSE a default value of numberPhases  3 will
-be assumed if the field is absent.
-phaseToUse integer 0..1 Optional. Values: 1..3, Used if numberPhases=1 and if the
-EVSE is capable of switching the phase connected to the
-EV, i.e. ACPhaseSwitchingSupported is defined and true.
-It’s not allowed unless both conditions above are true. If
-both conditions are true, and phaseToUse is omitted, the
-Charging Station / EVSE will make the selection on its
-own.
-
 
 [[charging_schedule_type]]
 ==== ChargingScheduleType
@@ -2526,50 +2469,29 @@ _Class_
 
 Charging schedule structure defines a list of charging periods, as used in: GetCompositeSchedule.conf and ChargingProfile.
 
-ChargingScheduleType is used by: Common:ChargingProfileType , NotifyChargingLimitRequest ,
-NotifyEVChargingScheduleRequest
-
+ChargingScheduleType is used by: <<charging_profile_type,Common:ChargingProfileType>>, <<notify_charging_limit_request,NotifyChargingLimitRequest>>, <<notify_ev_charging_schedule_request,NotifyEVChargingScheduleRequest>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|id |integer
+  |1..1 |Required. Identifies the ChargingSchedule.
+|startSchedule |dateTime
+  |0..1 |Optional. Starting point of an absolute or recurring schedule.
+|duration |integer
+  |0..1 |Optional. Duration of the charging schedule in seconds. If the duration is left empty, the last period will continue indefinitely or until end of the transaction if chargingProfilePurpose = TxProfile.
+|chargingRateUnit |<<charging_rate_unit_enum_type,ChargingRateUnitEnumType>>
+  |1..1 |Required. The unit of measure Limit is expressed in.
+|minChargingRate |decimal
+  |0..1 |Optional. Minimum charging rate supported by the EV. +
+  The unit of measure is defined by the chargingRateUnit. +
+  This parameter is intended to be used by a local smart charging algorithm to optimize the power allocation for in the case a charging process is inefficient at lower charging rates. Accepts at most one digit fraction (e.g. 8.1)
+|chargingSchedulePeriod |<<charging_schedule_period_type,ChargingSchedulePeriodType>>
+  |1..1024 |Required. List of ChargingSchedulePeriod elements defining maximum power or current usage over time. The maximum number of periods, that is supported by the Charging Station, if less than 1024, is set by device model variable SmartChargingCtrlr.PeriodsPerSchedule.
+|salesTariff |<<sales_tariff_type,SalesTariffType>>
+  |0..1 |Optional. Sales tariff associated with this charging schedule.
 |===
-id integer 1..1 Required. Identifies the ChargingSchedule.
-
-
-
-
-[cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
-|===
-|Field Name     |Field Type             |Card. |Description
-
-|===
-startSchedule dateTime 0..1 Optional. Starting point of an absolute or recurring
-schedule.
-duration integer 0..1 Optional. Duration of the charging schedule in seconds. If
-the duration is left empty, the last period will continue
-indefinitely or until end of the transaction if
-chargingProfilePurpose  TxProfile.
-chargingRateUnit ChargingRateUnitEnumType 1..1 Required. The unit of measure Limit is expressed in.
-minChargingRate decimal 0..1 Optional. Minimum charging rate supported by the EV.
-The unit of measure is defined by the chargingRateUnit.
-This parameter is intended to be used by a local smart
-charging algorithm to optimize the power allocation for in
-the case a charging process is inefficient at lower
-charging rates. Accepts at most one digit fraction (e.g.
-8.1)
-chargingSchedulePeriod ChargingSchedulePeriodType 1..102
-4
-
-
-Required. List of ChargingSchedulePeriod elements
-defining maximum power or current usage over time. The
-maximum number of periods, that is supported by the
-Charging Station, if less than 1024, is set by device model
-variable SmartChargingCtrlr.PeriodsPerSchedule.
-salesTariff SalesTariffType 0..1 Optional. Sales tariff associated with this charging
-schedule.
 
 [[charging_station_type]]
 === ChargingStationType
@@ -2578,80 +2500,63 @@ _Class_
 
 The physical system where an Electrical Vehicle (EV) can be charged.
 
-ChargingStationType is used by: BootNotificationRequest
-
+ChargingStationType is used by: <<boot_notification_request,BootNotificationRequest>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|serialNumber |string[0..25]
+  |0..1 |Optional. Vendor-specific device identifier.
+|model |string[0..20]
+  |1..1 |Required. Defines the model of the device.
+|vendorName |string[0..50]
+  |1..1 |Required. Identifies the vendor (not necessarily in a unique manner).
+|firmwareVersion |string[0..50]
+  |0..1 |Optional. This contains the firmware version of the Charging Station.
+|modem |<<modem_type,ModemType>>
+  |0..1 |Optional. Defines the functional parameters of a communication link.
 |===
-serialNumber string[0..25] 0..1 Optional. Vendor-specific device identifier.
-model string[0..20] 1..1 Required. Defines the model of the device.
-vendorName string[0..50] 1..1 Required. Identifies the vendor (not necessarily in a
-unique manner).
-firmwareVersion string[0..50] 0..1 Optional. This contains the firmware version of the
-Charging Station.
-modem ModemType 0..1 Optional. Defines the functional parameters of a
-communication link.
 
 [[clear_charging_profile_type]]
 === ClearChargingProfileType
 
 _Class_
 
-A ChargingProfile consists of a ChargingSchedule, describing the amount of power or current that can be delivered per time
-interval.
+A ChargingProfile consists of a ChargingSchedule, describing the amount of power or current that can be delivered per time interval.
 
-ClearChargingProfileType is used by: ClearChargingProfileRequest
-
+ClearChargingProfileType is used by: <<clear_charging_profile_request,ClearChargingProfileRequest>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|evseId |integer
+  |0..1 |Optional. Specifies the id of the EVSE for which to clear charging profiles. An evseId of zero (0) specifies the charging profile for the overall Charging Station. Absence of this parameter means the clearing applies to all charging profiles that match the other criteria in the request.
+|chargingProfilePurpose |<<charging_profile_purpose_enum_type,ChargingProfilePurposeEnumType>>
+  |0..1 |Optional. Specifies to purpose of the charging profiles that will be cleared, if they meet the other criteria in the request.
+|stackLevel |integer
+  |0..1 |Optional. Specifies the stackLevel for which charging profiles will be cleared, if they meet the other criteria in the request.
 |===
-evseId integer 0..1 Optional. Specifies the id of the EVSE for which to clear
-charging profiles. An evseId of zero (0) specifies the
-charging profile for the overall Charging Station. Absence
-of this parameter means the clearing applies to all
-charging profiles that match the other criteria in the
-request.
-chargingProfilePurpose ChargingProfilePurposeEnumType 0..1 Optional. Specifies to purpose of the charging profiles
-that will be cleared, if they meet the other criteria in the
-request.
-
-
-
-
-[cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
-|===
-|Field Name     |Field Type             |Card. |Description
-
-|===
-stackLevel integer 0..1 Optional. Specifies the stackLevel for which charging
-profiles will be cleared, if they meet the other criteria in
-the request.
 
 [[clear_monitoring_result_type]]
 === ClearMonitoringResultType
 
 _Class_
 
-ClearMonitoringResultType is used by: ClearVariableMonitoringResponse
-
+ClearMonitoringResultType is used by: <<clear_variable_monitoring_response,ClearVariableMonitoringResponse>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
-|===
-status ClearMonitoringStatusEnumType 1..1 Required. Result of the clear request for this monitor,
-identified by its Id.
-id integer 1..1 Required. Id of the monitor of which a clear was
-requested.
+|status |<<clear_monitoring_status_enum_type,ClearMonitoringStatusEnumType>>
+  |1..1 |Required. Result of the clear request for this monitor, identified by its Id.
+|id |integer
+  |1..1 |Required. Id of the monitor of which a clear was requested.
 |statusInfo |<<status_info_type,StatusInfoType>>
   |0..1 |Optional. Detailed status information.
+|===
 
 [[component_type]]
 === ComponentType
@@ -2660,28 +2565,19 @@ _Class_
 
 A physical or logical component
 
-ComponentType is used by: Common:ComponentVariableType , Common:MessageInfoType ,
-GetVariablesRequest.GetVariableDataType , GetVariablesResponse.GetVariableResultType ,
-NotifyMonitoringReportRequest.MonitoringDataType , NotifyReportRequest.ReportDataType ,
-SetVariableMonitoringRequest.SetMonitoringDataType , SetVariableMonitoringResponse.SetMonitoringResultType ,
-SetVariablesRequest.SetVariableDataType , SetVariablesResponse.SetVariableResultType , NotifyEventRequest.EventDataType
-
+ComponentType is used by: <<component_variable_type,Common:ComponentVariableType>>, <<message_info_type,Common:MessageInfoType>>, <<get_variable_data_type,GetVariablesRequest.GetVariableDataType>>, <<get_variable_result_type,GetVariablesResponse.GetVariableResultType>>, <<monitoring_data_type,NotifyMonitoringReportRequest.MonitoringDataType>>, <<report_data_type,NotifyReportRequest.ReportDataType>>, <<set_monitoring_data_type,SetVariableMonitoringRequest.SetMonitoringDataType>>, <<set_monitoring_result_type,SetVariableMonitoringResponse.SetMonitoringResultType>>, <<set_variable_data_type,SetVariablesRequest.SetVariableDataType>>, <<set_variable_result_type,SetVariablesResponse.SetVariableResultType>>, <<event_data_type,NotifyEventRequest.EventDataType>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|name |identifierString[0..50]
+  |1..1 |Required. Name of the component. Name should be taken from the list of standardized component names whenever possible. Case Insensitive. strongly advised to use Camel Case.
+|instance |identifierString[0..50]
+  |0..1 |Optional. Name of instance in case the component exists as multiple instances. Case Insensitive. strongly advised to use Camel Case.
+|evse |<<evse_type,EVSEType>>
+  |0..1 |Optional. Specifies the EVSE when component is located at EVSE level, also specifies the connector when component is located at Connector level.
 |===
-name identifierString[0..50] 1..1 Required. Name of the component. Name should be
-taken from the list of standardized component names
-whenever possible. Case Insensitive. strongly advised to
-use Camel Case.
-instance identifierString[0..50] 0..1 Optional. Name of instance in case the component exists
-as multiple instances. Case Insensitive. strongly advised
-to use Camel Case.
-evse EVSEType 0..1 Optional. Specifies the EVSE when component is located
-at EVSE level, also specifies the connector when
-component is located at Connector level.
 
 [[component_variable_type]]
 === ComponentVariableType
@@ -2690,119 +2586,107 @@ _Class_
 
 Class to report components, variables and variable attributes and characteristics.
 
-ComponentVariableType is used by: GetMonitoringReportRequest , GetReportRequest
-
+ComponentVariableType is used by: <<get_monitoring_report_request,GetMonitoringReportRequest>>, <<get_report_request,GetReportRequest>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|component |<<component_type,ComponentType>>
+  |1..1 |Required. Component for which a report of Variable is requested.
+|variable |<<variable_type,VariableType>>
+  |0..1 |Optional. Variable(s) for which the report is requested.
 |===
-component ComponentType 1..1 Required. Component for which a report of Variable is
-requested.
-variable VariableType 0..1 Optional. Variable(s) for which the report is requested.
 
 [[composite_schedule_type]]
 === CompositeScheduleType
 
 _Class_
 
-
-
-CompositeScheduleType is used by: GetCompositeScheduleResponse
-
+CompositeScheduleType is used by: <<get_compositie_schedule_response,GetCompositeScheduleResponse>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|evseId |integer
+  |1..1 |Required. The ID of the EVSE for which the schedule is requested. When evseid=0, the Charging Station calculated the expected consumption for the grid connection.
+|duration |integer
+  |1..1 |Required. Duration of the schedule in seconds.
+|scheduleStart |dateTime
+  |1..1 |Required. Date and time at which the schedule becomes active. All time measurements within the schedule are relative to this timestamp.
+|chargingRateUnit |<<charging_rate_unit_enum_type,ChargingRateUnitEnumType>>
+  |1..1 |Required. The unit of measure Limit is expressed in.
+|chargingSchedulePeriod |<<charging_schedule_period_type,ChargingSchedulePeriodType>>
+  |1..* |Required. List of ChargingSchedulePeriod elements defining maximum power or current usage over time.
 |===
-evseId integer 1..1 Required. The ID of the EVSE for which the schedule is
-requested. When evseid=0, the Charging Station
-calculated the expected consumption for the grid
-connection.
-duration integer 1..1 Required. Duration of the schedule in seconds.
-scheduleStart dateTime 1..1 Required. Date and time at which the schedule becomes
-active. All time measurements within the schedule are
-relative to this timestamp.
-chargingRateUnit ChargingRateUnitEnumType 1..1 Required. The unit of measure Limit is expressed in.
-chargingSchedulePeriod ChargingSchedulePeriodType 1..* Required. List of ChargingSchedulePeriod elements
-defining maximum power or current usage over time.
 
-=== 2.19. ConsumptionCostType
+[[consumption_cost_type]]
+=== ConsumptionCostType
 
 _Class_
 
 ConsumptionCostType is used by: Common:SalesTariffEntryType
 
-
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|startValue |decimal
+  |1..1 |Required. The lowest level of consumption that defines the starting point of this consumption block. The block interval extends to the start of the next interval.
+|cost |<<cost_type,CostType>>
+  |1..3 |Required. This field contains the cost details.
 |===
-startValue decimal 1..1 Required. The lowest level of consumption that defines
-the starting point of this consumption block. The block
-interval extends to the start of the next interval.
-cost CostType 1..3 Required. This field contains the cost details.
 
-=== 2.20. CostType
+[[cost_type]]
+=== CostType
 
 _Class_
 
-CostType is used by: Common:ConsumptionCostType
-
+CostType is used by: <<consumption_cost_type,Common:ConsumptionCostType>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
 |===
-costKind CostKindEnumType 1..1 Required. The kind of cost referred to in the message
-element amount
-amount integer 1..1 Required. The estimated or actual cost per kWh
-amountMultiplier integer 0..1 Optional. Values: -3..3, The amountMultiplier defines the
-exponent to base 10 (dec). The final value is determined
-by: amount * 10 ^ amountMultiplier
+|costKind |<<cost_kind_enum_type,CostKindEnumType>>
+  |1..1 |Required. The kind of cost referred to in the message element amount
+|amount |integer
+  |1..1 |Required. The estimated or actual cost per kWh
+|amountMultiplier |integer
+  |0..1 |Optional. Values: -3..3, The amountMultiplier defines the exponent to base 10 (dec). The final value is determined by: amount * 10 ^ amountMultiplier
 
-=== 2.21. DCChargingParametersType
+[[dc_charging_parameters_type]]
+=== DCChargingParametersType
 
 _Class_
 
 EV DC charging parameters
 
-DCChargingParametersType is used by: Common:ChargingNeedsType
-
-
-[cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
-|===
-|Field Name     |Field Type             |Card. |Description
-
-|===
-evMaxCurrent integer 1..1 Required. Maximum current (amps) supported by the
-electric vehicle. Includes cable capacity.
-evMaxVoltage integer 1..1 Required. Maximum voltage supported by the electric
-vehicle
-energyAmount integer 0..1 Optional. Amount of energy requested (in Wh). This
-inludes energy required for preconditioning.
-evMaxPower integer 0..1 Optional. Maximum power (in W) supported by the
-electric vehicle. Required for DC charging.
-
-
-
+DCChargingParametersType is used by: <<charging_needs_type,Common:ChargingNeedsType>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|evMaxCurrent |integer
+  |1..1 |Required. Maximum current (amps) supported by the electric vehicle. Includes cable capacity.
+|evMaxVoltage |integer
+  |1..1 |Required. Maximum voltage supported by the electric vehicle
+|energyAmount |integer
+  |0..1 |Optional. Amount of energy requested (in Wh). This inludes energy required for preconditioning.
+|evMaxPower |integer
+  |0..1 |Optional. Maximum power (in W) supported by the electric vehicle. Required for DC charging.
+|stateOfCharge |integer, 0 < = val < = 100
+  |0..1 |Optional. Energy available in the battery (in percent of the battery capacity)
+|evEnergyCapacity |integer
+  |0..1 |Optional. Capacity of the electric vehicle battery (in Wh)
+|fullSoC |integer, 0 < = val < = 100
+  |0..1 |Optional. Percentage of SoC at which the EV considers the battery fully charged. (possible values: 0 - 100)
+|bulkSoC |integer, 0 < = val < = 100
+  |0..1 |Optional. Percentage of SoC at which the EV considers a fast charging process to end. (possible values: 0 - 100)
 |===
-stateOfCharge integer, 0 <  val <  100 0..1 Optional. Energy available in the battery (in percent of the
-battery capacity)
-evEnergyCapacity integer 0..1 Optional. Capacity of the electric vehicle battery (in Wh)
-fullSoC integer, 0 <  val <  100 0..1 Optional. Percentage of SoC at which the EV considers
-the battery fully charged. (possible values: 0 - 100)
-bulkSoC integer, 0 <  val <  100 0..1 Optional. Percentage of SoC at which the EV considers a
-fast charging process to end. (possible values: 0 - 100)
 
 [[event_data_type]]
 === EventDataType
@@ -2811,45 +2695,41 @@ _Class_
 
 Class to report an event notification for a component-variable.
 
-EventDataType is used by: NotifyEventRequest
-
+EventDataType is used by: <<notify_event_request,NotifyEventRequest>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|eventId |integer
+  |1..1 |Required. Identifies the event. This field can be referred to as a cause by other events.
+|timestamp |dateTime
+  |1..1 |Required. Timestamp of the moment the report was generated.
+|trigger |<<event_trigger_enum_type,EventTriggerEnumType>>
+  |1..1 Required. Type of trigger for this event, e.g. exceeding a threshold value.
+|cause |integer
+  |0..1 Optional. Refers to the Id of an event that is considered to be the cause for this event.
+|actualValue |string[0..2500]
+  |1..1 |Required. Actual value (_attributeType_ Actual) of the variable.
+  
+  The Configuration Variable <<reporting_value_size,ReportingValueSize>> can be used to limit GetVariableResult.attributeValue, VariableAttribute.value and EventData.actualValue. The max size of these values will always remain equal.
+|techCode |string[0..50]
+  |0..1 |Optional. Technical (error) code as reported by component.
+|techInfo |string[0..500]
+  |0..1 |Optional. Technical detail information as reported by component.
+|cleared |boolean
+  |0..1 |Optional. Cleared is set to true to report the clearing of a monitored situation, i.e. a 'return to normal'.
+|transactionId |identifierString[0..36]
+  |0..1 |Optional. If an event notification is linked to a specific transaction, this field can be used to specify its transactionId.
+|variableMonitoringId |integer
+  |0..1 |Optional. Identifies the VariableMonitoring which triggered the event.
+|eventNotificationType |<<event_notification_enum_type,EventNotificationEnumType>>
+  |1..1 |Required. Specifies the event notification type of the message.
+|component |<<component_type,ComponentType>>
+  |1..1 |Required. Component for which event is notified.
+|variable |<<variable_type,VariableType>>
+  |1..1 |Required. Variable for which event is notified.
 |===
-eventId integer 1..1 Required. Identifies the event. This field can be referred
-to as a cause by other events.
-timestamp dateTime 1..1 Required. Timestamp of the moment the report was
-generated.
-trigger EventTriggerEnumType 1..1 Required. Type of trigger for this event, e.g. exceeding a
-threshold value.
-cause integer 0..1 Optional. Refers to the Id of an event that is considered to
-be the cause for this event.
-actualValue string[0..2500] 1..1 Required. Actual value ( attributeType Actual) of the
-variable.
-
-
-The Configuration Variable ReportingValueSize can be
-used to limit GetVariableResult.attributeValue,
-VariableAttribute.value and EventData.actualValue. The
-max size of these values will always remain equal.
-techCode string[0..50] 0..1 Optional. Technical (error) code as reported by
-component.
-techInfo string[0..500] 0..1 Optional. Technical detail information as reported by
-component.
-cleared boolean 0..1 Optional. Cleared is set to true to report the clearing of a
-monitored situation, i.e. a 'return to normal'.
-transactionId identifierString[0..36] 0..1 Optional. If an event notification is linked to a specific
-transaction, this field can be used to specify its
-transactionId.
-variableMonitoringId integer 0..1 Optional. Identifies the VariableMonitoring which
-triggered the event.
-eventNotificationType EventNotificationEnumType 1..1 Required. Specifies the event notification type of the
-message.
-component ComponentType 1..1 Required. Component for which event is notified.
-variable VariableType 1..1 Required. Variable for which event is notified.
 
 [[evse_type]]
 === EVSEType
@@ -2858,20 +2738,17 @@ _Class_
 
 Electric Vehicle Supply Equipment
 
-EVSEType is used by: Common:ComponentType , TriggerMessageRequest , ChangeAvailabilityRequest , TransactionEventRequest
-
-
-
+EVSEType is used by: <<component_type,Common:ComponentType>>, <<trigger_message_request,TriggerMessageRequest>>, <<change_availability_request,ChangeAvailabilityRequest>>, <<transaction_event_request,TransactionEventRequest>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|id |integer
+  |1..1 |Required. EVSE Identifier. This contains a number (> 0) designating an EVSE of the Charging Station.
+|connectorId |integer
+  |0..1 |Optional. An id to designate a specific connector (on an EVSE) by connector index number.
 |===
-id integer 1..1 Required. EVSE Identifier. This contains a number (> 0)
-designating an EVSE of the Charging Station.
-connectorId integer 0..1 Optional. An id to designate a specific connector (on an
-EVSE) by connector index number.
 
 [[firmware_type]]
 === FirmwareType
@@ -2880,22 +2757,24 @@ _Class_
 
 Represents a copy of the firmware that can be loaded/updated on the Charging Station.
 
-FirmwareType is used by: UpdateFirmwareRequest
-
+FirmwareType is used by: <<update_firmware_request,UpdateFirmwareRequest>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|location |string[0..512]
+  |1..1 |Required. URI defining the origin of the firmware.
+|retrieveDateTime |dateTime
+  |1..1 |Required. Date and time at which the firmware shall be retrieved.
+|installDateTime |dateTime
+  |0..1 |Optional. Date and time at which the firmware shall be installed.
+|signingCertificate |string[0..5500]
+  |0..1 |Optional. Certificate with which the firmware was signed. +
+  PEM encoded X.509 certificate.
+|signature |string[0..800]
+  |0..1 |Optional. Base64 encoded firmware signature.
 |===
-location string[0..512] 1..1 Required. URI defining the origin of the firmware.
-retrieveDateTime dateTime 1..1 Required. Date and time at which the firmware shall be
-retrieved.
-installDateTime dateTime 0..1 Optional. Date and time at which the firmware shall be
-installed.
-signingCertificate string[0..5500] 0..1 Optional. Certificate with which the firmware was signed.
-PEM encoded X.509 certificate.
-signature string[0..800] 0..1 Optional. Base64 encoded firmware signature.
 
 [[get_variable_data_type]]
 === GetVariableDataType
@@ -2904,19 +2783,19 @@ _Class_
 
 Class to hold parameters for GetVariables request.
 
-GetVariableDataType is used by: GetVariablesRequest
-
+GetVariableDataType is used by: <<get_variables_request,GetVariablesRequest>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|attributeType |<<attribute_enum_type,AttributeEnumType>>
+  |0..1 |Optional. Attribute type for which value is requested. When absent, default Actual is assumed.
+|component |<<component_type,ComponentType>>
+  |1..1 |Required. Component for which the Variable is requested.
+|variable |<<variable_type,VariableType>>
+  |1..1 |Required. Variable for which the attribute value is requested.
 |===
-attributeType AttributeEnumType 0..1 Optional. Attribute type for which value is requested.
-When absent, default Actual is assumed.
-component ComponentType 1..1 Required. Component for which the Variable is requested.
-variable VariableType 1..1 Required. Variable for which the attribute value is
-requested.
 
 [[get_variable_result_type]]
 === GetVariableResultType
@@ -2925,39 +2804,28 @@ _Class_
 
 Class to hold results of GetVariables request.
 
-GetVariableResultType is used by: GetVariablesResponse
-
-
-[cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
-|===
-|Field Name     |Field Type             |Card. |Description
-
-|===
-attributeStatus GetVariableStatusEnumType 1..1 Required. Result status of getting the variable.
-attributeType AttributeEnumType 0..1 Optional. Attribute type for which value is requested.
-When absent, default Actual is assumed.
-
-
-
+GetVariableResultType is used by: <<get_variables_response,GetVariablesResponse>>
 
 [cols="<.^4s,<.^6,<.^1,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Field Name     |Field Type             |Card. |Description
 
+|attributeStatus |<<get_variable_status_enum_type,GetVariableStatusEnumType>>
+  |1..1 |Required. Result status of getting the variable.
+|attributeType |<<attribute_enum_type,AttributeEnumType>>
+  |0..1 |Optional. Attribute type for which value is requested. +
+  When absent, default Actual is assumed.
+|attributeValue |string[0..2500]
+  |0..1 |Optional. Value of requested attribute type of component variable. This field can only be empty when the given status is NOT accepted.
+
+  The Configuration Variable <<reporting_value_size,ReportingValueSize>> can be used to limit GetVariableResult.attributeValue, VariableAttribute.value and EventData.actualValue. The max size of these values will always remain equal.
+|component |<<component_type,ComponentType>>
+  |1..1 |Required. Component for which the Variable is requested.
+|variable |<<variable_type,VariableType>>
+  |1..1 |Required. Variable for which the attribute value is requested.
+|attributeStatusInfo |<<status_info_type,StatusInfoType>>
+  |0..1 |Optional. Detailed attribute status information.
 |===
-attributeValue string[0..2500] 0..1 Optional. Value of requested attribute type of component-
-variable. This field can only be empty when the given
-status is NOT accepted.
-
-
-The Configuration Variable ReportingValueSize can be
-used to limit GetVariableResult.attributeValue,
-VariableAttribute.value and EventData.actualValue. The
-max size of these values will always remain equal.
-component ComponentType 1..1 Required. Component for which the Variable is requested.
-variable VariableType 1..1 Required. Variable for which the attribute value is
-requested.
-attributeStatusInfo StatusInfoType 0..1 Optional. Detailed attribute status information.
 
 [[id_token_info_type]]
 === IdTokenInfoType
@@ -3142,7 +3010,8 @@ MeterValueType is used by: MeterValuesRequest , TransactionEventRequest
 timestamp dateTime 1..1 Required. Timestamp for measured value(s).
 sampledValue SampledValueType 1..* Required. One or more measured values
 
-=== 2.33. ModemType
+[[modem_type]]
+=== ModemType
 
 _Class_
 
@@ -3314,7 +3183,8 @@ valid for, based upon relative times.
 consumptionCost ConsumptionCostType 0..3 Optional. Defines additional means for further relative
 price information and/or alternative costs.
 
-=== 2.40. SalesTariffType
+[[sales_tariff_type]]
+=== SalesTariffType
 
 _Class_
 
@@ -3905,7 +3775,8 @@ type VPNEnumType 1..1 Required. Type of VPN
 
 == 3. Enumerations.
 
-=== 3.1. APNAuthenticationEnumType
+[[apn_authentication_enum_type]]
+=== APNAuthenticationEnumType
 
 _Enumeration_
 
@@ -4104,7 +3975,8 @@ Other Indicates that an external source, not being an EMS or system operator, ha
 SO Indicates that a System Operator (DSO or TSO) has sent a charging limit.
 CSO Indicates that the CSO has set this charging profile.
 
-=== 3.12. ChargingProfileKindEnumType
+[[charging_profile_kind_enum_type]]
+=== ChargingProfileKindEnumType
 
 _Enumeration_
 
@@ -4362,7 +4234,8 @@ scheduled, StatusNotification SHALL be send when the availability change becomes
 Faulted When a Connector (or the EVSE or the entire Charging Station it belongs to) has reported an error and is not
 available for energy delivery. (Inoperative).
 
-=== 3.24. CostKindEnumType.
+[[cost_kind_enum_type]]
+=== CostKindEnumType
 
 _Enumeration_
 
@@ -4489,7 +4362,8 @@ n
 
 Given Transaction not known/ongoing.
 
-=== 3.30. EnergyTransferModeEnumType
+[[energy_transfer_mode_enum_type]]
+=== EnergyTransferModeEnumType
 
 _Enumeration_
 
@@ -4504,7 +4378,8 @@ AC_single_phase AC single phase charging according to IEC 62196.
 AC_two_phase AC two phase charging according to IEC 62196.
 AC_three_phase AC three phase charging according to IEC 62196.
 
-=== 3.31. EventNotificationEnumType.
+[[event_notification_enum_type]]
+=== EventNotificationEnumType
 
 _Enumeration_
 
@@ -4702,7 +4577,8 @@ Value Description
 Accepted Normal successful completion (no errors).
 NotFound Requested resource not found.
 
-==== 3.41. GetVariableStatusEnumType
+[[get_variable_status_enum_type]]
+=== GetVariableStatusEnumType
 
 _Enumeration_
 
@@ -4726,7 +4602,8 @@ uteType
 
 The AttributeType is not supported.
 
-==== 3.42. HashAlgorithmEnumType
+[[hash_algorithm_enum_type]]
+=== HashAlgorithmEnumType
 
 _Enumeration_
 

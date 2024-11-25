@@ -351,7 +351,8 @@ maxLimit 1000
 Description This Configuration Variable can be used to limit the following fields: SetVariableData.attributeValue and
 VariableCharacteristics.valueList. The max size of these values will always remain equal.
 
-**2.1.21.** ReportingValueSize
+[[reporting_value_size]]
+==== `ReportingValueSize`
 
 
 Required no
@@ -1613,7 +1614,8 @@ variableAttributes mutability ReadOnly
 variableCharacteristics dataType boolean
 Description If defined and true, this Charging Station supports switching from 3 to 1 phase during a transaction.
 
-**2.9.10.** ChargingProfileEntries
+[[charging_profile_entries]]
+==== `ChargingProfileEntries`
 
 
 Required yes
