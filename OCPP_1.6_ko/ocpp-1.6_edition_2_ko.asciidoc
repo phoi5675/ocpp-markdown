@@ -1394,8 +1394,8 @@ CSMS는 <<remote_start_transaction_req,RemoteStartTransaction.req>>를 보내서
 
 RemoteStartTransaction.req 메시지의 효과는 충전기의 <<authorize_remote_tx_requests,AuthorizeRemoteTxRequests>> 구성 키 값에 따라 달라집니다.
 
-* `AuthorizeRemoteTxRequests`의 값이 _true_ 이면, 충전기는 RemoteStartTransaction.req 메시지에 제공된 idTag로 트랜잭션을 시작하기 위해 충전기에서 로컬 작업에 대한 응답으로 동작해야 합니다. 즉, 충전기는 먼저 <<local_authorization_list,Local Authorization List>>, <<authorization_cache,Authorization Cache>> 및/또는 <<authorize_req,Authorize.req>> 요청을 사용하여 idTag를 승인하려고 시도합니다. 승인을 획득한 후에만 트랜잭션이 시작됩니다.
-* `AuthorizeRemoteTxRequests`의 값이 _false_ 이면, 충전기는 RemoteStartTransaction.req 메시지에 제공된 idTag에 대한 트랜잭션을 즉시 시작하려고 시도해야 합니다. 트랜잭션이 시작된 후 충전기는 CSMS에 StartTransaction 요청을 보내고 CSMS는 이 StartTransaction 요청을 처리할 때 idTag의 승인 상태를 확인합니다.
+* `AuthorizeRemoteTxRequests` 의 값이 _true_ 이면, 충전기는 RemoteStartTransaction.req 메시지에 제공된 idTag로 트랜잭션을 시작하기 위해 충전기에서 로컬 작업에 대한 응답으로 동작해야 합니다. 즉, 충전기는 먼저 <<local_authorization_list,Local Authorization List>>, <<authorization_cache,Authorization Cache>> 및/또는 <<authorize_req,Authorize.req>> 요청을 사용하여 idTag를 승인하려고 시도합니다. 승인을 획득한 후에만 트랜잭션이 시작됩니다.
+* `AuthorizeRemoteTxRequests` 의 값이 _false_ 이면, 충전기는 RemoteStartTransaction.req 메시지에 제공된 idTag에 대한 트랜잭션을 즉시 시작하려고 시도해야 합니다. 트랜잭션이 시작된 후 충전기는 CSMS에 StartTransaction 요청을 보내고 CSMS는 이 StartTransaction 요청을 처리할 때 idTag의 승인 상태를 확인합니다.
 
 다음은 Remote Start Transaction의 일반적인 사용 사례입니다.
 
@@ -3597,7 +3597,7 @@ _Enumeration_
 |**Accessibility** |RW
 |**Type** |CSL
 |**Description** |TransactionData 요소에 포함될 시계 정렬 주기적 측정값 <<stop_transaction_req,StopTransaction.req>> +
-<<metervalues_req,MeterValues.req>> 트랜잭션의 모든 `ClockAlignedDataInterval`에 대한 PDU입니다.
+<<metervalues_req,MeterValues.req>> 트랜잭션의 모든 `ClockAlignedDataInterval` 에 대한 PDU입니다.
 |===
 
 [[stop_txn_aligned_data_max_length]]
@@ -3837,7 +3837,7 @@ OCPP 1.5와 비교하여 OCPP 1.6에서 다음과 같은 변경 사항이 적용
 ** Pending 상태가 추가되었습니다.
 * <<chargepoint_errorcode,ChargePointErrorCode>>
 ** 열거형 값 추가: `InternalError`, `LocalListConfict` 및 `UnderVoltage`
-** 열거형 값 `Mode3Error`를 `EVCommunicationError`로 변경되었습니다.
+** 열거형 값 `Mode3Error` 를 `EVCommunicationError` 로 변경되었습니다.
 * <<charge_point_status,ChargePointStatus>>
 ** 열거형 값 `Occupied` 를 더 자세한 값인 `Preparing`, `Charging`, `SuspendedEVSE`, `SuspendedEV` 및 `Finishing` 으로 대체했습니다.
 * <<charging_rate_unit_type,ChargingRateUnitType>>
