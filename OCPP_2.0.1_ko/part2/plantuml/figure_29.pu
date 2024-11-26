@@ -1,0 +1,55 @@
+@startuml figure_29
+!include style.puml
+
+actor "EVDriver1" as EVDriver1
+actor "EVDriver2" as EVDriver2
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+EVDriver1 -> ChargingStation: IdToken(001) 제시
+activate ChargingStation
+
+opt IdToken이 Local Authorization List 또는 Authorization Cache에 존재하지 않는 경우
+  ChargingStation -> CSMS: AuthorizeRequest(IdToken = 001)
+  activate CSMS
+
+  CSMS --> ChargingStation: AuthorizeResponse(groupIdToken = 123, status)
+  deactivate CSMS
+end
+
+opt
+  ChargingStation --> EVDriver1: 알림
+end
+
+ChargingStation -> CSMS: TransactionEventRequest(eventType = Started, triggerReason = Authorized, ...)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate CSMS
+deactivate ChargingStation
+
+EVDriver2 -> ChargingStation: IdToken(002) 제시
+activate ChargingStation
+
+opt 트랜잭션을 중단하는 데 사용한 IdToken이 트랜잭션을 시작하는 데 사용한 IdToken과 다르고 \
+  \n(Local Authorization List 또는 Authorization Cache에 트랜잭션을 시작하거나 종료하는 데 사용한 GroupIdToken이 없거나 같음)이 \
+  \n아닌 경우
+
+  ChargingStation -> CSMS: AuthorizeRequest(IdToken = 002)
+  activate CSMS
+
+  CSMS --> ChargingStation: AuthorizeResponse(groupIdToken = 123, status)
+  deactivate CSMS
+end
+
+ChargingStation -> CSMS: TransactionEventRequest(eventType = Ended, triggerReason = StopAuthorized, stoppedReason = Local, ...)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate CSMS
+
+opt 
+  ChargingStation --> EVDriver2: 알림
+  deactivate ChargingStation
+end 
+@enduml

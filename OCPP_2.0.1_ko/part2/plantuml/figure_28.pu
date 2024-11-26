@@ -1,0 +1,54 @@
+@startuml figure_28
+!include style.puml
+
+participant "EV" as EV
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+opt 인증 우선
+  note over ChargingStation
+    EV를 EVSE에 연결하기 이전에 사용자 인증이 진행될 수 있음
+  end note
+
+  ChargingStation -> CSMS: AuthorizeRequest(idToken)
+  activate ChargingStation
+  activate CSMS
+
+  CSMS --> ChargingStation: AuthorizeResponse(idTokenInfo)
+  deactivate ChargingStation
+  deactivate CSMS
+end
+
+EV -> ChargingStation: ServiceDiscoveryReq()
+activate EV
+activate ChargingStation
+
+ChargingStation --> EV: ServiceDiscoveryRes(PaymentServiceList: ExternalPayment)
+deactivate ChargingStation
+
+EV -> ChargingStation: PaymentServiceSelectionReq(paymentOption: ExternalPayment)
+activate ChargingStation
+
+ChargingStation --> EV: PaymentServiceSelectionRes()
+deactivate ChargingStation
+
+EV -> ChargingStation: AuthorizationReq()
+activate ChargingStation
+
+opt 플러그 연결 이후 인증
+  note over ChargingStation
+    플러그 연결 이후 사용자 인증이 진행될 수 있으며, 시퀀스의 타임아웃은 60초임
+  end note
+
+  ChargingStation -> CSMS: AuthorizeRequest(idToken)
+  activate CSMS
+
+  CSMS --> ChargingStation: AuthorizeResponse(idTokenInfo)
+  deactivate CSMS
+end
+
+ChargingStation --> EV: AuthorizationRes()
+deactivate EV
+deactivate ChargingStation
+
+@enduml

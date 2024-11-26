@@ -1,0 +1,43 @@
+@startuml figure_25
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "APP" as App
+participant "Charging Station\nCS-001" as ChargingStation
+participant "CSMS" as CSMS
+
+note right of ChargingStation
+  케이블 연결 시점에
+  이미 트랜잭션이 시작됨
+end note
+
+EVDriver -> App: 충전 시작
+activate App
+
+App -> CSMS: 충전 시작 (CS-001)
+deactivate App
+activate CSMS
+
+CSMS -> CSMS: \
+  determine unique id() \n\
+    result = 4444
+
+CSMS -> ChargingStation: \
+  RequestStartTransactionRequest(evseId = 1 \n\
+    idToken(id = 4444, type = Central))
+activate ChargingStation
+
+ChargingStation --> CSMS: RequestStartTransactionResponse(Accepted)
+deactivate CSMS
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Updated, transactionId = AB1234, \n\
+    evse.id = 1, evse.connectorId = 1, \n\
+    meterValues, timestamp)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

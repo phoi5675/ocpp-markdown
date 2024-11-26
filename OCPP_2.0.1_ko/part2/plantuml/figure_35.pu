@@ -1,0 +1,37 @@
+@startuml figure_35
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+
+note over EVDriver, ChargingStation
+  충전소가 Offline 상태임.
+end note
+
+EVDriver -> ChargingStation: IdToken 제시
+
+opt 활성화된 경우 
+  ChargingStation -> ChargingStation: Authorization Cache 확인
+end
+
+opt 활성화 & 구현된 경우
+  ChargingStation -> ChargingStation: Local Authorization List 확인
+end
+
+note over ChargingStation
+  알 수 없는 IdToken
+end note
+
+alt OfflineTxForUnknownIdEnabled() = True
+  ChargingStation -> ChargingStation: identifier 허용
+  opt
+    ChargingStation -> EVDriver: 알림
+  end
+else OfflineTxForUnknownIdEnabled() = False
+  ChargingStation -> ChargingStation: identifier 거절
+  opt
+    ChargingStation -> EVDriver: 알림
+  end
+end
+
+@enduml
