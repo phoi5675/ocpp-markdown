@@ -339,7 +339,8 @@ variableAttributes mutability ReadOnly
 variableCharacteristics dataType integer
 Description Message Size (in bytes) - puts constraint on GetVariablesRequest message size.
 
-**2.1.20.** ConfigurationValueSize
+[[configuration_value_size]]
+==== `ConfigurationValueSize`
 
 
 Required no
@@ -351,7 +352,8 @@ maxLimit 1000
 Description This Configuration Variable can be used to limit the following fields: SetVariableData.attributeValue and
 VariableCharacteristics.valueList. The max size of these values will always remain equal.
 
-**2.1.21.** ReportingValueSize
+[[reporting_value_size]]
+==== `ReportingValueSize`
 
 
 Required no
@@ -1613,7 +1615,8 @@ variableAttributes mutability ReadOnly
 variableCharacteristics dataType boolean
 Description If defined and true, this Charging Station supports switching from 3 to 1 phase during a transaction.
 
-**2.9.10.** ChargingProfileEntries
+[[charging_profile_entries]]
+==== `ChargingProfileEntries`
 
 
 Required yes
@@ -1848,7 +1851,7 @@ variableAttributes mutability ReadOnly
 variableCharacteristics dataType integer
 Description Shows the currently used MonitoringLevel. Valid values are severity levels of SetMonitoringLevelRequest: 0-9.
 
-== 2.12. Display Message related
+=== Display Message related
 
 **2.12.1.** DisplayMessageEnabled
 
@@ -1870,7 +1873,8 @@ variableAttributes mutability ReadOnly
 variableCharacteristics dataType boolean
 Description Whether Display Message is supported.
 
-**2.12.3.** NumberOfDisplayMessages
+[[number_of_display_messages]]
+==== `NumberOfDisplayMessages`
 
 
 Required yes
@@ -1884,7 +1888,8 @@ SetDisplayMessageRequest.
 Description Amount of different messages that are currently configured in this Charging Station, via
 SetDisplayMessageRequest
 
-**2.12.4.** DisplayMessageSupportedFormats
+[[display_message_supported_formats]]
+==== DisplayMessageSupportedFormats
 
 
 Required yes
@@ -1896,8 +1901,8 @@ Description List of message formats supported by this Charging Station. Possible
 
 Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
-
-**2.12.5.** DisplayMessageSupportedPriorities
+[[display_message_supported_priorities]]
+==== DisplayMessageSupportedPriorities
 
 
 Required yes

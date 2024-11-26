@@ -1,0 +1,29 @@
+@startuml figure_146
+!include style.puml
+
+actor "CSO" as CSO
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+note over ChargingStation
+  A message with
+  id=15 is configured
+end note
+
+CSO -> CSMS: Replace Messages(id = 15)
+activate CSO
+activate CSMS
+
+CSMS -> ChargingStation: SetDisplayMessagesRequest(id = 15,...)
+activate ChargingStation
+
+ChargingStation --> CSMS: SetDisplayMessagesResponse(Accepted)
+deactivate ChargingStation
+
+opt
+  CSMS --> CSO: notification
+  deactivate CSO
+  deactivate CSMS
+end
+
+@enduml

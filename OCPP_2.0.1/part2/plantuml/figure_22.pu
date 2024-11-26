@@ -16,7 +16,7 @@ activate CSMS
 
 CSMS --> ChargingStation: StatusNotificationResponse()
 
-ChargingStation -> CSMS: TransactionEventRequest(eventType  Started,...)
+ChargingStation -> CSMS: TransactionEventRequest(eventType = Started,...)
 
 CSMS --> ChargingStation: TransactionEventResponse(...)
 deactivate CSMS
@@ -36,12 +36,12 @@ end
 ChargingStation -> ChargingStation: Start energy offer
 
 ChargingStation -> CSMS: \
-  TransactionEventRequest(eventType  Updated, \n\
-    idToken.type  NoAuthorization,...)
+  TransactionEventRequest(eventType = Updated, \n\
+    idToken.type = NoAuthorization,...)
 activate ChargingStation
 activate CSMS
 
-CSMS --> ChargingStation: TransactionEventResponse(idTokenInfo.status  Accepted,...)
+CSMS --> ChargingStation: TransactionEventResponse(idTokenInfo.status = Accepted,...)
 deactivate CSMS
 deactivate ChargingStation
 deactivate ChargingStation

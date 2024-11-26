@@ -18,7 +18,7 @@ activate CSMS
 
 CSMS --> ChargingStation: StatusNotificationResponse()
 
-ChargingStation -> CSMS: TransactionEventRequest(eventType  Started, ...)
+ChargingStation -> CSMS: TransactionEventRequest(eventType = Started, ...)
 
 CSMS --> ChargingStation: TransactionEventResponse(...)
 deactivate ChargingStation
@@ -46,7 +46,7 @@ ChargingStation -> CSMS: \
   chargingState = Charging, trigger = Authorized, idToken.id = 1234, meterValues, ...)
 activate CSMS
 
-CSMS --> ChargingStation: TransactionEventResponse(idTokenInfo.status  Accepted, ...)
+CSMS --> ChargingStation: TransactionEventResponse(idTokenInfo.status = Accepted, ...)
 deactivate CSMS
 deactivate ChargingStation
 

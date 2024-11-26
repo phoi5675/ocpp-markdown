@@ -12,7 +12,7 @@ ChargingStation -> CSMS: \
         type = PinCode), ...)
 activate CSMS
 
-CSMS --> ChargingStation: AuthorizeResponse(idTokenInfo.status  Accepted, ...)
+CSMS --> ChargingStation: AuthorizeResponse(idTokenInfo.status = Accepted, ...)
 deactivate CSMS
 
 opt

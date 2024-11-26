@@ -1,0 +1,40 @@
+@startuml figure_142
+!include style.puml
+
+actor "CSO" as CSO
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+note over ChargingStation
+  A transaction with
+  id=123 is ongoing
+end note
+
+CSO -> CSMS:  Set new messages(transactionId=123)
+activate CSO
+activate CSMS
+
+CSMS -> ChargingStation: SetDisplayMessagesRequest(transactionId=123,...)
+
+ChargingStation --> CSMS: SetDisplayMessagesResponse(Accepted)
+
+opt
+  CSMS --> CSO: notification
+  deactivate CSO
+  deactivate CSMS
+end
+
+note over ChargingStation
+  At configured moment
+end note
+
+ChargingStation -> ChargingStation: Display Message
+
+note over ChargingStation
+  Transaction with
+  id=123 ends
+end note
+
+ChargingStation -> ChargingStation: Remove Message
+
+@enduml

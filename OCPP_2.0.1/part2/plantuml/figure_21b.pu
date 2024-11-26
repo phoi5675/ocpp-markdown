@@ -26,7 +26,7 @@ alt Reset Charging Station
   end note
 
   loop for all stopped transactions
-      ChargingStation -> CSMS: TransactionEventRequest(eventType  Ended, stopReason  ImmediateReset,...)
+      ChargingStation -> CSMS: TransactionEventRequest(eventType = Ended, stopReason = ImmediateReset,...)
       activate CSMS
 
       CSMS --> ChargingStation: TransactionEventResponse(...)
@@ -58,7 +58,7 @@ else Reset EVSE
     regardless of TxStopPoint.
   end note
 
-  ChargingStation -> CSMS: TransactionEventRequest(eventType  Ended, stopReason  ImmediateReset,...)
+  ChargingStation -> CSMS: TransactionEventRequest(eventType = Ended, stopReason = ImmediateReset,...)
   activate CSMS
 
   CSMS --> ChargingStation: TransactionEventResponse(...)

@@ -1,0 +1,25 @@
+@startuml figure_145
+!include style.puml
+
+actor "CSO" as CSO
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+activate CSO
+
+CSO -> CSMS: Clear Message(id=12)
+activate CSMS
+
+CSMS -> ChargingStation: ClearDisplayMessageRequest(id=12)
+activate ChargingStation
+
+ChargingStation -> ChargingStation: Remove\nMessage(id=12)
+
+ChargingStation --> CSMS: ClearDisplayMessageResponse(Accepted)
+deactivate ChargingStation
+
+opt
+  CSMS --> CSO: notification
+end
+
+@enduml
