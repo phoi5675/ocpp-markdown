@@ -1,0 +1,15 @@
+@startuml figure_31
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+CSMS -> ChargingStation: ClearCacheRequest()
+activate ChargingStation
+activate CSMS
+
+ChargingStation --> CSMS: ClearCacheResponse(status)
+deactivate ChargingStation
+deactivate CSMS
+
+@enduml

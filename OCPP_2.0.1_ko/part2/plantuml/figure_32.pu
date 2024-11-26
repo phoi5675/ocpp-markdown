@@ -1,0 +1,51 @@
+@startuml figure_32
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+activate EVDriver
+
+EVDriver -> ChargingStation: 케이블 연결
+activate ChargingStation
+
+ChargingStation -> CSMS: StatusNotificationRequest(Occupied)
+activate CSMS
+
+CSMS --> ChargingStation: StatusNotificationResponse()
+deactivate CSMS
+
+ChargingStation -> CSMS: TransactionEventRequest(eventType = Started,...)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate CSMS
+deactivate ChargingStation
+
+EVDriver -> ChargingStation: IdToken 제시
+activate ChargingStation
+
+ChargingStation -> ChargingStation: authorization cache() 확인
+
+opt 
+  ChargingStation -> EVDriver: 알림
+  deactivate EVDriver
+end
+
+opt 커넥터가 영구적으로(permanently) 결합되지 않은 경우
+  ChargingStation -> ChargingStation: 커넥터 잠금
+end 
+
+ChargingStation -> ChargingStation: 에너지 제공 시작
+
+ChargingStation -> CSMS: TransactionEventRequest(eventType = Updated, chargingState = Charging,...)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate CSMS
+
+ChargingStation ->: E01 - Start Transaction - Cable Plugin First로 계속
+deactivate ChargingStation
+
+@enduml

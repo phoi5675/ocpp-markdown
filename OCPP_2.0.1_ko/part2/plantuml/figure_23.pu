@@ -1,0 +1,68 @@
+@startuml figure_23
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station\nCS-001" as ChargingStation
+participant "CSMS" as CSMS
+participant "Payment System" as PaymentSystem
+
+EVDriver -> ChargingStation: 케이블 연결
+activate ChargingStation
+
+ChargingStation -> CSMS: StatusNotificationRequest(Occupied)
+activate CSMS
+
+CSMS --> ChargingStation: StatusNotificationResponse()
+deactivate CSMS
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Started, transactionId = AB1234, \n\
+  timestamp, evse.id = 1, \n\
+  evse.connectorId = 1, meterValues)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate CSMS
+deactivate ChargingStation
+
+EVDriver -> PaymentSystem: 카드 사용
+activate PaymentSystem
+
+PaymentSystem -> PaymentSystem: \
+  financial\ntransaction
+
+PaymentSystem -> CSMS: \
+  authorized(TransactionReference = 1234, \n\
+  CS = CS-001, EVSE = 1)
+deactivate PaymentSystem
+activate CSMS
+
+CSMS -> CSMS: \
+  generate unique id() \n\
+  result = 4444
+
+CSMS -> ChargingStation: \
+  RequestStartTransactionRequest(evseId = 1 \n\
+    idToken(id = 4444, type = Central)
+activate ChargingStation
+
+ChargingStation --> CSMS: RequestStartTransactionResponse(Accepted)
+deactivate CSMS
+
+opt 케이블이 영구적으로(permanently) 결합되지 않은 경우
+  ChargingStation -> ChargingStation: lock connector
+end
+
+ChargingStation -> ChargingStation: 에너지 전달 시작
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Updated, transactionId = AB1234, \n\
+    seqNo = 1, timestamp, chargingState = Charging,\n\
+    trigger = Authorized, idToken(id = 4444, type = Central))
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(idTokenInfo.status = Accepted)
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

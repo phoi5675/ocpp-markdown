@@ -1,0 +1,109 @@
+@startuml figure_26
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Payment Terminal" as PaymentTerminal
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+activate EVDriver
+EVDriver -> ChargingStation: 케이블 연결
+activate ChargingStation
+
+ChargingStation -[hidden]-> EVDriver: hidden
+deactivate EVDriver
+
+ChargingStation -> CSMS: StatusNotificationRequest(Occupied)
+activate CSMS
+
+CSMS --> ChargingStation: StatusNotificationResponse()
+
+ChargingStation -> CSMS: TransactionEventRequest(eventType = Started, ...)
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate ChargingStation
+deactivate CSMS
+
+EVDriver --> ChargingStation: 주차 티켓(1234) 제시
+activate ChargingStation
+
+ChargingStation -> CSMS: AuthorizeRequest(idToken(id = 1234, type = Local))
+activate CSMS
+
+CSMS --> ChargingStation: AuthorizeResponse(...)
+deactivate CSMS
+
+opt
+  ChargingStation --> EVDriver: 알림
+end
+
+note over ChargingStation
+  충전 시작
+end note
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Updated, transactionId = AB1234, \n\
+  chargingState = Charging, trigger = Authorized, idToken.id = 1234, meterValues, ...)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(idTokenInfo.status = Accepted, ...)
+deactivate CSMS
+deactivate ChargingStation
+
+note over EVDriver
+  사용자가 EV를 픽업하러 돌아옴
+end note
+
+EVDriver --> PaymentTerminal: \
+  주차 티켓(1234)\n\
+  제시
+activate PaymentTerminal
+
+PaymentTerminal -> CSMS: 충전(id = 1234) 종료
+activate CSMS
+
+CSMS -> CSMS: \
+  ticketId와 일치하는 \
+  \nTransactionId()
+
+CSMS -> ChargingStation: RequestStopTransactionRequest(transactionId = AB1234)
+activate ChargingStation
+
+ChargingStation --> CSMS: RequestStopTransactionResponse(Accepted)
+deactivate CSMS
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Updated, transactionId = AB1234, \n\
+  chargingState = EVConnected, trigger = RemoteStop, idToken.id = 1234, meterValues, ...)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate CSMS
+deactivate ChargingStation
+
+PaymentTerminal <--> CSMS: 가격(id = 1234) 수신
+activate CSMS
+
+EVDriver -> PaymentTerminal: \
+  충전 및 주차에 대한 \n\
+  요금 결제
+
+opt
+  PaymentTerminal --> EVDriver: 알림
+  deactivate PaymentTerminal
+end
+
+EVDriver -> ChargingStation: 케이블 제거 
+activate ChargingStation
+
+ChargingStation -> CSMS: StatusNotificationRequest(Available)
+
+CSMS --> ChargingStation: StatusNotificationResponse()
+
+ChargingStation -> CSMS: TransactionEventRequest(eventType = Ended, transactionId = AB1234, meterValues, ...)
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

@@ -1,0 +1,80 @@
+@startuml figure_21b
+!include style.puml
+
+actor "CSO" as CSO
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+alt 충전기 리셋
+
+  note left of ChargingStation
+    한 개 이상의 EVSE에 대해 트랜잭션 활성화됨
+  end note
+
+  CSO -> CSMS: CS 리셋
+  activate CSMS
+
+  CSMS -> ChargingStation: ResetRequest(Immediate)
+  activate ChargingStation
+
+  ChargingStation --> CSMS: ResetResponse(Accepted)
+  deactivate CSMS
+
+  note over ChargingStation
+    모든 트랜잭션을
+    TxStopPoint과 무관하게 종료시킴
+  end note
+
+  loop 종료된 모든 트랜잭션에 대해
+      ChargingStation -> CSMS: TransactionEventRequest(eventType = Ended, stopReason = ImmediateReset,...)
+      activate CSMS
+
+      CSMS --> ChargingStation: TransactionEventResponse(...)
+      deactivate CSMS
+      deactivate ChargingStation
+  end
+
+  ChargingStation -> ChargingStation: 충전기 재부팅
+  activate ChargingStation
+
+  ChargingStation ->o]: B01 - Cold Boot Charging Station로 계속
+  deactivate ChargingStation
+else EVSE 리셋
+  note left of ChargingStation
+    EVSE에 활성 상태의 트랜잭션 존재
+  end note 
+
+  CSO -> CSMS: CS 리셋
+  activate CSMS
+
+  CSMS -> ChargingStation: ResetRequest(Immediate, evseId)
+  activate ChargingStation
+
+  ChargingStation --> CSMS: ResetResponse(Scheduled)
+  deactivate CSMS
+
+  note over ChargingStation
+    모든 트랜잭션을
+    TxStopPoint과 무관하게 종료시킴
+  end note
+
+  ChargingStation -> CSMS: TransactionEventRequest(eventType = Ended, stopReason = ImmediateReset,...)
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse(...)
+  deactivate CSMS
+  deactivate ChargingStation
+
+  ChargingStation -> ChargingStation: EVSE 리셋
+  activate ChargingStation
+
+  loop EVSE의 모든 커넥터에 대해
+    ChargingStation -> CSMS: StatusNotificationRequest(Available, evseId, connectorId)
+    activate CSMS
+
+    CSMS --> ChargingStation: StatusNotificationResponse()
+    deactivate ChargingStation
+    deactivate CSMS
+  end
+end
+@enduml
