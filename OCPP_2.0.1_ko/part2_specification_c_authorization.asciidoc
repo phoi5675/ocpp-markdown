@@ -19,13 +19,13 @@
 
 _이 섹션은 규범적입니다._
 
-OCPP는 이제 다양한 유형의 인증을 사용할 수 있게 되었습니다. OCPP 1.X는 RFID만 지원했지만, 이제 OCPP는 신용카드, PIN 코드, 즉시 시작 버튼등도 지원합니다.
+OCPP는 이제 다양한 유형의 인증을 사용할 수 있게 되었습니다. OCPP 1.X는 RFID만 지원했지만, 이제 OCPP는 신용카드, PIN 코드, 즉시 시작 버튼 등도 지원합니다.
 
 <<id_token_type,IDTokenType>>에는 인증에 사용할 식별자가 포함되어 있습니다. 이는 대/소문자를 구분하지 않는 문자열과 형식의 조합으로 정의됩니다. <<id_token_type,IDTokenType>> 클래스의 메시지 데이터 요소(GroupId 포함)는 CSMS에 의미 있는 모든 데이터(예: 충전 활동의 시작자를 식별하기 위한 목적)를 포함할 수 있으며(MAY) 충전기는 IdTokenType의 설명에 제공된 것 외에 이러한 데이터의 형식이나 내용에 대해 어떠한 추정도 해서는 안 됩니다(예: UID와 같은 값으로 가정하여 16진수 문자만 포함하거나 짝수 자릿수여야 한다고 가정하는 것). 로컬 토큰 판독기 하드웨어를 통해 획득한 IdToken 데이터는 일반적으로 물리적 IdToken의 (4, 7 또는 10바이트) UID 값으로, 일반적으로 8, 14 또는 20개의 16진수 문자로 표시됩니다.
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE |상호 운용성을 촉진하기 위하여 <<id_token_type,IdTokenType>> 데이터 유형이 <<id_token_enum_type,_ISO14443_>>인 경우 현재까지의 일반적인 관행에 따라, 이러한 UID를 UID바이트의 16진수 표현으로 나타내는것을 권장합니다. ISO 14443-3에 따르면 바이트 0은 16진수 문자열 가장 앞에 와야 합니다. (최상위 니블의 바이트에 0이 먼저)
+|NOTE |상호 운용성을 촉진하기 위하여 <<id_token_type,IdTokenType>> 데이터 유형이 <<id_token_enum_type,_ISO14443_>>인 경우 현재까지의 일반적인 관행에 따라, 이러한 UID를 UID바이트의 16진수 표현으로 나타내는것을 권장합니다. ISO 14443-3에 따르면 바이트 0은 16진수 문자열 가장 앞에 와야 합니다. (최상위 니블의 바이트에 0이 먼저)
 |===
 
 ==== Additional Info
@@ -44,9 +44,9 @@ CSMS는 일련의 신원 토큰을 "그룹"으로 취급할 수 있는 기능을
 
 토큰(idTags)은 <<id_token_info_type,IdTokenInfo>>의 선택적 _groupIdToken_ 요소에 공통 그룹 식별자를 지정하여 인증 목적으로 그룹화됩니다. 두 개의 IdTokens이 GroupIdTokens가 일치하고 비어 있지 않은 경우 동일한 그룹에 속하는 것으로 간주됩니다.
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|참고 
+|NOTE  
   |GroupId는 idToken과 동일한 명목 데이터 유형(<<id_token_type,IdTokenType>>)을 가지고 있지만, 이 요소의 값은 <<id_token_type,IdTokenTypes>>의 일반 형식에 있지 않거나 실제 유효한 <<id_token_type,IdTokenType>>을 나타내지 않을 수 있습니다(예: 공통 공유 "계정 번호"일 수 있음): 따라서 GroupId 값은 제시된 토큰 값과 비교하는 데 사용해서는 안 됩니다(동일한 값이 idToken 값으로 발생하지 않는 한).
 |===
 
@@ -70,14 +70,14 @@ s|참고
 
 로컬 인증 목록 기능을 구현/사용하는 방법에 대한 자세한 내용은 <<send_local_authorization_list,D01 - 로컬 인증 목록 보내기>>, <<offline_authorization_through_local_authorization_list,C13 - 로컬 인증 목록을 통한 오프라인 인증>> 및 <<online_authorization_through_local_authorization_list,C14 - 로컬 인증 목록을 통한 온라인 인증>> 유즈케이스를 참조하세요.
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|참고|<<authorization_cache,Authorization Cache>>와 <<local_authorization_list,Local Authorization List>> 메커니즘의 차이점에 유의하세요. <<authorization_cache,Authorization Cache>>는 충전기에서 자율적인 메커니즘인 반면, <<local_authorization_list,Local Authorization List>>는 CSMS와 충전기(CSMS에서 시작) 간에 동기화되는 목록입니다.
+|NOTE |<<authorization_cache,Authorization Cache>>와 <<local_authorization_list,Local Authorization List>> 메커니즘의 차이점에 유의하세요. <<authorization_cache,Authorization Cache>>는 충전기에서 자율적인 메커니즘인 반면, <<local_authorization_list,Local Authorization List>>는 CSMS와 충전기(CSMS에서 시작) 간에 동기화되는 목록입니다.
 |===
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|참고|<<authorization_cache,Authorization Cache>>와 <<local_authorization_list,Local Authorization List>>는 *별개의* 논리적 데이터 구조입니다. <<authorization_cache,Authorization Cache>>와 <<local_authorization_list,Local Authorization List>>가 모두 지원되는 경우 충전기는 <<local_authorization_list,Local Authorization List>> 항목을 <<authorization_cache,Authorization Cache>> 항목보다 우선시해야 합니다.
+|NOTE |<<authorization_cache,Authorization Cache>>와 <<local_authorization_list,Local Authorization List>>는 *별개의* 논리적 데이터 구조입니다. <<authorization_cache,Authorization Cache>>와 <<local_authorization_list,Local Authorization List>>가 모두 지원되는 경우 충전기는 <<local_authorization_list,Local Authorization List>> 항목을 <<authorization_cache,Authorization Cache>> 항목보다 우선시해야 합니다.
 |===
 
 다음 구성 변수는 충전기에서 로컬 인증 목록에 대한 정보를 제공하는 데 사용됩니다.
