@@ -14,7 +14,7 @@ ChargingStation -> CSMS: BootNotificationRequest(reason, chargingStation)
 activate ChargingStation
 activate CSMS
 
-CSMS --> ChargingStation: BootNotificationResponse(status  Accepted, currentTime, interval)
+CSMS --> ChargingStation: BootNotificationResponse(status = Accepted, currentTime, interval)
 deactivate ChargingStation
 deactivate CSMS
 
@@ -34,7 +34,7 @@ end
 
 loop for all Connectors
   alt Connector was set to Unavailable/Reserved/Faulted prior to (re)boot
-    ChargingStation -> CSMS: StatusNotificationRequest(connectorStatus  Unavailable/Reserved/Faulted)
+    ChargingStation -> CSMS: StatusNotificationRequest(connectorStatus = Unavailable/Reserved/Faulted)
     activate ChargingStation
     activate CSMS
 

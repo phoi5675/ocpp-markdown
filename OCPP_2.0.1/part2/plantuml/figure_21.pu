@@ -8,7 +8,7 @@ participant "CSMS" as CSMS
 EVDriver -> ChargingStation: present RFID(AA12345)
 activate ChargingStation
 
-ChargingStation -> CSMS: AuthorizeRequest(idToken(id  AA12345, type  ISO14443))
+ChargingStation -> CSMS: AuthorizeRequest(idToken(id = AA12345, type = ISO14443))
 activate CSMS
 
 CSMS --> ChargingStation: AuthorizeResponse(...)
