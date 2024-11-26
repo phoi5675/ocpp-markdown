@@ -15,9 +15,9 @@ This 15118 OCPP Functional Block has been designed to meet a number of alignment
 
 For illustration purposes: the figure below shows a complete sequence with authorization and scheduling.
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE |To the below figure: this sequence only applies for AC charging, although the certificate handling (which is the focus in this section) does not differ in AC or DC.
+|NOTE |To the below figure: this sequence only applies for AC charging, although the certificate handling (which is the focus in this section) does not differ in AC or DC.
 |===
 
 <<<
@@ -25,21 +25,21 @@ s|NOTE |To the below figure: this sequence only applies for AC charging, althoug
 .Sequence with Authorization and Scheduling
 image::part2/images/figure_122.svg[Sequence with Authorization and Scheduling]
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE |The time-out on the ChargeParameterDiscoveryReq is 2 seconds, but this can be prolonged up to 60 seconds to wait for charging profile to be provided by the CSMS. See ISO 15118-2 <<iso15118_2,[ISO15118-2]>>.
+|NOTE |The time-out on the ChargeParameterDiscoveryReq is 2 seconds, but this can be prolonged up to 60 seconds to wait for charging profile to be provided by the CSMS. See ISO 15118-2 <<iso15118_2,[ISO15118-2]>>.
 |===
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE |Please note that it is highly RECOMMENDED to use one of the TLS based security profiles from functional blockA, not doing this might "break" the ISO 15118 security.
+|NOTE |Please note that it is highly RECOMMENDED to use one of the TLS based security profiles from functional blockA, not doing this might "break" the ISO 15118 security.
 |===
 
 In order to control the amount of power that an EV may draw from a Charging Station, some form of vehicle to grid communication is necessary. OCPP has been designed to support the <<iso15118_1,ISO 15118>> standard for communication between the EV and Charging Station (EVSE). However, it is anticipated that for the coming years, the majority of EVs will only support the control pilot PWM signal <<iec61851_1,IEC61851>>, so care has been taken to support smart charging with this as well.
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE |A mapping of the ISO 15118 and OCPP terminology is provided in <<iso_15118_and_ocpp_terminology_mapping,ISO 15118 and OCPP terminology mapping>> and abbreviations used in ISO 15118 are listed in <<iso_15118_abbreviations,ISO 15118 Abbreviations>>.
+|NOTE |A mapping of the ISO 15118 and OCPP terminology is provided in <<iso_15118_and_ocpp_terminology_mapping,ISO 15118 and OCPP terminology mapping>> and abbreviations used in ISO 15118 are listed in <<iso_15118_abbreviations,ISO 15118 Abbreviations>>.
 |===
 
 <<<
@@ -118,16 +118,16 @@ From an OCPP perspective, based on the above paragraph, the Charging Station nee
   |Certificate from an eMobility Service provider. To support PnC charging with contracts from service providers that not derived their certificates from the V2G root.
 |===
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE |The V2G Charging Station Certificate might be the same as the certificate used for securing the connection between the Charging Station and the CSMS. For this to work, this certificate MUST BE to be derived from a V2G Root.
+|NOTE |The V2G Charging Station Certificate might be the same as the certificate used for securing the connection between the Charging Station and the CSMS. For this to work, this certificate MUST BE to be derived from a V2G Root.
 |===
 
 A Contract Certificate can be derived from a V2G root, or an eMobility root. This means the Charging Station needs to be in possession of the corresponding root certificate to be able to authenticate the driver by means of the Contract Certificate and the associated certificate chain.
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE |When a Charging Station is online this does not have to be the case, because it can send an <<authorize_request,AuthorizeRequest>> message with the Contract Certificate to be validated by the CSMS.
+|NOTE |When a Charging Station is online this does not have to be the case, because it can send an <<authorize_request,AuthorizeRequest>> message with the Contract Certificate to be validated by the CSMS.
 |===
 
 The V2G Charging Station Certificate needs to be derived from a V2G root. If this root is not known by the EV, no connection via 15118 is possible, so charging controlled by 15118 is NOT possible. In the event a Charging Station needs to support more than one V2G root, multiple V2G Charging Station Certificates are needed.
@@ -204,9 +204,9 @@ d|G2  d|Charging details
 |H1  |End of charging process
 |===
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE |Not all 15118 related OCPP use cases are described in this functional block. This functional block describes installing and updating certificates in the EV and CA certificate handling (also for non 15118 related purposes). Please refer to <<iso_15118_authorization,ISO 15118 Authorization>> for the authorization related use cases. The Smart Charging related use cases are described in the chapter <<smart_charging,Smart Charging>>.
+|NOTE |Not all 15118 related OCPP use cases are described in this functional block. This functional block describes installing and updating certificates in the EV and CA certificate handling (also for non 15118 related purposes). Please refer to <<iso_15118_authorization,ISO 15118 Authorization>> for the authorization related use cases. The Smart Charging related use cases are described in the chapter <<smart_charging,Smart Charging>>.
 |===
 
 <<<

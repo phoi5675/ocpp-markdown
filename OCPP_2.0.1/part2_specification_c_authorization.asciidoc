@@ -23,9 +23,9 @@ OCPP now makes it possible to use many different types of authorization. Where O
 
 An <<id_token_type,IDTokenType>> contains the identifier to use for authorization. It is defined as a combination of a case insensitive string and a type. Message data elements of the <<id_token_type,IDTokenType>> class (including GroupId) MAY contain any data, that is meaningful to a CSMS (e.g. for the purpose of identifying the initiator of charging activity), and Charging Stations MUST NOT make any presumptions as to the format or content of such data, other than is provided in the description of the IdTokenType (e.g. by assuming that it is a UID- like value that must be hex characters only and/or an even number of digits). IdToken data acquired via local token reader hardware is usually a (4, 7 or 10 bytes) UID value of a physical IdToken, typically represented as 8, 14 or 20 hexadecimal digit characters.
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE |To promote interoperability, based on common practice to date in the case of <<id_token_type,IdTokenType>> data has type: <<id_token_enum_type,_ISO14443_>>, it is RECOMMENDED that such UIDs be represented as hex representations of the UID bytes. According to ISO 14443-3, byte 0 should come first in the hex string. (Most significant nibble of byte 0 first)
+|NOTE |To promote interoperability, based on common practice to date in the case of <<id_token_type,IdTokenType>> data has type: <<id_token_enum_type,_ISO14443_>>, it is RECOMMENDED that such UIDs be represented as hex representations of the UID bytes. According to ISO 14443-3, byte 0 should come first in the hex string. (Most significant nibble of byte 0 first)
 |===
 
 ==== Additional Info
@@ -43,9 +43,9 @@ A CSMS has the ability to treat a set of identity tokens as a "group", thereby a
 
 Tokens (idTags) are grouped for authorization purposes by specifying a common group identifier in the optional _groupIdToken_ element in <<id_token_info_type,IdTokenInfo>>: two IdTokens are considered to be in the same group if their GroupIdTokens match (and they are not empty).
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE 
+|NOTE 
   |Even though the GroupId has the same nominal data type (<<id_token_type,IdTokenType>>) as an idToken, the value of this element may not be in the common format of <<id_token_type,IdTokenTypes>> and/or may not represent an actual valid <<id_token_type,IdTokenType>> (e.g. it may be a common shared "account number"): therefore, the GroupId value SHOULD NOT be used for comparison against a presented Token value (unless it also occurs as an idToken value).
 |===
 
@@ -69,14 +69,14 @@ This list contains the authorization status of all (or a selection of) identifie
 
 Please refer to the use cases <<send_local_authorization_list,D01 - Send Local Authorization List>>, <<offline_authorization_through_local_authorization_list,C13 - Offline Authorization through Local Authorization List>> and <<online_authorization_through_local_authorization_list,C14 - Online Authorization through Local Authorization List>> for more information on how to implement / use the Local Authorization List functionality.
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE|Please note the difference between the <<authorization_cache,Authorization Cache>> and <<local_authorization_list,Local Authorization List>> mechanisms: the <<authorization_cache,Authorization Cache>> is an autonomous mechanism at the Charging Station, whereas the <<local_authorization_list,Local Authorization List>> is a list that is synchronized between CSMS and Charging Station (originating from the CSMS).
+|NOTE|Please note the difference between the <<authorization_cache,Authorization Cache>> and <<local_authorization_list,Local Authorization List>> mechanisms: the <<authorization_cache,Authorization Cache>> is an autonomous mechanism at the Charging Station, whereas the <<local_authorization_list,Local Authorization List>> is a list that is synchronized between CSMS and Charging Station (originating from the CSMS).
 |===
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE|The <<authorization_cache,Authorization Cache>> and <<local_authorization_list,Local Authorization List>> are *distinct* logical data structures. When both <<authorization_cache,Authorization Cache>> as well as <<local_authorization_list,Local Authorization List>> are supported, a Charging Station SHALL treat <<local_authorization_list,Local Authorization List>> entries as having priority over <<authorization_cache,Authorization Cache>> entries for the same identifiers.
+|NOTE|The <<authorization_cache,Authorization Cache>> and <<local_authorization_list,Local Authorization List>> are *distinct* logical data structures. When both <<authorization_cache,Authorization Cache>> as well as <<local_authorization_list,Local Authorization List>> are supported, a Charging Station SHALL treat <<local_authorization_list,Local Authorization List>> entries as having priority over <<authorization_cache,Authorization Cache>> entries for the same identifiers.
 |===
 
 The following Configuration Variables are used by the Charging Station to give information about the Local Authorization List
@@ -145,7 +145,7 @@ image::part2/images/figure_21.svg[Sequence Diagram: EV Driver Authorization]
 . at all EVES: _idTokenInfo.status_ = Accepted. +
 . at EVSE 1: _idTokenInfo.status_ = Accepted, _idTokenInfo.evseId_ = [ 1 ]. +
 . at EVSE 1 + 2: _idTokenInfo.status_ = Accepted, _idTokenInfo.evseId_ = [ 1, 2 ]. +
-. at none of the EVSEs: _idTokenInfo.status=NotAtThisLocation.
+. at none of the EVSEs: _idTokenInfo.status_ = NotAtThisLocation.
 |===
 
 <<<
@@ -168,8 +168,7 @@ image::part2/images/figure_21.svg[Sequence Diagram: EV Driver Authorization]
   (b) when the presented <<id_token_type,idToken>> is in the Local Authorization List or Authorization Cache AND is valid AND has the same GroupIdToken as the IdToken that started the authorization.
     |The Charging Station SHALL end the authorization of the transaction, without first sending an <<authorize_request,AuthorizeRequest>>
       |The <<id_token_type,idToken>> that started the authorization can always be used to end the authorization. Ending authorization will end delivery of energy. Depending on the TxStopPoint ending of the authorization may also end the transaction.
-|C01.FR.04  |{nbsp}               |<<authorize_request,AuthorizeRequest>> SHALL only be used for the
-authorization of an identifier. |{nbsp}
+|C01.FR.04  |{nbsp}               |<<authorize_request,AuthorizeRequest>> SHALL only be used for the authorization of an identifier. |{nbsp}
 |C01.FR.05  |If an IdToken is present in the <<local_authorization_list,Local Authorization List>> or <<authorization_cache,Authorization Cache>>.
   |The Charging Station MAY send <<authorize_request,AuthorizeRequest>> to the CSMS. |{nbsp}
 |C01.FR.06  |When CSMS receives an <<authorize_request,AuthorizeRequest>> for an _idToken_ AND +

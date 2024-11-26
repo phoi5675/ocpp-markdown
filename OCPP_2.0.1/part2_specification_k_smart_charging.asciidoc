@@ -18,9 +18,9 @@ Smart Charging in general has more than one definition. It can mean that the gri
 
 These types will be explained in <<types_of_smart_charging,Types of Smart Charging>>. Of course, more complex use cases are possible in which two or more of the above use cases are combined into one more complex system.
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE |A mapping of the ISO 15118 and OCPP terminology is provided in <<iso_15118_and_ocpp_terminology_mapping,ISO 15118 and OCPP terminology mapping>>
+|NOTE |A mapping of the ISO 15118 and OCPP terminology is provided in <<iso_15118_and_ocpp_terminology_mapping,ISO 15118 and OCPP terminology mapping>>
 |===
 
 <<<
@@ -192,19 +192,19 @@ s|ChargingProfile     |{nbsp}             |{nbsp}           |{nbsp}
 |{nbsp}               |{nbsp}             |numberPhases     |3
 |===
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|IMPORTANT |The amount of phases used during charging is limited by the capabilities of: The Charging Station, EV and Cable between CS and EV. If any of these three is not capable of 3 phase charging, the EV will be charged using the number of phases that is supported by all three.
-|===
-
-[cols="^.^1,10",%autowidth.stretch]
-|===
-s|IMPORTANT |Switching the number of used phases during a schedule or transaction should be done with care. Some EVs MAY not support this and changing the amount of phases MAY result in physical damage. With the Configuration Variable: <<phases_3_to_1,Phases3to1>> The Charging Station can tell if it supports switching the amount of phases during a transaction.
+|IMPORTANT |The amount of phases used during charging is limited by the capabilities of: The Charging Station, EV and Cable between CS and EV. If any of these three is not capable of 3 phase charging, the EV will be charged using the number of phases that is supported by all three.
 |===
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|TIP |On days on which daylight saving goes into or out of effect, a special profile might be needed (e.g. for relativeprofiles).
+|IMPORTANT |Switching the number of used phases during a schedule or transaction should be done with care. Some EVs MAY not support this and changing the amount of phases MAY result in physical damage. With the Configuration Variable: <<phases_3_to_1,Phases3to1>> The Charging Station can tell if it supports switching the amount of phases during a transaction.
+|===
+
+[cols="^.^1s,10",%autowidth.stretch]
+|===
+|TIP |On days on which daylight saving goes into or out of effect, a special profile might be needed (e.g. for relativeprofiles).
 |===
 
 ==== Example Using Stacked Charging Profiles
@@ -260,9 +260,9 @@ Note, that this profile is only valid in the year 2020.
   }
 ----
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE |Normally, when no limits are desired for charging, one will not define a charging schedule period for those hours (see stack level #1 for hours outside 17:00h - 20:00h). However, when overruling a charging schedule by one from a profile with a higher stack level, it is not possible to define a charging schedule period that has no limit. Therefore, the charging schedules for stack #2 and #3 in the above example use a (arbitrary) high value of 999999.
+|NOTE |Normally, when no limits are desired for charging, one will not define a charging schedule period for those hours (see stack level #1 for hours outside 17:00h - 20:00h). However, when overruling a charging schedule by one from a profile with a higher stack level, it is not possible to define a charging schedule period that has no limit. Therefore, the charging schedules for stack #2 and #3 in the above example use a (arbitrary) high value of 999999.
 |===
 
 <<<
