@@ -301,9 +301,9 @@ image::part2/images/figure_67.svg[Sequence Diagram: Remote Start Transaction - R
     |The device model variable SmartChargingCtrlr.Enabl ed tells CSMS whether smart charging is supported.
 |===
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE |Requirements of previous use case: <<f01_remote_start_transaction_cable_plugin_first,F01 - Remote Start Transaction - Cable Plugin First>>, are also considered relevant for <<f02_remote_start_transaction_remote_start_first,F02 - Remote Start Transaction - Remote Start First>>
+|NOTE |Requirements of previous use case: <<f01_remote_start_transaction_cable_plugin_first,F01 - Remote Start Transaction - Cable Plugin First>>, are also considered relevant for <<f02_remote_start_transaction_remote_start_first,F02 - Remote Start Transaction - Remote Start First>>
 |===
 
 <<<

@@ -48,9 +48,9 @@ Frequent (e.g. 1-5 minute interval) meter readings taken and transmitted (usuall
 Care should be taken to ensure that the amount of measurands that is expected at the end of a transaction fits in one
 <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) message. Keep the number of measurands in <<sampled_data_tx_ended_measurands,`SampledDataTxEndedMeasurands`>> to a minimum and configure a large interval in <<sampled_data_tx_ended_interval,`SampledDataTxEndedInterval`>> to keep the number of samples small.
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE |Please note: _Transaction related_ MeterValues are never transmitted in <<metervalues_request,MeterValuesRequest>>.
+|NOTE |Please note: _Transaction related_ MeterValues are never transmitted in <<metervalues_request,MeterValuesRequest>>.
 |===
 
 [[clock_aligned_meter_values]]
@@ -79,9 +79,9 @@ For example, a value of 900 (15 minutes) indicates that every day should be brok
 <<aligned_data_send_during_idle,`AlignedDataSendDuringIdle`>> can be used to only send clock aligned meter values when there are no ongoing transactions.
 
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE |Clock-aligned meter values for an EVSE that is involved in a transaction MAY be transmitted in TransactionEventRequests with context  Sample.Clock instead of in MeterValuesRequests.
+|NOTE |Clock-aligned meter values for an EVSE that is involved in a transaction MAY be transmitted in TransactionEventRequests with context  Sample.Clock instead of in MeterValuesRequests.
 |===
 
 === Multiple Locations/Phases
@@ -94,9 +94,9 @@ For example: A Charging Station capable of measuring _Current.Import_ on _Inlet_
 - a <<metervalues_request,MeterValuesRequest>> with: evseId  1; with 3 SampledValue elements, one per phase with location  Outlet.
 - a <<metervalues_request,MeterValuesRequest>> with: evseId  2; with 3 SampledValue elements, one per phase with location  Outlet.
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE |When the configuration variable <<sampled_data_register_values_without_phases,`SampledDataRegisterValuesWithoutPhases`>> has the value _true_, then meter values of measurand `Energy.Active.Import.Register` will only report the total energy over all phases without reporting the individual phase values.
+|NOTE |When the configuration variable <<sampled_data_register_values_without_phases,`SampledDataRegisterValuesWithoutPhases`>> has the value _true_, then meter values of measurand `Energy.Active.Import.Register` will only report the total energy over all phases without reporting the individual phase values.
 |===
 
 === Signed Meter Values

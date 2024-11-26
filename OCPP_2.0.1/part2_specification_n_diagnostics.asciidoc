@@ -134,9 +134,9 @@ FTP needs to be able to use Passive FTP, to be able to transverse over as much d
 :sectnums:
 === Configure Monitoring
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE |For managing the monitoring of a Charging Station a basic understanding of Device Model concepts is essential. These concepts are explained in "OCPP 2.0.1: Part 1 - Architecture & Topology", chapter 4.
+|NOTE |For managing the monitoring of a Charging Station a basic understanding of Device Model concepts is essential. These concepts are explained in "OCPP 2.0.1: Part 1 - Architecture & Topology", chapter 4.
 |===
 
 :sectnums!:

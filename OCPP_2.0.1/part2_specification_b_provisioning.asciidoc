@@ -327,9 +327,9 @@ image::part2/images/figure_13.svg[Sequence Diagram: Offline Behavior Idle Chargi
 :sectnums:
 === Configuring a Charging Station
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE |For managing the configuration of a Charging Station a basic understanding of Device Model concepts is essential. These concepts are explained in "OCPP 2.0.1: Part 1 - Architecture & Topology", chapter 4. 
+|NOTE |For managing the configuration of a Charging Station a basic understanding of Device Model concepts is essential. These concepts are explained in "OCPP 2.0.1: Part 1 - Architecture & Topology", chapter 4. 
 |===
 
 :sectnums!:

@@ -37,9 +37,9 @@ The following three variants are most common:
 (Such that upon authorization first, the charger is already seen as 'in use').
 - If charging time is billed, then start and stop points should be `PowerPathClosed`. (This starts as soon as charger is ready to provide power and stops when authorization is revoked or vehicle disconnected.) Pauses in between (i.e. SuspendedEV(SE)) do not end the transaction. Billing on the amount of energy or power can be done based on the meter values that are collected during the transaction.
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|WARNING
+|WARNING
   |Certain combinations of start and stop points can lead to a situation where a started transaction is never stopped. For example: when the start point is `ParkingBayOccupancy` and the stop point is `EVConnected`, then a transaction starts when an EV occupies the parking bay, but when the user never connects the EV, but simply drives away, then the transaction will remain open, because `ParkingBayOccupancy` is not configured as a stop point.
 |===
 

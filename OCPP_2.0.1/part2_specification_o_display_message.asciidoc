@@ -8,9 +8,9 @@ With the DisplayMessage feature, OCPP enables a CSO to display a message or a cy
 
 Every message can be configured in different languages and different message formats. See <<display_message_supported_formats,DisplayMessageSupportedFormats>>. So the Charging Station can select the correct format/language when it needs to display a message to a user. Every message the CSO sends to the Charging Station has some parameters to control when and how a message is shown: priority, state, start/end time etc. See <<display_message_supported_priorities,DisplayMessageSupportedPriorities>>.
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE |It is not possible to retrieve/modify messages not configured via SetDisplayMessageRequest. (In other words: Message coded in the firmware of a Charging Station cannot be modified.)
+|NOTE |It is not possible to retrieve/modify messages not configured via SetDisplayMessageRequest. (In other words: Message coded in the firmware of a Charging Station cannot be modified.)
 |===
 
 <<<
