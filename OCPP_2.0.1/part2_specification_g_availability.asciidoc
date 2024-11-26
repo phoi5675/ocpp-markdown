@@ -21,9 +21,9 @@ Connector.
 
 Obviously, it is also possible to make the Charging Station or a Connector available again with a command from the CSMS.
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE |An overview of the Connectors Statuses can be found in: <<connector_status_enum_type,ConnectorStatusEnumType>>.
+|NOTE |An overview of the Connectors Statuses can be found in: <<connector_status_enum_type,ConnectorStatusEnumType>>.
 |===
 
 <<<
@@ -89,7 +89,7 @@ Notifying a connector status from the Charging Station to the CSMS will be taken
 ==== G01 - Status Notification - Requirements
 
 .G01 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -158,7 +158,7 @@ image::part2/images/figure_74.svg[Sequence Diagram: Heartbeat]
 === G02 - Heartbeat - Requirements
 
 .G02 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -226,7 +226,7 @@ image::part2/images/figure_75.svg[Sequence Diagram: Change Availability]
 ==== G03 - Change Availability EVSE - Requirements
 
 .G03 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -254,14 +254,14 @@ image::part2/images/figure_75.svg[Sequence Diagram: Change Availability]
       |Connector stays reserved until IdToken matching reservation is presented or reservation expires.
 |===
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE |1. The Charging Station, EVSEs and Connectors have separate / individual states. This means (for example) that when setting a connector to Inoperative, then setting the connected EVSE to Inoperative and thereafter change the EVSE back to operative, the connector will remain Inoperative.
+|NOTE |1. The Charging Station, EVSEs and Connectors have separate / individual states. This means (for example) that when setting a connector to Inoperative, then setting the connected EVSE to Inoperative and thereafter change the EVSE back to operative, the connector will remain Inoperative.
 |===
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE |2. It is only required to report a status change of a connector. StatusNotificationRequest only supports the reporting of connector statuses.
+|NOTE |2. It is only required to report a status change of a connector. StatusNotificationRequest only supports the reporting of connector statuses.
 |===
 <<<
 
@@ -311,7 +311,7 @@ image::part2/images/figure_76.svg[Sequence Diagram: Change Availability Charging
 ==== G04 - Change Availability Charging Station - Requirements
 
 .G04 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -337,14 +337,14 @@ image::part2/images/figure_76.svg[Sequence Diagram: Change Availability Charging
   |The set availability state SHALL be persistent across reboot/power loss. |{nbsp}
 |===
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE |1. The Charging Station, EVSEs and Connectors have separate / individual states. This means (for example) that when setting a connector to Inoperative, then setting the connected EVSE to Inoperative and thereafter change the EVSE back to operative, the connector will remain Inoperative.
+|NOTE |1. The Charging Station, EVSEs and Connectors have separate / individual states. This means (for example) that when setting a connector to Inoperative, then setting the connected EVSE to Inoperative and thereafter change the EVSE back to operative, the connector will remain Inoperative.
 |===
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE |2. It is only required to report a status change of a connector. StatusNotificationRequest only supports the reporting of connector statuses.
+|NOTE |2. It is only required to report a status change of a connector. StatusNotificationRequest only supports the reporting of connector statuses.
 |===
 
 <<<
@@ -384,7 +384,7 @@ image::part2/images/figure_77.svg[Sequence Diagram: Lock Failure]
 ==== G05 - Lock Failure - Requirements
 
 .G05 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 

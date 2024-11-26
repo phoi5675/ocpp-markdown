@@ -1,0 +1,29 @@
+@startuml figure_140
+!include style.puml
+
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+CSMS -> ChargingStation: CustomerInformationRequest(report, clear = true)
+activate CSMS
+activate ChargingStation
+
+ChargingStation --> CSMS: CustomerInformationResponse()
+deactivate CSMS
+
+opt if report = true
+  loop for each report part
+    ChargingStation -> CSMS: NotifyCustomerInformationRequest()
+    activate CSMS
+    activate ChargingStation
+
+    CSMS --> ChargingStation: NotifyCustomerInformationResponse()
+    deactivate CSMS
+    deactivate ChargingStation
+  end
+end
+
+ChargingStation -> ChargingStation: clear customer information
+deactivate ChargingStation
+
+@enduml

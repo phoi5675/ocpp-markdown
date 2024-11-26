@@ -5,7 +5,7 @@ participant "EV" as EV
 participant "Charging Station" as ChargingStation
 participant "CSMS" as CSMS
 
-ChargingStation -> CSMS: TransactionEventRequest(eventType  Started, ...)
+ChargingStation -> CSMS: TransactionEventRequest(eventType = Started, ...)
 activate ChargingStation
 activate CSMS
 

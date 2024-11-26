@@ -1,0 +1,31 @@
+@startuml figure_144
+!include style.puml
+
+actor "CSO" as CSO
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+activate CSO
+
+CSO -> CSMS: Query Messages()
+activate CSMS
+
+CSMS -> ChargingStation: GetDisplayMessagesRequest( NOT EMPTY )
+activate ChargingStation
+
+ChargingStation --> CSMS: GetDisplayMessagesResponse(Accepted)
+
+loop for each DisplayMessages part matching the query
+  ChargingStation -> CSMS: NotifyDisplayMessagesRequest(requestId, messageInfo, tbc)
+
+  CSMS --> ChargingStation: NotifyDisplayMessagesResponse()
+  deactivate ChargingStation
+end
+
+opt
+  CSMS --> CSO: notification
+  deactivate CSO
+  deactivate CSMS
+end
+
+@enduml

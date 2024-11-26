@@ -35,7 +35,7 @@ alt if idToken valid
     end
 
     ChargingStation -> CSMS: \
-      TransactionEventRequest(eventType  Ended,\n\
+      TransactionEventRequest(eventType = Ended,\n\
       chargingState = EVConnected, stopReason = MasterPass,...)
     activate CSMS
 

@@ -1,0 +1,18 @@
+@startuml figure_136
+!include style.puml
+
+actor "CSO" as CSO
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+CSO -> CSMS : request to clear/remove a variable monitoring
+
+CSMS -> ChargingStation: ClearVariableMonitoringRequest(id)
+activate CSMS
+activate ChargingStation
+
+ChargingStation --> CSMS: ClearVariableMonitoringResponse(status)
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

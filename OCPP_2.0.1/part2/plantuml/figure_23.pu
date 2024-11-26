@@ -16,9 +16,9 @@ CSMS --> ChargingStation: StatusNotificationResponse()
 deactivate CSMS
 
 ChargingStation -> CSMS: \
-  TransactionEventRequest(eventType  Started, transactionId  AB1234, \n\
-  timestamp, evse.id  1, \n\
-  evse.connectorId  1, meterValues)
+  TransactionEventRequest(eventType = Started, transactionId = AB1234, \n\
+  timestamp, evse.id = 1, \n\
+  evse.connectorId = 1, meterValues)
 activate CSMS
 
 CSMS --> ChargingStation: TransactionEventResponse(...)
@@ -56,12 +56,12 @@ end
 ChargingStation -> ChargingStation: Start energy offer
 
 ChargingStation -> CSMS: \
-  TransactionEventRequest(eventType = Updated, transactionId  AB1234, \n\
+  TransactionEventRequest(eventType = Updated, transactionId = AB1234, \n\
     seqNo = 1, timestamp, chargingState = Charging,\n\
     trigger = Authorized, idToken(id = 4444, type = Central))
 activate CSMS
 
-CSMS --> ChargingStation: TransactionEventResponse(idTokenInfo.status  Accepted)
+CSMS --> ChargingStation: TransactionEventResponse(idTokenInfo.status = Accepted)
 deactivate CSMS
 deactivate ChargingStation
 

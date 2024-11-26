@@ -20,7 +20,7 @@ opt
   deactivate EVDriver
 end
 
-ChargingStation -> CSMS: StatusNotificationRequest(status  Reserved, ...)
+ChargingStation -> CSMS: StatusNotificationRequest(status = Reserved, ...)
 activate CSMS
 
 CSMS --> ChargingStation: StatusNotificationResponse()

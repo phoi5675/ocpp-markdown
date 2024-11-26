@@ -100,7 +100,7 @@ image::part2/images/figure_80.svg[Sequence Diagram: S3 - Reserve a connector typ
 ==== H01 - Reservation - Requirements
 
 .H01 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -206,7 +206,7 @@ image::part2/images/figure_81.svg[Sequence Diagram: Cancel Reservation]
 ==== H02 - Cancel Reservation - Requirements
 
 .H02 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -272,7 +272,7 @@ image::part2/images/figure_83.svg[Sequence Diagram: Use a reserved EVSE with Gro
 ==== H03 - Use a reserved EVSE - Requirements
 
 .H03 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -343,7 +343,7 @@ image::part2/images/figure_84.svg[Sequence Diagram: Reservation Ended, not used]
 ==== H04 - Reservation Ended, not used - Requirements
 
 .H04 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 

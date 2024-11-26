@@ -1,0 +1,33 @@
+@startuml figure_30
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+alt AuthorizeResponse에 대해
+  ChargingStation -> CSMS: AuthorizeRequest(...)
+  activate ChargingStation
+  activate CSMS
+
+  CSMS --> ChargingStation: AuthorizeResponse(idTokenInfo,...)
+  deactivate CSMS
+
+  ChargingStation -> ChargingStation: \
+    Authorization Cache()에 \n\
+    Authorization Data를 저장
+  deactivate ChargingStation
+else TransactionEventResponse에 대해
+  ChargingStation -> CSMS: TransactionEventRequest(...)
+  activate ChargingStation
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse(idTokenInfo,...)
+  deactivate CSMS
+
+  ChargingStation -> ChargingStation: \
+    Authorization Cache()에 \n\
+    Authorization Data를 저장
+  deactivate ChargingStation
+end
+
+@enduml

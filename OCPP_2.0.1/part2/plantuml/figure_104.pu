@@ -55,7 +55,7 @@ alt within ConnectionTimeOut
 
   ChargingStation -> CSMS: \
     TransactionEventRequest(eventType = Started, \n\
-    chargingState = Charging, remoteStartId  123, ...)
+    chargingState = Charging, remoteStartId = 123, ...)
   activate CSMS
 
   CSMS --> ChargingStation: TransactionEventResponse(...)

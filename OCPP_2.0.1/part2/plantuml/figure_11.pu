@@ -8,7 +8,7 @@ ChargingStation -> CSMS: BootNotificationRequest(...)
 activate ChargingStation
 activate CSMS
 
-CSMS --> ChargingStation: BootNotificationResponse(status  Pending, interval  X,...)
+CSMS --> ChargingStation: BootNotificationResponse(status = Pending, interval = X,...)
 deactivate ChargingStation
 deactivate CSMS
 
@@ -37,7 +37,7 @@ loop with interval X while "Pending"
   activate CSMS
   activate ChargingStation
 
-  CSMS --> ChargingStation: BootNotificationResponse(status  Pending, interval  X,...)
+  CSMS --> ChargingStation: BootNotificationResponse(status = Pending, interval = X,...)
   deactivate CSMS
 end
 

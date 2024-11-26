@@ -1,0 +1,22 @@
+@startuml figure_21
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+EVDriver -> ChargingStation: RFID(AA12345) 제시
+activate ChargingStation
+
+ChargingStation -> CSMS: AuthorizeRequest(idToken(id = AA12345, type = ISO14443))
+activate CSMS
+
+CSMS --> ChargingStation: AuthorizeResponse(...)
+deactivate CSMS
+
+opt
+  ChargingStation -> EVDriver: 알림
+  deactivate ChargingStation
+end
+
+@enduml

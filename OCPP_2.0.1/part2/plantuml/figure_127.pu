@@ -1,0 +1,17 @@
+@startuml figure_127
+!include style.puml
+
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+CSMS -> ChargingStation: GetInstalledCertificateIdsRequest(certificateType)
+activate CSMS
+activate ChargingStation
+
+ChargingStation -> ChargingStation: Compute hashes and list matching certificates
+
+ChargingStation --> CSMS: GetInstalledCertificateIdsResponse(status, certificateHashData)
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

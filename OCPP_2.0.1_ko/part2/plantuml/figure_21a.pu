@@ -1,0 +1,78 @@
+@startuml figure_21a
+!include style.puml
+
+actor "CSO" as CSO
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+alt 충전소 리셋
+
+  note left of ChargingStation
+    한 개 이상의 EVSE에서 트랜잭션이 활성화됨
+  end note
+
+  CSO -> CSMS: CS 리셋
+  activate CSMS
+
+  CSMS -> ChargingStation: ResetRequest(OnIdle)
+  activate ChargingStation
+
+  ChargingStation --> CSMS: ResetResponse(Scheduled)
+  deactivate CSMS
+
+  opt 무료로 설정된 EVSE에 대한 \n트랜잭션 방지
+    loop Available 상태인 모든 EVSE에 대해
+      ChargingStation -> CSMS: StatusNotificationRequest(Unavailable,...)
+      activate CSMS
+
+      CSMS --> ChargingStation: StatusNotificationResponse(...)
+      deactivate CSMS
+      deactivate ChargingStation
+    end
+  end
+
+  note over ChargingStation
+    트랜잭션이 끝날 때 까지 대기하고,
+    트랜잭션이 끝날 때 까지 커넥터를
+    Unavailable 상태로 설정할 수 있음(optionally)
+  end note
+
+  ChargingStation -> ChargingStation: 충전기 재부팅
+  activate ChargingStation
+
+  ChargingStation ->o]: B01 - Cold Boot Charging Station로 계속
+  deactivate ChargingStation
+else EVSE 리셋
+  note left of ChargingStation
+    EVSE에 대해 트랜잭션이 활성화됨
+  end note 
+
+  CSO -> CSMS: CS 리셋
+  activate CSMS
+
+  CSMS -> ChargingStation: ResetRequest(OnIdle, evseId)
+  activate ChargingStation
+
+  ChargingStation --> CSMS: ResetResponse(Scheduled)
+  deactivate ChargingStation
+  deactivate CSMS
+
+  note over ChargingStation
+    트랜잭션이 끝날 때 까지 대기하고,
+    트랜잭션이 끝날 때 까지 커넥터를
+    Unavailable 상태로 설정할 수 있음(optionally)
+  end note
+
+  ChargingStation -> ChargingStation: EVSE 리셋
+  activate ChargingStation
+
+  loop EVSE의 모든 커넥터에 대해
+    ChargingStation -> CSMS: StatusNotificationRequest(Available, evseId, connectorId)
+    activate CSMS
+
+    CSMS --> ChargingStation: StatusNotificationResponse()
+    deactivate ChargingStation
+    deactivate CSMS
+  end
+end
+@enduml

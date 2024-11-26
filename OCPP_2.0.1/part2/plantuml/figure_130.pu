@@ -1,0 +1,19 @@
+@startuml figure_130
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+ChargingStation -> CSMS: GetCertificateStatusRequest(ocpsRequestData)
+activate CSMS
+activate ChargingStation
+
+CSMS -> CSMS: Retrieve OCSP certificate status
+
+CSMS --> ChargingStation: GetCertificateStatusResponse(status, ocspResult)
+deactivate CSMS
+deactivate ChargingStation
+
+ChargingStation -> ChargingStation: Cache retrieved information
+
+@enduml

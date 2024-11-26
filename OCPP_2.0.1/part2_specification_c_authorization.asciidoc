@@ -23,9 +23,9 @@ OCPP now makes it possible to use many different types of authorization. Where O
 
 An <<id_token_type,IDTokenType>> contains the identifier to use for authorization. It is defined as a combination of a case insensitive string and a type. Message data elements of the <<id_token_type,IDTokenType>> class (including GroupId) MAY contain any data, that is meaningful to a CSMS (e.g. for the purpose of identifying the initiator of charging activity), and Charging Stations MUST NOT make any presumptions as to the format or content of such data, other than is provided in the description of the IdTokenType (e.g. by assuming that it is a UID- like value that must be hex characters only and/or an even number of digits). IdToken data acquired via local token reader hardware is usually a (4, 7 or 10 bytes) UID value of a physical IdToken, typically represented as 8, 14 or 20 hexadecimal digit characters.
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE |To promote interoperability, based on common practice to date in the case of <<id_token_type,IdTokenType>> data has type: <<id_token_enum_type,_ISO14443_>>, it is RECOMMENDED that such UIDs be represented as hex representations of the UID bytes. According to ISO 14443-3, byte 0 should come first in the hex string. (Most significant nibble of byte 0 first)
+|NOTE |To promote interoperability, based on common practice to date in the case of <<id_token_type,IdTokenType>> data has type: <<id_token_enum_type,_ISO14443_>>, it is RECOMMENDED that such UIDs be represented as hex representations of the UID bytes. According to ISO 14443-3, byte 0 should come first in the hex string. (Most significant nibble of byte 0 first)
 |===
 
 ==== Additional Info
@@ -43,9 +43,9 @@ A CSMS has the ability to treat a set of identity tokens as a "group", thereby a
 
 Tokens (idTags) are grouped for authorization purposes by specifying a common group identifier in the optional _groupIdToken_ element in <<id_token_info_type,IdTokenInfo>>: two IdTokens are considered to be in the same group if their GroupIdTokens match (and they are not empty).
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE 
+|NOTE 
   |Even though the GroupId has the same nominal data type (<<id_token_type,IdTokenType>>) as an idToken, the value of this element may not be in the common format of <<id_token_type,IdTokenTypes>> and/or may not represent an actual valid <<id_token_type,IdTokenType>> (e.g. it may be a common shared "account number"): therefore, the GroupId value SHOULD NOT be used for comparison against a presented Token value (unless it also occurs as an idToken value).
 |===
 
@@ -69,14 +69,14 @@ This list contains the authorization status of all (or a selection of) identifie
 
 Please refer to the use cases <<send_local_authorization_list,D01 - Send Local Authorization List>>, <<offline_authorization_through_local_authorization_list,C13 - Offline Authorization through Local Authorization List>> and <<online_authorization_through_local_authorization_list,C14 - Online Authorization through Local Authorization List>> for more information on how to implement / use the Local Authorization List functionality.
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE|Please note the difference between the <<authorization_cache,Authorization Cache>> and <<local_authorization_list,Local Authorization List>> mechanisms: the <<authorization_cache,Authorization Cache>> is an autonomous mechanism at the Charging Station, whereas the <<local_authorization_list,Local Authorization List>> is a list that is synchronized between CSMS and Charging Station (originating from the CSMS).
+|NOTE|Please note the difference between the <<authorization_cache,Authorization Cache>> and <<local_authorization_list,Local Authorization List>> mechanisms: the <<authorization_cache,Authorization Cache>> is an autonomous mechanism at the Charging Station, whereas the <<local_authorization_list,Local Authorization List>> is a list that is synchronized between CSMS and Charging Station (originating from the CSMS).
 |===
 
-[cols="^.^1,10",%autowidth.stretch]
+[cols="^.^1s,10",%autowidth.stretch]
 |===
-s|NOTE|The <<authorization_cache,Authorization Cache>> and <<local_authorization_list,Local Authorization List>> are *distinct* logical data structures. When both <<authorization_cache,Authorization Cache>> as well as <<local_authorization_list,Local Authorization List>> are supported, a Charging Station SHALL treat <<local_authorization_list,Local Authorization List>> entries as having priority over <<authorization_cache,Authorization Cache>> entries for the same identifiers.
+|NOTE|The <<authorization_cache,Authorization Cache>> and <<local_authorization_list,Local Authorization List>> are *distinct* logical data structures. When both <<authorization_cache,Authorization Cache>> as well as <<local_authorization_list,Local Authorization List>> are supported, a Charging Station SHALL treat <<local_authorization_list,Local Authorization List>> entries as having priority over <<authorization_cache,Authorization Cache>> entries for the same identifiers.
 |===
 
 The following Configuration Variables are used by the Charging Station to give information about the Local Authorization List
@@ -94,7 +94,7 @@ When _offline_, a Charging Station MAY allow automatic authorization of any "unk
 
 <<<
 
-== Use cases & Requirements.
+== Use cases & Requirements
 
 === Authorization options
 
@@ -115,7 +115,7 @@ When _offline_, a Charging Station MAY allow automatic authorization of any "unk
 |{nbsp} d|_Actors_    |Charging Station, CSMS, EV Driver
 |{nbsp} d|_Scenario description_ 
   |**1.** The EV Driver wants to start or stop charging the EV and presents an RFID card. +
-  **2.** The Charging Station sends <<authorize_request,AuthorizeRequest>> to the CSMS to request authorization.
+  **2.** The Charging Station sends <<authorize_request,AuthorizeRequest>> to the CSMS to request authorization. +
   **3.** Upon receipt of <<authorize_request,AuthorizeRequest>>, the CSMS responds with <<authorize_response,AuthorizeResponse>>. This response message indicates whether or not the IdToken is accepted by the CSMS.
 |{nbsp} d|_Alternative scenario(s)_ 
   |<<authorization_using_a_start_button,C02 - Authorization using a start button>> +
@@ -145,7 +145,7 @@ image::part2/images/figure_21.svg[Sequence Diagram: EV Driver Authorization]
 . at all EVES: _idTokenInfo.status_ = Accepted. +
 . at EVSE 1: _idTokenInfo.status_ = Accepted, _idTokenInfo.evseId_ = [ 1 ]. +
 . at EVSE 1 + 2: _idTokenInfo.status_ = Accepted, _idTokenInfo.evseId_ = [ 1, 2 ]. +
-. at none of the EVSEs: _idTokenInfo.status=NotAtThisLocation.
+. at none of the EVSEs: _idTokenInfo.status_ = NotAtThisLocation.
 |===
 
 <<<
@@ -153,7 +153,7 @@ image::part2/images/figure_21.svg[Sequence Diagram: EV Driver Authorization]
 ==== C01 - EV Driver Authorization using RFID - Requirements
 
 .C01 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -168,8 +168,7 @@ image::part2/images/figure_21.svg[Sequence Diagram: EV Driver Authorization]
   (b) when the presented <<id_token_type,idToken>> is in the Local Authorization List or Authorization Cache AND is valid AND has the same GroupIdToken as the IdToken that started the authorization.
     |The Charging Station SHALL end the authorization of the transaction, without first sending an <<authorize_request,AuthorizeRequest>>
       |The <<id_token_type,idToken>> that started the authorization can always be used to end the authorization. Ending authorization will end delivery of energy. Depending on the TxStopPoint ending of the authorization may also end the transaction.
-|C01.FR.04  |{nbsp}               |<<authorize_request,AuthorizeRequest>> SHALL only be used for the
-authorization of an identifier. |{nbsp}
+|C01.FR.04  |{nbsp}               |<<authorize_request,AuthorizeRequest>> SHALL only be used for the authorization of an identifier. |{nbsp}
 |C01.FR.05  |If an IdToken is present in the <<local_authorization_list,Local Authorization List>> or <<authorization_cache,Authorization Cache>>.
   |The Charging Station MAY send <<authorize_request,AuthorizeRequest>> to the CSMS. |{nbsp}
 |C01.FR.06  |When CSMS receives an <<authorize_request,AuthorizeRequest>> for an _idToken_ AND +
@@ -263,7 +262,7 @@ image::part2/images/figure_22.svg[Sequence Diagram: Authorization using a start 
 ==== C02 - Authorization using a start button - Requirements
 
 .C02 - Authorization using a start button - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -334,14 +333,13 @@ This use-case is also valid for other configurations, but then the transaction m
 ==== C03 - Authorization using credit/debit card - Requirements
 
 .C03 - Authorization using credit/debit card - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
 |C03.FR.01  |If the Charging Station receives a <<request_start_transaction_request,RequestStartTransactionRequest>> with an <<id_token_type,IdTokenType>> of type <<id_token_enum_type,Central>>
   |The Charging Station SHALL NOT send an <<authorize_request,AuthorizeRequest>> for the received <<id_token_type,IdTokenType>>.
-|C03.FR.02  |If the Charging Station has implemented an Authorization Cache AND the Charging Station
-receives <<id_token_info_type,IdTokenInfo>> for an <<id_token_type,IdTokenType>> of type <<id_token_enum_type,Central>> in any message
+|C03.FR.02  |If the Charging Station has implemented an Authorization Cache AND the Charging Station receives <<id_token_info_type,IdTokenInfo>> for an <<id_token_type,IdTokenType>> of type <<id_token_enum_type,Central>> in any message
   |The Charging Station SHALL NOT store the information in its
 Authorization Cache.
 |===
@@ -393,7 +391,7 @@ image::part2/images/figure_24.svg[Sequence Diagram: Authorization using PIN-code
 ==== C04 - Authorization using PIN-code - Requirements
 
 .C04 - Authorization using PIN-code - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -452,8 +450,7 @@ image::part2/images/figure_25.svg[Sequence Diagram: Authorization for CSMS initi
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7   |Error Handling    |n/a
-|8   |Remarks           |IdTokens MAY be (single use) virtual transaction authorization codes or virtual RFID tokens that deliberately use a non-standard UID format to avoid possible conflict with real UID values. These virtual single use <<id_token,type,IdTokens>> are sent with <<id_token_enum_type,type>> _Central_ and it is pointless to either cache or
-authorize these tokens.
+|8   |Remarks           |IdTokens MAY be (single use) virtual transaction authorization codes or virtual RFID tokens that deliberately use a non-standard UID format to avoid possible conflict with real UID values. These virtual single use <<id_token,type,IdTokens>> are sent with <<id_token_enum_type,type>> _Central_ and it is pointless to either cache or authorize these tokens.
 
 This use case uses an App as example, but this is not a requirement. This use case is valid for any <<request_start_transaction_request,RequestStartTransactionRequest>> with a server generated IdToken.
 
@@ -469,7 +466,7 @@ Other <<id_token_enum_type,idTokenTypes>> can also be used to remote start charg
 ==== C05 - Authorization for CSMS initiated transactions Requirements
 
 .C05 - Authorization for CSMS initiated transactions Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -531,18 +528,18 @@ image::part2/images/figure_26.svg[Sequence Diagram: Authorization using local id
 |7   |Error Handling  |n/a
 |8   |Remarks         |This use case uses an Parking Ticket as example, but this is not a requirement.
 
-The communication between the Payment Terminal and the CSMS is outside of scope of OCPP.
+  The communication between the Payment Terminal and the CSMS is outside of scope of OCPP.
 
-The scenario description and sequence diagram above are based on the Configuration Variable for start & stop transaction being configured as follows: +
-<<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
-<<tx_stop_point,`TxStopPoint`>>: <<tx_start_stop_point_values,ParkingBayOccupancy, EVConnected>> +
-This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are send. For more details see the use cases: <<e01_start_transaction_options,E01 - Start Transaction options>> and <<e06_stop_transaction_options,E06 - Stop Transaction options>>.
+  The scenario description and sequence diagram above are based on the Configuration Variable for start & stop transaction being configured as follows: +
+  <<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
+  <<tx_stop_point,`TxStopPoint`>>: <<tx_start_stop_point_values,ParkingBayOccupancy, EVConnected>> +
+  This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are send. For more details see the use cases: <<e01_start_transaction_options,E01 - Start Transaction options>> and <<e06_stop_transaction_options,E06 - Stop Transaction options>>.
 |===
 
 ==== C06 - Authorization using local id type - Requirements
 
 .C06 - Authorization using local id type - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -606,15 +603,15 @@ image::part2/images/figure_27.svg[Authorization using Contract Certificates]
 |7   |Error handling |{nbsp}
 |8   |Remark(s)      |In edition 1 of 15118, the message timeout of the PaymentDetailsReq/Res message is 5 seconds. In case certificate verification cannot be completed in that time it is possible to complete this during the AuthorizationReq/Res, which can be extended up to 60 seconds.
 
-{nbsp}
+  {nbsp}
 
-When the Charging Station is offline, it is recommended to omit the payment option for ISO 15118 contract certificates from the ServiceDiscoveryRes and revert to External Identification Means (use case C08), because certificate status cannot be checked.
+  When the Charging Station is offline, it is recommended to omit the payment option for ISO 15118 contract certificates from the ServiceDiscoveryRes and revert to External Identification Means (use case C08), because certificate status cannot be checked.
 |===
 
 ==== C07 - Authorization using Contract Certificates - Requirements
 
 .C07 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -623,7 +620,7 @@ When the Charging Station is offline, it is recommended to omit the payment opti
 |C07.FR.02  |C07.FR.01            |The <<authorize_request,AuthorizeRequest>> SHALL contain the eMAID and data needed for an OCSP request with regards to the contract certificate and certificate chain. |{nbsp}
 |C07.FR.04  |If the CSMS receives an <<authorize_request,AuthorizeRequest>>.
   |It SHALL respond with an <<authorize_response,AuthorizeResponse>> and SHALL include an authorization status value indicating acceptance or a reason for rejection. |{nbsp}
-|C07.FR.05  |C07.FR.02            |The CSMS SHALL verify validity of the certificate and certificate chain via real-time orcached OCSP data. |{nbsp}
+|C07.FR.05  |C07.FR.02            |The CSMS SHALL verify validity of the certificate and certificate chain via real-time or cached OCSP data. |{nbsp}
 |C07.FR.06  |C07.FR.01 AND +
   If Charging Station is not able to validate a contract certificate, because it does not have the associated root certificate AND <<central_contract_validation_allowed,`CentralContractValidationAllowed`>> is _true_
     |The Charging Station SHALL pass the contract certificate chain to the CSMS in _certificate_ attribute (in PEM format) of <<authorize_request,AuthorizeRequest>> for validation by CSMS. |{nbsp}
@@ -688,7 +685,7 @@ When the Charging Station is offline, it is recommended to omit the payment opti
 |{nbsp} d|_Reference_ |<<iso15118_1,ISO15118-1>> D4
 |3   |Objective(s)    |To authorize the EV via the Charging Station, with help of the CSMS. Also see <<iso15118_1,ISO15118-1>>, use case Objective D4, page 28.
 |4   |Description     |The Charging Station sends an <<authorize_request,AuthorizeRequest>> message based on information provided by the EV. Also see <<iso15118_1,ISO15118-1>>, use case Description D4 up to and including "NOTE", page 28.
-|{nbsp} d|_Actors_    |Actors: EV, Charging Station, CSMS
+|{nbsp} d|_Actors_    |EV, Charging Station, CSMS
 |{nbsp} d|_Scenario description_ 
   |**15118** +
   See <<iso15118_1,ISO15118-1>>, use case Description (Scenarion Description) D4, page 28.
@@ -722,7 +719,7 @@ Source: <<iso15118_1,ISO15118-1>>
 ==== C08 - Authorization at EVSE using ISO 15118 External Identification Means (EIM) - Requirements
 
 .C08 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -734,7 +731,7 @@ Source: <<iso15118_1,ISO15118-1>>
 === GroupId
 
 :sectnums!:
-==== C09 - Authorization by GroupId
+=== C09 - Authorization by GroupId
 
 .C09 - Authorization by GroupId
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
@@ -773,7 +770,7 @@ The groupId mechanism as described in this use case also works when using the Au
 ==== C09 - Authorization by GroupId - Requirements
 
 .C09 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -809,7 +806,7 @@ The groupId mechanism as described in this use case also works when using the Au
 
 :sectnums!:
 [[store_authorization_data_in_the_authorization_cache]]
-==== C10 - Store Authorization Data in the Authorization Cache
+=== C10 - Store Authorization Data in the Authorization Cache
 
 .C10 - Store Authorization Data in Authorization Cache
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
@@ -846,7 +843,7 @@ image::part2/images/figure_30.svg[Sequence Diagram: Store Authorization Data in 
 ==== C10 - Store Authorization Data in the Authorization Cache - Requirements
 
 .C10 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -919,7 +916,7 @@ image::part2/images/figure_31.svg[Sequence Diagram: Clear Authorization Data in 
 ==== C11 - Clear Authorization Data in Authorization Cache - Requirements
 
 .C11 - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 
@@ -963,7 +960,7 @@ image::part2/images/figure_31.svg[Sequence Diagram: Clear Authorization Data in 
   **6.** The Charging Station starts charging. +
   **7.** <<e02_start_transaction_cable_plugin_first,E02 - Start Transaction - Cable Plugin First>> applies.
 |5   |Prerequisite(s) 
-  |<<auth_cache_enabled,`AuthCacheEnabled`>> = true
+  |<<auth_cache_enabled,`AuthCacheEnabled`>> = true +
   <<local_pre_authorize,`LocalPreAuthorize`>> = true
   The Id of the EV Driver is Cached in the <<authorization_cache,Authorization Cache>> +
   Id is valid
@@ -985,19 +982,18 @@ image::part2/images/figure_32.svg[Sequence Diagram: Start Transaction - Cached I
 |7   |Error handling |When the Charging Station has an IdToken in the Authorization Cache, which is valid in the Authorization Cache, but is no longer valid in the CSMS: The Charging Station will receive the IdTokenInfo in the <<transaction_event_response,TransactionEventResponse>> which contains the newer invalid status. What happens in such a cases depends on the Configuration Variables: <<max_energy_on_invalid_id,`MaxEnergyOnInvalidId`>> and <<stop_tx_on_invalid_id,`StopTxOnInvalidId`>>.
 |8   |Remark(s)       |If the Charging Station has implemented an Authorization Cache, then upon receipt of a <<authorize_response,AuthorizeResponse>> message the Charging Station updates the Cache entry.
 
-For a Cached valid IdToken it is not logical to send <<authorize_request,AuthorizeRequest>>. The <<transaction_event_response,TransactionEventResponse>> message also contains the IdToken information. If the IdToken has become no longer valid, the Charging Station will learn this from this <<transaction_event_response,TransactionEventResponse>>. +
-So if the IdToken is no longer valid, the Charging Station might decide to stop the energy offering,
-and depending on the configuration even stop the transaction.
+  For a Cached valid IdToken it is not logical to send <<authorize_request,AuthorizeRequest>>. The <<transaction_event_response,TransactionEventResponse>> message also contains the IdToken information. If the IdToken has become no longer valid, the Charging Station will learn this from this <<transaction_event_response,TransactionEventResponse>>. +
+  So if the IdToken is no longer valid, the Charging Station might decide to stop the energy offering, and depending on the configuration even stop the transaction.
 
-The scenario description and sequence diagram above are based on the Configuration Variable for start transaction being configured as follows: +
-<<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,EVConnected, Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
-This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are send. For more details see the use case: <<e01_start_transaction_options,E01 - Start Transaction options>>.
+  The scenario description and sequence diagram above are based on the Configuration Variable for start transaction being configured as follows: +
+  <<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,EVConnected, Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
+  This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are send. For more details see the use case: <<e01_start_transaction_options,E01 - Start Transaction options>>.
 |===
 
 ==== C12 - Start Transaction - Cached Id - Requirements
 
 .C12 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -1034,7 +1030,7 @@ This use-case is also valid for other configurations, but then the transaction m
 |3   |Objective(s)    |To authorize an idToken by using the <<local_authorization_list,Local Authorization List>> while Offline.
 |4   |Description     |This use case describes how to authorize an IdToken, when communication with the CSMS is not possible.
 
-The <<local_authorization_list,Local Authorization List>> is a list of idTokens that can be synchronized with the CSMS. The list contains the authorization status of a selected set of idTokens as managed by the CSMS.
+  The <<local_authorization_list,Local Authorization List>> is a list of idTokens that can be synchronized with the CSMS. The list contains the authorization status of a selected set of idTokens as managed by the CSMS.
 |{nbsp} d|_Actors_    |EV Driver, Charging Station
 |{nbsp} d|_Scenario description_ 
   |**1.** The Charging Station is _Offline_ +
@@ -1066,7 +1062,7 @@ image::part2/images/figure_33.svg[Sequence Diagram: Offline Authorization throug
 ==== C13 - Offline Authorization through Local Authorization List - Requirements
 
 .C13 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -1140,7 +1136,7 @@ image::part2/images/figure_34.svg[Sequence Diagram: Online Authorization through
 ==== C14 - Online Authorization through Local Authorization List - Requirements
 
 .C14 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -1152,10 +1148,10 @@ image::part2/images/figure_34.svg[Sequence Diagram: Online Authorization through
 |C14.FR.03 |Identifiers presented is in the <<local_authorization_list,Local Authorization List>> with a status OTHER than _Accepted_
   |The Charging Station SHALL send an <<authorize_request,AuthorizeRequest>> to try to authorize this IdToken. |{nbsp}
 |C14.FR.04  |Identifier presented is in the <<local_authorization_list,Local Authorization List>> with a status `Accepted` AND +
-`ocalAuthListSupportsExpiryDateTime` = true AND +
-the _cacheExpiryDateTime_ has not passed
-  |The Charging Station SHALL start charging without sending an <<authorize_request,AuthorizeRequest>>.
-    |When _cacheExpiryDateTime_ is absent, the idToken will not expire in Local Authorization List.
+  `LocalAuthListSupportsExpiryDateTime` = true AND +
+  the _cacheExpiryDateTime_ has not passed
+    |The Charging Station SHALL start charging without sending an <<authorize_request,AuthorizeRequest>>.
+      |When _cacheExpiryDateTime_ is absent, the idToken will not expire in Local Authorization List.
 |C14.FR.05  |Identifier presented is in the <<local_authorization_list,Local Authorization List>> with a status `Accepted` AND +
 `LocalAuthListSupportsExpiryDateTime` = true AND +
 the _cacheExpiryDateTime_ has passed
@@ -1208,7 +1204,6 @@ the _cacheExpiryDateTime_ has passed
   The authorization status in <<transaction_event_response,TransactionEventResponse>> is _not Accepted_ when <<offline_tx_for_unknown_id_enabled,`OfflineTxForUnknownIdEnabled`>> is _True_.
 |===
 
-
 .Sequence Diagram: Start Transaction - Unknown Offline Authorization
 image::part2/images/figure_35.svg[Sequence Diagram: Start Transaction - Unknown Offline Authorization]
 
@@ -1221,7 +1216,7 @@ image::part2/images/figure_35.svg[Sequence Diagram: Start Transaction - Unknown 
 ==== C15 - Offline Authorization of unknown Id - Requirements
 
 .C15 - Requirements
-[cols="^.^1,<.^2,<.^5,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
@@ -1315,7 +1310,7 @@ image::part2/images/figure_36.svg[Sequence Diagram: Stop Transaction with a Mast
 ==== C16 - Stop Transaction with a Master Pass - Requirements
 
 .C16 - Stop Transaction with a Master Pass - Requirements
-[cols="^.^1,<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID         |Precondition         |Requirement definition
 

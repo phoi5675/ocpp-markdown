@@ -1,0 +1,22 @@
+@startuml figure_24
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+EVDriver -> ChargingStation: pin-code(1234) 입력
+
+ChargingStation -> CSMS: \
+  AuthorizeRequest(idToken(id = 1234, \n\
+        type = PinCode), ...)
+activate CSMS
+
+CSMS --> ChargingStation: AuthorizeResponse(idTokenInfo.status = Accepted, ...)
+deactivate CSMS
+
+opt
+  ChargingStation --> EVDriver: 알림
+end
+
+@enduml

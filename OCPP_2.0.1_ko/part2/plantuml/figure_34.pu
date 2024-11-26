@@ -1,0 +1,33 @@
+@startuml figure_34
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+activate EVDriver
+EVDriver -> ChargingStation: IdToken 제시
+activate ChargingStation
+
+ChargingStation -> ChargingStation: \
+  local authorization list() 확인 \
+  \n[cached tariff: 0.23/kWh]
+
+alt 알려진 IdToken이 아니거나 상태가 Accepted가 아닌 경우
+  ChargingStation -> CSMS: AuthorizeRequest(IdToken)
+
+  CSMS -> ChargingStation: AuthorizeResponse(Accepted)
+end
+
+opt 
+  ChargingStation -> EVDriver: \
+    알림 \
+    \n[tariff: 0.23/kWh]
+  deactivate EVDriver
+end
+
+ChargingStation -> ChargingStation: 커넥터 잠금
+
+ChargingStation -> ChargingStation: 에너지 제공 시작
+
+@enduml

@@ -16,7 +16,7 @@ ChargingStation -> ChargingStation: suspend energy offer
 
 ChargingStation -> CSMS: \
   TransactionEventRequest(eventType = Updated, transactionId = AB1234, seqNo = N + 1,\
-  \ntimestamp, chargingState = SuspendedEV, triggerReason  EVCommunicationLost, meterValues)
+  \ntimestamp, chargingState = SuspendedEV, triggerReason = EVCommunicationLost, meterValues)
 activate CSMS
 
 CSMS --> ChargingStation: TransactionEventResponse()

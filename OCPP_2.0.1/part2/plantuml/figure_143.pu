@@ -1,0 +1,31 @@
+@startuml figure_143
+!include style.puml
+
+actor "CSO" as CSO
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+activate CSO
+
+CSO -> CSMS: Get all messages
+activate CSMS
+
+CSMS -> ChargingStation: GetDisplayMessagesRequest(requestId)
+activate ChargingStation
+
+ChargingStation --> CSMS: GetDisplayMessagesResponse(Accepted)
+
+loop for each DisplayMessages part
+  ChargingStation -> CSMS: NotifyDisplayMessagesRequest(requestId, messageInfo, tbc)
+  
+  CSMS --> ChargingStation: NotifyDisplayMessagesResponse()
+  deactivate ChargingStation
+end
+
+opt
+  CSMS --> CSO: notification
+  deactivate CSO
+  deactivate CSMS
+end
+
+@enduml

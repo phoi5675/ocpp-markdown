@@ -1,0 +1,48 @@
+@startuml figure_36
+!include style.puml
+
+actor "User" as User
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over ChargingStation
+  한 개 이상의 트랜잭션이 진행중
+end note
+
+User -> ChargingStation: IdToken 제시
+activate User
+activate ChargingStation
+
+ChargingStation -> CSMS: AuthorizeRequest(...)
+activate CSMS
+
+CSMS --> ChargingStation: AuthorizeResponse(GroupId = MasterPassGroupId)
+deactivate CSMS
+
+alt idToken이 valid한 경우
+  alt Master Pass UI가 이용 가능한 경우
+    ChargingStation --> User: Master Pass UI를 보여줌
+
+    User -> ChargingStation: transaction(s) 선택
+  end
+  deactivate User
+
+  loop 모든 (선택된) 트랜잭션에 대해
+    ChargingStation -> ChargingStation: 에너지 제공 중단
+
+    alt 케이블이 영구적으로(permanently) 결합 된 경우
+      ChargingStation -> ChargingStation: 커넥터 잠금 해제
+    end
+
+    ChargingStation -> CSMS: \
+      TransactionEventRequest(eventType = Ended,\n\
+      chargingState = EVConnected, stopReason = MasterPass,...)
+    activate CSMS
+
+    CSMS --> ChargingStation: TransactionEventResponse(...)
+    deactivate CSMS
+  end
+  deactivate ChargingStation
+end
+
+@enduml
