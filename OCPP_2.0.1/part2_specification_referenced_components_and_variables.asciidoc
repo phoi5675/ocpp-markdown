@@ -55,7 +55,6 @@ entries will still be there – they are just not used. If afterwards Reservatio
 active again as long as they have not expired and no transaction is in progress. If a transaction has started in the mean time, that
 transaction remains active. The reservation is then considered expired.
 
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
 === 2. Referenced Components and Variables
@@ -92,7 +91,10 @@ NOTE WebSocket-related variables are described in "OCPP-2.0.1 Part 4 JSON over W
 **2.1.1.** ActiveNetworkProfile
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName OCPPCommCtrlr
 Variable variableName ActiveNetworkProfile
 variableAttributes mutability ReadOnly
@@ -104,7 +106,10 @@ variable only has to be implemented when NetworkConnectionProfile is implemented
 ==== `AllowNewSessionsPendingFirmwareUpdate`
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName ChargingStation
 Variable variableName AllowNewSessionsPendingFirmwareUpdate
 variableAttributes mutability ReadWrite
@@ -116,13 +121,15 @@ Charging Station will not set free EVSEs to Unavailable, pending the update. Thi
 until there is a point in time when all EVSEs of the Charging Station are free and it can perform the firmware
 update.
 
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
 **2.1.3.** DefaultMessageTimeout
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName OCPPCommCtrlr
 Variable variableName MessageTimeout
 variableInstance Default
@@ -138,7 +145,10 @@ NetworkConnectionProfile.
 ==== `FileTransferProtocols`
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName OCPPCommCtrlr
 Variable variableName FileTransferProtocols
 variableAttributes mutability ReadOnly
@@ -174,7 +184,10 @@ this Variable.
 ==== `NetworkProfileConnectionAttempts`
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName OCPPCommCtrlr
 Variable variableName NetworkProfileConnectionAttempts
 variableAttributes mutability ReadWrite
@@ -185,7 +198,10 @@ Description Specifies the number of connection attempts the Charging Station exe
 ==== `OfflineThreshold`
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName OCPPCommCtrlr
 Variable variableName OfflineThreshold
 variableAttributes mutability ReadWrite
@@ -197,7 +213,10 @@ StatusNotificationRequest for all its Connectors when the Charging Station is ba
 **2.1.9.** QueueAllMessages
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName OCPPCommCtrlr
 Variable variableName QueueAllMessages
 variableAttributes mutability ReadWrite
@@ -215,7 +234,10 @@ Default  false
 ==== `MessageAttemptsTransactionEvent`
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName OCPPCommCtrlr
 Variable variableName MessageAttempts
 variableInstance TransactionEvent
@@ -228,10 +250,12 @@ process it.
 ==== MessageAttemptIntervalTransactionEvent
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName OCPPCommCtrlr
 
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
 
@@ -248,7 +272,10 @@ CSMS failed to process.
 ==== `UnlockOnEVSideDisconnect`
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName OCPPCommCtrlr
 Variable variableName UnlockOnEVSideDisconnect
 variableAttributes mutability ReadWrite/ReadOnly
@@ -266,7 +293,10 @@ This configuration variable is described in "OCPP-2.0.1 Part 4 JSON over WebSock
 **2.1.14.** ResetRetries
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName OCPPCommCtrlr
 Variable variableName ResetRetries
 variableAttributes mutability ReadWrite
@@ -276,7 +306,10 @@ Description Number of times to retry a reset of the Charging Station when a rese
 **2.1.15.** MessageFieldLength
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName OCPPCommCtrlr
 Variable variableName FieldLength
 variableInstance <message>.<field>
@@ -289,10 +322,12 @@ the standard OCPP message schema.
 ==== ItemsPerMessageGetReport
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName DeviceDataCtrlr
 
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
 
@@ -307,7 +342,10 @@ GetMonitoringReportRequest message.
 ==== `ItemsPerMessageGetVariables`
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName DeviceDataCtrlr
 Variable variableName ItemsPerMessage
 variableInstance GetVariables
@@ -319,7 +357,10 @@ Description Maximum number of GetVariableData objects in GetVariablesRequest.
 ==== BytesPerMessageGetReport
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName DeviceDataCtrlr
 Variable variableName BytesPerMessage
 variableInstance GetReport
@@ -331,7 +372,10 @@ Description Message Size (in bytes) - puts constraint on getReportRequest or Get
 ==== `BytesPerMessageGetVariables`
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName DeviceDataCtrlr
 Variable variableName BytesPerMessage
 variableInstance GetVariables
@@ -343,7 +387,10 @@ Description Message Size (in bytes) - puts constraint on GetVariablesRequest mes
 ==== `ConfigurationValueSize`
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName DeviceDataCtrlr
 Variable variableName ConfigurationValueSize
 variableAttributes mutability ReadOnly
@@ -356,9 +403,11 @@ VariableCharacteristics.valueList. The max size of these values will always rema
 ==== `ReportingValueSize`
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
 
@@ -374,7 +423,10 @@ VariableAttribute.value and EventData.actualValue. The max size of these values 
 ==== `ItemsPerMessageSetVariables`
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName DeviceDataCtrlr
 Variable variableName ItemsPerMessage
 variableInstance SetVariables
@@ -385,7 +437,10 @@ Description Maximum number of SetVariableData objects in SetVariablesRequest.
 **2.1.23.** BytesPerMessageSetVariables
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName DeviceDataCtrlr
 Variable variableName BytesPerMessage
 variableInstance SetVariables
@@ -396,7 +451,10 @@ Description Message Size (in bytes) - puts constraint on SetVariablesRequest mes
 **2.1.24.** DateTime
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName ClockCtrlr
 Variable variableName DateTime
 variableAttributes mutability ReadOnly
@@ -407,7 +465,10 @@ Description Contains the current date and time.
 ==== NtpSource
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName ClockCtrlr
 Variable variableName NtpSource
 variableAttributes mutability ReadWrite
@@ -421,9 +482,11 @@ via DHCP, or use the manually configured NTP server.
 ==== NtpServerUri
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
 
@@ -444,7 +507,10 @@ also connect to multiple NTP servers simultaneous to get a more reliable time so
 ==== TimeOffset
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName ClockCtrlr
 Variable variableName TimeOffset
 variableAttributes mutability ReadWrite
@@ -483,7 +549,6 @@ This can be used to manually configure the offset for the start or end of the da
 ==== TimeSource
 
 **Required** yes
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
 
@@ -516,7 +581,10 @@ broadcasted time to UTC. For this TimeZone, TimeOffset, 'NextTimeOffsetTransitio
 ==== TimeZone
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName ClockCtrlr
 Variable variableName TimeZone
 variableAttributes mutability ReadWrite
@@ -539,7 +607,6 @@ reasonable value is 20 seconds.
 **2.1.33.** CustomImplementationEnabled
 **Required** no
 **Component componentName** CustomizationCtrlr
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
 
@@ -563,7 +630,10 @@ The basic authentication password is used for HTTP Basic Authentication. The con
 accidentally stored in plaintext by the CSMS when it reads out all configuration values.
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName SecurityCtrlr
 Variable variableName BasicAuthPassword
 variableAttributes mutability WriteOnly
@@ -580,7 +650,10 @@ implemented.
 **2.2.2.** Identity
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName SecurityCtrlr
 Variable variableName Identity
 variableAttributes mutability ReadOnly or ReadWrite
@@ -593,7 +666,10 @@ Maximum length was chosen to ensure compatibility with EVSE ID from [EMI3-BO] "P
 **2.2.3.** OrganizationName
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName SecurityCtrlr
 Variable variableName OrganizationName
 variableAttributes mutability ReadWrite
@@ -601,13 +677,15 @@ variableCharacteristics dataType string
 Description This configuration variable is used to set the organization name of the CSO or an organization trusted by the CSO.
 It is used to set the O ( organizationName ) RDN in the subject field of the client certificate. See also A00.FR.509.
 
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
 **2.2.4.** CertificateEntries
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName SecurityCtrlr
 Variable variableName CertificateEntries
 variableAttributes mutability ReadOnly
@@ -620,7 +698,10 @@ Description Amount of Certificates currently installed on the Charging Station.
 ==== SecurityProfile
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName SecurityCtrlr
 Variable variableName SecurityProfile
 variableAttributes mutability ReadOnly
@@ -631,7 +712,10 @@ Description This configuration variable is used to report the security profile u
 ==== `AdditionalRootCertificateCheck`
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName SecurityCtrlr
 Variable variableName AdditionalRootCertificateCheck
 variableAttributes mutability ReadOnly
@@ -660,14 +744,16 @@ Charging Station indicates that it does not support this feature, whereas true m
 ==== `MaxCertificateChainSize`
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName SecurityCtrlr
 Variable variableName MaxCertificateChainSize
 variableAttributes mutability ReadOnly
 variableCharacteristics dataType integer
 maxLimit 10000
 
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
 
@@ -681,7 +767,10 @@ the Charging Station to support most security architectures.
 ==== CertSigningWaitMinimum
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName SecurityCtrlr
 Variable variableName CertSigningWaitMinimum
 variableAttributes mutability ReadWrite
@@ -695,7 +784,10 @@ certificate signing process is slow, this setting allows the CSMS to tell the Ch
 **2.2.9.** CertSigningRepeatTimes
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName SecurityCtrlr
 Variable variableName CertSigningRepeatTimes
 variableAttributes mutability ReadWrite
@@ -712,7 +804,10 @@ SignCertificateRequest, until it is requested by the CSMS using a TriggerMessage
 ==== AuthEnabled
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName AuthCtrlr
 Variable variableName Enabled
 variableAttributes mutability ReadWrite
@@ -725,7 +820,10 @@ provided, then idToken in TransactionEventRequest will be left empty and type is
 ==== AdditionalInfoItemsPerMessage
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName AuthCtrlr
 Variable variableName AdditionalInfoItemsPerMessage
 variableAttributes mutability ReadOnly
@@ -737,7 +835,10 @@ be implemented when AdditionalInfo is implemented.
 ==== `OfflineTxForUnknownIdEnabled`
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName AuthCtrlr
 Variable variableName OfflineTxForUnknownIdEnabled
 variableAttributes mutability ReadWrite
@@ -749,7 +850,10 @@ Unknown Offline Authorization is enabled.
 ==== `AuthorizeRemoteStart`
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName AuthCtrlr
 Variable variableName AuthorizeRemoteStart
 variableAttributes mutability ReadOnly or ReadWrite. Choice is up to Charging
@@ -762,7 +866,10 @@ be authorized beforehand like a local action to start a transaction.
 ==== `LocalAuthorizeOffline`
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName AuthCtrlr
 Variable variableName LocalAuthorizeOffline
 variableAttributes mutability ReadWrite
@@ -773,7 +880,10 @@ Description Whether the Charging Station, when Offline , will start a transactio
 ==== `LocalPreAuthorize`
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName AuthCtrlr
 Variable variableName LocalPreAuthorize
 variableAttributes mutability ReadWrite
@@ -785,7 +895,10 @@ for or requesting an AuthorizeResponse from the CSMS.
 ==== `MasterPassGroupId`
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName AuthCtrlr
 Variable variableName MasterPassGroupId
 variableAttributes mutability ReadWrite
@@ -796,13 +909,15 @@ Description IdTokens that have this id as groupId belong to the Master Pass Grou
 transaction, but cannot start transactions. This can, for example, be used by law enforcement personal to stop any
 ongoing transaction when an EV has to be towed away.
 
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
 **2.3.8.** DisableRemoteAuthorization
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName AuthCtrlr
 Variable variableName DisableRemoteAuthorization
 variableAttributes mutability ReadWrite
@@ -825,7 +940,10 @@ disables all authorization with CSMS.
 NOTE When the value of this variable is changed, the content of the authorization cache should not be altered.
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName AuthCacheCtrlr
 Variable variableName Enabled
 variableAttributes mutability ReadWrite
@@ -835,7 +953,10 @@ Description If this variable exists and reports a value of true , Authorization 
 **2.4.2.** AuthCacheAvailable
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName AuthCacheCtrlr
 Variable variableName Available
 variableAttributes mutability ReadOnly
@@ -846,7 +967,10 @@ Description If this variable exists and reports a value of true , Authorization 
 ==== `AuthCacheLifeTime`
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName AuthCacheCtrlr
 Variable variableName LifeTime
 variableAttributes mutability ReadWrite
@@ -857,10 +981,12 @@ Description Indicates how long it takes until a token expires in the authorizati
 **2.4.4.** AuthCacheStorage
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName AuthCacheCtrlr
 
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
 
@@ -874,7 +1000,10 @@ number of bytes that can be used by the Authorization Cache.
 **2.4.5.** AuthCachePolicy
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName AuthCacheCtrlr
 Variable variableName Policy
 variableAttributes mutability ReadWrite
@@ -886,7 +1015,10 @@ mechanism.
 **2.4.6.** AuthCacheDisablePostAuthorize
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName AuthCacheCtrlr
 Variable variableName DisablePostAuthorize
 variableAttributes mutability ReadWrite
@@ -900,7 +1032,10 @@ cache with a status other than Accepted, as stated in C10.FR.03 and C12.FR.05.
 ==== `LocalAuthListEnabled`
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName LocalAuthListCtrlr
 Variable variableName Enabled
 variableAttributes mutability ReadWrite
@@ -922,13 +1057,15 @@ in the Local Authorization List.
 **Description** (^) Amount of IdTokens currently in the Local Authorization List.
 The maxLimit of this variable SHALL be provided to report the maximum number of IdTokens that can be stored in
 the Local Authorization List.
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 [[local_auth_list_available]]
 ==== LocalAuthListAvailable
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName LocalAuthListCtrlr
 Variable variableName Available
 variableAttributes mutability ReadOnly
@@ -958,7 +1095,10 @@ variableCharacteristics dataType integer
 **2.5.6.** LocalAuthListStorage
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName LocalAuthListCtrlr
 Variable variableName Storage
 variableAttributes mutability ReadOnly
@@ -970,7 +1110,10 @@ number of bytes that can be used by the Local Authorization List.
 **2.5.7.** LocalAuthListDisablePostAuthorize
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName LocalAuthListCtrlr
 Variable variableName DisablePostAuthorize
 variableAttributes mutability ReadWrite
@@ -981,10 +1124,12 @@ local authorization list with a status other than Accepted, as stated in C14.FR.
 **2.5.8.** LocalAuthListSupportsExpiryDateTime
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName LocalAuthListCtrlr
 
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
 
@@ -1002,7 +1147,10 @@ messages.
 ==== `EVConnectionTimeOut`
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName TxCtrlr
 Variable variableName EVConnectionTimeOut
 variableAttributes mutability ReadWrite
@@ -1017,7 +1165,10 @@ pressing a start button, a RequestStartTransactionRequest being received etc.
 ==== `StopTxOnEVSideDisconnect`
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName TxCtrlr
 Variable variableName StopTxOnEVSideDisconnect
 variableAttributes mutability ReadWrite or ReadOnly, depending on Charging
@@ -1030,7 +1181,10 @@ EV.
 ==== `TxBeforeAcceptedEnabled`
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName TxCtrlr
 Variable variableName TxBeforeAcceptedEnabled
 variableAttributes mutability ReadWrite
@@ -1043,7 +1197,10 @@ CSMS.
 ==== `TxStartPoint`
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName TxCtrlr
 
 Variable variableName TxStartPoint
@@ -1102,7 +1259,6 @@ Note: There may be situations where PowerPathClosed does not
 imply that charging starts at that moment, e.g. because of delayed
 charging or a battery that is too hot.
 **EnergyTransfer** Energy is being transferred between EV and EVSE.
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
 
@@ -1166,13 +1322,15 @@ be used as such.
 **dataType** integer
 **Description** Maximum amount of energy in Wh delivered when an identifier is deauthorized by the CSMS after start of a
 transaction.
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 [[stop_tx_on_invalid_id]]
 ==== `StopTxOnInvalidId`
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName TxCtrlr
 Variable variableName StopTxOnInvalidId
 variableAttributes mutability ReadWrite
@@ -1185,7 +1343,10 @@ authorization status in TransactionEventResponse for this transaction.
 **2.7.1.** SampledDataEnabled
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName SampledDataCtrlr
 Variable variableName Enabled
 variableAttributes mutability ReadWrite
@@ -1195,7 +1356,10 @@ Description If this variable reports a value of true , Sampled Data is enabled.
 **2.7.2.** SampledDataAvailable
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName SampledDataCtrlr
 Variable variableName Available
 variableAttributes mutability ReadOnly
@@ -1205,7 +1369,10 @@ Description If this variable reports a value of true , Sampled Data is supported
 [[sampled_data_sign_readings]]
 ==== `SampledDataSignReadings`
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName SampledDataCtrlr
 Variable variableName SignReadings
 variableAttributes mutability ReadWrite
@@ -1218,7 +1385,10 @@ values. When a Charging Station does not support signed meter values it SHALL NO
 ==== `SampledDataTxEndedMeasurands`
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName SampledDataCtrlr
 Variable variableName TxEndedMeasurands
 variableAttributes mutability ReadWrite
@@ -1226,7 +1396,6 @@ variableCharacteristics dataType MemberList
 maxLimit The maximum length of the CSV formatted string, to
 be defined by the implementer.
 
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
 
@@ -1243,7 +1412,10 @@ When left empty, no sampled measurands SHALL be put into the TransactionEventReq
 ==== `SampledDataTxEndedInterval`
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName SampledDataCtrlr
 Variable variableName TxEndedInterval
 variableAttributes mutability ReadWrite
@@ -1263,7 +1435,10 @@ message.
 ==== `SampledDataTxStartedMeasurands`
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName SampledDataCtrlr
 Variable variableName TxStartedMeasurands
 variableAttributes mutability ReadWrite
@@ -1282,7 +1457,10 @@ If the Charging Station has a meter, recommended to use as default: "Energy.Acti
 ==== `SampledDataTxUpdatedMeasurands`
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName SampledDataCtrlr
 Variable variableName TxUpdatedMeasurands
 variableAttributes mutability ReadWrite
@@ -1290,7 +1468,6 @@ variableCharacteristics dataType MemberList
 maxLimit The maximum length of the CSV formatted string, to
 be defined by the implementer.
 
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
 
@@ -1306,7 +1483,10 @@ If the Charging Station has a meter, recommended to use as default: "Energy.Acti
 ==== `SampledDataTxUpdatedInterval`
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component component Name SampledDataCtrlr
 Variable variableName TxUpdatedInterval
 variableAttributes mutability ReadWrite
@@ -1323,7 +1503,10 @@ transmitted during the transaction.
 **2.7.9.** AlignedDataEnabled
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName AlignedDataCtrlr
 Variable variableName Enabled
 variableAttributes mutability ReadWrite
@@ -1333,7 +1516,10 @@ Description If this variable reports a value of true , Aligned Data is enabled.
 **2.7.10.** AlignedDataAvailable
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName AlignedDataCtrlr
 Variable variableName Available
 variableAttributes mutability ReadOnly
@@ -1343,7 +1529,10 @@ Description If this variable reports a value of true , Aligned Data is supported
 [[aligned_data_measurands]]
 ==== `AlignedDataMeasurands`
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName AlignedDataCtrlr
 Variable variableName Measurands
 variableAttributes mutability ReadWrite
@@ -1359,7 +1548,10 @@ variable. This way the CSMS knows which Measurands it can put in the AlignedData
 ==== `AlignedDataInterval`
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName AlignedDataCtrlr
 Variable variableName Interval
 variableAttributes mutability ReadWrite
@@ -1378,7 +1570,10 @@ transmitted.
 ==== `AlignedDataSendDuringIdle`
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName AlignedDataCtrlr
 evse *
 Variable variableName SendDuringIdle
@@ -1393,7 +1588,10 @@ transaction is ongoing on this Charging Station.
 ==== `AlignedDataSignReadings`
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName AlignedDataCtrlr
 Variable variableName SignReadings
 variableAttributes mutability ReadWrite
@@ -1406,7 +1604,10 @@ When a Charging Station does not support signed meter values it SHALL NOT report
 ==== `AlignedDataTxEndedMeasurands`
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName AlignedDataCtrlr
 Variable variableName TxEndedMeasurands
 variableAttributes mutability ReadWrite
@@ -1414,7 +1615,6 @@ variableCharacteristics dataType MemberList
 maxLimit The maximum length of the CSV formatted string, to
 be defined by the implementer.
 
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
 
@@ -1431,7 +1631,10 @@ Ended).
 ==== `AlignedDataTxEndedInterval`
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName AlignedDataCtrlr
 Variable variableName TxEndedInterval
 variableAttributes mutability ReadWrite
@@ -1449,7 +1652,10 @@ This is not a recommended practice, since the size of the message can become ver
 **2.7.17.** PublicKeyWithSignedMeterValue
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName OCPPCommCtrlr
 Variable variableName PublicKeyWithSignedMeterValue
 variableAttributes mutability ReadWrite
@@ -1462,7 +1668,10 @@ value. Note, that the field is required, so it needs to be present as an empty s
 ==== `SampledDataRegisterValuesWithoutPhases`
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName SampledDataCtrlr
 Variable variableName RegisterValuesWithoutPhases
 variableAttributes mutability ReadWrite
@@ -1477,10 +1686,12 @@ If this variable is absent or false , then the value for each phase is reported,
 **2.8.1.** ReservationEnabled
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName ReservationCtrlr
 
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
 
@@ -1492,7 +1703,10 @@ Description Whether Reservation is enabled.
 **2.8.2.** ReservationAvailable
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName ReservationCtrlr
 Variable variableName Available
 variableAttributes mutability ReadOnly
@@ -1503,7 +1717,10 @@ Description Whether Reservation is supported.
 ==== `ReservationNonEvseSpecific`
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName ReservationCtrlr
 Variable variableName NonEvseSpecific
 variableAttributes mutability ReadOnly
@@ -1516,7 +1733,10 @@ specified.
 **2.9.1.** SmartChargingEnabled
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName SmartChargingCtrlr
 Variable variableName Enabled
 variableAttributes mutability ReadWrite
@@ -1526,7 +1746,10 @@ Description Whether Smart Charging is enabled.
 **2.9.2.** SmartChargingAvailable
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName SmartChargingCtrlr
 Variable variableName Available
 variableAttributes mutability ReadOnly
@@ -1537,10 +1760,12 @@ Description Whether Smart Charging is supported.
 ==== ACPhaseSwitchingSupported
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName SmartChargingCtrlr
 
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
 
@@ -1553,7 +1778,10 @@ the selection of which phase to use for 1 phase AC charging.
 **2.9.4.** ChargingProfileMaxStackLevel
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName SmartChargingCtrlr
 Variable variableName ProfileStackLevel
 variableAttributes mutability ReadOnly
@@ -1565,7 +1793,10 @@ Purpose per EVSE.
 **2.9.5.** ChargingScheduleChargingRateUnit
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName SmartChargingCtrlr
 Variable variableName RateUnit
 variableAttributes mutability ReadOnly
@@ -1593,7 +1824,6 @@ Station implementation.
 ==== `NotifyChargingLimitWithSchedules`
 **Required** no
 **Component componentName** SmartChargingCtrlr
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
 
@@ -1608,7 +1838,10 @@ an external system sends new profiles/limits with a short interval. Default is f
 ==== Phases3to1
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName SmartChargingCtrlr
 Variable variableName Phases3to1
 variableAttributes mutability ReadOnly
@@ -1619,7 +1852,10 @@ Description If defined and true, this Charging Station supports switching from 3
 ==== `ChargingProfileEntries`
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName SmartChargingCtrlr
 Variable variableName Entries
 VariableInstance ChargingProfiles
@@ -1633,7 +1869,10 @@ Description Amount of Charging profiles currently installed on the Charging Stat
 ==== `LimitChangeSignificance`
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName SmartChargingCtrlr
 Variable variableName LimitChangeSignificance
 variableAttributes mutability ReadWrite
@@ -1649,7 +1888,10 @@ actors.
 **2.10.1.** TariffEnabled
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName TariffCostCtrlr
 Variable variableName Enabled
 variableInstance Tariff
@@ -1657,13 +1899,15 @@ variableAttributes mutability ReadWrite
 variableCharacteristics dataType boolean
 Description Whether Tariff is enabled.
 
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
 **2.10.2.** TariffAvailable
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName TariffCostCtrlr
 Variable variableName Available
 variableInstance Tariff
@@ -1677,7 +1921,10 @@ Description Whether Tariff is supported.
 Required for Charging Stations supporting Tariff Information.
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName TariffCostCtrlr
 Variable variableName TariffFallbackMessage
 variableAttributes mutability ReadWrite
@@ -1689,7 +1936,10 @@ available.
 **2.10.4.** CostEnabled
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName TariffCostCtrlr
 Variable variableName Enabled
 variableInstance Cost
@@ -1700,7 +1950,10 @@ Description Whether Cost is enabled.
 **2.10.5.** CostAvailable
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName TariffCostCtrlr
 Variable variableName Available
 variableInstance Cost
@@ -1714,7 +1967,10 @@ Description Whether Cost is supported.
 Required for Charging Stations supporting Tariff Information.
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName TariffCostCtrlr
 
 
@@ -1733,7 +1989,10 @@ end of the transaction.
 Required for Charging Stations supporting Tariff Information.
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName TariffCostCtrlr
 Variable variableName Currency
 variableAttributes mutability ReadWrite
@@ -1746,7 +2005,10 @@ Description Currency used by this Charging Station in a ISO 4217 [ISO4217] forma
 **2.11.1.** MonitoringEnabled
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName MonitoringCtrlr
 Variable variableName Enabled
 variableAttributes mutability ReadWrite
@@ -1756,7 +2018,10 @@ Description Whether Monitoring is enabled.
 **2.11.2.** MonitoringAvailable
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName MonitoringCtrlr
 Variable variableName Available
 variableAttributes mutability ReadOnly
@@ -1767,7 +2032,10 @@ Description Whether Monitoring is supported.
 ==== `ItemsPerMessageClearVariableMonitoring`
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName MonitoringCtrlr
 Variable variableName ItemsPerMessage
 variableInstance ClearVariableMonitoring
@@ -1775,13 +2043,15 @@ variableAttributes mutability ReadOnly
 variableCharacteristics dataType integer
 Description Maximum number of IDs in a ClearVariableMonitoringRequest.
 
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 [[items_per_message_set_variable_monitoring]]
 ==== `ItemsPerMessageSetVariableMonitoring`
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName MonitoringCtrlr
 Variable variableName ItemsPerMessage
 variableInstance SetVariableMonitoring
@@ -1794,7 +2064,10 @@ message.
 ==== `BytesPerMessageClearVariableMonitoring`
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName MonitoringCtrlr
 Variable variableName BytesPerMessage
 variableInstance ClearVariableMonitoring
@@ -1806,7 +2079,10 @@ Description Message Size (in bytes) - puts constraint on ClearVariableMonitoring
 ==== `BytesPerMessageSetVariableMonitoring`
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName MonitoringCtrlr
 Variable variableName BytesPerMessage
 variableInstance SetVariableMonitoring
@@ -1818,7 +2094,10 @@ Description Message Size (in bytes) - puts constraint on setVariableMonitoringRe
 ==== `OfflineMonitoringEventQueuingSeverity`
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName MonitoringCtrlr
 Variable variableName OfflineQueuingSeverity
 variableAttributes mutability ReadWrite
@@ -1830,7 +2109,10 @@ from 0 (Emergency) to 9 (Debug).
 **2.11.8.** ActiveMonitoringBase
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName MonitoringCtrlr
 Variable variableName ActiveMonitoringBase
 variableAttributes mutability ReadOnly
@@ -1838,13 +2120,15 @@ variableCharacteristics dataType OptionList
 Description Shows the currently used MonitoringBase. Valid values according MonitoringBaseEnumType: All,
 FactoryDefault, HardwiredOnly.
 
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
 **2.11.9.** ActiveMonitoringLevel
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName MonitoringCtrlr
 Variable variableName ActiveMonitoringLevel
 variableAttributes mutability ReadOnly
@@ -1856,7 +2140,10 @@ Description Shows the currently used MonitoringLevel. Valid values are severity 
 **2.12.1.** DisplayMessageEnabled
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName DisplayMessageCtrlr
 Variable variableName Enabled
 variableAttributes mutability ReadWrite
@@ -1866,7 +2153,10 @@ Description Whether Display Message is enabled.
 **2.12.2.** DisplayMessageAvailable
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName DisplayMessageCtrlr
 Variable variableName Available
 variableAttributes mutability ReadOnly
@@ -1877,7 +2167,10 @@ Description Whether Display Message is supported.
 ==== `NumberOfDisplayMessages`
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName DisplayMessageCtrlr
 Variable variableName DisplayMessages
 variableAttributes mutability ReadOnly
@@ -1892,20 +2185,25 @@ SetDisplayMessageRequest
 ==== DisplayMessageSupportedFormats
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName DisplayMessageCtrlr
 Variable variableName SupportedFormats
 variableAttributes mutability ReadOnly
 variableCharacteristics dataType MemberList
 Description List of message formats supported by this Charging Station. Possible values: MessageFormat.
 
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 [[display_message_supported_priorities]]
 ==== DisplayMessageSupportedPriorities
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName DisplayMessageCtrlr
 Variable variableName SupportedPriorities
 variableAttributes mutability ReadOnly
@@ -1919,7 +2217,10 @@ Description List of the priorities supported by this Charging Station. Possible 
 ==== Available
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Components componentName ChargingStation
 EVSE
 Connector
@@ -1956,7 +2257,6 @@ An EVSE component is addressed on its own tier. So, EVSE #1 is addressed as comp
 **Required** no
 **Component componentName** EVSE
 **evse** *
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
 
@@ -1968,7 +2268,10 @@ Description Component can be reset. Can be used to announce that an EVSE can be 
 **2.13.4.** ConnectorType
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName Connector
 evse *
 Variable variableName ConnectorType
@@ -1981,7 +2284,10 @@ cGBT, cChaoJi, OppCharge.
 ==== `PhaseRotation`
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName *
 evse *
 Variable variableName PhaseRotation
@@ -2015,9 +2321,11 @@ Some examples:
 **2.13.6.** SupplyPhases
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
 
@@ -2034,7 +2342,12 @@ value indicates that the number of phases (e.g. in use) is unknown.
 **2.13.7.** Power
 
 
-Required yes ( maxLimit only )
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
+
+( maxLimit only )
 Component componentName EVSE
 evse *
 Variable variableName Power
@@ -2081,7 +2394,6 @@ Connector 2 1 Available Actual true boolean false
 Connector 2 1 AvailabilityState Actual Occupied optionList false
 Connector 2 1 ConnectorType Actual cCCS2 string false
 Connector 2 1 SupplyPhases Actual 0 integer false
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
 
@@ -2105,7 +2417,11 @@ Not all VariableAttributes and VariableCharacteristics are shown in the table.
 ==== `CentralContractValidationAllowed`
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
+
 Component componentName ISO15118Ctrlr
 Variable variableName CentralContractValidationAllowed
 variableAttributes mutability ReadWrite
@@ -2117,7 +2433,10 @@ validate, to the CSMS for validation as part of the AuthorizeRequest.
 ==== `ContractValidationOffline`
 
 
-Required yes
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|yes
+|===
 Component componentName ISO15118Ctrlr
 Variable variableName ContractValidationOffline
 variableAttributes mutability ReadWrite
@@ -2127,7 +2446,10 @@ Description If this variable is true , then Charging Station will try to validat
 **2.14.3.** ProtocolSupportedByEV
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName ConnectedEV
 evse *
 Variable variableName ProtocolSupportedByEV
@@ -2144,13 +2466,15 @@ Example:
 - ConnectedEV.ProtocolSupportedByEV["1"]  "urn:iso:15118:2:2013:MsgDef,2,0"
 - ConnectedEV.ProtocolSupportedByEV["2"]  "urn:iso:15118:2:2010:MsgDef,1,0"
 
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
 **2.14.4.** ProtocolAgreed
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName ConnectedEV
 evse *
 Variable variableName ProtocolAgreed
@@ -2197,13 +2521,15 @@ the Charging Station is disabled.
 Certificate installation EV and M02 - Certificate Update EV is enabled.
 If this variable is _false_ , then ISO 15118 contract certificate installation/update as described by use case M01 -
 Certificate installation EV and M02 - Certificate Update EV is disabled.
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
 **2.14.8.** ISO15118RequestMeteringReceipt
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName ISO15118Ctrlr
 Variable variableName RequestMeteringReceipt
 variableAttributes mutability ReadWrite
@@ -2214,7 +2540,10 @@ value to CSMS.
 **2.14.9.** ISO15118SeccId
 
 
-Required no
+[cols="<.^2s,<.^3s,<.^3,<.^5",%autowidth.stretch,frame=all,grid=all]
+|===
+|Required 3+d|no
+|===
 Component componentName ISO15118Ctrlr
 evse * (optional)
 Variable variableName SeccId
@@ -2247,7 +2576,6 @@ Example: "John Doe Charging Services Ltd"
 Note: This value will usually be identical to SecurityCtrlr.OrganizationName, but it does not have to be.
 **2.14.12.** ISO15118EvseId
 **Required** no
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
 
@@ -2259,6 +2587,5 @@ variableCharacteristics dataType string
 
 **Description** (^) The name of the EVSE in the string format as required by ISO 15118 and IEC 63119-2.
 Example: "DE*ICE*E*1234567890*1"
-Edition 3 FINAL, 2024-05-06 **Referenced Components and Variables**
 
 
