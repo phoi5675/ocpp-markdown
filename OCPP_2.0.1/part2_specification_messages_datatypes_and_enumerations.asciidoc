@@ -483,7 +483,7 @@ _Class_
 
 |status |<<delete_certificate_status_enum_type,DeleteCertificateStatusEnumType>>
   |1..1 |Required. Charging Station indicates if it can process the request.
-|statusInfo |<<status_info_type,StatusInfoType>> 0..1 Optional. Detailed status information.
+|statusInfo |<<status_info_type,StatusInfoType>> |0..1 |Optional. Detailed status information.
 |===
 
 [[firmware_status_notification]]
@@ -681,10 +681,7 @@ _Class_
 |chargingRateUnit |<<charging_rate_unit_enum_type,ChargingRateUnitEnumType>>
   |0..1 |Optional. Can be used to force a power or current profile.
 |evseId |integer
-  |1..1 Required. The ID of the EVSE for which the schedule is
-requested. When evseid=0, the Charging Station will
-calculate the expected consumption for the grid
-connection.
+  |1..1 |Required. The ID of the EVSE for which the schedule is requested. When evseid=0, the Charging Station will calculate the expected consumption for the grid connection.
 |===
 
 [[get_compositie_schedule_response]]
@@ -935,7 +932,7 @@ _Class_
 |Field Name     |Field Type             |Card. |Description
 
 |transactionId |identifierString[0..36]
-  |0..1 Optional. The Id of the transaction for which the status is requested.
+  |0..1 |Optional. The Id of the transaction for which the status is requested.
 |===
 
 [[get_transaction_status_response]]
@@ -1456,7 +1453,7 @@ _Class_
 |chargingProfile |<<charging_profile_type,ChargingProfileType>>
   |0..1 |Optional. Charging Profile to be used by the Charging Station for the requested transaction. ChargingProfilePurpose MUST be set to TxProfile
 |groupIdToken |<<id_token_type,IdTokenType>>
-  |0..1 |Optional. The groupIdToken is only relevant when the transaction is to be started on an EVSE for which a reservation for groupIdToken is active, and the configuration variable AuthorizeRemoteStart  false (otherwise the AuthorizeResponse could return the groupIdToken).
+  |0..1 |Optional. The groupIdToken is only relevant when the transaction is to be started on an EVSE for which a reservation for groupIdToken is active, and the configuration variable AuthorizeRemoteStart = false (otherwise the AuthorizeResponse could return the groupIdToken).
 |===
 
 [[request_start_transaction_response]]
@@ -1562,7 +1559,7 @@ _Class_
   |0..1 |Optional. This contains ID of the evse to be reserved.
 |idToken |<<id_token_type,IdTokenType>>
   |1..1 |Required. The identifier for which the reservation is made.
-groupIdToken |<<id_token_type,IdTokenType>>
+|groupIdToken |<<id_token_type,IdTokenType>>
   |0..1 |Optional. The group identifier for which the reservation is made.
 |===
 
@@ -2036,7 +2033,7 @@ _Class_
 |seqNo |integer
   |1..1 |Required. Incremental sequence number, helps with determining if all messages of a transaction have been received.
 |offline |boolean
-  |0..1 |Optional. Indication that this transaction event happened when the Charging Station was offline. Default  false, meaning: the event occurred when the Charging Station was online.
+  |0..1 |Optional. Indication that this transaction event happened when the Charging Station was offline. Default = false, meaning: the event occurred when the Charging Station was online.
 |numberOfPhasesUsed |integer
   |0..1 |Optional. If the Charging Station is able to report the number of phases used, then it SHALL provide it. When omitted the CSMS may be able to determine the number of phases used via device management.
 |cableMaxCurrent |integer
@@ -2313,9 +2310,9 @@ AuthorizationData is used by: <<send_local_list_request,SendLocalListRequest>>
 |===
 |Field Name     |Field Type             |Card. |Description
 
-|idTokenInfo <<id_token_info_type,IdTokenInfoType>>
+|idTokenInfo |<<id_token_info_type,IdTokenInfoType>>
   |0..1 |Optional. Required when UpdateType is Full. This contains information about authorization status, expiry and group id. For a Differential update the following applies: If this element is present, then this entry SHALL be added or updated in the Local Authorization List. If this element is absent, the entry for this IdToken in the Local Authorization List SHALL be deleted.
-|idToken <<id_token_type,IdTokenType>>
+|idToken |<<id_token_type,IdTokenType>>
   |1..1 |Required. This contains the identifier which needs to be stored for authorization.
 |===
 
@@ -2389,7 +2386,7 @@ ChargingNeedsType is used by: <<notify_ev_charging_needs_request,NotifyEVChargin
 
 |requestedEnergyTransfer |<<energy_transfer_mode_enum_type,EnergyTransferModeEnumType>>
   |1..1 |Required. Mode of energy transfer requested by the EV.
-|departureTime |dateTime |0..1 Optional. Estimated departure time of the EV.
+|departureTime |dateTime |0..1 |Optional. Estimated departure time of the EV.
 |acChargingParameters |<<ac_charging_parameters_type,ACChargingParametersType>>
   |0..1 |Optional. EV AC charging parameters.
 |dcChargingParameters |<<dc_charging_parameters_type,DCChargingParametersType>>
@@ -2721,9 +2718,9 @@ EventDataType is used by: <<notify_event_request,NotifyEventRequest>>
 |timestamp |dateTime
   |1..1 |Required. Timestamp of the moment the report was generated.
 |trigger |<<event_trigger_enum_type,EventTriggerEnumType>>
-  |1..1 Required. Type of trigger for this event, e.g. exceeding a threshold value.
+  |1..1 |Required. Type of trigger for this event, e.g. exceeding a threshold value.
 |cause |integer
-  |0..1 Optional. Refers to the Id of an event that is considered to be the cause for this event.
+  |0..1 |Optional. Refers to the Id of an event that is considered to be the cause for this event.
 |actualValue |string[0..2500]
   |1..1 |Required. Actual value (_attributeType_ Actual) of the variable.
   
@@ -4547,7 +4544,7 @@ MeasurandEnumType is used by: <<sampled_value_type,Common:SampledValueType>>
 |Power.Reactive.Export |Instantaneous reactive power exported by EV. (var or kvar)
 |Power.Reactive.Import |Instantaneous reactive power imported by EV. (var or kvar)
 |SoC |State of charge of charging vehicle in percentage
-Voltage
+|Voltage
   |Instantaneous DC or AC RMS supply voltage. +
   For _location_ = `Inlet` and _evseId_ = 0: voltage at charging station grid connection. +
   For _location_ = `Outlet` and _evseId_ > 0: voltage at EVSE outlet towards the EV.

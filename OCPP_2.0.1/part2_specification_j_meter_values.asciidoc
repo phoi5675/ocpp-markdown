@@ -81,7 +81,7 @@ For example, a value of 900 (15 minutes) indicates that every day should be brok
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===
-|NOTE |Clock-aligned meter values for an EVSE that is involved in a transaction MAY be transmitted in TransactionEventRequests with context  Sample.Clock instead of in MeterValuesRequests.
+|NOTE |Clock-aligned meter values for an EVSE that is involved in a transaction MAY be transmitted in TransactionEventRequests with _context_ = `Sample.Clock` instead of in MeterValuesRequests.
 |===
 
 === Multiple Locations/Phases
@@ -90,9 +90,9 @@ When a Charging Station can measure the same measurand on multiple locations or 
 
 For example: A Charging Station capable of measuring _Current.Import_ on _Inlet_ (all 3 phases) (grid connection) and _Outlet_ (3 phases per EVSE on both its EVSEs). _Current.Import_ is set in <<aligned_data_measurands,`AlignedDataMeasurands`>>. <<aligned_data_interval,`AlignedDataInterval`>> is set to 900 (seconds). Then the Charging Station should send: (every 15 minutes)
 
-- a <<metervalues_request,MeterValuesRequest>> with: evseId = 0; with 3 SampledValue elements, one per phase with location  Inlet.
-- a <<metervalues_request,MeterValuesRequest>> with: evseId = 1; with 3 SampledValue elements, one per phase with location  Outlet.
-- a <<metervalues_request,MeterValuesRequest>> with: evseId = 2; with 3 SampledValue elements, one per phase with location  Outlet.
+- a <<metervalues_request,MeterValuesRequest>> with: evseId = 0; with 3 SampledValue elements, one per phase with location = Inlet.
+- a <<metervalues_request,MeterValuesRequest>> with: evseId = 1; with 3 SampledValue elements, one per phase with location = Outlet.
+- a <<metervalues_request,MeterValuesRequest>> with: evseId = 2; with 3 SampledValue elements, one per phase with location = Outlet.
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===

@@ -54,7 +54,7 @@ Please see chapter 4 in "Part 1 - Architecture & Topology" about the addressing 
 
 Requirements for all the Configuration Variables in this document:
 
-- All variables that are writable SHALL have the VariableAttribute field: _persistence_  true, and SHALL thus be stored in a persistent way.
+- All variables that are writable SHALL have the VariableAttribute field: _persistence_ = true, and SHALL thus be stored in a persistent way.
 - Any fields not defined SHALL be left empty.
 - Any field marked with a * (Asterisk) can be of any possible value.
 - When the AttributeType is NOT given, the CSMS and Charging Station SHALL assume the AttributeType to be Actual.
@@ -204,7 +204,7 @@ Requirements for all the Configuration Variables in this document:
 |===
 |Required 3+d|yes
 |Component |componentName 2+d|OCPPCommCtrlr
-.3+|Variable |variableName 2+d|MessageAttempts
+.4+|Variable |variableName 2+d|MessageAttempts
   |variableInstance 2+d|TransactionEvent
   |variableAttributes |mutability d|ReadWrite
   |variableCharacteristics |dataType d|integer
@@ -1168,7 +1168,7 @@ The values are the same as for <<tx_start_point,`TxStartPoint`>>, but in this ca
 |===
 |Required 3+d|yes
 |Component |componentName 2+d|SampledDataCtrlr
-.5+|Variable |variableName 2+d|TxEndedMeasurands
+.4+|Variable |variableName 2+d|TxEndedMeasurands
   |variableAttributes |mutability d|ReadWrite
   .2+|variableCharacteristics |dataType d|MemberList
     |maxLimit d|The maximum length of the CSV formatted string, to be defined by the implementer.
@@ -1353,7 +1353,7 @@ A value of "0" (numeric zero), by convention, is to be interpreted to mean that 
 |Component |componentName 2+d|AlignedDataCtrlr
 .4+|Variable |variableName 2+d|TxEndedInterval
   |variableAttributes |mutability d|ReadWrite
-  .2+variableCharacteristics |unit d|s
+  .2+|variableCharacteristics |unit d|s
     |dataType d|integer
 |Description 3+d|Size (in seconds) of the clock-aligned data interval, intended to be transmitted in the <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) message. This is the size (in seconds) of the set of evenly spaced aggregation intervals per day, starting at 00:00:00 (midnight). For example, a value of 900 (15 minutes) indicates that every day should be broken into 96 15-minute intervals. +
   When clock aligned data is being collected, the interval in question is identified by the start time and (optional) duration interval value, represented according to the ISO8601 standard. All intervals are transmitted (if so enabled) at the end of the transaction in 1 TransactionEventRequest (<<transaction_event_enum_type,eventType = Ended>>) message. +
@@ -1896,7 +1896,7 @@ Required for Charging Stations supporting Tariff Information.
     |valuesList d|Available, Occupied, Reserved, Unavailable, Faulted
 |Description 3+d|This variable reports current availability state for the ChargingStation and EVSE. If a Connector has its own availability state independent of the EVSE, then this variable may be used to report the Connector’s availability state. As such it replicates ConnectorStatus values reported in StatusNotification messages.
 
-  An EVSE component is addressed on its own tier. So, EVSE #1 is addressed as component EVSE on tier  _evse_ = 1.
+  An EVSE component is addressed on its own tier. So, EVSE #1 is addressed as component EVSE on tier _evse_ = 1.
 |===
 
 [[allow_reset]]

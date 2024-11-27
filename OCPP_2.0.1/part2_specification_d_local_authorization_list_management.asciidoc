@@ -6,7 +6,7 @@
 :sectnums:
 == Introduction
 
-As explained in <<local_authorization_list,C1.4 - Local Authorization List>>, the Local Authorization List is a list of identifiers that can be synchronized with the CSMS. It allows authorization of a user when offline and when online it can be used to reduce authorization response time. This Functional Block is for enabling the CSMS to synchronize the list by either sending a complete list of identifiers to replace the Local Authorization List or by sending a list of changes (add, update, delete) to apply to the Local Authorization List. The operations to  support this are <<get_local_list_version,GetLocalListVersion>> and <<send_local_list,SendLocalList>>. +
+As explained in <<local_authorization_list,C1.4 - Local Authorization List>>, the Local Authorization List is a list of identifiers that can be synchronized with the CSMS. It allows authorization of a user when offline and when online it can be used to reduce authorization response time. This Functional Block is for enabling the CSMS to synchronize the list by either sending a complete list of identifiers to replace the Local Authorization List or by sending a list of changes (add, update, delete) to apply to the Local Authorization List. The operations to support this are <<get_local_list_version,GetLocalListVersion>> and <<send_local_list,SendLocalList>>. +
 The list contains the authorization status of all (or a selection of) identifiers and the corresponding expiration date. These values may be used to provide more fine grained information to users (e.g. by display message) during local authorization.
 
 <<<
