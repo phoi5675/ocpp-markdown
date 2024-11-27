@@ -214,6 +214,7 @@ d|G2  d|Charging details
 == Use cases & Requirements
 
 :sectnums!:
+[[m01_certificate_installation_ev]]
 === M01 - Certificate installation EV
 
 .M01 - Certificate installation
@@ -267,6 +268,7 @@ Source: <<iso15118_1,ISO15118-1>>
     |The CSMS is responsible for forwarding it to the secondary actor which will process the CertificateUpdateRequest. This could be a contract certificate pool as outlined in application guide VDE-AR- 2802-100-1.
 |===
 
+[[m02_certificate_update_ev]]
 === M02 - Certificate Update EV
 
 .M02 - Certificate Update
