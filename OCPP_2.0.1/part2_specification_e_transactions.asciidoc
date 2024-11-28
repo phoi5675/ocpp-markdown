@@ -57,7 +57,7 @@ If transactions similar to OCPP 1.6 are wanted, this section describes how the t
 
 In OCPP 1.x the moment a Charging Station should send StartTransaction.req was not defined very precise, generally this was done when the Charging Station was ready to deliver energy: cable is connected and user is authorized.
 
-To support similar transaction start behaviour, the value: _PowerPathClosed_ is to be used. (and for completeness, also add: _EnergyTransfer_
+To support similar transaction start behaviour, the value: _PowerPathClosed_ is to be used. (and for completeness, also add: _EnergyTransfer_)
 
 .The settings for an OCPP 1.6 compatible transaction
 [cols="<.^2,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
@@ -94,10 +94,7 @@ When the Charging Station fails to receive a <<transaction_event_response,Transa
 
 ==== Sequence numbers
 
-When delivery of <<transaction_event_request,TransactionEventRequest>> messages fails and will be retried later, the result is that <<transaction_event_request,TransactionEventRequest>>
-messages may arrive in the CSMS in a different order from the one in which the transaction events occurred at the Charging
-Station. This in turn would make it difficult for the CSMS to know if it received all <<transaction_event_request,TransactionEventRequest>> messages about a
-transaction, which the CSMS may want to know before it starts billing the transaction.
+When delivery of <<transaction_event_request,TransactionEventRequest>> messages fails and will be retried later, the result is that <<transaction_event_request,TransactionEventRequest>> messages may arrive in the CSMS in a different order from the one in which the transaction events occurred at the Charging Station. This in turn would make it difficult for the CSMS to know if it received all <<transaction_event_request,TransactionEventRequest>> messages about a transaction, which the CSMS may want to know before it starts billing the transaction.
 
 In order to make it possible to know that all <<transaction_event_request,TransactionEventRequest>> messages about a transaction were received, OCPP uses _sequence numbers_ in TransactionEventRequest messages. For every EVSE, the Charging Station maintains a counter of the number of <<transaction_event_request,TransactionEventRequest>> messages generated about that EVSE. When generating a new <<transaction_event_request,TransactionEventRequest>> message, the Charging Station includes the current value of the EVSE’s counter in the **seqNo** field of the request, and then increments the counter. With this mechanism, a CSMS can check if it has full information about a transaction by checking that:
 
@@ -150,7 +147,7 @@ The TransactionEventRequest contains several optional fields. Some of these fiel
 **_transactionInfo.chargingState_**
 
 (E02.FR.13) Whenever the charging state changes, the Charging Station must send a TransactionEventRequest containing _chargingState_. This implies that a TransactionEventRequest(_eventType_=`Started`) always has a _chargingState_, because the state goes from non-existent to a value. +
-If the change of charging state is the only event, then TransactionEventRequest has a _triggerReason_ = `ChargingStateChanged`, but if a change in charging state occurs together with other events, such as those represented by _triggerReason_ `CablePluggedIn` or (`Stop`)`Authorized`, for example, then _chargingState_ can simply be reported as part of that message. +
+If the change of charging state is the only event, then TransactionEventRequest has a _triggerReason_ = `ChargingStateChanged`, but if a change in charging state occurs together with other events, such as those represented by _triggerReason_ = `CablePluggedIn` or (`Stop`)`Authorized`, for example, then _chargingState_ can simply be reported as part of that message. +
 A TransactionEventRequest with _triggerReason_ = `ChargingStateChanged` must contain _chargingState_.
 
 **_transactionInfo.stoppedReason_**
@@ -358,7 +355,7 @@ image::part2/images/figure_44.svg[Sequence Diagram: Start Transaction options - 
   AND +
   The EV Driver is authorized +
   AND +
-  No transaction has started yet +
+  No transaction has started yet
     |The Charging Station SHALL start a transaction and send a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>) to the CSMS.
 |E01.FR.04  |<<tx_start_point,`TxStartPoint`>> contains: DataSigned +
   AND +
@@ -443,7 +440,7 @@ image::part2/images/figure_44.svg[Sequence Diagram: Start Transaction options - 
 |{nbsp} d|_Scenario description_ 
   |**1.** The EV Driver plugs in the cable at the Charging Station. +
   **2.** The Charging Station sends a <<status_notification_request,StatusNotificationRequest>> to the CSMS to inform it about a Connector that became <<connector_status_enum_type,_Occupied_>>. +
-  **3.** The Charging Station sends a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType == Started>>) notifying the CSMS about a transaction that has started (even when the driver is not yet known.) +
+  **3.** The Charging Station sends a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>) notifying the CSMS about a transaction that has started (even when the driver is not yet known.) +
   **4.** The CSMS responds with a <<transaction_event_response,TransactionEventResponse>>, confirming that the <<transaction_event_request,TransactionEventRequest>> was received. +
   **5.** The EV Driver is authorized by the Charging Station and/or CSMS. +
   **6.** The energy offer starts. +
@@ -525,7 +522,7 @@ image::part2/images/figure_45.svg[Sequence Diagram: Start Transaction - Cable Pl
   |The Charging Station MAY send additional <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) messages during the transaction when a <<trigger_reason_enum_type,trigger event>> occurs. |{nbsp}
 |E02.FR.17  |When a transaction-related trigger event occurs, listed in _TriggerReasonEnumType_ AND the transaction is ongoing.
   |The Charging Station SHALL send a <<transaction_event_request,TransactionEventRequest>> with a _triggerReason_ corresponding to the occurred event.
-    |When two trigger reasons overlap, the more specific one should be used. For example, when a cable is plugged in, triggerReason _CablePluggedIn_ should be used, not _ChargingStateChanged_. It is not forbidden to send separate <<transaction_event_request,TransactionEventRequest>> messages for each trigger, though.
+    |When two trigger reasons overlap, the more specific one should be used. For example, when a cable is plugged in, triggerReason = _CablePluggedIn_ should be used, not _ChargingStateChanged_. It is not forbidden to send separate <<transaction_event_request,TransactionEventRequest>> messages for each trigger, though.
 |E02.FR.18  |When the energy transfer starts AND If the Charging Station is able to report the number of phases used
   |The Charging Station SHALL provide the number of phases used, using the _numberOfPhasesUsed_ field. |{nbsp}
 |E02.FR.19  |E02.FR.18 AND +
@@ -622,7 +619,7 @@ This use-case is also valid for other configurations, but then the transaction m
     |The Charging Station SHALL add the measurands for _eventType_ = `Started` to the optional meterValue field with _context_ = `Transaction.Begin` in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) that occurs when charging starts. |{nbsp}
 |E03.FR.12  |When a transaction-related trigger event occurs, listed in _TriggerReasonEnumType_ AND the transaction is ongoing.
   |The Charging Station SHALL send a <<transaction_event_request,TransactionEventRequest>> with a triggerReason corresponding to the occurred event.
-    |When two trigger reasons overlap, the more specific one should be used. For example, when a cable is plugged in, triggerReason _CablePluggedIn_ should be used, not _ChargingStateChanged_. When two events occur at the same time, they need transmitted using two separate <<transaction_event_request,TransactionEventRequest>> messages. This is to prevent information loss, when something goes wrong.
+    |When two trigger reasons overlap, the more specific one should be used. For example, when a cable is plugged in, triggerReason = _CablePluggedIn_ should be used, not _ChargingStateChanged_. When two events occur at the same time, they need transmitted using two separate <<transaction_event_request,TransactionEventRequest>> messages. This is to prevent information loss, when something goes wrong.
 |E03.FR.13  |When the energy transfer starts AND +
   If the Charging Station is able to report the number of phases used
     |The Charging Station SHALL provide the number of phases used, using the _numberOfPhasesUsed_ field. |{nbsp}
@@ -745,7 +742,7 @@ multiple <<transaction_event_request,TransactionEventRequest>>(<<transaction_eve
   |**1.** The Charging Station sends <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>) that contains the IdToken provided by the EV Driver. +
   **2.** The CSMS responds with <<transaction_event_response,TransactionEventResponse>>, with an AuthorizationStatus that does not allow charging. +
   **3.** The Charging Station suspends the energy offer. (Taking into account: <<max_energy_on_invalid_id,`MaxEnergyOnInvalidId`>>, if supported) +
-  **4.** The Charging Station sends <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>) with trigger _Deauthorized_ and the chargingState _SuspendedEVSE_ and receives <<transaction_event_response,TransactionEventResponse>> from the CSMS.
+  **4.** The Charging Station sends <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>) with trigger = _Deauthorized_ and the chargingState _SuspendedEVSE_ and receives <<transaction_event_response,TransactionEventResponse>> from the CSMS.
 |5   |Prerequisite(s) 
   |The EV Driver is offline/locally authorized by the Charging Station. +
   The IdToken is not allowed to charge by the CSMS.
@@ -978,7 +975,6 @@ image::part2/images/figure_53.svg[Sequence Diagram: Stop Transaction options - E
 .Sequence Diagram: Stop Transaction options - Authorized
 image::part2/images/figure_54.svg[Sequence Diagram: Stop Transaction options - Authorized]
 
-
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7   |Error handling    |n/a
@@ -1129,8 +1125,7 @@ The CSMS cannot prevent a transaction from stopping.
   |Charging Station SHOULD use a <<reason_enum_type,stoppedReason>> = `Local` in the final TransactionEventRequest with _eventType_ = `Ended`.
     |e.g. EV-driver presented IdToken to stop the transaction or pressed a "stop" button (not the emergency stop). See use case F03 for remotely stopping.
 |E07.FR.06  |If a transaction is stopped, but not on request of the EV driver at the Charging Station.
-  |Charging Station SHOULD use the most appropriate
-value from <<reason_enum_type,ReasonEnumType>> for _stoppedReason_ in the final TransactionEventRequest with _eventType_ = `Ended`.
+  |Charging Station SHOULD use the most appropriate value from <<reason_enum_type,ReasonEnumType>> for _stoppedReason_ in the final TransactionEventRequest with _eventType_ = `Ended`.
     |Apart from remotely stopping (`Remote`), CSMS revoking authorization (`DeAuthorized`) or disconnecting the EV (`EVDisconnected`), most other reasons are related to technical faults or energy limitations.
 |E07.FR.07  |As part of the normal transaction termination.
   |The Charging Station SHALL unlock the cable (if not permanently attached). |{nbsp}
@@ -1250,7 +1245,6 @@ image::part2/images/figure_57.svg[Sequence Diagram: Transaction stopped while Ch
 |4   |Description
   |This use case covers how a transaction is stopped when the EV Driver unplugs the cable at the EV side. In this use case the Configuration Variable: <<stop_tx_on_ev_side_disconnect,`StopTxOnEVSideDisconnect`>> = true.
 
-
   The Charging Cable is unplugged at the EV side. This is detected by the Charging Station. The Charging Station stops the transaction and sends a <<transaction_event_request,TransactionEventRequest>> to the CSMS. The Charging Cable, if locked and <<unlock_on_ev_side_disconnect,`UnlockOnEVSideDisconnect`>> = false, will remain locked at the Charging Station until the EV Driver returns and presents his/hers IdToken. Otherwise it will unlock the cable.
 |{nbsp} d|_Actors_    |Charging Station, CSMS, EV Driver
 |{nbsp} d|_Scenario description_ 
@@ -1312,8 +1306,7 @@ image::part2/images/figure_58.svg[Sequence Diagram: When cable disconnected on E
   |The Charging Station SHALL set the message’s **seqNo** field as specified in <<sequence_number_generation,Sequence Number Generation>>.
     |This enables the CSMS to track the completeness of transaction information
 |E09.FR.05  |When configured to send meter data in the <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>), See: <<metervalues_configuration,Meter Values - Configuration>>
-  |The Charging Station SHALL add the configured measurands to the optional meterValue field in the
-<<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>) sent to the CSMS to provide more details about transaction usage. |{nbsp}
+  |The Charging Station SHALL add the configured measurands to the optional meterValue field in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>) sent to the CSMS to provide more details about transaction usage. |{nbsp}
 |E09.FR.06  |E09.FR.05 +
   AND +
   The Charging Station is running low on memory
@@ -1321,9 +1314,7 @@ image::part2/images/figure_58.svg[Sequence Diagram: When cable disconnected on E
 |E09.FR.07  |E09.FR.06 
   |When dropping meter data, the Charging Station SHALL drop intermediate values first (1st value, 3th value, 5th etc), not start dropping values from the start of the list or stop adding values to the list. |{nbsp}
 |E09.FR.08  |<<sampled_data_sign_readings,`SampledDataSignReadings`>> is _true_
-  |The Charging Station SHALL retrieve signed meter
-values and put them in the _signedMeterValue_ field
-of sampledValues. |{nbsp}
+  |The Charging Station SHALL retrieve signed meter values and put them in the _signedMeterValue_ field of sampledValues. |{nbsp}
 |===
 
 <<<
