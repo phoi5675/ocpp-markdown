@@ -1090,8 +1090,8 @@ image::part2/images/figure_54.svg[Sequence Diagram: Stop Transaction options - A
 .Sequence Diagram: Transaction locally stopped by IdToken with TransactionEventRequest reported strictly by TxStopPoint configuration
 image::part2/images/figure_55.svg[Sequence Diagram: Transaction locally stopped by IdToken with TransactionEventRequest reported strictly by TxStopPoint configuration]
 
-.Sequence Diagram: Transaction locally stopped by IdToken with delayed TransactionEventRequest eventType  Ended for TxStopPoint = Authorized OR PowerPathClosed
-image::part2/images/figure_56.svg[Sequence Diagram: Transaction locally stopped by IdToken with delayed TransactionEventRequest eventType  Ended for TxStopPoint = Authorized OR PowerPathClosed]
+.Sequence Diagram: Transaction locally stopped by IdToken with delayed TransactionEventRequest eventType = Ended for TxStopPoint = Authorized OR PowerPathClosed
+image::part2/images/figure_56.svg[Sequence Diagram: Transaction locally stopped by IdToken with delayed TransactionEventRequest eventType = Ended for TxStopPoint = Authorized OR PowerPathClosed]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
@@ -1509,7 +1509,7 @@ image::part2/images/figure_60.svg[Sequence Diagram: Connection Loss During Trans
 |{nbsp} d|_Scenario description_ 
   |**1.** The connection with the CSMS is restored. +
   **2.** The Charging Station sends a Heartbeat message to the CSMS. +
-  **3.** The Charging Station sends <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>, offline  TRUE) to the CSMS. +
+  **3.** The Charging Station sends <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>, offline = TRUE) to the CSMS. +
   **4.** The CSMS responds with <<transaction_event_response,TransactionEventResponse>>, accepting the transaction. +
   **5.** The Charging Station sends <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>, offline = TRUE) +
   **6.** The CSMS responds with <<transaction_event_response,TransactionEventResponse>>. +

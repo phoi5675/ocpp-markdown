@@ -48,7 +48,7 @@ Obviously, it is also possible to make the Charging Station or a Connector avail
   |**1.** A connector status changed, the Charging Station sends a <<status_notification_request,StatusNotificationRequest>> to the CSMS to inform the CSMS about the new status. +
   **2.** The CSMS responds with <<status_notification_response,StatusNotificationResponse>> to the Charging Station.
 |{nbsp} d|_Alternative scenario_
-  |**1.** Instead of a <<status_notification_request,StatusNotificationRequest>> a Charging Station can send a <<notify_event_request,NotifyEventRequest>> with _trigger_  `Delta` for _component.name_  "Connector" and the EVSE number in _evse.id_ and the connector number in _evse.connectorId_, and _variable_ = "AvailabilityState" with the value of the new status to the CSMS. +
+  |**1.** Instead of a <<status_notification_request,StatusNotificationRequest>> a Charging Station can send a <<notify_event_request,NotifyEventRequest>> with _trigger_ = `Delta` for _component.name_  "Connector" and the EVSE number in _evse.id_ and the connector number in _evse.connectorId_, and _variable_ = "AvailabilityState" with the value of the new status to the CSMS. +
   **1a.** Optionally, Charging Station can also include the state of _component_ = "ChargingStation" and _component_ = "EVSE" in the <<notify_event_request,NotifyEventRequest>>. +
   **2.** The CSMS responds with <<notify_event_response,NotifyEventResponse>> to the Charging Station.
 |5   |Prerequisite(s) |n/a
@@ -365,7 +365,7 @@ image::part2/images/figure_76.svg[Sequence Diagram: Change Availability Charging
 |{nbsp} d|_Scenario description_
   |**1.** The EV Driver is authorized by the Charging Station and/or CSMS. +
   **2.** The lock Connector attempt fails. +
-  **3.** A <<notify_event_request,NotifyEventRequest>> for the ConnectorPlugRetentionLock component, variable  Problem, value = _true_.
+  **3.** A <<notify_event_request,NotifyEventRequest>> for the ConnectorPlugRetentionLock component, variable = Problem, value = _true_.
 |5   |Prerequisite(s) |Charging Cable plugged in (status = _Occupied_) +
   Charging Station has the ConnectorPlugRetentionLock component defined in its Device Model. +
   MonitoringLevel is set to a level that a connector lock event failure will be reported.
@@ -391,7 +391,7 @@ image::part2/images/figure_77.svg[Sequence Diagram: Lock Failure]
 |G05.FR.01  |If the locking of the connector retention lock fails.
   |The Charging Station SHALL NOT start charging. |{nbsp}
 |G05.FR.02  |G05.FR.01 
-  |The Charging Station SHALL send a <<notify_event_request,NotifyEventRequest>> to the CSMS for the _ConnectorPlugRetentionLock_ component with variable  Problem, Value = _True_. |{nbsp}
+  |The Charging Station SHALL send a <<notify_event_request,NotifyEventRequest>> to the CSMS for the _ConnectorPlugRetentionLock_ component with variable = Problem, Value = _True_. |{nbsp}
 |G05.FR.03  |G05.FR.02
   |The CSMS SHALL respond with a <<notify_event_response,NotifyEventResponse>>. |{nbsp}
 |G05.FR.04  |G05.FR.01 

@@ -238,7 +238,7 @@ image::part2/images/figure_67.svg[Sequence Diagram: Remote Start Transaction - R
 |F02.FR.07  |When the EV Driver does not plug-in the charging cable before the timeout set by the Configuration Variable: +
   <<ev_connection_timeout,`EVConnectionTimeOut`>> AND +
   TxStopPoint does not contain `ParkingBayOccupancy`
-    |The Charging Station SHALL end the transaction and send a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>, stoppedReason  Timeout, _triggerReason_ = `EVConnectionTimeout`) to the CSMS.
+    |The Charging Station SHALL end the transaction and send a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>, stoppedReason = Timeout, _triggerReason_ = `EVConnectionTimeout`) to the CSMS.
       |Otherwise the transaction would not be ended in case the TxStopPoint does not contain Authorized.
 |F02.FR.08  |When the EV Driver does not plug-in the charging cable before the timeout set by the Configuration Variable: +
   <<ev_connection_timeout,`EVConnectionTimeOut`>> AND +

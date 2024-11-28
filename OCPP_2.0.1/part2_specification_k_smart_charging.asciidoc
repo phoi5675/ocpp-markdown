@@ -473,7 +473,7 @@ image::part2/images/figure_101.svg[Sequence Diagram: SetChargingProfile]
     |The Charging Station SHALL assume numberPhases = 3 as a default value. |{nbsp}
 |K01.FR.50  |When a <<set_charging_profile_request,SetChargingProfileRequest>> with a <<charging_rate_unit_enum_type,chargingRateUnit>> = _W_ is received AND +
   The ChargingSchedule is used for AC charging
-    |The Charging Station SHOULD calculate the phase current limit via: Current per phase  Power / (Line Voltage * Number of Phases).
+    |The Charging Station SHOULD calculate the phase current limit via: Current per phase = Power / (Line Voltage * Number of Phases).
       |The "Line Voltage" used in the calculation is not the measured voltage, but the set voltage for the area (for example, 230 or 110 V). The "Number of Phases" is the numberPhases from the ChargingSchedulePeriod. It is usually more convenient to use <<charging_rate_unit_enum_type,chargingRateUnit>> = _A_ for AC charging.
 |K01.FR.51  |When a <<set_charging_profile_request,SetChargingProfileRequest>> with a <<charging_rate_unit_enum_type,chargingRateUnit>> = _A_ is received
   |The Charging Station SHALL use the provided limits, to limit the amount of Ampere per phase, not the sum of all phases. |{nbsp}
@@ -1617,6 +1617,6 @@ image::part2/images/figure_116.svg[Renegotiation initiated by EV]
     |The Charging Station SHALL use the TxDefaultProfile (if present) and generate a charging schedule within the limits of its composite schedule. |{nbsp}
 |K17.FR.16  |K17.FR.07 +
   EV does not return a charging profile
-    |Charging Station IS RECOMMENDED to return an EV charging profile as a chargingSchedule in a NotifyEVChargingScheduleRequest message to CSMS that matches the schedule that was selected by the EV (i.e. chargingSchedule.id  SAScheduleTupleId)
+    |Charging Station IS RECOMMENDED to return an EV charging profile as a chargingSchedule in a NotifyEVChargingScheduleRequest message to CSMS that matches the schedule that was selected by the EV (i.e. chargingSchedule.id = SAScheduleTupleId)
       |In ISO 15118-2 the EV charging profile and the selected schedule are returned as _ChargingProfile_ and _SAScheduleTupleId_ in PowerDeliveryReq.
 |===

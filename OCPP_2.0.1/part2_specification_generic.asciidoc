@@ -64,6 +64,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 The phrase "valid reasons in particular circumstances" relating to the usage of the terms "SHOULD", "SHOULD NOT", "RECOMMENDED", and "NOT RECOMMENDED" is to be taken to mean technically valid reasons, such as the absence of necessary hardware to support a function from a Charging Station design: for the purposes of this specification it specifically excludes decisions made on commercial, or other non-technical grounds, such as cost of implementation, or likelihood of use.
 
+[[primitive_datatypes]]
 ==== Primitive Datatypes
 
 The specification mentions the following primitive datatypes:
@@ -424,7 +425,7 @@ The generic requirements build the basis for defining the use case elements desc
   |The CSMS SHALL respond with a RPC Framework: CALLERROR: SecurityError. |{nbsp}
 |FR.05  |There are a few messages that do not provide their result in the response message, but send one or more messages that contain the result. When one of the following messages is received; GetReport, GetBaseReport, GetMonitoringReport, GetDisplayMessages, CustomerInformation, GetChargingProfiles, GetLog, UpdateFirmware, PublishFirmware, TriggerMessage(<message>)
   |The Charging Station SHALL acknowledge the requests in the list below with a response message(shown after the arrow "→") with the same requestId as the request: GetReport → NotifyReport GetBaseReport → NotifyReport GetMonitoringReport → NotifyMonitoringReport GetDisplayMessages → NotifyDisplayMessage CustomerInformation → NotifyCustomerInformation GetChargingProfiles → ReportChargingProfiles GetLog → LogStatusNotification UpdateFirmware → FirmwareStatusNotification PublishFirmware → PublishFirmwareStatusNotification TriggerMessage(<message>) → <requested message>
-    |The CSMS needs to know that a request for requestId  X was accepted, so that it can expect result messages for this requestId. TriggerMessage does not have a requestId , but the requirement still applies in the sense that a TriggerMessageResponse must be sent before the sending the requested message.
+    |The CSMS needs to know that a request for _requestId = X_ was accepted, so that it can expect result messages for this requestId. TriggerMessage does not have a requestId , but the requirement still applies in the sense that a TriggerMessageResponse must be sent before the sending the requested message.
 |===
 
 === Time Format Requirements

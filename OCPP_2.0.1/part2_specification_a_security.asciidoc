@@ -553,7 +553,7 @@ If the Charging Station has multiple SECCs that each control multiple EVSEs, the
   **1.** The CSMS requests the Charging Station to update its certificate using the <<trigger_message_request,TriggerMessageRequest>> with the _requestedMessage_ field set to <<message_trigger_enum_type,SignChargingStationCertificate>>. +
   **2.** The Charging Station responds with <<trigger_message_response,TriggerMessageResponse>> +
   **3.** The Charging Station generates a new public / private key pair. +
-  **4.** The Charging Station sends a <<sign_certificate_request,SignCertificateRequest>> to the CSMS containing the _certificateType_  `ChargingStationCertificate`. +
+  **4.** The Charging Station sends a <<sign_certificate_request,SignCertificateRequest>> to the CSMS containing the _certificateType_ = `ChargingStationCertificate`. +
   **5.** The CSMS responds with <<sign_certificate_response,SignCertificateResponse>>, with status _Accepted_. +
   **6.** The CSMS forwards the CSR to the Certificate Authority Server. +
   **7.** Certificate Authority Server signs the certificate. +

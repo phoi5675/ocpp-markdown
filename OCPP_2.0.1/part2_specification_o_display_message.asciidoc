@@ -94,7 +94,7 @@ image::part2/images/figure_141.svg[Set DisplayMessage sequence diagram]
 |O01.FR.16  |O01.FR.15 AND +
   Another message with <<message_priority_enum_type,priority>> _AlwaysFront_ is already set
     |The Charging Station SHALL replace the old message with the newly set message.
-|O01.FR.17  |Language SHALL be specified as RFC-5646 tags, see: <<rfc5646,[RFC5646]>>, example: US English is: "en-US"
+|O01.FR.17  |{nbsp} |Language SHALL be specified as RFC-5646 tags, see: <<rfc5646,[RFC5646]>>, example: US English is: "en-US"
 |===
 
 <<<
@@ -154,7 +154,7 @@ image::part2/images/figure_142.svg[Set DisplayMessage for transaction sequence d
   |The Charging Station SHALL send a <<set_display_message_response,SetDisplayMessageResponse>> with status: <<display_message_status_enum_type,**NotSupportedMessageFormat**>>.
 |O02.FR.06  |{nbsp}
   |The Charging Station SHALL NOT display the DisplayMessage message before the <<message_info_type,startTime>>.
-|O02.FR.07  |The Charging Station SHALL remove a DisplayMessage message after the <<message_info_type,endTime>>.
+|O02.FR.07  |{nbsp} |The Charging Station SHALL remove a DisplayMessage message after the <<message_info_type,endTime>>.
 |O02.FR.08  |When the Charging Station knows the language preferences of the EV Driver
   |The Charging Station SHALL display the DisplayMessage message in the preferred language, if available.
 |O02.FR.09  |O02.FR.08
