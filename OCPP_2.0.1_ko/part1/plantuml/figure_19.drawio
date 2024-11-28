@@ -1,0 +1,303 @@
+<mxfile host="65bd71144e" scale="0.8" border="0">
+    <diagram id="2imF5TS-2AsIUvXl1Hec" name="Page-1">
+        <mxGraphModel dx="204" dy="1066" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="SdKNR-IxsHslmInC_97g-1" value="&lt;div style=&quot;line-height: 14.4px;&quot;&gt;&lt;div style=&quot;line-height: 14.4px;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;«&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;BusinessComponent&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;»&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;b&gt;Components:IdentifiedObject&lt;/b&gt;&lt;/div&gt;" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;fillColor=#e9fea7;shadow=1;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="480" y="20" width="220" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-2" value="&lt;div&gt;&lt;span style=&quot;text-align: center; background-color: initial;&quot;&gt;&amp;nbsp; «Content»&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;+&amp;nbsp; &amp;nbsp; MRID: NumericIdentifierType [0..1]&lt;/span&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; ObjectID: IdentifierType [0..*]&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; Name: NameType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; AliasName: NameType [0..*]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; Description: TextType [0..*]&lt;br&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=#e9fea7;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" parent="SdKNR-IxsHslmInC_97g-1" vertex="1">
+                    <mxGeometry y="40" width="220" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-24" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;endArrow=none;endFill=0;curved=0;" parent="1" source="SdKNR-IxsHslmInC_97g-3" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="590" y="180" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="255" y="190"/>
+                            <mxPoint x="590" y="190"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-3" value="&lt;div style=&quot;line-height: 14.4px;&quot;&gt;&lt;div style=&quot;line-height: 14.4px;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;«&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;BusinessComponent&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;»&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;b&gt;AuthorizationListType&lt;/b&gt;&lt;/div&gt;" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;fillColor=#e9fea7;shadow=1;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="120" y="350" width="270" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-4" value="&lt;div&gt;&lt;span style=&quot;text-align: center; background-color: initial;&quot;&gt;&amp;nbsp; «Content»&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; VersionNumber: IntegerType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; MaxLength: CounterType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; MaxTransmitCount: CounterType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; LocalAuthListEnabled: IndicatorType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; LocalAuthListMaxLength: CounterType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; SendLocalListMaxLength: CounterType [0..1]&lt;br&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=#e9fea7;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" parent="SdKNR-IxsHslmInC_97g-3" vertex="1">
+                    <mxGeometry y="40" width="270" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-5" value="&lt;div style=&quot;line-height: 14.4px;&quot;&gt;&lt;div style=&quot;line-height: 14.4px;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;«&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;BusinessComponent&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;»&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;b&gt;RootModel::DeviceFunctionType&lt;/b&gt;&lt;/div&gt;" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=70;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;fillColor=#e9fea7;shadow=1;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="480" y="220" width="220" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-6" value="&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=#e9fea7;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" parent="SdKNR-IxsHslmInC_97g-5" vertex="1">
+                    <mxGeometry y="70" width="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-7" value="&lt;div style=&quot;line-height: 14.4px;&quot;&gt;&lt;div style=&quot;line-height: 14.4px;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;«&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;BusinessComponent&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;»&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;b&gt;OCSPRequestDataType&lt;/b&gt;&lt;/div&gt;" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;fillColor=#e9fea7;shadow=1;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="717" y="220" width="290" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-8" value="&lt;div&gt;+&amp;nbsp; &amp;nbsp; HashAlgorithm: HashAlgorithmEnumType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; IssuerNameHash: IssuerNameType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; IssuerKeyHash: HashType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; SerialNumber: SerialNumberType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; ResponderURL: URIType [0..1]&lt;br&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=#e9fea7;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" parent="SdKNR-IxsHslmInC_97g-7" vertex="1">
+                    <mxGeometry y="40" width="290" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endSize=15;endArrow=blockThin;endFill=0;" parent="1" source="SdKNR-IxsHslmInC_97g-9" target="SdKNR-IxsHslmInC_97g-5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-9" value="&lt;div style=&quot;line-height: 14.4px;&quot;&gt;&lt;div style=&quot;line-height: 14.4px;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;«&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;BusinessComponent&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;»&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;b&gt;AuthorizationFunctionType&lt;/b&gt;&lt;/div&gt;" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;fillColor=#e9fea7;shadow=1;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="440" y="470" width="300" height="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-10" value="&lt;div&gt;&lt;span style=&quot;text-align: center; background-color: initial;&quot;&gt;&amp;nbsp; «Content»&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; AuthorizationListSupported: IndicatorType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; LocalAuthorizationEnabled: IndicatorType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; LocalAuthorizeOffline: IndicatorType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; LocalPreAuthorize: IndicatorType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; AuthorizationCacheEnabled: IndicatorType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; AllowOfflineTxForUnknownID: IndicatorType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; LawEnforcementGroupId: TokenType [0..1]&lt;br&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=#e9fea7;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" parent="SdKNR-IxsHslmInC_97g-9" vertex="1">
+                    <mxGeometry y="40" width="300" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-25" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;curved=0;endArrow=none;endFill=0;" parent="1" source="SdKNR-IxsHslmInC_97g-11" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="590" y="180" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="1075" y="190"/>
+                            <mxPoint x="590" y="190"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-11" value="&lt;div style=&quot;line-height: 14.4px;&quot;&gt;&lt;div style=&quot;line-height: 14.4px;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;«&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;BusinessComponent&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;»&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;b&gt;Transactions:TransactionType&lt;/b&gt;&lt;/div&gt;" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;fillColor=#e9fea7;shadow=1;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="930" y="470" width="290" height="270" as="geometry"/>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-12" value="&lt;div&gt;&lt;span style=&quot;text-align: center; background-color: initial;&quot;&gt;&amp;nbsp; «Content»&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; SeqNo: CounterType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; ChargingState: ChargingStateEnumType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; Offline: IndicatorType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; StartedTimestamp: DateTimeType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; StoppedTimestamp: DateTimeType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; TimeSpendCharging: SecondsType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; NumberOfPhasesUsed: CounterType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; MaxAllowedHours: SecondsType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; MaxAllowedKwh: PowerType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; TriggerReason: TriggerReasonEnumType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; RemoteStartID: RequestIdType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; Id: TransactionIdType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; RunningCost: AmountType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; TotalCost: AmountType [0..1]&lt;br&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=#e9fea7;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" parent="SdKNR-IxsHslmInC_97g-11" vertex="1">
+                    <mxGeometry y="40" width="290" height="230" as="geometry"/>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-13" value="&lt;div style=&quot;line-height: 14.4px;&quot;&gt;&lt;div style=&quot;line-height: 14.4px;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;«&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;BusinessComponent&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;»&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;b&gt;IDTokenType&lt;/b&gt;&lt;/div&gt;" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;fillColor=#e9fea7;shadow=1;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="490" y="730" width="200" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-14" value="&lt;div&gt;+&amp;nbsp; &amp;nbsp; IDToken: TokenType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; Type: IDTokenEnumType [0..1]&lt;br&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=#e9fea7;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" parent="SdKNR-IxsHslmInC_97g-13" vertex="1">
+                    <mxGeometry y="40" width="200" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-15" value="&lt;div style=&quot;line-height: 14.4px;&quot;&gt;&lt;div style=&quot;line-height: 14.4px;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;«&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;BusinessComponent&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;»&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;b&gt;IDTokenInfoType&lt;/b&gt;&lt;/div&gt;" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;fillColor=#e9fea7;shadow=1;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="455" y="870" width="270" height="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-16" value="&lt;div&gt;&lt;span style=&quot;text-align: center; background-color: initial;&quot;&gt;&amp;nbsp; «Content»&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; Status: AuthorizationStatusEnumType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; CacheExpiryDateTime: DateTimeType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; Language1: LanguageType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; Language2: LanguageType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; ChargingPriority: NumericIdentifierType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; ListID: IdentifierType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; ListEntryTimestamp: DateTimeType [0.1]&lt;br&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=#e9fea7;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" parent="SdKNR-IxsHslmInC_97g-15" vertex="1">
+                    <mxGeometry y="40" width="270" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-17" value="&lt;div style=&quot;line-height: 14.4px;&quot;&gt;&lt;div style=&quot;line-height: 14.4px;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;«&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;BusinessComponent&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;»&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;b&gt;Components::MessageContentType&lt;/b&gt;&lt;/div&gt;" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;fillColor=#e9fea7;shadow=1;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="950" y="900" width="250" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-18" value="&lt;div&gt;&lt;span style=&quot;text-align: center; background-color: initial;&quot;&gt;&amp;nbsp; «Content»&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; Format: MessageFormatEnumType [0..1]&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; Language: LanguageType [0..1]&lt;br&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp; &amp;nbsp; Content: MessageType [0..1]&lt;br&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=#e9fea7;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" parent="SdKNR-IxsHslmInC_97g-17" vertex="1">
+                    <mxGeometry y="40" width="250" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-19" value="&lt;div style=&quot;line-height: 14.4px;&quot;&gt;&lt;div style=&quot;line-height: 14.4px;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;«&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;enumeration,BDTEnumType&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;»&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;line-height: 14.4px;&quot;&gt;&lt;b style=&quot;background-color: initial;&quot;&gt;CodeLists::&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;line-height: 14.4px;&quot;&gt;&lt;b style=&quot;background-color: initial;&quot;&gt;IDTokenEnumType&lt;/b&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=60;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;fillColor=#f6fda6;shadow=1;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="20" y="850" width="170" height="210" as="geometry"/>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-20" value="&lt;div&gt;&lt;div style=&quot;line-height: 14.4px;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp; «&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;enum,Facet&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;»&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; Central&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; eMAID&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; ISO14443&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; ISO15693&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; Local&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; NoAuthorization&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; KeyCode&lt;br&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=#f6fda6;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" parent="SdKNR-IxsHslmInC_97g-19" vertex="1">
+                    <mxGeometry y="60" width="170" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-21" value="&lt;div style=&quot;line-height: 14.4px;&quot;&gt;&lt;div style=&quot;line-height: 14.4px;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;«&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;enumeration,BDTEnumType&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;»&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;line-height: 14.4px;&quot;&gt;&lt;b style=&quot;background-color: initial;&quot;&gt;CodeLists::&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;line-height: 14.4px;&quot;&gt;&lt;b style=&quot;background-color: initial;&quot;&gt;AuthorizationStatusEnumType&lt;/b&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=60;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;fillColor=#f6fda6;shadow=1;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="220" y="840" width="180" height="230" as="geometry"/>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-22" value="&lt;div&gt;&lt;div style=&quot;line-height: 14.4px;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp; «&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;enum,Facet&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;»&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; Accepted&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; Blocked&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; Expired&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; Invalid&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; NoCredit&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; NotAllowedTypeEVSE&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; NotAtThisLocation&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; NotAtThisTime&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; ConcurrentTx&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; Unknown&lt;br&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=#f6fda6;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;" parent="SdKNR-IxsHslmInC_97g-21" vertex="1">
+                    <mxGeometry y="60" width="180" height="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-23" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.501;entryY=1.002;entryDx=0;entryDy=0;entryPerimeter=0;endSize=15;endArrow=blockThin;endFill=0;" parent="1" source="SdKNR-IxsHslmInC_97g-5" target="SdKNR-IxsHslmInC_97g-2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-27" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.312;entryY=-0.006;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1.001;exitY=0.133;exitDx=0;exitDy=0;exitPerimeter=0;endSize=15;endArrow=diamondThin;endFill=1;curved=0;" parent="1" source="SdKNR-IxsHslmInC_97g-3" target="SdKNR-IxsHslmInC_97g-9" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="390" y="370" as="sourcePoint"/>
+                        <Array as="points">
+                            <mxPoint x="534" y="370"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-28" value="+AuthorizationList" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-27" vertex="1" connectable="0">
+                    <mxGeometry x="-0.8069" y="1" relative="1" as="geometry">
+                        <mxPoint x="22" y="-8" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-29" value="0..*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-27" vertex="1" connectable="0">
+                    <mxGeometry x="-0.8619" y="-1" relative="1" as="geometry">
+                        <mxPoint x="-6" y="7" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-30" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.205;entryY=-0.005;entryDx=0;entryDy=0;entryPerimeter=0;endSize=15;endArrow=diamondThin;endFill=1;curved=0;" parent="1" source="SdKNR-IxsHslmInC_97g-3" target="SdKNR-IxsHslmInC_97g-9" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-31" value="+AuthorizationCache" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-30" vertex="1" connectable="0">
+                    <mxGeometry x="-0.6147" relative="1" as="geometry">
+                        <mxPoint x="23" y="-9" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-32" value="0..1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-30" vertex="1" connectable="0">
+                    <mxGeometry x="-0.7229" relative="1" as="geometry">
+                        <mxPoint x="-10" y="9" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-33" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1.002;entryY=0.173;entryDx=0;entryDy=0;entryPerimeter=0;curved=0;endArrow=none;endFill=0;" parent="1" source="SdKNR-IxsHslmInC_97g-7" target="SdKNR-IxsHslmInC_97g-9" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-34" value="+OCSPCertificateHash" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-33" vertex="1" connectable="0">
+                    <mxGeometry x="-0.9414" relative="1" as="geometry">
+                        <mxPoint x="-59" y="2" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-35" value="0..*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-33" vertex="1" connectable="0">
+                    <mxGeometry x="-0.9285" relative="1" as="geometry">
+                        <mxPoint x="10" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-36" value="+AuthorizationFunction" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-33" vertex="1" connectable="0">
+                    <mxGeometry x="0.875" relative="1" as="geometry">
+                        <mxPoint x="41" y="-9" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-37" value="0..*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-33" vertex="1" connectable="0">
+                    <mxGeometry x="0.9191" y="1" relative="1" as="geometry">
+                        <mxPoint y="7" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-38" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=1.005;entryY=0.687;entryDx=0;entryDy=0;entryPerimeter=0;curved=0;endArrow=none;endFill=0;" parent="1" target="SdKNR-IxsHslmInC_97g-10" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="930" y="560" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-39" value="+Transaction" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-38" vertex="1" connectable="0">
+                    <mxGeometry x="-0.8655" relative="1" as="geometry">
+                        <mxPoint x="-18" y="-9" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-40" value="0..*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-38" vertex="1" connectable="0">
+                    <mxGeometry x="-0.8933" y="1" relative="1" as="geometry">
+                        <mxPoint x="2" y="8" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-41" value="+AuthorizationFunction" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-38" vertex="1" connectable="0">
+                    <mxGeometry x="0.8158" relative="1" as="geometry">
+                        <mxPoint x="37" y="-12" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-42" value="0..1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-38" vertex="1" connectable="0">
+                    <mxGeometry x="0.9053" y="1" relative="1" as="geometry">
+                        <mxPoint x="1" y="9" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-44" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=-0.002;entryY=0.379;entryDx=0;entryDy=0;entryPerimeter=0;curved=0;endArrow=none;endFill=0;" parent="1" source="SdKNR-IxsHslmInC_97g-3" target="SdKNR-IxsHslmInC_97g-13" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-45" value="+AuthorizationList" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-44" vertex="1" connectable="0">
+                    <mxGeometry x="-0.955" relative="1" as="geometry">
+                        <mxPoint x="-47" y="-1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-46" value="0..1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-44" vertex="1" connectable="0">
+                    <mxGeometry x="-0.9584" y="1" relative="1" as="geometry">
+                        <mxPoint x="11" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-47" value="+LocalAuthorization" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-44" vertex="1" connectable="0">
+                    <mxGeometry x="0.874" y="2" relative="1" as="geometry">
+                        <mxPoint x="-20" y="-7" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-48" value="0..*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-44" vertex="1" connectable="0">
+                    <mxGeometry x="0.9464" y="-2" relative="1" as="geometry">
+                        <mxPoint x="2" y="6" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-49" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.503;entryY=1.001;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1.003;exitY=0.371;exitDx=0;exitDy=0;exitPerimeter=0;endArrow=none;endFill=0;curved=0;" parent="1" source="SdKNR-IxsHslmInC_97g-13" target="SdKNR-IxsHslmInC_97g-12" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="720" y="780" as="sourcePoint"/>
+                        <mxPoint x="1080" y="750" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="720" y="760"/>
+                            <mxPoint x="1076" y="760"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-50" value="+IDToken" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-49" vertex="1" connectable="0">
+                    <mxGeometry x="-0.9017" y="-1" relative="1" as="geometry">
+                        <mxPoint x="5" y="-11" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-51" value="0..*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-49" vertex="1" connectable="0">
+                    <mxGeometry x="-0.9449" y="-2" relative="1" as="geometry">
+                        <mxPoint x="-1" y="7" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-52" value="+Transaction" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-49" vertex="1" connectable="0">
+                    <mxGeometry x="0.9616" y="1" relative="1" as="geometry">
+                        <mxPoint x="-35" y="1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-53" value="0..1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-49" vertex="1" connectable="0">
+                    <mxGeometry x="0.9554" y="-2" relative="1" as="geometry">
+                        <mxPoint x="10" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-56" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.499;entryY=1.002;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=none;endFill=0;" parent="1" source="SdKNR-IxsHslmInC_97g-15" target="SdKNR-IxsHslmInC_97g-14" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="590" y="820" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-57" value="+IDToken" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-56" vertex="1" connectable="0">
+                    <mxGeometry x="0.8025" relative="1" as="geometry">
+                        <mxPoint x="-26" y="2" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-58" value="0..1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-56" vertex="1" connectable="0">
+                    <mxGeometry x="0.7245" y="-1" relative="1" as="geometry">
+                        <mxPoint x="10" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-59" value="+IDTokenInfo" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-56" vertex="1" connectable="0">
+                    <mxGeometry x="-0.7219" y="-1" relative="1" as="geometry">
+                        <mxPoint x="-36" y="-1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-60" value="0..1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-56" vertex="1" connectable="0">
+                    <mxGeometry x="-0.6996" relative="1" as="geometry">
+                        <mxPoint x="11" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-61" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.001;entryY=0.205;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=none;endFill=0;" parent="1" source="SdKNR-IxsHslmInC_97g-15" target="SdKNR-IxsHslmInC_97g-18" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-62" value="+IDTokenInfo" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-61" vertex="1" connectable="0">
+                    <mxGeometry x="-0.8875" relative="1" as="geometry">
+                        <mxPoint x="22" y="-9" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-63" value="0..*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-61" vertex="1" connectable="0">
+                    <mxGeometry x="-0.8846" y="-1" relative="1" as="geometry">
+                        <mxPoint x="-2" y="7" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-64" value="+TariffMessage" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-61" vertex="1" connectable="0">
+                    <mxGeometry x="0.6337" y="-1" relative="1" as="geometry">
+                        <mxPoint x="2" y="-10" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-65" value="0..1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-61" vertex="1" connectable="0">
+                    <mxGeometry x="0.8527" y="-1" relative="1" as="geometry">
+                        <mxPoint x="5" y="7" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-66" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=-0.001;entryY=0.819;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=none;endFill=0;" parent="1" source="SdKNR-IxsHslmInC_97g-15" target="SdKNR-IxsHslmInC_97g-18" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-67" value="+IDTokenInfo" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-66" vertex="1" connectable="0">
+                    <mxGeometry x="-0.8131" y="-1" relative="1" as="geometry">
+                        <mxPoint x="13" y="-11" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-68" value="0..*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-66" vertex="1" connectable="0">
+                    <mxGeometry x="-0.9199" relative="1" as="geometry">
+                        <mxPoint x="1" y="9" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-69" value="+PersonalMessage" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-66" vertex="1" connectable="0">
+                    <mxGeometry x="0.7264" y="-1" relative="1" as="geometry">
+                        <mxPoint x="-18" y="-10" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="SdKNR-IxsHslmInC_97g-70" value="0..1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="SdKNR-IxsHslmInC_97g-66" vertex="1" connectable="0">
+                    <mxGeometry x="0.8598" relative="1" as="geometry">
+                        <mxPoint x="5" y="8" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
