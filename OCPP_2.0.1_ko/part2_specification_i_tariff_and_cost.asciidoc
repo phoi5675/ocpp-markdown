@@ -1,0 +1,359 @@
+= I. TariffAndCost
+:!chapter-number:
+
+<<<
+
+:sectnums:
+== Introduction
+
+이 기능 블록은 충전기에서 디스플레이에 요금 및 비용 정보를 표시할 수 있는 경우 EV 운전자에게 요금 및 비용 정보를 제공합니다.
+
+운전자가 충전을 시작하기 전에 요금 정보를 제공받아 이 충전기에서 이 운전자에게 적용되는 요금 계획을 구성하는 모든 구성 요소에 대한 자세한 가격을 제공해야 합니다. 이것은 사람이 읽을 수 있는 텍스트 메시지이므로 개인적인 환영 메시지와 같은 다른 용도로도 사용할 수 있습니다.
+
+일부 비즈니스 사례에서는 EV 운전자에게 충전 중 실행 총 비용을 정기적으로 적합한 간격으로 업데이트하여 표시해야 할 수 있습니다. EV 운전자가 충전을 중단하면 방금 중단된 트랜잭션의 총 비용을 표시해야 합니다.
+
+모든 요금 및 비용은 구성 변수 <<currency,Currency>>에서 구성된 통화로 표시됩니다.
+
+=== Why no structured tariff information?
+
+요금 구조가 매우 복잡해질 수 있으므로 충전기에서 이를 사람이 읽을 수 있는 텍스트로 변환하기 어려울 것입니다. CSO는 요금의 소유자이며 충전기에 사람이 읽을 수 있는 요금 텍스트를 제공할 수 있어야 합니다. CSO가 자체 요금에서 사람이 읽을 수 있는 텍스트를 생성할 수 없다면 충전기가 어떻게 이를 할 수 있을 것으로 기대할 수 있겠습니까? 그렇기 때문에 우리는 OCPP에서 요금의 복잡성을 제외했습니다.
+
+== Show EV Driver-specific Tariff Information
+
+:sectnums!:
+[[i01_show_ev_driver_specific_tariff_information]]
+=== I01 - Show EV Driver-specific Tariff Information
+
+.I01 - EV 운전자별 요금 정보 표시
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|번호 |유형 |설명
+
+|1 |이름 |EV 운전자별 요금 정보 표시
+|2 |ID |I01
+|{nbsp} d|_기능 블록_ |I. 단가 및 비용
+|3 |목표 |트랜잭션 시작 전에 EV 운전자별 단가를 표시합니다.
+|4 |설명 |EV 운전자가 EV를 충전하려면 현재 충전기에서 얼마의 충전 비용이 드는지 알고 싶어합니다. EV 운전자는 (RFID) 토큰으로 인증됩니다. 충전기는 CSMS에 제시된 토큰에 대한 정보를 요청합니다. CSMS는 이 EV 운전자에게 적용되는 단가를 포함하여 토큰에 대한 정보를 반환합니다.
+|{nbsp} d|_Actors_ |충전기, CSMS, EV 운전자
+|{nbsp} d|_시나리오 설명_
+|**1.** EV 운전자가 EV를 충전하려면 <<id_token_type,IdTokenType>>을 제시합니다. +
+**2.** 충전기는 <<authorize_request,AuthorizeRequest>>를 CSMS로 보내 승인을 요청합니다. +
+**3.** <<authorize_request,AuthorizeRequest>>를 수신하면 CSMS는 <<authorize_response,AuthorizeResponse>>로 응답합니다. 이 응답 메시지는 CSMS가 <<id_token_type,IdTokenType>>을 수락하는지 여부를 나타내며 personalMessage 필드에 EV 운전자별 요금을 표시합니다. +
+**4.** 충전기는 EV 운전자에게 EV 운전자별 요금을 표시합니다.
+|{nbsp} d|_대체 시나리오_ |<<i04_show_fallback_tariff_information,I04 - Show Fallback Tariff Information>>
+|5 |필수 조건 |충전기는 요금 정보를 지원합니다.
+|6 |사후 조건
+|**성공한 사후 조건:** +
+EV 운전자는 인증되고 자신에게 적용되는 요금을 알고 충전을 시작할 수 있습니다.
+
+**실패 사후 조건:** +
+인증 상태가 _Accepted_이 아닌 경우 EV 운전자는 시작할 수 _없으며_ 요금을 알지 못할 수 있습니다.
+|===
+
+.시퀀스 다이어그램: EV 운전자별 요금 정보 표시
+image::part2/images/figure_85.svg[시퀀스 다이어그램: EV 운전자별 요금 정보 표시]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7 |오류 처리 |n/a
+|8 |주의 사항
+|이런 방식으로 제시된 요금 정보는 제시된 다른 토큰과 동일할 수 있습니다.
+
+EV 운전자가 이해할 수 있는 언어를 알고 있고 적용 가능한 경우, 해당 언어로 요금 정보를 표시하는 것을 추천합니다.
+
+운전자가 요금에 동의하지 않을 때 트랜잭션을 취소할 수 있는 옵션을 제공하는 것을 추천합니다.  운전자에게 트랜잭션을 취소하는 방법이 명확하다면 이는 케이블을 연결하지 않은 것일 수도 있고, 사용자 인터페이스에 취소 버튼이 있는 것일 수도 있습니다.
+|===
+
+==== I01 - Show EV Driver-specific Tariff Information - Requirements
+
+.I01 - Show EV Driver-specific Tariff Information - Requirements
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID |전제 조건 |요구 사항 정의
+
+|I01.FR.01 |{nbsp} |CSMS는 <<authorize_response,AuthorizeResponse>> 메시지의 PersonalMessage 필드에 EV 운전자별 요금 정보를 보낼 수 있습니다.
+|I01.FR.02 |{nbsp} |CSMS는 충전기가 요금 또는 DisplayMessage 기능을 지원하는 경우에만 요금 정보를 보내야 합니다.
+|I01.FR.03 |I01.FR.01 |충전기는 EV 운전자별 요금 정보를 EV 운전자에게 표시해야 합니다.
+|===
+
+=== I02 - Show EV Driver Running Total Cost During Charging
+
+.I02 - 충전 중 EV 운전자 총 비용 표시
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|번호 |유형 |설명
+
+|1 |이름 |충전 중 EV 운전자의 총 주행 비용 표시
+|2 |ID |I02
+|{nbsp} d|_기능 블록_ |I. 단가 및 비용
+|3 |목표 |충전 중 EV 운전자에게 총 주행 비용을 표시
+|4 |설명 |트랜잭션이 진행되는 동안 운전자는 관련 간격으로 업데이트된 총 주행 비용을 알고 싶어합니다.
+|{nbsp} d|_행위자_ |충전기, CSMS, EV 운전자
+|{nbsp} d|_시나리오 설명_
+|**1.** CSMS는 Y초마다 <<cost_updated_request,CostUpdatedRequest>>를 충전기로 보내 현재 총 비용을 업데이트합니다. +
+**2.** <<cost_updated_request,CostUpdatedRequest>>를 수신하면 충전기는 <<cost_updated_response,CostUpdatedResponse>>로 응답합니다. +
+**3.** 충전기는 EV 운전자에게 현재 총 비용을 보여줍니다.
+|{nbsp} d|_대체 시나리오_
+|**1.** _eventType_ = `Updated` 인 <<transaction_event_request,TransactionEventRequest>>를 수신하면 CSMS는 <<transaction_event_response,TransactionEventResponse>>의  있는 _timestamp_ 와 _meterValue_ 에 해당하는 running cost을 _totalCost_ 필드에 넣어 반환합니다. +
+**2.** 충전기는 EV 운전자에게 현재 총 비용을 보여줍니다.
+|5 |필수 조건 |충전기가 요금 정보를 지원함 +
+진행 중인 트랜잭션
+|6 |사후 조건
+|**성공한 사후 조건:** +
+EV 운전자는 충전 중 총 비용을 알고 있습니다.
+
+**실패한 사후 조건:** +
+EV 운전자는 충전 중 총 비용을 알 수 없습니다.
+|===
+
+.시퀀스 다이어그램: 충전 중 EV 운전자의 총 비용 표시
+image::part2/images/figure_86.svg[시퀀스 다이어그램: 충전 중 EV 운전자의 총 비용 표시]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7 |오류 처리 |해당 없음
+|8 |주의 |실행 비용을 매우 자주 업데이트하면 많은 메시지가 생성되어 모바일 데이터 비용이 많이 발생할 수 있습니다.
+|===
+
+==== I02 - Show EV Driver Running Total Cost During Charging - Requirements
+
+.I02 - 충전 중 EV 운전자의 총 주행 비용 표시 - 요구 사항
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID |전제 조건 |요구 사항 정의
+
+|I02.FR.01 |{nbsp}
+|CSMS는 적절한 간격/순간에 <<cost_updated_request,CostUpdatedRequest>>를 보내거나 <<transaction_event_response,TransactionEventResponse>>에서 주행 비용을 반환해야 합니다. 이는 충전 속도, 주행 비용 등에 따라 달라질 수 있습니다.
+|I02.FR.02 | <<cost_updated_request,CostUpdatedRequest>> 메시지를 수신하면
+|충전기는 <<cost_updated_response,CostUpdatedResponse>> 메시지로 응답해야 합니다.
+|I02.FR.03 |I02.FR.02
+|충전기는 EV 운전자에게 현재 총 비용을 표시해야 합니다.
+|I02.FR.04 |<<transaction_event_response,TransactionEventResponse>>에서 실행 비용이 보고되는 경우
+|충전기는 EV 운전자에게 현재 실행 비용을 표시해야 합니다.
+|===
+
+[[i03_show_ev_driver_final_total_cost_after_charging]]
+=== I03 - Show EV Driver Final Total Cost After Charging
+
+.I03 - Show EV Driver Final Total Cost After Charging
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|번호 |유형 |설명
+
+|1 |이름 |충전 후 EV 운전자에게 최종 비용 표시
+|2 |ID |I03
+|{nbsp} d|_기능 블록_ |I. 단가 및 비용
+|3 |목표 |트랜잭션이 완료된 후 EV 운전자에게 총 비용을 표시합니다.
+|4 |설명 |EV 운전자는 자신의 식별 토큰(예: RFID)을 제시하여 진행 중인 트랜잭션을 중단합니다. 트랜잭션이 중단되고 트랜잭션의 총 비용이 EV 운전자에게 표시됩니다.
+|{nbsp} d|_행위자_ |충전기, CSMS, EV 운전자
+|{nbsp} d|_시나리오 설명_
+|**1.** EV 운전자는 트랜잭션을 중단하기 위해 <<id_token_type,IdTokenType>>을 제시합니다. +
+**2.** 충전기는 <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>)를 전송합니다. +
+**3.** CSMS는 <<transaction_event_response,TransactionEventResponse>>로 응답하며 여기에는 트랜잭션의 총 비용이 포함됩니다. +
+**4.** 충전기는 EV 운전자에게 총 비용을 보여줍니다.
+|{nbsp} |_대체 시나리오_ |<<i05_show_fallback_total_cost_message,I05 - Show Fallback Total Cost Message>>
+|5 |필수 조건 |충전기는 단가 정보를 지원합니다. +
+진행 중인 트랜잭션
+|6 |사후 조건(들) ​​
+|**성공한 사후 조건:** +
+EV 운전자는 트랜잭션의 총 비용을 알고 있습니다.
+
+**실패한 사후 조건:** +
+EV 운전자는 트랜잭션의 총 비용을 알지 못합니다.
+|===
+
+.시퀀스 다이어그램: 충전 후 EV 운전자 최종 총 비용 표시
+image::part2/images/figure_87.svg[시퀀스 다이어그램: 충전 후 EV 운전자 최종 총 비용 표시]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7 |오류 처리 |n/a
+|8 |주의
+|트랜잭션이 종료될 때 충전기가 오프라인 상태였고 그 후 얼마 지나지 않아 충전기가 다시 온라인 상태가 되었을 때 _totalCost_ 가 포함된 <<transaction_event_response,TransactionEventResponse>>가 수신된 경우 비용을 표시할 필요가 없습니다. 사용자가 이미 떠났을 가능성이 높기 때문입니다. `TxStopPoint` 가 <<tx_start_stop_point_values,ParkingBayOccupancy>>로 정의된 경우에도 비슷한 상황이 적용되며, 이 경우 EV는 충전기를 떠나서 트랜잭션을 종료해야 합니다.
+
+위의 시나리오 설명과 시퀀스 다이어그램은 다음과 같이 구성된 중지 트랜잭션에 대한 구성 변수를 기반으로 합니다. +
+<<tx_stop_point,`TxStopPoint`>>: <<tx_start_stop_point_values,ParkingBayOccupancy, EVConnected, Authorized>> +
+이 유즈케이스는 다른 구성에도 유효하지만 트랜잭션이 다른 순간에 중지될 수 있으며, 이때 메시지를 보내는 순서가 변경될 수 있습니다. 자세한 내용은 사용 사례를 참조하세요. <<e06_stop_transaction_options,E06 - Stop Transaction options>>
+|===
+
+==== I03 - Show EV Driver Final Total Cost After Charging - Requirements
+
+.I03 - 충전 후 EV 운전자 최종 총 비용 표시 - 요구 사항
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID |전제 조건 |요구 사항 정의
+
+|I03.FR.01 |트랜잭션이 중지된 경우
+|충전기는 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>)를 CSMS로 보내야 합니다.
+|I03.FR.02 |I03.FR.01 AND +
+총 비용이 CSMS에 알려진 경우
+|CSMS는 <<transaction_event_response,TransactionEventResponse>> 메시지의 totalCost 필드에 트랜잭션의 총 비용을 보내야 합니다.
+|I03.FR.03 |I03.FR.02 AND +
+트랜잭션이 중단되었을 때 충전기가 온라인 상태였습니다.
+|충전기는 EV 운전자에게 총 비용을 표시해야 합니다.
+|I03.FR.04 |{nbsp}
+|무료 트랜잭션을 나타내기 위해 CSMS는 _totalCost_ 를 0.00으로 설정해야 합니다. 따라서 _totalCost_ 를 생략하는것은 트랜잭션이 무료였음을 의미하지 않습니다.
+|I03.FR.05 |I02.FR.02 AND +
+`TxStopPoint` 는 <<tx_start_stop_point_values,ParkingBayOccupancy>>로 정의됩니다.
+|충전기는 EV 운전자에게 총 비용을 표시해서는 안 됩니다. (운전자가 이미 떠났습니다.)
+|===
+
+[[i04_show_fallback_tariff_information]]
+=== I04 - Show Fallback Tariff Information
+
+.I04 - Show Fallback Tariff Information
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|번호 |유형 |설명
+
+|1 |이름 |대체 요금 정보 표시
+|2 |ID |I04
+|{nbsp} d|_기능 블록_ |I. 요금 및 비용
+|3 |목표 |충전기에서 이 EV 운전자에 대한 요금 정보를 검색할 수 없는 경우 EV 운전자에게 일부 정보, 일반 요금, 메시지 등을 표시합니다.
+|4 |설명 |EV 운전자가 EV를 충전하고 싶을 때, 현재 충전기에서 충전 비용이 얼마인지 알고 싶어하지만 충전기에서 이 EV 운전자에 대한 특정 요금을 얻을 수 없는 경우(예: 충전기가 _Offline_ 이거나 EV 운전자 전용 요금이 없는 경우). 이러한 시나리오의 경우 충전기에서 대체 요금 정보 메시지를 구성할 수 있습니다.
+
+|{nbsp} d|_Actors_ |충전기, EV 운전자
+|{nbsp} d|_시나리오 설명_
+|**1.** EV 운전자가 EV를 충전하고 싶어하며, <<id_token_type,IdTokenType>>을 제시합니다. +
+**2.** 충전기가 EV 운전자를 인증 캐시에 대해 승인합니다. +
+**3.** 충전기가 EV 운전자에게 TariffFallbackMessage를 보여줍니다.
+|{nbsp} d|_대체 시나리오_ |<<i01_show_ev_driver_specific_tariff_information,I01 - Show EV Driver-specific Tariff Information>>
+|5 |필수 조건 |충전기는 요금 정보를 지원합니다. +
+구성 변수: <<tariff_fallback_message,TariffFallbackMessage>>가 구성됩니다.
+|6 |사후 조건(들) ​​
+|**성공한 사후 조건:** +
+EV 운전자에게 대체 요금 정보 메시지가 표시되었습니다.
+
+**실패한 사후 조건:** +
+EV 운전자는 이 충전기의 요금에 대한 정보가 없습니다.
+|===
+
+.시퀀스 다이어그램: 대체 단가 정보 표시
+image::part2/images/figure_88.svg[시퀀스 다이어그램: 대체 단가 정보 표시]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7 |오류 처리 |n/a
+|8 |설명 |n/a
+|===
+
+==== I04 - Show Fallback Tariff Information - Requirements
+
+.I04 - 대체 단가 정보 표시 - 요구 사항
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID |전제 조건 |요구 사항 정의
+
+|I04.FR.01 |충전기에서 EV 운전자에 대한 특정 단가를 얻을 수 없는 경우( 예: 충전기가 오프라인이거나 EV 운전자 전용 요금이 제공되지 않음)
+|충전기는 EV 운전자에게 대체 요금 정보 메시지를 표시해야 하며, 이는 구성 변수 <<tariff_fallback_message,`TariffFallbackMessage`>>에서 구성됩니다.
+|I04.FR.02 |{nbsp}
+|CSMS는 구성 변수 <<tariff_fallback_message,`TariffFallbackMessage`>>를 통해 TariffFallbackMessage를 구성할 수 있습니다.
+|===
+
+[[i05_show_fallback_total_cost_message]]
+=== I05 - Show Fallback Total Cost Message
+
+.I05 - Show Fallback Total Cost Message
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|번호 |유형 |설명
+
+|1 |이름 |폴백 총 비용 메시지 표시
+|2 |ID |I05
+|{nbsp} d|_기능 블록_ |I. 단가 및 비용
+|3 |목표 |트랜잭션이 중단될 때 충전기가 _offline_ 인 경우 EV 운전자에게 실제 총 비용 대신 메시지를 표시합니다.
+|4 |설명 |EV 운전자가 진행 중인 트랜잭션을 중단하려고 하지만 충전기가 _offline_ 인 경우. 트랜잭션은 앞서 설명한 대로 중단됩니다. 충전기는 중단된 트랜잭션의 총 비용을 검색할 수 없습니다. EV 운전자에게 메시지를 제공해야 하며, 이 메시지는 구성 변수에서 구성할 수 있습니다: <<total_cost_fallback_message,TotalCostFallbackMessage>>.
+|{nbsp} d|_Actors_ |충전기, EV 운전자
+|{nbsp} d|_시나리오 설명_
+|**1.** EV 운전자가 <<id_token_type,IdTokenType>>을 제시하여 트랜잭션을 중단합니다. +
+**2.** 충전기가 에너지 제공을 중단합니다. +
+**3.** 충전기가 <<total_cost_fallback_message,TotalCostFallbackMessage>>를 EV 운전자에게 보여줍니다.
+|{nbsp} d|_대체 시나리오_ |<<i03_show_ev_driver_final_total_cost_after_charging,I03 - Show EV Driver Final Cost After Charging>>
+|5 |필수 조건 |충전기가 요금 정보를 지원합니다. +
+충전기가 _offline_ 입니다. +
+구성 변수: <<total_cost_fallback_message,`TotalCostFallbackMessage`>>가 구성되었습니다.
+|6 |사후 조건(들) ​​
+|**성공한 사후 조건:** +
+EV 드라이버가 사전 구성된 폴백 메시지를 수신했습니다. +
+**실패 사후 조건:** +
+EV 드라이버가 사전 구성된 폴백 메시지를 수신하지 못했습니다.
+|===
+
+.시퀀스 다이어그램: 폴백 총 비용 메시지 표시
+image::part2/images/figure_89.svg[시퀀스 다이어그램: 폴백 총 비용 메시지 표시]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7 |오류 처리 |n/a
+|8 |설명 |n/a
+|===
+
+==== I05 - Show Fallback Total Cost Message - Requirements
+
+.I05 - 폴백 총 비용 메시지 표시 - 요구 사항
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID |사전 조건 |요구 사항 정의
+
+|I05.FR.01 |{nbsp}
+|CSMS는 폴백을 구성할 수 있습니다. 구성 변수를 통한 총 비용 정보 메시지: +
+<<total_cost_fallback_message,`TotalCostFallbackMessage`>>.
+|I05.FR.02 |충전기가 오프라인 상태이기 때문에 중단된 트랜잭션에 대한 총 비용을 검색할 수 없는 경우.
+|충전기는 EV 운전자에게 폴백 총 비용 정보 메시지를 표시해야 합니다.
+|===
+
+=== I06 - Update Tariff Information During Transaction
+
+.I06 - 트랜잭션 중 단가 정보 업데이트
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|번호 |유형 |설명
+
+|1 |이름 |트랜잭션 중 단가 정보 업데이트
+|2 |ID |I06
+|{nbsp} d|_기능 블록_ |I. 단가 및 비용
+|3 |목표 |트랜잭션 중에 EV 운전자에게 최신 단가 정보를 표시합니다.
+|4 |설명
+|충전 중(특히 DC 고속 충전)에는 EV 운전자에게 최신 단가 정보가 제공되면 표시하는 것이 유용할 수 있습니다. +
+예: 단가에 대역폭이 있는 경우: +
+_충전 비용은 현재 에너지 가격에 따라 0.25~0.40유로/kWh입니다. 현재 가격은 0.28유로/kWh입니다._ +
+그런 다음 가격이 변경되면 이 단가 정보를 업데이트해야 합니다. +
+_충전 비용은 현재 에너지 가격에 따라 0.25~0.40유로/kWh입니다. 현재 가격은 0,32유로/kWh입니다._
+|{nbsp} d|_시나리오 설명_
+|**1.** 충전기는 트랜잭션 중에 <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>) 메시지를 보냅니다. +
+**2.** CSMS가 <<transaction_event_request,TransactionEventRequest>> 메시지를 받으면 업데이트된 요금 정보가 있는지 확인합니다. +
+**3.** CSMS는 <<transaction_event_response,TransactionEventResponse>> 메시지로 확인합니다. 여기에는 업데이트된 요금 정보가 포함되어 있습니다(있는 경우).
+|5 |필수 조건 |충전기는 요금 정보를 지원합니다. +
+진행 중인 트랜잭션이 있습니다.
+|6 |사후 조건(들) ​​
+|**성공적인 사후 조건:** +
+업데이트된 요금 정보가 EV 운전자에게 표시됩니다.
+
+**실패 사후 조건:** +
+EV 운전자에게 업데이트된 요금 정보가 표시되지 않았습니다.
+|===
+
+.Sequence Diagram: Update Tariff Information During Transaction
+image::part2/images/figure_90.svg[Sequence Diagram: Update Tariff Information During Transaction]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7 |오류 처리 |해당 없음
+|8 |주의 |트랜잭션 시작 시 전달된 단가를 전체 트랜잭션에 사용해야 하는 정책이나 법적 요구 사항이 있을 수 있으며, 이 경우 트랜잭션 중에 업데이트된 단가 정보를 보내서는 안 됩니다.
+|===
+
+==== I06 - Update Tariff Information During Transaction - Requirements
+
+.I06 - 트랜잭션 중 단가 정보 업데이트 - 요구 사항
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID |전제 조건 |요구 사항 정의
+
+|I06.FR.01 |CSMS가 충전기에서 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>)를 수신하는 경우.
+|CSMS는 업데이트된 단가 정보가 있는지 확인해야 합니다.
+|I06.FR.02 |I06.FR.01 및 +
+업데이트된 요금 정보가 있는 경우.
+|CSMS는 PersonalMessage 필드에 업데이트된 요금 정보가 포함된 <<transaction_event_response,TransactionEventResponse>> 메시지로 충전기에 응답해야 합니다.
+|I06.FR.03 |I06.FR.02
+|충전기는 EV 운전자에게 업데이트된 요금 정보를 표시해야 합니다.
+|===
