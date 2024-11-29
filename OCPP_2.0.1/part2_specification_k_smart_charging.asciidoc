@@ -162,7 +162,6 @@ This section is informative.
 
 The following data structure describes a daily default profile that limits the power to 6 kW between 08:00h and 20:00h and to 11 kW between 00:00h and 08:00h and between 20:00h and 00:00h.
 
-
 [cols="<.^1,<.^1,<.^1,<.^1",%autowidth.stretch,frame=all,grid=all]
 |===
 s|ChargingProfile     |{nbsp}             |{nbsp}           |{nbsp}
@@ -295,9 +294,9 @@ To determine how a Charging Station should respond to simultaneous smart chargin
   |The Charging Station SHALL always inform the CSMS.
     |The message used for this varies depending on the which of the mechanisms mentioned at the start of this section is applicable:
 
-    1. n/a
-    2. <<notify_ev_charging_schedule_request,NotifyEVChargingScheduleRequest>>
-    3. <<notify_charging_limit_request,NotifyChargingLimitRequest>>
+    1. n/a +
+    2. <<notify_ev_charging_schedule_request,NotifyEVChargingScheduleRequest>> +
+    3. <<notify_charging_limit_request,NotifyChargingLimitRequest>> +
     4. <<transaction_event_request,TransactionEventRequest>>
 |SC.03      |{nbsp}
   |Reporting to the CSMS concerning a changed limit in the ChargingProfile for mechanisms 3 and 4 as described in SC.02 MAY be skipped if the change in the limit is smaller than the percentage defined in the Configuration Variable: <<limit_change_significance,`LimitChangeSignificance`>>.
