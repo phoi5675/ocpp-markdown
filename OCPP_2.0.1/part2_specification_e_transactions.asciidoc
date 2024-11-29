@@ -1460,8 +1460,7 @@ image::part2/images/figure_60.svg[Sequence Diagram: Connection Loss During Trans
   |The Charging Station MUST queue all <<transaction_event_request,TransactionEventRequest>> messages, that it would have sent to the CSMS if the Charging Station had been online.
 |E11.FR.02  |After the connection is restored.
   |The Charging Station MUST send queued <<transaction_event_request,TransactionEventRequest>> messages with the flag _offline_ set to TRUE.
-|E11.FR.03  |When configured to send meter data in the
-<<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>), See: <<metervalues_configuration,Meter Values - Configuration>>
+|E11.FR.03  |When configured to send meter data in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>), See: <<metervalues_configuration,Meter Values - Configuration>>
   |The Charging Station SHALL add the configured measurands to the optional meterValue field in the <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>) sent to the CSMS to provide more details during the transaction.
 |E11.FR.04  |E11.FR.03 +
   AND +
@@ -1534,8 +1533,7 @@ image::part2/images/figure_61.svg[Sequence Diagram: Inform CSMS of an Offline Oc
   |The Charging Station MUST queue all <<transaction_event_request,TransactionEventRequest>> messages, that it would have sent to the CSMS if the Charging Station had been online.
 |E12.FR.02  |After the connection is restored.
   |The Charging Station MUST send queued <<transaction_event_request,TransactionEventRequest>> messages with the flag _offline_ set to TRUE.
-|E12.FR.03  |When configured to send meter data in the
-<<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>), See: <<metervalues_configuration,Meter Values - Configuration>>
+|E12.FR.03  |When configured to send meter data in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>), See: <<metervalues_configuration,Meter Values - Configuration>>
   |The Charging Station SHALL add the configured measurands to the optional meterValue field in the <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>) sent to the CSMS to provide more details during the transaction.
 |E12.FR.04  |E12.FR.03 +
   AND +
@@ -1554,8 +1552,7 @@ image::part2/images/figure_61.svg[Sequence Diagram: Inform CSMS of an Offline Oc
 |E12.FR.08  |E12.FR.07 +
   AND +
   The Charging Station is running low on memory
-    |The Charging Station MAY drop meter data in the
-<<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>) message.
+    |The Charging Station MAY drop meter data in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>) message.
 |E12.FR.09  |E12.FR.08
   |When dropping meter data, the Charging Station SHALL drop intermediate values first (1st value, 3th value, 5th etc), not start dropping values from the start of the list or stop adding values to the list.
 |E12.FR.10 |<<sampled_data_sign_readings,`SampledDataSignReadings`>> is _true_

@@ -459,7 +459,7 @@ image::part2/images/figure_45.svg[Sequence Diagram: Start Transaction - Cable Pl
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7 |오류 처리 |<<transaction_event_response,TransactionEventResponse>>로 응답하지 못하면 충전기는 <<e12_inform_csms_of_an_offline_occurred_transaction,E12 - Transaction-related message not accepted by CSMS>>에 지정된 대로 동일한 메시지를 다시 시도합니다.
-|8 |주의 사항
+|8 |참고
   |충전기가 인증 캐시를 구현한 경우 <<transaction_event_response,TransactionEventResponse>>를 수신하면 충전기는 캐시 항목을 업데이트합니다.
 
   위의 시나리오 설명과 시퀀스 다이어그램은 트랜잭션 시작 및 중지에 대한 구성 변수가 다음과 같이 구성된 것을 기반으로 합니다. +
@@ -566,7 +566,7 @@ image::part2/images/figure_46.svg[시퀀스 다이어그램: 트랜잭션 시작
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7 |오류 처리 |n/a
-|8 |주의 |CSMS가 수신한 <<transaction_event_request,TransactionEventRequest>> 메시지에 포함된 데이터에 적합성 테스트를 적용할 가능성이 있습니다. 이러한 테스트의 결과는 CSMS가 <<transaction_event_response,TransactionEventResponse>>를 응답하지 않도록 해서는 안 됩니다. 그렇지 않으면 충전기가 <<e12_inform_csms_of_an_offline_occurred_transaction,E12 - Transaction-related message not accepted by CSMS>>에 지정된 대로 동일한 메시지를 다시 시도합니다.
+|8 |참고 |CSMS가 수신한 <<transaction_event_request,TransactionEventRequest>> 메시지에 포함된 데이터에 적합성 테스트를 적용할 가능성이 있습니다. 이러한 테스트의 결과는 CSMS가 <<transaction_event_response,TransactionEventResponse>>를 응답하지 않도록 해서는 안 됩니다. 그렇지 않으면 충전기가 <<e12_inform_csms_of_an_offline_occurred_transaction,E12 - Transaction-related message not accepted by CSMS>>에 지정된 대로 동일한 메시지를 다시 시도합니다.
 
   위의 시나리오 설명과 시퀀스 다이어그램은 시작 트랜잭션에 대한 구성 변수가 다음과 같이 구성된 것을 기반으로 합니다. +
   <<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
@@ -663,7 +663,7 @@ image::part2/images/figure_47.svg[시퀀스 다이어그램: 충전기가 오프
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7 |오류 처리 |n/a
-|8 |주의
+|8 |참고
   |위의 시나리오 설명과 시퀀스 다이어그램은 시작 트랜잭션에 대한 구성 변수가 다음과 같이 구성된 것을 기반으로 합니다. +
   <<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
   이 유즈케이스는 다른 구성에서도 유효하지만, 그 경우 트랜잭션이 다른 시점에서 시작/종료될 수 있으며, 이는 메시지가 전송되는 순서에 영향을 미칠 수 있습니다. 자세한 내용은 사용 사례를 참조하세요. <<e01_start_transaction_options,E01 - Start Transaction options>>.
@@ -750,7 +750,7 @@ image::part2/images/figure_48.svg[시퀀스 다이어그램: 시작 트랜잭션
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7 |오류 처리 |n/a
-|8 |주의 사항
+|8 |참고
   |위의 시나리오 설명과 시퀀스 다이어그램은 시작 및 중지 트랜잭션에 대한 구성 변수가 다음과 같이 구성된 것을 기반으로 합니다. +
   <<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
   <<tx_stop_point,`TxStopPoint`>>: <<tx_start_stop_point_values,ParkingBayOccupancy, EVConnected>> +
@@ -968,7 +968,7 @@ image::part2/images/figure_54.svg[Sequence Diagram: Stop Transaction options - A
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7 |오류 처리 |n/a
-|8 |주의 사항 |n/a
+|8 |참고 |n/a
 |===
 
 ==== E06 - Stop Transaction options - Requirements
@@ -1082,7 +1082,7 @@ image::part2/images/figure_56.svg[시퀀스 다이어그램: 트랜잭션이 IdT
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7 |오류 처리 |n/a
-|8 |주의 |시나리오 설명은 <<tx_start_stop_point_values,Authorized>> 또는 <<tx_start_stop_point_values,PowerPathClosed>>를 포함하는 TxStopPoint를 기반으로 합니다. +
+|8 |참고 |시나리오 설명은 <<tx_start_stop_point_values,Authorized>> 또는 <<tx_start_stop_point_values,PowerPathClosed>>를 포함하는 TxStopPoint를 기반으로 합니다. +
   시퀀스 다이어그램은 또한 alt-블록의 다른 TxStopPoint 값에 대한 동작을 보여줍니다.
 
   CSMS는 트랜잭션이 중지되는 것을 막을 수 없습니다.
@@ -1168,7 +1168,7 @@ image::part2/images/figure_57.svg[시퀀스 다이어그램: 충전기가 오프
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7 |오류 처리 |n/a
-|8 |주의
+|8 |참고
   |groupId 검사가 가능할경우 로컬 인증 목록 및/또는 인증 캐시에서 이를 수행해야 합니다.
 
   위의 시나리오 설명과 시퀀스 다이어그램은 중지 트랜잭션을 위한 구성 변수가 다음과 같이 구성된 것을 기반으로 합니다. +
@@ -1259,7 +1259,7 @@ image::part2/images/figure_58.svg[시퀀스 다이어그램: EV 측에서 케이
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7 |오류 처리 |n/a
-|8 |주의 사항
+|8 |참고
   |충전 케이블을 다시 연결하면 충전이 재개/계속되지 않습니다.
 
   위의 시나리오 설명과 시퀀스 다이어그램은 트랜잭션 중지를 위한 구성 변수가 다음과 같이 구성된 것을 기반으로 합니다. +
@@ -1413,18 +1413,18 @@ image::part2/images/figure_59.svg[시퀀스 다이어그램: EV 측에서 케이
 |4 |설명 |이 사용 사례는 충전기가 CSMS와의 연결을 끊고 다시 연결하는 동안에도 진행 중인 트랜잭션을 계속할 수 있는 방법을 설명합니다.
 |{nbsp} d|_Actors_ |충전기, CSMS
 |{nbsp} d|_시나리오 설명_
-|**1.** 트랜잭션이 진행 중인 동안 충전기의 연결이 끊어졌습니다. +
-**2.** 충전기의 트랜잭션 이벤트가 저장됩니다. +
-**3.** CSMS와의 연결이 복구됩니다. +
-**4.** 충전기는 <<transaction_event_request,TransactionEventRequest>>(offline = TRUE)를 사용하여 저장된 트랜잭션 이벤트를 CSMS로 보냅니다. +
-**5.** 충전기가 정기적인 통신을 재개합니다.
+  |**1.** 트랜잭션이 진행 중인 동안 충전기의 연결이 끊어졌습니다. +
+  **2.** 충전기의 트랜잭션 이벤트가 저장됩니다. +
+  **3.** CSMS와의 연결이 복구됩니다. +
+  **4.** 충전기는 <<transaction_event_request,TransactionEventRequest>>(offline = TRUE)를 사용하여 저장된 트랜잭션 이벤트를 CSMS로 보냅니다. +
+  **5.** 충전기가 정기적인 통신을 재개합니다.
 |{nbsp} d|_대체 시나리오_ |<<e04_transaction_started_while_charging_station_is_offline,E04 - Offline Start Transaction>>
 |5 |필수 조건 |트랜잭션이 진행 중이고 연결이 끊어짐.
 |6 |사후 조건
-|**성공적인 사후 조건:** +
-충전기가 정상적인 통신을 재개합니다. +
-**실패 사후 조건:** +
-n/a +
+  |**성공적인 사후 조건:** +
+  충전기가 정상적인 통신을 재개합니다. +
+  **실패 사후 조건:** +
+  n/a +
 |===
 
 .시퀀스 다이어그램: 트랜잭션 중 연결 끊김
@@ -1433,7 +1433,7 @@ image::part2/images/figure_60.svg[시퀀스 다이어그램: 트랜잭션 중 �
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7 |오류 처리 |n/a
-|8 |주의 |n/a
+|8 |참고 |n/a
 |===
 
 ==== E11 - Connection Loss During Transaction - Requirements
@@ -1444,28 +1444,27 @@ image::part2/images/figure_60.svg[시퀀스 다이어그램: 트랜잭션 중 �
 |ID |전제 조건 |요구 사항 정의
 
 |E11.FR.01 |_offline_ 일 때
-|충전기는 충전기가 온라인 상태였다면 CSMS에 전송했을 모든 <<transaction_event_request,TransactionEventRequest>> 메시지를 큐에 넣어야 합니다.
+  |충전기는 충전기가 온라인 상태였다면 CSMS에 전송했을 모든 <<transaction_event_request,TransactionEventRequest>> 메시지를 큐에 넣어야 합니다.
 |E11.FR.02 |연결이 복구된 후.
-|충전기는 플래그 _offline_ 을 TRUE로 설정하여 큐에 넣은 <<transaction_event_request,TransactionEventRequest>> 메시지를 전송해야 합니다.
-|E11.FR.03 |
-<<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>)에서 미터 데이터를 보내도록 구성된 경우 다음을 참조하세요. <<metervalues_configuration,Meter Values ​​- Configuration>>
-|충전기는 구성된 측정값을 CSMS로 전송된 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>)의 선택적 MeterValue 필드에 추가하여 트랜잭션 중에 더 자세한 정보를 제공해야 합니다.
+  |충전기는 플래그 _offline_ 을 TRUE로 설정하여 큐에 넣은 <<transaction_event_request,TransactionEventRequest>> 메시지를 전송해야 합니다.
+|E11.FR.03 |<<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>)에서 미터 데이터를 보내도록 구성된 경우 다음을 참조하세요. <<metervalues_configuration,Meter Value - Configuration>>
+  |충전기는 구성된 측정값을 CSMS로 전송된 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>)의 선택적 MeterValue 필드에 추가하여 트랜잭션 중에 더 자세한 정보를 제공해야 합니다.
 |E11.FR.04 |E11.FR.03 +
-AND +
-_offline_ +
-AND +
-충전기의 메모리가 부족합니다.
-|충전기는 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) 메시지를 삭제할 수 있습니다.
+  AND +
+  _offline_ +
+  AND +
+  충전기의 메모리가 부족합니다.
+    |충전기는 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) 메시지를 삭제할 수 있습니다.
 |E11.FR.05 |E11.FR.04
-|<<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) 메시지를 삭제할 때 충전기는 중간 메시지를 먼저 삭제해야 합니다(첫 번째 메시지, 세 번째 메시지, 다섯 번째 메시지 등). 처음부터 메시지를 삭제하거나 큐에 메시지를 추가하는 것을 중단해서는 안 됩니다.
+  |<<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) 메시지를 삭제할 때 충전기는 중간 메시지를 먼저 삭제해야 합니다(첫 번째 메시지, 세 번째 메시지, 다섯 번째 메시지 등). 처음부터 메시지를 삭제하거나 큐에 메시지를 추가하는 것을 중단해서는 안 됩니다.
 |E11.FR.06 |E11.FR.03 +
-AND +
-1개의 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>)에 대한 미터 데이터 양이 너무 많은 경우.
-|충전기는 동일한 _timestamp_ 를 가진 여러 개의 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) 메시지로 미터 데이터를 분할할 수 있습니다.
+  AND +
+  1개의 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>)에 대한 미터 데이터 양이 너무 많은 경우.
+    |충전기는 동일한 _timestamp_ 를 가진 여러 개의 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) 메시지로 미터 데이터를 분할할 수 있습니다.
 |E11.FR.07 |{nbsp}
-|충전기가 오프라인이 되면 대기열에 남아 있는 모든 메시지는 _offline_ 으로 설정해야 합니다.
+  |충전기가 오프라인이 되면 대기열에 남아 있는 모든 메시지는 _offline_ 으로 설정해야 합니다.
 |E11.FR.08 |<<sampled_data_sign_readings,`SampledDataSignReadings`>>는 _true_ 입니다.
-|충전기는 서명된 미터 값을 검색하여 sampledValues의 _signedMeterValue_ 필드에 넣어야 합니다.
+  |충전기는 서명된 미터 값을 검색하여 sampledValues의 _signedMeterValue_ 필드에 넣어야 합니다.
 |===
 
 <<<
@@ -1485,20 +1484,20 @@ AND +
 |4 |설명 |이 사용 사례는 충전기가 연결 손실 이후 트랜잭션을 시작하고 중지하는 방법을 다룹니다.
 |{nbsp} d|_Actors_ |충전기, CSMS
 |{nbsp} d|_시나리오 설명_
-|**1.** CSMS와의 연결이 복구됩니다. +
-**2.** 충전기가 CSMS에 Heartbeat 메시지를 보냅니다. +
-**3.** 충전기가 <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>, offline = TRUE)를 CSMS에 보냅니다. +
-**4.** CSMS가 <<transaction_event_response,TransactionEventResponse>>로 응답하여 트랜잭션을 수락합니다. +
-**5.** 충전기에서 <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>, offline = TRUE)를 전송합니다. +
-**6.** CSMS에서 <<transaction_event_response,TransactionEventResponse>>로 응답합니다. +
-**7.** 충전기에서 <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>, offline = TRUE)를 전송합니다. +
-**8.** CSMS에서 <<transaction_event_response,TransactionEventResponse>>로 응답합니다.
+  |**1.** CSMS와의 연결이 복구됩니다. +
+  **2.** 충전기가 CSMS에 Heartbeat 메시지를 보냅니다. +
+  **3.** 충전기가 <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>, offline = TRUE)를 CSMS에 보냅니다. +
+  **4.** CSMS가 <<transaction_event_response,TransactionEventResponse>>로 응답하여 트랜잭션을 수락합니다. +
+  **5.** 충전기에서 <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>, offline = TRUE)를 전송합니다. +
+  **6.** CSMS에서 <<transaction_event_response,TransactionEventResponse>>로 응답합니다. +
+  **7.** 충전기에서 <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>, offline = TRUE)를 전송합니다. +
+  **8.** CSMS에서 <<transaction_event_response,TransactionEventResponse>>로 응답합니다.
 |5 |필수 조건 |최소 한 개의 _offline_ 트랜잭션이 발생했습니다.
 |6 |사후 조건
-|**성공한 사후 조건:** +
-CSMS에서 _offline_ 으로 발생한 모든 트랜잭션을 처리했습니다. +
-**실패 사후 조건:** +
-없음
+  |**성공한 사후 조건:** +
+  CSMS에서 _offline_ 으로 발생한 모든 트랜잭션을 처리했습니다. +
+  **실패 사후 조건:** +
+  없음
 |===
 
 .Sequence Diagram: Inform CSMS of an Offline Occurred Transaction
@@ -1507,7 +1506,7 @@ image::part2/images/figure_61.svg[Sequence Diagram: Inform CSMS of an Offline Oc
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7 |오류 처리 |n/a
-|8 |주의 |n/a
+|8 |참고 |n/a
 |===
 
 ==== E12 - Inform CSMS of an Offline Occurred Transaction - Requirements
@@ -1518,35 +1517,33 @@ image::part2/images/figure_61.svg[Sequence Diagram: Inform CSMS of an Offline Oc
 |ID |전제 조건 |요구 사항 정의
 
 |E12.FR.01 |_offline_ 일 때
-|충전기는 충전기가 온라인 상태였다면 CSMS에 전송했을 모든 <<transaction_event_request,TransactionEventRequest>> 메시지를 큐에 넣어야 합니다.
+  |충전기는 충전기가 온라인 상태였다면 CSMS에 전송했을 모든 <<transaction_event_request,TransactionEventRequest>> 메시지를 큐에 넣어야 합니다.
 |E12.FR.02 |연결이 복구된 후.
-|충전기는 플래그 _offline_ 을 TRUE로 설정하여 큐에 넣은 <<transaction_event_request,TransactionEventRequest>> 메시지를 전송해야 합니다.
-|E12.FR.03 |
-<<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>)에서 미터 데이터를 보내도록 구성된 경우 다음을 참조하세요. <<metervalues_configuration,Meter Values ​​- Configuration>>
-|충전기는 구성된 측정값을 CSMS로 전송된 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>)의 선택적 MeterValue 필드에 추가하여 트랜잭션 중에 더 자세한 정보를 제공해야 합니다.
+  |충전기는 플래그 _offline_ 을 TRUE로 설정하여 큐에 넣은 <<transaction_event_request,TransactionEventRequest>> 메시지를 전송해야 합니다.
+|E12.FR.03 |<<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>)에서 미터 데이터를 보내도록 구성된 경우 다음을 참조하세요. <<metervalues_configuration,Meter Values - Configuration>>
+  |충전기는 구성된 측정값을 CSMS로 전송된 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>)의 선택적 MeterValue 필드에 추가하여 트랜잭션 중에 더 자세한 정보를 제공해야 합니다.
 |E12.FR.04 |E12.FR.03 +
-및 +
-_Offline_ +
-및 +
-충전기의 메모리가 부족합니다.
-|충전기는 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) 메시지를 삭제할 수 있습니다.
+  및 +
+  _Offline_ +
+  및 +
+  충전기의 메모리가 부족합니다.
+    |충전기는 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) 메시지를 삭제할 수 있습니다.
 |E12.FR.05 |E12.FR.04
-|<<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) 메시지를 삭제할 때 충전기는 중간 메시지를 먼저 삭제해야 합니다(첫 번째 메시지, 세 번째 메시지, 다섯 번째 메시지 등). 처음부터 메시지를 삭제하거나 큐에 메시지를 추가하는 것을 중단해서는 안 됩니다.
+  |<<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) 메시지를 삭제할 때 충전기는 중간 메시지를 먼저 삭제해야 합니다(첫 번째 메시지, 세 번째 메시지, 다섯 번째 메시지 등). 처음부터 메시지를 삭제하거나 큐에 메시지를 추가하는 것을 중단해서는 안 됩니다.
 |E12.FR.06 |E12.FR.03 +
-및 +
-1개의 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>)에 대한 미터 데이터 양이 너무 많은 경우.
-|충전기는 동일한 _timestamp_ 를 가진 여러 개의 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) 메시지로 미터 데이터를 분할할 수 있습니다.
-|E12.FR.07 | <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>)에서 미터 데이터를 보내도록 구성된 경우 다음을 참조하세요. <<metervalues_configuration,Meter Values ​​- Configuration>>
-|충전기는 구성된 측정값을 CSMS로 전송된 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>)의 선택적 meterValue 필드에 추가하여 트랜잭션 사용에 대한 자세한 정보를 제공해야 합니다.
+  및 +
+  1개의 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>)에 대한 미터 데이터 양이 너무 많은 경우.
+    |충전기는 동일한 _timestamp_ 를 가진 여러 개의 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) 메시지로 미터 데이터를 분할할 수 있습니다.
+|E12.FR.07 | <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>)에서 미터 데이터를 보내도록 구성된 경우 다음을 참조하세요. <<metervalues_configuration,Meter Values - Configuration>>
+  |충전기는 구성된 측정값을 CSMS로 전송된 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>)의 선택적 meterValue 필드에 추가하여 트랜잭션 사용에 대한 자세한 정보를 제공해야 합니다.
 |E12.FR.08 |E12.FR.07 +
-AND +
-충전기의 메모리가 부족합니다.
-|충전기는
-<<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>) 메시지에서 미터 데이터를 삭제할 수 있습니다.
+  AND +
+  충전기의 메모리가 부족합니다.
+    |충전기는 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>) 메시지에서 미터 데이터를 삭제할 수 있습니다.
 |E12.FR.09 |E12.FR.08
-|미터 데이터를 삭제할 때 충전기는 중간 값을 먼저 삭제해야 합니다(첫 번째 값, 세 번째 값, 다섯 번째 등). 목록의 시작 부분에서 값을 삭제하거나 목록에 값을 추가하는 것을 중단해서는 안 됩니다.
+  |미터 데이터를 삭제할 때 충전기는 중간 값을 먼저 삭제해야 합니다(첫 번째 값, 세 번째 값, 다섯 번째 등). 목록의 시작 부분에서 값을 삭제하거나 목록에 값을 추가하는 것을 중단해서는 안 됩니다.
 |E12.FR.10 |<<sampled_data_sign_readings,`SampledDataSignReadings`>>는 _true_ 입니다.
-|충전기는 서명된 미터 값을 검색하여 sampledValues의 _signedMeterValue_ 필드에 넣어야 합니다.
+  |충전기는 서명된 미터 값을 검색하여 sampledValues의 _signedMeterValue_ 필드에 넣어야 합니다.
 |===
 
 [[e13_transaction_related_message_not_accepted_by_csms]]
@@ -1564,16 +1561,16 @@ AND +
 |4 |설명 |CSMS에서 트랜잭션 관련 메시지를 수락하지 않거나 MessageTimeout 내에 응답하지 않는 상황/문제가 있습니다. 대부분은 오류 시나리오입니다. 이와 같은 일이 발생하면 충전기는 메시지를 몇 번 다시 시도해야 합니다.
 |{nbsp} d|_Actors_ |충전기, CSMS
 |{nbsp} d|_시나리오 설명_
-|**1.** 충전기에서 CSMS에 트랜잭션 관련 메시지를 보냅니다. +
-**2.** 메시지가 수락되지 않고 <<message_attempts_transaction_event,`MessageAttemptsTransactionEvent`>>에 도달하지 못했습니다. +
-**3.** 충전기는 동일한 메시지의 이전 전송 횟수를 <<message_attempt_interval_transaction_event,`MessageAttemptIntervalTransactionEvent`>>와 곱한 초 동안 기다립니다. +
-**4.** 충전기는 트랜잭션 관련 메시지를 CSMS로 다시 보냅니다. +
+  |**1.** 충전기에서 CSMS에 트랜잭션 관련 메시지를 보냅니다. +
+  **2.** 메시지가 수락되지 않고 <<message_attempts_transaction_event,`MessageAttemptsTransactionEvent`>>에 도달하지 못했습니다. +
+  **3.** 충전기는 동일한 메시지의 이전 전송 횟수를 <<message_attempt_interval_transaction_event,`MessageAttemptIntervalTransactionEvent`>>와 곱한 초 동안 기다립니다. +
+  **4.** 충전기는 트랜잭션 관련 메시지를 CSMS로 다시 보냅니다. +
 |5 |필수 조건 |n/a
 |6 |사후 조건
-|**성공 사후 조건:** +
-MessageAttemptsTransactionEvent에 도달하지 않고 트랜잭션 관련 메시지가 수락됩니다. MessageAttemptsTransactionEvent에 도달하고 트랜잭션 관련 메시지가 삭제됩니다. +
-**실패 사후 조건:** +
-MessageAttemptsTransactionEvent에 도달하지 않고 트랜잭션 관련 메시지가 삭제됩니다. MessageAttemptsTransactionEvent에 도달하고 트랜잭션 관련 메시지가 수락됩니다.
+  |**성공 사후 조건:** +
+  MessageAttemptsTransactionEvent에 도달하지 않고 트랜잭션 관련 메시지가 수락됩니다. MessageAttemptsTransactionEvent에 도달하고 트랜잭션 관련 메시지가 삭제됩니다. +
+  **실패 사후 조건:** +
+  MessageAttemptsTransactionEvent에 도달하지 않고 트랜잭션 관련 메시지가 삭제됩니다. MessageAttemptsTransactionEvent에 도달하고 트랜잭션 관련 메시지가 수락됩니다.
 |===
 
 .시퀀스 다이어그램: CSMS에서 수락되지 않은 트랜잭션 관련 메시지
@@ -1582,7 +1579,7 @@ image::part2/images/figure_62.svg[시퀀스 다이어그램: CSMS에서 수락�
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7 |오류 처리 |n/a
-|8 |주의 |이 사용 사례는 CSMS가 메시지를 수락하지 않거나 메시지 시간 초과 내에 응답하지 않을 때 예상되는 동작을 설명합니다. 이는 충전기와 CSMS 간의 통신이 _offline_ 인 상황과 다릅니다.
+|8 |참고 |이 사용 사례는 CSMS가 메시지를 수락하지 않거나 메시지 시간 초과 내에 응답하지 않을 때 예상되는 동작을 설명합니다. 이는 충전기와 CSMS 간의 통신이 _offline_ 인 상황과 다릅니다.
 |===
 
 ==== E13 - Transaction-related message not accepted by CSMS - Requirements
@@ -1593,13 +1590,13 @@ image::part2/images/figure_62.svg[시퀀스 다이어그램: CSMS에서 수락�
 |ID |전제 조건 |요구 사항 정의
 
 |E13.FR.01 |{nbsp}
-|충전기가 실패한 트랜잭션 관련 메시지를 재시도해야 하는 횟수와 간격은 <<message_attempts_transaction_event,`MessageAttemptsTransactionEvent`>> 및 <<message_attempt_interval_transaction_event,`MessageAttemptIntervalTransactionEvent`>> 구성 변수를 사용하여 구성할 수 있습니다.
+  |충전기가 실패한 트랜잭션 관련 메시지를 재시도해야 하는 횟수와 간격은 <<message_attempts_transaction_event,`MessageAttemptsTransactionEvent`>> 및 <<message_attempt_interval_transaction_event,`MessageAttemptIntervalTransactionEvent`>> 구성 변수를 사용하여 구성할 수 있습니다.
 |E13.FR.02 |충전기가 특정 트랜잭션 관련 메시지를 전달하는 데 처음으로 실패할 때.
-|충전기는 이 메시지를 처리하는 데 실패하는 일이 계속 발생하고 <<message_attempts_transaction_event,`MessageAttemptsTransactionEvent`>> 구성 변수에 지정된 만큼의 이 메시지 처리 실패가 아직 발생하지 않은 한 이 메시지를 다시 보내야 합니다.
+  |충전기는 이 메시지를 처리하는 데 실패하는 일이 계속 발생하고 <<message_attempts_transaction_event,`MessageAttemptsTransactionEvent`>> 구성 변수에 지정된 만큼의 이 메시지 처리 실패가 아직 발생하지 않은 한 이 메시지를 다시 보내야 합니다.
 |E13.FR.03 |CSMS는 트랜잭션 관련 메시지를 수락하지 않습니다.
-|충전기는 <<message_attempt_interval_transaction_event,`MessageAttemptIntervalTransactionEvent`>> 키에 지정된 시간(초)에 이 동일한 메시지의 이전 전송 횟수를 곱한 값을 대기해야 합니다.
+  |충전기는 <<message_attempt_interval_transaction_event,`MessageAttemptIntervalTransactionEvent`>> 키에 지정된 시간(초)에 이 동일한 메시지의 이전 전송 횟수를 곱한 값을 대기해야 합니다.
 |E13.FR.04 |최종 시도가 실패하는 경우.
-|충전기는 메시지를 삭제하고 다음 트랜잭션 관련 메시지가 있는 경우 계속 진행해야 합니다.
+  |충전기는 메시지를 삭제하고 다음 트랜잭션 관련 메시지가 있는 경우 계속 진행해야 합니다.
 |===
 
 ==== E13 - Transaction-related message not accepted by CSMS - Example
@@ -1620,17 +1617,17 @@ image::part2/images/figure_62.svg[시퀀스 다이어그램: CSMS에서 수락�
 |{nbsp} d|_기능 블록_ |E. 트랜잭션
 |3 |목표 |CSMS가 트랜잭션 상태를 요청하고 대기 중인 트랜잭션 관련 메시지가 있는지 확인할 수 있도록 합니다.
 |4 |설명
-|CSMS가 전달해야 하는 트랜잭션에 대한 메시지가 아직 있는지 알아야 하는 시나리오가 있습니다. 예를 들어: CSMS가 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>)를 수신하고, 이 트랜잭션에 대한 청구 프로세스를 시작하려고 하지만 여전히 일부 중간 메시지가 누락되어 있음을 감지합니다(메시지의 시퀀스 번호를 통해 확인할 수 있음). <<get_transaction_status_request,GetTransactionStatusRequest>>에서 transactionId를 지정하여 충전기에 이 트랜잭션에 대한 대기열에 메시지가 있는지 물어볼 수 있습니다. 결과에 따라 CSMS는 예를 들어 메시지가 전달될 때까지 기다리거나 정보 없이 청구 프로세스를 시작할 수 있습니다. 또한 트랜잭션이 아직 진행 중인지 알아야 할 수도 있습니다. CSMS가 대기열에 트랜잭션 관련 메시지가 있는지(특정 트랜잭션에 대한 메시지가 아닌) 알고 싶은 경우 transactionId 없이 <<get_transaction_status_request,GetTransactionStatusRequest>>를 보낼 수 있습니다.
+  |CSMS가 전달해야 하는 트랜잭션에 대한 메시지가 아직 있는지 알아야 하는 시나리오가 있습니다. 예를 들어: CSMS가 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>)를 수신하고, 이 트랜잭션에 대한 청구 프로세스를 시작하려고 하지만 여전히 일부 중간 메시지가 누락되어 있음을 감지합니다(메시지의 시퀀스 번호를 통해 확인할 수 있음). <<get_transaction_status_request,GetTransactionStatusRequest>>에서 transactionId를 지정하여 충전기에 이 트랜잭션에 대한 대기열에 메시지가 있는지 물어볼 수 있습니다. 결과에 따라 CSMS는 예를 들어 메시지가 전달될 때까지 기다리거나 정보 없이 청구 프로세스를 시작할 수 있습니다. 또한 트랜잭션이 아직 진행 중인지 알아야 할 수도 있습니다. CSMS가 대기열에 트랜잭션 관련 메시지가 있는지(특정 트랜잭션에 대한 메시지가 아닌) 알고 싶은 경우 transactionId 없이 <<get_transaction_status_request,GetTransactionStatusRequest>>를 보낼 수 있습니다.
 |{nbsp} d|_Actors_ |CSMS, 충전기
 |{nbsp} d|_시나리오 설명_
-|**1.** CSMS는 <<get_transaction_status_request,GetTransactionStatusRequest>>를 충전기로 보냅니다. 이때 transactionId가 있거나 없어도 됩니다. +
-**2.** 충전기는 <<get_transaction_status_response,GetTransactionStatusResponse>>로 응답합니다.
+  |**1.** CSMS는 <<get_transaction_status_request,GetTransactionStatusRequest>>를 충전기로 보냅니다. 이때 transactionId가 있거나 없어도 됩니다. +
+  **2.** 충전기는 <<get_transaction_status_response,GetTransactionStatusResponse>>로 응답합니다.
 |5 |필수 조건 |CSMS는 상태를 알고자 하는 트랜잭션의 transactionId를 알고 있습니다.
-|6 |사후 조건(들) ​​
-|**성공 사후 조건:** +
-CSMS는 요청된 트랜잭션의 상태를 알고 있습니다. +
-**실패 사후 조건:** +
-CSMS는 요청된 트랜잭션의 상태를 알지 못합니다.
+|6 |사후 조건(들)
+  |**성공 사후 조건:** +
+  CSMS는 요청된 트랜잭션의 상태를 알고 있습니다. +
+  **실패 사후 조건:** +
+  CSMS는 요청된 트랜잭션의 상태를 알지 못합니다.
 |===
 
 .시퀀스 다이어그램: 트랜잭션 상태 확인
@@ -1639,8 +1636,8 @@ image::part2/images/figure_63.svg[시퀀스 다이어그램: 트랜잭션 상태
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7 |오류 처리 |n/a
-|8 |주의
-|CSMS가 두 필드(_ongoingIndicator_ 및 _messagesInQueue_)가 모두 false로 설정된 <<get_transaction_status_response,GetTransactionStatusResponse>>를 수신하는 경우, 이는 트랜잭션이 완료되었고 이 트랜잭션에 대한 대기열에 더 이상 메시지가 없거나 충전기가 이 트랜잭션에 대해 아무것도 알지 못한다는 것을 의미할 수 있습니다(더 이상).
+|8 |참고
+  |CSMS가 두 필드(_ongoingIndicator_ 및 _messagesInQueue_)가 모두 false로 설정된 <<get_transaction_status_response,GetTransactionStatusResponse>>를 수신하는 경우, 이는 트랜잭션이 완료되었고 이 트랜잭션에 대한 대기열에 더 이상 메시지가 없거나 충전기가 이 트랜잭션에 대해 아무것도 알지 못한다는 것을 의미할 수 있습니다(더 이상).
 |===
 
 ==== E14 - Check transaction status - Requirements
@@ -1651,25 +1648,25 @@ image::part2/images/figure_63.svg[시퀀스 다이어그램: 트랜잭션 상태
 |ID |전제 조건 |요구 사항 정의
 
 |E14.FR.01 |충전기는 transactionId와 함께 <<get_transaction_status_request,GetTransactionStatusRequest>>를 수신하고 +
-해당 transactionId로 트랜잭션을 수행하지 않았습니다.
-|충전기는 _ongoingIndicator_ = false AND _messagesInQueue_ = false로 응답해야 합니다.
+  해당 transactionId로 트랜잭션을 수행하지 않았습니다.
+    |충전기는 _ongoingIndicator_ = false AND _messagesInQueue_ = false로 응답해야 합니다.
 |E14.FR.02 |충전기는 transactionId와 함께 <<get_transaction_status_request,GetTransactionStatusRequest>>를 수신하고 +
-해당 transactionId로 트랜잭션이 아직 중단되지 않았습니다.
-|충전기의 응답은 _ongoingIndicator_ = true여야 합니다.
+  해당 transactionId로 트랜잭션이 아직 중단되지 않았습니다.
+    |충전기의 응답은 _ongoingIndicator_ = true여야 합니다.
 |E14.FR.03 |충전기는 transactionId가 있는 <<get_transaction_status_request,GetTransactionStatusRequest>>를 수신하고 +
-해당 transactionId가 있는 트랜잭션이 중단되었습니다. |충전기의 응답은 _ongoingIndicator_ = false여야 합니다.
+  해당 transactionId가 있는 트랜잭션이 중단되었습니다. |충전기의 응답은 _ongoingIndicator_ = false여야 합니다.
 |E14.FR.04 |충전기는 transactionId가 있는 <<get_transaction_status_request,GetTransactionStatusRequest>>를 수신하고 +
-해당 transactionId가 있는 트랜잭션에 대해 전달할 트랜잭션 관련 메시지가 있습니다. |충전기의 응답은 _messagesInQueue_ = true여야 합니다.
+  해당 transactionId가 있는 트랜잭션에 대해 전달할 트랜잭션 관련 메시지가 있습니다. |충전기의 응답은 _messagesInQueue_ = true여야 합니다.
 |E14.FR.05 |충전기는 transactionId가 있는 <<get_transaction_status_request,GetTransactionStatusRequest>>를 수신하고 +
-해당 transactionId가 있는 트랜잭션에 대해 전달할 트랜잭션 관련 메시지가 없습니다. |충전기의 응답은 _messagesInQueue_ = false여야 합니다.
+  해당 transactionId가 있는 트랜잭션에 대해 전달할 트랜잭션 관련 메시지가 없습니다. |충전기의 응답은 _messagesInQueue_ = false여야 합니다.
 |E14.FR.06 |충전기는 transactionId 없이 <<get_transaction_status_request,GetTransactionStatusRequest>>를 수신합니다.
-|충전기의 응답은 _ongoingIndicator_ = 설정되어서는 안 됩니다.
+  |충전기의 응답은 _ongoingIndicator_ = 설정되어서는 안 됩니다.
 |E14.FR.07 |충전기는 transactionId 없이 <<get_transaction_status_request,GetTransactionStatusRequest>>를 수신하고 +
-전달할 트랜잭션 관련 메시지가 있습니다.
-|충전기의 응답은 _messagesInQueue_ = true여야 합니다.
+  전달할 트랜잭션 관련 메시지가 있습니다.
+    |충전기의 응답은 _messagesInQueue_ = true여야 합니다.
 |E14.FR.08 |충전기는 transactionId 없이 <<get_transaction_status_request,GetTransactionStatusRequest>>를 수신하고 +
-전달할 트랜잭션 관련 메시지가 없습니다.
-|충전기의 응답은 _messagesInQueue_ = false여야 합니다.
+  전달할 트랜잭션 관련 메시지가 없습니다.
+    |충전기의 응답은 _messagesInQueue_ = false여야 합니다.
 |===
 
 <<<
@@ -1693,15 +1690,15 @@ image::part2/images/figure_63.svg[시퀀스 다이어그램: 트랜잭션 상태
 |4 |설명 |<<iso15118_1,ISO15118-1>> 참조, 사용 사례 설명 H1, 44페이지.
 |{nbsp} d|_Actors_ |EV, EVSE, EV 드라이버
 |{nbsp} d|_시나리오 설명_
-|<<iso15118_1,ISO15118-1>> 참조, 사용 사례 설명 H1, 기본 초보 사용 사례 설명, 처음 5개의 글머리 기호와 마지막 2개의 설명, 44페이지.
+  |<<iso15118_1,ISO15118-1>> 참조, 사용 사례 설명 H1, 기본 초보 사용 사례 설명, 처음 5개의 글머리 기호와 마지막 2개의 설명, 44페이지.
 
-**1.** EV 드라이버가 EV에서 케이블을 분리합니다 +
-**2.** 충전기는 <<transaction_event_request,TransactionEventRequest>>를 eventType <<transaction_event_enum_type,eventType = Ended>>로 CSMS로 보냅니다.
+  **1.** EV 드라이버가 EV에서 케이블을 분리합니다 +
+  **2.** 충전기는 <<transaction_event_request,TransactionEventRequest>>를 eventType <<transaction_event_enum_type,eventType = Ended>>로 CSMS로 보냅니다.
 |7 |필수 조건 |<<iso15118_1,ISO15118-1>>, 사용 사례 필수 조건 H1, 44페이지를 참조하세요.
 |8 |사후 조건(들)
-|CSMS가 트랜잭션에 대한 모든 관련 정보를 수신했습니다.
+  |CSMS가 트랜잭션에 대한 모든 관련 정보를 수신했습니다.
 
-<<iso15118_1,ISO15118-1>>, 사용 사례 종료 조건 H1, 44페이지를 참조하세요.
+  <<iso15118_1,ISO15118-1>>, 사용 사례 종료 조건 H1, 44페이지를 참조하세요.
 |===
 
 .End of charging process
@@ -1710,12 +1707,12 @@ image::part2/images/figure_64.svg[End of charging process]
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |9 |오류 처리 |n/a
-|10 |주의
-|트리거에 대한 <<iso15118_1,ISO15118-1>>, 사용 사례 요구 사항 H1, 44페이지를 참조하세요.
+|10 |참고
+  |트리거에 대한 <<iso15118_1,ISO15118-1>>, 사용 사례 요구 사항 H1, 44페이지를 참조하세요.
 
-위의 시나리오 설명과 시퀀스 다이어그램은 중지 트랜잭션에 대한 구성 변수가 다음과 같이 구성된 것을 기반으로 합니다. +
-<<tx_stop_point,`TxStopPoint`>>: <<tx_start_stop_point_values,ParkingBayOccupancy, EVConnected, Authorized, DataSigned, PowerPathClosed>> +
-이 유즈케이스는 다른 구성에서도 유효하지만, 그 경우 트랜잭션이 다른 시점에서 시작/종료될 수 있으며, 이는 메시지가 전송되는 순서에 영향을 미칠 수 있습니다. 자세한 내용은 사용 사례를 참조하세요. <<e06_stop_transaction_options,E06 - Stop Transaction options>>
+  위의 시나리오 설명과 시퀀스 다이어그램은 중지 트랜잭션에 대한 구성 변수가 다음과 같이 구성된 것을 기반으로 합니다. +
+  <<tx_stop_point,`TxStopPoint`>>: <<tx_start_stop_point_values,ParkingBayOccupancy, EVConnected, Authorized, DataSigned, PowerPathClosed>> +
+  이 유즈케이스는 다른 구성에서도 유효하지만, 그 경우 트랜잭션이 다른 시점에서 시작/종료될 수 있으며, 이는 메시지가 전송되는 순서에 영향을 미칠 수 있습니다. 자세한 내용은 사용 사례를 참조하세요. <<e06_stop_transaction_options,E06 - Stop Transaction options>>
 |===
 
 출처: <<iso15118_1,ISO15118-1>>
@@ -1727,16 +1724,16 @@ image::part2/images/figure_64.svg[End of charging process]
 |===
 |ID |전제 조건 |요구 사항 정의
 
-|E15.FR.01 | <<transaction_event_request,TransactionEventRequest>>에서 미터 데이터를 보내도록 구성된 경우(<<transaction_event_enum_type,eventType = Ended>>), 다음을 참조하세요. <<metervalues_configuration,Meter Values ​​- Configuration>>
-|충전기는 구성된 측정값을 선택 사항에 추가해야 합니다. <<transaction_event_request,TransactionEventRequest>>의 meterValue 필드(<<transaction_event_enum_type,eventType = Ended>>)는 CSMS로 전송되어 트랜잭션 사용에 대한 자세한 정보를 제공합니다.
+|E15.FR.01 | <<transaction_event_request,TransactionEventRequest>>에서 미터 데이터를 보내도록 구성된 경우(<<transaction_event_enum_type,eventType = Ended>>), 다음을 참조하세요. <<metervalues_configuration,Meter Values - Configuration>>
+  |충전기는 구성된 측정값을 선택 사항에 추가해야 합니다. <<transaction_event_request,TransactionEventRequest>>의 meterValue 필드(<<transaction_event_enum_type,eventType = Ended>>)는 CSMS로 전송되어 트랜잭션 사용에 대한 자세한 정보를 제공합니다.
 |E15.FR.02 |E15.FR.01 +
-AND +
-충전기의 메모리가 부족합니다.
-|충전기는 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>) 메시지에서 미터 데이터를 삭제할 수 있습니다.
+  AND +
+  충전기의 메모리가 부족합니다.
+    |충전기는 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>) 메시지에서 미터 데이터를 삭제할 수 있습니다.
 |E15.FR.03 |E15.FR.02
-|미터 데이터를 삭제할 때 충전기는 중간 값(첫 번째 값, 세 번째 값, 다섯 번째 등)을 먼저 삭제해야 하며, 목록의 시작 부분에서 값을 삭제하거나 목록에 값을 추가하는 것을 중지해서는 안 됩니다.
+  |미터 데이터를 삭제할 때 충전기는 중간 값(첫 번째 값, 세 번째 값, 다섯 번째 등)을 먼저 삭제해야 하며, 목록의 시작 부분에서 값을 삭제하거나 목록에 값을 추가하는 것을 중지해서는 안 됩니다.
 |E15.FR.04 |<<tx_stop_point,`TxStopPoint`>>에 "Authorized" 또는 "PowerPathClosed" 또는 "EnergyTransfer"가 포함되어 있고 충전기가 EV에서 ISO 15118 SessionStopReq(Terminate) 메시지를 수신할 때 _triggerReason_ = `StopAuthorized` 인 <<transaction_event_request,TransactionEventRequest>>를 아직 보내지 않은 경우
-|충전기는 <<transaction_event_enum_type,eventType = Ended>> 및 _triggerReason_ = `StopAuthorized` 및 _stoppedReason_ = `StoppedByEV` 인 <<transaction_event_request,TransactionEventRequest>> 메시지를 보내서 CSMS에 충전 트랜잭션이 (EV에 의해) 중단되었음을 알려야 합니다.
+  |충전기는 <<transaction_event_enum_type,eventType = Ended>> 및 _triggerReason_ = `StopAuthorized` 및 _stoppedReason_ = `StoppedByEV` 인 <<transaction_event_request,TransactionEventRequest>> 메시지를 보내서 CSMS에 충전 트랜잭션이 (EV에 의해) 중단되었음을 알려야 합니다.
 |E15.FR.05 |<<tx_stop_point,`TxStopPoint`>>에 "Authorized" 또는 "PowerPathClosed" 또는 "EnergyTransfer"가 포함되어 있지 않고 충전기가 EV에서 ISO 15118 SessionStopReq(Terminate) 메시지를 수신했을 때 _triggerReason_ = `StopAuthorized` 인 <<transaction_event_request,TransactionEventRequest>>를 아직 보내지 않은 경우
-|충전기는 <<transaction_event_enum_type,eventType = Updated>> 및 _triggerReason_ = `StopAuthorized` 인 <<transaction_event_request,TransactionEventRequest>> 메시지를 보내 CSMS에 인증이 종료되었음을 알려야 합니다.
+  |충전기는 <<transaction_event_enum_type,eventType = Updated>> 및 _triggerReason_ = `StopAuthorized` 인 <<transaction_event_request,TransactionEventRequest>> 메시지를 보내 CSMS에 인증이 종료되었음을 알려야 합니다.
 |===
