@@ -285,7 +285,7 @@ image::part2/images/figure_22.svg[시퀀스 다이어그램: 시작 버튼을 �
 |2 |ID |C03
 |{nbsp} d|_기능 블록_ |C. 승인
 |3 |목표 |신용 카드를 사용하여 충전을 시작할 수 있도록 합니다.
-|4 |설명 |하우징 내부에 신용/직불 카드 단말기가 내장된 충전기 또는 중앙 결제 단말기/키오스크가 있는 충전기 그룹에 속하는 충전기. EV 운전자가 카드를 사용하여 충전 비용을 지불합니다. 트랜잭션는 결제 회사에서 승인되고, CSMS는 결제 시스템으로부터 메시지를 받고, <<request_start_transaction_request,RequestStartTransactionRequest>>를 충전기로 보내 충전을 시작합니다.
+|4 |설명 |하우징 내부에 신용/직불 카드 단말기가 내장된 충전기 또는 중앙 결제 단말기/키오스크가 있는 충전기 그룹에 속하는 충전기. EV 운전자가 카드를 사용하여 충전 비용을 지불합니다. 트랜잭션은 결제 회사에서 승인되고, CSMS는 결제 시스템으로부터 메시지를 받고, <<request_start_transaction_request,RequestStartTransactionRequest>>를 충전기로 보내 충전을 시작합니다.
 |{nbsp} d|_Actors_ |EV 운전자, 결제 시스템, CSMS, 충전기
 |{nbsp} d|_시나리오 설명_
   |**1.** EV 운전자가 충전 케이블을 꽂습니다. +
