@@ -9,7 +9,7 @@
 
 이 기능 블록은 CSO(또는 제3자)가 트랜잭션 중에 전송되는 충전 전류/전력에 영향을 미치거나 충전기가 그리드에서 끌어올 수 있는 전류/전력량에 대한 제한을 설정할 수 있는 모든 기능을 설명합니다.
 
-일반적으로 스마트 충전에는 두 가지 이상의 정의가 있습니다. 이는 소비자가 대규모 소비자 그룹이 동시에 '충전'하기를 원하더라도 언제든지 배터리를 완전히 충전할 수 있는 방식으로 그리드 용량을 사용한다는 것을 의미할 수 있습니다. 스마트는 충전 시 에너지 가격을 고려할 수 있다는 것을 의미할 수도 있고, 또는 태양광 패널에서 지속 가능한 에너지를 지역적으로 공급하는 것으로 간주될 수 있습니다. 그리고 전기 자동차(EV) 운전자가 솔루션의 일부가 되기를 원할 때 더욱 '스마트'합니다. OCPP 내에서 스마트 충전은 CSMS가 특정 EV의 (충전) 전력 또는 전류, 또는 전체 충전기/충전기 그룹의 총 허용 에너지 소비에 영향을 미칠 수 있는 기능을 얻는 것을 의미합니다. 다양한 설정을 사용할 수 있습니다. 다음의 네 가지 일반적인 스마트 충전 유형은 OCPP를 사용한 스마트 충전의 가능한 동작을 설명하는 데 사용됩니다.
+일반적으로 스마트 충전에는 두 가지 이상의 정의가 있습니다. 이는 소비자가 대규모 소비자 그룹이 동시에 '충전'하기를 원하더라도 언제든지 배터리를 완전히 충전할 수 있는 방식으로 그리드 용량을 사용한다는 것을 의미할 수 있습니다. 스마트는 충전 시 에너지 가격을 고려할 수 있다는 것을 의미할 수도 있고, 또는 태양광 패널에서 지속 가능한 에너지를 지역적으로 공급하는 것으로 간주될 수 있습니다. 그리고 전기 자동차(EV) 운전자가 솔루션의 일부가 되기를 원할 때 더욱 '스마트'한것 일겁니다. OCPP 내에서 스마트 충전은 CSMS가 특정 EV의 (충전) 전력 또는 전류의 충전(방전)에 영향을 미치거나, 전체 충전기/충전기 그룹의 총 허용 에너지 소비에 영향을 미칠 수 있는 기능을 얻는 것을 의미합니다. 다양한 설정을 사용할 수 있습니다. 다음의 CPP를 사용한 스마트 충전의 네 가지 일반적인 스마트 충전 동작을 설명하는 유형입니다.
 
 - 내부 부하 분산
 - 중앙 스마트 충전
@@ -59,7 +59,7 @@ image::part2/images/figure_96.svg[로컬 스마트 충전 토폴로지]
 
 === External Smart Charging Control Signals
 
-OCPP 프로토콜은 원래 CSMS와 하나 이상의 충전기 간의 통신을 위해 개발되었습니다. 위에서 설명한 대로 이는 충전기 운영자(CSO) CSMS가 충전기를 제어하고 EV와 충전기의 충전 한도에 따라 CSO가 EV가 얼마나 빨리 충전되는지 결정한다는 것을 의미합니다. 그러나 OCPP 지원 충전기의 일부 상황/애플리케이션에서는 충전 속도를 결정하는 두 가지 요소가 이것들뿐이 아닙니다. 충전 속도를 결정하는 다른 입력은 DSO 신호(예: IEC 61850 <<iec61850_7_420,[IEC61850-7-420]>>, IEC 60870 <<iec60870_5_104,[IEC60870-5-104]>>, DNP3 <<dnp3,[DNP3]>> 또는 OpenADR <<open_adr,[OPENADR]>>) 또는 건물/가정 에너지 관리 시스템의 신호일 수 있습니다. 이러한 신호는 OCPP의 범위를 벗어나지만, OCPP 관점에서 보면 CSMS가 외부 신호에 의한 요금 변경 사항을 통보받아야 한다는 것은 분명해 보입니다. 그러나 이는 충돌하는 신호를 처리하는 방법과 같은 여러 가지 의문으로 이어집니다. 아래 그림은 에너지 관리 시스템을 사용한 예시 설정을 보여줍니다. 여기서 외부 신호는 충전기와 직접 통신하는 설정과 로컬 컨트롤러를 사용하는 여러 충전기 설정 모두에서 시각화됩니다.
+OCPP 프로토콜은 원래 CSMS와 하나 이상의 충전기 간의 통신을 위해 개발되었습니다. 위에서 설명한 대로 이는 충전기 운영자(CSO) CSMS가 충전기를 제어하고 EV와 충전기의 충전 한도에 따라 CSO가 EV가 얼마나 빨리 충전되는지 결정한다는 것을 의미합니다. 그러나 OCPP 지원 충전기의 일부 상황/애플리케이션에서는 충전 속도를 결정하는 두 가지 요소가 이것들뿐이 아닙니다. 충전 속도를 결정하는 다른 입력은 DSO 신호(예: IEC 61850 <<iec61850_7_420,[IEC61850-7-420]>>, IEC 60870 <<iec60870_5_104,[IEC60870-5-104]>>, DNP3 <<dnp3,[DNP3]>> 또는 OpenADR <<open_adr,[OPENADR]>>) 또는 건물/가정 에너지 관리 시스템의 신호일 수 있습니다. 이러한 신호는 OCPP의 범위를 벗어나지만, OCPP 관점에서 보면 CSMS가 외부 신호에 의한 충전 변경 사항을 통보받아야 한다는 것은 분명해 보입니다. 그러나 이는 충돌하는 신호를 처리하는 방법과 같은 여러 가지 의문으로 이어집니다. 아래 그림은 에너지 관리 시스템을 사용한 예시 설정을 보여줍니다. 여기서 외부 신호는 충전기와 직접 통신하는 설정과 로컬 컨트롤러를 사용하는 여러 충전기 설정 모두에서 시각화됩니다.
 
 .외부 스마트 충전
 image::part2/images/figure_97.svg[외부 스마트 충전]
@@ -71,18 +71,18 @@ image::part2/images/figure_98.svg[LC를 통한 외부 스마트 충전]
 
 <<<
 
-== Charging profiles
+== Charging Profiles
 
 === Introduction
 
-충전 전력 또는 전류에 영향을 미치는 것은 특정 시점에 충전기로 에너지 전송 한도를 보내는 것에 기반합니다. 이러한 한도는 <<charging_profile_type,ChargingProfile>>에 결합되어 있습니다. <<charging_profile_type,ChargingProfile>>은 충전 전력 또는 전류 한도 블록을 정의하고 시작 시간과 기간을 포함할 수 있는 <<charging_schedule_type,ChargingSchedule>>을 보유합니다. 이는 충전기와 충전기의 EVSE에 적용할 수 있습니다. <<example_charging_profile,Example ChargingProfile>>에서 <<charging_profile_type,ChargingProfile>>의 예를 들어 이러한 충전 프로파일을 사용하는 방법을 설명합니다.
+충전 전력 또는 전류에 영향을 미치는 것은 특정 시점에 충전기로 에너지 전송 한도를 보내는 것에 기반합니다. 이러한 한도는 <<charging_profile_type,ChargingProfile>>에 결합되어 있습니다. <<charging_profile_type,ChargingProfile>>은 충전 전력 또는 전류 한도 블록을 정의하고 시작 시간과 기간을 포함할 수 있는 <<charging_schedule_type,ChargingSchedule>>을 가지고 있습니다. 이는 충전기와 충전기의 EVSE에 적용될 수 있습니다. <<example_charging_profile,Example ChargingProfile>>에는 충전 프로파일을 사용하는 방법을 설명하기 위해  <<charging_profile_type,ChargingProfile>>의 예시가 주어집니다.
 
 CSMS는 다음과 같은 상황에서 메시지 <<set_charging_profile_request,SetChargingProfileRequest>>를 사용하여 충전기에 충전 프로파일을 보낼 수 있습니다.
 
 - 트랜잭션 시작 시 트랜잭션에 대한 충전 프로파일을 설정
-- 충전기에 전송된 RequestStartTransaction 요청 시
+- 충전기에 RequestStartTransaction 요청이 전송 될때
 - 트랜잭션 중 트랜잭션에 대한 활성 프로파일을 변경
-- 트랜잭션 컨텍스트 외부에서 별도의 메시지로 로컬 컨트롤러, 충전기 또는 EVSE에 대한 기본 충전 프로파일을 설정
+- 트랜잭션 컨텍스트 외에서 별도의 메시지로 로컬 컨트롤러, 충전기 또는 EVSE에 대한 기본 충전 프로파일을 설정
 
 [[charging_profile_purpose]]
 === Charging profile purposes
@@ -98,11 +98,11 @@ CSMS는 다음과 같은 상황에서 메시지 <<set_charging_profile_request,S
   |내부 부하 분산 시나리오에서 충전기에는 충전기의 모든 EVSE가 공유할 전력 또는 전류를 제한하는 하나 이상의 로컬 충전 프로파일이 있습니다. CSMS는 이러한 프로파일을 ChargingProfilePurpose를 "_ChargingStationMaxProfile_"로 설정하여 구성해야 합니다. +
   _ChargingStationMaxProfile_ 은 충전기 evseId 0에서만 설정할 수 있습니다.
 |[[tx_profile]]TxProfile
-  |TxProfile이라는 목적이 있는 트랜잭션별 프로파일은 현재 트랜잭션 기간 동안만 <<tx_default_profile,TxDefaultProfile>>을 무시하거나 TxProfile이 만료될 때까지 무시합니다. 어느 쪽이 먼저 발생하는지에 따라 다릅니다.
+  |TxProfile이라는 목적이 있는 트랜잭션별 프로파일은 어느 쪽이 먼저 발생하는지에 따라 현재 트랜잭션 기간 동안만 <<tx_default_profile,TxDefaultProfile>>을 무시하거나 TxProfile이 만료될 때까지 무시합니다.
 |[[tx_default_profile]]TxDefaultProfile
-  |요금 정책을 부과하는 데 사용될 수 있는 새 트랜잭션에 대한 기본 일정입니다. 예를 들어 낮 동안 요금을 청구하지 않는 정책이 있습니다.
+  |충전 정책을 부과하는 데 사용될 수 있는 새 트랜잭션에 대한 기본 일정입니다. 예를 들어 낮 동안 충전을 하지 않는 정책이 있습니다.
 |[[charging_station_external_constraints]]ChargingStationExternalConstraints
-  |CSMS가 아닌 외부 시스템이 요금 한도 또는 일정을 설정하면 충전기는 이 목적을 사용하여 해당 한도/일정을 보고합니다.
+  |CSMS가 아닌 외부 시스템이 충전 한도 또는 일정을 설정하면 충전기는 이 목적을 사용하여 해당 한도/일정을 보고합니다.
 |===
 
 === Charging profile recurrency
@@ -115,31 +115,31 @@ CSMS는 다음과 같은 상황에서 메시지 <<set_charging_profile_request,S
   Kind |설명
 
 |Absolute
-  |충전 일정 기간은 일정에 정의된 절대 시점을 기준으로 합니다. 이를 위해서는 _startSchedule_ 이 시작 시점으로 설정되어야 합니다. 예를 들어, 이를 사용하여 충전 세션이 시작된 시점과 관계없이 17:00h와 21:00h 사이에 충전을 줄이는 일정을 정의합니다.
+  |충전 일정 기간은 일정에 정의된 절대 시점을 기준으로 합니다. 이를 위해서는 _startSchedule_ 이 시작 시점으로 설정되어야 합니다. 예를들어 충전 세션이 시작된 시점과 관계없이 17:00h와 21:00h 사이에 충전을 줄이는 일정을 사용할때 사용할 수 있습니다.
 |Recurring
   |충전 일정은 첫 번째 일정 기간에 주기적으로 다시 시작됩니다. 가장 유용하려면 _startSchedule_ 이 시작 시점으로 설정되어야 합니다. _recurrencyKind_ = `Daily` 와 함께 사용하세요. +
-  예를 들어, 충전 세션이 시작된 시점과 관계없이 매일 17:00h와 21:00h 사이에 충전을 줄이는 일정을 정의합니다.
+  예를 들어, 충전 세션이 시작된 시점과 관계없이 매일 17:00h와 21:00h 사이에 충전을 줄이는 일정을 정의할때 사용됩니다.
 |Relative
-  |충전 일정 기간은 EVSE가 에너지를 공급할 준비가 되면 시작해야 합니다. 즉, EV 운전자가 승인되고 EV가 연결될 때입니다. 이미 충전 중인 트랜잭션에 대한 ChargingProfile을 수신하면 충전 일정 기간은 PowerPathClosed 순간을 기준으로 유지되어야 합니다. +
+  |충전 일정 기간은 EVSE가 에너지를 공급할 준비가 되면 시작해야 합니다. 즉, EV 운전자가 인증되고 EV가 연결될 때입니다. 이미 충전 중인 트랜잭션에 대한 ChargingProfile을 수신하면 충전 일정 기간은 PowerPathClosed 순간까지 relative하게 유지되어야 합니다. +
   startSchedule에 대한 값을 제공해서는 안 됩니다.
 |===
 
 === Stacking charging profiles
 
-복잡한 달력을 설명하기 위해 동일한 <<charging_profile_type,ChargingProfile>> 목적의 충전 프로파일을 스태킹할 수 있습니다. 예를 들어, <<tx_default_profile,TxDefaultProfile>>의 목적인 <<charging_profile_type,ChargingProfile>>을 정의하여 주중 23:00h에서 06:00h까지, 주말 00:00h에서 24:00h까지 전력 또는 전류 충전을 허용하고 다른 시간에는 전력 또는 전류 충전을 줄이는 1주일의 기간과 반복을 지정할 수 있습니다. 그 위에 다른 <<tx_default_profile,TxDefaultProfiles>>를 정의하여 휴일과 같이 이 규칙에 대한 예외를 정의할 수 있습니다.
+복잡한 달력을 설명하기 위해 동일한 <<charging_profile_type,ChargingProfile>> 목적의 충전 프로파일을 스태킹할 수 있습니다. 예를 들어, <<tx_default_profile,TxDefaultProfile>>의 목적인 <<charging_profile_type,ChargingProfile>>을 정의하여 주중 23:00h에서 06:00h까지, 그리고 주말 00:00h에서 24:00h까지 풀파워로 충전을 허용하고 다른 시간에는 전력 또는 전류 충전을 줄이는 한 주의 기간과 반복을 지정할 수 있습니다. 그 위에 다른 <<tx_default_profile,TxDefaultProfiles>>를 정의하여 휴일과 같이 이 규칙에 대한 예외를 정의할 수 있습니다.
 
 <<charging_profile_type,ChargingProfile>>은 특정 시간 간격에 대한 제한을 정의하는 <<charging_schedule_type,ChargingSchedule>>을 보유합니다. <<charging_schedule_type,ChargingSchedule>>의 우선순위는 <<charging_profile_type,ChargingProfile>>의 _stackLevel_ 에 따라 결정됩니다. 동일한 <<charging_profile_purpose,chargingProfilePurpose>>를 갖는 두 개 이상의 <<charging_profile_type,ChargingProfile>>이 유효한 경우, 스택 수준이 더 높은 <<charging_profile_type,ChargingProfile>>의 <<charging_schedule_type,ChargingSchedule>>이 스택 수준이 더 낮은 <<charging_profile_type,ChargingProfile>>의 <<charging_schedule_type,ChargingSchedule>>을 무효화합니다.
 
-충돌을 피하기 위해 동일한 _stackLevel_ 과 동일한 _chargingProfilePurpose_ 를 가진 여러 개의 충전 프로파일이 주어진 시간에 동일한 EVSE에서 ​​유효하도록 허용되지 않습니다. EVSE #0의 충전 프로파일은 모든 EVSE에서 ​​활성화된 것으로 간주됩니다!
+충돌을 피하기 위해 동일한 _stackLevel_  과 동일한 _chargingProfilePurpose_  를 가진 여러 개의 충전 프로파일이 주어진 시간에 동일한 EVSE에서 ​​유효하도록 설정하는것을 허용하지 않습니다. EVSE #0의 충전 프로파일은 모든 EVSE에서 ​​활성화된 것으로 간주됩니다!
 
 [[combining_charging_profile_purposes]]
 === Combining Charging Profile Purposes
 
 충전 수준을 안내하는 복합 일정은 다양한 <<charging_profile_purpose,chargingProfilePurposes>>의 기존 충전 프로파일과 스택 수준의 조합입니다.
 
-앞서 언급했듯이 각 충전 프로파일 목적에 대해 언제든지 해당 목적에 대한 선행 충전 일정은 해당 시간에 정의된 일정 기간이 있고 _validFrom_ 및 _validTo_ 매개변수에 따라 결정되는 해당 시간에 유효한 가장 높은 스택 수준을 가진 충전 프로파일에 속하는 충전 일정입니다. 복합 일정은 각 시간 간격에 대한 다양한 목적의 주요 프로파일 중에서 가장 낮은 요금 한도(다른 <<charging_rate_unit_enum_type,chargingRateUnits>> 고려)를 고려하여 계산됩니다.
+앞서 언급했듯이 각 충전 프로파일 목적에 대해 언제든지 해당 목적에 대한 leading 충전 일정은 해당 시간에 정의된 일정 기간이 있고 _validFrom_ 및 _validTo_ 매개변수에 따라 결정되는 해당 시간에 유효한 가장 높은 스택 수준을 가진 충전 프로파일에 속하는 충전 일정입니다. 복합 일정은 각 시간 간격에 대한 다양한 목적의 주요 프로파일 중에서 가장 낮은 충전 한도(다른 <<charging_rate_unit_enum_type,chargingRateUnits>> 고려)를 고려하여 계산됩니다.
 
-유일한 예외는 <<tx_default_profile,TxDefaultProfiles>>와 <<tx_profile,TxProfile>>이 모두 유효한 경우입니다. 이 경우 <<tx_profile,TxProfile>>이 항상 <<tx_default_profile,TxDefaultProfiles>>보다 우선하므로 복합 일정은 이 특정 상황에서 주요 목적 프로파일 <<tx_default_profile,TxDefaultProfiles>>을 고려하지 않습니다. 시간 간격은 고정된 길이일 필요가 없으며 모든 <<charging_profile_type,ChargingProfile>> 목적에 대해 동일할 필요도 없습니다. 즉, 결과 복합 일정에는 길이가 다른 간격이 포함될 수 있습니다.
+유일한 예외는 <<tx_default_profile,TxDefaultProfiles>>와 <<tx_profile,TxProfile>>이 모두 유효한 경우입니다. 이 경우 <<tx_profile,TxProfile>>이 항상 <<tx_default_profile,TxDefaultProfiles>>보다 우선하므로 복합 일정은 이 특정 상황에서 주요 목적 프로파일 <<tx_default_profile,TxDefaultProfiles>>을 고려하지 않습니다. 시간 간격은 고정된 길이일 필요가 없으며 모든 <<charging_profile_type,ChargingProfile>> 목적에 대해 동일할 필요도 없습니다. 즉, 결과적으로 생성된 복합 일정에는 길이가 다른 간격이 포함될 수 있습니다.
 
 충전기에 두 개 이상의 EVSE가 장착된 경우 ChargingStationMaxProfile의 한계 값은 모든 EVSE를 합친 한계입니다.
 
@@ -168,11 +168,11 @@ s|ChargingProfile |{nbsp} |{nbsp} |{nbsp}
 |chargingProfileId s|100 |{nbsp} |{nbsp}
 |stackLevel s|0 |{nbsp} |{nbsp}
 |chargingProfilePurpose s|TxDefaultProfile |{nbsp} |{nbsp}
-|chargingProfileKind s|반복 |{nbsp} |{nbsp}
-|recurrencyKind s|매일 |{nbsp} |{nbsp}
+|chargingProfileKind s|Recurring |{nbsp} |{nbsp}
+|recurrencyKind s|Daily |{nbsp} |{nbsp}
 |chargingSchedule 3.+|_(1개의 <<charging_schedule_type,ChargingSchedule>> 요소 목록)_
 |{nbsp} s|ChargingSchedule |{nbsp} |{nbsp}
-|{nbsp} |기간 s|86400 (= 24시간) |{nbsp}
+|{nbsp} |duration s|86400 (= 24시간) |{nbsp}
 |{nbsp} |startSchedule s|2013-01-01T00:00Z |{nbsp}
 |{nbsp} |chargingRateUnit s|W |{nbsp}
 |{nbsp} |chargingSchedulePeriod
@@ -193,12 +193,12 @@ s|ChargingProfile |{nbsp} |{nbsp} |{nbsp}
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===
-|IMPORTANT |사용되는 단계의 양 충전은 충전기, EV, CS와 EV 간 케이블의 기능에 따라 제한됩니다. 이 세 가지 중 하나라도 3상 충전이 불가능한 경우 EV는 세 가지 모두에서 지원하는 위상 수를 사용하여 충전됩니다.
+|IMPORTANT |사용되는 위상의 양 충전은 충전기, EV, CS와 EV 간 케이블의 기능에 따라 제한됩니다. 이 세 가지 중 하나라도 3위상 충전이 불가능한 경우 EV는 세 가지 모두에서 지원하는 위상 수를 사용하여 충전됩니다.
 |===
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===
-|IMPORTANT |일정이나 트랜잭션 중에 사용되는 위상 수를 전환하는 것은 신중하게 수행해야 합니다. 일부 EV는 이를 지원하지 않을 수 있으며 위상 수를 변경하면 물리적 손상이 발생할 수 있습니다. 구성 변수: <<phases_3_to_1,Phases3to1>> 충전기는 트랜잭션 중에 위상 수를 전환하는 것을 지원하는지 여부를 알 수 있습니다.
+|IMPORTANT |일정이나 트랜잭션 중에 사용되는 위상 수를 전환하는 것은 신중하게 수행해야 합니다. 일부 EV는 이를 지원하지 않을 수 있으며 위상 수를 변경하면 물리적 손상이 발생할 수 있습니다. 구성 변수: <<phases_3_to_1,Phases3to1>> 으로 충전기가 트랜잭션 중에 위상 수를 전환하는 것을 지원하는지 여부를 알 수 있습니다.
 |===
 
 [cols="^.^1s,10",%autowidth.stretch]
@@ -217,13 +217,18 @@ CSO가 17:00h에서 20:00h까지의 피크 시간 동안 충전을 2kW로 제한
 [,json]
 ----
 "chargingProfile": {
-  "id": 10, "stackLevel": 1, "chargingProfilePurpose": "TxDefaultProfile",
-  "chargingProfileKind": "Recurring", "recurrencyKind": "Daily",
+  "id": 10, 
+  "stackLevel": 1, 
+  "chargingProfilePurpose": "TxDefaultProfile",
+  "chargingProfileKind": "Recurring", 
+  "recurrencyKind": "Daily",
   "chargingSchedule": [ {
-    "id": 1, "startSchedule": "2020-01-09T17:00:00", "duration": 1080,
+    "id": 1, 
+    "startSchedule": "2020-01-09T17:00:00", 
+    "duration": 1080,
     "chargingRateUnit": "W",
     "chargingSchedulePeriod": [ { "startPeriod": 0, "limit": 2000 } ]
-} ]
+  } ]
 }
 ----
 
@@ -232,27 +237,37 @@ CSO가 17:00h에서 20:00h까지의 피크 시간 동안 충전을 2kW로 제한
 [,json]
 ----
 "chargingProfile": {
-  "id": 11, "stackLevel": 2, "chargingProfilePurpose": "TxDefaultProfile",
-  "chargingProfileKind": "반복", "recurrencyKind": "주간",
+  "id": 11, 
+  "stackLevel": 2, 
+  "chargingProfilePurpose": "TxDefaultProfile",
+  "chargingProfileKind": "Recurring", 
+  "recurrencyKind": "Weekly",
   "chargingSchedule": [ {
-    "id": 1, "startSchedule": "2020-01-05T00:00:00", "duration": 86400,
+    "id": 1, 
+    "startSchedule": "2020-01-05T00:00:00", 
+    "duration": 86400,
     "chargingRateUnit": "W",
     "chargingSchedulePeriod": [ { "startPeriod": 0, "limit": 999999 } ]
-} ]
+  } ]
 }
 ----
 
-**(3) TxDefaultProfile, 스택 #3:** 2020년 크리스마스 데이를 무제한으로, 고정 날짜로 변경 2020-12-25.
+**(3) TxDefaultProfile, 스택 #3:** 2020년 크리스마스 데이를 무제한으로 변경하고, 날짜를 2020-12-25로 고정.
 이 프로파일은 2020년에만 유효합니다.
 
 [,json]
 ----
 "chargingProfile": {
-  "id": 12, "stackLevel": 3, "chargingProfilePurpose": "TxDefaultProfile",
+  "id": 12, 
+  "stackLevel": 3, 
+  "chargingProfilePurpose": "TxDefaultProfile",
   "chargingProfileKind": "Absolute",
-  "validFrom": "2020-01-01T00:00:00", "validTo": "2021-01-01T00:00:00",
+  "validFrom": "2020-01-01T00:00:00", 
+  "validTo": "2021-01-01T00:00:00",
   "chargingSchedule": [ {
-    "id": 1, "startSchedule": "2020-12-25T00:00:00", "duration": 86400,
+    "id": 1, 
+    "startSchedule": "2020-12-25T00:00:00", 
+    "duration": 86400,
     "chargingRateUnit": "W",
     "chargingSchedulePeriod": [ { "startPeriod": 0, "제한": 999999 } ]
   } ]
@@ -292,18 +307,18 @@ EV 충전 제한을 설정하는 데 관여할 수 있는 모든 당사자가 �
     |이는 안전을 위해서 입니다.
 |SC.02 |충전 프로파일이 변경된 경우
   |충전기는 항상 CSMS에 알려야 합니다.
-    |이에 사용되는 메시지는 이 섹션의 시작 부분에 언급된 메커니즘 중 어떤 것이 적용되는지에 따라 다릅니다.
+      |이에 사용되는 메시지는 이 섹션의 시작 부분에 언급된 메커니즘 중 어떤 것이 적용되는지에 따라 다릅니다.
 
   1. 해당 없음 +
   2. <<notify_ev_charging_schedule_request,NotifyEVChargingScheduleRequest>> +
   3. <<notify_charging_limit_request,NotifyChargingLimitRequest>> +
   4. <<transaction_event_request,TransactionEventRequest>>
 |SC.03 |{nbsp}
-  |SC.02에 설명된 메커니즘 3 및 4에 대한 충전 프로파일의 변경된 한도에 대한 CSMS 보고는 한도 변경이 구성 변수 <<limit_change_significance,`LimitChangeSignificance`>>에 정의된 백분율보다 작은 경우 건너뛸 수 있습니다.
+  |SC.02에 메커니즘 3 및 4에 설명된 충전 프로파일의 변경된 한도에 대한 CSMS 보고는 한도 변경이 구성 변수 <<limit_change_significance,`LimitChangeSignificance`>>에 정의된 백분율보다 작은 경우 건너뛸 수 있습니다.
 
   |이는 충전기가 작은 변동(예: 충전기의 HEMS/스마트 미터 입력으로 인해)에 대해 많은 메시지를 보내는 것을 방지하기 위한 것입니다.
 |SC.04 |{nbsp}
-  |<<get_compositie_schedule_response,GetCompositeScheduleResponse>> 메시지는 항상 예상 충전 일정, 즉 충전을 위한 가장 낮은 _한계_를 보고해야 합니다. 즉, EV에 충전 한도 X가 있고 (예: ISO 15118 프로토콜을 사용하여) 제공된 양 Y보다 적은 에너지를 사용할 것이라고 표시하면 충전기는 한도 Y를 보고해야 합니다. |{nbsp}
+|<<get_compositie_schedule_response,GetCompositeScheduleResponse>> 메시지는 항상 예상 충전 일정, 즉 충전을 위한 가장 낮은 _limit_ 를 보고해야 합니다. 즉, EV에 충전 한도 X가 있고 (예: ISO 15118 프로토콜을 사용하여) 제공된 양보다 적은 에너지 Y를 사용할 것이라고 표시하면 충전기는 한도 Y를 보고해야 합니다. |{nbsp}
 |===
 
 <<<
@@ -360,32 +375,32 @@ image::part2/images/figure_101.svg[시퀀스 다이어그램: SetChargingProfile
 |K01.FR.02 |{nbsp}
   |CSMS는 EV에 대한 제한 일정으로 사용해야 하는 EVSE에 대한 새로운 충전 프로파일을 보낼 수 있습니다. |{nbsp}
 |K01.FR.03 |{nbsp}
-  |CSMS는 <<tx_profile,TxProfile>>을 설정할 때 <<set_charging_profile_request,SetChargingProfileRequest>>에 _transactionId_ 를 포함해야 합니다.
+  |CSMS는 <<tx_profile,TxProfile>>을 설정할 때 <<set_charging_profile_request,SetChargingProfileRequest>>에 _transactionId_  를 포함해야 합니다.
     |transactionId는 프로파일을 특정 트랜잭션에 일치시키는 데 사용됩니다.
 |K01.FR.04 |K01.FR.03 AND +
-  주어진 _transactionId_ 가 알려져 있는 경우
-    |충전기는 지정된 _transactionId_ 를 사용하여 보낸 <<tx_profile,TxProfile>>을 트랜잭션에 적용해야 합니다. |{nbsp}
-|K01.FR.05 |이미 알려진 <<charging_profile_type,ChargingProfile>>._id_가 있는 <<set_charging_profile_request,SetChargingProfileRequest>>를 수신하고 기존 <<charging_profile_type,ChargingProfile>>에 <<charging_profile_purpose,chargingProfilePurpose>> = `ChargingStationExternalConstraints` 가 없는 경우
+  주어진 _transactionId_  가 알려져 있는 경우
+    |충전기는 지정된 _transactionId_  를 사용하여 보낸 <<tx_profile,TxProfile>>을 트랜잭션에 적용해야 합니다. |{nbsp}
+|K01.FR.05 |이미 알려진 <<charging_profile_type,ChargingProfile>>._id_ 가 있는 <<set_charging_profile_request,SetChargingProfileRequest>>를 수신하고 기존 <<charging_profile_type,ChargingProfile>>에 <<charging_profile_purpose,chargingProfilePurpose>> = `ChargingStationExternalConstraints`  가 없는 경우
   |충전기는 기존 <<charging_profile_type,ChargingProfile>>을 지정된 것으로 대체해야 합니다.
     |ChargingStationExternalConstraints 프로파일은 대체할 수 없습니다.
-|K01.FR.06 |_chargingProfilePurpose_가 `TxProfile` 이 아닌 경우
+|K01.FR.06 |_chargingProfilePurpose_ 가 `TxProfile`  이 아닌 경우
   |CSMS는 충전기의 다른 <<charging_profile_type,ChargingProfile>>(다른 _id_)에 이미 존재하고 유효 기간이 겹치는 _stackLevel - chargingProfilePurpose - evseId_ 조합을 갖는 <<charging_profile_type,ChargingProfile>>을 보내서는 안 됩니다.
     |이는 동일한 스택 수준과 용도를 가진 두 개의 충전 프로파일이 동시에 유효하지 않도록 하기 위한 것입니다.
-|K01.FR.07 |충전기가 <<set_charging_profile_request,SetChargingProfileRequest>>를 _수락_ 하는 경우
+|K01.FR.07 |충전기가 <<set_charging_profile_request,SetChargingProfileRequest>>를 _accepts_  하는 경우
   |충전기는 충전 프로파일 컬렉션을 다시 평가하여 어떤 <<charging_profile_type,ChargingProfile>>이 활성화될지 결정해야 합니다. |{nbsp}
 |K01.FR.08 |{nbsp}
   |CSMS는 기본 충전 프로파일로 사용할 충전 프로파일을 충전기로 보낼 수 있습니다. |{nbsp}
 |K01.FR.09 |<<tx_profile,TxProfile>>이 있는 <<set_charging_profile_request,SetChargingProfileRequest>>가 수신되고 지정된 EVSE에서 ​​활성화된 트랜잭션이 없는 경우
   |충전기는 `Rejected` 상태의 <<set_charging_profile_response,SetChargingProfileResponse>>를 보내야 합니다. |{nbsp}
-|K01.FR.10 | <<charging_profile_type,ChargingProfile>>의 _validFrom_ 및 _validTo_가 설정되지 않은 경우
+|K01.FR.10 | <<charging_profile_type,ChargingProfile>>의 _validFrom_ 및 _validTo_ 가 설정되지 않은 경우
   |충전기는 <<charging_profile_type,ChargingProfile>>이 명시적으로 대체될 때까지 무기한 유효한 것으로 간주해야 합니다. |{nbsp}
-|K01.FR.11 | <<charging_schedule_type,ChargingSchedule>>에 _duration_ 이 있고 +
-  <<charging_schedule_period_type,ChargingSchedulePeriod>>._startPeriod_ >= <<charging_schedule_type,ChargingSchedule>>._duration_ 인 경우
+|K01.FR.11 | <<charging_schedule_type,ChargingSchedule>>에 _duration_  이 있고 +
+  <<charging_schedule_period_type,ChargingSchedulePeriod>>._startPeriod_ >= <<charging_schedule_type,ChargingSchedule>>._duration_  인 경우
     |충전기는 <<charging_schedule_period_type,ChargingSchedulePeriod>>를 실행해서는 안 됩니다. <<charging_schedule_type,ChargingSchedule>>의 기간을 지났기 때문입니다. |{nbsp}
 |K01.FR.12 |{nbsp}
-  |<<charging_schedule_period_type,ChargingSchedulePeriod>>는 목록의 다음 <<charging_schedule_period_type,ChargingSchedulePeriod>>가 시작되거나 <<charging_schedule_type,ChargingSchedule>>._duration_ 이 경과할 때까지 활성 상태를 유지합니다. |{nbsp}
-|K01.FR.13 |<<recurrency_kind_enum_type,recurrencyKind>>가 <<recurrency_kind_enum_type,recurrencyKind>> 기간보다 짧은 <<charging_schedule_type,ChargingSchedule>> 기간과 함께 사용되는 경우.
-  |충전기는 <<charging_schedule_type,ChargingSchedule>> 기간이 끝나면 기본 동작으로 돌아갑니다. |{nbsp}
+  |<<charging_schedule_period_type,ChargingSchedulePeriod>>는 목록의 다음 <<charging_schedule_period_type,ChargingSchedulePeriod>>가 시작되거나 <<charging_schedule_type,ChargingSchedule>>._duration_  이 경과할 때까지 활성 상태를 유지합니다. |{nbsp}
+|K01.FR.13 |<<recurrency_kind_enum_type,recurrencyKind>>가 <<recurrency_kind_enum_type,recurrencyKind>> period보다 짧은 <<charging_schedule_type,ChargingSchedule>> duration과 함께 사용되는 경우.
+  |충전기는 <<charging_schedule_type,ChargingSchedule>> duration이 끝나면 기본 동작으로 돌아갑니다. |{nbsp}
 |K01.FR.14 |<<tx_default_profile,TxDefaultProfile>> 및 evseId = 0인 <<set_charging_profile_request,SetChargingProfileRequest>>가 수신되고 동일한 stackLevel을 가진 다른 <<tx_default_profile,TxDefaultProfile>>이 특정 EVSE에 설치되지 않은 경우.
   |충전기는 이 프로파일을 모든 EVSE에 적용해야 하지만 복사해서는 안 됩니다.
     |EVSE #0의 TxDefaultProfile 충전 프로파일은 EVSE #0이 "소유"하지만 모든 EVSE에 적용됩니다.
@@ -394,7 +409,7 @@ image::part2/images/figure_101.svg[시퀀스 다이어그램: SetChargingProfile
 |K01.FR.16 |{nbsp}
   |<<tx_profile,TxProfile>>은 evseId >0에서만 사용해야 합니다. |{nbsp}
 |K01.FR.17 |{nbsp}
-  |같은 <<charging_profile_purpose,chargingProfilePurpose>>를 가진 두 개 이상의 <<charging_profile_type,ChargingProfile>>가 유효한 경우, _validFrom_ 및 _validTo_ 필드에 따라 결정되며, 더 높은 _stackLevel_ 을 가진 <<charging_profile_type,ChargingProfile>>의 <<charging_schedule_type,ChargingSchedule>>이 더 낮은 _stackLevel_ 을 가진 <<charging_profile_type,ChargingProfile>>의 <<charging_schedule_type,ChargingSchedule>>을 무효화합니다. |{nbsp}
+  |같은 <<charging_profile_purpose,chargingProfilePurpose>>를 가진 두 개 이상의 <<charging_profile_type,ChargingProfile>>가 유효한 경우, _validFrom_ 및 _validTo_ 필드에 따라 결정되며, 더 높은 _stackLevel_  을 가진 <<charging_profile_type,ChargingProfile>>의 <<charging_schedule_type,ChargingSchedule>>이 더 낮은 _stackLevel_  을 가진 <<charging_profile_type,ChargingProfile>>의 <<charging_schedule_type,ChargingSchedule>>을 무효화합니다. |{nbsp}
 |K01.FR.19 |{nbsp}
   |CSMS는 <<charging_schedule_period_type,numberPhases>>가 1이 아닌 경우 <<set_charging_profile_request,SetChargingProfileRequest>>에서 <<charging_schedule_period_type,phaseToUse>>를 설정해서는 안 됩니다. |{nbsp}
 |K01.FR.20 |{nbsp}
@@ -405,69 +420,69 @@ image::part2/images/figure_101.svg[시퀀스 다이어그램: SetChargingProfile
 |K01.FR.22 |{nbsp}
   |CSMS는 <<set_charging_profile_request,SetChargingProfileRequest>>에서 <<charging_profile_purpose,chargingProfilePurpose>>를 <<charging_station_external_constraints,ChargingStationExternalConstraints>>로 설정해서는 안 됩니다.
     |이 목적은 외부 시스템에서 충전 한도/일정을 설정한 경우에만 사용됩니다.
-|K01.FR.26 |<<set_charging_profile_request,SetChargingProfileRequest>>가 구성 변수 `ChargingScheduleChargingRateUnit`에 구성되지 않은 _chargingRateUnit_ 에 대한 값으로 수신되는 경우.
+|K01.FR.26 |<<set_charging_profile_request,SetChargingProfileRequest>>가 구성 변수 `ChargingScheduleChargingRateUnit` 에 구성되지 않은 값이 _chargingRateUnit_  에 대한 값으로 수신되는 경우.
 |충전기는 <<set_charging_profile_response,SetChargingProfileResponse>>로 `Rejected` 상태로 응답해야 합니다. |{nbsp}
 |K01.FR.27 |{nbsp}
   |SetChargingProfileRequest를 통해 설정된 ChargingProfiles는 재부팅/전원 주기를 거쳐도 지속되어야 합니다. |{nbsp}
 |K01.FR.28 |존재하지 않는 evseId에 대해 <<set_charging_profile_request,SetChargingProfileRequest>>가 수신된 경우.
-  |충전기는 <<set_charging_profile_response,SetChargingProfileResponse>>로 응답해야 하며 상태는 `Rejected` 입니다. |{nbsp}
+  |충전기는 <<set_charging_profile_response,SetChargingProfileResponse>>로 응답해야 하며 상태는 `Rejected`  입니다. |{nbsp}
 |K01.FR.29 |충전기가 스마트 충전을 지원하지 않는 경우.
-  |충전기는 RPC 프레임워크 호출자: NotSupported 또는 NotImplemented로 응답해야 합니다. |{nbsp}
-|K01.FR.30 |_chargingProfile_ 에는 _startSchedule_ 이 미래 시간으로 설정된 _chargingSchedule_ 이 있습니다.
-  |충전기는 _startSchedule_ 에서 설정한 시점부터 이 일정의 제한을 부과하기 시작해야 합니다. |{nbsp}
+  |충전기는 RPC 프레임워크 호출자 CALLERROR: NotSupported 또는 NotImplemented로 응답해야 합니다. |{nbsp}
+|K01.FR.30 |_chargingProfile_  에는 _startSchedule_  이 미래 시간으로 설정된 _chargingSchedule_  이 있습니다.
+  |충전기는 _startSchedule_  에서 설정한 시점부터 이 일정의 제한을 부과하기 시작해야 합니다. |{nbsp}
 |K01.FR.31 |{nbsp}
-  |<<charging_schedule_type,chargingSchedule>>의 첫 번째 <<charging_schedule_period_type,chargingSchedulePeriod>>의 _startPeriod_ 는 항상 0이어야 합니다. |{nbsp}
+  |<<charging_schedule_type,chargingSchedule>>의 첫 번째 <<charging_schedule_period_type,chargingSchedulePeriod>>의 _startPeriod_  는 항상 0이어야 합니다. |{nbsp}
 |K01.FR.32 |(K01.FR.14 또는 K01.FR.15)이고 지정된 EVSE에서 ​​트랜잭션이 활성화되어 있습니다(evseId = 0은 모든 EVSE를 나타냄).
-  |충전기는 지정된 EVSE에서 ​​트랜잭션을 계속 진행해야 하지만 다음으로 전환해야 합니다. 새로운/업데이트된 <<tx_default_profile,TxDefaultProfile>>을 사용합니다. |{nbsp}
+  |충전기는 지정된 EVSE에서 ​​트랜잭션을 계속 진행해야 하지만 새로운/업데이트된 <<tx_default_profile,TxDefaultProfile>>을 사용합니다. |{nbsp}
 |K01.FR.33 |K01.FR.03 AND +
   주어진 transactionId가 알려지지 않음
-    |충전기는 <<set_charging_profile_request,SetChargingProfileRequest>>를 거부해야 합니다. |{nbsp}
+    |충전기는 <<set_charging_profile_request,SetChargingProfileRequest>>를 reject해야 합니다. |{nbsp}
 |K01.FR.34 |CSMS는 현재 트랜잭션에 대한 <<notify_ev_charging_needs_request,NotifyEVChargingNeedsRequest>>를 수신하지 못했습니다. 즉, 충전 세션은 ISO 15118을 사용하지 않습니다.
   |<<set_charging_profile_request,SetChargingProfileRequest>>의 <<charging_profile_type,ChargingProfile>>에는 <<charging_schedule_type,ChargingScheduleType>>이 하나만 포함되어야 합니다.
 |ISO 15118 스마트 충전에 대한 사용 사례 K15-K17을 참조하세요.
 |K01.FR.35 |{nbsp}
-  |<<charging_schedule_type,chargingSchedule>>의 <<charging_schedule_period_type,ChargingSchedulePeriod>> 요소 목록은 <<charging_schedule_period_type,ChargingSchedulePeriod>>._startPeriod_의 값을 증가시켜 정렬해야 합니다.
+  |<<charging_schedule_type,chargingSchedule>>의 <<charging_schedule_period_type,ChargingSchedulePeriod>> 요소 목록은 <<charging_schedule_period_type,ChargingSchedulePeriod>>._startPeriod_ 의 값 기준 오름차순으로 정렬해야 합니다.
     |이는 목록이 시간순으로 정렬됨을 의미합니다.
-|K01.FR.36 |<<charging_profile_type,ChargingProfile>>의 _validFrom_이 설정된 경우
+|K01.FR.36 |<<charging_profile_type,ChargingProfile>>의 _validFrom_ 이 설정된 경우
   |충전기는 현재 시간 >= _validFrom_ 일 때 <<charging_profile_type,ChargingProfile>>을 유효한 것으로 간주해야 합니다. |{nbsp}
-|K01.FR.37 |<<charging_profile_type,ChargingProfile>>의 _validTo_가 설정된 경우
+|K01.FR.37 |<<charging_profile_type,ChargingProfile>>의 _validTo_ 가 설정된 경우
   |충전기는 현재 시간 < _validTo_ 일 때 <<charging_profile_type,ChargingProfile>>을 유효한 것으로 간주해야 합니다. |{nbsp}
 |K01.FR.38 |_chargingProfilePurpose_ = `ChargingStationMaxProfile` 인 경우
-  |_chargingProfileKind_ 가 `Relative` 이면 안 됩니다 |{nbsp}
-|K01.FR.39 |_chargingProfilePurpose_ 가 `TxProfile` 인 경우
+  |_chargingProfileKind_가 `Relative` 이면 안 됩니다 |{nbsp}
+|K01.FR.39 |_chargingProfilePurpose_가 `TxProfile` 인 경우
   |CSMS는 다른 <<charging_profile_type,ChargingProfile>>(다른 _id_)에 이미 존재하는 _stackLevel - transactionId_ 조합을 가진 <<charging_profile_type,ChargingProfile>>을 `TxProfile` 목적으로 보내면 안 됩니다.
     |이는 동일한 스택 수준과 목적을 가진 두 개의 충전 프로파일이 동시에 유효하지 않도록 하기 위한 것입니다.
-|K01.FR.40 |<<charging_profile_type,ChargingProfile>>의 _chargingProfileKind_가 `Absolute` 또는 `Recurring`인 경우
+|K01.FR.40 |<<charging_profile_type,ChargingProfile>>의 _chargingProfileKind_ 가 `Absolute` 또는 `Recurring` 인 경우
   |<<charging_profile_type,ChargingProfile>>의 <<charging_schedule_type,ChargingSchedule>>에 _startSchedule_ 값이 있어야 합니다.
     |이는 일정과 반복 시퀀스의 시작 날짜/시간을 결정합니다.
-|K01.FR.41 |<<charging_profile_type,ChargingProfile>>의 _chargingProfileKind_가 `Relative` 인 경우
+|K01.FR.41 |<<charging_profile_type,ChargingProfile>>의 _chargingProfileKind_ 가 `Relative` 인 경우
   |<<charging_profile_type,ChargingProfile>>의 <<charging_schedule_type,ChargingSchedule>>에는 _startSchedule_ 필드가 없어야 합니다.
     |상대적 프로파일은 프로파일이 활성화된 때부터 시작됩니다.
 |K01.FR.42 |K01.FR.41
-  |충전기가 에너지를 공급할 준비가 된 순간을 기준으로 <<charging_schedule_period_type,ChargingSchedulePeriods>>를 만드는 것이 좋습니다. 즉, EV 운전자가 승인되고 EV가 연결된 시점입니다.
+  |충전기가 에너지를 공급할 준비가 된 순간을 기준으로 <<charging_schedule_period_type,ChargingSchedulePeriods>>를 relative로 만드는 것을 권장합니다. 즉, EV 운전자가 인증되고 EV가 연결된 시점입니다.
     |이것은 충전기가 에너지를 공급할 준비가 된 트랜잭션의 지점입니다. PowerPathClosed가 TxStartPoint인 경우 이는 트랜잭션의 시작과 일치합니다. 다음 OCPP 버전에서는 이것이 더 엄격한 요구 사항이 됩니다.
 |K01.FR.43 |numberPhases 값이 있는 <<set_charging_profile_request,SetChargingProfileRequest>>를 수신하고 EVSE가 AC 유형이고 충전기가 수신된 numberPhases 이상을 사용하지 않도록 보장할 수 없는 경우
-    |충전기는 status = `Rejected` 로 응답해야 합니다.
+    |충전기는 status = `Rejected`  로 응답해야 합니다.
       |예를 들어 <<charging_profile_type,ChargingProfile>>이 3상을 정의하고 충전기가 3상으로 충전할 수 있는 경우에도 EV 또는 케이블이 3상으로 충전할 수 있다는 보장은 없습니다. +
-      수신된 MeterValues를 기반으로 CSMS는 사용된 상 수를 확인할 수 있습니다. 상당 한도를 올바르게 계산하려면 요구 사항 K01.FR.50 및 K01.FR.51을 참조하세요.
+      수신된 MeterValues를 기반으로 CSMS는 사용된 위상 수를 확인할 수 있습니다. 위상 한도를 올바르게 계산하려면 요구 사항 K01.FR.50 및 K01.FR.51을 참조하세요.
 |K01.FR.44 |<<set_charging_profile_request,SetChargingProfileRequest>>에 _numberPhases_ 또는 _phaseToUse_ 값이 수신되고 +
   EVSE가 DC ​​유형인 경우
-    |충전기는 Rejected 대신 status = _Accepted_ 로 응답하고 제공된 _numberPhases_ 및 _phaseToUse_ 값을 무시할 수 있습니다. |{nbsp}
+    |충전기는 Rejected 대신 status = _Accepted_  로 응답하고 제공된 _numberPhases_ 및 _phaseToUse_ 값을 무시할 수 있습니다.(MAY) |{nbsp}
 |K01.FR.45 |<<set_charging_profile_request,SetChargingProfileRequest>>에 _numberPhases_ 값이 수신되고 +
-  EVSE가 AC 유형이고 수신된 _numberPhases_ 가 충전기에서 지원되지 않고 충전기에서 지원하는 _numberPhases_ 보다 높은 경우
-  |충전기는 _Rejected_ 대신 status = _Accepted_ 로 응답하고 더 낮은 _numberPhases_ 에 제한을 부과할 수 있습니다.
+  EVSE가 AC 유형이고 수신된 _numberPhases_  가 충전기에서 지원되지 않거나 충전기에서 지원하는 _numberPhases_  보다 높은 경우
+  |충전기는 _Rejected_ 대신 status = _Accepted_  로 응답하고 더 낮은 _numberPhases_  로 제한을 부과할 수 있습니다.
     |단계당 제한을 올바르게 계산하려면 요구 사항 K01.FR.50 및 K01.FR.51을 참조하세요.
-|K01.FR.46 |<<set_charging_profile_request,SetChargingProfileRequest>>가 _numberPhases = 1_이고 _phaseToUse_ 에 대한 값이 수신되고 +
-  EVSE가 AC 유형이고 EVSE가 EV에 연결된 위상을 전환할 수 있는 경우(<<ac_phase_switching_supported,ACPhaseSwitchingSupported>>가 _true_ 로 정의됨) 또는 +
-  EVSE가 이미 수신된 _phaseToUse_ 를 사용하려고 하는 경우
+|K01.FR.46 |<<set_charging_profile_request,SetChargingProfileRequest>>가 _numberPhases = 1_ 이고 _phaseToUse_  에 대한 값이 수신되고 +
+  EVSE가 AC 유형이고 EVSE가 EV에 연결된 위상을 전환할 수 있는 경우(<<ac_phase_switching_supported,ACPhaseSwitchingSupported>>가 _true_  로 정의됨) 또는 +
+  EVSE가 이미 수신된 _phaseToUse_  를 사용하려고 하는 경우
     |충전기는 수신된 _phaseToUse_ 가 나타내는 위상을 사용하여 EV에 연결해야 합니다. |{nbsp}
-|K01.FR.47 |<<set_charging_profile_request,SetChargingProfileRequest>>가 _numberPhases = 1_ 이고 _phaseToUse_ 가 생략된 경우 수신되고 +
+|K01.FR.47 |<<set_charging_profile_request,SetChargingProfileRequest>>가 _numberPhases = 1_  이고 _phaseToUse_  가 생략된 경우 수신되고 +
   EVSE가 AC 유형인 경우
     |충전기는 스스로 위상을 선택해야 합니다. |{nbsp}
 |K01.FR.48 |<<set_charging_profile_request,SetChargingProfileRequest>>에 _phaseToUse_ 값이 수신되고 +
-  EVSE가 EV에 연결된 위상을 전환할 수 없는 경우, 이는 <<ac_phase_switching_supported,ACPhaseSwitchingSupported>>가 구현되지 않았거나 _false_ 로 정의되지 않은 것으로 표시되며 +
-  EVSE가 수신된 _phaseToUse_ 를 사용하지 않을 경우
-    |충전기는 status = _Rejected_ 로 응답해야 합니다. |{nbsp}
+  EVSE가 EV에 연결된 위상을 전환할 수 없는 경우, 이는 <<ac_phase_switching_supported,ACPhaseSwitchingSupported>>가 구현되지 않았거나 _false_  로 정의되지 않은 것으로 표시되며 +
+  EVSE가 수신된 _phaseToUse_  를 사용하지 않을 경우
+    |충전기는 status = _Rejected_  로 응답해야 합니다. |{nbsp}
 |K01.FR.49 |<<set_charging_profile_request,SetChargingProfileRequest>>에 _numberPhases_ 값이 없는 경우 수신되고 +
   EVSE가 AC 유형인 경우
     |충전기는 기본값으로 numberPhases = 3을 가정해야 합니다. |{nbsp}
@@ -477,7 +492,7 @@ image::part2/images/figure_101.svg[시퀀스 다이어그램: SetChargingProfile
 |K01.FR.51 |<<charging_rate_unit_enum_type,chargingRateUnit>> = _A_ 인 <<set_charging_profile_request,SetChargingProfileRequest>>를 수신할 때
   |충전기는 제공된 제한을 사용하여 모든 단계의 합이 아닌 단계당 암페어 양을 제한해야 합니다. |{nbsp}
 |K01.FR.52 |<<tx_default_profile,TxDefaultProfile>> 및 _evseId_ = 0인 <<set_charging_profile_request,SetChargingProfileRequest>>가 수신되고 +
-  동일한 stackLevel을 가진 <<tx_default_profile,TxDefaultProfile>>이 특정 EVSE에 설치되고 해당 _chargingProfile.id_ 가 수신된 _chargingProfile.id_와 같지 않은 경우
+  동일한 stackLevel을 가진 <<tx_default_profile,TxDefaultProfile>>이 특정 EVSE에 설치되고 해당 _chargingProfile.id_ 가 수신된 _chargingProfile.id_ 와 같지 않은 경우
     |충전기는 `Rejected` 상태와 선택적으로 _reasonCode_ = `DuplicateProfile` 인 <<set_charging_profile_response,SetChargingProfileResponse>>로 응답해야 합니다. |{nbsp}
 |K01.FR.53 |<<tx_default_profile,TxDefaultProfile>> 및 _evseId_ > 0인 <<set_charging_profile_request,SetChargingProfileRequest>>를 수신하고 +
   동일한 _stackLevel_ 을 가진 <<tx_default_profile,TxDefaultProfile>>이 EVSE #0에 설치되고 해당 _chargingProfile.id_ 가 수신된 _chargingProfile.id_ 와 같지 않은 경우
@@ -500,7 +515,7 @@ image::part2/images/figure_101.svg[시퀀스 다이어그램: SetChargingProfile
   참조: <<central_smart_charging,Central Smart Charging>>
 |{nbsp} d|_Actors_ |충전기, CSMS, EV, EV 운전자
 |{nbsp} d|_시나리오 설명_
-  |**1.** 승인 후 충전기는 제어 파일럿 신호를 통해 EV가 사용할 수 있는 최대 전류를 설정합니다. 이 한도는 충전기가 이전에 CSMS에서 수신한 (기본) <<charging_profile_type,ChargingProfiles>>를 기반으로 합니다. +
+  |**1.** 인증 후 충전기는 제어 파일럿 신호를 통해 EV가 사용할 수 있는 최대 전류를 설정합니다. 이 한도는 충전기가 이전에 CSMS에서 수신한 (기본) <<charging_profile_type,ChargingProfiles>>를 기반으로 합니다. +
   **2.** EV가 충전을 시작하고 <<transaction_event_request,TransactionEventRequest>>가 CSMS로 전송됩니다. +
   **3.** CSMS가 <<transaction_event_response,TransactionEventResponse>>로 응답합니다. +
   **4.** <<transaction_event_request,TransactionEventRequest>>에 대한 응답으로 CSMS는 <<set_charging_profile_request,SetChargingProfileRequest>>를 사용하여 트랜잭션에 대한 충전 한도를 설정할 수 있습니다. +
@@ -523,7 +538,7 @@ image::part2/images/figure_102.svg[Sequence Diagram: Central Smart Charging]
 
 위 그림에 대한 설명:
 
-- 승인 후 EVSE는 Control Pilot 신호를 통해 사용할 최대 전류를 설정합니다. 이 제한은 EVSE가 이전에 CSMS에서 수신한 (기본) 충전 프로파일을 기반으로 합니다. EV가 충전을 시작하고 <<transaction_event_request,TransactionEventRequest>>가 CSMS로 전송됩니다.
+- 인증 후 EVSE는 Control Pilot 신호를 통해 사용할 최대 전류를 설정합니다. 이 제한은 EVSE가 이전에 CSMS에서 수신한 (기본) 충전 프로파일을 기반으로 합니다. EV가 충전을 시작하고 <<transaction_event_request,TransactionEventRequest>>가 CSMS로 전송됩니다.
 - 충전이 진행되는 동안 EVSE는 충전 프로파일에 따라 최대 전류 또는 전력을 지속적으로 조정합니다. 선택적으로 CSMS는 언제든지 EVSE에 대한 새 충전 프로파일을 보낼 수 있습니다. 그러면 충전기는 새 복합 일정을 계산할 때 이 새 일정도 고려합니다. 이런 방식으로 CSMS는 진행 중인 트랜잭션의 충전에 영향을 미칠 수 있습니다.
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
@@ -550,7 +565,7 @@ TxProfile에서 ChargingSchedule의 기간 필드를 생략하여 자동으로 �
 
 |K02.FR.01 |{nbsp}
 |CSMS는 외부 시스템에서 부과한 제한 내에 머물기 위해 충전 프로파일을 사용해야 합니다. |{nbsp}
-|K02.FR.02 |승인 후.
+|K02.FR.02 |인증 후.
 |EVSE는 Control Pilot 신호를 통해 사용할 최대 전류를 설정합니다.
 |이 요구 사항은 61851을 사용하는 AC 충전기에만 적용됩니다. 제한은 EVSE가 이전에 CSMS에서 수신한 (기본) 충전 프로파일을 기반으로 할 수 있습니다.
 |K02.FR.03 |{nbsp}
@@ -592,7 +607,7 @@ TxProfile에서 ChargingSchedule의 기간 필드를 생략하여 자동으로 �
 <<local_smart_charging_topology,Figure Local Smart Charging Topology>> 참조
 |{nbsp} d|_Actors_ |충전기, CSMS, EV, 로컬 컨트롤러, EV 드라이버
 |{nbsp} d|_시나리오 설명_
-|**1.** 충전기는 승인 후 제어 파일럿 신호를 통해 EV가 사용할 수 있는 최대 전류를 설정합니다. 이 한도는 충전기가 이전에 CSMS에서 수신한 <<tx_default_profile,TxDefaultProfile>>을 기반으로 합니다. +
+|**1.** 충전기는 인증 후 제어 파일럿 신호를 통해 EV가 사용할 수 있는 최대 전류를 설정합니다. 이 한도는 충전기가 이전에 CSMS에서 수신한 <<tx_default_profile,TxDefaultProfile>>을 기반으로 합니다. +
 **2.** EV가 충전을 시작하고 충전기가 <<transaction_event_request,TransactionEventRequest>>를 보냅니다. +
 **3.** 로컬 컨트롤러를 통해 <<transaction_event_request,TransactionEventRequest>>가 CSMS로 전송되어 로컬 컨트롤러가 트랜잭션이 시작되었음을 알 수 있습니다. +
 **4.** 트랜잭션 중에 로컬 컨트롤러가 <<set_charging_profile_request,SetChargingProfileRequest>>를 보내 충전 전류/전력에 영향을 미칩니다. +
@@ -1560,6 +1575,7 @@ image::part2/images/figure_116.svg[EV가 시작한 재협상]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
+|7 |참고 |Signed SalesTariffs는 현재 지원되지 않습니다. 필요한 경우 <<p01_data_transfer_to_the_charging_station,P01 - Data Transfer to the Charging Station>>을 사용하여 충전기로 보내주세요.
 |7 |참고 |Signed SalesTariffs는 현재 지원되지 않습니다. 필요한 경우 <<p01_data_transfer_to_the_charging_station,P01 - Data Transfer to the Charging Station>>을 사용하여 충전기로 보내주세요.
 |===
 
