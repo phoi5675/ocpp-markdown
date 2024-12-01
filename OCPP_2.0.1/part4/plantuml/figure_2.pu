@@ -1,0 +1,45 @@
+@startuml figure_2
+!include component_diagram_style.puml
+
+left to right direction
+
+node "CSMS" as CSMS
+
+folder "Local group" {
+  node "Local Controller\nCS00" as LocalControllerCS00
+
+  node "Charge Station\nCS01" as CS01
+  node "Charge Station\nCS02" as CS02
+  node "Charge Station\nCS03" as CS03
+}
+
+LocalControllerCS00 -up-> CSMS: \
+  WebSocket\
+  \nws://csms.example.com/ocpp/CS00
+
+LocalControllerCS00 -up-> CSMS: \
+  WebSocket\
+  \nws://csms.example.com/ocpp/CS01
+
+LocalControllerCS00 -up-> CSMS: \
+  WebSocket\
+  \nws://csms.example.com/ocpp/CS02
+
+LocalControllerCS00 -up-> CSMS: \
+  WebSocket\
+  \nws://csms.example.com/ocpp/CS03
+
+
+CS03 -up-> LocalControllerCS00 : \
+  WebSocket\
+  \nws://controller.example.local/ocpp/CS03
+
+CS02 -up-> LocalControllerCS00 : \
+  WebSocket\
+  \nws://controller.example.local/ocpp/CS02
+
+CS01 -up-> LocalControllerCS00 : \
+  WebSocket\
+  \nws://controller.example.local/ocpp/CS01
+
+@enduml
