@@ -133,7 +133,6 @@ This appendix provides a list of all standardized component names for OCPP 2.0.1
 
 This is the list of Standardized Controller Components for OCPP 2.0.1. and typical Variables that might be associated with them.
 
-
 [cols="^.^1s,10",%autowidth.stretch]
 |===
 |IMPORTANT |This list does not imply that these Components are required, nor does it imply that the listed Variables arerequired for a Component or no other Variables are allowed to be associated with a Component.
