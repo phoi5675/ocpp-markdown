@@ -1,0 +1,24 @@
+@startuml figure_88
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+activate EVDriver
+EVDriver -> ChargingStation: IdToken 제시
+activate ChargingStation
+
+alt 충전기가 오프라인인 경우
+  ChargingStation -> ChargingStation: 인증 캐시 확인
+
+  ChargingStation --> EVDriver: TariffFallbackMessage
+else 사용 가능한 단가가 없는 경우
+  ChargingStation -> CSMS: AuthorizeRequest(idToken)
+
+  CSMS --> ChargingStation: AuthorizeResponse(...)
+
+  ChargingStation --> EVDriver: TariffFallbackMessage
+end
+
+@enduml

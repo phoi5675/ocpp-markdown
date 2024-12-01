@@ -1,0 +1,46 @@
+@startuml figure_58
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over EVDriver, CSMS
+  트랜잭션 진행중
+end note
+
+EVDriver -> ChargingStation: 차에서 케이블을 언플러그함
+activate ChargingStation
+
+ChargingStation -> ChargingStation: 에너지 제공 중단(suspend)
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Ended, transactionId = AB1234, seqN = N + 1, timestamp,\
+  \ntriggerReason = EVCommunicationLost, stoppedReason = EVDisconnected, meterValues)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse()
+deactivate CSMS
+
+alt 케이블이 영구적으로 연결되지 않음 & UnlockOnEVSideDisconnect = true
+  ChargingStation -> ChargingStation: 커넥터 잠금 해제
+else 케이블이 영구적으로 연결되지 않음 & UnlockOnEVSideDisconnect = false
+  note over EVDriver, CSMS
+    사용자 인증 성공
+  end note
+
+  ChargingStation -> ChargingStation: 커넥터 잠금 해제
+end
+deactivate ChargingStation
+
+EVDriver -> ChargingStation: 케이블 분리
+activate ChargingStation
+
+ChargingStation -> CSMS: StatusNotificationRequest(Available)
+activate CSMS
+
+CSMS --> ChargingStation: StatusNotificationResponse()
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

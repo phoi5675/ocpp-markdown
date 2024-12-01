@@ -1,0 +1,24 @@
+@startuml figure_53
+!include style.puml
+
+actor "EV" as EV
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over ChargingStation, CSMS
+  트랜잭션 진행중
+end note
+
+EV <-> ChargingStation: 에너지 전달 중단됨
+activate ChargingStation
+
+ChargingStation -> ChargingStation: 에너지 전달 중단
+
+ChargingStation -> CSMS: TransactionEventRequest(eventType = Ended, ...)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse()
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

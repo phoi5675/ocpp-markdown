@@ -1,0 +1,30 @@
+@startuml figure_44
+!include style.puml
+
+actor "EV" as EV
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over EV, ChargingStation
+  EV 연결됨
+end note
+
+note over ChargingStation, CSMS
+  사용자 인증 성공
+end note
+
+ChargingStation -> ChargingStation: 파워 릴레이 연결 종료
+activate ChargingStation
+
+EV <-> ChargingStation: 에너지 전달
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Started, chargingState = Charging,\
+  \ntriggerReason = ChargingStateChanged)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse()
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

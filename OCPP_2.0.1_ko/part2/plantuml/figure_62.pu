@@ -1,0 +1,30 @@
+@startuml figure_62
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+ChargingStation -> CSMS: 트랜잭션 관련 메시지 요청
+
+loop 전송된 메시지의 수가 MessageAttemptsTransactionEvent를 넘기지 않는 동안
+  alt 메시지가 성공적으로 전송된 경우
+    CSMS --> ChargingStation: 트랜잭션 관련 메시지 응답
+    activate ChargingStation
+
+    ChargingStation ->o] : 다음 메시지 처리 진행
+    deactivate ChargingStation
+  else 메시지 수신 받지 못하는 경우
+    CSMS --> ChargingStation: 메시지 처리 실패
+    activate ChargingStation
+    
+    ChargingStation -> ChargingStation: \
+      x MessageAttemptsTransactionEvent 초 동안 대기
+    
+    ChargingStation -> CSMS: 메시지 재전송
+    deactivate ChargingStation
+  end
+end
+
+ChargingStation -> ChargingStation: 메시지 폐기
+
+@enduml

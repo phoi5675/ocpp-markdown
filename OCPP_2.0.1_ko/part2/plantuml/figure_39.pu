@@ -1,0 +1,24 @@
+@startuml figure_39
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over EVDriver, ChargingStation
+  EV가 주차됨
+end note
+
+ChargingStation -> ChargingStation: 주차 감지기가 활성화됨
+activate ChargingStation
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Started,\
+  \ntriggerReason = EVDetected)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse()
+deactivate ChargingStation
+deactivate CSMS
+
+@enduml

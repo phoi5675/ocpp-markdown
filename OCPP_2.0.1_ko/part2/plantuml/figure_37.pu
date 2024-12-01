@@ -1,0 +1,15 @@
+@startuml figure_37
+!include style.puml
+
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+CSMS -> ChargingStation: SendLocalListRequest(versionNumber, updateType,...)
+activate CSMS
+activate ChargingStation
+
+ChargingStation --> CSMS: SendLocalListResponse(Accepted)
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

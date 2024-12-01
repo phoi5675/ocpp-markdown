@@ -1,0 +1,25 @@
+@startuml figure_89
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+
+note over ChargingStation
+  트랜잭션 진행중
+end note
+
+EVDriver -> ChargingStation: IdToken 제시
+activate ChargingStation
+
+opt (id = startId) 또는 (GroupId = GroupId of startId)일 때
+  ChargingStation -> ChargingStation: 에너지 제공 중단
+
+  opt 케이블이 영구적으로 결합되지 않은 경우
+    ChargingStation -> ChargingStation: 커넥터 잠금 해제
+  end
+
+  ChargingStation --> EVDriver: TotalCostFallbackMessage
+  deactivate ChargingStation
+end
+
+@enduml

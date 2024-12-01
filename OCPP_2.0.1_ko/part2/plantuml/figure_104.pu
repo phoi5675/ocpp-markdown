@@ -1,0 +1,68 @@
+@startuml figure_104
+!include style.puml
+
+actor "External Trigger" as ExternalTrigger
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+ExternalTrigger -> CSMS: 원격 시작
+activate ExternalTrigger
+activate CSMS
+
+CSMS -> ChargingStation: RequestStartTransactionRequest(idToken, chargingProfile, remoteStartId = 123)
+activate ChargingStation
+
+ChargingStation --> CSMS: RequestStartTransactionResponse(status = Accepted)
+
+opt
+  CSMS --> ExternalTrigger: 알림
+  deactivate CSMS
+  deactivate ExternalTrigger
+end
+
+opt AuthorizeRemoteStart = true
+  ChargingStation -> CSMS: AuthorizeRequest(idToken)
+  activate CSMS
+
+  CSMS --> ChargingStation: AuthorizeResponse(idTokenInfo)
+  deactivate CSMS
+  deactivate ChargingStation
+end
+
+ChargingStation -> CSMS: StatusNotificationRequest(Occupied)
+activate CSMS
+activate ChargingStation
+
+CSMS --> ChargingStation: StatusNotificationResponse()
+deactivate CSMS
+deactivate ChargingStation
+
+alt ConnectionTimeOut 기간 내
+  ExternalTrigger -> ChargingStation: 케이블 연결
+  activate ExternalTrigger
+  activate ChargingStation
+
+  opt 케이블이 영구적으로 연결되지 않은 경우
+    ChargingStation -> ChargingStation: 커넥터 잠금
+  end
+
+  ChargingStation -> ChargingStation: 에너지 제공 시작
+
+  opt
+    ChargingStation --> ExternalTrigger: 알림
+    deactivate ExternalTrigger
+  end
+
+  ChargingStation -> CSMS: \
+    TransactionEventRequest(eventType = Started, \n\
+    chargingState = Charging, remoteStartId = 123, ...)
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse(...)
+  deactivate ChargingStation
+  deactivate CSMS
+
+  ChargingStation ->o] : 일반 스마트 충전 세션 계속
+end
+
+@enduml

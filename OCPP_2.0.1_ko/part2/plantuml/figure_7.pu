@@ -1,0 +1,41 @@
+@startuml figure_7
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+participant "Certificate Authority Server" as CAS
+
+activate ChargingStation
+note over ChargingStation
+  CS 인증서 만료 기간 도래
+end note
+
+ChargingStation -> ChargingStation: 신규 공개 / 개인 키 생성
+
+ChargingStation -> CSMS: SignCertificateRequest(csr)
+activate CSMS
+
+CSMS --> ChargingStation: SignCertificateResponse(Accepted)
+deactivate ChargingStation
+
+CSMS -> CAS: CSR 포워딩
+activate CAS
+
+CAS -> CAS: 인증서 서명
+
+CAS --> CSMS: 서명된 인증서 반환
+deactivate CAS
+
+CSMS -> ChargingStation: CertificateSignedRequest(certificate)
+activate ChargingStation
+
+ChargingStation -> ChargingStation: 서명된 인증서 유효성 검증
+
+ChargingStation --> CSMS: CertificateSignedResponse (Accepted/Rejected)
+deactivate CSMS
+
+opt 키 유요함
+  ChargingStation -> ChargingStation: 새 인증서로 변경
+end
+
+@enduml

@@ -1,0 +1,25 @@
+@startuml figure_54
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over ChargingStation, CSMS
+  사용자 인증 성공
+end note
+
+opt 케이블이 영구적으로 연결되지 않음 & (동일 ID 또는 인증)
+  ChargingStation -> ChargingStation: 커넥터 잠금 해제
+end
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Ended, transactionId = AB1234, seqNo = N + 1, timestamp,\
+  \nchargingState = EVConnected, triggerReason = StopAuthorized, idToken.id = 1234, stoppedReason = Local)
+activate CSMS
+
+ChargingStation --> CSMS: \
+  TransactionEventResponse(idTokenInfo.status = Accepted / Blocked / Invalid / Expired)
+deactivate CSMS
+
+@enduml

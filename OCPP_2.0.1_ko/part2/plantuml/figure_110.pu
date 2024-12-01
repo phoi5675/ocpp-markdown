@@ -1,0 +1,68 @@
+@startuml figure_110
+!include style.puml
+
+participant "External Control System\n(example DSO)" as ECS
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+loop
+  opt 충전 과정 동안
+    ChargingStation -> ECS: I/U value
+    activate ECS
+    activate ChargingStation
+
+    ChargingStation -> ECS: \
+      무효전력 계수\
+      \n(reactive power factor)
+    deactivate ECS
+    deactivate ChargingStation
+  end
+
+  opt MeterValues가 활성화된 경우
+    alt 진행중인 트랜잭션 없음
+      ChargingStation -> CSMS: MeterValuesRequest(evseId, meterValue)
+      activate ChargingStation
+      activate CSMS
+
+      CSMS --> ChargingStation: MeterValuesResponse()
+      deactivate ChargingStation
+      deactivate CSMS
+    else 트랜잭션 진행중
+      ChargingStation -> CSMS: TransactionEventRequest(eventType = Updated, ...)
+      activate ChargingStation
+      activate CSMS
+
+      CSMS --> ChargingStation: TransactionEventResponse(...)
+      deactivate ChargingStation
+      deactivate CSMS
+    end
+  end
+
+  ECS -> ChargingStation: 그리드 제한 설정
+  activate ChargingStation
+
+  opt 트랜잭션이 진행중인 경우
+    opt
+      ChargingStation -> ChargingStation: 충전 스케쥴 다시 계산
+    end 
+
+    ChargingStation -> ChargingStation: 충전 제한 설정(알려진 모든 제한량의 최솟값)
+  end
+
+  opt 충전량 제한이 LimitChangeSignificance보다 많이 변경된 경우
+    ChargingStation -> CSMS: NotifyChargingLimitRequest(evseId, chargingSchedule, chargingLimit)
+    activate CSMS
+
+    CSMS --> ChargingStation: NotifyChargingLimitResponse()
+    deactivate CSMS
+  end
+
+  opt 충전량 제한이 LimitChangeSignificance보다 많이 변경된 경우
+    ChargingStation -> CSMS: TransactionEventRequest(eventType = Updated, trigger = ChargingRateChanged, ...)
+    activate CSMS
+
+    CSMS --> ChargingStation: TransactionEventResponse(...)
+  end
+end
+
+@enduml

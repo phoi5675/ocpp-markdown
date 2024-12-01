@@ -1,0 +1,15 @@
+@startuml figure_101
+!include style.puml
+
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+CSMS -> ChargingStation: SetChargingProfileRequest(evseId, chargingProfile)
+activate CSMS
+activate ChargingStation
+
+ChargingStation --> CSMS: SetChargingProfileResponse(Accepted)
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

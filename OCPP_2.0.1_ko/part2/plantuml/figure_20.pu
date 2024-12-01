@@ -1,0 +1,75 @@
+@startuml figure_20
+!include style.puml
+
+actor "CSO" as CSO
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+note left of ChargingStation
+  활성화된 트랜잭션 없음
+end note
+
+alt 충전기 리셋
+  CSO -> CSMS: CS 리셋
+  activate CSMS
+
+  CSMS -> ChargingStation: ResetRequest(OnIdle | Immediate)
+  activate ChargingStation
+
+  ChargingStation --> CSMS: ResetResponse(status)
+  deactivate CSMS
+
+  opt 리셋 기간 동안 모든 커넥터를 Unavailable로 보고
+    loop 모든 EVSE의 커넥터에 대해
+      ChargingStation -> CSMS: StatusNotificationRequest(Unavailable, ...)
+      activate CSMS
+
+      CSMS --> ChargingStation: StatusNotificationResponse()
+      deactivate CSMS
+    end
+  end
+
+  ChargingStation -> ChargingStation: 충전기 재부팅
+
+  ChargingStation ->o]: B01 - Cold Boot Charging Station로 계속
+  deactivate ChargingStation
+else EVSE 재부팅
+  CSO -> CSMS: EVSE 리셋
+  activate CSMS
+
+  CSMS -> ChargingStation: ResetRequest(OnIdle | Immediate, evseId)
+  activate ChargingStation
+
+  ChargingStation --> CSMS: ResetResponse(status)
+  deactivate CSMS
+
+  opt 리셋 기간 동안 EVSE의 커넥터를 Unavailable로 보고
+    loop 모든 커넥터의 EVSE에 대해
+      CSMS -> ChargingStation: StatusNotificationRequest(Unavailable, evseId, connectorId)
+      activate CSMS
+
+      ChargingStation --> CSMS: StatusNotificationResponse()
+      deactivate CSMS
+    end
+  end
+
+  note over ChargingStation
+    충전기 재부팅 없이
+    EVSE 리셋
+  end note
+
+  ChargingStation -> ChargingStation: EVSE 리셋
+
+  opt EVSE의 모든 커넥터를 Available로 보고
+    loop 모든 커넥터의 EVSE에 대해
+      ChargingStation -> CSMS: StatusNotificationRequest(Unavailable, evseId, connectorId)
+      activate CSMS
+
+      CSMS --> ChargingStation: StatusNotificationResponse()
+      deactivate CSMS
+    end
+  end
+
+end
+
+@enduml

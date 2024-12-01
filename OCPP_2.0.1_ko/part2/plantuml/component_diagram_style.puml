@@ -1,0 +1,25 @@
+
+!include style.puml
+
+<style>
+componentDiagram {
+  actor {
+    LineThickness 1.5
+    LineColor BASE_COLOR
+    FontName FONT_NAME
+  }
+  folder {
+    LineThickness 1.5
+    LineColor BASE_COLOR
+    FontName FONT_NAME
+    FontStyle Bold
+  }
+  node {
+    BackgroundColor BASE_COLOR
+    BorderColor #000000
+    LineThickness 1.5
+    FontColor #ffffff
+    FontName FONT_NAME
+  }
+}
+</style>

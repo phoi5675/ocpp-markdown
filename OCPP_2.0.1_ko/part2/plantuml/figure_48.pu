@@ -1,0 +1,32 @@
+@startuml figure_48
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over ChargingStation, CSMS
+  충전기에서 로컬 인증으로 EV 운전자를 인증합니다.
+end note
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Started, transactionId = AB1234, seqNo = N, timestamp,\
+  \nevse.id = 1, evse.connectorId = 1, meterValues,...)
+activate CSMS
+activate ChargingStation
+
+CSMS --> ChargingStation: \
+  TransactionEventResponse(idTokenInfo.status = Blocked / Invalid / Expired / Unknown,...)
+deactivate CSMS
+
+ChargingStation -> ChargingStation: 에너지 제공 중단
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Updated, transactionId = AB1234, seqNo = N + 1, timestamp,\
+  \nchargingState = SuspendedEVSE, triggerReason = Deauthorized, meterValues,...)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

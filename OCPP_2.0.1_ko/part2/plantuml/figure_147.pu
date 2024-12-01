@@ -1,0 +1,15 @@
+@startuml figure_147
+!include style.puml
+
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+CSMS -> ChargingStation: DataTransferRequest(vendorId, [messageId], [data])
+activate CSMS
+activate ChargingStation
+
+ChargingStation --> CSMS: DataTransferResponse(status, [data])
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

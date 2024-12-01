@@ -1,0 +1,19 @@
+@startuml figure_138
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+loop 모니터링 설정의 주기적 값에 도달할 때마다
+  loop 각 리포트 파트에 대해
+    ChargingStation -> CSMS: NotifyEventRequest(generatedAt, tbc, seqNo, eventData)
+    activate ChargingStation
+    activate CSMS
+
+    CSMS --> ChargingStation: NotifyEventResponse()
+    deactivate ChargingStation
+    deactivate CSMS
+  end
+end
+
+@enduml

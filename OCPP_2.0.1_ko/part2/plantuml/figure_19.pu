@@ -1,0 +1,37 @@
+@startuml figure_19
+!include style.puml
+
+participant "Operator" as Operator
+participant "CSMS1" as CSMS1
+participant "CSMS2" as CSMS2
+participant "Charging Station" as ChargingStation
+
+Operator -> CSMS1: 네트워크 설정 변경
+activate Operator
+activate CSMS1
+
+CSMS1 -[hidden]-> Operator: hidden
+deactivate Operator
+
+CSMS1 -> ChargingStation: SetVariablesRequest(NetworkConfigurationPriority)
+activate ChargingStation
+
+ChargingStation --> CSMS1: SetVariablesResponse(status: RebootRequired)
+deactivate ChargingStation
+
+CSMS1 -> ChargingStation: ResetRequest(OnIdle)
+activate ChargingStation
+
+ChargingStation --> CSMS1: ResetResponse(Accepted)
+deactivate CSMS1
+
+ChargingStation -> ChargingStation: 재부팅
+
+ChargingStation -> CSMS2: BootNotificationRequest(...)
+activate CSMS2
+
+CSMS2 --> ChargingStation: BootNotificationResponse(...)
+deactivate CSMS2
+deactivate ChargingStation
+
+@enduml

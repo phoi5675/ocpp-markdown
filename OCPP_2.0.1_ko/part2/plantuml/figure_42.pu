@@ -1,0 +1,31 @@
+@startuml figure_42
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+activate ChargingStation
+
+note over EVDriver, ChargingStation
+  EV 연결됨
+end note
+
+note over ChargingStation, CSMS
+  사용자 인증 성공
+end note
+
+ChargingStation -> ChargingStation: \
+  get signed meter value\
+  \n(might take some time)
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Started,\
+  \ntriggerReason = SignedDataReceived)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse()
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

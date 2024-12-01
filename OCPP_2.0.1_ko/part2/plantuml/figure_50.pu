@@ -1,0 +1,27 @@
+@startuml figure_50
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over ChargingStation, CSMS
+  트랜잭션 진행중
+  A transaction is ongoing.
+end note
+
+EVDriver -> ChargingStation: 충전 케이블 연결 해제
+activate ChargingStation
+
+ChargingStation -> ChargingStation: 에너지 제공 중단
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Ended, chargingState = idle,\
+  \ntriggerReason = EVCommunicationLost, stoppedReason = EVDisconnected)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse()
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

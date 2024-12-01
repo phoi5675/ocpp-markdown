@@ -1,0 +1,25 @@
+@startuml figure_49
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over ChargingStation, CSMS
+  트랜잭션 진행중
+end note
+
+ChargingStation -> ChargingStation: \
+  parking bay detector\
+  \nno longer detects the EV
+activate ChargingStation
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Ended,\
+  \ntriggerReason = EVDeparted, stoppedReason = Local, ...)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse()
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

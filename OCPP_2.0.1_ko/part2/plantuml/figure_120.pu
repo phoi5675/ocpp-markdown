@@ -1,0 +1,54 @@
+@startuml figure_120
+!include style.puml
+
+participant "Local Controller" as LocalController
+participant "CSMS" as CSMS
+
+CSMS -> LocalController: PublishFirmwareRequest()
+activate LocalController
+activate CSMS
+
+LocalController -> CSMS: PublishFirmwareResponse()
+deactivate CSMS
+
+LocalController -> CSMS: PublishFirmwareStatusNotificationRequest(status = Downloading)
+activate CSMS
+
+CSMS -> LocalController: PublishFirmwareStatusNotificationResponse()
+deactivate CSMS
+
+LocalController ->o LocalController: 펌웨어 다운로드
+
+note over LocalController
+  펌웨어 다운로드중
+end note
+
+LocalController -> CSMS: PublishFirmwareStatusNotificationRequest(status = Downloaded)
+activate CSMS
+
+CSMS -> LocalController: PublishFirmwareStatusNotificationResponse()
+deactivate CSMS
+
+LocalController ->o LocalController: 체크섬 확인
+
+note over LocalController
+  MD5 체크섬 확인
+end note
+
+LocalController -> CSMS: PublishFirmwareStatusNotificationRequest(status = ChecksumVerified)
+activate CSMS
+
+CSMS -> LocalController: PublishFirmwareStatusNotificationResponse()
+deactivate CSMS
+
+note over LocalController
+  공개 URL에 펌웨어 게시
+end note
+
+LocalController -> CSMS: FirmwareStatusNotificationRequest(status = Published, location)
+activate CSMS
+
+CSMS -> LocalController: FirmwareStatusNotificationResponse()
+deactivate CSMS
+
+@enduml

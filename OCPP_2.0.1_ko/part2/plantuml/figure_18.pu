@@ -1,0 +1,17 @@
+@startuml figure_18
+!include style.puml
+
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+CSMS -> ChargingStation: SetNetworkProfileRequest(configurationSlot, connectionData)
+activate CSMS
+activate ChargingStation
+
+ChargingStation -> ChargingStation: 새 크레덴셜 설정
+
+ChargingStation --> CSMS: SetNetworkProfileResponse(status: Accepted)
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

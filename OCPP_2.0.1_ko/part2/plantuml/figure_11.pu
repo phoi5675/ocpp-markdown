@@ -1,0 +1,47 @@
+@startuml figure_11
+!include style.puml
+
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+ChargingStation -> CSMS: BootNotificationRequest(...)
+activate ChargingStation
+activate CSMS
+
+CSMS --> ChargingStation: BootNotificationResponse(status = Pending, interval = X,...)
+deactivate ChargingStation
+deactivate CSMS
+
+opt
+  CSMS -> ChargingStation: GetVariablesRequest(...)
+  activate CSMS
+  activate ChargingStation
+
+  ChargingStation --> CSMS: GetVariablesResponse(...)
+  deactivate ChargingStation
+  deactivate CSMS
+end
+
+opt
+  CSMS -> ChargingStation: SetVariablesRequest(...)
+  activate CSMS
+  activate ChargingStation
+
+  ChargingStation --> CSMS: SetVariablesResponse(...)
+  deactivate CSMS
+  deactivate ChargingStation
+end
+
+loop "Pending"인 기간동안 X 인터벌으로
+  ChargingStation -> CSMS: BootNotificationRequest(...)
+  activate CSMS
+  activate ChargingStation
+
+  CSMS --> ChargingStation: BootNotificationResponse(status = Pending, interval = X,...)
+  deactivate CSMS
+end
+
+ChargingStation ->o] : B01 - Cold Boot Charging Station로 계속
+deactivate ChargingStation
+
+@enduml

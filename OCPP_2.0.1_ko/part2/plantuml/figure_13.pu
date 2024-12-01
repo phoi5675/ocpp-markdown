@@ -1,0 +1,52 @@
+@startuml figure_13
+!include style.puml
+
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+activate ChargingStation
+
+loop 전원이 켜진 동안 다른 메시지가 없는 경우
+  ChargingStation -> CSMS: HeartbeatRequest()
+  activate CSMS
+
+  CSMS --> ChargingStation: HeartbeatResponse(currentTime)
+  deactivate CSMS
+end
+
+ChargingStation -> ChargingStation: 연결 끊김
+
+note over CSMS, ChargingStation
+  연결 끊김은 몇 분 또는 며칠이 될 수 있습니다..
+end note
+
+ChargingStation -> ChargingStation: 연결 복구됨
+
+alt 오프라인 기간이 오프라인 임계점(threshold)를 넘기는 경우
+  loop 모든 커넥터에 대해
+    ChargingStation -> CSMS: StatusNotificationRequest(...)
+    activate CSMS
+
+    CSMS --> ChargingStation: StatusNotificationResponse()
+    deactivate CSMS
+    deactivate ChargingStation
+  end
+else 오프라인 기간동안 상태가 변경될 때
+  loop 오프라인 기간동안 상태가 변경된 각 커넥터에 대해
+    ChargingStation -> CSMS: StatusNotificationRequest(...)
+    activate CSMS
+
+    CSMS --> ChargingStation: StatusNotificationResponse()
+    deactivate CSMS
+  end
+end
+
+loop 전원이 켜진 상태에서 다른 메시지가 없는 동안
+  ChargingStation -> CSMS: HeartbeatRequest()
+  activate CSMS
+
+  CSMS --> ChargingStation: HeartbeatResponse(currentTime)
+  deactivate CSMS
+end
+
+@enduml

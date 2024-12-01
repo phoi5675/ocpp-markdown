@@ -1,0 +1,46 @@
+@startuml figure_3
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+ChargingStation -> CSMS: Client Hello
+activate ChargingStation
+activate CSMS
+
+CSMS --> ChargingStation: \
+  Server Hello \n\
+  Server Certificate \n\
+  Server Hello Done
+
+deactivate CSMS
+
+ChargingStation -> CSMS: \
+  ClientKeyExchange \n\
+  [ChangeCipherSpec] \n\
+  Finished 
+activate CSMS
+
+CSMS --> ChargingStation: \
+  [ChangeCipherSpec] \n\
+  Finished
+deactivate CSMS
+
+ChargingStation -> CSMS: HTTP GET / ProtectedData (암호화 통신)
+activate CSMS
+
+CSMS --> ChargingStation: HTTP/401 Authentication Required
+deactivate CSMS
+
+ChargingStation -> CSMS: \
+  HTTP GET / ProtectedData \n\
+  Authorization Basic \n\
+  Username/Password
+activate CSMS
+
+CSMS --> ChargingStation: HTTP 200 / ProtectedData
+deactivate CSMS
+
+ChargingStation -> CSMS: 어플리케이션 데이터
+deactivate ChargingStation
+@enduml

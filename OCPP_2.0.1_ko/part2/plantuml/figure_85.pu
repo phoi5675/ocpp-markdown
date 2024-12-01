@@ -1,0 +1,25 @@
+@startuml figure_85
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over ChargingStation
+  이 사용자에 대해
+  진행중인 트랜잭션 없음
+end note
+
+EVDriver -> ChargingStation: IdToken 제시
+
+ChargingStation -> CSMS: AuthorizeRequest(idToken = '123456')
+activate CSMS
+
+CSMS --> ChargingStation: \
+  AuthorizeResponse(status = Accepted,\n\
+          PersonalMessage = '0.25/kWh')
+deactivate CSMS
+
+ChargingStation --> EVDriver: 단가: 0.25/kWh
+
+@enduml

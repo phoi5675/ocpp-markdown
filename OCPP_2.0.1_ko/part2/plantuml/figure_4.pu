@@ -1,0 +1,34 @@
+@startuml figure_4
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+ChargingStation -> CSMS: Client Hello
+activate ChargingStation
+activate CSMS
+
+CSMS --> ChargingStation: \
+  Server Hello \n\
+  Server Certificate \n\
+  Certificate Server Request \n\
+  Server Hello Done
+
+deactivate CSMS
+
+ChargingStation -> CSMS: \
+  Client Certificate \n\
+  Client Key Exchange \n\
+  Certificate Verify \n\
+  [ChangeCipherSpec] \n\
+  Finished
+activate CSMS
+
+CSMS --> ChargingStation: \
+  [ChangeCipherSpec] \n\
+  Finished
+deactivate CSMS
+
+ChargingStation -> CSMS: 어플리케이션 데이터 (인증되고 암호화된 통신)
+deactivate ChargingStation
+@enduml
