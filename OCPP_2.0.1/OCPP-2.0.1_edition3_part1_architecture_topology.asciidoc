@@ -85,7 +85,7 @@ _This section is informative._
 To understand the terminology in the OCPP specification, it is important to understand the starting point of this specification. The OCPP specification uses the term Charging Station as the physical system where EVs can be charged. A Charging Station can have one or more EVSEs (Electric Vehicle Supply Equipment). An EVSE is considered as a part of the Charging Station that can deliver energy to one EV at a time. The term Connector, as used in this specification, refers to an independently operated and managed electrical outlet on a Charging Station, in other words, this corresponds to a single physical Connector. In some cases an EVSE may have multiple physical socket types and/or tethered cable/connector arrangements to facilitate different vehicle types (e.g. four- wheeled EVs and electric scooters). This setup is referred to as the 3-tier model and visualized in the figure below.
 
 .3-tier model as used in OCPP
-image::part1/images/figure_1.svg[3-tier model as used in OCPP]
+image::part1/images/figure_1.png[3-tier model as used in OCPP]
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===
