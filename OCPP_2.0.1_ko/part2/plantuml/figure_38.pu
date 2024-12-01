@@ -1,0 +1,15 @@
+@startuml figure_38
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+CSMS -> ChargingStation: GetLocalListVersionRequest()
+activate ChargingStation
+activate CSMS
+
+ChargingStation --> CSMS: GetLocalListVersionResponse(versionNumber)
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

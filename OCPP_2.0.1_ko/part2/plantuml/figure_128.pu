@@ -1,0 +1,15 @@
+@startuml figure_128
+!include style.puml
+
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+CSMS -> ChargingStation: DeleteCertificateRequest(certificateHashData)
+activate CSMS
+activate ChargingStation
+
+ChargingStation --> CSMS: DeleteCertificateResponse(status)
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

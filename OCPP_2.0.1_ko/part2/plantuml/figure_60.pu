@@ -1,0 +1,38 @@
+@startuml figure_60
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+activate ChargingStation
+note over ChargingStation, CSMS
+  트랜잭션 진행중
+end note
+
+note over ChargingStation, CSMS
+  연결 끊김
+end note
+
+opt
+  loop 트랜잭션 진행(running)중인 동안
+    ChargingStation -> ChargingStation: TransactionEventRequest() 메시지 저장
+  end
+end
+
+note over ChargingStation, CSMS
+  연결 재개됨
+end note
+
+loop 모든 저장된 TransactionEventRequest() 메시지에 대해
+  ChargingStation -> CSMS: TransactionEventRequest(offline = true)
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse()
+  deactivate CSMS
+end
+
+deactivate ChargingStation
+
+ChargingStation ->o] : 일반 통신 재개
+
+@enduml

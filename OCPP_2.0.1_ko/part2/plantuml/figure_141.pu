@@ -1,0 +1,25 @@
+@startuml figure_141
+!include style.puml
+
+actor "CSO" as CSO
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+activate CSO
+
+CSO -> CSMS: 신규 메시지 설정
+activate CSMS
+
+CSMS -> ChargingStation: SetDisplayMessagesRequest(...)
+activate ChargingStation
+
+CSMS --> ChargingStation: SetDisplayMessagesResponse(Accepted)
+deactivate ChargingStation
+
+opt
+  CSMS --> CSO: 알림
+  deactivate CSO
+  deactivate CSMS
+end
+
+@enduml

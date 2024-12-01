@@ -1,0 +1,30 @@
+@startuml figure_16
+!include style.puml
+
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+note over CSMS, ChargingStation
+  어떤 이벤트에 의해 충전기에서 CSMS로 리포트를 요청합니다.
+end note
+
+CSMS -> ChargingStation: GetBaseReportRequest(requestId, reportBase)
+activate CSMS
+activate ChargingStation
+
+ChargingStation --> CSMS: GetBaseReportResponse(status)
+deactivate CSMS
+deactivate ChargingStation
+
+loop 각 리포트 파트에 대해
+  ChargingStation -> CSMS: NotifyReportRequest(generatedAt, requestId, tbc, reports,...)
+  activate CSMS
+  activate ChargingStation
+
+  CSMS --> ChargingStation: NotifyReportResponse()
+  deactivate CSMS
+  deactivate ChargingStation
+end 
+
+
+@enduml

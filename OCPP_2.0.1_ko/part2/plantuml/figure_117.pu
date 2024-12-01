@@ -1,0 +1,111 @@
+@startuml figure_117
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+CSMS -> ChargingStation: UpdateFirmwareRequest(requestId = 123)
+activate CSMS
+activate ChargingStation
+
+ChargingStation --> CSMS: UpdateFirmwareResponse()
+deactivate CSMS
+
+ChargingStation ->o ChargingStation: 인증서 검증
+
+note over ChargingStation
+  retrieveDate 대기...
+end note
+
+ChargingStation -> CSMS: FirmwareStatusNotificationRequest(status = Downloading, requestId = 123)
+activate CSMS
+
+CSMS --> ChargingStation: FirmwareStatusNotificationResponse()
+deactivate CSMS
+
+ChargingStation ->o ChargingStation: 펌웨어 다운로드
+
+note over ChargingStation
+  펌웨어 다운로드중...
+end note
+
+ChargingStation -> CSMS: FirmwareStatusNotificationRequest(status = Downloaded, requestId = 123)
+activate CSMS
+
+CSMS --> ChargingStation: FirmwareStatusNotificationResponse()
+deactivate CSMS
+
+ChargingStation ->o ChargingStation: 서명 검증
+
+ChargingStation -> CSMS: FirmwareStatusNotificationRequest(status = SignatureVerified, requestId = 123)
+activate CSMS
+
+CSMS --> ChargingStation: FirmwareStatusNotificationResponse()
+deactivate CSMS
+deactivate ChargingStation
+
+note over ChargingStation
+  트랜잭션이 끝날 때까지 대기...
+end note
+
+note right of ChargingStation
+  FirmwareStatusNotificationRequests가 전송되는 순서와
+  재부팅이 발생하는 순서는 고정되어 있지 않습니다.
+end note
+
+opt 펌웨어 설치 전에 재부팅이 필요한 경우
+  ChargingStation -> CSMS: FirmwareStatusNotificationRequest(status = InstallRebooting, requestId = 123)
+  activate ChargingStation
+  activate CSMS
+
+  CSMS --> ChargingStation: FirmwareStatusNotificationResponse()
+  deactivate CSMS
+
+  ChargingStation ->o ChargingStation: 재부팅
+
+  note over ChargingStation
+    재부팅...
+  end note 
+end
+
+ChargingStation -> CSMS: FirmwareStatusNotificationRequest(status = Installing, requestId = 123)
+activate CSMS
+
+CSMS --> ChargingStation: FirmwareStatusNotificationResponse()
+deactivate CSMS
+
+ChargingStation ->o ChargingStation: 펌웨어 설치
+
+note over ChargingStation
+  설치중...
+end note
+
+opt 설치 이후 펌웨어 활성화를 위해 재부팅이 필요한 경우
+  ChargingStation -> CSMS: FirmwareStatusNotificationRequest(status = InstallRebooting, requestId = 123)
+  activate ChargingStation
+  activate CSMS
+
+  CSMS --> ChargingStation: FirmwareStatusNotificationResponse()
+  deactivate CSMS
+
+  ChargingStation ->o ChargingStation: 재부팅
+
+  note over ChargingStation
+    재부팅... 
+  end note
+end
+
+ChargingStation -> CSMS: FirmwareStatusNotificationRequest(status = Installed, requestId = 123)
+activate CSMS
+
+CSMS --> ChargingStation: FirmwareStatusNotificationResponse()
+deactivate CSMS
+deactivate ChargingStation
+
+opt
+  note over ChargingStation
+    재부팅...
+  end note
+end
+
+@enduml

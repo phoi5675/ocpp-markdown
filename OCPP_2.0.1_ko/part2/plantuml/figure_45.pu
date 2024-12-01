@@ -1,0 +1,56 @@
+@startuml figure_45
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+EVDriver -> ChargingStation: 케이블 연결
+activate ChargingStation
+
+ChargingStation -> CSMS: StatusNotificationRequest(Occupied)
+activate CSMS
+
+CSMS --> ChargingStation: StatusNotificationResponse()
+deactivate CSMS
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Started, triggerReason = CablePluggedIn, chargingState = EVConnected, \
+  \ntransactionId = AB1234, timestamp, evse.id = 1, evse.connectorId = 1, meterValues, ...)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate CSMS
+deactivate ChargingStation
+
+note over EVDriver, CSMS
+  사용자 인증 성공
+end note
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Updated, transactionId = AB1234, idToken.id = 1234,\
+  \ntimestamp, triggerReason = Authorized, meterValues, ...)
+activate CSMS
+activate ChargingStation
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate CSMS
+deactivate ChargingStation
+
+alt 케이블이 영구적으로 결합되지 않음
+  ChargingStation -> ChargingStation: 커넥터 잠금
+end
+
+ChargingStation -> ChargingStation: 에너지 제공 시작
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Updated, transactionId = AB1234, \
+  \ntimestamp, chargingState = Charging, triggerReason = ChargingStateChanged, meterValues, ...)
+activate CSMS
+activate ChargingStation
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

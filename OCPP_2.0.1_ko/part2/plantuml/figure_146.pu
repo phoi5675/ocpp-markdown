@@ -1,0 +1,28 @@
+@startuml figure_146
+!include style.puml
+
+actor "CSO" as CSO
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+note over ChargingStation
+  id=15인 메시지가 구성됨
+end note
+
+CSO -> CSMS: 메시지(id = 15) 교체
+activate CSO
+activate CSMS
+
+CSMS -> ChargingStation: SetDisplayMessagesRequest(id = 15,...)
+activate ChargingStation
+
+ChargingStation --> CSMS: SetDisplayMessagesResponse(Accepted)
+deactivate ChargingStation
+
+opt
+  CSMS --> CSO: 알림
+  deactivate CSO
+  deactivate CSMS
+end
+
+@enduml

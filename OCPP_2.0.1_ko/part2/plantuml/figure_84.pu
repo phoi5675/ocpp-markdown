@@ -1,0 +1,27 @@
+@startuml figure_84
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+ChargingStation -> ChargingStation: \
+  예약이 종료되고,\
+  \nexpiryDateTime 도달
+
+alt 예약된 특정 EVSE에 대해
+  ChargingStation -> CSMS: StatusNotificationRequest(status = Available)
+  activate ChargingStation
+  activate CSMS
+
+  CSMS --> ChargingStation: StatusNotificationResponse()
+  deactivate CSMS
+end
+
+ChargingStation -> CSMS: ReservationStatusUpdateRequest(reservationId, reservationUpdateStatus = Expired)
+activate CSMS
+
+CSMS --> ChargingStation: ReservationStatusUpdateResponse()
+deactivate ChargingStation
+deactivate CSMS
+
+@enduml

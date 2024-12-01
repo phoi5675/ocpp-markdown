@@ -1,0 +1,26 @@
+@startuml figure_2
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+ChargingStation -> CSMS: HTTP GET / ProtectedData (평문 통신)
+activate ChargingStation
+activate CSMS
+
+CSMS --> ChargingStation: HTTP/401 Authorization Required
+deactivate CSMS
+
+ChargingStation -> CSMS: \
+  HTTP GET / ProtectedData \n\
+  Authorization Basic \n\
+  Username / Password
+
+activate CSMS
+
+CSMS --> ChargingStation: HTTP 200 / ProtectedData
+deactivate CSMS
+
+ChargingStation -> CSMS: 어플리케이션 데이터
+deactivate ChargingStation
+@enduml

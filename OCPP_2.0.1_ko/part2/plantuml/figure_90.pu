@@ -1,0 +1,23 @@
+@startuml figure_90
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over ChargingStation
+  트랜잭션 진행중
+end note
+
+ChargingStation -> CSMS: TransactionEventRequest(eventType = Updated,...)
+activate ChargingStation
+activate CSMS
+
+CSMS -> CSMS: \
+  업데이트 된\n\
+  단가 정보 확인
+
+CSMS --> ChargingStation: TransactionEventResponse(PersonalMessage,...)
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

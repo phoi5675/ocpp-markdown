@@ -1,0 +1,18 @@
+@startuml figure_133
+!include style.puml
+
+actor "CSO" as CSO
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+CSO -> CSMS : 모니터링 기반 설정 요청
+
+CSMS -> ChargingStation: SetMonitoringBaseRequest(monitoringBase)
+activate CSMS
+activate ChargingStation
+
+ChargingStation --> CSMS: SetMonitoringBaseResponse(status)
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

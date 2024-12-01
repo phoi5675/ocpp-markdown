@@ -1,0 +1,26 @@
+@startuml figure_70
+!include style.puml
+
+participant "External Trigger" as ExternalTrigger
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+ExternalTrigger -> CSMS: 커넥터 잠금 해제
+activate ExternalTrigger
+activate CSMS
+
+CSMS -> ChargingStation: UnlockConnectorRequest(evseId, connectorId)
+activate ChargingStation
+
+ChargingStation -> ChargingStation: 커넥터 잠금 해제
+
+ChargingStation --> CSMS: UnlockConnectorResponse(unlocked)
+deactivate ChargingStation
+
+opt
+  CSMS -> ExternalTrigger: 알림
+  deactivate ExternalTrigger
+  deactivate CSMS
+end
+
+@enduml

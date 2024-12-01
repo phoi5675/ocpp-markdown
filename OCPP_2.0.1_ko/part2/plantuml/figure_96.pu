@@ -1,0 +1,39 @@
+@startuml figure_96
+!include component_diagram_style.puml
+
+left to right direction
+
+node "CSMS" as CSMS
+
+folder "Local group" {
+  node "Local Controller\nCS00" as LocalControllerCS00
+
+  node "Charge Station\nCS03" as CS03
+  node "Charge Station\nCS02" as CS02
+  node "Charge Station\nCS01" as CS01
+
+  actor "EV2" as EV2
+  actor "EV1" as EV1
+
+  note top of LocalControllerCS00
+    로컬 컨트롤러는 전체 그룹의
+    전력 사용량을 사전에 설정된
+    최대 전력 사용량으로 제한합니다.
+  end note
+}
+
+CSMS -down-> LocalControllerCS00 : OCPP ChargingStationMaxProfile
+
+LocalControllerCS00 -down-> CS03 : OCPP 차징 프로파일
+LocalControllerCS00 -down-> CS02 : OCPP 차징 프로파일
+LocalControllerCS00 -down- CS01 
+
+CS03 -down[dotted]-> EV2 : Control Pilot signal \
+    \n또는 ISO 15118
+CS02 -down[dotted]-> EV1 : Control Pilot signal \
+    \n또는 ISO 15118
+
+CS03 -left[hidden]- CS02
+CS02 -left[hidden]- CS01
+
+@enduml

@@ -1,0 +1,95 @@
+@startuml figure_102
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "EV" as EV
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over EVDriver, CSMS
+  사용자 인증에 성공하고 트랜잭션이 시작됨
+end note
+
+ChargingStation -> EV: 최대 전류(제한) 설정
+activate ChargingStation
+
+ChargingStation -> ChargingStation: 전원 켬
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Updated, transactionId, \n\
+        chargingState = Charging, ...)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate CSMS
+
+EV -> ChargingStation: 충전 시작
+activate EV
+
+loop 차징 프로파일에 따라 루프 변화
+else 차징 프로파일의 각 인터벌 기간에 대해
+  ChargingStation -> ChargingStation: 차징 프로파일에서 충전량 제한 가져옴
+  note right
+    충전기는 최대 전류를 변경해야 할 때마다
+    Control Pilot 신호를 통해
+    충전 프로파일을 구현합니다.
+  end note
+
+  ChargingStation -> EV: 최대 전류(제한) 설정
+  deactivate ChargingStation
+
+  opt Change of limits by CSMS
+    ChargingStation -> CSMS: \
+      SetChargingProfileRequest(evseId,chargingProfile.id,[transactionId], \
+      \nchargingProfilePurpose: TxProfile, ChargingProfileKind, RecurrencyKind, ValidFrom, \
+      \nValidTo, ChargingSchedule)
+    activate ChargingStation
+    activate CSMS
+
+    note right of CSMS
+      CSMS가 충전 프로파일을
+      변경할지 결정합니다. 
+    end note
+
+    ChargingStation --> CSMS: SetChargingProfileResponse(Accepted)
+    deactivate CSMS
+  end 
+end
+
+note over EVDriver, CSMS
+  사용자 인증 성공
+end note
+
+ChargingStation --> EV: 충전 종료
+deactivate EV
+
+ChargingStation -> ChargingStation: 전원 끔
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Updated, transactionId, \n\
+      chargingState = EVConnected, ...)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate CSMS
+deactivate ChargingStation
+
+EVDriver --> ChargingStation: 케이블 분리
+activate ChargingStation
+
+ChargingStation -> CSMS: StatusNotificationRequest(Available)
+activate CSMS
+
+CSMS --> ChargingStation: StatusNotificationResponse()
+deactivate CSMS
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Ended, transactionId, timestamp, \n\
+      stopReason, ...)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse([IdTokenInfo])
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

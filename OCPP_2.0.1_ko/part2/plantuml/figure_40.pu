@@ -1,0 +1,20 @@
+@startuml figure_40
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+EVDriver -> ChargingStation : 충전 케이블 연결됨
+activate ChargingStation
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Started, chargingState = EVConnected,\
+  \ntriggerReason = CablePluggedIn)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse()
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

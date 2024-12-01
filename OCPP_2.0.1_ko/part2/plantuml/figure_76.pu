@@ -1,0 +1,33 @@
+@startuml figure_76
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+CSMS -> ChargingStation: ChangeAvailabilityRequest(type)
+activate CSMS
+activate ChargingStation
+
+ChargingStation --> CSMS: ChangeAvailabilityResponse(status)
+deactivate CSMS
+deactivate ChargingStation
+
+alt 가용성이 변경된 경우
+  alt 트랜잭션이 진행중인 경우
+    note over ChargingStation, CSMS
+      EVSE에서 진행중인 트랜잭션이 종료될 때 까지 대기
+    end note
+  end
+
+  loop 모든 커넥터에 대해
+    ChargingStation -> CSMS: StatusNotificationRequest(evseId, connectorId, connectorStatus, [timestamp])
+    activate ChargingStation
+    activate CSMS
+
+    CSMS --> ChargingStation: StatusNotificationResponse()
+    deactivate ChargingStation
+    deactivate CSMS
+  end
+end
+
+@enduml

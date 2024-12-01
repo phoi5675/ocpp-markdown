@@ -1,0 +1,68 @@
+@startuml figure_10
+!include style.puml
+
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+ChargingStation -> ChargingStation: 전원 켜짐
+
+opt 
+  ChargingStation -> ChargingStation: 자가 진단
+end
+
+ChargingStation -> CSMS: BootNotificationRequest(reason, chargingStation)
+activate ChargingStation
+activate CSMS
+
+CSMS --> ChargingStation: BootNotificationResponse(status = Accepted, currentTime, interval)
+deactivate ChargingStation
+deactivate CSMS
+
+opt
+  loop 모든 커넥터에 대해
+    ChargingStation -> CSMS: StatusNotificationRequest(connectorStatus = Unavailable)
+    activate ChargingStation
+    activate CSMS
+
+    CSMS --> ChargingStation: StatusNotificationResponse()
+    deactivate ChargingStation
+    deactivate CSMS
+  end
+
+  ChargingStation -> ChargingStation: 자가 진단
+end
+
+loop 모든 커넥터에 대해
+  alt 커넥터가 (재)부팅 전에 Unavailable/Reserved/Faulted로 설정됨
+    ChargingStation -> CSMS: StatusNotificationRequest(connectorStatus = Unavailable/Reserved/Faulted)
+    activate ChargingStation
+    activate CSMS
+
+    CSMS --> ChargingStation: StatusNotificationResponse()
+    deactivate ChargingStation
+    deactivate CSMS
+  else else
+    ChargingStation -> CSMS: StatusNotificationRequest(Connectortatus = Available)
+    activate ChargingStation
+    activate CSMS
+
+    CSMS --> ChargingStation: StatusNotificationResponse()
+    deactivate ChargingStation
+    deactivate CSMS
+  end
+end
+
+loop \
+  전원이 켜지고 다른 메시지가 없는 동안, \n\
+  BootNotificationResponse의 Interval 값 기반의 주기로
+
+  ChargingStation -> CSMS: HeartbeatRequest()
+  activate ChargingStation
+  activate CSMS
+
+  CSMS --> ChargingStation: HeartbeatResponse(currentTime)
+  deactivate ChargingStation
+  deactivate CSMS
+end
+
+@enduml

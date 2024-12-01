@@ -1,0 +1,24 @@
+@startuml figure_86
+!include style.puml
+
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+actor "EV Driver" as EVDriver
+
+note over ChargingStation
+  트랜잭션 진행중
+end note
+
+loop 트랜잭션이 진행중인 매 Y초 마다
+  CSMS -> ChargingStation: CostUpdatedRequest(transactionId, cost = X.XX)
+  activate CSMS
+  activate ChargingStation
+
+  ChargingStation --> CSMS: CostUpdatedResponse()
+  deactivate CSMS
+
+  ChargingStation -> EVDriver: 단가: X.XX 표시
+  deactivate ChargingStation
+end
+
+@enduml

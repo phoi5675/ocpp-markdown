@@ -1,0 +1,15 @@
+@startuml figure_121
+!include style.puml
+
+participant "Local Controller" as LocalController
+participant "CSMS" as CSMS
+
+CSMS -> LocalController: UnpublishFirmwareRequest()
+activate LocalController
+activate CSMS
+
+LocalController -> CSMS: UnpublishFirmwareResponse()
+deactivate LocalController
+deactivate CSMS
+
+@enduml

@@ -1,0 +1,63 @@
+@startuml figure_46
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over EVDriver, CSMS
+  사용자 인증 성공
+end note
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Started, transactionId = AB1234, triggerReason = Authorized,\
+  \nseqNo = N, timestamp, idToken.id = 1234, ...)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(idTokenInfo.status = Accepted,...)
+
+alt ConnectionTimeOut 이내인 경우
+  EVDriver -> ChargingStation: 케이블 연결
+  activate ChargingStation
+
+  ChargingStation -> CSMS: StatusNotificationRequest(Occupied)
+
+  CSMS --> ChargingStation: StatusNotificationResponse()
+
+  ChargingStation -> CSMS: \
+    TransactionEventRequest(eventType = Updated, transactionId = AB1234, seqNo = N + 1,\
+    \ntimestamp, chargingState = EVConnected, triggerReason = CablePluggedIn, ...)
+  
+  CSMS --> ChargingStation: TransactionEventResponse(...)
+  deactivate CSMS
+
+  alt 케이블이 영구적으로 결합되지 않은 경우
+    ChargingStation -> ChargingStation: 커넥터 잠금
+  end
+
+  ChargingStation -> ChargingStation: 에너지 제공 시작
+
+  ChargingStation -> CSMS: \
+    TransactionEventRequest(eventType = Updated, transactionId = AB1234, seqNo = N + 1,\
+    \ntimestamp, chargingState = Charging, triggerReason = ChargingStateChanged, ...)
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse(...)
+  deactivate ChargingStation
+  deactivate CSMS
+else Connection Timeout 시간이 초과된 경우
+  ChargingStation -> CSMS: \
+    TransactionEventRequest(eventType = Ended, triggerReason = EVConnectTimeout, transactionId = AB1234, seqNo = N + 1,\
+    \ntimestamp, meterValues, stoppedReason = Timeout)
+  activate ChargingStation
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse()
+  deactivate ChargingStation
+  deactivate CSMS
+end
+
+opt
+  ChargingStation -> EVDriver: 알림
+end 
+@enduml

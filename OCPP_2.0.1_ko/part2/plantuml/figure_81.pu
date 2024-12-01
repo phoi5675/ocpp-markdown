@@ -1,0 +1,28 @@
+@startuml figure_81
+!include style.puml
+
+actor "User" as User
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+User -> CSMS: 예약 취소
+activate CSMS
+
+CSMS -> ChargingStation: CancelReservationRequest(reservationId)
+activate ChargingStation
+
+ChargingStation --> CSMS: CancelReservationResponse(status = Accepted)
+deactivate CSMS
+deactivate ChargingStation
+
+opt 예약된 특정 EVSE
+  ChargingStation -> CSMS: StatusNotificationRequest(status = Available)
+  activate CSMS
+  activate ChargingStation
+
+  CSMS --> ChargingStation: StatusNotificationResponse()
+  deactivate ChargingStation
+  deactivate CSMS
+end
+
+@enduml

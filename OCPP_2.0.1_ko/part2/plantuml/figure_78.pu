@@ -1,0 +1,24 @@
+@startuml figure_78
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+activate EVDriver
+EVDriver -> CSMS: 예약
+activate CSMS
+
+CSMS -> ChargingStation: ReserveNowRequest(reservation.id, no evseId)
+activate ChargingStation
+
+ChargingStation --> CSMS: ReserveNowResponse(status = Accepted)
+deactivate ChargingStation
+
+opt
+  CSMS --> EVDriver: 알림
+  deactivate CSMS
+  deactivate EVDriver
+end
+
+@enduml

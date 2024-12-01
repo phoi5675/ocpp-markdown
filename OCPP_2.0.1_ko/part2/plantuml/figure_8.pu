@@ -1,0 +1,25 @@
+@startuml figure_8
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+ChargingStation -> ChargingStation: 보안 관련 이벤트 발생
+
+activate ChargingStation
+
+note right of CSMS
+  보안 관련 이벤트는
+  Part 2 - Appendices를
+  참고하세요
+end note
+opt 키 유요함
+  ChargingStation -> CSMS: SecurityEventNotificationRequest()
+  activate CSMS
+
+  CSMS --> ChargingStation: SecurityEventNotificationResponse()
+  deactivate CSMS
+  deactivate ChargingStation
+end
+
+@enduml

@@ -1,0 +1,42 @@
+@startuml figure_51
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over ChargingStation
+  TxStopPoint가
+  "Authorized"를 포함합니다.
+end note
+
+note over ChargingStation, CSMS
+  충전기에서 로컬 인증으로 사용자를 인증합니다.
+end note
+
+ChargingStation -> CSMS: TransactionEventRequest(...)
+activate ChargingStation
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(idTokenInfo.status != Accepted, ...)
+deactivate CSMS
+
+ChargingStation -> ChargingStation: 에너지 전달 중단
+
+alt StopTxOnInvalidId가 true
+  ChargingStation -> CSMS: \
+    TransactionEventRequest(eventType = Ended,\n\
+        triggerReason = Deauthorized, stoppedReason = DeAuthorized, ...)
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse(...)
+else StopTxOnInvalidId가 false
+  ChargingStation -> CSMS: \
+    TransactionEventRequest(eventType = Updated,\n\
+        triggerReason = ChargingStateChanged, ...)
+
+  CSMS --> ChargingStation: TransactionEventResponse(...)
+  deactivate CSMS
+  deactivate ChargingStation
+end
+
+@enduml

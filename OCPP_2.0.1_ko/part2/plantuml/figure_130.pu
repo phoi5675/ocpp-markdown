@@ -1,0 +1,19 @@
+@startuml figure_130
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+ChargingStation -> CSMS: GetCertificateStatusRequest(ocpsRequestData)
+activate CSMS
+activate ChargingStation
+
+CSMS -> CSMS: OCSP 인증서 상태 수신
+
+CSMS --> ChargingStation: GetCertificateStatusResponse(status, ocspResult)
+deactivate CSMS
+deactivate ChargingStation
+
+ChargingStation -> ChargingStation: 수신된 정보 캐싱
+
+@enduml

@@ -1,0 +1,30 @@
+@startuml figure_95
+!include component_diagram_style.puml
+
+left to right direction
+
+node "CSMS" as CSMS
+
+node "Charge Station\nCS10" as CS10
+node "Charge Station\nCS11" as CS11
+node "Charge Station\nCS12" as CS12
+
+actor "EV1" as EV1
+actor "EV2" as EV2
+
+note top of CSMS
+  CSMS는 외부 소스(예: DSO)에서
+  수용량(capacity) 예측을
+  수신합니다.
+end note
+
+CSMS -down- CS10
+CSMS -down-> CS11 : OCPP 차징 프로파일
+CSMS -down-> CS12 : OCPP 차징 프로파일
+
+CS11 -down[dotted]-> EV1 : Control Pilot signal \
+  \n또는 ISO 15118
+CS12 -down[dotted]-> EV2 : Control Pilot signal \
+  \n또는 ISO 15118
+
+@enduml

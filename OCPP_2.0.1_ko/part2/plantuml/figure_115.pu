@@ -1,0 +1,106 @@
+@startuml figure_115
+!include style.puml
+
+participant "EV" as EV
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+loop 충전 진행중...
+  alt AC Charging일 때
+    EV -> ChargingStation: ChargingStatusReq()
+    activate EV
+    activate ChargingStation
+
+    ChargingStation --> EV: ChargingStatusRes()
+    deactivate EV
+    deactivate ChargingStation
+  else DC Charging일 때
+    EV -> ChargingStation: CurrentDemandReq()
+    activate EV
+    activate ChargingStation
+
+    ChargingStation --> EV: CurrentDemandRes()
+    deactivate EV
+    deactivate ChargingStation
+  end
+
+  ChargingStation -> CSMS: TransactionEventRequest(eventType = Updated,...)
+  activate ChargingStation
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse(...)
+  deactivate ChargingStation
+  deactivate CSMS
+end
+
+group CSMS가 새로운 스케쥴을 설정함
+  CSMS -> ChargingStation: SetChargingProfileRequest(evseId, chargingProfile)
+  activate ChargingStation
+  activate CSMS
+
+  ChargingStation --> CSMS: SetChargingProfileResponse(Accepted)
+  deactivate ChargingStation
+  deactivate CSMS
+
+  alt AC Charging일 때
+    EV -> ChargingStation: ChargingStatusReq()
+    activate EV
+    activate ChargingStation
+
+    ChargingStation --> EV: ChargingStatusRes(ReNegotiation)
+    deactivate EV
+    deactivate ChargingStation
+  else DC Charging일 때
+    EV -> ChargingStation: CurrentDemandReq()
+    activate EV
+    activate ChargingStation
+
+    ChargingStation --> EV: CurrentDemandRes(ReNegotiation)
+    deactivate EV
+    deactivate ChargingStation
+  end
+
+  EV -> ChargingStation: PowerDeliveryReq(ReNegotiate)
+  activate EV
+  activate ChargingStation
+
+  ChargingStation --> EV: PowerDeliveryRes(OK)  
+  deactivate ChargingStation
+
+  note right
+    전력 전송이 중단(halted)될 수 있습니다
+  end note
+
+  EV -> ChargingStation: ChargeParameterDiscoveryReq(EnergyTransferMode, EVChargeParam)
+  activate ChargingStation
+
+  ChargingStation --> EV: ChargeParameterDiscoveryRes(SAScheduleList)  
+  deactivate ChargingStation
+
+  note right
+    충전기가 충전 프로파일을 SASchedule로 제공
+  end note
+
+  EV -> ChargingStation: PowerDeliveryReq(Start, ChargingProfile, EVPowerDeliveryParam)
+  activate ChargingStation
+
+  ChargingStation --> EV: PowerDeliveryRes(OK) 
+  deactivate ChargingStation
+  deactivate EV
+
+  note right
+    전력 제공이 지속됨
+  end note
+
+  opt EV가 충전 스케쥴을 제공하는 경우
+    ChargingStation -> CSMS: NotifyEVChargingScheduleRequest(evseId, chargingSchedule)
+    activate ChargingStation
+    activate CSMS
+
+    CSMS --> ChargingStation: NotifyEVChargingScheduleResponse(Accepted)
+    deactivate ChargingStation
+    deactivate CSMS
+  end 
+end
+
+@enduml
