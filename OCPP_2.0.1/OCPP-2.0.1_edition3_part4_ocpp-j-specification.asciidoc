@@ -80,7 +80,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 === References
 
-[cols="<.^1s,<.^9",%autowidth.stretch,options="header",frame=all,grid=all]
+[cols="<.^2s,<.^10",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Reference |Description
 
