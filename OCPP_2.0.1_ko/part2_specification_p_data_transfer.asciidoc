@@ -1,0 +1,164 @@
+= P. DataTransfer
+:!chapter-number:
+
+:sectnums:
+== Introduction
+
+This Functional Block describes the functionality that enables parties to extend existing commands with custom attributes or add new custom commands to OCPP
+
+OCPP offers two mechanisms to create vendor-specific custom extension.
+
+. The <<data_transfer_request,DataTransferRequest>> message allows for the exchange of data or messages not standardized in OCPP. As such, it offers a framework within OCPP for experimental functionality that may find its way into future OCPP versions. Experimenting can be done without creating new (possibly incompatible) OCPP dialects. Secondly, it offers a possibility to implement additional functionality agreed upon between specific CSMS and Charging Station vendors.
+. A CustomData element exists as an optional element in the JSON schemas of all types. CustomData is the only class in the JSON schema files that allows additional properties. It can thus be used to add additional custom attributes to any type. The CustomData has been deliberately left out of the specification document, because it would introduce a lot of clutter and it is not meant to be used in standard implementations. See also <<ocpp2_0_part4,[OCPP2.0-PART4]>>.
+
+The DataTransferRequest/Response contains a field without a length or type specification. It can be convenient to use this field as
+structured JSON content.
+
+_Example of embedded JSON_
+
+```json
+[2,
+"<unique msg id>",
+"DataTransfer",
+{
+  "vendorId": "com.mycompany.ice",
+  "messageId": "iceParkedAtCs"
+  "data": { "start_time": "2020-04-01T11:01:02" }
+}
+]
+```
+
+[cols="^.^1s,10",%autowidth.stretch]
+|===
+|IMPORTANT |Please use with extreme caution and only for optional functionality, since it will impact your compatibility with other systems that do not make use of this option. We recommend mentioning the usage explicitly in your documentation and/or communication. Please consider consulting the Open Charge Alliance before turning to this option to add functionality.
+|===
+
+<<<
+== Use cases & Requirements
+
+:sectnums!:
+[[p01_data_transfer_to_the_charging_station]]
+=== P01 - Data Transfer to the Charging Station
+
+.P01 - Data Transfer to the Charging Station
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Data Transfer to the Charging Station
+|2   |ID              |P01
+|{nbsp} d|_Functional block_ |P. Data Transfer
+|3   |Objective(s)    |To send information from the CSMS to the Charging Station for a function that is not supported by OCPP.
+|4   |Description     |This use case covers the functionality of sending a DataTransfer message to the Charging Station from the CSMS.
+|{nbsp} d|_Actors_    |Charging Station, CSMS
+|{nbsp} d|_Scenario description_
+  |**1.** The CSMS sends information to a Charging Station for a function not supported by OCPP with <<data_transfer_request,DataTransferRequest>>. +
+  **2.** The Charging Station responds to the CSMS with <<data_transfer_response,DataTransferResponse>>.
+|5   |Prerequisite(s) |n/a
+|6   |Postcondition(s)
+  |**Successful postcondition:** +
+  <<data_transfer_request,DataTransferRequest>> is received _Successfully_ and _Accepted_
+
+  **Failure postcondition:** +
+  Message has been _Accepted_ but the contained request is _Rejected_. +
+  In all other cases the usage of status _Accepted_ or _Rejected_ and the data element is part of the vendor-specific agreement between the parties involved.
+|===
+
+.Sequence Diagram: Data Transfer to the Charging Station
+image::part2/images/figure_147.svg[Sequence Diagram: Data Transfer to the Charging Station]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling  |n/a
+|8   |Remark(s)       |Data Transfer is used if information for a function is not supported by OCPP.
+
+The length of data in both the request and response message is undefined and it is RECOMMENDED that this is agreed upon by all parties involved.
+|===
+
+==== P01 - Data Transfer to the Charging Station - Requirements
+
+.P01 - Requirements
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
+
+|P01.FR.01  |{nbsp}
+  |The Charging Station SHALL only use <<data_transfer_request,DataTransferRequest>> for a function which is not supported by OCPP.
+|P01.FR.02  |{nbsp}
+  |The vendorId SHOULD be a value from the reversed DNS namespace, where the top tiers of the name, when reversed, should correspond to the publicly registered primary DNS name of the Vendor organization.
+|P01.FR.03  |{nbsp}
+  |The messageId in the request message MAY be used to indicate a specific message or implementation.
+|P01.FR.04  |{nbsp}
+  |The length of data in both the request and response message is undefined and it is RECOMMENDED that this is agreed upon by all parties involved.
+|P01.FR.05  |If the recipient of the request has no implementation for the specific vendorId.
+  |The recipient SHALL return a status _UnknownVendor_.
+|P01.FR.06  |Upon receipt of <<data_transfer_request,DataTransferRequest>> and in case of a messageId mismatch (if used).
+  |The recipient SHALL return status _UnknownMessageId_.
+|P01.FR.07  |{nbsp}
+  |The usage of status _Accepted_ or _Rejected_ and the data element SHALL be part of the vendor-specific agreement between the parties involved.
+|===
+
+<<<
+
+=== P02 - Data Transfer to the CSMS
+
+.P02 - Data Transfer to the CSMS
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Data Transfer to the CSMS
+|2   |ID              |P02
+|{nbsp} d|_Functional block_ |P. Data Transfer
+|3   |Objective(s)    |To send information from the Charging Station to the CSMS for a function which is not supported by OCPP.
+|4   |Description     |This use case covers the functionality of sending a DataTransfer message to the CSMS from the Charging Station.
+|{nbsp} d|_Actors_    |Charging Station, CSMS
+|{nbsp} d|_Scenario description_
+  |**1.** The Charging Station sends information to the CSMS for a function not supported by OCPP with <<data_transfer_request,DataTransferRequest>>. +
+  **2.** The CSMS responds to the Charging Station with <<data_transfer_response,DataTransferResponse>>.
+|5   |Prerequisite(s) |n/a
+|6   |Postcondition(s)
+  |**Successful postcondition:** +
+  <<data_transfer_request,DataTransferRequest>> is received _Successfully_ and _Accepted_
+
+  **Failure postcondition:** +
+  Message has been accepted but the contained request is _Rejected_.
+
+  In all other cases the usage of status _Accepted_ or _Rejected_ and the data element is part of the vendor-specific agreement between the parties involved.
+|===
+
+.Sequence Diagram: Data Transfer to the CSMS
+image::part2/images/figure_148.svg[Sequence Diagram: Data Transfer to the CSMS]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling |n/a
+|8   |Remark(s)      |Data Transfer is used if information for a function is _not_ supported by OCPP.
+
+The length of data in both the request and response message is undefined and should be agreed upon by all parties involved.
+|===
+
+==== P02 - Data Transfer to the CSMS - Requirements
+
+.P02 - Requirements
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
+
+|P02.FR.01  |{nbsp}
+  |The vendorId in the request message SHOULD be known to the Charging Station and uniquely identify the vendor-specific implementation.
+|P02.FR.02  |{nbsp}
+  |The Charging Station SHALL only use <<data_transfer_request,DataTransferRequest>> for a function which is not supported by OCPP.
+|P02.FR.03  |{nbsp}
+  |The VendorId SHOULD be a value from the reversed DNS namespace, where the top tiers of the name, when reversed, should correspond to the publicly registered primary DNS name of the Vendor organization.
+|P02.FR.04  |{nbsp}
+  |The messageId in the request message MAY be used to indicate a specific message or implementation.
+|P02.FR.05  |{nbsp}
+  |The length of data in both the request and response message is undefined and it is RECOMMENDED that this is agreed upon by all parties involved.
+|P02.FR.06  |If the recipient of the request has no implementation for the specific vendorId.
+  |The recipient SHALL return a status _UnknownVendor_.
+|P02.FR.07  |Upon receipt of <<data_transfer_request,DataTransferRequest>> and in case of a messageId mismatch (if used).
+  |The recipient SHALL return status UnknownMessageId.
+|P02.FR.08  |{nbsp}
+  |The usage of status _Accepted_ or _Rejected_ and the data element SHALL be part of the vendor-specific agreement between the parties involved.
+|===

@@ -1,0 +1,153 @@
+= D. LocalAuthorizationList Management
+:!chapter-number:
+
+<<<
+
+:sectnums:
+== Introduction
+
+As explained in <<local_authorization_list,C1.4 - Local Authorization List>>, the Local Authorization List is a list of identifiers that can be synchronized with the CSMS. It allows authorization of a user when offline and when online it can be used to reduce authorization response time. This Functional Block is for enabling the CSMS to synchronize the list by either sending a complete list of identifiers to replace the Local Authorization List or by sending a list of changes (add, update, delete) to apply to the Local Authorization List. The operations to support this are <<get_local_list_version,GetLocalListVersion>> and <<send_local_list,SendLocalList>>. +
+The list contains the authorization status of all (or a selection of) identifiers and the corresponding expiration date. These values may be used to provide more fine grained information to users (e.g. by display message) during local authorization.
+
+<<<
+
+==  Use cases & Requirements
+
+:sectnums!:
+[[send_local_authorization_list]]
+=== D01 - Send Local Authorization List
+
+.D01 - Send Local Authorization List
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Send Local Authorization List
+|2   |ID              |D01
+|{nbsp} d|_Functional block_ |D. Local Authorization List
+|3   |Objective(s)    |To enable the CSMS to send a <<local_authorization_list,Local Authorization List>> which a Charging Station can use for the authorization of idTokens.
+|4   |Description     |The CSMS sends a <<local_authorization_list,Local Authorization List>> which a Charging Station can use for the
+authorization of idTokens. The list MAY be either a full list to replace the current list in the
+Charging Station or it MAY be a differential list with updates to be applied to the current list in the
+Charging Station.
+|{nbsp} d|_Actors_    |Charging Station, CSMS
+|{nbsp} d|_Scenario description_ 
+  |**1.** The CSMS sends a <<send_local_list_request,SendLocalListRequest>> to install or update the <<local_authorization_list,Local Authorization List>>. +
+  **2.** Upon receipt of the <<send_local_list_request,SendLocalListRequest>> the Charging Station responds with a <<send_local_list_response,SendLocalListResponse>> with its status. +
+|5   |Prerequisite(s) |Local Authorization List is enabled with Configuration Variable <<local_auth_list_enabled,`LocalAuthListEnabled`>>.
+|6   |Postcondition(s) 
+  |**Successful postcondition:** +
+  - A new <<local_authorization_list,Local Authorization List>> is installed on the Charging Station. +
+  **Failure postcondition:** +
+  - The <<local_authorization_list,Local Authorization List>> on the Charging Station stays as it was. +
+  - If the status is _Failed_ or _VersionMismatch_.
+|===
+
+.Sequence Diagram: Send Local Authorization List
+image::part2/images/figure_37.svg[Sequence Diagram: Send Local Authorization List]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling  |If the status is _Failed_ or _VersionMismatch_ and the updateType was Differential, the CSMS will transmit the full <<local_authorization_list,Local Authorization List>>. When this list is too large for one message, it will start by sending an initial list with updateType _Full_ and adding identifiers using updateType _Differential_ until the list is completely sent (the amount of identifiers that can be sent in a single <<send_local_list_request,SendLocalListRequest>> is limited as described in requirement D01.FR.11).
+|8   |Remark(s)       |n/a
+|===
+
+==== D01 - Send Local Authorization List - Requirements
+
+.D01 - Requirements
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
+
+|D01.FR.01  |{nbsp}
+  |<<send_local_list_request,SendLocalListRequest>> SHALL contain the type of update (_updateType_) and a version number (_versionNumber_) that the Charging Station MUST associate with the <<local_authorization_list,Local Authorization List>> after it has been updated. |{nbsp}
+|D01.FR.02  |{nbsp}
+  |<<send_local_list_response,SendLocalListResponse>> SHALL indicate whether the Charging Station has accepted the update of the <<local_authorization_listLocal Authorization List>> |{nbsp}
+|D01.FR.03  |If the _status_ in <<send_local_list_response,SendLocalListResponse>> is `Failed` or `VersionMismatch` and the _updateType_ was `Differential`
+  |It is RECOMMENDED that the CSMS sends the full <<local_authorization_list,Local Authorization List>>.
+    |When this list is too large for one message (see D01.FR.11), it shall start by sending an initial list with _updateType_ `Full` and adding identifiers using _updateType_ `Differential` until the list is completely sent.
+|D01.FR.04  |If no _localAuthorizationList_ is given and the _updateType_ is `Full`.
+  |The Charging Station SHALL remove all IdTokens from the list.
+    |Note, that the version number of the list is still updated to value of _versionNumber_ in the request.
+|D01.FR.05  |{nbsp}
+  |Requesting a Differential update without or with empty _localAuthorizationList_ SHALL have no effect on the list.
+    |Note, that the version number of the list is still updated to value of _versionNumber_ in the request.
+|D01.FR.06  |{nbsp}
+  |All IdTokens in the <<local_authorization_list,Local Authorization List>> SHALL be unique.
+    |No duplicate values are allowed.
+|D01.FR.09  |{nbsp}
+  |The Charging Station SHALL NOT modify the contents of the Authorization List by any other means than upon a the receipt of a SendLocalList message from the CSMS. |{nbsp}
+|D01.FR.10  |{nbsp}
+  |The <<local_authorization_list,Local Authorization List>> SHOULD be maintained by the Charging Station in non-volatile memory, and SHOULD be persisted across reboots and power outages. |{nbsp}
+|D01.FR.11  |{nbsp}
+  |The size of a single <<send_local_list_request,SendLocalListRequest>> is limited by the Configuration Variables <<items_per_message_send_local_list,`ItemsPerMessageSendLocalList`>> and <<bytes_per_message_send_local_list,`BytesPerMessageSendLocalList`>>. |{nbsp}
+|D01.FR.12  |{nbsp}
+  |A Charging Station that supports <<local_authorization_list,Local Authorization List>> SHALL implement the Configuration Variable: <<local_auth_list_entries,`LocalAuthListEntries`>>.
+    |This gives the CSMS a way to known the current amount and maximum possible number of <<local_authorization_list,Local Authorization List>> elements in a Charging Station.
+|D01.FR.13  |{nbsp}
+  |The Charging Station indicates whether the <<local_authorization_list,Local Authorization List>> is enabled. This is reported and controlled by the <<local_auth_list_enabled,`LocalAuthListEnabled`>> Configuration Variable. |{nbsp}
+|D01.FR.15  |If the Charging Station receives a <<send_local_list_request,SendLocalListRequest>> with _updateType_ is `Full` AND +
+  _localAuthorizationList_ is non-empty
+    |The Charging Station SHALL replace its current <<local_authorization_list,Local Authorization List>> with the one in the <<send_local_list_request,SendLocalListRequest>> and set the version number to the value specified in the message
+      |Otherwise, there is no way to sync the initial Charging Station and CSMS lists. When this list is too large for one message (see D01.FR.11), it shall start by sending an initial list with _updateType_ `Full` and adding identifiers using _updateType_ `Differential` until the list is completely sent.
+|D01.FR.16  |If the Charging Station receives a <<send_local_list_request,SendLocalListRequest>> with _updateType_ is `Differential` AND +
+  _localAuthorizationList_ contains AuthorizationData elements with idTokenInfo
+    |The Charging Station SHALL update its <<local_authorization_list,Local Authorization List>> with these elements and set the version number to the value specified in the message.
+      |Add them if not yet present, update with new information when already present in the <<local_authorization_list,Local Authorization List>>.
+|D01.FR.17  |If the Charging Station receives a <<send_local_list_request,SendLocalListRequest>> with _updateType_ is `Differential` AND +
+  _localAuthorizationList_ contains AuthorizationData elements without idTokenInfo
+    |The Charging Station SHALL remove these elements from its <<local_authorization_list,Local Authorization List>> and set the version number to the value specified in the message. |{nbsp}
+|D01.FR.18  |{nbsp}
+  |_versionNumber_ in a <<send_local_list_request,SendLocalListRequest>> SHALL be greater than 0.
+    |In <<get_local_list_version_response,GetLocalListVersionResponse>> the _versionNumber_ = 0 has a special meaning: No Local List installed. So the value 0 should never be used.
+|D01.FR.19  |If the Charging Station receives a <<send_local_list_request,SendLocalListRequest>> with _updateType_ = `Differential` AND _versionNumber_ is less or equal to the version number of its <<local_authorization_list,Local Authorization List>>
+  |The Charging Station SHALL refuse to update its <<local_authorization_list,Local Authorization List>> and SHALL return a <<send_local_list_response,SendLocalListResponse>> with status set to `VersionMismatch`. |{nbsp}
+|===
+
+=== D02 - Get Local List Version
+
+.D02 - Get Local List Version
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Get Local List Version
+|2   |ID              |D02
+|{nbsp} d|_Functional block_ |D. Local Authorization List
+|{nbsp} d|_Parent use case_  |<<send_local_authorization_list,D01 - Send Local Authorization List>>
+|3   |Objective(s)    |To support synchronization of <<local_authorization_list,Local Authorization List>>.
+|4   |Description     |The CSMS can request a Charging Station for the version number of the <<local_authorization_list,Local Authorization List>>
+by sending a <<get_local_list_version_request,GetLocalListVersionRequest>>.
+|{nbsp} d|_Actors_    |Charging Station, CSMS
+|{nbsp} d|_Scenario description_ 
+  |**1.** The CSMS sends a <<get_local_list_version_request,GetLocalListVersionRequest>> to request this value. +
+  **2.** Upon receipt of the <<get_local_list_version_request,GetLocalListVersionRequest>> Charging Station responds with a <<get_local_list_version_response,GetLocalListVersionResponse>> containing the version number of its <<local_authorization_list,Local Authorization List>>.
+|5   |Prerequisite(s)   |{nbsp}
+|6   |Postcondition(s)  |The CSMS received the <<get_local_list_version_response,GetLocalListVersionResponse>> with the <<local_authorization_list,Local Authorization List>> version.
+|===
+
+.Sequence Diagram: Get Local List Version
+image::part2/images/figure_38.svg[Sequence Diagram: Get Local List Version]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling    |n/a
+|8   |Remark(s)         |A _versionNumber_ of 0 (zero) is reserved to indicate that no local authorization list exists, either because it is not enabled or because it has not yet received any update from CSMS and thus does not have a version number to return. +
+In contrast, a local authorization list that was emptied, because CSMS sent a <<send_local_list_request,SendLocalListRequest>> with an empty _localAuthorizationList_, does have a _versionNumber_ > 0.
+|===
+
+==== D02 - Get Local List Version - Requirements
+
+.D02 - Requirements
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
+
+|D02.FR.01  |`LocalAuthListEnabled` is _true_ 
+  |When Charging Station receives <<get_local_list_version_request,GetLocalListVersionRequest>> then Charging Station SHALL respond with a <<get_local_list_version_response,GetLocalListVersionResponse>> containing the version number of its <<local_authorization_list,Local Authorization List>>.
+|D02.FR.02  |`LocalAuthListEnabled` is _true_ AND +
+  the CSMS has not yet sent any update to the Charging Station for <<local_authorization_list,Local Authorization List>> (via <<send_local_list_request,SendLocalListRequest>>)
+    |When Charging Station receives <<get_local_list_version_request,GetLocalListVersionRequest>> then Charging Station SHALL respond with a <<get_local_list_version_response,GetLocalListVersionResponse>> with _versionNumber_ is 0 (zero) to indicate that there is no <<local_authorization_list,Local Authorization List>>.
+|D02.FR.03  |`LocalAuthListEnabled` is not _true_
+  |When Charging Station receives <<get_local_list_version_request,GetLocalListVersionRequest>> then Charging Station SHALL respond with a <<get_local_list_version_response,GetLocalListVersionResponse>> with _versionNumber_ is 0 (zero) to indicate that there is no <<local_authorization_list,Local Authorization List>>.
+|===

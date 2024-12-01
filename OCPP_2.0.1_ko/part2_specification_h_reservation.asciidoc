@@ -1,0 +1,357 @@
+[[h_reservation]]
+= H. Reservation
+:!chapter-number:
+:sectnums:
+
+== Introduction
+
+This Functional Block describes the reservation functionality of OCPP. The reservation functionality enables an EV Driver to make a reservation of a Charging Station/EVSE, ensuring an available Connector at a Charging Station when he arrives.
+
+With Charging Stations not being abundantly available, and EVs having limited range, EV Drivers plan their trips from Charging Station to Charging Station. They need to know for sure they can use a Charging Station they plan to go to. They don’t like it when another EV Driver has started using the Charging Station in the time they were traveling to the Charging Station.
+
+For the EV Driver it is useful to be able to reserve a specific Type of Connector, or, when the EV Driver has no preference, an unspecified EVSE at a Charging Station. So he knows for sure he can charge at the Charging Station when he arrives.
+
+== Use cases & Requirements
+
+:sectnums!:
+=== H01 - Reservation
+
+.H01 - Reservation
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Reservation
+|2   |ID              |H01
+|{nbsp} d|_Functional block_ |H. Reservation
+|3   |Objective(s)    |To ensure the EV Driver can charge his EV at a Charging Station, the EV Driver can make a reservation until a certain expiry time.
+|4   |Description     |This use case describes how a Charging Station can be reserved for a specific <<id_token_type,IdTokenType>>.
+|5   d|_Actors_       |Charging Station, CSMS, EV Driver
+d|_S1_ d|_Scenario objective_ |Reserve an unspecified EVSE at a Charging Station
+|{nbsp} d|_Scenario description_ 
+  |**1.** EV Driver asks the CSMS to reserve an unspecified EVSE at the Charging Station. +
+  **2.** The CSMS sends <<reserve_now_request,ReserveNowRequest>> without _evseId_ to a Charging Station. +
+  **3.** Upon receipt of <<reserve_now_request,ReserveNowRequest>>, the Charging Station responds with <<reserve_now_response,ReserveNowResponse>> with status _Accepted_.
+|{nbsp} d|_Prerequisite(s)_ |The Charging Station has at least one available EVSE
+|{nbsp} d|_Postcondition(s)_
+  |**Successful postcondition:** +
+  The Charging Station has accepted the <<reserve_now_request,ReserveNowRequest>> +
+  **Failure postcondition:** +
+  The Charging Station has rejected the <<reserve_now_request,ReserveNowRequest>>
+|===
+
+.Sequence Diagram: S1 - Reserve a unspecified EVSE at a Charging Station
+image::part2/images/figure_78.svg[Sequence Diagram: S1 - Reserve a unspecified EVSE at a Charging Station]
+
+[cols="^.^1,<.^2,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|_S2_  |_Scenario objective_ |Reserve a specific EVSE at a Charging Station
+|{nbsp} |_Scenario description_ 
+  |**1.** EV Driver asks the CSMS to reserve a specific EVSE at the Charging Station. +
+  **2.** The CSMS sends <<reserve_now_request,ReserveNowRequest>> with a EVSE to a Charging Station. +
+  **3.** Upon receipt of <<reserve_now_request,ReserveNowRequest>>, the Charging Station responds with <<reserve_now_response,ReserveNowResponse>> with status _Accepted_. +
+  **4.** The Charging Station sends <<status_notification_request,StatusNotificationRequest>> with the status _Reserved_ for all Connectors of that EVSE. +
+  **5.** The CSMS responds with <<status_notification_response,StatusNotificationResponse>> to the Charging Station. 
+|{nbsp} |_Alternative scenario description_
+  |Steps 1, 2 and 3 as above. +
+  **4.** Instead of a <<status_notification_request,StatusNotificationRequest>> a Charging Station can send a <<notify_event_request,NotifyEventRequest>> with _trigger_ = `Delta` for _component.name_ = "Connector" and the EVSE number in _evse.id_ and the connector number in _evse.connectorId_, _variable_ = "AvailabilityState" and _actualValue_ = "Reserved". +
+  **5a.** Optionally, Charging Station can also report a <<notify_event_request,NotifyEventRequest>> for _component_ = "EVSE", _variable_ = "AvailabilityState" and _actualValue_ = "Reserved", and when applicable, also report this for _component_ = "ChargingStation".
+|{nbsp} |_Prerequisite(s)_ 
+  |The specified EVSE of the Charging Station has status _Available_
+|{nbsp} |_Postcondition(s)_
+  |**Successful postcondition:** +
+  The Charging Station has accepted the <<reserve_now_request,ReserveNowRequest>> +
+  AND +
+  sent <<status_notification_request,StatusNotificationRequest>> with status _Reserved_. +
+  **Failure postcondition:** +
+  The Charging Station has rejected the <<reserve_now_request,ReserveNowRequest>> +
+  OR +
+  The Charging Station has NOT sent <<status_notification_request,StatusNotificationRequest>> with status _Reserved_.
+|===
+
+.Sequence Diagram: S2 - Reserve a specified EVSE at a Charging Station
+image::part2/images/figure_79.svg[Sequence Diagram: S2 - Reserve a specified EVSE at a Charging Station]
+
+[cols="^.^1,<.^2,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|_S3_   |_Scenario objective_ |Reserve a connector type at a Charging Station
+|{nbsp} |_Scenario description_ 
+  |**1.** EV Driver asks the CSMS to reserve a connector type at the Charging Station. +
+  **2.** The CSMS sends <<reserve_now_request,ReserveNowRequest>> with a connector type to a Charging Station. +
+  **3.** Upon receipt of <<reserve_now_request,ReserveNowRequest>>, the Charging Station responds with <<reserve_now_response,ReserveNowResponse>> with status _Accepted_.
+|{nbsp} |_Prerequisite(s)_
+  |The Charging Station has at least one available EVSE with the specified connector type
+|{nbsp} |_Postcondition(s)_ 
+  |**Successful postcondition:** +
+  The Charging Station has accepted the <<reserve_now_request,ReserveNowRequest>> +
+  **Failure postcondition:** +
+  The Charging Station has rejected the <<reserve_now_request,ReserveNowRequest>>
+|===
+
+.Sequence Diagram: S3 - Reserve a connector type at a Charging Station
+image::part2/images/figure_80.svg[Sequence Diagram: S3 - Reserve a connector type at a Charging Station]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|6   |Error handling |n/a
+|7   |Remark(s)      |It is RECOMMENDED to validate the Identifier with an <<authorize_request,AuthorizeRequest>> after reception of <<reserve_now_request,ReserveNowRequest>> and before the start of the transaction.
+|===
+
+==== H01 - Reservation - Requirements
+
+.H01 - Requirements
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
+
+|H01.FR.01  |If the Charging Station is configured not to accept reservations.
+  |The Charging Station SHALL return _Rejected_. |{nbsp}
+|H01.FR.02  |If the _id+ in the <<reserve_now_request,ReserveNowRequest>> matches a reservation in the Charging station.
+  |The Charging Station SHALL replace that reservation with the new reservation in the request. |{nbsp}
+|H01.FR.03  |If the _id_ in the <<reserve_now_request,ReserveNowRequest>> does not match any reservation in the Charging Station.
+  |The Charging Station SHALL return the status value _Accepted_ if it succeeds in reserving an EVSE. |{nbsp}
+|H01.FR.04  |If the Charging Station receives a <<reserve_now_request,ReserveNowRequest>> without _evseId_ +
+  AND at least one EVSE is _Available_ +
+  AND H01.FR.18
+    |The Charging Station SHALL accept the reservation AND respond with a <<reserve_now_response,ReserveNowResponse>> with status _Accepted_. |{nbsp}
+|H01.FR.06  |If the Charging Station receives a <<reserve_now_request,ReserveNowRequest>> with a connector type +
+  AND at least one EVSE with the specified connector type is _Available_ +
+  AND H01.FR.18
+    |The Charging Station SHALL accept the reservation AND respond with a <<reserve_now_response,ReserveNowResponse>> with status _Accepted_. |{nbsp}
+|H01.FR.07  |When the Charging Station has _Accepted_ a <<reserve_now_request,ReserveNowRequest>> without _evseId_
+  |The Charging Station SHALL make sure that at any time during the validity of the reservation, one EVSE remains available for the reserved <<id_token_type,IdTokenType>>. |{nbsp}
+|H01.FR.09  |When the Charging Station has _Accepted_ a <<reserve_now_request,ReserveNowRequest>> with a connector type
+  |The Charging Station SHALL make sure that at any time during the validity of the reservation, one Connector with the specified type remains available for the reserved <<id_token_type,IdTokenType>>. |{nbsp}
+|H01.FR.11  |When receiving a <<reserve_now_request,ReserveNowRequest>> AND +
+  (all) targeted EVSEs have status _Reserved_ or _Occupied_
+    |The Charging Station SHALL return _Occupied_. |{nbsp}
+|H01.FR.12  |When receiving a <<reserve_now_request,ReserveNowRequest>> AND (all) targeted EVSEs have status _Faulted_
+  |The Charging Station SHALL return _Faulted_. |{nbsp}
+|H01.FR.14  |When receiving a <<reserve_now_request,ReserveNowRequest>> AND (all) targeted EVSEs have status _Unavailable_
+  |The Charging Station SHALL return _Unavailable_. |{nbsp}
+|H01.FR.15  |If a transaction for the reserved <<id_token_type,IdTokenType>> is started.
+  |The Charging Station SHALL send the reservationId in a <<transaction_event_request,TransactionEventRequest>>.
+    |To notify the CSMS that the reservation is terminated. See <<e_transaction,E. Transactions>>.
+|H01.FR.16  |When the status of a targeted EVSE changes to _Faulted_
+  |The Charging Stations SHALL cancel the reservation AND send a <<reservation_status_update,ReservationStatusUpdate>> with status _Removed_. |{nbsp}
+|H01.FR.17  |When the status of a targeted EVSE changes to _Unavailable_
+  |The Charging Stations SHALL cancel the reservation AND send a <<reservation_status_update,ReservationStatusUpdate>> with status _Removed_. |{nbsp}
+|H01.FR.18  |If the Configuration Variable: <<reservation_non_evse_specific,`ReservationNonEvseSpecific`>> is set to _true_.
+  |The Charging Station SHALL accept reservations on an unspecified EVSE. |{nbsp}
+|H01.FR.19  |If the Configuration Variable: <<reservation_non_evse_specific,`ReservationNonEvseSpecific`>> is not set or set to _false_.
+  |The Charging Station SHALL reject reservations on an unspecified EVSE. |{nbsp}
+|H01.FR.20  |H01.FR.04 +
+  AND +
+  amount of EVSEs available equals the amount of reservations
+    |The Charging Station SHALL send for all connectors of the EVSE: +
+    - a <<status_notification_request,StatusNotificationRequest>> with _connectorStatus_ = `Reserved`, OR +
+    - a <<notify_event_request,NotifyEventRequest>> with _component_ = "Connector", _variable_ = "AvailabilityState", _trigger_ = "Delta", _actualValue_ = "Reserved"
+      |If an EVSE is reserved, all of its connectors are reported as reserved.
+|H01.FR.23  |If the Charging Station receives a <<reserve_now_request,ReserveNowRequest>> for _evseId_ AND this EVSE is Available
+  |The Charging Station SHALL respond with a <<reserve_now_response,ReserveNowResponse>> with status _Accepted_ AND SHALL send for all connectors of the EVSE: +
+  - a <<status_notification_request,StatusNotificationRequest>> with _connectorStatus_ = `Reserved`, OR +
+  - a <<notify_event_request,NotifyEventRequest>> with _component_ = "Connector", _variable_ = "AvailabilityState", _trigger_ = "Delta", _actualValue_ = "Reserved"
+    |If an EVSE is reserved, all of its connectors are reported as reserved.
+|H01.FR.24  |H01.FR.06 +
+  AND +
+  amount of reservations for a specific _connectorType_ equals the amount of available EVSEs with that specific _connectorType_
+    |The Charging Station SHALL send for all connectors of the EVSEs that have the specific _connectorType_ +
+    - a <<status_notification_request,StatusNotificationRequest>> with _connectorStatus_ = `Reserved`, OR +
+    - a <<notify_event_request,NotifyEventRequest>> with _component_ = "Connector", _variable_  "AvailabilityState", _trigger_ = "Delta", _actualValue_ = "Reserved"
+      |If an EVSE is reserved for a specific _connectorType_, all connectors on the EVSE are reported as reserved.
+|===
+
+<<<
+
+=== H02 - Cancel Reservation
+
+.H02 - Cancel Reservation
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Cancel Reservation
+|2   |ID              |H02
+|{nbsp} d|_Functional block_ |H. Reservation
+|3   |Objective(s)    |To cancel a reservation on a Charging Station.
+|4   |Description     |This use case describes how an EV Driver can cancel an existing reservation. The CSMS can cancel the reservation the EV Driver has on a Charging Station.
+|{nbsp} d|_Actors_    |Charging Station, CSMS, EV Driver
+|{nbsp} d|_Scenario description_ 
+  |**1.** EV Driver asks the CSMS to cancel a reservation. +
+  **2.** To cancel a reservation the CSMS sends <<cancel_reservation_request,CancelReservationRequest>> to the Charging Station. +
+  **3.** If the Charging Station has a reservation matching the reservationId in the request PDU, it returns the status _Accepted_. +
+  **4.** If a specific EVSE was reserved for this reservation, the Charging Station sends <<status_notification_request,StatusNotificationRequest>> with the status _Available_ for all the Connectors of that EVSE. +
+  **5.** The CSMS responds with <<status_notification_response,StatusNotificationResponse>> to the Charging Station. +
+  **6.** The reservation is cancelled.
+|5   |Prerequisite(s) 
+  |- The Functional Block _Reservation_ is installed. +
+  - EV Driver has a reservation at the Charging Station.
+|6   |Postcondition(s) 
+  |**Successful postcondition:** +
+  The CSMS was able to cancel the EV Driver’s reservation at the Charging Stations.
+
+  **Failure postcondition:** +
+  n/a.
+|===
+
+.Sequence Diagram: Cancel Reservation
+image::part2/images/figure_81.svg[Sequence Diagram: Cancel Reservation]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling |n/a
+|8   |Remark(s)      |The Charging Station does not send a <<reservation_status_update,ReservationStatusUpdate>>, because it was explicitly cancelled by CSMS, so it is already aware of the event.
+|===
+
+==== H02 - Cancel Reservation - Requirements
+
+.H02 - Requirements
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
+
+|H02.FR.01  |The Charging Station has received a <<cancel_reservation_request,CancelReservationRequest>> and no matching reservationId.
+  |The Charging Station SHALL return _Rejected_.
+|H02.FR.02  |If a Charging Station receives a <<cancel_reservation_request,CancelReservationRequest>> with a valid, known reservationId.
+  |The reservation SHALL be cancelled.
+|===
+
+<<<
+
+=== H03 - Use a reserved EVSE
+
+.H03 - Use a reserved EVSE
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Use a reserved EVSE
+|2   |ID              |H03
+|{nbsp} d|_Functional block_ |H. Reservation
+|3   |Objective(s)    |Use a reserved EVSE
+|4   |Description     |This use cases covers how a reserved EVSE can be used based on IdToken and GroupIdToken information.
+|{nbsp} d|_Actors_    |Charging Station, CSMS, EV Driver
+d|_S1_ d|_Scenario objective_ |Use an EVSE reserved by the same IdToken
+|{nbsp} d|_Scenario description_ 
+  |**1.** The CSMS sends a <<reserve_now_request,ReserveNowRequest>> to a Charging Station to reserve an EVSE for use by a specific <<id_token_type,IdTokenType>>. +
+  **2.** Upon receipt of the <<reserve_now_request,ReserveNowRequest>>, the Charging Station responds with a <<reserve_now_response,ReserveNowResponse>>. +
+  **3.** When a specific EVSE is reserved for this reservation, the Charging Station sends a <<status_notification_request,StatusNotificationRequest>> with the status _Reserved_ for all the Connectors of that EVSE. +
+  **4.** The CSMS responds with a <<status_notification_response,StatusNotificationResponse>> to the Charging Station. +
+  **5.** The EV Driver presents an <<id_token_type,IdTokenType>> at the Charging Station, and the <<id_token_type,IdTokenType>> is the same as the reservation’s <<id_token_type,IdTokenType>>, the Charging Station recognizes the <<id_token_type,IdTokenType>> and starts charging and <<e02_start_transaction_cable_plugin_first,E02 - Start Transaction - Cable Plugin First applies>>.
+|5   |Prerequisite(s) |n/a
+|6   |Postcondition(s) |n/a
+|===
+
+.Sequence Diagram: Use a reserved EVSE with IdToken
+image::part2/images/figure_82.svg[Sequence Diagram: Use a reserved EVSE with IdToken]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+d|_S2_ d|_Scenario objective_ |Use an EVSE reserved by the same GroupIdToken
+|{nbsp} d|_Scenario description_ 
+  |**1.** The CSMS sends a <<reserve_now_request,ReserveNowRequest>> with the GroupId to a Charging Station to reserve a EVSE for use by a specific <<id_token_type,IdTokenType>>. +
+  **2.** Upon receipt of the <<reserve_now_request,ReserveNowRequest>>, the Charging Station responds with a <<reserve_now_response,ReserveNowResponse>>. +
+  **3.** When a specific EVSE is reserved for this reservation, the Charging Station sends a <<status_notification_request,StatusNotificationRequest>> with the status _Reserved_ for all the Connectors of that EVSE. +
+  **4.** The CSMS responds with a <<status_notification_response,StatusNotificationResponse>> to the Charging Station. +
+  **5.** The EV Driver presents an <<id_token_type,IdTokenType>> at the Charging Station, and the <<id_token_type,IdTokenType>> is different from the reservation’s <<id_token_type,IdTokenType>>, the Charging Station sends an <<authorize_request,AuthorizeRequest>> to the CSMS. +
+  **6.** The CSMS responds with an <<authorize_response,AuthorizeResponse>>. This response message includes the GroupId. +
+  **7.** Based on the matching GroupId information in both responses, the Charging Station starts charging and <<e02_start_transaction_cable_plugin_first,E02 - Start Transaction - Cable Plugin First applies>>.
+|5   |Prerequisite(s) |n/a
+|6   |Postcondition(s) |n/a
+|===
+
+.Sequence Diagram: Use a reserved EVSE with GroupId
+image::part2/images/figure_83.svg[Sequence Diagram: Use a reserved EVSE with GroupId]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling |n/a
+|8   |Remark(s)      |It is RECOMMENDED to validate the Identifier with an <<authorize_request,AuthorizeRequest>> after reception of <<reserve_now_request,ReserveNowRequest>> and before the start of the transaction.
+|===
+
+==== H03 - Use a reserved EVSE - Requirements
+
+.H03 - Requirements
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
+
+|H03.FR.01  |Reservation is pending for a specific _idToken_ for a specific _evseId_
+  |The Charging Station SHALL allow charging on that EVSE when <<id_token_type,IdToken>> presented for authorization matches the specific _idToken_ from the reservation.
+|H03.FR.02  |Reservation is pending for a specific _idToken_ for a specific _connectorType_
+  |The Charging Station SHALL allow charging on an EVSE with a connector of type _connectorType_ when <<id_token_type,IdToken>> presented for authorization matches the specific _idToken_ from the reservation.
+|H03.FR.03  |Reservation is pending for a specific _idToken_ without a specific _evseId_ or _connectorType_
+  |The Charging Station SHALL allow charging on an EVSE when <<id_token_type,IdToken>> presented for authorization matches the specific _idToken_ from the reservation.
+|H03.FR.04  |H03.FR.01 AND +
+  attribute _groupIdToken_ in reservation has a value
+    |The Charging Station SHALL allow charging on that EVSE when <<id_token_type,IdToken>> presented for authorization matches the specific _idToken_ from the reservation or when the associated _groupIdToken_ matches.
+|H03.FR.05  |H03.FR.02 AND +
+  attribute _groupIdToken_ in reservation has a value
+    |The Charging Station SHALL allow charging on an EVSE with a connector of type _connectorType_ when <<id_token_type,IdToken>> presented for authorization matches the specific _idToken_ from the reservation or when the associated _groupIdToken_ matches.
+|H03.FR.06  |H03.FR.03 AND +
+  attribute _groupIdToken_ in reservation has a value
+    |The Charging Station SHALL allow charging on any EVSE when <<id_token_type,IdToken>> presented for authorization matches the specific _idToken_ from the reservation or when the associated _groupIdToken_ matches.
+|H03.FR.07  |If attribute _groupIdToken_ in the reservation has a value (it is optional).
+  |In order to determine the _groupIdToken_ that is associated with an incoming <<id_token_type,IdToken>>, the Charging Station MAY look it up in its Local Authorization List or Authorization Cache.
+|H03.FR.08  |H03.FR.07 AND +
+  If the incoming <<id_token_type,IdToken>> is not found in the Local Authorization List or Authorization Cache.
+    |The Charging Station SHALL send an <<authorize_request,AuthorizeRequest>> for the incoming <<id_token_type,IdToken>> to the CSMS in order to get its associated _groupIdToken_. +
+    (Note: This AuthorizeRequest may already have been performed when the idToken was presented for authorization.)
+|H03.FR.09  |When an _idToken_ or _groupIdToken_ is presented that matches a reservation
+  |Charging Station SHALL consider the reservation to be used (consumed)
+|H03.FR.10  |H03.FR.09 AND +
+  Connector associated with reservation has status `Reserved`
+    |Charging Station SHALL set connector status to `Available` if no cable has been plugged-in, or `Occupied` if a cable has already been plugged-in.
+|===
+
+<<<
+
+=== H04 - Reservation Ended, not used
+
+.H04 - Reservation Ended, not used
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Reservation Ended, not used
+|2   |ID              |H04
+|{nbsp} d|_Functional block_ |H. Reservation
+|3   |Objective(s)    |To enable a Charging Station to notify the CSMS about a reservation that has expired.
+|4   |Description     |This use cases covers how the Charging Station notifies the CSMS about a reservation, that has ended/timed out before the EV Driver starts using the Charging Station.
+|{nbsp} d|_Actors_    |Charging Station, CSMS
+|{nbsp} d|_Scenario description_ 
+  |**1.** The Charging Station has a reservation. +
+  **2.** The expiryDate of the reservation is reached. +
+  **3.** The Charging Station removes the reservation. +
+  **4.** If a specific EVSE was reserved for this reservation, the Charging Station makes the EVSE available again and notifies the CSMS about this by sending a <<status_notification_request,StatusNotificationRequest>> with the status _Available_ for that all the Connectors of that EVSE. +
+  **5.** The CSMS responds with a <<status_notification_response,StatusNotificationResponse>>. +
+  **6.** The Charging Station sends a <<reservation_status_update_request,ReservationStatusUpdateRequest>> with status _Expired_ to the CSMS. +
+  **7.** The CSMS responds with a <<reservation_status_update_response,ReservationStatusUpdateResponse>>.
+|5   |Prerequisite(s)   |n/a
+|6   |Postcondition(s)  |n/a
+|===
+
+.Sequence Diagram: Reservation Ended, not used
+image::part2/images/figure_84.svg[Sequence Diagram: Reservation Ended, not used]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling  |n/a
+|8   |Remark(s)       |n/a
+|===
+
+==== H04 - Reservation Ended, not used - Requirements
+
+.H04 - Requirements
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
+
+|H04.FR.01  |The reservation ends (_expiryDateTime_ reached)
+  |The Charging Station SHALL send a <<reservation_status_update_request,ReservationStatusUpdateRequest>> with status _Expired_.
+|H04.FR.02  |H04.FR.01 AND +
+  If a specific EVSE was reserved for this reservation
+    |The Charging Station SHALL allow charging again on this EVSE.
+|H04.FR.03  |H04.FR.02 
+  |The Charging Station SHALL send a <<status_notification_request,StatusNotificationRequest>> with status _Available_ to the CSMS, notifying the CSMS the all the connectors of this EVSE are available again for any EV Driver.
+|===
