@@ -1,0 +1,19 @@
+@startuml figure_137
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+alt 모니터링 설정의 임계값 또는 델타 값에 도달한 경우
+  loop 각 리포트 파트에 대해
+    ChargingStation -> CSMS: NotifyEventRequest(generatedAt, tbc, seqNo, eventData)
+    activate ChargingStation
+    activate CSMS
+
+    CSMS --> ChargingStation: NotifyEventResponse()
+    deactivate ChargingStation
+    deactivate CSMS
+  end
+end
+
+@enduml

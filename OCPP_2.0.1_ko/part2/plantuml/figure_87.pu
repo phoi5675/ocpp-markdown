@@ -1,0 +1,33 @@
+@startuml figure_87
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over ChargingStation
+  트랜잭션 진행중
+end note
+
+EVDriver -> ChargingStation: IdToken 제시
+
+opt
+  ChargingStation -> EVDriver: 알림
+end
+
+note over CSMS
+  TransactionEvent / StatusNotification
+  메시지는 가독성을 위해 제거됨
+end note
+
+ChargingStation -> CSMS: TransactionEventRequest(eventType = Ended, ...)
+activate ChargingStation
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse([idTokenInfo], totalCost = X.XX,...)
+
+ChargingStation --> EVDriver: 단가: X.XX 표시
+deactivate ChargingStation
+deactivate CSMS
+
+@enduml

@@ -1,0 +1,39 @@
+@startuml figure_142
+!include style.puml
+
+actor "CSO" as CSO
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+note over ChargingStation
+  id=123인 트랜잭션이 진행중
+end note
+
+CSO -> CSMS:  신규 메시지(transactionId=123) 설정
+activate CSO
+activate CSMS
+
+CSMS -> ChargingStation: SetDisplayMessagesRequest(transactionId=123,...)
+
+ChargingStation --> CSMS: SetDisplayMessagesResponse(Accepted)
+
+opt
+  CSMS --> CSO: 알림
+  deactivate CSO
+  deactivate CSMS
+end
+
+note over ChargingStation
+  설정 된 시점에
+end note
+
+ChargingStation -> ChargingStation: 메시지 표시
+
+note over ChargingStation
+  id=123인 트랜잭션이
+  종료됨
+end note
+
+ChargingStation -> ChargingStation: 메시지 제거
+
+@enduml

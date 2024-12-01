@@ -1,0 +1,39 @@
+@startuml figure_131
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+CSMS -> ChargingStation: GetLogRequest(logType)
+activate ChargingStation
+activate CSMS
+
+ChargingStation --> CSMS: GetLogResponse(fileName)
+deactivate ChargingStation
+deactivate CSMS
+
+note over ChargingStation
+  로그 파일 업로드...
+end note
+
+ChargingStation -> CSMS: LogStatusNotificationRequest(status = Uploading, requestId = 123)
+activate ChargingStation
+activate CSMS
+
+CSMS --> ChargingStation: LogStatusNotificationResponse()
+deactivate ChargingStation
+deactivate CSMS
+
+note over ChargingStation
+  로그 파일 업로드...
+end note
+
+ChargingStation -> CSMS: LogStatusNotificationRequest(status = Uploaded, requestId = 123)
+activate ChargingStation
+activate CSMS
+
+CSMS --> ChargingStation: LogStatusNotificationResponse()
+deactivate ChargingStation
+deactivate CSMS
+
+@enduml

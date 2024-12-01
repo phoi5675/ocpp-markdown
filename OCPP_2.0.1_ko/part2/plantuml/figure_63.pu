@@ -1,0 +1,25 @@
+@startuml figure_63
+!include style.puml
+
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+alt 특정 트랜잭션에 대해
+  CSMS -> ChargingStation: GetTransactionStatusRequest(transactionId)
+  activate CSMS
+  activate ChargingStation
+
+  ChargingStation --> CSMS: GetTransactionStatusResponse(ongoing, messagesInQueue)
+  deactivate ChargingStation
+  deactivate CSMS
+else 특정 트랜잭션이 아닌 경우에 대해
+  CSMS -> ChargingStation: GetTransactionStatusRequest()
+  activate CSMS
+  activate ChargingStation
+
+  ChargingStation --> CSMS: GetTransactionStatusResponse(messagesInQueue)
+  deactivate CSMS
+  deactivate ChargingStation
+end
+
+@enduml

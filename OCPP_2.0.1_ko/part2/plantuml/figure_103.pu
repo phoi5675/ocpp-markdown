@@ -1,0 +1,96 @@
+@startuml figure_103
+!include style.puml
+
+participant "EV" as EV
+participant "Charging Station" as ChargingStation
+participant "Local Controller" as LocalController
+participant "CSMS" as CSMS
+
+note over EV, CSMS
+  사용자 인증에 성공하고 트랜잭션이 시작됨
+end note
+
+ChargingStation -> EV: 최대 전류(제한) 설정
+activate ChargingStation
+
+ChargingStation -> ChargingStation: 전원 켬
+
+EV -> ChargingStation: 충전 시작
+activate EV
+activate LocalController
+
+ChargingStation -> LocalController: \
+  TransactionEventRequest(eventType = Updated, \n\
+    transactionId = AB1234, \n\
+    chargingState = Charging, ...)
+activate CSMS
+
+LocalController -> CSMS: \
+  TransactionEventRequest(eventType = Updated, \n\
+    transactionId = AB1234, \n\
+    chargingState = Charging, ...)
+
+CSMS --> LocalController: TransactionEventResponse(...)
+deactivate CSMS
+
+LocalController --> ChargingStation: TransactionEventResponse(...)
+deactivate LocalController
+
+loop 차징 프로파일에 따라 루프 변화
+else 차징 프로파일의 각 인터벌 기간에 대해
+  ChargingStation -> ChargingStation: 차징 프로파일에서 충전량 제한 가져옴
+  note right
+    충전기는 최대 전류가 변경되어야 할 때마다
+    Control Pilot 신호를 통해
+    TxDefaultProfile을 구현합니다.
+  end note
+
+  ChargingStation -> EV: 최대 전류(제한) 설정
+
+  opt 컨트롤러에 의해 제한이 변경됨
+    LocalController -> ChargingStation: SetChargingProfileRequest(evseId, csChargingProfiles)
+    activate LocalController
+
+    note right
+      로컬 컨트롤러가
+      차징 프로파일을 변경할 지 결정합니다
+    end note
+
+    ChargingStation --> LocalController: SetChargingProfileResponse(Accepted)
+    deactivate LocalController
+    deactivate ChargingStation
+  end
+end
+
+note over EV, CSMS
+  사용자 인증 성공
+end note
+
+ChargingStation --> EV: 충전 종료
+
+ChargingStation -> ChargingStation: 전원 끔
+activate ChargingStation
+activate LocalController
+
+ChargingStation -> LocalController: \
+  TransactionEventRequest(eventType = Updated, \n\
+    transactionId = AB1234, \n\
+    chargingState = EVConnected, ...)
+activate CSMS
+
+LocalController -> CSMS: \
+  TransactionEventRequest(eventType = Updated, \n\
+    transactionId = AB1234, \n\
+    chargingState = EVConnected, ...)
+CSMS --> LocalController: TransactionEventResponse(...)
+deactivate CSMS
+
+LocalController --> ChargingStation: TransactionEventResponse(...)
+deactivate LocalController
+deactivate ChargingStation
+
+note over EV, CSMS
+  트랜잭션 종료
+end note
+
+@enduml

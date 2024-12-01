@@ -1,0 +1,26 @@
+@startuml figure_99
+!include component_diagram_style.puml
+
+package "ChargingStationMaxProfile" {
+  node "profile with stackLevel=0" as P1
+}
+
+package "TxDefaultProfile" {
+  node P2 [
+    profile with stackLevel=2
+    ====
+    profile with stackLevel=1
+    ====
+    profile with stackLevel=0
+  ]
+}
+
+package "ChargingStationExternalConstraints" {
+  node P3 [
+    profile with stackLevel=1
+    ====
+    profile with stackLevel=0
+  ]
+}
+
+@enduml

@@ -1,0 +1,39 @@
+@startuml figure_124
+!include style.puml
+
+participant "EV" as EV
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+opt 캐싱의 경우
+  ChargingStation -> CSMS: GetCertificateStatusRequest(ocspRequestData)
+  activate ChargingStation
+  activate CSMS
+
+  CSMS --> ChargingStation: GetCertificateStatusResponse(status, ocspResult)
+  deactivate ChargingStation
+  deactivate CSMS
+end
+
+note over EV
+  TLS 시작에는 EV에서 알려진 모든 V2G 루트 인증서 목록이 포함됩니다.
+end note 
+
+EV -> ChargingStation: startTLS(ListOfRootCertificates)
+
+note over ChargingStation
+  TLS 응답에는 CSO 하위 CA 인증서에 대한 OCSP 해지 상태 정보가 포함됩니다.
+end note
+
+ChargingStation -> EV: StartTLSresponse()
+
+note over EV
+  가독성을 위해 일부 중간 메시지는 여기에 표시되지 않습니다.
+end note
+
+note over EV
+  EV는 Contact 인증서와 MO Sub-CA
+  인증서를 충전기로 보냅니다.
+end note
+
+@enduml

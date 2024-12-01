@@ -106,7 +106,7 @@ image::part2/images/figure_80.svg[Sequence Diagram: S3 - Reserve a connector typ
 
 |H01.FR.01  |If the Charging Station is configured not to accept reservations.
   |The Charging Station SHALL return _Rejected_. |{nbsp}
-|H01.FR.02  |If the _id+ in the <<reserve_now_request,ReserveNowRequest>> matches a reservation in the Charging station.
+|H01.FR.02  |If the _id_ in the <<reserve_now_request,ReserveNowRequest>> matches a reservation in the Charging station.
   |The Charging Station SHALL replace that reservation with the new reservation in the request. |{nbsp}
 |H01.FR.03  |If the _id_ in the <<reserve_now_request,ReserveNowRequest>> does not match any reservation in the Charging Station.
   |The Charging Station SHALL return the status value _Accepted_ if it succeeds in reserving an EVSE. |{nbsp}

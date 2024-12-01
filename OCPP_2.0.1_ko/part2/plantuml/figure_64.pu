@@ -1,0 +1,38 @@
+@startuml figure_64
+!include style.puml
+
+participant "EV" as EV
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+group 15118
+  EV -> ChargingStation: PowerDeliveryReq(ChargeProgress=Stop)
+  activate EV
+  activate ChargingStation
+
+  ChargingStation -> ChargingStation: contactor 오픈
+
+  ChargingStation --> EV: PowerDeliveryRes()
+  deactivate EV
+  deactivate ChargingStation
+
+  EV -> ChargingStation: SessionStopReq()
+  activate EV
+  activate ChargingStation
+
+  ChargingStation --> EV: SessionStopRes()
+  deactivate EV
+  deactivate ChargingStation
+end
+
+group OCPP
+  ChargingStation -> CSMS: TransactionEventRequest(eventType = Ended)
+  activate ChargingStation
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse()
+  deactivate ChargingStation
+  deactivate CSMS
+end
+
+@enduml

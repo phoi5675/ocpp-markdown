@@ -62,7 +62,7 @@ image::part2/images/figure_37.svg[Sequence Diagram: Send Local Authorization Lis
 |D01.FR.01  |{nbsp}
   |<<send_local_list_request,SendLocalListRequest>> SHALL contain the type of update (_updateType_) and a version number (_versionNumber_) that the Charging Station MUST associate with the <<local_authorization_list,Local Authorization List>> after it has been updated. |{nbsp}
 |D01.FR.02  |{nbsp}
-  |<<send_local_list_response,SendLocalListResponse>> SHALL indicate whether the Charging Station has accepted the update of the <<local_authorization_listLocal Authorization List>> |{nbsp}
+  |<<send_local_list_response,SendLocalListResponse>> SHALL indicate whether the Charging Station has accepted the update of the <<local_authorization_list,Local Authorization List>> |{nbsp}
 |D01.FR.03  |If the _status_ in <<send_local_list_response,SendLocalListResponse>> is `Failed` or `VersionMismatch` and the _updateType_ was `Differential`
   |It is RECOMMENDED that the CSMS sends the full <<local_authorization_list,Local Authorization List>>.
     |When this list is too large for one message (see D01.FR.11), it shall start by sending an initial list with _updateType_ `Full` and adding identifiers using _updateType_ `Differential` until the list is completely sent.

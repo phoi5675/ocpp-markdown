@@ -1,0 +1,31 @@
+@startuml figure_144
+!include style.puml
+
+actor "CSO" as CSO
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+activate CSO
+
+CSO -> CSMS: 메시지 쿼리
+activate CSMS
+
+CSMS -> ChargingStation: GetDisplayMessagesRequest( NOT EMPTY )
+activate ChargingStation
+
+ChargingStation --> CSMS: GetDisplayMessagesResponse(Accepted)
+
+loop 쿼리와 일치하는 각 DisplayMessages 파트에 대해
+  ChargingStation -> CSMS: NotifyDisplayMessagesRequest(requestId, messageInfo, tbc)
+
+  CSMS --> ChargingStation: NotifyDisplayMessagesResponse()
+  deactivate ChargingStation
+end
+
+opt
+  CSMS --> CSO: 알림
+  deactivate CSO
+  deactivate CSMS
+end
+
+@enduml

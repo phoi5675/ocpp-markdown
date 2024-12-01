@@ -1,0 +1,42 @@
+@startuml figure_118
+!include style.puml
+
+[*] --> Idle
+
+Idle -> DownloadScheduled: 수신 날짜/시각이 미래임
+
+Idle -> Downloading
+
+DownloadScheduled -down[hidden]-> Downloading
+
+Downloading --> DownloadScheduled: 펌웨어 다운로드 실패하여 retryInterval만큼 대기
+DownloadScheduled --> Downloading
+
+Downloading -> DownloadPaused: 일시적으로 중단됨
+DownloadPaused -> Downloading
+
+Downloading -> DownloadFailed: 펌웨어 다운로드 되지 않음
+
+Downloading --> Downloaded: 펌웨어 다운로드중
+Downloaded -> InvalidSignature: 유효하지 않은 펌웨어 서명
+
+Downloaded --> SignatureVerified: 유효한 펌웨어 서명
+SignatureVerified -> InstallScheduled: 설치 날짜/시각이 미래임
+InstallScheduled -> InstallRebooting_1
+SignatureVerified -> InstallRebooting_1: 설치 이전에 재부팅이 필요함
+
+InstallScheduled --> Installing
+SignatureVerified --> Installing: 즉시 설치
+InstallRebooting_1 --> Installing
+
+Installing -> InstallVerificationFailed: 펌웨어 확인 실패
+Installing -> InstallationFailed: 설치 실패
+
+Installing --> InstallRebooting_2
+InstallRebooting_2 -up-> InstallationFailed: 설치 실패
+
+Installing --> Installed: 설치 성공
+InstallRebooting_2 --> Installed: 설치 성공
+
+
+@enduml

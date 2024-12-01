@@ -2,7 +2,11 @@
 
 OCPP document converted to markdown
 
+OCPP 1.6 및 2.0.1 문서에 대해 asciidoc으로 변환하고, 한글로 변환한 프로젝트입니다.
+
 ## Convert asciidoc to pdf using asciidoc-pdf
+
+To convert asciidoc file to pdf file, run command below in asciidoc file is located.
 
 ```bash
 asciidoctor-pdf --theme ../styles/themes/theme.yml -a pdf-fontsdir="../styles/fonts;GEM_FONTS_DIR" ${asciidoc_file}
@@ -12,5 +16,3 @@ asciidoctor-pdf --theme ../styles/themes/theme.yml -a pdf-fontsdir="../styles/fo
 
 - [Open Charge Alliance(OCA)](https://openchargealliance.org/) for OCPP document
 - [pdf-to-markdown](https://github.com/jzillmann/pdf-to-markdown) for converting OCPP pdf to markdown
-- [Llama-3-Open-Ko-8B](https://huggingface.co/beomi/Llama-3-Open-Ko-8B) and [Llama-3-Open-Ko-8B-gguf](https://huggingface.co/teddylee777/Llama-3-Open-Ko-8B-gguf) for translation
-- [Ollama](https://ollama.com) for running LLM model

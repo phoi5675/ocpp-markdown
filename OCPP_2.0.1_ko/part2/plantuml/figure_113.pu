@@ -1,0 +1,53 @@
+@startuml figure_113
+!include style.puml
+
+participant "External Control System" as ECS
+participant "Local Controller" as LocalController
+participant "Charging Stations" as ChargingStation
+participant "CSMS" as CSMS
+
+ECS -> LocalController: 그리드 제한 설정
+
+LocalController -> CSMS: NotifyChargingLimitsRequest(chargingLimitSource, [chargingLimitGridCritical],...)
+activate LocalController
+activate CSMS
+
+CSMS --> LocalController: NotifyChargingLimitsResponse()
+deactivate LocalController
+deactivate CSMS
+
+note over LocalController
+  충전 스케쥴 다시 계산
+end note
+
+loop 영향 받는 모든 EVSE에 대해
+  LocalController -> ChargingStation: SetChargingProfileRequest(evseId, chargingProfile)
+  activate LocalController
+  activate ChargingStation
+
+  ChargingStation --> LocalController: SetChargingProfileResponse(status)
+  deactivate LocalController
+  deactivate ChargingStation
+end
+
+ECS -> LocalController: 그리드 제한 해제
+
+LocalController -> CSMS: ClearedChargingLimitRequest(chargingLimitSource,...)
+activate LocalController
+activate CSMS
+
+CSMS --> LocalController: ClearedChargingLimitResponse()
+deactivate LocalController
+deactivate CSMS
+
+loop 영향 받는 모든 EVSE에 대해
+  LocalController -> ChargingStation: ClearChargingProfileRequest(...)
+  activate LocalController
+  activate ChargingStation
+
+  ChargingStation --> LocalController: ClearChargingProfileResponse(status)
+  deactivate LocalController
+  deactivate ChargingStation
+end 
+
+@enduml

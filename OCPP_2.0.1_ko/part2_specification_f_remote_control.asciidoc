@@ -1,0 +1,622 @@
+= F. RemoteControl
+:!chapter-number:
+
+<<<
+
+:sectnums:
+==  Introduction
+
+This Functional Block describes three types of use cases for remote control management from the CSMS:
+
+. Remote Transaction Control. These use cases describe the functionality which enable the CSO (or indirect a third party) to start/stop a transaction with a remote command.
+. Unlocking a Connector. These use cases describe the functionality that enables the CSO (or indirect a third party) to unlock the Connector with a remote command. This can for example be used to assist customers when they have problems unplugging their cable.
+. Remote Trigger. These use cases describe all the remote trigger functionality of OCPP. This functionality enables remote triggering of messages. For example, requesting messages to be resend or request current status of some ongoing processes in the Charging Station.
+
+<<<
+
+== Use cases & Requirements
+
+=== Remote Transaction Control
+
+:sectnums!:
+[[f01_remote_start_transaction_cable_plugin_first]]
+=== F01 - Remote Start Transaction - Cable Plugin First
+
+.F01 - Remote Start Transaction - Cable Plugin First
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Remote Start Transaction - Cable Plugin First
+|2   |ID              |F01
+|{nbsp} d|_Functional block_  |F. Remote Control
+|3   |Objective(s) 
+  |**1.** To remotely start a transaction by the CSMS. +
+  **2.** To enable a CSO to help an EV Driver that has problems starting a transaction. +
+  **3.** To enable third parties (e.g. mobile apps) to control charging transactions via the CSMS.
+|4   |Description 
+  |This use case describes how the CSMS remotely requests the Charging Station to start a transaction by sending <<request_start_transaction_request,RequestStartTransactionRequest>>. Upon receipt, the Charging Station responds with <<request_start_transaction_response,RequestStartTransactionResponse>> and a status indicating whether it is able to try to start a transaction or not.
+|{nbsp} d|_Actors_    |Charging Station, CSMS, CSO
+|{nbsp} d|_Scenario description_ 
+  |**1.** The EV Driver plugs in the cable at the Charging Station. +
+  **2.** The Charging Station sends a <<status_notification_request,StatusNotificationRequest>> to the CSMS to inform it about a Connector that became <<connector_status_enum_type,_Occupied_>>. +
+  **3.** The CSMS responds with a <<status_notification_response,StatusNotificationResponse>>, confirming that the <<status_notification_request,StatusNotificationRequest>> was received. +
+  **4.** The Charging Station sends a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>) notifying the CSMS about a transaction that has started (even when the driver is not yet known.) +
+  **5.** The CSMS responds with a <<transaction_event_response,TransactionEventResponse>>, confirming that the <<transaction_event_request,TransactionEventRequest>> was received. +
+  **6.** An external trigger (as example in this use case: EV Driver) triggers the remote start. +
+  **7.** The CSMS sends a <<request_start_transaction_request,RequestStartTransactionRequest>> to the Charging Station. +
+  **8** The Charging Station responds with a <<request_start_transaction_response,RequestStartTransactionResponse>> with the _transactionId_ of the already started transaction to the CSMS. +
+  **9.** Optionally: the EV Driver is authorized by the CSMS. +
+  **10.** The Charging Station sends a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>, <<charging_state_enum_type,chargingState = Charging>>) message to inform the CSMS that the charging has started.
+|{nbsp} d|_Alternative scenario(s)_
+  |Remote Start Transaction - Remote Start First <<f02_remote_start_transaction_remote_start_first,F02 - Remote Start Transaction - Remote Start First>>
+|5   |Prerequisite(s)  |Charging Cable plugged in first.
+|6   |Postcondition(s) 
+  |The Charging Station offers energy. If the value of <<authorize_remote_start,`AuthorizeRemoteStart`>> is _true_, the Charging Station will only offer energy when it successfully authorized the IdToken, using <<local_authorization_list,Local Authorization List>>, <<authorization_cache,Authorization Cache>> and/or an <<authorize_request,AuthorizeRequest>>.
+|===
+
+.Sequence Diagram: Remote Start Transaction - Cable Plugged in First
+image::part2/images/figure_65.svg[Sequence Diagram: Remote Start Transaction - Cable Plugged in First]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling |n/a
+|8   |Remark(s) 
+  |An external trigger can be e.g. a Charging Station Operator or an EV Driver app.
+
+  The <<request_start_transaction_response,RequestStartTransactionResponse>> contains a status which indicates whether the Charging Station has accepted the request and will attempt to start a transaction.
+
+  The CSMS is allowed to send a <<request_start_transaction_request,RequestStartTransactionRequest>> with <<id_token_type,IdTokenType>> of type:
+<<id_token_enum_type,NoAuthorization>>. The operator should be aware that if the Charging Station supports local stop transaction, this transaction can be stopped by anyone.
+
+  The scenario description and sequence diagram above are based on the Configuration Variable for start transaction being configured as follows: +
+  <<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,EVConnected, Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
+  This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are send. For more details see the use cases: <<e01_start_transaction_options,E01 - Start Transaction options>>.
+|===
+
+==== F01 - Remote Start Transaction - Cable Plugin First - Requirements
+
+.F01 - Requirements
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
+
+|F01.FR.01  |If the value of <<authorize_remote_start,`AuthorizeRemoteStart`>> = true AND +
+  Charging Station receives a <<request_start_transaction_request,RequestStartTransactionRequest>>
+    |The Charging Station SHALL behave as if in response to a local action at the Charging Station to allow energy transfer after successful authorization of the IdToken given in <<request_start_transaction_request,RequestStartTransactionRequest>> message.
+      |Charging Station will first respond to the request and then try to authorize the IdToken, using the Local Authorization List, Authorization Cache and/or an <<authorize_request,AuthorizeRequest>>. +
+      Energy transfer is only allowed after authorization was obtained.
+|F01.FR.02  |If the value of <<authorize_remote_start,`AuthorizeRemoteStart`>> = false AND +
+  Charging Station receives a <<request_start_transaction_request,RequestStartTransactionRequest>>
+    |The Charging Station SHALL allow energy transfer for the IdToken given in <<request_start_transaction_request,RequestStartTransactionRequest>> message without checking authorization.
+      |Charging Station will first respond to the request, and send a <<transaction_event_request,TransactionEventRequest>> with the idToken to the CSMS, and the CSMS will check the authorization status of the IdToken when processing this <<transaction_event_request,TransactionEventRequest>>.
+|F01.FR.03  |F01.FR.01 OR F01.FR.02 
+  |The Charging Station SHALL send a <<transaction_event_request,TransactionEventRequest>> to the CSMS, and the CSMS will check the authorization status of the IdToken when processing this <<transaction_event_request,TransactionEventRequest>>.
+    |If CSMS returns an authorization status that is not Accepted, then Charging Station must stop energy transfer as per use case E05.
+|F01.FR.04  |{nbsp}
+  |<<request_start_transaction_request,RequestStartTransactionRequest>> SHALL contain an IdToken, which Charging Station SHALL use, if it is able to start a transaction, in the <<transaction_event_request,TransactionEventRequest>> sent to the CSMS. |{nbsp}
+|F01.FR.05  |{nbsp}
+  |The transaction SHALL be started in the same way as described in <<e02_start_transaction_cable_plugin_first,E02 - Start Transaction - Cable Plugin First>>. |{nbsp}
+|F01.FR.06  |{nbsp}
+  |<<request_start_transaction_request,RequestStartTransactionRequest>> MAY contain an evseId if the transaction is to be started on a specific EVSE.
+    |When no evseId is provided, the Charging Station is in control of the EVSE selection.
+|F01.FR.07  |If the <<request_start_transaction_request,RequestStartTransactionRequest>> does not contain an evseId.
+  |The Charging Station MAY reject the <<request_start_transaction_request,RequestStartTransactionRequest>>. |{nbsp}
+|F01.FR.08  |{nbsp}
+  |The CSMS MAY include a ChargingProfile in the <<request_start_transaction_request,RequestStartTransactionRequest>>. |{nbsp}
+|F01.FR.09  |F01.FR.08
+  |The purpose of this <<charging_profile_type,ChargingProfile>> SHALL be set to <<tx_profile,TxProfile>>. |{nbsp}
+|F01.FR.10  |F01.FR.08 
+  |The Charging Station SHALL use this <<charging_profile_type,ChargingProfile>> for the transaction that is started by this RequestStartTransaction. |{nbsp}
+|F01.FR.11  |F01.FR.08
+  |The transactionId in the <<charging_profile_type,ChargingProfile>> SHALL NOT be set. |{nbsp}
+|F01.FR.12  |If a Charging Station without support for Smart Charging receives a <<request_start_transaction_request,RequestStartTransactionRequest>> with a <<charging_profile_type,ChargingProfile>>.
+  |The Charging Station SHALL ignore the specified <<charging_profile_type,ChargingProfile>>.
+    |The device model variable SmartChargingCtrlr.Enabl ed tells CSMS whether smart charging is supported. 
+|F01.FR.13  |When a transaction is created on the Charging Station, but has not been authorized. +
+  AND +
+<<request_start_transaction_request,RequestStartTransactionRequest>> is received.
+  |The Charging Station SHALL return the _transactionId_ in the <<request_start_transaction_response,RequestStartTransactionResponse>>. |{nbsp}
+|F01.FR.14  |When configured to send meter data in the <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>), See: <<metervalues_configuration,Meter Values - Configuration>>
+  |The Charging Station SHALL add the configured measurands to the optional meterValue field in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Started>>) sent to the CSMS to provide more details during the transaction. |{nbsp}
+|F01.FR.15  |When configured to send meter data in the <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>), See: <<metervalues_configuration,Meter Values - Configuration>>
+  |The Charging Station SHALL add the configured measurands to the optional meterValue field in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) sent to the CSMS to provide more details during the transaction. |{nbsp}
+|F01.FR.16  |F01.FR.15 +
+  AND +
+  Amount of meter data is too much for 1 <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>)
+    |The Charging Station MAY split meter data over multiple <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) messages with the same _timestamp_. |{nbsp}
+|F01.FR.17  |When sending a <<transaction_event_request,TransactionEventRequest>>
+  |The Charging Station SHALL set the <<trigger_reason_enum_type,triggerReason>> to inform the CSMS about what triggered the event. What reason to use is described in the description of <<trigger_reason_enum_type,TriggerReasonEnumType>>. |{nbsp}
+|F01.FR.18  |After a transaction has been started
+  |The Charging Station MAY send additional <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) messages during the transaction when a trigger event occurs. |{nbsp}
+|F01.FR.19  |When a <<request_start_transaction_request,RequestStartTransactionRequest>> is received.
+  |The next <<transaction_event_request,TransactionEventRequest>> SHALL contain _triggerReason_ : <<trigger_reason_enum_type,RemoteStart>>. |{nbsp}
+|F01.FR.20  |If the <<request_start_transaction_request,RequestStartTransactionRequest>> does not contain an _evseId_ AND the Charging Station is capable of selecting an EVSE
+  |The Charging Station SHALL select an EVSE to be used as a value for _evseId_ for the operation
+    |See also F01.FR.07 if Charging Station does not support starting at an arbitrary EVSE.
+|F01.FR.21  |When the _evseId_ for <<request_start_transaction_request,RequestStartTransactionRequest>> is Reserved for an _idToken_ that differs from _idToken_ in the request AND has no reservation for a _groupIdToken_
+  |The Charging Station SHALL respond with <<request_start_transaction_response,RequestStartTransactionResponse>> with _status_ = `Rejected`. |{nbsp}
+|F01.FR.22  |When the _evseId_ for <<request_start_transaction_request,RequestStartTransactionRequest>> is `Reserved` for an _idToken_ that differs from _idToken_ in the request AND is Reserved for a _groupIdToken_ that differs from _groupIdToken_ in the request
+  |The Charging Station SHALL respond with <<request_start_transaction_response,RequestStartTransactionResponse>> with _status_ = `Rejected`.
+    |EV is not allowed to use station if neither _idToken_ nor _idGroupToken_ match the reservation.
+|F01.FR.23  |When the _evse_ for <<request_start_transaction_request,RequestStartTransactionRequest>> is `Unavailable` or `Faulted`
+  |The Charging Station SHALL respond with <<request_start_transaction_response,RequestStartTransactionResponse>> with _status_ = `Rejected`. |{nbsp}
+|F01.FR.24  |When the _evseId_ for <<request_start_transaction_request,RequestStartTransactionRequest>> is `Occupied` AND +
+  this _evseId_ has a transaction that has been authorized
+    |The Charging Station SHALL respond with <<request_start_transaction_response,RequestStartTransactionResponse>> with _status_ = `Rejected`.
+      |Only an EVSE with no transaction or with a transaction that has not yet been authorized can be matched with the <<request_start_transaction_request,RequestStartTransactionRequest>>
+|F01.FR.25  |F01.FR.13
+  |The Charging Station SHALL put the _remoteStartId_ in the next <<transaction_event_request,TransactionEventRequest>> it sends for the associated transaction. |{nbsp}
+|F01.FR.26  |If a Charging Station **with** support for Smart Charging receives a <<request_start_transaction_request,RequestStartTransactionRequest>> with an invalid <<charging_profile_type,ChargingProfile>>.
+  |The Charging Station SHALL respond with <<request_start_transaction_response,RequestStartTransactionResponse>> with _status_ = `Rejected` and optionally with _reasonCode_ = "InvalidProfile" or "InvalidSchedule".
+    |The device model variable SmartChargingCtrlr.Enabl ed tells CSMS whether smart charging is supported.
+|===
+
+<<<
+
+[[f02_remote_start_transaction_remote_start_first]]
+=== F02 - Remote Start Transaction - Remote Start First
+
+.F02 - Remote Start Transaction - Remote Start First
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Remote Start Transaction - Remote Start first
+|2   |ID              |F02
+|{nbsp} d|_Functional block_  |F. Remote Control
+|{nbsp} d|_Parent use case_ |<<f01_remote_start_transaction_cable_plugin_first,F01 - Remote Start Transaction - Cable Plugin First>>
+|3   |Objective(s)    |To enable the CSMS to remotely start a transaction while the <<request_start_transaction_request,RequestStartTransactionRequest>> is sent first, before the connection between Charging Station and EV is established.
+|4   |Description     |This use case covers how the CSMS is able to remotely start a transaction for the User.
+|{nbsp} d|_Actors_    |Charging Station, CSMS, External Trigger
+|{nbsp} d|_Scenario description_ 
+  |**1.** An External Trigger triggers the remote start. +
+  **2.** The CSMS sends <<request_start_transaction_request,RequestStartTransactionRequest>> to the Charging Station. +
+  **3.** The Charging Station responds with <<request_start_transaction_response,RequestStartTransactionResponse>> to the CSMS. +
+  **4.** The EV Driver is authorized by the CSMS, dependent on the Configuration Variable settings. +
+  **5.** The Charging Station sends a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>) notifying the CSMS about a transaction that has started +
+  **6.** The cable is plugged in. +
+  **6a.** Charging Station sends a <<status_notification_request,StatusNotificationRequest>> with _Occupied_. +
+  **6b.** CSMS sends a <<status_notification_response,StatusNotificationResponse>> to the Charging Station +
+  **7.** The energy offer is started. +
+  **8.** The Charging Station sends a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>, <<charging_state_enum_type,chargingState = Charging>>) message to inform the CSMS that the charging has started. +
+  **9.** The CSMS sends <<transaction_event_response,TransactionEventResponse>> to the Charging Station
+|5   |Prerequisite(s) 
+  |Charging Cable not plugged in. +
+  Remote start first. +
+  Enable mobile apps to control charging transactions via the CSMS.
+|6   |Postcondition(s) 
+  |**Successful postcondition:** +
+  The transaction for which a start was request has started and the EV is charging. +
+
+  **Failure postcondition:** +
+  The transaction for which a start was request did not start or the EV is not charging.
+|===
+
+.Sequence Diagram: Remote Start Transaction - Remote Start First with TxStartPoint=Authorized
+image::part2/images/figure_66.svg[Sequence Diagram: Remote Start Transaction - Remote Start First with TxStartPoint=Authorized]
+
+.Sequence Diagram: Remote Start Transaction - Remote Start First with TxStartPoint=EVConnected
+image::part2/images/figure_67.svg[Sequence Diagram: Remote Start Transaction - Remote Start First with TxStartPoint=EVConnected]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling  |n/a
+|8   |Remark(s) 
+  |An external trigger can be e.g. a Charging Station Operator or an EV Driver app.
+
+  It is advised not to start transactions remotely without evseId due to the uncertainty which EVSE is started. In case of a Logic Controller with many EVSEs, the EV Driver might not be in front of the activated EVSE.
+
+  The CSMS is allowed to send a <<request_start_transaction_request,RequestStartTransactionRequest>> with <<id_token_type,IdTokenType>> of type: <<id_token_enum_type,NoAuthorization>>. The operator should be aware that if the Charging Station supports local stop transaction, this transaction can be stopped by anyone.
+
+  The scenario description and sequence diagram above are based on the Configuration Variable for start transaction being configured as follows: +
+  <<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,EVConnected, Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
+  This use-case is also valid for other configurations, but then the transaction might start/stop at another moment, which might change the sequence in which message are send. For more details see the use cases: <<e01_start_transaction_options,E01 - Start Transaction options>>.
+|===
+
+==== F02 - Remote Start Transaction - Remote Start First - Requirements
+.F02 - Requirements
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
+
+|F02.FR.01  |When a transaction is started as a result of a <<request_start_transaction_request,RequestStartTransactionRequest>>.
+  |The Charging Station SHALL put the _remoteStartId_ in the first <<transaction_event_request,TransactionEventRequest>> it sends for this new transaction. |{nbsp}
+|F02.FR.02  |When configured to send meter data in the <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>), See: <<metervalues_configuration,Meter Values - Configuration>>
+  |The Charging Station SHALL add the configured measurands to the optional meterValue field in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Started>>) sent to the CSMS to provide more details during the transaction. |{nbsp}
+|F02.FR.03  |When configured to send meter data in the <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>), See: <<metervalues_configuration,Meter Values - Configuration>>
+  |The Charging Station SHALL add the configured measurands to the optional meterValue field in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) sent to the CSMS to provide more details during the transaction. |{nbsp}
+|F02.FR.04  |F02.FR.03 +
+  AND +
+  Amount of meter data is too much for 1 <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>)
+    |The Charging Station MAY split meter data over multiple <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) messages with the same _timestamp_. |{nbsp}
+|F02.FR.05  |When the IdToken information is known.
+  |The next <<transaction_event_request,TransactionEventRequest>> SHALL contain <<id_token_type,IdTokenType>> information. |{nbsp}
+|F02.FR.06  |This transaction ends a reservation for the specific IdToken.
+  |The next <<transaction_event_request,TransactionEventRequest>> SHALL contain the reservationId.
+    |See <<h_reservation,H. Reservation>>.
+|F02.FR.07  |When the EV Driver does not plug-in the charging cable before the timeout set by the Configuration Variable: +
+  <<ev_connection_timeout,`EVConnectionTimeOut`>> AND +
+  TxStopPoint does not contain `ParkingBayOccupancy`
+    |The Charging Station SHALL end the transaction and send a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>, stoppedReason = Timeout, _triggerReason_ = `EVConnectionTimeout`) to the CSMS.
+      |Otherwise the transaction would not be ended in case the TxStopPoint does not contain Authorized.
+|F02.FR.08  |When the EV Driver does not plug-in the charging cable before the timeout set by the Configuration Variable: +
+  <<ev_connection_timeout,`EVConnectionTimeOut`>> AND +
+  TxStopPoint contains `ParkingBayOccupancy`
+    |The Charging Station SHALL deauthorize the transaction and send a <<transaction_event_request,TransactionEventRequest>> (_triggerReason_ = `EVConnectionTimeout`) to the CSMS.
+      |Transaction will be ended normally when driver leaves the parking bay.
+|F02.FR.09  |If the value of <<authorize_remote_start,`AuthorizeRemoteStart`>> = true AND +
+  Charging Station receives a<<request_start_transaction_request,RequestStartTransactionRequest>>
+    |The Charging Station SHALL behave as if in response to a local action at the Charging Station to start a transaction after successful authorization of the IdToken given in <<request_start_transaction_request,RequestStartTransactionRequest>> message.
+      |Charging Station will first respond to the request and then try to authorize the IdToken, using the Local Authorization List, Authorization Cache and/or an <<authorize_request,AuthorizeRequest>>. +
+      A transaction is only started after authorization was obtained.
+|F02.FR.10  |If the value of <<authorize_remote_start,`AuthorizeRemoteStart`>> = false +
+  AND +
+  Charging Station receives a <<request_start_transaction_request,RequestStartTransactionRequest>>
+    |The Charging Station SHALL start a transaction for the IdToken given in <<request_start_transaction_request,RequestStartTransactionRequest>> message without checking authorization.
+      |Note that after the transaction has been started, the Charging Station will send a <<transaction_event_request,TransactionEventRequest>> with the idToken to the CSMS, and the CSMS will check the authorization status of the IdToken when processing this <<transaction_event_request,TransactionEventRequest>>.
+|F02.FR.11  |F02.FR.09 OR F02.FR.10 
+  |The Charging Station SHALL send a <<transaction_event_request,TransactionEventRequest>> to the CSMS, and the CSMS will check the authorization status of the IdToken when processing this <<transaction_event_request,TransactionEventRequest>>. |{nbsp}
+|F02.FR.12  |{nbsp}
+  |<<request_start_transaction_request,RequestStartTransactionRequest>> SHALL contain an IdToken, which Charging Station SHALL use, if it is able to start a transaction, in the <<transaction_event_request,TransactionEventRequest>> sent to the CSMS. |{nbsp}
+|F02.FR.13  |{nbsp}
+  |The transaction SHALL be started in the same way as described in <<e03_start_transaction_idtoken_first,E03 - Start Transaction - Id Token First>>. |{nbsp}
+|F02.FR.14  |{nbsp}
+  |<<request_start_transaction_request,RequestStartTransactionRequest>> MAY contain an evseId if the transaction is to be started on a specific EVSE.
+    |When no evseId is provided, the Charging Station is in control of the EVSE selection.
+|F02.FR.15  |If the <<request_start_transaction_request,RequestStartTransactionRequest>> does not contain an evseId.
+  |The Charging Station MAY reject the <<request_start_transaction_request,RequestStartTransactionRequest>>. |{nbsp}
+|F02.FR.16  |{nbsp}
+  |The CSMS MAY include a ChargingProfile in the <<request_start_transaction_request,RequestStartTransactionRequest>>. |{nbsp}
+|F02.FR.17  |F02.FR.16
+  |The purpose of this <<charging_profile_type,ChargingProfile>> SHALL be set to <<tx_profile,TxProfile>>. |{nbsp}
+|F02.FR.18  |F02.FR.16
+  |The Charging Station SHALL use this <<charging_profile_type,ChargingProfile>> for the transaction that is started by this RequestStartTransaction. |{nbsp}
+|F02.FR.19  |F02.FR.16
+  |The transactionId in the <<charging_profile_type,ChargingProfile>> SHALL NOT be set. |{nbsp}
+|F02.FR.20  |If a Charging Station without support for Smart Charging receives a <<request_start_transaction_request,RequestStartTransactionRequest>> with a <<charging_profile_type,ChargingProfile>>.
+  |The Charging Station SHALL ignore the specified <<charging_profile_type,ChargingProfile>>.
+    |The device model variable SmartChargingCtrlr.Enabl ed tells CSMS whether smart charging is supported.
+|F02.FR.21  |When a <<request_start_transaction_request,RequestStartTransactionRequest>> is received.
+  |The next <<transaction_event_request,TransactionEventRequest>> SHALL contain _triggerReason_: `RemoteStart` and the _remoteStartId_ from the <<request_start_transaction_request,RequestStartTransactionRequest>>.
+    |This is to notify CSMS that this is the result of RequestStartTransaction . + Note, that if TxStartPoint=`EVConnected` the transaction will be started upon cable connection, but the _triggerReason_ = `RemoteStart` must still be sent. The connection event is reported by the fact that `chargingState` = `EVConnected`.
+|F02.FR.22  |If the <<request_start_transaction_request,RequestStartTransactionRequest>> does not contain an _evseId_ AND +
+  the Charging Station is capable of selecting an EVSE
+    |The Charging Station SHALL select an EVSE to be used as a value for _evseId_ for the operation
+      |See also F02.FR.15 if Charging Station does not support starting at an arbitrary EVSE.
+|F02.FR.23  |When the _evseId_ for <<request_start_transaction_request,RequestStartTransactionRequest>> is `Reserved` for an _idToken_ that differs from _idToken_ in the request AND +
+  has no reservation for a _groupIdToken_
+    |The Charging Station SHALL respond with <<request_start_transaction_response,RequestStartTransactionResponse>> with _status_ = `Rejected`. |{nbsp}
+|F02.FR.24  |When the _evseId_ for <<request_start_transaction_request,RequestStartTransactionRequest>> is `Reserved` for an _idToken_ that differs from _idToken_ in the request AND + is `Reserved` for a _groupIdToken_ that differs from _groupIdToken_ in the request
+  |The Charging Station SHALL respond with <<request_start_transaction_response,RequestStartTransactionResponse>> with _status_ = `Rejected`.
+    |EV is not allowed to use station if neither _idToken_ nor _idGroupToken_ match the reservation.
+|F02.FR.25  |When the _evseId_ for <<request_start_transaction_request,RequestStartTransactionRequest>> is `Unavailable` or `Faulted`
+  |The Charging Station SHALL respond with <<request_start_transaction_response,RequestStartTransactionResponse>> with _status_ = `Rejected`. |{nbsp}
+|F02.FR.26  |When the _evseId_ for <<request_start_transaction_request,RequestStartTransactionRequest>> is `Occupied` AND +
+  this `evseId` has a transaction that has been authorized
+    |The Charging Station SHALL respond with <<request_start_transaction_response,RequestStartTransactionResponse>> with `status` = `Rejected`.
+      |Only an EVSE with no transaction or with a transaction that has not yet been authorized can be matched with the <<request_start_transaction_request,RequestStartTransactionRequest>>
+|F02.FR.27  |If a Charging Station **with** support for Smart Charging receives a <<request_start_transaction_request,RequestStartTransactionRequest>> with an invalid <<charging_profile_type,ChargingProfile>>.
+  |The Charging Station SHALL respond with <<request_start_transaction_response,RequestStartTransactionResponse>> with _status_ = `Rejected` and optionally with _reasonCode_ = "InvalidProfile" or "InvalidSchedule".
+    |The device model variable SmartChargingCtrlr.Enabl ed tells CSMS whether smart charging is supported.
+|===
+
+[cols="^.^1s,10",%autowidth.stretch]
+|===
+|NOTE |Requirements of previous use case: <<f01_remote_start_transaction_cable_plugin_first,F01 - Remote Start Transaction - Cable Plugin First>>, are also considered relevant for <<f02_remote_start_transaction_remote_start_first,F02 - Remote Start Transaction - Remote Start First>>
+|===
+
+<<<
+
+==== F03 - Remote Stop Transaction
+
+.F03 - Remote Stop Transaction
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Remote Stop Transaction
+|2   |ID              |F03
+|{nbsp} d|_Functional block_ |F. Remote Control
+|3   |Objective(s) 
+  |**1.** To enable a CSO to help an EV Driver who has problems stopping a transaction. _or_ +
+  **2.** Enable mobile apps to control transactions via the CSMS.
+|4   |Description     |This use case describes how the CSMS requests the Charging Station to stop a transaction.
+|{nbsp} d|_Actors_    |Charging Station, CSMS, CSO, EV Driver
+|{nbsp} d|_Scenario description_ 
+  |**1.** An External Trigger triggers a remote stop. +
+  **2.** The CSMS requests a Charging Station to stop a transaction by sending <<request_stop_transaction_request,RequestStopTransactionRequest>> to the Charging Station with the transactionId of the transaction. +
+  **3.** The Charging Station responds with <<request_stop_transaction_response,RequestStopTransactionResponse>> and a status indicating whether it has accepted the request and a transaction with the given transactionId is ongoing and will be stopped. +
+  **4.** Charging is stopped, the Charging Station sends <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>) and, if applicable, unlocks the Connector. +
+  **5.** After the EV Driver unplugs the cable, the Charging Station sends <<status_notification_request,StatusNotificationRequest>> with status _Available_. +
+  **6.** The Charging Station ends the transaction and sends a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = _Ended_>>, <<reason_enum_type,stoppedReason = _Remote_>>) message to the CSMS.
+|5   |Prerequisite(s)  |A transaction is ongoing.
+|6   |Postcondition(s) 
+  |**Successful postcondition:** +
+  The transaction for which a stop was request has ended. +
+  **Failure postcondition:** +
+  The transaction for which a stop was requested is still ongoing.
+|===
+
+.Sequence Diagram: Remote Stop Transaction
+image::part2/images/figure_68.svg[Sequence Diagram: Remote Stop Transaction]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Remark(s)   |This remote request to stop a transaction is equal to a local action to stop a
+transaction.
+
+  The scenario description and sequence diagram above are based on the Configuration Variable for stop transaction being configured as follows. <<tx_stop_point,`TxStopPoint`>>: <<tx_start_stop_point_values,ParkingBayOccupancy, EVConnected>> +
+  This use-case is also valid for other configurations, but then the transaction might stop at another moment, which might change the sequence in which message are send. For more details see the use case: <<e06_stop_transaction_options,E06 - Stop Transaction options>>
+|===
+
+==== F03 - Remote Stop Transaction - Requirements
+
+.F03 - Requirements
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
+
+|F03.FR.01  |When the CSMS receives a remote stop transaction trigger (For example when terminating using a smartphone app, exceeding a (non local) prepaid credit.)
+  |The CSMS SHALL send a <<request_stop_transaction_request,RequestStopTransactionRequest>> to the Charging Station with the transactionId of the transaction. |{nbsp}
+|F03.FR.02  |F03.FR.01 AND +
+TxStopPoint configuration does not cause transaction to end (E.g. TxStopPoint is NOT `Authorized` or `PowerPathClosed`)
+  |The Charging Station SHALL stop the energy offer and send a <<transaction_event_request,TransactionEventRequest>> (_eventType_ = `Updated`, _triggerReason_ = `RemoteStop`) to the CSMS.
+    |For example when TxStopPoint = `EVConnected` the transaction will not be ended until EV is disconnected.
+|F03.FR.03  |F03.FR.01 AND +
+  TxStopPoint configuration causes transaction to end (E.g. TxStopPoint is `Authorized` or `PowerPathClosed`)
+    |The Charging Station SHALL send a <<transaction_event_request,TransactionEventRequest>> ( _eventType_ = `Ended`, _triggerReason_ = `RemoteStop`, _stoppedReason_ = `Remote`) to the CSMS. |{nbsp}
+|F03.FR.04  |When configured to send meter data in the <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>), See: <<metervalues_configuration,Meter Values - Configuration>>
+  |The Charging Station SHALL add the configured measurands to the optional meterValue field in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>) sent to the CSMS to provide more details about transaction usage. |{nbsp}
+|F03.FR.05  |F03.FR.04 +
+  AND +
+  The Charging Station is running low on memory
+    |The Charging Station MAY drop meter data. |{nbsp}
+|F03.FR.06  |F03.FR.05
+  |When dropping meter data, the Charging Station SHALL drop intermediate values first (1st value, 3th value, 5th etc), not start dropping values from the start of the list or stop adding values to the list. |{nbsp}
+|F03.FR.07  |When the Charging Station receives a <<request_stop_transaction_request,RequestStopTransactionRequest>>
+  |And the TransactionId can be matched to an active transaction; the Charging Station SHALL respond with a <<request_stop_transaction_response,RequestStopTransactionResponse>> with status set to _Accepted_. |{nbsp}
+|F03.FR.08  |When the Charging Station receives a <<request_stop_transaction_request,RequestStopTransactionRequest>>
+  |And the TransactionId cannot be matched to an active transaction; the Charging Station SHALL respond with a <<request_stop_transaction_response,RequestStopTransactionResponse>> with status set to _Rejected_. |{nbsp}
+|F03.FR.09  |When sending a <<transaction_event_request,TransactionEventRequest>>
+  |The Charging Station SHALL set the <<trigger_reason_enum_type,triggerReason>> to inform the CSMS about what triggered the event. What reason to use is described in the description of <<trigger_reason_enum_type,TriggerReasonEnumType>>. |{nbsp}
+|===
+
+<<<
+
+=== F04 - Remote Stop ISO 15118 Charging from CSMS
+
+.F04 - Charging loop with interrupt from the CSMS
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Remote Stop ISO 15118 Charging from CSMS
+|2   |ID              |F04
+|{nbsp} d|_Functional block_  |F. Remote Control
+|{nbsp} d|_Reference_ |<<iso15118_1,ISO15118-1>> F2 Charging loop with interrupt from the SECC.
+|3   |Objective(s)    |See <<iso15118_1,ISO15118-1>>, use case Objective F2, page 38.
+|4   |Description     |See <<iso15118_1,ISO15118-1>>, use case Description F2, page 38.
+|{nbsp} d|Actors      |EV, EVSE, Charging Station
+|6   |Prerequisite(s) 
+  |- If authorization according use cases in Functional Block C is applied, it SHALL be finished successfully. +
+  See <<iso15118_1,ISO15118-1>>, use case Prerequisites F2, page 38.
+|7   |Combined scenario description
+  |**OCPP:** +
+  **1.** The CSMS sends a <<request_stop_transaction_request,RequestStopTransactionRequest>> to the Charging Station. +
+  **2.** The Charging Station responds with a <<request_stop_transaction_response,RequestStopTransactionResponse>>.
+
+  **ISO 15118:** +
+  **3.** The EV sends a ChargingStatus (in case of AC charging) or CurrentDemandReq (in case of DC Charging) PDU to the Charging Station. +
+  **4.** The Charging Station responds with an EVSENotification = StopCharging.
+|8   |Postcondition(s) |See <<iso15118_1,ISO15118-1>>, use case End conditions F2, page 38.
+|===
+
+.Charging loop with interrupt from the Charging Station
+image::part2/images/figure_69.svg[Charging loop with interrupt from the Charging Station]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|9   |Error handling    |n/a
+|10  |Remark(s)         |n/a
+|===
+
+==== F04 - Remote Stop ISO 15118 Charging from CSMS - Requirements
+
+_These requirements are normative._
+
+.F04 - Requirements
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
+
+|F04.FR.01  |When the CSMS receives a remote stop transaction trigger (For example when terminating using a smartphone app, exceeding a (non local) prepaid credit.)
+  |The CSMS SHALL send a <<request_stop_transaction_request,RequestStopTransactionRequest>> to the Charging Station with the transactionId of the transaction. |{nbsp}
+|F04.FR.02  |F04.FR.01
+  |The Charging Station SHALL stop the energy offer, unlock the cable and send a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>) to the CSMS.
+    |Cable unlocked if not permanently attached.
+|F04.FR.03  |F04.FR.02 AND +
+  When the EV Driver unplugs the cable.
+    |The Charging Station SHALL send a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = _Ended_>>, <<reason_enum_type,stoppedReason = _Remote_>>) to the CSMS. |{nbsp}
+|F04.FR.04  |When configured to send meter data in the <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>), See: <<metervalues_configuration,Meter Values - Configuration>>
+  |The Charging Station SHALL add the configured measurands to the optional meterValue field in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>) sent to the CSMS to provide more details about transaction usage. |{nbsp}
+|F04.FR.05  |F04.FR.04 +
+  AND +
+  The Charging Station is running low on memory
+    |The Charging Station MAY drop meter data. |{nbsp}
+|F04.FR.06  |F04.FR.05
+  |When dropping meter data, the Charging Station SHALL drop intermediate values first (1st value, 3th value, 5th etc), not start dropping values from the start of the list or stop adding values to the list. |{nbsp}
+|===
+
+<<<
+
+:sectnums:
+=== Unlock Connector
+
+:sectnums!:
+=== F05 - Remotely Unlock Connector
+
+.F05 - Remotely Unlock Connector
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Remotely Unlock Connector
+|2   |ID              |F05
+|{nbsp} d|_Functional block_ |F. RemoteControl
+|3   |Objective(s)    |To enable the CSO to help an EV-driver that has problems unplugging his charging cable because the locked failed after the transaction has ended.
+|4   |Description     |It sometimes happens that a connector of a Charging Station socket does not unlock correctly. +
+This happens most of the time when there is tension on the charging cable. This means the driver cannot unplug his charging cable from the Charging Station. To help a driver, the CSO can send a <<unlock_connector_request,UnlockConnectorRequest>> to the Charging Station. The Charging Station will then try to unlock the connector again.
+|{nbsp} d|_Actors_    |Charging Station, CSMS, External Trigger
+|{nbsp} d|_Scenario description_ 
+  |**1.** An External Trigger (probably the CSO) request the unlocking of a specific connector of a Charging Station. +
+  **2.** The CSMS sends an <<unlock_connector_request,UnlockConnectorRequest>> to the Charging Station. +
+  **3.** Upon receipt of <<unlock_connector_request,UnlockConnectorRequest>>, the Charging Station responds with <<unlock_connector_response,UnlockConnectorResponse>>. +
+  **4.** The response message indicates whether the Charging Station was able to unlock its Connector.
+|5   |Prerequisite(s) |No ongoing transaction on the specified connector +
+  The Charging Station has a connector lock.
+|6   |Postcondition(s) |The Charging Station was able to unlock the Connector.
+|===
+
+.Sequence Diagram: Unlock Connector
+image::part2/images/figure_70.svg[Sequence Diagram: Unlock Connector]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling  |n/a
+|8   |Remark(s)       |An external trigger, triggering the Unlock command, can be e.g. a Charging Station Operator or an EV Driver app.
+
+<<unlock_connector_request,UnlockConnectorRequest>> is intended only for unlocking the cable retention lock on the Connector, not for unlocking a Connector access door.
+|===
+
+==== F05 - Remotely Unlock Connector - Requirements
+
+.F05 - Requirements
+[cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition
+
+|F05.FR.01  |Upon receipt of an <<unlock_connector_request,UnlockConnectorRequest>>.
+  |The Charging Station SHALL respond with <<unlock_connector_response,UnlockConnectorResponse>>.
+|F05.FR.02  |F05.FR.01 +
+  AND +
+  There is a an authorized transaction ongoing on the specified connector.
+    |The Charging Station SHALL NOT try to unlock the connector (or stop the transaction) but use the status: `OngoingAuthorizedTransaction` in the <<unlock_connector_response,UnlockConnectorResponse>>.
+|F05.FR.03  |F05.FR.01 +
+  AND +
+  Specified connector unknown.
+    |The Charging Station SHALL use the status: <<unlock_status_enum_type,UnknownConnector>> in the <<unlock_connector_response,UnlockConnectorResponse>>.
+|F05.FR.04  |F05.FR.01 +
+  AND +
+  The Charging Station was able to unlock the specified connector.
+    |The Charging Station SHALL use the status: <<unlock_status_enum_type,Unlocked>> in the <<unlock_connector_response,UnlockConnectorResponse>>.
+|F05.FR.05  |F05.FR.01 +
+  AND +
+  The Charging Station was NOT able to unlock the specified connector.
+    |The Charging Station SHALL use the status: <<unlock_status_enum_type,UnlockFailed>> in the <<unlock_connector_response,UnlockConnectorResponse>>.
+|F05.FR.06  |F05.FR.01 +
+  AND +
+  No cable is connected to the connector.
+    |The Charging Station SHALL attempt to unlock the connector, even if no cable is detected and SHALL return the result of the unlock attempt.
+|===
+
+<<<
+
+:sectnums:
+=== Remote Trigger
+
+:sectnums!:
+=== F06 - Trigger Message
+
+.F06 - Trigger Message
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|No. |Type            |Description
+
+|1   |Name            |Trigger Message
+|2   |ID              |F06
+|{nbsp} d|_Functional block_ |F. RemoteControl
+|3   |Objective(s)    |To enable the CSMS to request a Charging Station to send a Charging Station-initiated message.
+|4   |Description     |This use case describes the use of the <<trigger_message_request,TriggerMessageRequest>> message: how a CSMS can request a Charging Station to send Charging Station-initiated messages. In the request the CSMS indicates which message it wishes to receive.
+|{nbsp} d|_Actors_    |Charging Station, CSMS
+|{nbsp} d|_Scenario description_  
+  |**1.** The CSMS sends a <<trigger_message_request,TriggerMessageRequest>> to the Charging Station. +
+  **2.** The Charging Station responds with a <<trigger_message_response,TriggerMessageResponse>>, indicating whether it will send it or not, by returning _Accepted_, _Rejected_ or _NotImplemented_. +
+  **3.** Message, requested by the CSMS, that the Charging Station marked as _Accepted_, is being sent.
+|5   |Prerequisite(s) |The Functional Block _Remote Trigger_ is installed.
+|6   |Postcondition(s) 
+  |**Successful postconditions:** +
+  **1.** The CSMS has _Successfully_ received a <<trigger_message_response,TriggerMessageResponse>> message. +
+  **2.** The CSMS has _Successfully_ received a <<trigger_message_response,TriggerMessageResponse>> message with status _Accepted_ AND has _Successfully_ received the requested message. +
+  **Failure postconditions:** +
+  **1.** The CSMS has NOT received a <<trigger_message_response,TriggerMessageResponse>> message. +
+  **2.** The CSMS has _Successfully_ received a <<trigger_message_response,TriggerMessageResponse>> message with status _Accepted_ AND has NOT received the requested message.
+|===
+
+.Sequence Diagram: Trigger Message
+image::part2/images/figure_71.svg[Sequence Diagram: Trigger Message]
+
+.Sequence Diagram: Trigger Message Example
+image::part2/images/figure_72.svg[Sequence Diagram: Trigger Message Example]
+
+[cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|7   |Error handling    |n/a
+|8   |Remark(s)         |The TriggerMessage mechanism is not intended to retrieve historic data.
+|===
+
+==== F06 - Trigger Message - Requirements
+
+.F06 - Requirements
+[cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
+|===
+|ID         |Precondition         |Requirement definition     |Note
+
+|F06.FR.01  |{nbsp}
+  |In the <<trigger_message_request,TriggerMessageRequest>> message, the CSMS SHALL indicate which message(s) it wishes to receive. |{nbsp}
+|F06.FR.02  |F06.FR.01. +
+  For every such requested message.
+    |The CSMS MAY indicate to which EVSE this request applies. |{nbsp}
+|F06.FR.03  |F06.FR.02
+  |The requested message SHALL be leading. If the specified evseId is not relevant to the message, it SHALL be ignored. In such cases the requested message SHALL still be sent. |{nbsp}
+|F06.FR.04  |If a Charging Station receives a <<trigger_message_request,TriggerMessageRequest>>.
+  |The Charging Station SHALL first send the TriggerMessage response, before sending the requested message. |{nbsp}
+|F06.FR.05  |F06.FR.04
+  |In the <<trigger_message_response,TriggerMessageResponse>> the Charging Station SHALL indicate whether it will send the requested message or not, by returning _Accepted_ or _Rejected_.
+    |It is up to the Charging Station if it accepts or rejects the request to send.
+|F06.FR.06  |If a Charging Station accepts a <<trigger_message_request,TriggerMessageRequest>> with _requestedMessage_ set to: _MeterValues_
+  |The Charging Station SHALL send a <<metervalues_request,MeterValuesRequest>> to the CSMS with the most recent measurements for all measurands configured in Configuration Variable: <<aligned_data_measurands,`AlignedDataMeasurands`>>. |{nbsp}
+|F06.FR.07  |If a Charging Station accepts a <<trigger_message_request,TriggerMessageRequest>> with _requestedMessage_ set to: _TransactionEvent_
+  |The Charging Station SHALL send a <<transaction_event_request,TransactionEventRequest>> to the CSMS with _triggerReason_ = _Trigger_, _transactionInfo_ with at least the _chargingState_, and _meterValue_ with the most recent measurements for all measurands configured in Configuration Variable: <<sampled_data_tx_updated_measurands,`SampledDataTxUpdatedMeasurands`>>. |{nbsp}
+|F06.FR.08  |When the Charging Station receives a <<trigger_message_request,TriggerMessageRequest>> with a requestedMessage that it has not implemented
+  |The Charging Station SHALL respond with <<trigger_message_response,TriggerMessageResponse>> with status _NotImplemented_. |{nbsp}
+|F06.FR.09  |{nbsp}
+  |The messages it triggers SHALL only give current information. |{nbsp}
+|F06.FR.10  |{nbsp}
+  |Messages that the Charging Station marks as _Accepted_ SHALL be sent.
+    |E.g. the situation could occur that, between accepting the request and actually sending the requested message, that same message gets sent because of normal operations. In such cases the message just sent MAY be considered as complying with the request.
+|F06.FR.11  |If the field evse is relevant but absent in the <<trigger_message_request,TriggerMessageRequest>>.
+  |The Charging Station SHALL interpret this as "for all allowed evse values".
+    |StatusNotifications can only be requested for a specific connector, see F06.FR.12/13
+|F06.FR.12  |If a Charging Station receives a <<trigger_message_request,TriggerMessageRequest>> with _requestedMessage_ set to: _StatusNotification_ AND +
+  (_evse_ is omitted OR +
+  _evse.connectorId_ is omitted)
+    |The Charging Station MAY respond with a <<trigger_message_response,TriggerMessageResponse>> with status _Rejected_.
+      |StatusNotification messages can only be requested at connector level.
+|F06.FR.13  |When sending a <<trigger_message_request,TriggerMessageRequest>> with _requestedMessage_ set to: _StatusNotification_
+  |The CSMS SHALL set the connectorId field
+    |StatusNotification messages can only be sent at connector level.
+|F06.FR.14  |If a Charging Station receives a <<trigger_message_request,TriggerMessageRequest>> with _requestedMessage_ set to: _LogStatusNotification_ AND +
+  The Charging Station is uploading a log file
+    |The Charging Station SHALL send a <<log_status_notification_request,LogStatusNotificationRequest>> to the CSMS with <<upload_log_status_enum_type,status>> _Uploading_. |{nbsp}
+|F06.FR.15  |If a Charging Station receives a <<trigger_message_request,TriggerMessageRequest>> with _requestedMessage_ set to: _LogStatusNotification_ AND +
+  The Charging Station is NOT uploading a log file
+    |The Charging Station SHALL send a <<log_status_notification_request,LogStatusNotificationRequest>> to the CSMS with <<upload_log_status_enum_type,status>> _Idle_. |{nbsp}
+|F06.FR.16  |If a Charging Station receives a <<trigger_message_request,TriggerMessageRequest>> with _requestedMessage_ set to: _FirmwareStatusNotification_ AND +
+  The Charging Station is not performing firmware update related tasks.
+    |The Charging Station SHALL send a <<firmware_status_notification_request,FirmwareStatusNotificationRequest>> to the CSMS with <<upload_log_status_enum_type,status>> _Idle_. |{nbsp}
+|F06.FR.17  |If Charging Station receives a <<trigger_message_request,TriggerMessageRequest>> with _requestedMessage_ set to: _BootNotification_ +
+  AND the response it received from CSMS to the last <<boot_notification_request,BootNotificationRequest>> was: _Accepted_
+    |Charging Station SHALL respond with a <<trigger_message_response,TriggerMessageResponse>> with <<upload_log_status_enum_type,status>> _Rejected_.
+      |A trigger to request a Charging Station to send a BootNotification is only meant to be used when the BootNotification has not yet been accepted.
+|===

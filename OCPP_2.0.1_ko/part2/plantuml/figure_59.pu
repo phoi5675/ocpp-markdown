@@ -1,0 +1,91 @@
+@startuml figure_59
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+note over EVDriver, CSMS
+  트랜잭션 진행중
+end note
+
+EVDriver -> ChargingStation: 차에서 케이블을 언플러그함
+activate ChargingStation
+
+ChargingStation -> ChargingStation: 에너지 제공 중단(suspend)
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Updated, transactionId = AB1234, seqNo = N + 1,\
+  \ntimestamp, chargingState = SuspendedEV, triggerReason = EVCommunicationLost, meterValues)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse()
+deactivate ChargingStation
+deactivate CSMS
+
+alt 케이블이 연결된 경우
+  EVDriver -> ChargingStation: 케이블 연결
+  activate ChargingStation
+
+  ChargingStation -> ChargingStation: 에너지 재공 재개
+
+  ChargingStation -> CSMS: \
+    TransactionEventRequest(eventType = Updated, transactionId = AB1234, seqNo = N + 2,\
+    \ntimestamp, chargingState = Charging, triggerReason = CablePluggedIn, meterValues)
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse()
+  deactivate ChargingStation
+  deactivate CSMS
+
+  note right of ChargingStation
+    E02 - Start Transaction - Cable Plugin First 의 Ref #1로 계속.
+  end note
+else 케이블이 영구적으로 연결되지 않은 경우
+  note over EVDriver, CSMS
+    사용자 인증 성공
+  end note
+
+  ChargingStation -> ChargingStation: 커넥터 잠금 해제
+  activate ChargingStation
+
+  ChargingStation -> CSMS: \
+    TransactionEventRequest(eventType = Ended, transactionId = AB1234, seqNo = N + 2,\
+    \ntimestamp, triggerReason = StopAuthorized, meterValues)
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse()
+  deactivate CSMS
+  deactivate ChargingStation
+
+  EVDriver -> ChargingStation: 케이블 연결 해제
+  activate ChargingStation
+
+  ChargingStation -> CSMS: StatusNotificationRequest(Available)
+  activate CSMS
+
+  CSMS --> ChargingStation: StatusNotificationResponse()
+  deactivate CSMS
+  deactivate ChargingStation
+
+else 케이블이 영구적으로 결합된 경우
+  ChargingStation -> ChargingStation: 타임아웃
+  activate ChargingStation
+
+  ChargingStation -> CSMS: \
+    TransactionEventRequest(eventType = Ended, stoppedReason = Timeout,\
+    \ntransactionId = AB1234, seqNo = N + 2,timestamp, meterValues)
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse()
+  deactivate CSMS
+
+  ChargingStation -> CSMS: StatusNotificationRequest(Available)
+  activate CSMS
+
+  CSMS --> ChargingStation: StatusNotificationResponse()
+  deactivate ChargingStation
+  deactivate CSMS
+end
+
+@enduml

@@ -1,0 +1,72 @@
+@startuml figure_65
+!include style.puml
+
+participant "EV Driver" as EVDriver
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+activate EVDriver
+
+EVDriver -> ChargingStation: 케이블 연결
+activate ChargingStation
+
+ChargingStation -> CSMS: StatusNotificationRequest(Occupied)
+activate CSMS
+
+CSMS --> ChargingStation: StatusNotificationResponse()
+deactivate CSMS
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Started, triggerReason = CablePluggedIn,\
+  \nchargingState = EVConnected, transactionId = AB1234,\
+  \nevse.id = 1, evse.connectorId = 1, meterValues, ...)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate ChargingStation
+deactivate CSMS
+
+EVDriver -> CSMS: 원격 시작
+activate CSMS
+
+CSMS -> ChargingStation: RequestStartTransactionRequest(idToken, remoteStartId = 123)
+activate ChargingStation
+
+ChargingStation --> CSMS: RequestStartTransactionResponse(status = Accepted, transactionId = AB1234)
+
+CSMS -> CSMS: \
+  TransactionId와 일치하는\
+  \nremoteStartId
+
+opt
+  CSMS -> EVDriver: 알림
+  deactivate CSMS
+  deactivate EVDriver
+end
+
+alt AuthorizeRemoteStart = true
+  ChargingStation -> CSMS: AuthorizeRequest(idToken)
+  activate CSMS
+
+  CSMS --> ChargingStation: AuthorizeResponse(idTokenInfo)
+  deactivate CSMS
+end
+
+alt 케이블이 영구적으로 연결되지 않은 경우
+  ChargingStation -> ChargingStation: 커넥터 잠금
+end
+
+ChargingStation -> ChargingStation: 에너지 전달 시작
+
+ChargingStation -> CSMS: \
+  TransactionEventRequest(eventType = Updated, chargingState = Charging,\
+  \ntriggerReason = RemoteStart, remoteStartId = 123, ...)
+activate CSMS
+
+CSMS --> ChargingStation: TransactionEventResponse(...)
+deactivate CSMS
+deactivate ChargingStation
+
+ChargingStation ->o] : 일반 트랜잭션 진행
+
+@enduml

@@ -557,12 +557,12 @@ a|image::asset/info-icon.svg[info-icon,32,32] |
 [[combining_charging_profile_purposes]]
 ==== Combining charging profile purposes
 
-충전 레벨을 안내하는 복합 일정은 다양한 <<charging_profile_purposes,chargingProfilePurposes>>의 기존 충전 프로필을 조합한 것입니다.
+충전 레벨을 안내하는 복합 일정은 다양한 <<charging_profile_purposes,chargingProfilePurposes>>의 기존 충전 프로파일을 조합한 것입니다.
 
-이 복합 일정은 각 시간 간격의 최소값을 취하여 계산합니다. 시간 간격은 고정된 길이일 필요가 없으며 모든 충전 프로필 목적에 대해 동일할 필요도 없습니다. +
+이 복합 일정은 각 시간 간격의 최소값을 취하여 계산합니다. 시간 간격은 고정된 길이일 필요가 없으며 모든 충전 프로파일 목적에 대해 동일할 필요도 없습니다. +
 즉, 결과 복합 일정에는 길이가 다른 간격이 포함될 수 있습니다.
 
-어느 시점에서든 충전 프로필 <<charge_point_max_profile,ChargePointMaxProfile>> 및 <<tx_default_profile,TxDefaultProfile>>(또는 <<tx_profile,TxProfile>>)의 일정을 병합한 결과인 복합 일정의 사용 가능한 전력 또는 전류는 병합된 일정에서 사용 가능한 전력 또는 전류의 가장 낮은 값보다 작거나 같아야 합니다.
+어느 시점에서든 충전 프로파일 <<charge_point_max_profile,ChargePointMaxProfile>> 및 <<tx_default_profile,TxDefaultProfile>>(또는 <<tx_profile,TxProfile>>)의 일정을 병합한 결과인 복합 일정의 사용 가능한 전력 또는 전류는 병합된 일정에서 사용 가능한 전력 또는 전류의 가장 낮은 값보다 작거나 같아야 합니다.
 
 충전 포인트에 두 개 이상의 커넥터가 장착된 경우 ChargePointMaxProfile의 한계 값은 모든 커넥터를 합친 한계입니다. 모든 커넥터의 합친 에너지 흐름은 ChargePointMaxProfile에서 설정한 한계보다 커서는 안 됩니다.
 

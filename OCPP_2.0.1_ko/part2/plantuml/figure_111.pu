@@ -1,0 +1,20 @@
+@startuml figure_111
+!include style.puml
+
+participant "External Control System\n(example DSO)" as ECS
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+ECS -> ChargingStation: 그리드 제한 설정
+activate ChargingStation
+
+opt 충전량 제한이 LimitChangeSignificance보다 많이 변경된 경우
+  ChargingStation -> CSMS: NotifyChargingLimitRequest(evseId, chargingLimit, chargingSchedule)
+  activate CSMS
+
+  CSMS --> ChargingStation: NotifyChargingLimitResponse()
+  deactivate ChargingStation
+  deactivate CSMS
+end
+
+@enduml

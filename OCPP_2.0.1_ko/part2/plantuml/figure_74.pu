@@ -1,0 +1,15 @@
+@startuml figure_74
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+ChargingStation -> CSMS: HeartbeatRequest()
+activate CSMS
+activate ChargingStation
+
+CSMS --> ChargingStation: HeartbeatResponse(currentTime)
+deactivate ChargingStation
+deactivate CSMS
+
+@enduml

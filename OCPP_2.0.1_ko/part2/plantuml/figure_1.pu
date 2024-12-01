@@ -1,0 +1,93 @@
+@startuml figure_1
+!include style.puml
+
+participant "Transaction" as Transaction
+participant "Energy Offer" as EnergyOffer
+participant "Energy Flow" as EnergyFlow
+
+activate Transaction
+group TransactionGroup 
+  note over Transaction
+    트랜잭션 시작은 다음 변수를 통해
+    설정 가능합니다:
+    TxStartPoint
+  end note
+
+  group EnergyOfferPeriod
+    note over EnergyOffer
+      에너지 제공 기간은 EVSE가 준비되고
+      에너지 제공을 하려는 시점에
+      시작됩니다.
+    end note
+
+    Transaction -[hidden]-> EnergyOffer
+    activate EnergyOffer
+
+    group EnergyTransferPeriod
+      EnergyOffer -[hidden]-> EnergyFlow
+      activate EnergyFlow
+
+      note right of EnergyFlow
+        에너지가 전달됩니다.
+      end note
+
+      EnergyFlow -[hidden]-> EnergyOffer
+      deactivate EnergyFlow
+    end group
+
+    note right of EnergyOffer
+      EnergyOfferPeriod 기간동안
+      배터리 고온/완충 또는 EV 내부의
+      스마트 차징으로 인해 EV가 충전되지 않는
+      기간이 존재할 수 있습니다.
+    end note
+
+    group EnergyTransferPeriod
+      EnergyOffer -[hidden]-> EnergyFlow
+      activate EnergyFlow
+
+      note right of EnergyFlow
+        에너지가 전달됩니다.
+      end note
+
+      EnergyFlow -[hidden]-> EnergyOffer
+      deactivate EnergyFlow
+    end group
+    deactivate EnergyOffer    
+  end group
+
+  group EnergyOfferSuspendPeriod
+    note over EnergyOffer
+      트랜잭션 기간동안 EV로 에너지 전달이
+      스마트 차징 또는 로컬 부하 조절로 인해
+      EVSE에서 전기를 전달하지 않는
+      기간이 존재할 수 있습니다.
+    end note
+  end group
+
+  group EnergyOfferPeriod
+    Transaction -[hidden]-> EnergyOffer
+    activate EnergyOffer
+    group EnergyTransferPeriod
+      EnergyOffer -[hidden]-> EnergyFlow
+      activate EnergyFlow
+
+      note right of EnergyFlow
+        에너지가 전달됩니다.
+      end note
+
+      EnergyFlow -[hidden]-> EnergyOffer
+      deactivate EnergyFlow
+    end group
+    deactivate EnergyOffer
+  end group
+
+  deactivate Transaction
+  note over Transaction
+    트랜잭션 정지는 다음 변수를 통해
+    설정 가능합니다.
+    TxStopPoint
+  end note
+end group
+
+@enduml

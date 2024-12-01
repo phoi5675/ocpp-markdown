@@ -547,7 +547,7 @@ image::part2/images/figure_102.svg[Sequence Diagram: Central Smart Charging]
 |8 |참고 |CSMS는 트랜잭션당 <<charging_schedule_type,ChargingSchedule>>에 대한 제약 조건을 결정합니다.
 
 CSMS는 EVSE에 충전 한도를 부과합니다. <<transaction_event_request,TransactionEventRequest>>에 대한 응답으로 CSMS는 TxProfile을 사용하여 트랜잭션에 대한 충전 한도를 설정하도록 선택할 수 있습니다. 충전 프로파일을 보내기 전에 <<transaction_event_request,TransactionEventRequest>>에서 `_offline_` 플래그를 확인하여 트랜잭션이 계속 진행될 가능성이 있는지 확인하는 것이 좋습니다. <<transaction_event_request,TransactionEventRequest>>는 _Offline_ 기간 동안 캐시되었을 수 있습니다. +
-트랜잭션에 적용되는 최종 일정 제약은 목적이 _ChargingStationMaxProfile_인 프로파일을 목적이 _TxProfile_인 프로파일과 병합하거나 목적이 _TxProfile_인 프로파일이 제공되지 않는 경우 <<tx_default_profile,TxDefaultProfile>> 프로파일을 병합하여 결정됩니다. 다음 <<charging_profile_type,ChargingProfile>> 목적 중 0개 이상이 이전에 CSMS에서 수신되었을 수 있습니다. _ChargingStationMaxProfile_ 또는 <<tx_default_profile,TxDefaultProfile>>.
+트랜잭션에 적용되는 최종 일정 제약은 목적이 _ChargingStationMaxProfile_ 인 프로파일을 목적이 _TxProfile_ 인 프로파일과 병합하거나 목적이 _TxProfile_ 인 프로파일이 제공되지 않는 경우 <<tx_default_profile,TxDefaultProfile>> 프로파일을 병합하여 결정됩니다. 다음 <<charging_profile_type,ChargingProfile>> 목적 중 0개 이상이 이전에 CSMS에서 수신되었을 수 있습니다. _ChargingStationMaxProfile_ 또는 <<tx_default_profile,TxDefaultProfile>>.
 
 TxProfile에서 ChargingSchedule의 기간 필드를 생략하여 자동으로 트랜잭션이 끝날 때까지 지속되도록 하는 것이 좋습니다. 트랜잭션이 끝나기 전에 TxProfile이 만료되면 활성 TxDefaultProfile과 ChargingStationMaxProfile의 가장 낮은 한도로 돌아갑니다. 다른 활성 프로파일이 없으면 충전기의 로컬 한도로 돌아갑니다.
 
@@ -569,7 +569,7 @@ TxProfile에서 ChargingSchedule의 기간 필드를 생략하여 자동으로 �
 |EVSE는 Control Pilot 신호를 통해 사용할 최대 전류를 설정합니다.
 |이 요구 사항은 61851을 사용하는 AC 충전기에만 적용됩니다. 제한은 EVSE가 이전에 CSMS에서 수신한 (기본) 충전 프로파일을 기반으로 할 수 있습니다.
 |K02.FR.03 |{nbsp}
-|업데이트된 <<charging_profile_type,ChargingProfile>>이 현재 트랜잭션에만 적용되도록 하기 위해 CSMS는 <<charging_profile_type,ChargingProfile>>의 chargingProfilePurpose를 _TxProfile_로 설정해야 합니다.
+|업데이트된 <<charging_profile_type,ChargingProfile>>이 현재 트랜잭션에만 적용되도록 하기 위해 CSMS는 <<charging_profile_type,ChargingProfile>>의 chargingProfilePurpose를 _TxProfile_ 로 설정해야 합니다.
 |업데이트된 청구 프로파일은 CSMS에서 동일한 chargingProfileId로 <<charging_profile_type,ChargingProfile>>을 보내면 보낼 수 있습니다.
 |K02.FR.04 |_TxProfile_ 목적이 있는 트랜잭션별 프로파일이 있는 경우.
 |<<tx_profile,TxProfile>>은 현재 트랜잭션 기간 동안만 목적이 <<tx_default_profile,TxDefaultProfile>>인 기본 청구 프로파일을 무시해야 합니다. |{nbsp}
@@ -590,7 +590,7 @@ TxProfile에서 ChargingSchedule의 기간 필드를 생략하여 자동으로 �
 <<<
 
 [[k03_local_smart_charging]]
-=== K03 - 로컬 스마트 충전
+=== K03 - Local Smart Charging
 
 .K03 - 로컬 스마트 충전
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
@@ -637,7 +637,7 @@ image::part2/images/figure_103.svg[Sequence Diagram: Local Smart Charging]
 로컬 스마트 충전 그룹의 충전기에 대한 제한은 로컬 컨트롤러에서 어떤 방식으로든 미리 구성하거나 CSMS에서 설정할 수 있습니다. 로컬 컨트롤러에는 필요에 따라 제한을 조정하여 연결된 EVSE 간에 이 용량을 분배하는 논리가 포함되어 있습니다.
 |===
 
-==== K03 - 로컬 스마트 충전 - 요구 사항
+==== K03 - Local Smart Charging - Requirements
 
 .K03 - 요구 사항
 [cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
@@ -668,7 +668,7 @@ image::part2/images/figure_103.svg[Sequence Diagram: Local Smart Charging]
 <<<
 
 [[k04_internal_load_balancing]]
-=== K04 - 내부 부하 분산
+=== K04 - Internal Load Balancing
 
 .K04 - 내부 부하 분산
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
@@ -699,7 +699,7 @@ image::part2/images/figure_103.svg[Sequence Diagram: Local Smart Charging]
 |8 |비고 |해당 없음
 |===
 
-==== K04 - 내부 부하 분산 - 요구 사항
+==== K04 - Internal Load Balancing - Requirements
 
 .K04 - 요구 사항
 [cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
@@ -717,12 +717,12 @@ image::part2/images/figure_103.svg[Sequence Diagram: Local Smart Charging]
 |선택 사항인 <<charging_schedule_type,ChargingSchedule>> 필드 <<charging_schedule_type,minChargingRate>>는 충전기에서 EVSE 간의 전력 분배를 최적화하는 데 사용할 수 있습니다.
 |매개변수는 로컬 컨트롤러에 <<charging_schedule_type,minChargingRate>> 이하의 충전은 비효율적임을 알려 다른 밸런싱 전략을 선택할 수 있는 가능성을 제공합니다.
 |K04.FR.05 |{nbsp}
-|모든 EVSE(및 충전기 하드웨어 자체)의 결합된 에너지 흐름은 _ChargingStationMaxProfile_에서 설정한 제한보다 커서는 안 됩니다. |{nbsp}
+|모든 EVSE(및 충전기 하드웨어 자체)의 결합된 에너지 흐름은 _ChargingStationMaxProfile_ 에서 설정한 제한보다 커서는 안 됩니다. |{nbsp}
 |===
 
 <<<
 
-==== K05 - 충전 프로파일이 있는 원격 시작 트랜잭션
+=== K05 - Remote Start Transaction with Charging Profile
 
 .K05 - 충전 프로파일이 있는 원격 시작 트랜잭션
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
@@ -733,7 +733,7 @@ image::part2/images/figure_103.svg[Sequence Diagram: Local Smart Charging]
 |2 |ID |K05
 |{nbsp} d|_기능 블록_ |K. 스마트 충전
 |3 |목표 |CSMS가 <<charging_profile_type,ChargingProfile>>을 직접 포함하여 트랜잭션을 원격으로 시작할 수 있도록 하여 트랜잭션이 올바른 <<charging_profile_type,ChargingProfile>>을 사용하도록 합니다.
-|4 |설명 |이 사용 사례는 CSMS가 <<tx_profile,TxProfile>> 목적으로 트랜잭션을 원격으로 시작하는 방법을 다룹니다. 이렇게 하면 올바른 <<tx_profile,TxProfile>>이 사용됩니다. 또한 충전기가 <<request_start_transaction_request,RequestStartTransactionRequest>>를 수신한 후 _offline_이 되는 경우도 있습니다. +
+|4 |설명 |이 사용 사례는 CSMS가 <<tx_profile,TxProfile>> 목적으로 트랜잭션을 원격으로 시작하는 방법을 다룹니다. 이렇게 하면 올바른 <<tx_profile,TxProfile>>이 사용됩니다. 또한 충전기가 <<request_start_transaction_request,RequestStartTransactionRequest>>를 수신한 후 _offline_ 이 되는 경우도 있습니다. +
 3단계에서 1단계로의 충전 전환이 항상 가능한 것은 아니며 트랜잭션은 올바른 단계에서 시작해야 하므로 이것도 필요합니다.
 |{nbsp} d|_Actors_ |충전기, CSMS, 외부 트리거
 |{nbsp} d|_시나리오 설명_
@@ -746,10 +746,10 @@ image::part2/images/figure_103.svg[Sequence Diagram: Local Smart Charging]
 |5 |필수 조건 |기능 블록 _Smart Charging_ 이 설치되었습니다.
 |6 |사후 조건
 |**성공한 사후 조건:** +
-충전기가 제공된 <<충전_프로파일_유형, 충전_프로파일>>을 고려하여 성공적으로 충전합니다. +
+충전기가 제공된 <<charging_profile_type,ChargingProfile>>을 고려하여 성공적으로 충전합니다. +
 **실패한 사후 조건:** +
 트랜잭션이 _시작되지_ 않습니다. +
-충전기가 제공된 <<충전_프로파일_유형, 충전_프로파일>>을 고려하여 성공적으로 충전하지 않습니다.
+충전기가 제공된 <<charging_profile_type,ChargingProfile>>을 고려하여 성공적으로 충전하지 않습니다.
 |===
 
 .시퀀스 다이어그램: 충전 프로파일이 있는 원격 시작 트랜잭션
@@ -765,7 +765,7 @@ image::part2/images/figure_104.svg[시퀀스 다이어그램: 충전 프로파�
   목적이 있는 ChargingProfile이 RequestStartTransactionRequest의 일부로 제공되는 경우, 당시에는 알 수 없기 때문에 ChargingProfile에 transactionId를 제공할 수 없습니다.
 |===
 
-==== K05 - Remote Start Transaction with Charging Profile
+==== K05 - Remote Start Transaction with Charging Profile - Requirements
 
 .K05 - 요구 사항
 [cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
@@ -797,8 +797,8 @@ image::part2/images/figure_104.svg[시퀀스 다이어그램: 충전 프로파�
 |1 |이름 |트랜잭션 중 오프라인 동작 스마트 충전
 |2 |ID |K06
 |{nbsp} d|_기능 블록_ |K. 스마트 충전
-|3 |목표 |충전기가 _offline_ 인 동안 트랜잭션 기간 동안 현재 <<충전_프로파일_유형,충전_프로파일>>을 계속 사용할 수 있도록 합니다.
-|4 |설명 |충전기가 목적이 <<tx_profile,TxProfile>>인 트랜잭션별 <<충전_프로파일_유형,충전_프로파일>>을 수신한 후 _offline_ 이 되면 트랜잭션 기간 동안 이 프로파일을 계속 사용합니다.
+|3 |목표 |충전기가 _offline_ 인 동안 트랜잭션 기간 동안 현재 <<charging_profile_type,ChargingProfile>>을 계속 사용할 수 있도록 합니다.
+|4 |설명 |충전기가 목적이 <<tx_profile,TxProfile>>인 트랜잭션별 <<charging_profile_type,ChargingProfile>>을 수신한 후 _offline_ 이 되면 트랜잭션 기간 동안 이 프로파일을 계속 사용합니다.
 |{nbsp} d|_Actors_ |충전기, CSMS, EV
 |{nbsp} d|_시나리오 설명_
   |**1.** CSMS가 <<tx_profile,TxProfile>>과 함께 <<set_charging_profile_request,SetChargingProfileRequest>>를 충전기로 보냅니다. +
@@ -1083,7 +1083,7 @@ image::part2/images/figure_109.svg[사용 사례 "충전 프로파일 지우기"
   에 대한 선택적 값이 있는 경우 일치하는 <<charging_profile_type,ChargingProfile(s)>>는 모두 <<charging_profile_type,ChargingProfile>> = `ChargingStationExternalConstraints`
     |충전기는 _status_ = `Unknown` 인 <<clear_charging_profile_response,ClearChargingProfileResponse>> 메시지로 응답해야 합니다.
       |외부 제약에 대한 충전 프로파일은 ClearChargingProfile 메시지에서 무시됩니다.
-|K10.FR.09 |지정된 _chargingProfileId_와 +
+|K10.FR.09 |지정된 _chargingProfileId_ 와 +
   참조된 <<charging_profile_type,ChargingProfile>> = `ChargingStationExternalConstraints` 의 <<charging_profile_purpose_enum_type,chargingProfilePurpose>>를 수신하면
     |충전기는 _status_ = `Unknown` 인 <<clear_charging_profile_response,ClearChargingProfileResponse>> 메시지로 응답해야 합니다.
       |외부 제약에 대한 충전 프로파일은 ClearChargingProfile 메시지에서 무시됩니다.
@@ -1148,7 +1148,7 @@ image::part2/images/figure_110.svg[Sequence diagram of the use case "Setting / U
 |K11.FR.03 |K11.FR.02 +
   AND +
   <<notify_charging_limit_with_schedule,EnableNotifyChargingLimitWithSchedules>>가 참입니다.
-    ||<<notify_charging_limit_request,NotifyChargingLimitRequest>>에는 외부 시스템에서 설정한 충전 한도/일정이 포함되어야 합니다. |{nbsp}
+    |<<notify_charging_limit_request,NotifyChargingLimitRequest>>에는 외부 시스템에서 설정한 충전 한도/일정이 포함되어야 합니다. |{nbsp}
 |K11.FR.04 |K11.FR.01 +
   AND +
   충전 요금이 <<limit_change_significance,`LimitChangeSignificance`>> 이상 변경됨
@@ -1439,7 +1439,7 @@ image::part2/images/figure_114.svg[시퀀스 다이어그램: 고수즌 통신�
 |K15.FR.16 |K15.FR.07
   |충전기를 구성하여 <<notify_ev_charging_needs_request,NotifyEVChargingNeedsRequest>> 메시지 이전에 idToken이 포함된 TransactionEvent를 보내도록 하는 것이 좋습니다. 이렇게 하면 CSMS가 충전 일정을 생성할 때 사용자를 고려할 수 있습니다. |{nbsp}
 |K15.FR.17 |충전기가 트랜잭션이 시작된 직후 <<set_charging_profile_request,SetChargingProfileRequest>>를 수신하고 <<notify_ev_charging_needs_request,NotifyEVChargingNeedsRequest>>를 CSMS로 보내기 전에 수신하는 경우
-  |충전기는 <<set_charging_profile_response,SetChargingProfileResponse>>를 _status_ = `Rejected` 로 응답하고 _statusInfo_를 _reasonCode_ = `InvalidMessageSeq` 로 응답해야 합니다.
+  |충전기는 <<set_charging_profile_response,SetChargingProfileResponse>>를 _status_ = `Rejected` 로 응답하고 _statusInfo_ 를 _reasonCode_ = `InvalidMessageSeq` 로 응답해야 합니다.
     |CSMS가 프로파일을 너무 일찍 보냈습니다. CS가 <<notify_ev_charging_needs_request,NotifyEVChargingNeedsRequest>>를 수신하면 다시 충전 프로파일을 보내기만 하면 충전 프로파일을 거부하는 대신 수락해도 문제가 없습니다.
 |K15.FR.18 |K15.FR.03 또는 +
   K15.FR.05
@@ -1518,7 +1518,7 @@ image::part2/images/figure_115.svg[CSMS에서 재협상 시작]
 |K16.FR.07 |K16.FR.05 +
   AND +
   EV 충전 프로파일이 CSMS 충전 일정의 한도 내에 있지 않음
-    |CSMS가 <<notify_ev_charging_schedule_response,NotifyEVChargingScheduleResponse>>로 응답하고 _status_ `Rejected`로 충전기에 응답합니다. |{nbsp}
+    |CSMS가 <<notify_ev_charging_schedule_response,NotifyEVChargingScheduleResponse>>로 응답하고 _status_ `Rejected` 로 충전기에 응답합니다. |{nbsp}
 |K16.FR.08 |K16.FR.07
   |CSMS가 사용 사례 K16에 따라 새로운 재협상을 시작합니다. |{nbsp}
 |K16.FR.09 |충전기가 EV로부터 충전 요구를 수신하는 경우

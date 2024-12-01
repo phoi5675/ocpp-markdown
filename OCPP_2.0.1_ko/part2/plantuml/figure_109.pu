@@ -1,0 +1,15 @@
+@startuml figure_109
+!include style.puml
+
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+CSMS -> ChargingStation: ClearChargingProfileRequest([id], [evseId], [chargingProfilePurpose], [stackLevel])
+activate ChargingStation
+activate CSMS
+
+ChargingStation --> CSMS: ClearChargingProfileResponse(status)
+deactivate ChargingStation
+deactivate CSMS
+
+@enduml

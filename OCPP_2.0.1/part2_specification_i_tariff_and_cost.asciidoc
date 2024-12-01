@@ -47,7 +47,7 @@ Because tariff structures can become very complex it will be difficult to conver
   The EV Driver is authorized, knows which tariff is applicable for him/her and can start charging.
 
   **Failure postcondition:** +
-  If the authorization status is other than _Accepted_ , the EV Driver can _not_ start and might not know the tariff.
+  If the authorization status is other than _Accepted_, the EV Driver can _not_ start and might not know the tariff.
 |===
 
 .Sequence Diagram: Show EV Driver-specific tariff information

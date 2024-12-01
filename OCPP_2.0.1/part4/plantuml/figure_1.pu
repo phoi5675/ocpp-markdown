@@ -1,0 +1,23 @@
+@startuml figure_1
+!include component_diagram_style.puml
+
+left to right direction
+
+node "CSMS" as CSMS
+
+folder "Local group" {
+  node "Local Controller\nCS00" as LocalControllerCS00
+
+  node "Charge Station\nCS01" as CS01
+  node "Charge Station\nCS02" as CS02
+  node "Charge Station\nCS03" as CS03
+
+}
+
+CSMS -down- LocalControllerCS00
+
+LocalControllerCS00 -down- CS01 
+LocalControllerCS00 -down- CS02
+LocalControllerCS00 -down- CS03
+
+@enduml

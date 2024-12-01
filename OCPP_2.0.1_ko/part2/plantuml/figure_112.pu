@@ -1,0 +1,33 @@
+@startuml figure_112
+!include style.puml
+
+participant "External Control System\n(example DSO)" as ECS
+participant "Charging Station" as ChargingStation
+participant "CSMS" as CSMS
+
+ECS -> ChargingStation: 그리드 제한 해제
+activate ECS
+activate ChargingStation
+
+opt 트랜잭션이 진행중인 경우
+  opt
+    ChargingStation -> ChargingStation: 충전 스케쥴 다시 계산
+  end
+
+  ChargingStation -> ChargingStation: 충전 제한 해제
+end
+
+ChargingStation -> CSMS: ClearedChargingLimitRequest(evseId, chargingLimitSource)
+activate CSMS
+
+CSMS --> ChargingStation: ClearedChargingLimitResponse()
+deactivate CSMS
+
+opt 충전량 제한이 LimitChangeSignificance보다 많이 변경된 경우
+  ChargingStation -> CSMS: TransactionEventRequest(eventType = Updated, trigger = ChargingRateChanged, ...)
+  activate CSMS
+
+  CSMS --> ChargingStation: TransactionEventResponse(...)
+end
+
+@enduml

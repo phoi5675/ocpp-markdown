@@ -1,0 +1,41 @@
+@startuml figure_9
+!include style.puml
+
+participant "Operator" as Operator
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+Operator -> CSMS: 네트워크 설정 변경
+activate Operator
+activate CSMS
+
+deactivate Operator
+
+CSMS -> ChargingStation: SetVariablesRequest(NetworkConfigurationPriority)
+activate ChargingStation
+
+ChargingStation --> CSMS: SetVariablesResponse(status: RebootRequired)
+deactivate ChargingStation
+
+CSMS -> ChargingStation: ResetRequest(OnIdle)
+activate ChargingStation
+
+ChargingStation --> CSMS: ResetResponse(Accepted)
+deactivate CSMS
+
+ChargingStation -> ChargingStation: Reboot
+
+ChargingStation -> ChargingStation: \
+  더 강화된 보안 프로파일을 포함한 \n\
+  (신규) NetworkConnectionProfile을 \n\
+  이용하여 연결
+
+ChargingStation -> CSMS: BootNotificationRequest(...)
+activate CSMS
+
+CSMS --> ChargingStation: BootNotificationResponse(...)
+
+deactivate CSMS
+deactivate ChargingStation
+
+@enduml

@@ -708,7 +708,7 @@ See <<k01_set_charging_profile,K01 - Set Charging Profile>>
 
 <<<
 
-==== K05 - Remote Start Transaction with Charging Profile
+=== K05 - Remote Start Transaction with Charging Profile
 
 .K05 - Remote Start Transaction with Charging Profile
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]

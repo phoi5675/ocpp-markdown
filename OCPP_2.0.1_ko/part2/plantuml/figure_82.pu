@@ -1,0 +1,32 @@
+@startuml figure_82
+!include style.puml
+
+actor "EV Driver" as EVDriver
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+EVDriver -> CSMS: 예약
+activate CSMS
+
+CSMS -> ChargingStation: ReserveNowRequest(connectorId, idToken = TOKEN_A, ...)
+activate ChargingStation
+
+ChargingStation --> CSMS: ReserveNowResponse(status = Accepted)
+deactivate CSMS
+
+opt 특정 EVSE가 이 예약에 이용된 경우
+  ChargingStation -> CSMS: StatusNotificationRequest(status = Reserved, ...)
+  activate CSMS
+
+  CSMS --> ChargingStation: StatusNotificationResponse()
+  deactivate CSMS
+  deactivate ChargingStation
+end
+
+EVDriver -> ChargingStation: IdToken(TOKEN_A) 제시
+activate ChargingStation
+
+ChargingStation ->o] : 일반 충전 세션 진행
+deactivate ChargingStation
+
+@enduml

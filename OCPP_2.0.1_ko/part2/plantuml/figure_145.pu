@@ -1,0 +1,25 @@
+@startuml figure_145
+!include style.puml
+
+actor "CSO" as CSO
+participant "CSMS" as CSMS
+participant "Charging Station" as ChargingStation
+
+activate CSO
+
+CSO -> CSMS: 메시지(id=12) 지우기
+activate CSMS
+
+CSMS -> ChargingStation: ClearDisplayMessageRequest(id=12)
+activate ChargingStation
+
+ChargingStation -> ChargingStation: 메시지(id=12)\n제거
+
+ChargingStation --> CSMS: ClearDisplayMessageResponse(Accepted)
+deactivate ChargingStation
+
+opt
+  CSMS --> CSO: 알림
+end
+
+@enduml

@@ -9,7 +9,7 @@ EVDriver -> ChargingStation: provides identification
 activate ChargingStation
 
 note over ChargingStation, CSMS
-  User authorization successful,
+  User authorization successful
 end note
 
 ChargingStation -> CSMS: \
