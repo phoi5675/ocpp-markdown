@@ -446,7 +446,7 @@ When a Charging Station wants to give detailed control of configuring the intern
 There are 2 ways a Charging Station can support punctual automated bi-annual changeover between "standard time" and "daylight saving time" periods.
 
 * The transition dates and offsets are known in the Charging Station, based on the configured <<timezone,`TimeZone`>>.
-* The transition date and offset is manually configured for every transition via: <<next_time_offset_transition_datetime,`NextTimeOffsetTransitionDateTime`>> and <<,time_offset_next_transition`TimeOffsetNextTransition`>>.
+* The transition date and offset is manually configured for every transition via: <<next_time_offset_transition_datetime,`NextTimeOffsetTransitionDateTime`>> and <<time_offset_next_transition,`TimeOffsetNextTransition`>>.
 
 Daylight saving time is used for displaying the current time to the EV driver.
 

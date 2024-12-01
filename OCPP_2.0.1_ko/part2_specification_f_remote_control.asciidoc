@@ -278,7 +278,7 @@ image::part2/images/figure_67.svg[Sequence Diagram: Remote Start Transaction - R
   |The Charging Station SHALL ignore the specified <<charging_profile_type,ChargingProfile>>.
     |The device model variable SmartChargingCtrlr.Enabl ed tells CSMS whether smart charging is supported.
 |F02.FR.21  |When a <<request_start_transaction_request,RequestStartTransactionRequest>> is received.
-  |The next <<transaction_event_request,TransactionEventRequest>> SHALL contain _triggerReason_:`RemoteStart` and the _remoteStartId_ from the <<request_start_transaction_request,RequestStartTransactionRequest>>.
+  |The next <<transaction_event_request,TransactionEventRequest>> SHALL contain _triggerReason_: `RemoteStart` and the _remoteStartId_ from the <<request_start_transaction_request,RequestStartTransactionRequest>>.
     |This is to notify CSMS that this is the result of RequestStartTransaction . + Note, that if TxStartPoint=`EVConnected` the transaction will be started upon cable connection, but the _triggerReason_ = `RemoteStart` must still be sent. The connection event is reported by the fact that `chargingState` = `EVConnected`.
 |F02.FR.22  |If the <<request_start_transaction_request,RequestStartTransactionRequest>> does not contain an _evseId_ AND +
   the Charging Station is capable of selecting an EVSE

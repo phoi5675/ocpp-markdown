@@ -5,7 +5,7 @@
 [[controller_components]]
 == Controller Components
 
-This section gives an overview of the 'Controller' components, which are introduced in OCPP 2.0. A controller component can be recognized by the 'Ctrlr' suffix and is responsible for the configuration of a certain functionality. Most of the <<referenced_components_and_variables,'Referenced' components that are described in this document, are 'Controller' components.
+This section gives an overview of the 'Controller' components, which are introduced in OCPP 2.0. A controller component can be recognized by the 'Ctrlr' suffix and is responsible for the configuration of a certain functionality. Most of the <<referenced_components_and_variables,'Referenced' components>> that are described in this document, are 'Controller' components.
 
 The table below contains a summary of all Controller components, for more details, please refer to Part 2 - Appendices.
 
