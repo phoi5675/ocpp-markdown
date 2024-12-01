@@ -29,7 +29,7 @@ InstallScheduled --> Installing
 SignatureVerified --> Installing: Install immediately
 InstallRebooting_1 --> Installing
 
-Installing -> InstallVerificationFailed: Varification of the firmware failed
+Installing -> InstallVerificationFailed: Verification of the firmware failed
 Installing -> InstallationFailed: Installation failed
 
 Installing --> InstallRebooting_2
