@@ -12,5 +12,3 @@ asciidoctor-pdf --theme ../styles/themes/theme.yml -a pdf-fontsdir="../styles/fo
 
 - [Open Charge Alliance(OCA)](https://openchargealliance.org/) for OCPP document
 - [pdf-to-markdown](https://github.com/jzillmann/pdf-to-markdown) for converting OCPP pdf to markdown
-- [Llama-3-Open-Ko-8B](https://huggingface.co/beomi/Llama-3-Open-Ko-8B) and [Llama-3-Open-Ko-8B-gguf](https://huggingface.co/teddylee777/Llama-3-Open-Ko-8B-gguf) for translation
-- [Ollama](https://ollama.com) for running LLM model
