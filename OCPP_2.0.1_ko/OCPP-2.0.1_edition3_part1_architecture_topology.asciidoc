@@ -252,7 +252,7 @@ DeviceModel을 사용하여 (물리적) 장치와 (가상) 컨트롤러 구성 �
 |{nbsp} |문자열 |10진수 |정수 |dateTime |부울 |옵션 목록 |시퀀스 목록 |멤버 목록
 |상한 임계값 |{nbsp} |X |X |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp}
 |하한 임계값 |{nbsp} |X |X |{nbsp} |{nbsp} |{nbsp} |{nbsp} |{nbsp}
-|델타 |X |X |X |X |X |X |X |X |X |X
+|델타 |X |X |X |X |X |X |X |X 
 |주기 |X |X |X |{nbsp} |X |X |X |X
 |시간 동기화 주기 +
 (PeriodicClockAligned) |X |X |X |X |{nbsp} |X |X |X |X |X
