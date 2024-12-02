@@ -7,44 +7,44 @@
 
 [cols="<.^*3",%autowidth.stretch,options="header,autowidth"]
 |===
-|Version         |Date        |Description
+|버전 |날짜 |설명
 
-|2.0.1 Edition 3 |2024-05-06  |OCPP 2.0.1 Edition 3. All errata from OCPP 2.0.1 Part 2 until and including Errata 2024-04 have been merged into this version of the specification.
-|2.0.1 Edition 2 |2022-12-15  |OCPP 2.0.1 Edition 2. All errata from OCPP 2.0.1 Part 2 - Errata v2.0 have been merged into this version of the specification.
-|2.0.1           |2020-03-31  |Final version of OCPP 2.0.
-|2.0             |2018-04-11  |OCPP 2.0 April 2018 +
-  First major release since 1.0. +
-  Lots of new/improved/revised functionality +
-  Revised documentation
+|2.0.1 3판 |2024-05-06 |OCPP 2.0.1 3판. OCPP 2.0.1 2부에서 2024-04까지의 모든 정오표가 이 버전의 사양에 병합되었습니다.
+|2.0.1 2판 |2022-12-15 |OCPP 2.0.1 2판. OCPP 2.0.1 2부 - 정오표 v2.0의 모든 정오표가 이 버전의 사양에 병합되었습니다.
+|2.0.1 |2020-03-31 |OCPP 2.0의 최종 버전.
+|2.0 |2018-04-11 |OCPP 2.0 2018년 4월 +
+1.0 이후 첫 번째 주요 릴리스. +
+많은 새로운/개선된/개정된 기능 +
+개정된 문서
 |===
 
 :sectnums:
 == Scope
 
-This document defines the protocol used between a **Charging Station** and a **Charging Station Management System** in an EV charging infrastructure in the form of use cases. If the protocol requires a certain action or response from one side or the other, then this will be stated in this document.
+이 문서는 EV 충전 인프라에서 **충전기**와 **충전기 관리 시스템** 간에 사용되는 프로토콜을 사용 사례 형태로 정의합니다. 프로토콜에 한쪽 또는 다른 쪽에서 특정 작업이나 응답이 필요한 경우 이 문서에 명시됩니다.
 
-This part of the specification does not define the communication technology. In order to ensure widespread compatibility OCPP 2.0.1 is limited to JSON. The specifications for the JSON implementation are in "Part 4 - JSON over WebSockets implementation guide".
+이 사양의 이 부분은 통신 기술을 정의하지 않습니다. 광범위한 호환성을 보장하기 위해 OCPP 2.0.1은 JSON으로 제한됩니다. JSON 구현에 대한 사양은 "4부 - JSON over WebSockets 구현 가이드"에 있습니다.
 
 === OCPP 2.0.1
 
-This specification defines version 2.0.1 of OCPP.
+이 사양은 OCPP 버전 2.0.1을 정의합니다.
 
-After the release of OCPP 2.0, some issues were found in OCPP 2.0. Some of these issues could not be fixed issuing errata to the specification text only, as has been done with OCPP 1.6, but required changes to the protocol’s machine-readable schema definition files that cannot be backward compatible.
+OCPP 2.0이 출시된 후 OCPP 2.0에서 몇 가지 문제가 발견되었습니다. 이러한 문제 중 일부는 OCPP 1.6에서 수행된 것처럼 사양 텍스트에만 오류를 발행하여 수정할 수 없었지만, 이전 버전과 호환되지 않는 프로토콜의 기계 판독 가능 스키마 정의 파일을 변경해야 했습니다.
 
-To prevent confusion in the market and possible interoperability issues in the field, OCA has decided to name this version: 2.0.1. +
-OCPP 2.0.1 contains fixes for all the known issues, to date, not only the fixes to the messages.
+시장에서의 혼란과 현장에서 발생할 수 있는 상호 운용성 문제를 방지하기 위해 OCA는 이 버전의 이름을 2.0.1로 지정하기로 했습니다. +
+OCPP 2.0.1에는 메시지에 대한 수정 사항뿐만 아니라 현재까지 알려진 모든 문제에 대한 수정 사항이 포함되어 있습니다.
 
-This version replaces OCPP 2.0. OCA advises implementers of OCPP to no longer implement OCPP 2.0 and only use version 2.0.1 going forward.
+이 버전은 OCPP 2.0을 대체합니다. OCA는 OCPP 구현자에게 더 이상 OCPP 2.0을 구현하지 않고 앞으로는 버전 2.0.1만 사용하도록 조언합니다.
 
-As a rule, existing numbered requirements are only updated or removed, previously used requirements numbers are never reused for a totally different requirement.
+원칙적으로 기존 번호가 매겨진 요구 사항은 업데이트되거나 제거될 뿐이며, 이전에 사용된 요구 사항 번호는 완전히 다른 요구 사항에 재사용되지 않습니다.
 
-Any mentions of "OCPP 2.0" refers to revision 2.0.1 unless specifically stated otherwise.
+특별히 달리 명시되어 있지 않는 한 "OCPP 2.0"이라는 언급은 개정판 2.0.1을 말합니다.
 
 === OCPP 2.0.1 Edition 3
 
-A number of errata documents have been released for OCPP 2.0.1 Edition 2 that was released in 2022. These errata until and including Errata 2024-04 have been incorporated in this document, “OCPP-2.0.1_edition3_part2_specification”, such that it is no longer necessary to read these errata in addition to the specification. The incorporation of the errata in edition 3 does not affect any schemas of OCPP messages. Certain errata did contain changes to requirements or even new requirements, but only in cases where a requirement contains an obvious error and would not or could not be implemented as described. New requirements were only added when they were already implicitly there. These changes have been discussed in or were proposed by the Technology Working Group of the Open Charge Alliance.
+2022년에 출시된 OCPP 2.0.1 Edition 2에 대한 여러 오류 문서가 출시되었습니다. 오류 2024-04까지의 오류는 이 문서 "OCPP-2.0.1_edition3_part2_specification"에 통합되어 더 이상 사양과 함께 이러한 오류도 읽을 필요가 없습니다. 버전 3에 오류 통합은 OCPP 메시지의 스키마에 영향을 미치지 않습니다. 특정 오류에는 요구 사항의 변경 사항 또는 새로운 요구 사항이 포함되었지만 요구 사항에 명백한 오류가 포함되어 있고 설명된 대로 구현되지 않거나 구현할 수 없는 경우에만 해당됩니다. 새로운 요구 사항은 이미 암묵적으로 존재하는 경우에만 추가되었습니다. 이러한 변경 사항은 Open Charge Alliance의 기술 작업 그룹에서 논의되었거나 제안되었습니다.
 
-The appendices of the OCPP 2.0.1 part 2 can be updated without requiring a new OCPP release. This mainly concerns the components and variables of the OCPP device model, which can be extended with new components or variables, as long as they are optional.
+OCPP 2.0.1 part 2의 부록은 새로운 OCPP 릴리스가 필요하지 않고도 업데이트할 수 있습니다. 이는 주로 OCPP 장치 모델의 구성 요소와 변수에 관한 것이며, 선택 사항인 한 새로운 구성 요소나 변수로 확장이 가능합니다.
 
 == Conventions, Terminology and Abbreviations
 
@@ -52,380 +52,380 @@ The appendices of the OCPP 2.0.1 part 2 can be updated without requiring a new O
 
 ==== Normative
 
-All sections and appendices are normative, unless they are explicitly indicated to be informative.
+모든 절과 부록은 명확하게 정보 제공을 목적으로 한다고 표시된 경우를 제외하고는 규범적입니다.
 
 ==== Requirements take precedence over text
 
-Whenever there is any (apparent) conflict between narrative text and requirements in the specification document, the requirements have precedence.
+설명적 텍스트와 사양 문서의 요구 사항 사이에 (겉보기에) 충돌이 있는 경우, 요구 사항이 우선합니다.
 
 ==== Requirement Keywords
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC-2119 <<rfc2119,[RFC2119]>>, subject to the following additional clarification clause:
+이 문서의 핵심 단어 "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", "OPTIONAL"은 RFC-2119 <<rfc2119,[RFC2119]>>에 설명된 대로 해석되어야 하며, 다음 추가 설명 조항이 적용됩니다.
 
-The phrase "valid reasons in particular circumstances" relating to the usage of the terms "SHOULD", "SHOULD NOT", "RECOMMENDED", and "NOT RECOMMENDED" is to be taken to mean technically valid reasons, such as the absence of necessary hardware to support a function from a Charging Station design: for the purposes of this specification it specifically excludes decisions made on commercial, or other non-technical grounds, such as cost of implementation, or likelihood of use.
+"SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED"라는 용어 사용과 관련된 "특정 상황에서의 타당한 이유"라는 문구는 충전기 설계의 기능을 지원하는 데 필요한 하드웨어가 없는 것과 같은 기술적으로 타당한 이유를 의미하는 것으로 간주됩니다. 이 사양의 목적을 위해 구현 비용이나 사용 가능성과 같은 상업적 또는 기타 비기술적 이유로 내린 결정은 구체적으로 제외합니다.
 
 [[primitive_datatypes]]
 ==== Primitive Datatypes
 
-The specification mentions the following primitive datatypes:
+사양에는 다음과 같은 기본 데이터 유형이 언급되어 있습니다.
 
-.Primitive Datatypes
+.기본 데이터 유형
 [cols="<.^2,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|Datatype       |Description
+|데이터 유형 |설명
 
-|string         |The characters defined in the UTF-8 character set are allowed to be used.
-|integer        |32 bit (31 bit resolution, 1 sign bit)
+|문자열 |UTF-8 문자 집합에 정의된 문자를 사용할 수 있습니다.
+|정수 |32비트(31비트 해상도, 1부호 비트)
 
-                No leading 0’s
+선행 0 없음
 
-                No plus sign
+더하기 기호 없음
 
-                Allowed value examples: 1234, -1234 +
-                Not Allowed: 01234, +1234
-|decimal        |For data being reported by the Charging Station, the full resolution of the source data must be preserved. The decimal sent towards the Charging Station SHALL NOT have more than six decimal places.
-|identifierString |This is a case-insensitive dataType and can only contain characters from the following character set: a-z, A-Z, 0-9, '*', '-', '_', '=', ':', '+', '\|', '@', '.'
-|dateTime       |All time values exchanged between CSMS and Charging Station SHALL be formatted as defined in <<rfc3339,[RFC3339]>>. Additionally fractional seconds have been given an extra limit. The number of decimal places SHALL NOT exceed the maximum of 3. +
-  Example 1: 2019-04-12T23:20:50.52Z represents 20 minutes and 50.52 seconds after the 23rd hour of April 12th, 2019 in UTC. +
-  Example 2: 2019-12-19T16:39:57+01:00 represents 39 minutes and 57 seconds after the 16th hour of December 19th, 2019 with an offset of +01:00 from UTC (Central European Time).
-|passwordString |This is a UTF-8 encoded case-sensitive string that can only contain characters from the following character set: "a-z", "A-Z", "0-9" +
-  or any of the following limited set of symbols: * - _  : + \| @.
-|AnyType        |Data without specified length or format.
-|boolean        |Only allowed values: "false" and "true".
+허용되는 값 예: 1234, -1234 +
+허용되지 않음: 01234, +1234
+|소수점 |충전기에서 보고하는 데이터의 경우 소스 데이터의 전체 해상도를 유지해야 합니다. 충전기로 전송되는 소수점에는 소수점 여섯 자리를 초과할 수 없습니다.
+|identifierString |대소문자를 구분하지 않는 dataType이며 다음 문자 집합의 문자만 포함할 수 있습니다. a-z, A-Z, 0-9, '*', '-', '_', '=', ':', '+', '\|', '@', '.'
+|dateTime |CSMS와 충전기 간에 교환된 모든 시간 값은 <<rfc3339,[RFC3339]>>에 정의된 대로 포맷해야 합니다. 또한 소수점 이하 초에는 추가 제한이 있습니다. 소수점 이하 자릿수는 최대 3을 초과해서는 안 됩니다. +
+예 1: 2019-04-12T23:20:50.52Z는 UTC 기준으로 2019년 4월 12일 23시 이후 20분 50.52초를 나타냅니다. +
+예 2: 2019-12-19T16:39:57+01:00은 UTC(중부 유럽 시간)에서 +01:00 오프셋을 적용하여 2019년 12월 19일 16시 39분 57초를 나타냅니다.
+|passwordString |다음 문자 집합의 문자만 포함할 수 있는 UTF-8 인코딩된 대소문자 구분 문자열입니다. "a-z", "A-Z", "0-9" +
+또는 다음 제한된 기호 집합 중 하나: * - _ : + \| @.
+|AnyType |지정된 길이 또는 형식이 없는 데이터입니다.
+|boolean |허용되는 값만: "false" 및 "true"입니다.
 |===
 
 ==== Normal communication
 
-Unless otherwise specified, all use cases and requirements assume normal communication between Charging Station and CSMS (_Online_).
+달리 명시하지 않는 한, 모든 사용 사례와 요구 사항은 충전기와 CSMS(_온라인_) 간의 정상적인 통신을 가정합니다.
 
 ==== Field description
 
-In many cases, further explanation about how or when to use certain fields in messages and datatypes is given in the field description. See Chapter <<messages,Messages>>.
+많은 경우, 메시지와 데이터 유형에서 특정 필드를 사용하는 방법 또는 시기에 대한 추가 설명은 필드 설명에 제공됩니다. <<메시지, 메시지>> 장을 ​​참조하세요.
 
 === Terminology
 
 ==== General Terminology
 
-This section contains the terminology that is used throughout this document.
+이 섹션에는 이 문서 전체에서 사용되는 용어가 포함되어 있습니다.
 
-.Terminology
+.용어
 [cols="<.^2s,<.^5",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|Terminology          |Description
+|용어 |설명
 
-|Application          |layer OSI-Layer 5-7.
-|Authentication       |Authentication is the process of confirming an identity or attribute. When speaking about authentication one should distinguish between user authentication (e.g. sender/receiver) and message authentication.
-|Block cipher         |Cryptographic primitive to encrypt/decrypt messages of fixed block length. Example: AES encrypts blocks of 128 bits (16 bytes) at a time.
-|Cable Plugged in     |In this document this can mean the following: +
-  - Cable fixed on Charging Station side, cable plugged in to EV +
-  - Cable plugged into the Charging Station and EV +
-  - Wireless Charger detects an EV +
-|Certificate          |A digital certificate authenticates a public key or entity. See also Public-Key Infrastructure.
-|Certificate Management Protocol |An internet protocol used to manage X.509 digital certificates within a PKI. It is described in RFC 4210 and uses the certificate request message format (CRMF) described in RFC 4211.
-|Charging Cable       |Cable assembly equipped with a, by the EV accepted, plug, intended to be used for the connection between an EV and an EVSE. One side may be permanently attached to the EVSE, or also be equipped with a plug that is accepted by the EVSE.
-|Charging Loop        |In this specification the ISO 15118-2 definition of the charging loop is used: _the V2G messaging phase for controlling the charging process by ISO 15118_.
-|Charging Profile     |Generic Charging Profile, used for different types of Profiles. Contains information about the Profile and holds the <<charging_schedule_type,ChargingSchedule>>.
-|Charging Schedule    |Part of a Charging Profile. Defines a block of charging Power or Current limits. Can contain a start time and length.
-|Charging Station     |The Charging Station is the physical system where EVs can be charged. A Charging Station has one or more EVSEs.
-|Composite Charging Schedule |The charging schedule as calculated by the Charging Station. It is the result of the calculation of all active schedules and possible local limits present in the Charging Station. Local Limits might be taken into account.
-|Confidentiality      |Only authorized entities may access confidential data. To protect data from unauthorized access it can be encrypted. Then only entities with access to the secret keys can access the data after decrypting it.
-|Connector            |The term Connector, as used in this specification, refers to an independently operated and managed electrical outlet on a Charging Station. In other words, this corresponds to a single physical Connector. In some cases an EVSE may have multiple physical socket types and/or tethered cable/Connector arrangements(i.e. Connectors) to facilitate different vehicle types (e.g. four-wheeled EVs and electric scooters).
-|Contactor            |An electrically controlled switching device, typically used by Charging Stations to switch charging power on/off.
-|Contract Certificate |A valid certificate for a charging contract in an EV for 15118 communication.
-|Control Pilot signal |A signal used by a Charging Station to inform an EV of a maximum current limit, as defined by <<iec61851_1,IEC61851-1>>.
+|응용 프로그램 |계층 OSI-계층 5-7.
+|인증 |인증은 신원이나 속성을 확인하는 프로세스입니다. 인증에 대해 말할 때 사용자 인증(예: 발신자/수신자)과 메시지 인증을 구별해야 합니다.
+|블록 암호 |고정된 블록 길이의 메시지를 암호화/복호화하는 암호화 기본 요소입니다. 예: AES는 한 번에 128비트(16바이트) 블록을 암호화합니다.
+|케이블이 연결됨 |이 문서에서는 다음을 의미할 수 있습니다. +
+- 충전기 쪽에 고정된 케이블, EV에 연결된 케이블 +
+- 충전기와 EV에 연결된 케이블 +
+- 무선 충전기가 EV를 감지 +
+|인증서 |디지털 인증서는 공개 키 또는 엔터티를 인증합니다. 공개 키 인프라도 참조하세요.
+|인증서 관리 프로토콜 |PKI 내에서 X.509 디지털 인증서를 관리하는 데 사용되는 인터넷 프로토콜입니다. RFC 4210에 설명되어 있으며 RFC 4211에 설명된 인증서 요청 메시지 형식(CRMF)을 사용합니다.
+|충전 케이블 |EV에서 허용하는 플러그가 장착된 케이블 어셈블리로, EV와 EVSE 간 연결에 사용하도록 의도되었습니다. 한쪽은 EVSE에 영구적으로 부착되거나 EVSE에서 ​​허용하는 플러그가 장착될 수도 있습니다.
+|충전 루프 |이 사양에서는 ISO 15118-2의 충전 루프 정의를 사용합니다. _ISO 15118에 따라 충전 프로세스를 제어하기 위한 V2G 메시징 단계_.
+|충전 프로필 |다양한 유형의 프로필에 사용되는 일반 충전 프로필입니다. 프로필에 대한 정보를 포함하고 <<충전_스케줄_유형,충전스케줄>>을 보유합니다.
+|충전 스케줄 |충전 프로필의 일부입니다. 충전 전력 또는 전류 제한 블록을 정의합니다. 시작 시간과 길이를 포함할 수 있습니다.
+|충전기 |충전기는 EV를 충전할 수 있는 물리적 시스템입니다. 충전기에는 하나 이상의 EVSE가 있습니다.
+|복합 충전 일정 |충전기에서 계산한 충전 일정입니다. 이는 충전기에 있는 모든 활성 일정과 가능한 지역 제한을 계산한 결과입니다. 지역 제한을 고려할 수 있습니다.
+|기밀성 |권한이 있는 엔터티만 기밀 데이터에 액세스할 수 있습니다. 데이터를 무단 액세스로부터 보호하기 위해 암호화할 수 있습니다. 그런 다음 비밀 키에 액세스할 수 있는 엔터티만 데이터를 해독한 후 데이터에 액세스할 수 있습니다.
+|커넥터 |이 사양에서 사용되는 용어 커넥터는 충전기에서 독립적으로 작동하고 관리되는 전기 콘센트를 말합니다. 즉, 이는 단일 물리적 커넥터에 해당합니다. 어떤 경우에는 EVSE에 여러 물리적 소켓 유형 및/또는 고정 케이블/커넥터 배열(예: 커넥터)이 있어 다양한 차량 유형(예: 4륜 EV 및 전기 스쿠터)을 용이하게 할 수 있습니다.
+|Contactor |일반적으로 충전기에서 충전 전원을 켜거나 끄는 데 사용되는 전기 제어 스위칭 장치입니다.
+|Contract Certificate |15118 통신을 위한 EV의 충전 계약에 대한 유효한 인증서입니다.
+|Control Pilot 신호 |충전기에서 EV에 <<iec61851_1,IEC61851-1>>에서 정의한 최대 전류 한도를 알리는 데 사용하는 신호입니다.
 
-|Cost                 |Cost to be paid by an EV Driver for consumed energy/time etc. Including taxes.
-|Cryptographic hash function |Cryptographic hash functions should behave as one-way functions. They must be preimage resistant, 2nd preimage resistant, and collision-resistant. Changes in the input must produce explicitly different results in the output. Example: SHA-256. See also ENISA <<ocpp_security_1,OCPP Security [1]>>.
-|Cryptography         |The ENISA Algorithms, Key Sizes and Parameters Report [1] provides an overview of the current state of the art.
-|CSMS <tab>           |Charging Station Management System. The system that manages Charging Stations and has the information for authorizing Users for using its Charging Stations.
-|Data Integrity       |See Integrity and Message authentication.
-|Digital Signature    |Authenticates the sender. In practice digital signatures are implemented using elliptic curves (EC).
-|Encryption           |Using a cryptographic scheme, the message is mapped to a random-looking undecipherable string (ciphertext). Decryption reverses the encryption process and can only be performed with the corresponding decryption key. This decryption key is either the same as the encryption key (symmetric cryptography) or the private key in a public-key cryptosystem. The confidentiality of the message can be guaranteed only while the keys are kept secret.
-|Energy Management System |A device that manages the local loads (consumption an production) based on local and/or contractual constraints and/or contractual incentives. It has additional inputs, such as sensors and controls from e.g. PV, battery storage.
-|Energy Offer Period  |Time during which a Charging Station is ready and willing to offer energy to an EV.
-|[[energy_transfer_period]]Energy Transfer Period |Time during which an EV chooses to take offered energy, or return it.
-|EVSE                   |An EVSE is considered as an independently operated and managed part of the Charging Station that can deliver energy to one EV at a time.
-|Hash function          |Function that maps a message to a bit string of fixed length (hash value). See also cryptographic hash function.
-|Hash value             |Output of a (cryptographic) hash function. The length is fixed in the specs of the hash function.
-|High level communication |bi-directional digital communication using protocol and messages and physical and data link layers specified in ISO 15118 series <<iso15118_1,[ISO15118-1]>>
-|Idle State               |In both use cases and sequence diagrams, Idle status is referred as the state in which a Charging Station is not performing any use case related tasks. Condition during which the equipment can promptly provide a primary function but is not doing so.
-|Integrity                |Data cannot be altered without authorization. See also Message authentication.
-|Local Controller         |A logical entity between a CSMS and one or more Charging Stations that has the ability to control charging of a group of Charging Stations based on the input from the CSMS, and can send messages to its Charging Stations, independently of the CSMS.
-|Master Pass              |IdToken that can be used to stop any (or all) ongoing transactions. This can be used by for example law enforcement personal to stop a transaction.
-|Master Pass UI           |Master Pass User Interface, this might be a full color touchscreen, but might also be just a couple of buttons and LEDs and/or sounds that enable a user to select transactions to be stopped.
-|Message authentication   |Messages should be protected against unauthorized modifications. The message should always be sent together with an authentication tag providing its authenticity. Such an authentication tag can be the second output of an authenticated cipher such as AES-CCM or AES-GCM or a message authentication code.
-|Mode of Operation        |A mode of operation specifies how the message blocks are processed by the block cipher. Using a block cipher in CBC or CTR mode provides encryption only, whereas using a block cipher in CCM or GCM mode encrypts the plaintext and produces a message authentication tag for the ciphertext.
-|OCPP-J                   |OCPP via JSON over WebSocket.
-|Offline                  |There is no communication possible between the Charging Station and CSMS. For an OCPP-J connection this means the WebSocket connection is not open.
-|Password authentication  |The user proves his/her identity using a password or PIN.
-|Phase Rotation           |Defines the wiring order of the phases between the electrical meter (or if absent, the grid connection), and the Charging Station Connector.
-|Price                    |Specific price tag of a single tariff entry, for example: 0.35 per kWh incl. 18% VAT.
+|비용 |EV 운전자가 소비한 에너지/시간 등에 대해 지불해야 하는 비용입니다. 세금 포함.
+|암호 해시 함수 |암호 해시 함수는 단방향 함수처럼 동작해야 합니다. 이 함수는 사전 이미지 저항성, 2차 사전 이미지 저항성 및 충돌 저항성이 있어야 합니다. 입력의 변경은 출력에서 ​​명확하게 다른 결과를 생성해야 합니다. 예: SHA-256. ENISA <<ocpp_security_1,OCPP 보안 [1]>>도 참조하세요.
+|암호화 |ENISA 알고리즘, 키 크기 및 매개변수 보고서 [1]는 최신 기술에 대한 개요를 제공합니다.
+|CSMS <탭> |충전기 관리 시스템. 충전기를 관리하고 사용자에게 충전기 사용을 허가하는 정보를 제공하는 시스템입니다.
+|데이터 무결성 |무결성 및 메시지 인증을 참조하세요.
+|디지털 서명 |발신자를 인증합니다. 실제로 디지털 서명은 타원 곡선(EC)을 사용하여 구현됩니다.
+|암호화 |암호화 체계를 사용하여 메시지를 무작위로 보이는 해독 불가능한 문자열(암호문)에 매핑합니다. 복호화는 암호화 프로세스를 역전하며 해당 복호화 키로만 수행할 수 있습니다. 이 복호화 키는 암호화 키(대칭 암호화)와 동일하거나 공개 키 암호 시스템의 개인 키입니다. 키가 비밀로 유지되는 동안에만 메시지의 기밀성을 보장할 수 있습니다.
+|에너지 관리 시스템 |지역 및/또는 계약적 제약 및/또는 계약적 인센티브에 따라 지역 부하(소비 및 생산)를 관리하는 장치입니다. 여기에는 PV, 배터리 저장 장치 등의 센서 및 제어와 같은 추가 입력이 있습니다.
+|에너지 제공 기간 |충전기가 EV에 에너지를 제공할 준비가 되어 있는 시간입니다.
+|[[energy_transfer_period]]에너지 전송 기간 |EV가 제공된 에너지를 가져가거나 반환하기로 선택하는 시간입니다.
+|EVSE |EVSE는 한 번에 하나의 EV에 에너지를 공급할 수 있는 충전기의 독립적으로 작동 및 관리되는 부분으로 간주됩니다.
+|해시 함수 |메시지를 고정 길이의 비트 문자열(해시 값)에 매핑하는 함수입니다. 암호화 해시 함수도 참조하세요.
+|해시 값 |(암호화) 해시 함수의 출력입니다. 길이는 해시 함수의 사양에 고정되어 있습니다.
+|고수준 통신 |ISO 15118 시리즈 <<iso15118_1,[ISO15118-1]>>에 명시된 프로토콜 및 메시지와 물리적 및 데이터 링크 계층을 사용하는 양방향 디지털 통신
+|유휴 상태 |사용 사례와 시퀀스 다이어그램 모두에서 유휴 상태는 충전기가 사용 사례 관련 작업을 수행하지 않는 상태를 말합니다. 장비가 주요 기능을 즉시 제공할 수 있지만 그렇게 하지 않는 상태입니다.
+|무결성 |데이터는 권한 없이 변경할 수 없습니다. 메시지 인증도 참조하세요.
+|로컬 컨트롤러 |CSMS와 하나 이상의 충전기 사이의 논리적 엔티티로, CSMS의 입력에 따라 충전기 그룹의 충전을 제어할 수 있으며, CSMS와 독립적으로 충전기로 메시지를 보낼 수 있습니다.
+|마스터 패스 |진행 중인 모든(또는 모든) 거래를 중지하는 데 사용할 수 있는 ID 토큰입니다. 예를 들어 법 집행 기관 직원이 거래를 중지하는 데 사용할 수 있습니다.
+|마스터 패스 UI |마스터 패스 사용자 인터페이스는 풀 컬러 터치스크린일 수도 있지만, 사용자가 중지할 거래를 선택할 수 있도록 하는 몇 개의 버튼과 LED 및/또는 사운드일 수도 있습니다.
+|메시지 인증 |메시지는 무단 수정으로부터 보호되어야 합니다. 메시지는 항상 진위성을 제공하는 인증 태그와 함께 보내야 합니다. 이러한 인증 태그는 AES-CCM 또는 AES-GCM과 같은 인증된 암호의 두 번째 출력이거나 메시지 인증 코드일 수 있습니다.
+|작동 모드 |작동 모드는 블록 암호가 메시지 블록을 처리하는 방식을 지정합니다. CBC 또는 CTR 모드에서 블록 암호를 사용하면 암호화만 제공되지만, CCM 또는 GCM 모드에서 블록 암호를 사용하면 일반 텍스트가 암호화되고 암호 텍스트에 대한 메시지 인증 태그가 생성됩니다.
+|OCPP-J |WebSocket을 통한 JSON을 통한 OCPP.
+|오프라인 |충전기와 CSMS 간에 통신이 불가능합니다. OCPP-J 연결의 경우 WebSocket 연결이 열리지 않습니다.
+|비밀번호 인증 |사용자는 비밀번호 또는 PIN을 사용하여 신원을 증명합니다.
+|위상 회전 |전기 계량기(또는 없는 경우 그리드 연결)와 충전기 커넥터 사이의 위상 배선 순서를 정의합니다.
+|가격 |단일 요금 항목의 특정 가격 태그, 예: 18% VAT 포함 kWh당 0.35.
 
-|Public-key cryptography  |"Cryptographic scheme where a public key is published and henceforth can be used for encryption of messages or verification of digital signatures. Each public key has a counterpart, the corresponding private key. This key must be kept secret and is used for decryption or digital signing of messages. Public-key primitives have a high computational complexity for encryption and therefore are mostly used as part of a hybrid encryption scheme where the public key is used to communicate a common symmetric session key under which all further communication is encrypted. Certificates administered by a public-key infrastructure are used to establish the authenticity of the public key. See also ENISA OCPP Security [12]. The most popular public-key encryption scheme is RSA. Digital signatures can be generated most efficiently with elliptic-curve based (EC) mechanisms."
-|Public-key infrastructure |System to generate, administer, and revoke certificates.
-|Resume regular transaction |Used in sequence diagrams to indicate that this use case/sequence diagram has ended, but the transaction has not ended and will continue, but that is outside of scope of that specific use case.
-|Requirement              |Provision that conveys criteria to be fulfilled. ISO/IEC Guide 2:2004, 7.5.
-|Security Event           |Any event relevant to the secure operation of the device.
-|Security Function        |Any function on the device that is needed for it to be operated securely, including access control, authentication, and encryption.
-|Session                  |A Session in OCPP is a general term that refers to the charging process of an EV, that might include a Transaction.
-|Session key              |Symmetric key with a limited lifetime.
-|Symmetric cryptography   |Sender and receiver hold the same key. Examples for symmetric primitives are block ciphers or MACs.
-|Transaction              |A transaction in OCPP is a part of the complete process of charging an EV that starts and stops based on configurable parameters. These configurable parameters refer to moments in the charging process, such as the EV being connected or the EV driver being authorized.
-|Tariff                   |Collection of prices depending on charging time, power usage and other price affecting parameters.
-|Use case                 |A use case is a structured way of describing the (inter)actions necessary to achieve a certain objective. In this document, a use case consists of an actor list, a scenario description, postconditions and a sequence diagram and is always followed by a list of numbered requirements.
-|User Authentication      |Verification of the identity of the communication partners (e.g., user on the device). Moreover, verification that the communication partners are still alive throughout a session.
+|공개 키 암호화 |"공개 키가 공개되고 이후 메시지 암호화 또는 디지털 서명 검증에 사용될 수 있는 암호화 방식입니다. 각 공개 키에는 해당 개인 키인 대응 키가 있습니다. 이 키는 비밀로 유지해야 하며 메시지의 암호 해독 또는 디지털 서명에 사용됩니다. 공개 키 기본 요소는 암호화에 대한 계산 복잡도가 높기 때문에 대부분 공개 키가 모든 추가 통신이 암호화되는 공통 대칭 세션 키를 전달하는 데 사용되는 하이브리드 암호화 방식의 일부로 사용됩니다. 공개 키 인프라에서 관리하는 인증서는 공개 키의 진위성을 확인하는 데 사용됩니다. ENISA OCPP 보안[12]도 참조하세요. 가장 널리 사용되는 공개 키 암호화 방식은 RSA입니다. 디지털 서명은 타원 곡선 기반(EC) 메커니즘을 사용하여 가장 효율적으로 생성할 수 있습니다."
+|공개 키 인프라 |인증서를 생성, 관리 및 해지하는 시스템입니다.
+|정기적인 트랜잭션 재개 |시퀀스 다이어그램에서 이 사용 사례/시퀀스 다이어그램이 끝났지만 트랜잭션은 끝나지 않았고 계속될 것이지만 해당 특정 사용 사례의 범위를 벗어난다는 것을 나타내는 데 사용됩니다.
+|요구 사항 |충족해야 할 기준을 전달하는 조항. ISO/IEC 가이드 2:2004, 7.5.
+|보안 이벤트 |장치의 안전한 작동과 관련된 모든 이벤트.
+|보안 기능 |액세스 제어, 인증 및 암호화를 포함하여 안전하게 작동하는 데 필요한 장치의 모든 기능.
+|세션 |OCPP의 세션은 EV의 충전 프로세스를 나타내는 일반적인 용어로, 트랜잭션을 포함할 수 있습니다.
+|세션 키 |수명이 제한된 대칭 키.
+|대칭 암호화 |송신자와 수신자가 동일한 키를 보유합니다. 대칭 기본 요소의 예로는 블록 암호 또는 MAC이 있습니다.
+|트랜잭션 |OCPP의 트랜잭션은 구성 가능한 매개변수에 따라 시작 및 중지되는 EV 충전의 전체 프로세스의 일부입니다. 이러한 구성 가능한 매개변수는 EV가 연결되거나 EV 운전자가 승인되는 것과 같은 충전 프로세스의 순간을 나타냅니다.
+|요금 |충전 시간, 전력 사용량 및 가격에 영향을 미치는 기타 매개변수에 따른 가격 수집.
+|사용 사례 |사용 사례는 특정 목표를 달성하는 데 필요한 (상호)작용을 설명하는 구조화된 방법입니다. 이 문서에서 사용 사례는 액터 목록, 시나리오 설명, 사후 조건 및 시퀀스 다이어그램으로 구성되며 항상 번호가 매겨진 요구 사항 목록이 뒤따릅니다.
+|사용자 인증 |통신 파트너(예: 장치의 사용자)의 신원을 확인합니다. 또한 세션 내내 통신 파트너가 여전히 살아 있는지 확인합니다.
 |===
 
 [[iso_15118_and_ocpp_terminology_mapping]]
 ==== ISO 15118 and OCPP terminology mapping
 
-_This section is informative._
+_이 섹션은 정보 제공용입니다._
 
-The ISO 15118 terminology is more comprehensive when referring to specific components within EVs and Charging Stations. The following table shows a "mapping" of these terms.
+ISO 15118 용어는 EV 및 충전기 내의 특정 구성 요소를 언급할 때 더 포괄적입니다. 다음 표는 이러한 용어의 "매핑"을 보여줍니다.
 
-.ISO 15118 and OCPP terminology mapping
+.ISO 15118 및 OCPP 용어 매핑
 [cols="<.^,<.^",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ISO 15118                              |OCPP
-|ChargingProfile (contains the power over time the EV is planned to consume)
-  |Loosely corresponds to ChargingSchedule in NotifyEVChargingSchedule message.
-|SASchedule (the power limits from a secondary actor for charging an EV for a specific time)
-  |Loosely corresponds to ChargingProfile in SetChargingProfile message.
-|EVCC (i.e. Electric Vehicle Communication Controller) 
-  |Controller in the EV that is used for ISO 15118 communication.
-|Outlet                                 |Connector
-|SECC (i.e. Supply Equipment Communication Controller)
-  |Controller in the EVSE of the Charging Station that is used for ISO 15118 communication.
-|SA (i.e. Secondary Actor)              |CSMS (or other backend systems)
+|ISO 15118 |OCPP
+|ChargingProfile(EV가 소비할 예정인 시간별 전력 포함)
+|NotifyEVChargingSchedule 메시지의 ChargingSchedule과 대략적으로 일치합니다.
+|SASchedule(특정 시간 동안 EV를 충전하기 위한 보조 액터의 전력 제한)
+|SetChargingProfile 메시지의 ChargingProfile과 대략적으로 일치합니다.
+|EVCC(전기 자동차 통신 컨트롤러)
+|ISO 15118 통신에 사용되는 EV의 컨트롤러.
+|아웃렛 |커넥터
+|SECC(공급 장비 통신 컨트롤러)
+|ISO 15118 통신에 사용되는 충전기의 EVSE의 컨트롤러.
+|SA(보조 액터) |CSMS(또는 다른 백엔드 시스템)
 |===
 
 === Abbreviations
 
 ==== General Abbreviations
 
-This section contains the abbreviations that are used throughout this document.
+이 섹션에는 이 문서 전체에서 사용되는 약어가 포함되어 있습니다.
 
-.Abbreviations
+.약어
 [cols="<.^1s,<.^10",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|Abbreviation   |Description
+|약어 |설명
 
-|AES            |Advanced Encryption Standard. Original name for this block cipher was Rijndael named after its designers Vincent Rijmen and Joan Daemen.
-|BEV            |Battery Electric Vehicle
-|CMP            |Certificate Management Protocol
-|CS Charging    |Station
-|CSL            |Comma Separated List
-|CSMS           |Charging Station Management System
-|CSO            |Charging Station Operator
-|DHCP           |Dynamic Host Configuration Protocol
-|DNS            |Domain Name System
-|DSO            |Distribution System Operator
-|DST            |Daylight Saving Time
-|EC Elliptic    |Curve. See also ENISA <<ocpp_security_1,OCPP Security [1]>>
-|ECDSA          |Elliptic Curve Digital Signature Algorithm.
-|EMS            |Energy Management System
-|ENISA          |European Union Agency for Network and Information Security.
-|EV Electric    |Vehicle
-|EVSE           |EV Supply Equipment <<iec61851_1,IEC61851-1>>
-|FQDN           |Fully Qualified Domain Name
-|FTP(S)         |File Transport Protocol (Secure)
-|HTTP(S)        |HyperText Transport Protocol (Secure)
-|ICCID          |Integrated Circuit Card Identifier
-|IMSI           |International Mobile Subscription Identity
-|JSON           |JavaScript Simple Object Notation
-|MAC            |Message authentication code. Provides data integrity. Examples: CMAC, GMAC. See also ENISA <<ocpp_security_1,OCPP Security [1]>>.
-|NAT            |Network Address Translation
-|NIST           |National Institute of Standards and Technology.
-|NTP            |Network Time Protocol
-|PDU            |Protocol Data Unit
-|PHEV           |Plugin Hybrid Electric Vehicle
-|RDN            |Relative Distinguished Name
-|RSA            |Public-key cryptosystem named after its inventors Rivest, Shamir, and Adleman.
-|RSA            |PSS RSA-PSS is a new signature scheme that is based on the RSA cryptosystem and provides increased security assurance. It was added in version 2.1 of PKCS #1, following <<ocpp_security_23,OCPP Security [23]>>
-|RST            |3 phase power connection, Standard Reference Phasing
-|RTS            |3 phase power connection, Reversed Reference Phasing
-|SRT            |3 phase power connection, Reversed 240 degree rotation
-|STR            |3 phase power connection, Standard 120 degree rotation
-|TRS            |3 phase power connection, Standard 240 degree rotation
-|TSR            |3 phase power connection, Reversed 120 degree rotation
-|SC Smart       |Charging
-|TLS            |Transport Layer Security
-|TSO            |Transmission System Operator
-|URI            |Uniform Resource Identifier RFC-3986 <<rfc3986,[RFC3986]>>
-|URL            |Uniform Resource Locator - refers to the subset of URIs that, in addition to identifying a resource, provide a means of locating the resource by describing its primary access mechanism (e.g., its network "location").
-|UTC            |Coordinated Universal Time
-|WAN            |Wide Area Network.
+|AES |고급 암호화 표준. 이 블록 암호의 원래 이름은 설계자 Vincent Rijmen과 Joan Daemen의 이름을 딴 Rijndael이었습니다.
+|BEV |배터리 전기 자동차
+|CMP |인증서 관리 프로토콜
+|CS 충전 |주차장
+|CSL |쉼표로 구분된 목록
+|CSMS |충전기 관리 시스템
+|CSO |충전기 운영자
+|DHCP |동적 호스트 구성 프로토콜
+|DNS |도메인 이름 시스템
+|DSO |분배 시스템 운영자
+|DST |일광 절약 시간제
+|EC 타원 |곡선. ENISA <<ocpp_security_1,OCPP 보안 [1]>>도 참조하세요.
+|ECDSA |타원 곡선 디지털 서명 알고리즘.
+|EMS |에너지 관리 시스템
+|ENISA |유럽 연합 네트워크 및 정보 보안 기관.
+|EV 전기 |차량
+|EVSE |EV 공급 장비 <<iec61851_1,IEC61851-1>>
+|FQDN |정규화된 도메인 이름
+|FTP(S) |파일 전송 프로토콜(보안)
+|HTTP(S) |하이퍼텍스트 전송 프로토콜(보안)
+|ICCID |집적 회로 카드 식별자
+|IMSI |국제 모바일 가입 ID
+|JSON |JavaScript 단순 개체 표기법
+|MAC |메시지 인증 코드. 데이터 무결성을 제공합니다. 예: CMAC, GMAC. ENISA <<ocpp_security_1,OCPP 보안 [1]>>도 참조하세요.
+|NAT |네트워크 주소 변환
+|NIST |국립표준기술원.
+|NTP |네트워크 시간 프로토콜
+|PDU |프로토콜 데이터 단위
+|PHEV |플러그인 하이브리드 전기 자동차
+|RDN |상대적 고유 이름
+|RSA |발명가인 리베스트, 샤미르, 애들먼의 이름을 딴 공개 키 암호 시스템.
+|RSA |PSS RSA-PSS는 RSA 암호 시스템을 기반으로 하는 새로운 서명 체계로 보안을 강화했습니다. PKCS #1의 버전 2.1에 추가되었으며, <<ocpp_security_23,OCPP Security [23]>>
+|RST |3상 전원 연결, 표준 참조 위상
+|RTS |3상 전원 연결, 역방향 참조 위상
+|SRT |3상 전원 연결, 역방향 240도 회전
+|STR |3상 전원 연결, 표준 120도 회전
+|TRS |3상 전원 연결, 표준 240도 회전
+|TSR |3상 전원 연결, 역방향 120도 회전
+|SC Smart |충전
+|TLS |전송 계층 보안
+|TSO |전송 시스템 운영자
+|URI |Uniform Resource Identifier RFC-3986 <<rfc3986,[RFC3986]>>
+|URL |Uniform Resource Locator - 리소스를 식별하는 것 외에도 리소스를 설명하는 방법을 제공하는 URI의 하위 집합을 말합니다. 주요 액세스 메커니즘(예: 네트워크 "위치").
+|UTC |협정 세계시
+|WAN |광역 네트워크.
 |===
 
 [[iso_15118_abbreviations]]
 ==== ISO 15118 Abbreviations
 
-This section contains the abbreviations from ISO 15118 that are used in this document.
+이 섹션에는 이 문서에서 사용되는 ISO 15118의 약어가 들어 있습니다.
 
-.ISO 15118 Abbreviations
+.ISO 15118 약어
 [cols="<.^1s,<.^10",%autowidth.stretch,frame=all,grid=all]
 |===
-|EIM        |External Identification Means
-|EMAID      |E-Mobility Account Identifier
-|EVCC       |EV Communication Controller
-|HLC        |High Level Communication
-|HMI        |Human Machine Interface
-|LAN        |Local Area Network
-|MO         |Mobility Operator
-|OEM        |Original Equipment Manufacturer
-|OCSP       |Online Certificate Status Protocol
-|PWM        |Pulse Width Modulation
-|SA         |Secondary Actor
-|SECC       |Supply Equipment Communication Controller
-|V2G        |Vehicle to Grid
+|EIM |외부 식별 수단
+|EMAID |E-Mobility 계정 식별자
+|EVCC |EV 통신 컨트롤러
+|HLC |고수준 통신
+|HMI |인간-기계 인터페이스
+|LAN |로컬 영역 네트워크
+|MO |모빌리티 운영자
+|OEM |원래 장비 제조업체
+|OCSP |온라인 인증서 상태 프로토콜
+|PWM |펄스 폭 변조
+|SA |2차 액터
+|SECC |공급 장비 통신 컨트롤러
+|V2G |차량 대 그리드
 |===
 
 === Actors
 
-_This section is informative._
+_이 섹션은 정보 제공용입니다._
 
-In OCPP, system actors are covering functions or devices.
+OCPP에서 시스템 액터는 기능 또는 장치를 포함합니다.
 
-.Actors
+.액터
 [cols="<.^2,<.^2,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|Actor name       |Actor type     |Actor description
-|EV Driver        |Actor          |The Driver of an EV who wants to charge the EV at a Charging Station.
-|Connector        |Device         |The term "Connector", as used in this specification, refers to an independently operated and managed electrical outlet on a Charging Station. In other words, this corresponds to a single physical Connector. In some cases an EVSE may have multiple Connectors: multiple physical socket types and/or types (e.g. four-wheeled EVs and electric scooters).
-|CSMS             |System         |Charging Station Management System: manages Charging Stations and has the information for authorizing Users for using its Charging Stations.
-|Charging Station |Device         |The Charging Station is the physical system where an EV can be charged. A Charging Station has one or more EVSEs.
-|Charging Station Operator |Actor |A party that manages a CSMS.
-|Electric Vehicle |Device         |Electric Vehicle, distributed energy resource with a remote battery and socket.
-|Local Controller |Device         |A logical entity between a CSMS and one or more Charging Stations that has the ability to control charging of a group of Charging Stations based on the input from the CSMS.
-|External Control System |Actor   |An external system that may impose charging limits/constraints on the Charging Station or CSMS, for example a DSO or EMS.
+|액터 이름 |액터 유형 |액터 설명
+|EV 운전자 |액터 |충전기에서 EV를 충전하려는 EV 운전자.
+|커넥터 |장치 |이 사양에서 사용되는 용어 "커넥터"는 충전기에서 독립적으로 작동하고 관리되는 전기 콘센트를 말합니다. 즉, 이는 단일 물리적 커넥터에 해당합니다. 어떤 경우 EVSE에 여러 개의 커넥터가 있을 수 있습니다. 여러 개의 물리적 소켓 유형 및/또는 유형(예: 4륜 EV 및 전기 스쿠터).
+|CSMS |시스템 |충전기 관리 시스템: 충전기를 관리하고 사용자가 충전기를 사용하도록 허가하는 정보를 보유합니다.
+|충전기 |장치 |충전기는 EV를 충전할 수 있는 물리적 시스템입니다. 충전기에는 하나 이상의 EVSE가 있습니다.
+|충전기 운영자 |행위자 |CSMS를 관리하는 당사자.
+|전기 자동차 |장치 |전기 자동차, 원격 배터리와 소켓이 있는 분산 에너지 리소스.
+|로컬 컨트롤러 |장치 |CSMS와 하나 이상의 충전기 사이의 논리적 엔티티로, CSMS의 입력에 따라 충전기 그룹의 충전을 제어할 수 있습니다.
+|외부 제어 시스템 |행위자 |충전기 또는 CSMS에 충전 제한/제약을 부과할 수 있는 외부 시스템(예: DSO 또는 EMS).
 |===
 
 === References
 
 ==== Generic references
 
-.References
+.참조
 [cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|Reference            |Description
+|참조 |설명
 
-|[[dnp3]][DNP3]     |Distributed Network Protocol. https://www.dnp.org/About/Overview-of-DNP3-Protocol
-|[[emi3_b0]][EMI3-BO]     |"eMI3 standard version V1.0" http://emi3group.com/documents-links/
-|[[iec60870_5_104]][IEC60870-5-104]     |Set of standards which define systems used for telecontrol (supervisory control and data acquisition) in electrical engineering and power system automation applications. https://webstore.iec.ch/publication/3755
-|[[iec61850_7_420]][IEC61850-7-420] |Communications standard for distributed energy resources (DER). https://webstore.iec.ch/publication/6019
-|[[iec61851_1]][IEC61851-1] |"IEC 61851-1 2017: EV conductive charging system - Part 1: General requirements" https://webstore.iec.ch/publication/33644
-|[[iec62196]][IEC62196] |IEC 62196: Plugs, socket-outlets, vehicle couplers and vehicle inlets - Conductive charging of electric vehicles. https://webstore.iec.ch/publication/6582
-|[[iso15118_1]][ISO15118-1] |ISO 15118-1 specifies terms and definitions, general requirements and use cases as the basis for the other parts of ISO 15118. It provides a general overview and a common understanding of aspects influencing the charge process, payment and load leveling. https://webstore.iec.ch/publication/9272
-|[[iso15118_2]][ISO15118-2] |Road vehicles – Vehicle to grid communication interface – Part 2: Technical protocol description and Open Systems Interconnection (OSI) layer requirements, Document Identifier: 69/216/CDV. https://webstore.iec.ch/publication/9273
-|[[iso4217]][ISO4217] |"ISO 4217: Currency codes" http://www.iso.org/iso/home/standards/currency_codes.htm
-|[[ocpp2_0_part4]][OCPP2.0-PART4] |"OCPP 2.0.1: Part 4 - JSON over WebSockets implementation guide". http://www.openchargealliance.org/downloads/
-|[[open_adr]][OpenADR] |"Open Automated Demand Response" http://www.openadr.org/
-|[[rfc1321]][RFC1321] |"The MD5 Message-Digest Algorithm" https://tools.ietf.org/html/rfc1321
-|[[rfc2119]][RFC2119] |"Key words for use in RFCs to Indicate Requirement Levels". S. Bradner. March 1997. http://www.ietf.org/rfc/rfc2119.txt
-|[[rfc3339]][RFC3339] |"Date and Time on the Internet: Timestamps" https://tools.ietf.org/html/rfc3339
-|[[rfc3986]][RFC3986] |"Uniform Resource Identifier (URI): Generic Syntax" https://tools.ietf.org/html/rfc3986
-|[[rfc5646]][RFC5646] |"Tags for Identifying Languages" https://tools.ietf.org/html/rfc5646
+|[[dnp3]][DNP3] |분산 네트워크 프로토콜. https://www.dnp.org/About/Overview-of-DNP3-Protocol
+|[[emi3_b0]][EMI3-BO] |"eMI3 표준 버전 V1.0" http://emi3group.com/documents-links/
+|[[iec60870_5_104]][IEC60870-5-104] |전기 엔지니어링 및 전력 시스템 자동화 애플리케이션에서 원격 제어(감독 제어 및 데이터 수집)에 사용되는 시스템을 정의하는 표준 세트입니다. https://webstore.iec.ch/publication/3755
+|[[iec61850_7_420]][IEC61850-7-420] |분산형 에너지 자원(DER)을 위한 통신 표준. https://webstore.iec.ch/publication/6019
+|[[iec61851_1]][IEC61851-1] |"IEC 61851-1 2017: EV 전도성 충전 시스템 - 1부: 일반 요구 사항" https://webstore.iec.ch/publication/33644
+|[[iec62196]][IEC62196] |IEC 62196: 플러그, 소켓-아웃렛, 차량 커플러 및 차량 인렛 - 전기 자동차의 전도성 충전. https://webstore.iec.ch/publication/6582
+|[[iso15118_1]][ISO15118-1] |ISO 15118-1은 ISO 15118의 다른 부분을 위한 기초로서 용어와 정의, 일반 요구 사항 및 사용 사례를 지정합니다. 이는 요금 프로세스, 지불 및 부하 평준화에 영향을 미치는 측면에 대한 일반적인 개요와 공통된 이해를 제공합니다. https://webstore.iec.ch/publication/9272
+|[[iso15118_2]][ISO15118-2] |도로 차량 - 차량 대 그리드 통신 인터페이스 - 2부: 기술 프로토콜 설명 및 OSI(개방형 시스템 상호 연결) ​​계층 요구 사항, 문서 식별자: 69/216/CDV. https://webstore.iec.ch/publication/9273
+|[[iso4217]][ISO4217] |"ISO 4217: 통화 코드" http://www.iso.org/iso/home/standards/currency_codes.htm
+|[[ocpp2_0_part4]][OCPP2.0-PART4] |"OCPP 2.0.1: 4부 - WebSockets를 통한 JSON 구현 가이드". http://www.openchargealliance.org/downloads/
+|[[open_adr]][OpenADR] |"오픈 자동 수요 대응" http://www.openadr.org/
+|[[rfc1321]][RFC1321] |"MD5 메시지 다이제스트 알고리즘" https://tools.ietf.org/html/rfc1321
+|[[rfc2119]][RFC2119] |"요구 사항 수준을 나타내는 RFC에서 사용되는 키워드". S. Bradner. 1997년 3월. http://www.ietf.org/rfc/rfc2119.txt
+|[[rfc3339]][RFC3339] |"인터넷의 날짜 및 시간: 타임스탬프" https://tools.ietf.org/html/rfc3339
+|[[rfc3986]][RFC3986] |"Uniform Resource Identifier(URI): 일반 구문" https://tools.ietf.org/html/rfc3986
+|[[rfc5646]][RFC5646] |"언어 식별을 위한 태그" https://tools.ietf.org/html/rfc5646
 |===
 
 ==== Security related references
 
-.Security related references
+.보안 관련 참조
 [cols="^.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|Reference            |Description
-|[[ocpp_security_1]][1]   |ENISA European Network and Information Security Agency, Algorithms, key size and parameters report 2014, 2014. (last accessed on 17 January 2016) https://www.enisa.europa.eu/publications/algorithms-key-size-and-parameters-report-2014
-|[[ocpp_security_2]][2]   |National Institute of Standards and Technology. FIPS PUB 140-2, Security Requirements for Cryptographic Modules, May 2001. http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.140-2.pdf
-|[[ocpp_security_3]][3]   |Cooper, D., et al., Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile, Internet Engineering Task Force, Request for Comments 5280, May 2008, http://www.ietf.org/rfc/rfc5280.txt
-|[[ocpp_security_4]][4]   |Dierks, T. and Rescorla, E., The Transport Layer Security (TLS) Protocol Version 1.2, Internet Engineering Task Force, Request for Comments 5246, August 2008, http://www.ietf.org/rfc/rfc5246.txt
-|[[ocpp_security_5]][5]   |Eastlake, D., Transport Layer Security (TLS) Extensions: Extension Definitions, Internet Engineering Task Force, Request for Comments 6066, January 2011, http://www.ietf.org/rfc/rfc6066.txt
-|[[ocpp_security_6]][6]   |McGrew, D. and Bailey, D., AES-CCM Cipher Suites for Transport Layer Security (TLS), Internet Engineering Task Force, Request for Comments 6655, July 2012, http://www.ietf.org/rfc/rfc6655.txt
-|[[ocpp_security_7]][7]   |Rescorla E. et al., Transport Layer Security (TLS) Renegotiation Indication Extension, Internet Engineering Task Force, Request for Comments 5746, February 2010, http://www.ietf.org/rfc/rfc5746.txt
-|[[ocpp_security_8]][8]   |"Russel Housley, Tim Polk, Warwick Ford, and David Solo. Internet Public Key Infrastructure: X.509 Certificate and Certificate Revocation List (CRL) Profile, RFC 3280, April 2002." https://www.ietf.org/rfc/rfc3280.txt
-|[[ocpp_security_9]][9]   |Pettersen. "The Transport Layer Security (TLS) Multiple Certificate Status Request Extension." RFC 6961, June 2013. https://tools.ietf.org/html/rfc6961.
-|[[ocpp_security_10]][10]   |Hollenbeck, S., "Transport Layer Security Protocol Compression Methods", RFC 3749, May 2004. https://www.ietf.org/rfc/rfc3749.txt
-|[[ocpp_security_11]][11]   |National Institute of Standards and Technology. Annex C: Approved Random Number Generators for FIPS PUB 140-2 [25], February 2012. https://csrc.nist.gov/csrc/media/publications/fips/140/2/final/documents/fips1402annexc.pdf
-|[[ocpp_security_12]][12]   |Bundesamt für Sicherheit in der Informationstechnik: Anwendungshinweise und Interpretationen zum Schema, AIS 20, Funktionalitätsklassen und Evaluationsmethodologie für deterministische Zufallszahlengeneratoren, Version 3.0, Bonn, Germany, May 2013. (in German) https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/Zertifizierung/Interpretationen/AIS_20_pdf.html
-|[[ocpp_security_13]][13]   |Bundesamt für Sicherheit in der Informationstechnik: Anwendungshinweise und Interpretationen zum Schema, AIS 31, Funktionalitätsklassen und Evaluationsmethodologie für physikalische Zufallszahlengeneratoren, Version 3.0, Bonn, Germany, May 2013. (in German) https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/Zertifizierung/Interpretationen/AIS_31_pdf.html
-|[[ocpp_security_14]][14]   |"OWASP - Transport Layer Protection Cheat Sheet. https://www.owasp.org/index.php/Transport_Layer_Protection_Cheat_Sheet#Extended_Validation_Certificates "
-|[[ocpp_security_15]][15]   |P. Hoffman and W.C.A. Wijngaards, Elliptic Curve Digital Signature Algorithm (DSA) for DNNSEC, Internet Engineering Task Force (IETF) RFC 6605, April 2012. http://www.ietf.org/rfc/rfc6605.txt
-|[[ocpp_security_16]][16]   |Adams, C., Farrell, S., Kause, T., and T. Mononen, "Internet X.509 Public Key Infrastructure Certificate Management Protocol (CMP)", RFC 4210, September 2005. https://www.ietf.org/rfc/rfc4210.txt
-|[[ocpp_security_17]][17]   |National Institute of Standards and Technology. Special Publication 800-57 Part 1 Rev. 4, Recommendation for Key Management. January 2016. https://csrc.nist.gov/publications/detail/sp/800-57-part-1/rev-4/final
-|[[ocpp_security_18]][18]   |(^) RFC 2617. HTTP Authentication: Basic and Digest Access Authentication. https://www.ietf.org/rfc/rfc2617.txt
-|[[ocpp_security_19]][19]   |RFC 5280. Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile. https://www.ietf.org/rfc/rfc5280.txt
-|[[ocpp_security_20]][20]   |OCPP 1.6. Interface description between Charging Station and CSMS. October 2015. http://www.openchargealliance.org/downloads/
-|[[ocpp_security_21]][21]   |Eekelen, M. van, Poll, E., Hubbers, E., Vieira, B., Broek, F. van den: An end-to-end security design for smart EV-charging for Enexis and ElaadNL by LaQuSo1. December 2, 2014. https://www.elaad.nl/smart-charging-end2end-security-design/
-|[[ocpp_security_22]][22]   |(^) RFC 2986. PKCS #10: Certification Request Syntax Specification, Version 1.7. https://www.ietf.org/rfc/rfc2986.txt
-|[[ocpp_security_23]][23]   |(^) RSA-PSS. https://tools.ietf.org/html/rfc8017
-|[[ocpp_security_24]][24]   |Santesson, et al. "X.509 Internet Public Key Infrastructure Online Certificate Status Protocol - OCSP" RFC 6960. June 2013
-|[[ocpp_security_25]][[rfc2818]][25]   |(^) RFC 2818. HTTP Over TLS. https://tools.ietf.org/html/rfc2818
+|참조 |설명
+|[[ocpp_security_1]][1] |ENISA 유럽 네트워크 및 정보 보안 기관, 알고리즘, 키 크기 및 매개변수 보고서 2014, 2014. (마지막 액세스 2016년 1월 17일) https://www.enisa.europa.eu/publications/algorithms-key-size-and-parameters-report-2014
+|[[ocpp_security_2]][2] |국립 표준 기술 연구소. FIPS PUB 140-2, 암호화 모듈에 대한 보안 요구 사항, 2001년 5월. http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.140-2.pdf
+|[[ocpp_security_3]][3] |Cooper, D. 등, 인터넷 X.509 공개 키 인프라 인증서 및 인증서 해지 목록(CRL) 프로필, 인터넷 엔지니어링 태스크포스, 의견 요청 5280, 2008년 5월, http://www.ietf.org/rfc/rfc5280.txt
+|[[ocpp_security_4]][4] |Dierks, T. 및 Rescorla, E., 전송 계층 보안(TLS) 프로토콜 버전 1.2, 인터넷 엔지니어링 태스크포스, 의견 요청 5246, 2008년 8월, http://www.ietf.org/rfc/rfc5246.txt
+|[[ocpp_security_5]][5] |Eastlake, D., 전송 계층 보안(TLS) 확장: 확장 정의, 인터넷 엔지니어링 태스크포스, 의견 요청 6066, 2011년 1월, http://www.ietf.org/rfc/rfc6066.txt
+|[[ocpp_security_6]][6] |McGrew, D. 및 Bailey, D., 전송 계층 보안(TLS)을 위한 AES-CCM 암호 모음, 인터넷 엔지니어링 태스크포스, 의견 요청 6655, 2012년 7월, http://www.ietf.org/rfc/rfc6655.txt
+|[[ocpp_security_7]][7] |Rescorla E. 등, 전송 계층 보안(TLS) 재협상 표시 확장, 인터넷 엔지니어링 태스크포스, 의견 요청 5746, 2월 2010, http://www.ietf.org/rfc/rfc5746.txt
+|[[ocpp_security_8]][8] |"Russel Housley, Tim Polk, Warwick Ford, David Solo. 인터넷 공개 키 인프라: X.509 인증서 및 인증서 해지 목록(CRL) 프로필, RFC 3280, 2002년 4월." https://www.ietf.org/rfc/rfc3280.txt
+|[[ocpp_security_9]][9] |Pettersen. "전송 계층 보안(TLS) 다중 인증서 상태 요청 확장." RFC 6961, 2013년 6월. https://tools.ietf.org/html/rfc6961.
+|[[ocpp_security_10]][10] |Hollenbeck, S., "전송 계층 보안 프로토콜 압축 방법", RFC 3749, 2004년 5월. https://www.ietf.org/rfc/rfc3749.txt
+|[[ocpp_security_11]][11] |미국 국립표준기술원. 부록 C: 승인된 난수 생성기 FIPS PUB 140-2 [25], 2012년 2월. https://csrc.nist.gov/csrc/media/publications/fips/140/2/final/documents/fips1402annexc.pdf
+|[[ocpp_security_12]][12] |Bundesamt für Sicherheit in der Informationstechnik: Anwendungshinweise und Interpretationen zum Schema, AIS 20, Funktionalitätsklassen und Evaluationsmethodologie für deterministische Zufallszahlengeneratoren, 버전 3.0, 본, 독일, 2013년 5월. (in 독일어) https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/Zertifizierung/Interpretationen/AIS_20_pdf.html
+|[[ocpp_security_13]][13] |Bundesamt für Sicherheit in der Informationstechnik: Anwendungshinweise und Interpretationen zum Schema, AIS 31, Funktionalitätsklassen und Evaluationsmethodologie fürphykalische Zufallszahlengeneratoren, 버전 3.0, 독일 본, 2013년 5월.(독일어) https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/Zertifizierung/Interpretationen/AIS_31_pdf.html
+|[[ocpp_security_14]][14] |"OWASP - 전송 계층 보호 치트 시트. https://www.owasp.org/index.php/Transport_Layer_Protection_Cheat_Sheet#Extended_Validation_Certificates "
+|[[ocpp_security_15]][15] |P. Hoffman 및 W.C.A. Wijngaards, DNNSEC을 위한 타원 곡선 디지털 서명 알고리즘(DSA), 인터넷 엔지니어링 태스크포스(IETF) RFC 6605, 2012년 4월. http://www.ietf. org/rfc/rfc6605.txt
+|[[ocpp_security_16]][16] |Adams, C., Farrell, S., Kause, T., 및 T. Mononen, "인터넷 X.509 공개 키 인프라 인증서 관리 프로토콜(CMP) )", RFC 4210, 2005년 9월. https://www.ietf.org/rfc/rfc4210.txt
+|[[ocpp_security_17]][17] |미국 국립표준기술원. 특별 간행물 800-57 Part 1 Rev. 4, 주요 관리 권장 사항. 2016년 1월. https://csrc.nist.gov/publications/detail/sp/800-57-part-1/rev-4/final
+|[ [ocpp_security_18]][18] |RFC 2617. HTTP 인증: 기본 및 다이제스트 액세스 인증. https://www.ietf.org/rfc/rfc2617.txt
+|[[ocpp_security_19]][19] |RFC 5280 . 인터넷 X.509 공개 키 인프라 인증서 및 인증서 해지 목록(CRL) 프로필. https://www.ietf.org/rfc/rfc5280.txt
+|[[ocpp_security_20]][20] |OCPP 1.6. 충전 간 인터페이스 설명 스테이션 및 CSMS. 2015년 10월. http://www.openchargealliance.org/downloads/
+|[[ocpp_security_21]][21] |Eekelen, M. van, Poll, E., Hubbers, E., Vieira, B., Broek, F. van den: LaQuSo1의 Enexis 및 ElaadNL을 위한 스마트 EV 충전을 위한 종단간 보안 설계. 2014년 12월 2일. https://www.elaad.nl/smart-charging-end2end-security-design/
+|[ [ocpp_security_22]][22] |RFC 2986. PKCS #10: 인증 요청 구문 사양, 버전 1.7. https://www.ietf.org/rfc/rfc2986.txt
+|[[ocpp_security_23]][23] |RSA-PSS. https://tools.ietf.org/html/rfc8017
+|[[ocpp_security_24]][24] |Santesson 등 "X.509 인터넷 공개 키 인프라 온라인 인증서 상태 프로토콜 - OCSP" RFC 6960. 2013년 6월
+|[ [ocpp_security_25]][[rfc2818]][25] |RFC 2818. TLS를 통한 HTTP. https://tools.ietf.org/html/rfc2818
 |===
 
 [[transaction]]
 === Definition of Transaction
 
-_This section is informative._
+_이 섹션은 정보입니다._
 
-To support as many business cases as possible, and to prevent too many messages being sent when not needed for certain business cases, OCPP 2.0.1 supports flexible configuration of the start and stop of a transaction. This makes it possible to define the start and stop of a transaction depending on market demands.
+가능한 한 많은 비즈니스 사례를 지원하고 특정 비즈니스 사례에 필요하지 않은 너무 많은 메시지가 전송되는 것을 방지하기 위해 OCPP 2.0.1은 트랜잭션 시작 및 중지의 유연한 구성을 지원합니다. 이를 통해 시장 수요에 따라 트랜잭션 시작 및 중지를 정의할 수 있습니다.
 
-See: <<flexible_transaction_start_stop,Flexible transaction start/stop>> for more information.
+자세한 내용은 <<flexible_transaction_start_stop,Flexible transaction start/stop>>을 참조하세요.
 
 ==== Transaction in relation to Energy Transfer Period
 
-The Energy Transfer Period is a period of time during which energy is transferred between the EV and the EVSE. There MAY be multiple <<energy_transfer_period,Energy Transfer Periods>> during a <<transaction,Transaction>>.
+에너지 전송 기간은 EV와 EVSE 간에 에너지가 전송되는 기간입니다. <<transaction,Transaction>> 동안 여러 개의 <<energy_transfer_period,Energy Transfer Periods>>가 있을 수 있습니다.
 
-Multiple Energy Transfer Periods can be separated by either:
+여러 에너지 전송 기간은 다음 중 하나로 구분할 수 있습니다.
 
-* an EVSE-initiated suspense of transfer during which the EVSE does not offer energy transfer, _or_ 
-* an EV-initiated suspense of transfer during which the EV remains electrically connected to the EVSE, _or_
-* an EV-initiated suspense of transfer during which the EV is not electrically connected to the EVSE.
+* EVSE가 에너지 전송을 제공하지 않는 EVSE에서 ​​시작된 전송 중단, _또는_
+* EV가 EVSE에 전기적으로 연결된 상태로 유지되는 EV에서 시작된 전송 중단, _또는_
+* EV가 EVSE에 전기적으로 연결되지 않은 EV에서 시작된 전송 중단.
 
-.OCPP Charging Transaction definition
-image::part2/images/figure_1.svg[OCPP Charging Transaction definition]
+.OCPP 충전 거래 정의
+image::part2/images/figure_1.svg[OCPP 충전 거래 정의]
 
 === ISO 15118 support
 
-_This section is informative._
+_이 섹션은 정보입니다._
 
-This version of OCPP supports ISO 15118 authorization (also called "Plug and Charge") and ISO 15118 based Smart Charging. (See <<iso15118_2,[ISO15118-2]>>) Furthermore it describes how to install and update ISO 15118 certificates. These 3 functionalities are not included as one functional block, but are included in multiple chapters throughout the specification. ISO 15118 authorization is included in the functional block <<iso_15118_authorization,Authorization>> and the Smart Charging use cases for ISO 15118 are included in the chapter <<smart_charging,Smart Charging>>.
-Certificate handling is described in a separate functional block.
+이 버전의 OCPP는 ISO 15118 인증(일명 "플러그 앤 차지")과 ISO 15118 기반 스마트 충전을 지원합니다. (<<iso15118_2,[ISO15118-2]>> 참조) 또한 ISO 15118 인증서를 설치하고 업데이트하는 방법을 설명합니다. 이 3가지 기능은 하나의 기능 블록으로 포함되지 않지만 사양 전체에 걸쳐 여러 장에 포함되어 있습니다. ISO 15118 인증은 기능 블록 <<iso_15118_authorization,Authorization>>에 포함되고 ISO 15118의 스마트 충전 사용 사례는 <<smart_charging,Smart Charging>> 장에 포함됩니다.
+인증서 처리에 대한 설명은 별도의 기능 블록에 나와 있습니다.
 
-Implementors of 15118 need to be aware of timeout constraints enforced by 15118, see <<iso15118_1,[ISO15118-1]>> (Page: 127, Table: 109) +
-For reference, the current timing constrains for 15118 edition 1 are:
+15118 구현자는 15118에서 시행하는 시간 제한 제약을 알고 있어야 합니다. <<iso15118_1,[ISO15118-1]>> (페이지: 127, 표: 109) +
+참고로, 15118 버전 1의 현재 시간 제한은 다음과 같습니다.
 
-.ISO 15118 Timing constrains
+.ISO 15118 시간 제한
 [cols="<.^4,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|Timeout                       |Default
+|시간 제한 |기본값
 
-|Sequence Timeouts             |60 seconds
-|Sequence Performance Timeouts |40 seconds
-|PaymentDetailsReq/Res         |5 seconds
-|CertificateUpdateReq/Res      |5 seconds
-|CertificateInstallationReq/Res |5 seconds
+|시퀀스 시간 제한 |60초
+|시퀀스 성능 시간 제한 |40초
+|PaymentDetailsReq/Res |5초
+|CertificateUpdateReq/Res |5초
+|CertificateInstallationReq/Res |5초
 |===
 
 == Generic Requirements
 
-_This section is normative._
+_이 섹션은 규범적입니다._
 
-The generic requirements build the basis for defining the use case elements described in the Functional Blocks.
+일반 요구 사항은 기능 블록에 설명된 사용 사례 요소를 정의하기 위한 기반을 구축합니다.
 
-.Generic requirements
+.일반 요구 사항
 [cols="^.^1,<.^3,<.^3,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID     |Precondition         |Requirement definition       |Note
+|ID |전제 조건 |요구 사항 정의 |참고
 
-|FR.01  |{nbsp} |The sender of a <message>Request SHALL wait for a <message>Response or a timeout, before sending another request message.  |{nbsp}
-|FR.02  |When the Charging Station receives a valid OCPP request message according to the JSON schemas / RPC Framework AND the other system is not causing a security violation
-  |The Charging Station SHALL respond with a RPC Framework: CALLRESULT.
-    |If the Charging Station/CSMS needs to provide additional information, this can be done in the _statusInfo_ element of the response message.
-|FR.03  |When the Charging Station/CSMS receives an invalid OCPP message according to the JSON schemas / RPC Framework OR the other system causes a security violation
-  |The Charging Station/CSMS SHALL respond with a RPC Framework: CALLERROR. |{nbsp}
-|FR.04  |When the CSMS did not accept the BootNotificationRequest from the Charging Station AND The Charging Station sends a message other than BootNotificationRequest
-  |The CSMS SHALL respond with a RPC Framework: CALLERROR: SecurityError. |{nbsp}
-|FR.05  |There are a few messages that do not provide their result in the response message, but send one or more messages that contain the result. When one of the following messages is received; GetReport, GetBaseReport, GetMonitoringReport, GetDisplayMessages, CustomerInformation, GetChargingProfiles, GetLog, UpdateFirmware, PublishFirmware, TriggerMessage(<message>)
-  |The Charging Station SHALL acknowledge the requests in the list below with a response message(shown after the arrow "→") with the same requestId as the request: GetReport → NotifyReport GetBaseReport → NotifyReport GetMonitoringReport → NotifyMonitoringReport GetDisplayMessages → NotifyDisplayMessage CustomerInformation → NotifyCustomerInformation GetChargingProfiles → ReportChargingProfiles GetLog → LogStatusNotification UpdateFirmware → FirmwareStatusNotification PublishFirmware → PublishFirmwareStatusNotification TriggerMessage(<message>) → <requested message>
-    |The CSMS needs to know that a request for _requestId = X_ was accepted, so that it can expect result messages for this requestId. TriggerMessage does not have a requestId , but the requirement still applies in the sense that a TriggerMessageResponse must be sent before the sending the requested message.
+|FR.01 |{nbsp} |<message>요청의 발신자는 다른 요청 메시지를 보내기 전에 <message>응답 또는 시간 초과를 기다려야 합니다. |{nbsp}
+|FR.02 |충전기가 JSON 스키마/RPC 프레임워크에 따라 유효한 OCPP 요청 메시지를 수신하고 다른 시스템이 보안 위반을 일으키지 않는 경우
+|충전기는 RPC 프레임워크인 CALLRESULT로 응답해야 합니다.
+|충전기/CSMS가 추가 정보를 제공해야 하는 경우 응답 메시지의 _statusInfo_ 요소에서 이를 수행할 수 있습니다.
+|FR.03 |충전기/CSMS가 JSON 스키마/RPC 프레임워크에 따라 잘못된 OCPP 메시지를 수신하거나 다른 시스템이 보안 위반을 발생시키는 경우
+|충전기/CSMS는 RPC 프레임워크로 응답해야 합니다: CALLERROR. |{nbsp}
+|FR.04 |CSMS가 충전기에서 BootNotificationRequest를 수락하지 않고 충전기가 BootNotificationRequest가 아닌 다른 메시지를 보내는 경우
+|CSMS는 RPC 프레임워크로 응답해야 합니다: CALLERROR: SecurityError. |{nbsp}
+|FR.05 |응답 메시지에 결과를 제공하지 않지만 결과가 포함된 하나 이상의 메시지를 보내는 몇 가지 메시지가 있습니다. 다음 메시지 중 하나를 수신하는 경우; GetReport, GetBaseReport, GetMonitoringReport, GetDisplayMessages, CustomerInformation, GetChargingProfiles, GetLog, UpdateFirmware, PublishFirmware, TriggerMessage(<메시지>)
+|충전기는 아래 목록의 요청을 요청과 동일한 requestId를 사용하여 응답 메시지(화살표 "→" 뒤에 표시됨)로 확인해야 합니다. GetReport → NotifyReport GetBaseReport → NotifyReport GetMonitoringReport → NotifyMonitoringReport GetDisplayMessages → NotifyDisplayMessage CustomerInformation → NotifyCustomerInformation GetChargingProfiles → ReportChargingProfiles GetLog → LogStatusNotification UpdateFirmware → FirmwareStatusNotification PublishFirmware → PublishFirmwareStatusNotification TriggerMessage(<메시지>) → <요청된 메시지>
+|CSMS는 _requestId = X_에 대한 요청이 수락되었음을 알아야 하므로 이 requestId에 대한 결과 메시지를 기대할 수 있습니다. TriggerMessage에는 requestId가 없지만, TriggerMessageResponse는 요청된 메시지를 보내기 전에 보내야 한다는 의미에서 여전히 요구 사항이 적용됩니다.
 |===
 
 === Time Format Requirements
@@ -439,34 +439,34 @@ It is strongly RECOMMENDED to exchange all time values between CSMS and Charging
 
 ==== Displaying local time
 
-When a Charging Station wants to give detailed control of configuring the internal clock to a CSO, it can implement one or more of the following Configuration Variables: <<timesource,`TimeSource`>>, <<timezone,`TimeZone`>>, <<timeoffset,`TimeOffset`>>, <<ntp_source,`NtpSource`>>, <<ntp_server_uri,`NtpServerUri`>>.
+충전기에서 CSO에 내부 시계 구성에 대한 세부적인 제어권을 주고 싶을 때 다음 구성 변수 중 하나 이상을 구현할 수 있습니다. <<timesource,`TimeSource`>>, <<timezone,`TimeZone`>>, <<timeoffset,`TimeOffset`>>, <<ntp_source,`NtpSource`>>, <<ntp_server_uri,`NtpServerUri`>>.
 
 ==== Daylight Saving Time
 
-There are 2 ways a Charging Station can support punctual automated bi-annual changeover between "standard time" and "daylight saving time" periods.
+충전기가 "표준 시간"과 "일광 절약 시간" 기간 간의 정시적 자동 2년 주기 전환을 지원할 수 있는 방법은 두 가지가 있습니다.
 
-* The transition dates and offsets are known in the Charging Station, based on the configured <<timezone,`TimeZone`>>.
-* The transition date and offset is manually configured for every transition via: <<next_time_offset_transition_datetime,`NextTimeOffsetTransitionDateTime`>> and <<time_offset_next_transition,`TimeOffsetNextTransition`>>.
+* 전환 날짜와 오프셋은 구성된 <<timezone,`TimeZone`>>을 기반으로 충전기에서 알 수 있습니다.
+* 전환 날짜와 오프셋은 <<next_time_offset_transition_datetime,`NextTimeOffsetTransitionDateTime`>> 및 <<time_offset_next_transition,`TimeOffsetNextTransition`>>을 통해 모든 전환에 대해 수동으로 구성됩니다.
 
-Daylight saving time is used for displaying the current time to the EV driver.
+일광 절약 시간은 EV 운전자에게 현재 시간을 표시하는 데 사용됩니다.
 
 [[message_timeouts]]
 === Message Timeouts
 
-_This section is normative._
+_이 섹션은 규범적입니다._
 
-OCPP does not specify timing requirements for messages. Timing of messages is greatly influenced by the underlying network used. A GPRS network has different timing characteristics compared to a land-line. As OCPP does not require a certain type of network, but leaves this open for the CSO to select, OCPP cannot require timing constrains.
+OCPP는 메시지에 대한 타이밍 요구 사항을 지정하지 않습니다. 메시지 타이밍은 사용되는 기본 네트워크에 따라 크게 영향을 받습니다. GPRS 네트워크는 유선 전화와 다른 타이밍 특성을 가지고 있습니다. OCPP는 특정 유형의 네트워크를 요구하지 않지만 CSO가 선택할 수 있도록 열어두므로 OCPP는 타이밍 제약을 요구할 수 없습니다.
 
-If you are looking for some guidance, start with a 30 second timeout on message requests, and tune it for the network used.
+지침을 찾고 있다면 메시지 요청에 30초 시간 초과로 시작하여 사용되는 네트워크에 맞게 조정하세요.
 
-The message timeout setting in a Charging Station can be configured in the messageTimeout field in the <<network_connection_profile_type,NetworkConnectionProfile>>. The purpose of the message timeout is to be able to consider a request message as not sent and continue with other tasks when the message did not arrive due to communication errors or software failure. For transaction related events, use case <<e13_transaction_related_message_not_accepted_by_csms,E13 - Transaction-related message not accepted by CSMS>> describes the retry procedure when this happens. See also the section <<delivering_transaction_related_messages,Delivering transaction-related messages>> in Functional Block E.
+충전기의 메시지 시간 초과 설정은 <<network_connection_profile_type,NetworkConnectionProfile>>의 messageTimeout 필드에서 구성할 수 있습니다. 메시지 시간 초과의 목적은 요청 메시지를 전송되지 않은 것으로 간주하고 통신 오류나 소프트웨어 오류로 인해 메시지가 도착하지 않았을 때 다른 작업을 계속할 수 있도록 하는 것입니다. 거래 관련 이벤트의 경우, 사용 사례 <<e13_transaction_related_message_not_accepted_by_csms,E13 - CSMS에서 거래 관련 메시지를 수락하지 않음>>은 이런 경우 재시도 절차를 설명합니다. 기능 블록 E의 섹션 <<delivering_transaction_related_messages,Delivering transaction-related messages>>도 참조하세요.
 
-A charging station may discover that the connection to CSMS is not functioning correctly when it gets a timeout to a request or when the websocket ping is not answered. In such a situation it is advised that the charging station drops the connection and then reconnects to CSMS. This will create a fresh session and will possibly connect to a different endpoint of a multi-instance CSMS, which may resolve the error.
+충전기는 요청에 대한 시간 초과가 발생하거나 웹소켓 ping에 응답하지 않을 때 CSMS에 대한 연결이 제대로 작동하지 않는다는 것을 발견할 수 있습니다. 이러한 상황에서는 충전기가 연결을 끊은 다음 CSMS에 다시 연결하는 것이 좋습니다. 이렇게 하면 새 세션이 생성되고 다중 인스턴스 CSMS의 다른 엔드포인트에 연결되어 오류가 해결될 수 있습니다.
 
 === Language support
 
-_This section is informative._
+_이 섹션은 정보입니다._
 
-A CSMS can provide the Charging Station with preferred languages for an EV Driver, enabling the Charging Station to communicate with the EV Driver in a language according to his/her preferences.
+CSMS는 충전기에 EV 운전자가 선호하는 언어를 제공하여 충전기가 EV 운전자의 선호도에 따라 언어로 통신할 수 있도록 합니다.
 
-For any Charging Station that shows messages on a display it is RECOMMENDED to at least also implement these in "English". When the preferred languages for an EV-driver (provided by the CSMS) are not "English" and don’t match any of the other languages implemented in the Charging Station, it is RECOMMENDED to use "English" as fall-back.
+디스플레이에 메시지를 표시하는 모든 충전기의 경우 최소한 "영어"로 이를 구현하는 것이 좋습니다. EV 운전자의 선호 언어(CSMS에서 제공)가 "영어"가 아니고 충전기에 구현된 다른 언어와 일치하지 않는 경우 대체 언어로 "영어"를 사용하는 것이 좋습니다.
