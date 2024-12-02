@@ -6,8 +6,8 @@
 :sectnums:
 == Introduction
 
-<<local_authorization_list,C1.4 - 로컬 권한 부여 목록>>에서 설명한 대로 로컬 권한 부여 목록은 CSMS와 동기화할 수 있는 식별자 목록입니다. 오프라인일 때 사용자 권한을 부여하고 온라인일 때 권한 부여 응답 시간을 줄이는 데 사용할 수 있습니다. 이 기능 블록은 로컬 권한 부여 목록을 대체할 식별자의 전체 목록을 보내거나 로컬 권한 부여 목록에 적용할 변경 사항(추가, 업데이트, 삭제) 목록을 보내어 CSMS가 목록을 동기화할 수 있도록 하는 것입니다. 이를 지원하는 작업은 <<get_local_list_version,GetLocalListVersion>> 및 <<send_local_list,SendLocalList>>입니다. +
-목록에는 모든(또는 일부) 식별자의 권한 부여 상태와 해당 만료 날짜가 포함됩니다. 이러한 값은 로컬 권한 부여 중에 사용자에게 보다 세부적인 정보를 제공하는 데 사용될 수 있습니다(예: 표시 메시지).
+<<local_authorization_list,C1.4 - Local Authorization List>>에서 설명한 대로 로컬 인증 목록은 CSMS와 동기화할 수 있는 식별자 목록입니다. 오프라인일 때 사용자 인증을 진행하고 온라인일 때 인증 응답 시간을 줄이는 데 사용할 수 있습니다. 이 기능 블록은 로컬 인증 목록을 대체할 식별자의 전체 목록을 보내거나 로컬 인증 목록에 적용할 변경 사항(추가, 업데이트, 삭제) 목록을 보내어 CSMS가 목록을 동기화할 수 있도록 하는 것입니다. 이를 지원하는 작업은 <<get_local_list_version,GetLocalListVersion>> 및 <<send_local_list,SendLocalList>>입니다. +
+목록에는 모든(또는 일부) 식별자의 인증 부여 상태와 해당 만료 날짜가 포함됩니다. 이러한 값은 로컬 인증 중에 사용자에게 보다 세부적인 정보를 제공하는 데 사용될 수 있습니다(예: 표시 메시지).
 
 <<<
 
@@ -17,36 +17,36 @@
 [[send_local_authorization_list]]
 === D01 - Send Local Authorization List
 
-.D01 - 로컬 권한 부여 목록 전송
+.D01 - 로컬 인증 목록 전송
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |번호 |유형 |설명
 
-|1 |이름 |로컬 권한 부여 목록 전송
+|1 |이름 |로컬 인증 목록 전송
 |2 |ID |D01
-|{nbsp} d|_기능 블록_ |D. 로컬 권한 부여 목록
-|3 |목표 |CSMS가 충전소가 idToken의 권한 부여에 사용할 수 있는 <<local_authorization_list,Local Authorization List>>를 전송할 수 있도록 합니다.
-|4 |설명 |CSMS가 충전소가 idToken의 권한 부여에 사용할 수 있는 <<local_authorization_list,Local Authorization List>>를 전송합니다. 목록은 현재 충전소의 목록을 대체하는 전체 목록이거나 현재 충전소의 목록에 적용할 업데이트가 있는 차등 목록일 수 있습니다.
-|{nbsp} d|_Actors_ |충전소, CSMS
+|{nbsp} d|_기능 블록_ |D. 로컬 인증 목록
+|3 |목표 |CSMS가 충전기가 idToken의 인증 부여에 사용할 수 있는 <<local_authorization_list,Local Authorization List>>를 전송할 수 있도록 합니다.
+|4 |설명 |CSMS가 충전기가 idToken의 인증 부여에 사용할 수 있는 <<local_authorization_list,Local Authorization List>>를 전송합니다. 목록은 현재 충전기의 목록을 대체하는 전체 목록이거나 현재 충전기의 목록에 적용할 업데이트가 있는 차등 목록일 수 있습니다.
+|{nbsp} d|_Actors_ |충전기, CSMS
 |{nbsp} d|_시나리오 설명_
-|**1.** CSMS는 <<send_local_list_request,SendLocalListRequest>>를 보내 <<local_authorization_list,Local Authorization List>>를 설치하거나 업데이트합니다. +
-**2.** <<send_local_list_request,SendLocalListRequest>>를 수신하면 충전소는 <<send_local_list_response,SendLocalListResponse>>와 함께 상태를 응답합니다. +
-|5 |필수 조건 |로컬 권한 부여 목록은 구성 변수 <<local_auth_list_enabled,`LocalAuthListEnabled`>>로 활성화됩니다.
-|6 |사후 조건(들) ​​
-|**성공한 사후 조건:** +
-- 충전소에 새로운 <<local_authorization_list,Local Authorization List>>가 설치되었습니다. +
-**실패 사후 조건:** +
-- 충전소의 <<local_authorization_list,Local Authorization List>>가 그대로 유지됩니다. +
-- 상태가 _Failed_ 또는 _VersionMismatch_인 경우.
+  |**1.** CSMS는 <<send_local_list_request,SendLocalListRequest>>를 보내 <<local_authorization_list,Local Authorization List>>를 설치하거나 업데이트합니다. +
+  **2.** <<send_local_list_request,SendLocalListRequest>>를 수신하면 충전기는 <<send_local_list_response,SendLocalListResponse>>와 함께 상태를 응답합니다. +
+|5 |필수 조건 |로컬 인증 목록은 구성 변수 <<local_auth_list_enabled,`LocalAuthListEnabled`>>로 활성화됩니다.
+|6 |사후 조건(들)
+  |**성공한 사후 조건:** +
+  - 충전기에 새로운 <<local_authorization_list,Local Authorization List>>가 설치되었습니다. +
+  **실패 사후 조건:** +
+  - 충전기의 <<local_authorization_list,Local Authorization List>>가 그대로 유지됩니다. +
+  - 상태가 _Failed_ 또는 _VersionMismatch_ 인 경우.
 |===
 
-.시퀀스 다이어그램: 로컬 권한 부여 목록 전송
-image::part2/images/figure_37.svg[시퀀스 다이어그램: 로컬 권한 부여 목록 전송]
+.시퀀스 다이어그램: 로컬 인증 목록 전송
+image::part2/images/figure_37.svg[시퀀스 다이어그램: 로컬 인증 목록 전송]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7 |오류 처리 |상태가 _Failed_ 또는 _VersionMismatch_이고 updateType이 Differential인 경우 CSMS는 전체 <<local_authorization_list,Local Authorization List>>를 전송합니다. 이 목록이 한 메시지에 너무 큰 경우 updateType _Full_로 초기 목록을 보내고 updateType _Differential_을 사용하여 식별자를 추가하여 목록이 완전히 전송될 때까지 시작합니다(단일 <<send_local_list_request,SendLocalListRequest>>에서 전송할 수 있는 식별자의 양은 요구 사항 D01.FR.11에 설명된 대로 제한됨).
-|8 |비고 |해당 없음
+|7 |오류 처리 |상태가 _Failed_ 또는 _VersionMismatch_ 이고 updateType이 Differential인 경우 CSMS는 전체 <<local_authorization_list,Local Authorization List>>를 전송합니다. 이 목록이 한 메시지에 너무 큰 경우 updateType _Full_ 로 초기 목록을 보내고 updateType _Differential_ 을 사용하여 식별자를 추가하여 목록이 완전히 전송될 때까지 시작합니다(단일 <<send_local_list_request,SendLocalListRequest>>에서 전송할 수 있는 식별자의 양은 요구 사항 D01.FR.11에 설명된 대로 제한됨).
+|8 |비고 |n/a
 |===
 
 ==== D01 - Send Local Authorization List - Requirements
@@ -57,48 +57,48 @@ image::part2/images/figure_37.svg[시퀀스 다이어그램: 로컬 권한 부�
 |ID |전제 조건 |요구 사항 정의 |참고
 
 |D01.FR.01 |{nbsp}
-|<<send_local_list_request,SendLocalListRequest>>에는 업데이트 유형(_updateType_)과 충전소가 업데이트된 후 <<local_authorization_list,Local Authorization List>>와 연결해야 하는 버전 번호(_versionNumber_)가 포함되어야 합니다. |{nbsp}
+  |<<send_local_list_request,SendLocalListRequest>>에는 업데이트 유형(_updateType_)과 충전기가 업데이트된 후 <<local_authorization_list,Local Authorization List>>와 연결해야 하는 버전 번호(_versionNumber_)가 포함되어야 합니다. |{nbsp}
 |D01.FR.02 |{nbsp}
-|<<send_local_list_response,SendLocalListResponse>>는 충전소가 <<local_authorization_list,Local Authorization List>>의 업데이트를 수락했는지 여부를 나타냅니다. |{nbsp}
-|D01.FR.03 |<<send_local_list_response,SendLocalListResponse>>의 _status_가 `Failed` 또는 `VersionMismatch`이고 _updateType_이 `Differential`인 경우
-|CSMS가 전체 <<local_authorization_list,Local Authorization List>>를 보내는 것이 좋습니다.
-|이 목록이 하나의 메시지에 너무 큰 경우(D01.FR.11 참조), _updateType_ `Full`을 사용하여 초기 목록을 전송하고 목록이 완전히 전송될 때까지 _updateType_ `Differential`을 사용하여 식별자를 추가하는 것으로 시작합니다.
-|D01.FR.04 |_localAuthorizationList_가 제공되지 않고 _updateType_이 `Full`인 경우.
-|충전소는 목록에서 모든 IdToken을 제거해야 합니다.
-|목록의 버전 번호는 요청에서 _versionNumber_ 값으로 계속 업데이트됩니다.
+  |<<send_local_list_response,SendLocalListResponse>>는 충전기가 <<local_authorization_list,Local Authorization List>>의 업데이트를 수락했는지 여부를 나타냅니다. |{nbsp}
+|D01.FR.03 |<<send_local_list_response,SendLocalListResponse>>의 _status_ 가 `Failed` 또는 `VersionMismatch` 이고 _updateType_ 이 `Differential` 인 경우
+  |CSMS가 전체 <<local_authorization_list,Local Authorization List>>를 보내는 것이 좋습니다.
+    |이 목록이 하나의 메시지에 넣기에 너무 큰 경우(D01.FR.11 참조), _updateType_ `Full` 을 사용하여 초기 목록을 전송하고 목록이 완전히 전송될 때까지 _updateType_ `Differential` 을 사용하여 식별자를 추가하는 것으로 시작합니다.
+|D01.FR.04 |_localAuthorizationList_ 가 제공되지 않고 _updateType_ 이 `Full` 인 경우.
+  |충전기는 목록에서 모든 IdToken을 제거해야 합니다.
+    |목록의 버전 번호는 요청에서 _versionNumber_ 값으로 계속 업데이트됩니다.
 |D01.FR.05 |{nbsp}
-|_localAuthorizationList_가 비어 있거나 없이 차등 업데이트를 요청하는 것은 목록에 영향을 미치지 않습니다.
-|목록의 버전 번호는 요청에서 _versionNumber_ 값으로 계속 업데이트됩니다.
+  |_localAuthorizationList_ 가 비어 있거나 없이 차등 업데이트를 요청하는 것은 목록에 영향을 미치지 않습니다.
+    |목록의 버전 번호는 요청에서 _versionNumber_ 값으로 계속 업데이트됩니다.
 |D01.FR.06 |{nbsp}
-|<<local_authorization_list,Local Authorization List>>의 모든 IdToken은 고유해야 합니다.
-|중복된 값은 허용되지 않습니다.
+  |<<local_authorization_list,Local Authorization List>>의 모든 IdToken은 고유해야 합니다.
+    |중복된 값은 허용되지 않습니다.
 |D01.FR.09 |{nbsp}
-|충전소는 CSMS에서 SendLocalList 메시지를 수신한 경우를 제외하고는 다른 방법으로 권한 목록의 내용을 수정해서는 안 됩니다. |{nbsp}
+  |충전기는 CSMS에서 SendLocalList 메시지를 수신한 경우를 제외하고는 다른 방법으로 인증 목록의 내용을 수정해서는 안 됩니다. |{nbsp}
 |D01.FR.10 |{nbsp}
-|<<local_authorization_list,Local Authorization List>>는 충전소에서 비휘발성 메모리에 유지 관리해야 하며 재부팅 및 정전 시에도 지속되어야 합니다. |{nbsp}
+  |<<local_authorization_list,Local Authorization List>>는 충전기에서 비휘발성 메모리에 유지 관리해야 하며 재부팅 및 정전 시에도 지속되어야 합니다. |{nbsp}
 |D01.FR.11 |{nbsp}
-|단일 <<send_local_list_request,SendLocalListRequest>>의 크기는 구성 변수 <<items_per_message_send_local_list,`ItemsPerMessageSendLocalList`>> 및 <<bytes_per_message_send_local_list,`BytesPerMessageSendLocalList`>>에 의해 제한됩니다. |{nbsp}
+  |단일 <<send_local_list_request,SendLocalListRequest>>의 크기는 구성 변수 <<items_per_message_send_local_list,`ItemsPerMessageSendLocalList`>> 및 <<bytes_per_message_send_local_list,`BytesPerMessageSendLocalList`>>에 의해 제한됩니다. |{nbsp}
 |D01.FR.12 |{nbsp}
-|<<local_authorization_list,Local Authorization List>>를 지원하는 충전소는 구성 변수 <<local_auth_list_entries,`LocalAuthListEntries`>>를 구현해야 합니다.
-|이를 통해 CSMS는 충전소에서 <<local_authorization_list,Local Authorization List>> 요소의 현재 양과 최대 가능 개수를 알 수 있습니다.
+  |<<local_authorization_list,Local Authorization List>>를 지원하는 충전기는 구성 변수 <<local_auth_list_entries,`LocalAuthListEntries`>>를 구현해야 합니다.
+    |이를 통해 CSMS는 충전기에서 <<local_authorization_list,Local Authorization List>> 요소의 현재 양과 최대 가능 개수를 알 수 있습니다.
 |D01.FR.13 |{nbsp}
-|충전소는 <<local_authorization_list,Local Authorization List>>가 활성화되었는지 여부를 나타냅니다. 이는 <<local_auth_list_enabled,`LocalAuthListEnabled`>> 구성 변수에 의해 보고되고 제어됩니다. |{nbsp}
-|D01.FR.15 |충전소가 _updateType_이 `Full`이고 +
-_localAuthorizationList_가 비어 있지 않은 <<send_local_list_request,SendLocalListRequest>>를 수신하는 경우
-|충전소는 현재 <<local_authorization_list,Local Authorization List>>를 <<send_local_list_request,SendLocalListRequest>>의 목록으로 대체하고 버전 번호를 메시지에 지정된 값으로 설정해야 합니다.
-|그렇지 않으면 초기 충전소 및 CSMS 목록을 동기화할 방법이 없습니다. 이 목록이 하나의 메시지에 너무 큰 경우(D01.FR.11 참조), _updateType_ `Full`로 초기 목록을 보내고 _updateType_ `Differential`을 사용하여 식별자를 추가하여 목록이 완전히 전송될 때까지 시작합니다.
-|D01.FR.16 |충전소가 _updateType_이 `Differential`이고 +
-_localAuthorizationList_에 idTokenInfo가 있는 AuthorizationData 요소가 포함된 <<send_local_list_request,SendLocalListRequest>>를 수신하는 경우
-|충전소는 이러한 요소로 <<local_authorization_list,Local Authorization List>>를 업데이트하고 버전 번호를 메시지에 지정된 값으로 설정해야 합니다.
-|아직 없는 경우 추가하고, <<local_authorization_list,Local Authorization List>>에 이미 있는 경우 새 정보로 업데이트합니다.
-|D01.FR.17 |충전소가 _updateType_이 `Differential`인 <<send_local_list_request,SendLocalListRequest>>를 수신하고 +
-_localAuthorizationList_에 idTokenInfo가 없는 AuthorizationData 요소가 포함된 경우
-|충전소는 <<local_authorization_list,Local Authorization List>>에서 이러한 요소를 제거하고 버전 번호를 메시지에 지정된 값으로 설정해야 합니다. |{nbsp}
+  |충전기는 <<local_authorization_list,Local Authorization List>>가 활성화되었는지 여부를 나타냅니다. 이는 <<local_auth_list_enabled,`LocalAuthListEnabled`>> 구성 변수에 의해 보고되고 제어됩니다. |{nbsp}
+|D01.FR.15 |충전기가 _updateType_ 이 `Full` 이고 +
+  _localAuthorizationList_ 가 비어 있지 않은 <<send_local_list_request,SendLocalListRequest>>를 수신하는 경우
+    |충전기는 현재 <<local_authorization_list,Local Authorization List>>를 <<send_local_list_request,SendLocalListRequest>>의 목록으로 대체하고 버전 번호를 메시지에 지정된 값으로 설정해야 합니다.
+      |그렇지 않으면 초기 충전기 및 CSMS 목록을 동기화할 방법이 없습니다. 이 목록이 하나의 메시지에 넣기에 너무 큰 경우(D01.FR.11 참조), _updateType_ `Full` 로 초기 목록을 보내고 _updateType_ `Differential` 을 사용하여 식별자를 추가하여 목록이 완전히 전송될 때까지 시작합니다.
+|D01.FR.16 |충전기가 _updateType_ 이 `Differential` 이고 +
+  _localAuthorizationList_ 에 idTokenInfo가 있는 AuthorizationData 요소가 포함된 <<send_local_list_request,SendLocalListRequest>>를 수신하는 경우
+    |충전기는 이러한 요소로 <<local_authorization_list,Local Authorization List>>를 업데이트하고 버전 번호를 메시지에 지정된 값으로 설정해야 합니다.
+      |아직 없는 경우 추가하고, <<local_authorization_list,Local Authorization List>>에 이미 있는 경우 새 정보로 업데이트합니다.
+|D01.FR.17 |충전기가 _updateType_ 이 `Differential` 인 <<send_local_list_request,SendLocalListRequest>>를 수신하고 +
+  _localAuthorizationList_ 에 idTokenInfo가 없는 AuthorizationData 요소가 포함된 경우
+    |충전기는 <<local_authorization_list,Local Authorization List>>에서 이러한 요소를 제거하고 버전 번호를 메시지에 지정된 값으로 설정해야 합니다. |{nbsp}
 |D01.FR.18 |{nbsp}
-|<<send_local_list_request,SendLocalListRequest>>의 _versionNumber_는 0보다 커야 합니다.
-|<<get_local_list_version_response,GetLocalListVersionResponse>>에서 _versionNumber_ = 0은 특별한 의미를 갖습니다. 로컬 목록이 설치되지 않았습니다. 따라서 값 0은 절대 사용해서는 안 됩니다.
-|D01.FR.19 |충전소가 _updateType_ = `Differential`인 <<send_local_list_request,SendLocalListRequest>>를 수신하고 _versionNumber_가 <<local_authorization_list,Local Authorization List>>의 버전 번호보다 작거나 같은 경우
-|충전소는 <<local_authorization_list,Local Authorization List>>를 업데이트하는 것을 거부하고 상태가 `VersionMismatch`로 설정된 <<send_local_list_response,SendLocalListResponse>>를 반환해야 합니다. |{nbsp}
+  |<<send_local_list_request,SendLocalListRequest>>의 _versionNumber_ 는 0보다 커야 합니다.
+    |<<get_local_list_version_response,GetLocalListVersionResponse>>에서 _versionNumber_ = 0은 특별한 의미를 갖습니다. 이는 로컬 목록이 설치되지 않음을 의미합니다. 따라서 값 0은 절대 사용해서는 안 됩니다.
+|D01.FR.19 |충전기가 _updateType_ = `Differential` 인 <<send_local_list_request,SendLocalListRequest>>를 수신하고 _versionNumber_ 가 <<local_authorization_list,Local Authorization List>>의 버전 번호보다 작거나 같은 경우
+  |충전기는 <<local_authorization_list,Local Authorization List>>를 업데이트하는 것을 거부하고 상태가 `VersionMismatch` 로 설정된 <<send_local_list_response,SendLocalListResponse>>를 반환해야 합니다. |{nbsp}
 |===
 
 === D02 - Get Local List Version
@@ -110,14 +110,14 @@ _localAuthorizationList_에 idTokenInfo가 없는 AuthorizationData 요소가 �
 
 |1 |이름 |로컬 목록 버전 가져오기
 |2 |ID |D02
-|{nbsp} d|_기능 블록_ |D. 로컬 권한 부여 목록
-|{nbsp} d|_부모 사용 사례_ |<<send_local_authorization_list,D01 - 로컬 권한 부여 목록 보내기>>
+|{nbsp} d|_기능 블록_ |D. 로컬 인증 목록
+|{nbsp} d|_부모 사용 사례_ |<<send_local_authorization_list,D01 - Send Local Authorization List>>
 |3 |목표 |<<local_authorization_list,Local Authorization List>>의 동기화를 지원합니다.
-|4 |설명 |CSMS는 <<get_local_list_version_request,GetLocalListVersionRequest>>를 보내서 <<local_authorization_list,Local Authorization List>>의 버전 번호에 대한 충전소를 요청할 수 있습니다.
-|{nbsp} d|_Actors_ |충전소, CSMS
+|4 |설명 |CSMS는 <<get_local_list_version_request,GetLocalListVersionRequest>>를 보내서 <<local_authorization_list,Local Authorization List>>의 버전 번호에 대한 충전기를 요청할 수 있습니다.
+|{nbsp} d|_Actors_ |충전기, CSMS
 |{nbsp} d|_시나리오 설명_
-|**1.** CSMS는 <<get_local_list_version_request,GetLocalListVersionRequest>>를 보내 이 값을 요청합니다. +
-**2.** <<get_local_list_version_request,GetLocalListVersionRequest>>를 수신하면 충전소는 <<get_local_list_version_response,GetLocalListVersionResponse>>로 응답하며 여기에는 <<local_authorization_list,Local Authorization List>>의 버전 번호가 포함됩니다.
+  |**1.** CSMS는 <<get_local_list_version_request,GetLocalListVersionRequest>>를 보내 이 값을 요청합니다. +
+  **2.** <<get_local_list_version_request,GetLocalListVersionRequest>>를 수신하면 충전기는 <<get_local_list_version_response,GetLocalListVersionResponse>>로 응답하며 여기에는 <<local_authorization_list,Local Authorization List>>의 버전 번호가 포함됩니다.
 |5 |필수 조건 |{nbsp}
 |6 |사후 조건 |CSMS가 <<get_local_list_version_response,GetLocalListVersionResponse>>와 <<local_authorization_list,Local Authorization List>> 버전을 수신했습니다.
 |===
@@ -127,9 +127,9 @@ image::part2/images/figure_38.svg[시퀀스 다이어그램: 로컬 목록 버�
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7 |오류 처리 |해당 없음
-|8 |참고 |0(영)의 _versionNumber_는 로컬 권한 부여 목록이 존재하지 않음을 나타내기 위해 예약되어 있습니다. 로컬 권한 부여 목록이 활성화되지 않았거나 아직 CSMS에서 업데이트를 수신하지 않아 반환할 버전 번호가 없기 때문입니다. +
-반대로, CSMS가 빈 _localAuthorizationList_와 함께 <<send_local_list_request,SendLocalListRequest>>를 보냈기 때문에 비워진 로컬 권한 부여 목록은 _versionNumber_ > 0을 갖습니다.
+|7 |오류 처리 |n/a
+|8 |참고 |0(영)의 _versionNumber_ 는 로컬 인증 목록이 존재하지 않음을 나타내기 위해 예약되어 있습니다. 로컬 인증 목록이 활성화되지 않았거나 아직 CSMS에서 업데이트를 수신하지 않아 반환할 버전 번호가 없기 때문입니다. +
+  반대로, CSMS가 빈 _localAuthorizationList_ 와 함께 <<send_local_list_request,SendLocalListRequest>>를 보냈기 때문에 비워진 로컬 인증 목록은 _versionNumber_ > 0을 갖습니다.
 |===
 
 ==== D02 - Get Local List Version - Requirements
@@ -139,11 +139,11 @@ image::part2/images/figure_38.svg[시퀀스 다이어그램: 로컬 목록 버�
 |===
 |ID |전제 조건 |요구 사항 정의
 
-|D02.FR.01 |`LocalAuthListEnabled`는 _참_입니다.
-|충전소가 <<get_local_list_version_request,GetLocalListVersionRequest>>를 수신하면 충전소는 <<local_authorization_list,Local Authorization List>>의 버전 번호가 포함된 <<get_local_list_version_response,GetLocalListVersionResponse>>로 응답해야 합니다.
-|D02.FR.02 |`LocalAuthListEnabled`가 _참_이고 +
-CSMS가 아직 충전소에 <<local_authorization_list,Local Authorization List>>에 대한 업데이트를 보내지 않았습니다(<<send_local_list_request,SendLocalListRequest>>를 통해)
-|충전소가 <<get_local_list_version_request,GetLocalListVersionRequest>>를 수신하면 충전소는 <<get_local_list_version_response,GetLocalListVersionResponse>>로 응답해야 하며 _versionNumber_는 0(영)으로 <<local_authorization_list,Local Authorization List>>가 없음을 나타냅니다.
-|D02.FR.03 |`LocalAuthListEnabled`가 _참_이 아닙니다.
-|충전소가 <<get_local_list_version_request,GetLocalListVersionRequest>>를 수신하면 충전소는 <<get_local_list_version_response,GetLocalListVersionResponse>>로 응답해야 하며 _versionNumber_는 0(영)이어야 합니다. 이는 <<local_authorization_list,Local Authorization List>>가 없음을 나타냅니다.
+|D02.FR.01 |`LocalAuthListEnabled` 가 _true_ 입니다.
+  |충전기가 <<get_local_list_version_request,GetLocalListVersionRequest>>를 수신하면 충전기는 <<local_authorization_list,Local Authorization List>>의 버전 번호가 포함된 <<get_local_list_version_response,GetLocalListVersionResponse>>로 응답해야 합니다.
+|D02.FR.02 |`LocalAuthListEnabled` 가 _true_ 이고 +
+  CSMS가 아직 충전기에 <<local_authorization_list,Local Authorization List>>에 대한 업데이트를 보내지 않았습니다(<<send_local_list_request,SendLocalListRequest>>를 통해)
+    |충전기가 <<get_local_list_version_request,GetLocalListVersionRequest>>를 수신하면 충전기는 <<get_local_list_version_response,GetLocalListVersionResponse>>로 응답해야 하며 _versionNumber_ 는 0(영)으로 <<local_authorization_list,Local Authorization List>>가 없음을 나타냅니다.
+|D02.FR.03 |`LocalAuthListEnabled` 가 _true_ 가 아닙니다.
+  |충전기가 <<get_local_list_version_request,GetLocalListVersionRequest>>를 수신하면 충전기는 <<get_local_list_version_response,GetLocalListVersionResponse>>로 응답해야 하며 _versionNumber_ 는 0(영)이어야 합니다. 이는 <<local_authorization_list,Local Authorization List>>가 없음을 나타냅니다.
 |===
