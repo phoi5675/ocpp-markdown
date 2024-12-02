@@ -359,7 +359,6 @@ image::part2/images/figure_13.svg[Sequence Diagram: Offline Behavior Idle Chargi
   **2.** The variable is _not_ supported, the Charging Station responds with the status _UnknownVariable_.
 |===
 
-
 .Sequence Diagram: Set Variables
 image::part2/images/figure_14.svg[Sequence Diagram: Set Variables]
 
