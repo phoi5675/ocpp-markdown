@@ -17,7 +17,7 @@ Edition 3 v1.4 FINAL, 2024-05-06
 [discrete]
 == Disclaimer
 
-Copyright © 2010 – 2024 Open Charge Alliance. All rights reserved.
+Copyright © 2010 - 2024 Open Charge Alliance. All rights reserved.
 
 This document is made available under the _*Creative Commons Attribution-NoDerivatives 4.0 International Public License*_
 (https://creativecommons.org/licenses/by-nd/4.0/legalcode).
@@ -133,7 +133,6 @@ This appendix provides a list of all standardized component names for OCPP 2.0.1
 
 This is the list of Standardized Controller Components for OCPP 2.0.1. and typical Variables that might be associated with them.
 
-
 [cols="^.^1s,10",%autowidth.stretch]
 |===
 |IMPORTANT |This list does not imply that these Components are required, nor does it imply that the listed Variables arerequired for a Component or no other Variables are allowed to be associated with a Component.
@@ -212,7 +211,7 @@ s|Variables       s|Type    s|Description
 |HighCurrentControl     |boolean |Vehicle is compatible with high current control (H'110.0.1)
 |HighVoltageControl     |boolean |Vehicle is compatible with high voltage control (H'110.1.2)
 |AutoManufacturerCode     |integer |Auto manufacturer code (H'700.0) +
-    _A single byte manufacturer code assigned by CHAdeMO association_
+  _A single byte manufacturer code assigned by CHAdeMO association_
 |===
 
 ==== ClockCtrlr
@@ -767,7 +766,7 @@ s|Typically used variables s|Description
 |Tripped                    |A problem requiring intervention has occurred.
 |ConnectorType              |Type of connector as defined by ConnectorEnumType in "Part 2 - Specification" plus additionally: `cGBT`, `cChaoJi`, `OppCharge`.
 |SupplyPhases               |AC phases connected
-|SupplyPhases(              |MaxLimit) AC phases Max
+|SupplyPhases(MaxLimit)     |AC phases Max
 |PhaseRotation              |AC wiring phase rotation
 |ChargeProtocol             |Charging Control Protocol applicable to the Connector
 |AvailabilityState          |Indicates if the Connector is available or not (replaces the Status values reported by the StatusNotification)
@@ -1570,7 +1569,7 @@ Variables that are specific to a Controller Component are not included in this l
 |Name               |DataType     |Unit     |Description
 
 |ACCurrent          |decimal      |A        |RMS AC Current (in amperes). For 3-phase circuits, each phase (and optional neutral) is represented by a Variable instance equal to a value of the PhaseEnumType (e.g. L1,N). Unkeyed values reported for a Component declared to be multi-phase are assumed to be an average of all per-phase readings and written values are common per-phase settings. Example(s): ChargingStation: Total AC current consumption (all EVSE’s, ancillaries), EVSE: Total current consumed by EVSE: includes losses (AC→DC) and EVSE specific ancillaries (e.g. fans), ElectricalFeed: Inflow AC current on feed
-|Active             |boolean      |{nbsp}   |Component is in its non-resting / active state: e.g: On, Engaged, Locked. Some Components may have secondary functions that have corresponding Active Variables with an explicit Variable instance., +
+|Active             |boolean      |{nbsp}   |Component is in its non-resting / active state: e.g: On, Engaged, Locked. Some Components may have secondary functions that have corresponding Active Variables with an explicit Variable instance. +
   Note: Monitoring of changes in the Active state of any Component can be specified by setting Delta monitoring on the boolean value with a delta values of 1. Setting/clearing an Active Variable activates/stops the associated functionality, where remotely controllable. Only components that are Available and Enabled can be in the Active state.
 |ACVoltage          |decimal      |V        |RMS AC Voltage (in volts). For 3-phase circuits, each phase (and optional neutral) is represented by a Variable instance equal to a value of the PhaseEnumType (e.g. L1,N). Unkeyed values reported for a Component declared to be multi-phase are assumed to be an average ofall per-phase readings and written values are common per-phase settings. Example(s): ElectricalFeed: Input Voltage AllowReset boolean Component can be reset. Can be used to announce that an EVSE can be reset individually.
 |Angle              |decimal      |Deg      |Angle(s) relative to normal/design idle position. Multiple Variable instance values may be used to indicate angular position in multiple axes (e.g. Left-Right, Forward-Back).
