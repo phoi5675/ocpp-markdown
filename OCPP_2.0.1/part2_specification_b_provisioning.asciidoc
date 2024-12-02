@@ -59,9 +59,9 @@ If this is supported, this behaviour can be configured via the Configuration Var
   The Charging Station is in _Idle_ status, and _Accepted_.
 
   **Failure postcondition:** +
-  The Charging Station received the status _Rejected_ , <<cold_boot_charging_station_rejected,B03 - Cold Boot Charging Station - Rejected>> applies.
+  The Charging Station received the status _Rejected_, <<cold_boot_charging_station_rejected,B03 - Cold Boot Charging Station - Rejected>> applies.
 
-  The Charging Station received the status _Pending_ , <<cold_boot_charging_station_pending,B02 - Cold Boot Charging Station - Pending>> applies.
+  The Charging Station received the status _Pending_, <<cold_boot_charging_station_pending,B02 - Cold Boot Charging Station - Pending>> applies.
 |===
 
 .Sequence Diagram: Cold Boot Charging Station
@@ -73,7 +73,7 @@ image::part2/images/figure_10.svg[Sequence Diagram: Cold Boot Charging Station]
   |**1.** No initial establishment of connection of communication between the CSMS and Charging Station: Retry Connection with the CSMS. +
   **2.** No response / time-out from the CSMS: The Charging Station resends <<boot_notification_request,BootNotificationRequest>> after a waiting interval. The Charging Station chooses this interval on its own (since it dit not get a <<boot_notification_response,BootNotificationResponse>> containing this interval), in a way that avoids flooding the CSMS with requests.
 |8   |Remark(s)
-  |Multiple options for a self check are possible: some Charging Stations boot and send status notifications with _Unavailable_ , then perform a check of all the hardware and send new StatusNotifications with status _Available_ when the Charging Station is up and running. However, there is no required order for a self check and sending a <<boot_notification_request,BootNotificationRequest>>. A Charging Stations can also do the self check _before_ sending a <<boot_notification_request,BootNotificationRequest>> and determine the status before a (mobile) network connection is established and a <<boot_notification_request,BootNotificationRequest>> is sent. +
+  |Multiple options for a self check are possible: some Charging Stations boot and send status notifications with _Unavailable_, then perform a check of all the hardware and send new StatusNotifications with status _Available_ when the Charging Station is up and running. However, there is no required order for a self check and sending a <<boot_notification_request,BootNotificationRequest>>. A Charging Stations can also do the self check _before_ sending a <<boot_notification_request,BootNotificationRequest>> and determine the status before a (mobile) network connection is established and a <<boot_notification_request,BootNotificationRequest>> is sent. +
   When something is wrong with the Charging Station or EVSE, the status SHALL be set to _Faulted_. _Reserved_ and _Unavailable_ states persist after a reboot.
 |===
 
@@ -155,7 +155,7 @@ image::part2/images/figure_10.svg[Sequence Diagram: Cold Boot Charging Station]
   The Charging Station is in _Pending_ status.
 
   **Failure postcondition:** +
-  The Charging Station received the status _Rejected_ , <<cold_boot_charging_station_rejected,B03 - Cold Boot Charging Station - Rejected>>.
+  The Charging Station received the status _Rejected_, <<cold_boot_charging_station_rejected,B03 - Cold Boot Charging Station - Rejected>>.
 |===
 
 .Sequence Diagram: Cold Boot Charging Station - Pending
@@ -166,7 +166,7 @@ image::part2/images/figure_11.svg[Sequence Diagram: Cold Boot Charging Station -
 |7   |Error handling
   |**1.** When no initial connection established between CSMS and Charging Station: Retry Connection to the CSMS and resend <<boot_notification_request,BootNotificationRequest>>. +
   **2.** No response / time-out from the CSMS: The Charging Station resends <<boot_notification_request,BootNotificationRequest>> after a waiting interval. This waiting interval can be based on the interval from a previous <<boot_notification_response,BootNotificationResponse>> or chosen by the Charging Station itself. In the latter case, the Charging Station chooses this interval in a way that avoids flooding the CSMS with requests.
-|8   |Remark(s)   |When the CSMS returns with <<boot_notification_response,BootNotificationResponse>> with the status _Accepted_ , <<cold_boot_charging_station,B01 - Cold Boot Charging Station>> applies.
+|8   |Remark(s)   |When the CSMS returns with <<boot_notification_response,BootNotificationResponse>> with the status _Accepted_, <<cold_boot_charging_station,B01 - Cold Boot Charging Station>> applies.
 |===
 
 ==== B02 - Cold Boot Charging Station - Pending - Requirements
@@ -237,13 +237,12 @@ image::part2/images/figure_12.svg[Sequence Diagram: Cold Boot Charging Station -
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7   |Error handling  |When there is no response or a time-out from the CSMS: The Charging Station resends <<boot_notification_request,BootNotificationRequest>> after a waiting interval. This waiting interval can be based on the interval from a previous <<boot_notification_response,BootNotificationResponse>> or chosen by the Charging Station itself. In the latter case, the Charging Station chooses this interval in a way that avoids flooding the CSMS with requests.
-|8   |Remark(s)       |During the status _Rejected_, the Charging Station may no longer be reachable from the CSMS. The Charging Station MAY e.g. close its communication channel or shut down its communication
-hardware. +
+|8   |Remark(s)       |During the status _Rejected_, the Charging Station may no longer be reachable from the CSMS. The Charging Station MAY e.g. close its communication channel or shut down its communication hardware. +
   Additionally, the CSMS MAY close the communication channel, for instance to free up system resources.
 
   It is advised not to accept any transactions until the BootNotification of the Charging Station has been accepted by the CSMS. See: <<transactions_before_being_accepted_by_a_csms,Transactions before being accepted by a CSMS>>
   
-  When the CSMS returns with <<boot_notification_response,BootNotificationResponse>> with the status Accepted , <<cold_boot_charging_station,B01 - Cold Boot Charging Station>> applies.
+  When the CSMS returns with <<boot_notification_response,BootNotificationResponse>> with the status _Accepted_, <<cold_boot_charging_station,B01 - Cold Boot Charging Station>> applies.
 |===
 
 ==== B03 - Cold Boot Charging Station - Rejected - Requirements
@@ -398,7 +397,7 @@ image::part2/images/figure_14.svg[Sequence Diagram: Set Variables]
 |B05.FR.09  |NOT (B05.FR.04 to B05.FR.08) AND +
   When the Charging Station receives a <<set_variables_request,SetVariablesRequest>> for a <<variable_type,Variable>> in the <<set_variable_data_type,SetVariableData>>, but is not able to set it
     |The Charging Station SHALL set the _attributeStatus_ field in the corresponding <<set_variable_result_type,SetVariableResult>> to: <<set_variable_status_enum_type,Rejected>>. +
-    (This happens if the variable is _ReadOnly_ , but may also occur when setting the variable fails because of technical problems.)
+    (This happens if the variable is _ReadOnly_, but may also occur when setting the variable fails because of technical problems.)
 |B05.FR.10  |When the Charging Station was able to set the given _value_ from the <<set_variable_data_type,SetVariableData>>
   |The Charging Station SHALL set the _attributeStatus_ field in the corresponding <<set_variable_result_type,SetVariableResult>> to: <<set_variable_status_enum_type,Accepted>>.
 |B05.FR.11  |{nbsp}
@@ -674,7 +673,7 @@ image::part2/images/figure_17.svg[Sequence Diagram: Get Custom Report]
 |B08.FR.21  |When Charging Station receives a <<get_report_request,GetReportRequest>> with _componentVariable_ elements in which _variable_ is present, but _instance_ is missing
   |The Charging Station SHALL report for every instance of the _variable_ of the _component_ in _componentVariable_.
 |B08.FR.22  |B08.FR.11 AND +
-  When Charging Station receives a <<get_report_request,GetReportRequest>> with a _component_ in a _componentVariable_ element that has a _component.evse.id_ , but _component.evse.connector_ is missing
+  When Charging Station receives a <<get_report_request,GetReportRequest>> with a _component_ in a _componentVariable_ element that has a _component.evse.id_, but _component.evse.connector_ is missing
     |The Charging Station SHALL report the component(s) with this _component.name_, _component.instance_ and _component.evse.id_ for every _component.evse.connector_, whilst taking into account B08.FR.24.
 |B08.FR.23  |B08.FR.11 AND +
   When Charging Station receives a <<get_report_request,GetReportRequest>> with a _component_ in a _componentVariable_ element that has no _component.evse.id_
@@ -790,8 +789,8 @@ image::part2/images/figure_19.svg[Sequence Diagram: Migrate to new ConnectionPro
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
-|B10.FR.01  |On receipt of a <<set_variables_request,SetVariablesRequest>>, containing Configuration Variable <<network_configuration_priority,`NetworkConfigurationPriority`>> AND the NetworkProfile slots in the message all contain valid configurations |{nbsp}
-  The Charging Station SHALL send <<set_variables_response,SetVariablesResponse>> with status _Accepted_, or _RebootRequired_. |{nbsp}
+|B10.FR.01  |On receipt of a <<set_variables_request,SetVariablesRequest>>, containing Configuration Variable <<network_configuration_priority,`NetworkConfigurationPriority`>> AND the NetworkProfile slots in the message all contain valid configurations 
+  |The Charging Station SHALL send <<set_variables_response,SetVariablesResponse>> with status _Accepted_, or _RebootRequired_. |{nbsp}
 |B10.FR.02  |On receipt of a <<set_variables_request,SetVariablesRequest>>, containing Configuration Variable <<network_configuration_priority,`NetworkConfigurationPriority`>> AND any of the NetworkProfile slots in the message does not contain a valid configuration
   |The Charging Station SHALL send <<set_variables_response,SetVariablesResponse>> with status _Rejected_.
     |The optional element _statusInfo_ can be used to provide more information.
@@ -834,8 +833,7 @@ image::part2/images/figure_19.svg[Sequence Diagram: Migrate to new ConnectionPro
   |**1.** The CSO requests the CSMS to reset the Charging Station or EVSE. +
   **2.** The CSMS sends <<reset_request,ResetRequest>> requesting the Charging Station to reset itself or EVSE. +
   **3.** The CSMS requests for an OnIdle or Immediate reset. +
-  **4.** The Charging Station responds with ResetResponse, indicating whether the Charging Station is +
-  able to reset itself or EVSE. +
+  **4.** The Charging Station responds with ResetResponse, indicating whether the Charging Station is able to reset itself or EVSE. +
   **5.** The CSMS sends an optional notification to the CSO. +
   **6.** Only if no evseId was supplied, then after the reset, the Charging Station will proceed as in use case B01.
 |{nbsp} d|_Alternative scenario(s)_ |<<reset_with_ongoing_transaction,B12 - Reset With Ongoing Transaction>>
@@ -914,12 +912,12 @@ image::part2/images/figure_20.svg[Sequence Diagram: Reset Without Transaction]
 |2   |ID              |B12
 |{nbsp} d|_Functional block_ |B. Provisioning
 |3   |Objective(s)    |To enable the CSMS to request a Charging Station to reset itself or EVSE, while there is an ongoing transaction.
-|4   |Description     |This use case covers how the CSMS can request the Charging Station to reset itself or an EVSE by sending <<reset_request,ResetRequest>>. (If <<reset_request,ResetRequest>> contains an optional paramater evseId , then only a reset of the specific EVSE is requested.) This could for example be necessary if the Charging Station is not functioning correctly. The CSMS has the possibility to let the Charging Station end all transactions itself and reboot or wait until all ongoing transactions are ended normally (by an EV user) and then reboot.
+|4   |Description     |This use case covers how the CSMS can request the Charging Station to reset itself or an EVSE by sending <<reset_request,ResetRequest>>. (If <<reset_request,ResetRequest>> contains an optional paramater _evseId_, then only a reset of the specific EVSE is requested.) This could for example be necessary if the Charging Station is not functioning correctly. The CSMS has the possibility to let the Charging Station end all transactions itself and reboot or wait until all ongoing transactions are ended normally (by an EV user) and then reboot.
 |{nbsp} d|_Actors_    |Charging Station, CSMS, CSO
 |{nbsp} d|_Scenario description_
   |**1.** The CSO requests the CSMS to reset the Charging Station or EVSE. +
   **2.** The CSMS sends <<reset_request,ResetRequest>> requesting the Charging Station to reset itself or EVSE. +
-  **3a.** On receipt of an OnIdle reset, the Charging Station responds with <<reset_response,ResetResponse(Scheduled)>>, indicating the Charging Station will try to reset itself or EVSE after all ongoing transactions have ended. The Charging Station continues charging and sets all EVSEs (or only the one provided in the request, if _evseId_ was supplied) that are Available to status _Unavailable_ , waits until all transactions are finished and all <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) messages are sent. +
+  **3a.** On receipt of an OnIdle reset, the Charging Station responds with <<reset_response,ResetResponse(Scheduled)>>, indicating the Charging Station will try to reset itself or EVSE after all ongoing transactions have ended. The Charging Station continues charging and sets all EVSEs (or only the one provided in the request, if _evseId_ was supplied) that are Available to status _Unavailable_, waits until all transactions are finished and all <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) messages are sent. +
   **3b.** On receipt of an Immediate reset, the Charging Station responds with <<reset_response,ResetResponse(Accepted)>>, indicating the Charging Station will try to reset itself or EVSE. The Charging Station attempts to terminate any transaction (or only those running on the EVSE provided in the request, if _evseId_ was supplied) in progress, and sending a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) message. +
   **4.** Only if no evseId was supplied the Charging Station reboots and returns to a state as just having been booted, <<cold_boot_charging_station,B01 - Cold Boot Charging Station applies>>.
 |{nbsp} d|_Alternative scenario(s)_ |<<reset_without_ongoing_transaction,B11 - Reset Without Ongoing Transaction>>
