@@ -6,24 +6,24 @@
 
 == OCPP Security
 
-이 기능 블록은 OCPP 프로토콜에 대한 보안 요구 사항을 설명합니다. 보안 부분은 OCPP의 미래 개발 및 표준화를 강화하고 성숙시키기 위해 개발되었습니다. 이는 LaQuSo <<ocpp_security_21,[21]>>의 종단 간 보안 설계를 기반으로 합니다. 보안 요구 사항은 OCPP 사용자를 지원하기 위해 충전소 및 CSMS의 보안 조치에 포함됩니다.
+이 기능 블록은 OCPP 프로토콜에 대한 보안 요구 사항을 설명합니다. 보안 부분은 OCPP의 미래 개발 및 표준화를 강화하고 성숙시키기 위해 개발되었습니다. 이는 LaQuSo <<ocpp_security_21,[21]>>의 종단 간 보안 설계를 기반으로 합니다. 보안 요구 사항은 OCPP 사용자를 지원하기 위해 충전기 및 CSMS의 보안 조치에 포함됩니다.
 
 === Security Objectives
 
-_이 섹션은 정보입니다._
+_이 섹션은 정보제공을 목적으로 합니다._
 
 OCPP 보안은 다음 보안 목표를 충족하도록 설계되었습니다.
 
-. CSMS와 충전소 간에 안전한 통신 채널을 생성할 수 있도록 합니다. 이 채널의 메시지 무결성과 기밀성은 강력한 암호화 조치로 보호해야 합니다.
-. 충전소와 CSMS 간에 상호 인증을 제공합니다. 양측은 통신하는 사람을 식별할 수 있어야 합니다.
-. 충전소가 펌웨어 이미지의 소스와 무결성을 확인하고 이러한 이미지에 대한 부인 방지를 허용하여 안전한 펌웨어 업데이트 프로세스를 제공합니다.
+. CSMS와 충전기 간에 안전한 통신 채널을 생성할 수 있도록 합니다. 이 채널의 메시지 무결성과 기밀성은 강력한 암호화 조치로 보호해야 합니다.
+. 충전기와 CSMS 간에 상호 인증을 제공합니다. 양측은 통신하는 사람을 식별할 수 있어야 합니다.
+. 충전기가 펌웨어 이미지의 출처와 무결성을 확인할 수 있도록 하고, 해당 이미지에 대한 부인 방지를 가능하게 함으로써 안전한 펌웨어 업데이트 프로세스를 제공합니다.
 . 스마트 충전 시스템의 보안을 모니터링하기 쉽게 보안 이벤트 로깅을 허용합니다. 보안 관련 이벤트 목록과 해당 '중요도'는 부록에 제공됩니다.
 
 === Design Considerations
 
-_이 섹션은 정보 제공용입니다._
+_이 섹션은 정보 제공을 목적으로 합니다._
 
-보안 기능 블록은 OCPP에서 취한 접근 방식에 맞게 설계되었습니다. 가능한 한 표준 웹 기술을 사용하여 사용 가능한 웹 라이브러리와 소프트웨어를 사용하여 비용 효율적인 구현을 허용합니다. 애플리케이션 계층 보안 조치는 포함되지 않습니다. 이러한 고려 사항에 따라 OCPP 보안은 X.509 인증서를 사용하는 TLS 및 공개 키 암호화를 기반으로 합니다. CSMS는 일반적으로 서버 역할을 하므로 충전소의 다른 사용자 또는 역할 기반 액세스 제어는 이 표준에 구현되지 않습니다. 이를 완화하려면 CSMS에 액세스 제어를 구현하는 것이 좋습니다. 구현된 메커니즘을 우회할 수 없도록 하려면 충전소에서 로컬로 충전소에 대한 유지 관리를 수행하는 자격을 갖춘 인력이 OCPP를 사용해서는 안 됩니다. 로컬 유지 관리 목적으로 다른 프로토콜을 사용할 수 있기 때문입니다.
+보안 기능 블록은 OCPP에서 취한 접근 방식에 맞게 설계되었습니다. 가능한 한 표준 웹 기술을 사용하여 사용 가능한 웹 라이브러리와 소프트웨어를 사용하여 비용 효율적인 구현을 허용합니다. 애플리케이션 계층 보안 조치는 포함되지 않습니다. 이러한 고려 사항에 따라 OCPP 보안은 X.509 인증서를 사용하는 TLS 및 공개 키 암호화를 기반으로 합니다. CSMS는 일반적으로 서버 역할을 하므로 충전기의 다른 사용자 또는 역할 기반 액세스 제어는 이 표준에 구현되지 않습니다. 이를 완화하려면 CSMS에 액세스 제어(Access control)를 구현하는 것이 좋습니다. 구현된 메커니즘을 우회할 수 없도록 하려면 충전기에서 로컬로 충전기에 대한 유지 관리를 수행하는 자격을 갖춘 인력이 OCPP를 사용해서는 안 됩니다. 로컬 유지 관리 목적으로 다른 프로토콜을 사용할 수 있기 때문입니다.
 
 <<<
 
@@ -34,41 +34,42 @@ _이 섹션은 정보 제공용입니다._
 .OCPP 보안 프로필 개요
 [cols="^.^1s,<.^1,<.^1,<.^1",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|프로필 |충전소 +
-인증
+|프로필 |충전기 +
+  인증
 |CSMS +
-인증
-|통신 +
-보안
+  인증
+    |통신 +
+    보안
+
 |1. 기본 인증을 사용한 보안되지 않은 전송
-|HTTP 기본 인증 |- |-
+  |HTTP 기본 인증 |- |-
 |2. 기본 인증을 사용한 TLS |HTTP 기본 인증
-|인증서를 사용한 TLS 인증 |전송 계층 보안(TLS)
+  |인증서를 사용한 TLS 인증 |전송 계층 보안(TLS)
 |3. 클라이언트 측 인증서가 있는 TLS |인증서를 사용한 TLS 인증
-|인증서를 사용한 TLS 인증 |전송 계층 보안(TLS)
+  |인증서를 사용한 TLS 인증 |전송 계층 보안(TLS)
 |===
 
-- <<unsecured_transport_with_basic_authentication_profile_1,기본 인증 프로필이 있는 보안되지 않은 전송>>에는 CSMS에 대한 인증이나 보안 통신 채널을 설정하는 조치가 포함되지 않습니다. 따라서 신뢰할 수 있는 네트워크, 예를 들어 CSMS와 충전소 사이에 VPN이 있는 네트워크에서만 사용해야 합니다. 현장 작업의 경우 TLS가 있는 보안 프로필을 사용하는 것이 좋습니다.
+- <<unsecured_transport_with_basic_authentication_profile_1,Unsecured Transport with Basic Authentication Profile>>에는 CSMS에 대한 인증이나 보안 통신 채널을 설정하는 조치가 포함되지 않습니다. 따라서 신뢰할 수 있는 네트워크, 예를 들어 CSMS와 충전기 사이에 VPN이 있는 네트워크에서만 사용해야 합니다. 현장 작업의 경우 TLS가 있는 보안 프로필을 사용하는 것이 좋습니다.
 - 어떤 경우(예: 실험실 설치, 테스트 설정 등)에는 보안을 구현하지 않고 OCPP 2.0.1을 사용하는 것을 선호할 수 있습니다. 이는 가능하지만 유효한 OCPP 2.0.1 구현으로 간주되지 않습니다.
-- 충전소에 올바른 날짜와 시간이 설정되어 있지 않으면 서버 인증서를 검증할 수 없습니다. 이 문제를 해결하려면 NTP를 사용하거나, 모바일 네트워크를 사용하여 시간을 자동으로 설정하거나, 첫 번째 연결 전에 시간을 설정하는 설치 도구를 사용하는 것이 좋습니다.
+- 충전기에 올바른 날짜와 시간이 설정되어 있지 않으면 서버 인증서를 검증할 수 없습니다. 이 문제를 해결하려면 NTP를 사용하거나, 모바일 네트워크를 사용하여 시간을 자동으로 설정하거나, 첫 번째 연결 전에 시간을 설정하는 설치 도구를 사용하는 것이 좋습니다.
 
 ==== Generic Security Profile requirements
 
-.Generic Security Profile requirements
+.일반 보안 프로필 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition       |Requirement definition
-|A00.FR.001 |{nbsp}             |The Charging Station and CSMS SHALL only use one security profile at a time
-|A00.FR.002 |If the Charging Station tries to connect with a different profile than the CSMS is using
-  |The CSMS SHALL terminate the connection.
-|A00.FR.003 |If the CSMS tries to connect with a different profile than the Charging Station is using
-  |The Charging Station SHALL terminate the connection.
-|A00.FR.004 |{nbsp}             |The security profile SHALL be configured before OCPP communication is possible.
-|A00.FR.005 |{nbsp}             |Lowering the security profile that is used, to a less secure profile, is for security reasons, not part of the OCPP specification, and MUST be done through another method, not via OCPP. OCPP messages SHALL NOT be used for this (e.g. <<set_variables_request,SetVariablesRequest>> or <<data_transfer_request,DataTransferRequest>>).
-|A00.FR.006 |When a CSMS communicates with Charging Stations with different security profiles or different versions of OCPP.
-  |The CSMS MAY operate the Charging Stations via different addresses or ports of the CSMS. +
-  For instance, the CSMS server may have one TCP port for TLS with Basic Authentication, and another port for TLS with Client Side Certificates. +
-  In this case there is only one security profile in use per port of the CSMS, which is allowed.
+|ID |전제 조건 |요구 사항 정의
+|A00.FR.001 |{nbsp} |충전기와 CSMS는 한 번에 하나의 보안 프로필만 사용해야 합니다.
+|A00.FR.002 |충전기가 CSMS가 사용하는 것과 다른 프로필로 연결을 시도하는 경우
+  |CSMS는 연결을 종료해야 합니다.
+|A00.FR.003 |CSMS가 충전기가 사용하는 것과 다른 프로필로 연결을 시도하는 경우
+  |충전기는 연결을 종료해야 합니다.
+|A00.FR.004 |{nbsp} |OCPP 통신이 가능하기 전에 보안 프로필을 구성해야 합니다.
+|A00.FR.005 |{nbsp} |사용하는 보안 프로필을 보안 수준이 낮은 프로필로 낮추는 것은 보안상의 이유로 OCPP 사양의 일부가 아니며 OCPP를 통해서가 아닌 다른 방법을 통해 수행해야 합니다. OCPP 메시지는 이를 위해 사용되어서는 안 됩니다(예: <<set_variables_request,SetVariablesRequest>> 또는 <<data_transfer_request,DataTransferRequest>>).
+|A00.FR.006 |CSMS가 다른 보안 프로필 또는 다른 버전의 OCPP를 사용하는 충전기와 통신하는 경우.
+  |CSMS는 CSMS의 다른 주소 또는 포트를 통해 충전기를 운영할 수 있습니다. +
+  예를 들어, CSMS 서버에는 기본 인증을 사용하는 TLS용 TCP 포트 하나와 클라이언트 측 인증서를 사용하는 TLS용 TCP 포트 하나가 있을 수 있습니다. +
+  이 경우 CSMS 포트당 사용되는 보안 프로필이 하나뿐이며 이는 허용됩니다.
 |===
 
 [[unsecured_transport_with_basic_authentication_profile_1]]
@@ -81,9 +82,9 @@ _이 섹션은 정보 제공용입니다._
 |1 |이름 |기본 인증을 사용한 보안되지 않은 전송
 |2 |프로필 번호 |1
 |3 |설명 |기본 인증을 사용한 보안되지 않은 전송 프로필은 낮은 수준의 보안을 제공합니다. +
-충전소 인증은 사용자 이름과 비밀번호를 통해 수행됩니다. 통신 채널을 보호하기 위한 조치는 포함되지 않습니다.
-|4 |충전소 인증 |충전소 인증에는 HTTP 기본 인증이 사용됩니다.
-|5 |CSMS 인증 |이 프로필에서 CSMS는 충전소에 자신을 인증하지 않습니다. 충전소는 연결하는 서버가 실제로 CSMS라고 신뢰해야 합니다.
+  충전기 인증은 사용자 이름과 비밀번호를 통해 수행됩니다. 통신 채널을 보호하기 위한 조치는 포함되지 않습니다.
+|4 |충전기 인증 |충전기 인증에는 HTTP 기본 인증이 사용됩니다.
+|5 |CSMS 인증 |이 프로필에서 CSMS는 충전기에 자신을 인증하지 않습니다. 충전기는 연결하는 서버가 실제로 CSMS라고 신뢰해야 합니다.
 |6 |통신 보안 |프로필에 통신 보안 조치가 포함되지 않습니다.
 |===
 
@@ -92,7 +93,7 @@ image::part2/images/figure_2.svg[시퀀스 다이어그램: HTTP 기본 인증 �
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7 |주의 |OCPP 2.0.1(A00.FR.205)의 기본 인증 비밀번호 인코딩은 OCPP 1.6에서 수행된 방식과 다릅니다.
+|7 |참고 |OCPP 2.0.1(A00.FR.205)의 기본 인증 비밀번호 인코딩은 OCPP 1.6에서 수행된 방식과 다릅니다.
 |===
 
 ==== Unsecured Transport with Basic Authentication Profile - Requirements
@@ -102,13 +103,13 @@ image::part2/images/figure_2.svg[시퀀스 다이어그램: HTTP 기본 인증 �
 |===
 |ID |전제 조건 |요구 사항 정의
 
-|A00.FR.201 |{nbsp} |<<unsecured_transport_with_basic_authentication_profile_1,기본 인증을 사용한 보안되지 않은 전송 프로필>>은 신뢰할 수 있는 네트워크에서만 사용해야 합니다.
-|A00.FR.202 |{nbsp} |충전소는 HTTP 기본 인증을 사용하여 CSMS에 자체 인증을 해야 합니다. <<ocpp_security_18,[18]>>
-|A00.FR.203 |A00.FR.202 |클라이언트, 즉 충전소는 모든 연결 요청에 사용자 이름과 비밀번호를 제공해야 합니다.
-|A00.FR.204 |A00.FR.203 |사용자 이름은 충전소 ID와 동일해야 하며, 이는 충전소가 OCPP-J 연결 URL에서 사용하는 식별 문자열입니다. 기본 인증을 사용하는 경우 충전소 ID에 ":" 문자가 포함될 수 없습니다. 그렇지 않으면 CSMS가 사용자 이름과 비밀번호를 분리하지 못할 수 있습니다.
+|A00.FR.201 |{nbsp} |<<unsecured_transport_with_basic_authentication_profile_1,Unsecured Transport with Basic Authentication Profile>>은 신뢰할 수 있는 네트워크에서만 사용해야 합니다.
+|A00.FR.202 |{nbsp} |충전기는 HTTP 기본 인증을 사용하여 CSMS에 자체 인증을 해야 합니다. <<ocpp_security_18,[18]>>
+|A00.FR.203 |A00.FR.202 |클라이언트, 즉 충전기는 모든 연결 요청에 사용자 이름과 비밀번호를 제공해야 합니다.
+|A00.FR.204 |A00.FR.203 |사용자 이름은 충전기 ID와 동일해야 하며, 이는 충전기가 OCPP-J 연결 URL에서 사용하는 식별 문자열입니다. 기본 인증을 사용하는 경우 충전기 ID에 ":" 문자가 포함될 수 없습니다. 그렇지 않으면 CSMS가 사용자 이름과 비밀번호를 분리하지 못할 수 있습니다.
 |A00.FR.205 |{nbsp} |비밀번호는 <<basic_auth_password,`BasicAuthPassword`>> 구성 변수에 저장해야 합니다. 충분히 높은 엔트로피를 갖는 임의로 선택된 passwordString이어야 하며, 최소 16자에서 최대 40자(영숫자 문자 및 passwordString에서 허용하는 특수 문자)로 구성되어야 합니다. 비밀번호는 UTF-8 인코딩된 문자열(옥텟 문자열 또는 base64로 인코딩되지 않음)로 전송해야 합니다.
 |A00.FR.206 |A00.FR.203 |HTTP Basic을 사용하면 사용자 이름과 비밀번호는 일반 텍스트로 전송되며 base64로만 인코딩됩니다. 따라서 이 메커니즘은 VPN과 같은 다른 수단으로 이미 보안된 연결에서만 사용하는 것이 좋습니다.
-|A00.FR.207 |A00.FR.202 |CSMS는 충전소 ID와 기본 인증 비밀번호가 연결 요청의 권한 헤더에 있는 사용자 이름과 비밀번호와 일치하는지 확인해야 합니다.
+|A00.FR.207 |A00.FR.202 |CSMS는 충전기 ID와 기본 인증 비밀번호가 연결 요청의 권한 헤더에 있는 사용자 이름과 비밀번호와 일치하는지 확인해야 합니다.
 |===
 
 [[tls_with_basic_authentication_profile_2]]
@@ -120,11 +121,11 @@ image::part2/images/figure_2.svg[시퀀스 다이어그램: HTTP 기본 인증 �
 |번호 |유형 |설명
 |1 |이름 |기본 인증을 사용한 TLS
 |2 |프로필 번호 |2
-|3 |설명 |기본 인증을 사용한 TLS 프로필에서 통신 채널은 TLS(전송 계층 보안)를 사용하여 보안됩니다. CSMS는 TLS 서버 인증서를 사용하여 자체 인증합니다. 충전소는 HTTP 기본 인증을 사용하여 자체 인증합니다.
-|4 |충전소 인증 |충전소 인증에는 HTTP 기본 인증이 사용됩니다. +
-이 프로필에서 TLS를 사용하므로 비밀번호가 암호화되어 전송되어 이 인증 방법을 사용할 때의 위험이 줄어듭니다.
-|5 |CSMS 인증 |충전소는 TLS 서버 인증서를 통해 CSMS를 인증합니다.
-|6 |통신 보안 |충전소와 CSMS 간의 통신은 TLS를 사용하여 보안됩니다.
+|3 |설명 |기본 인증을 사용한 TLS 프로필에서 통신 채널은 TLS(전송 계층 보안)를 사용하여 보안됩니다. CSMS는 TLS 서버 인증서를 사용하여 자체 인증합니다. 충전기는 HTTP 기본 인증을 사용하여 자체 인증합니다.
+|4 |충전기 인증 |충전기 인증에는 HTTP 기본 인증이 사용됩니다. +
+  이 프로필에서 TLS를 사용하므로 비밀번호가 암호화되어 전송되어 이 인증 방법을 사용할 때의 위험이 줄어듭니다.
+|5 |CSMS 인증 |충전기는 TLS 서버 인증서를 통해 CSMS를 인증합니다.
+|6 |통신 보안 |충전기와 CSMS 간의 통신은 TLS를 사용하여 보안됩니다.
 |===
 
 .시퀀스 다이어그램: 기본 인증이 있는 TLS 시퀀스 다이어그램
@@ -134,20 +135,20 @@ image::part2/images/figure_3.svg[시퀀스 다이어그램: 기본 인증이 있
 |===
 |7 |참고 |TLS는 여러 구성을 허용하지만, 모든 구성이 충분한 보안을 제공하는 것은 아닙니다. 아래 요구 사항은 OCPP에 허용되는 구성을 설명합니다.
 
-충전소는 RFC 6455에 설명된 대로 http 연결을 웹소켓 연결로 업그레이드하도록 요청하는 동안 기본 인증 RFC 2617에서 사용된 것과 동일한 헤더를 포함해야 합니다. 서버는 연결을 업그레이드하기 전에 먼저 권한 부여 헤더를 검증해야 합니다.
+  충전기는 RFC 6455에 설명된 대로 http 연결을 웹소켓 연결로 업그레이드하도록 요청하는 동안 기본 인증 RFC 2617에서 사용된 것과 동일한 헤더를 포함해야 합니다. 서버는 연결을 업그레이드하기 전에 먼저 인증 헤더를 검증해야 합니다.
 
-**예:** +
-_GET /ws HTTP/1.1_ +
-_(Remote-Addr: 127.0.0.1)_ +
-_UPGRADE: websocket_ +
-_CONNECTION: Upgrade_ +
-_HOST: 127.0.0.1:9999_ +
-_ORIGIN: http://127.0.0.1:9999_ +
-_SEC-WEBSOCKET-KEY: Pb4obWo2214EfaPQuazMjA==_ +
-_SEC-WEBSOCKET-VERSION: 13_ +
-_AUTHORIZATION: Basic <Base64로 인코딩됨(<ChargePointId>:<AuthorizationKey>)>_
+  **예:** +
+  _GET /ws HTTP/1.1_ +
+  _(Remote-Addr: 127.0.0.1)_ +
+  _UPGRADE: websocket_ +
+  _CONNECTION: Upgrade_ +
+  _HOST: 127.0.0.1:9999_ +
+  _ORIGIN: http://127.0.0.1:9999_ +
+  _SEC-WEBSOCKET-KEY: Pb4obWo2214EfaPQuazMjA==_ +
+  _SEC-WEBSOCKET-VERSION: 13_ +
+  _AUTHORIZATION: Basic <Base64로 인코딩됨(<ChargePointId>:<AuthorizationKey>)>_
 
-OCPP 2.0.1(A00.FR.304)의 기본 인증 비밀번호 인코딩은 OCPP 1.6에서 수행된 방식과 다릅니다.
+  OCPP 2.0.1(A00.FR.304)의 기본 인증 비밀번호 인코딩은 OCPP 1.6에서 수행된 방식과 다릅니다.
 |===
 
 ==== TLS with Basic Authentication Profile - Requirements
@@ -157,67 +158,67 @@ OCPP 2.0.1(A00.FR.304)의 기본 인증 비밀번호 인코딩은 OCPP 1.6에서
 |===
 |ID |전제 조건 |요구 사항 정의
 
-|A00.FR.301 |{nbsp} |충전소는 HTTP 기본 인증을 사용하여 CSMS에 자체 인증을 해야 합니다 <<ocpp_security_18,[18]>>
-|A00.FR.302 |A00.FR.301 |클라이언트, 즉 충전소는 모든 연결 요청에 사용자 이름과 비밀번호를 제공해야 합니다.
-|A00.FR.303 |A00.FR.302 |사용자 이름은 충전소 ID와 동일해야 합니다. 충전소 ID는 OCPP-J 연결 URL에서 사용하는 충전소의 식별 문자열입니다. 기본 인증을 사용할 때 충전소 ID에 ":" 문자가 포함되어서는 안 됩니다. 그렇지 않으면 CSMS가 사용자 이름과 비밀번호를 분리하지 못할 수 있습니다.
+|A00.FR.301 |{nbsp} |충전기는 HTTP 기본 인증을 사용하여 CSMS에 자체 인증을 해야 합니다 <<ocpp_security_18,[18]>>
+|A00.FR.302 |A00.FR.301 |클라이언트, 즉 충전기는 모든 연결 요청에 사용자 이름과 비밀번호를 제공해야 합니다.
+|A00.FR.303 |A00.FR.302 |사용자 이름은 충전기 ID와 동일해야 합니다. 충전기 ID는 OCPP-J 연결 URL에서 사용하는 충전기의 식별 문자열입니다. 기본 인증을 사용할 때 충전기 ID에 ":" 문자가 포함되어서는 안 됩니다. 그렇지 않으면 CSMS가 사용자 이름과 비밀번호를 분리하지 못할 수 있습니다.
 |A00.FR.304 |A00.FR.302 |비밀번호는 <<basic_auth_password,`BasicAuthPassword`>> 구성 변수에 저장해야 합니다. 최소 16자에서 최대 40자(영숫자 문자 및 passwordString에서 허용하는 특수 문자)로 구성된 충분히 높은 엔트로피를 갖는 임의로 선택된 passwordString이어야 합니다. 비밀번호는 UTF-8 인코딩된 문자열로 전송해야 합니다(옥텟 문자열이나 base64로 인코딩되지 않음).
 |A00.FR.306 |{nbsp} |CSMS는 TLS 서버 역할을 해야 합니다.
 |A00.FR.307 |{nbsp} |CSMS는 CSMS 인증서를 서버 측 인증서로 사용하여 자체를 인증해야 합니다.
-|A00.FR.308 |{nbsp} |충전소는 <<ocpp_security_3,[3]>>의 섹션 6에 설정된 경로 검증 규칙에 따라 CSMS 인증서의 인증 경로를 검증해야 합니다.
-|A00.FR.309 |{nbsp} |충전소는 commonName에 CSMS의 FQDN이 포함되어 있는지 검증해야 합니다.
+|A00.FR.308 |{nbsp} |충전기는 <<ocpp_security_3,[3]>>의 Section 6에 설정된 경로 검증 규칙에 따라 CSMS 인증서의 인증 경로를 검증해야 합니다.
+|A00.FR.309 |{nbsp} |충전기는 commonName에 CSMS의 FQDN이 포함되어 있는지 검증해야 합니다.
 |A00.FR.310 |CSMS가 유효한 인증서를 소유하지 않거나 인증 경로가 유효하지 않은 경우
-|충전소는 InvalidCsmsCertificate 보안 이벤트를 트리거해야 합니다(보안 이벤트의 전체 목록은 2부 부록 참조).
-|A00.FR.311 |A00.FR.310 |충전소는 연결을 종료해야 합니다.
-|A00.FR.312 |{nbsp} |통신 채널은 TLS(전송 계층 보안) <<ocpp_security_4,[4]>>를 사용하여 보안해야 합니다.
-|A00.FR.313 |{nbsp} |충전소와 CSMS는 TLS v1.2 이상만 사용해야 합니다.
+  |충전기는 InvalidCsmsCertificate 보안 이벤트를 트리거해야 합니다(보안 이벤트의 전체 목록은 Part 2 - Appendices 참조).
+|A00.FR.311 |A00.FR.310 |충전기는 연결을 종료해야 합니다.
+|A00.FR.312 |{nbsp} |통신 채널은 TLS(전송 계층 보안) <<ocpp_security_4,[4]>>를 사용하여 보호해야 합니다.
+|A00.FR.313 |{nbsp} |충전기와 CSMS는 TLS v1.2 이상만 사용해야 합니다.
 |A00.FR.314 |{nbsp} |두 엔드포인트 모두 사용된 TLS 버전을 확인해야 합니다.
 
 |A00.FR.315 |A00.FR.314 +
-AND +
-CSMS가 충전소에서 이전 버전의 TLS를 사용하는 연결만 허용하거나 SSL만 허용한다는 것을 감지합니다.
-|CSMS는 연결을 종료해야 합니다.
+  AND +
+  CSMS가 충전기에서 이전 버전의 TLS를 사용하는 연결만 허용하거나 SSL만 허용한다는 것을 감지합니다.
+    |CSMS는 연결을 종료해야 합니다.
 |A00.FR.316 |A00.FR.314 +
-AND +
-충전소에서 CSMS가 이전 버전의 TLS를 사용하는 연결만 허용하거나 SSL만 허용한다는 것을 감지합니다.
-|충전소는 InvalidTLSVersion 보안 이벤트를 트리거하고 연결을 종료해야 합니다(보안 이벤트의 전체 목록은 2부 부록 참조).
+  AND +
+  충전기에서 CSMS가 이전 버전의 TLS를 사용하는 연결만 허용하거나 SSL만 허용한다는 것을 감지합니다.
+    |충전기는 InvalidTLSVersion 보안 이벤트를 트리거하고 연결을 종료해야 합니다(보안 이벤트의 전체 목록은 Part 2 - Appendices 참조).
 
-참고: 이는 성공적인 연결이 이루어지면 큐에 넣고 CSMS로 보내야 하는 중요한 보안 이벤트입니다(사용 사례 A04에서 설명). +
-보안 이벤트는 오프라인 큐로의 오버플로를 방지하기 위해 반복적으로 실패한 연결 시도에 대해 한 번만 보내면 됩니다.
-|A00.FR.317 |{nbsp} |TLS는 수정 없이 [4] 또는 후속 표준과 같이 구현되어야 합니다.
+    참고: 이는 성공적인 연결이 이루어지면 큐에 넣고 CSMS로 보내야 하는 중요한 보안 이벤트입니다(사용 사례 A04에서 설명). +
+    보안 이벤트는 오프라인 큐의 오버플로우를 방지하기 위해 반복적으로 실패한 연결 시도에 대해 한 번만 보내면 됩니다.
+|A00.FR.317 |{nbsp} |TLS는 수정 없이 <<ocpp_security_4,[4]>> 또는 후속 표준과 같이 구현되어야 합니다.
 |A00.FR.318 |{nbsp} |CSMS는 최소한 다음 네 가지 암호화 제품군을 지원해야 합니다. +
-*TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256* +
-*TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384* +
-*TLS_RSA_WITH_AES_128_GCM_SHA256* +
-*TLS_RSA_WITH_AES_256_GCM_SHA384*
+  *TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256* +
+  *TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384* +
+  *TLS_RSA_WITH_AES_128_GCM_SHA256* +
+  *TLS_RSA_WITH_AES_256_GCM_SHA384*
 
-참고: CSMS는 두 암호화 제품군을 모두 지원하기 위해 두 가지 다른 인증서를 제공해야 합니다. 보안 프로필 3을 사용하는 경우에도 CSMS는 두 암호 제품군에 대한 클라이언트 측 인증서를 생성할 수 있어야 합니다.
-|A00.FR.319 |{nbsp} |충전소는 최소한 다음 암호 제품군을 지원해야 합니다.
-(*TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256* +
-및 +
-*TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384*) +
-또는 +
-(*TLS_RSA_WITH_AES_128_GCM_SHA256* +
-및 +
-*TLS_RSA_WITH_AES_256_GCM_SHA384*)
+  참고: CSMS는 두 암호화 제품군을 모두 지원하기 위해 두 가지 다른 인증서를 제공해야 합니다. 보안 프로필 3을 사용하는 경우에도 CSMS는 두 암호 제품군에 대한 클라이언트 측 인증서를 생성할 수 있어야 합니다.
+|A00.FR.319 |{nbsp} |충전기는 최소한 다음 암호 제품군을 지원해야 합니다.
+  (*TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256* +
+  및 +
+  *TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384*) +
+  또는 +
+  (*TLS_RSA_WITH_AES_128_GCM_SHA256* +
+  및 +
+  *TLS_RSA_WITH_AES_256_GCM_SHA384*)
 
-참고 1: TLS_RSA는 전방 비밀성을 지원하지 않으므로 TLS_ECDHE를 권장합니다. 또한 충전소에서 보안되지 않은 알고리즘을 사용한 것을 감지하면 InvalidTLSCipherSuite 보안 이벤트를 트리거해야 합니다(보안 이벤트의 전체 목록은 2부 부록 참조).
+  참고 1: TLS_RSA는 순방향 비밀성(forward secrecy)을 지원하지 않으므로 TLS_ECDHE를 권장합니다. 또한 충전기에서 보안되지 않은 알고리즘을 사용한 것을 감지하면 InvalidTLSCipherSuite 보안 이벤트를 트리거해야 합니다(보안 이벤트의 전체 목록은 Part 2 - Appendices 참조).
 
-{nbsp}
+  {nbsp}
 
-참고 2: <<iso15118_2,ISO15118-2>>는 EV와 충전소 간 통신을 위해 다음 암호 제품군을 구현하도록 규정합니다. +
-TLS_ECDH_ECDSA_WITH_AES_128_**CBC**_SHA256, +
-TLS_ECDHE_ECDSA_WITH_AES_128_**CBC**_SHA256
-|A00.FR.320 |{nbsp} |충전소와 CSMS는 <<ocpp_security_1,[1]>>에서 레거시 사용에 적합하지 않은 것으로 표시된 암호화 기본을 사용하는 암호 제품군을 사용해서는 안 됩니다. 이는 이 사양에 설명된 암호화 제품군 중 하나(또는 그 이상)가 레거시 사용에 적합하지 않다고 표시되면 더 이상 사용해서는 안 됨을 의미합니다.
-|A00.FR.321 |{nbsp} |TLS 서버와 클라이언트는 압축 사이드 채널 공격을 방지하고 <<ocpp_security_10,[10]>>의 섹션 6에 설명된 대로 상호 운용성을 보장하기 위해 TLS 압축 방법을 사용해서는 안 됩니다.
+  참고 2: <<iso15118_2,ISO15118-2>>는 EV와 충전기 간 통신을 위해 다음 암호 제품군을 구현하도록 규정합니다. +
+  TLS_ECDH_ECDSA_WITH_AES_128_**CBC**_SHA256, +
+  TLS_ECDHE_ECDSA_WITH_AES_128_**CBC**_SHA256
+|A00.FR.320 |{nbsp} |충전기와 CSMS는 <<ocpp_security_1,[1]>>에서 레거시 사용에 적합하지 않은 것으로 표시된 암호화 기본을 사용하는 암호 제품군을 사용해서는 안 됩니다. 이는 이 사양에 설명된 암호화 제품군 중 하나(또는 그 이상)가 레거시 사용에 적합하지 않다고 표시되면 더 이상 사용해서는 안 됨을 의미합니다.
+|A00.FR.321 |{nbsp} |TLS 서버와 클라이언트는 압축 사이드 채널 공격을 방지하고 <<ocpp_security_10,[10]>>의 Section 6에 설명된 대로 상호 운용성을 보장하기 위해 TLS 압축 방법을 사용해서는 안 됩니다.
 |A00.FR.322 |A00.FR.320 +
-AND +
-CSMS가 충전소에서 이러한 제품군 중 하나만 사용하는 연결만 허용한다는 것을 감지합니다.
-|CSMS는 연결을 종료해야 합니다.
+  AND +
+  CSMS가 충전기에서 이러한 제품군 중 하나만 사용하는 연결만 허용한다는 것을 감지합니다.
+    |CSMS는 연결을 종료해야 합니다.
 |A00.FR.323 |A00.FR.320 +
-AND +
-충전소는 CSMS가 이러한 제품군 중 하나만을 사용하여 연결을 허용한다는 것을 감지합니다.
-|충전소는 InvalidTLSCipherSuite 보안 이벤트를 트리거하고 연결을 종료해야 합니다(보안 이벤트의 전체 목록은 2부 부록 참조).
-|A00.FR.324 |A00.FR.302 |CSMS는 충전소 ID와 기본 인증 암호가 연결 요청의 권한 헤더에 있는 사용자 이름 및 암호와 일치하는지 확인해야 합니다.
+  AND +
+  충전기는 CSMS가 이러한 제품군 중 하나만을 사용하여 연결을 허용한다는 것을 감지합니다.
+    |충전기는 InvalidTLSCipherSuite 보안 이벤트를 트리거하고 연결을 종료해야 합니다(보안 이벤트의 전체 목록은 Part 2 - Appendices 참조).
+|A00.FR.324 |A00.FR.302 |CSMS는 충전기 ID와 기본 인증 암호가 연결 요청의 권한 헤더에 있는 사용자 이름 및 암호와 일치하는지 확인해야 합니다.
 |===
 
 ==== TLS with Client Side Certificates Profile - 3
@@ -228,10 +229,10 @@ AND +
 |번호 |유형 |설명
 |1 |이름 |클라이언트 측 인증서가 있는 TLS
 |2 |프로필 번호 |3
-|3 |설명 |클라이언트 측 인증서가 있는 TLS 프로필에서 통신 채널은 TLS(전송 계층 보안)를 사용하여 보안됩니다. 충전소와 CSMS는 모두 인증서를 사용하여 자체 인증합니다.
-|4 |충전소 인증 |CSMS는 TLS 클라이언트 인증서를 통해 충전소를 인증합니다.
-|5 |CSMS 인증 |충전소는 TLS 서버 인증서를 통해 CSMS를 인증합니다.
-|6 |통신 보안 |충전소와 CSMS 간의 통신은 TLS를 사용하여 보안됩니다.
+|3 |설명 |클라이언트 측 인증서가 있는 TLS 프로필에서 통신 채널은 TLS(전송 계층 보안)를 사용하여 보안됩니다. 충전기와 CSMS는 모두 인증서를 사용하여 자체 인증합니다.
+|4 |충전기 인증 |CSMS는 TLS 클라이언트 인증서를 통해 충전기를 인증합니다.
+|5 |CSMS 인증 |충전기는 TLS 서버 인증서를 통해 CSMS를 인증합니다.
+|6 |통신 보안 |충전기와 CSMS 간의 통신은 TLS를 사용하여 보안됩니다.
 |===
 
 .시퀀스 다이어그램: 클라이언트 측 인증서가 있는 TLS
@@ -249,78 +250,77 @@ image::part2/images/figure_4.svg[시퀀스 다이어그램: 클라이언트 측 
 |===
 |ID |전제 조건 |요구 사항 정의
 
-|A00.FR.401 |{nbsp} |충전소는 충전소 인증서를 사용하여 CSMS에 자체 인증을 해야 합니다.
-|A00.FR.402 |{nbsp} |충전소 인증서는 TLS 클라이언트 측 인증서로 사용해야 합니다.
-|A00.FR.403 |{nbsp} |CSMS는 <<ocpp_security_3,[3]>>의 섹션 6에 설정된 경로 검증 규칙에 따라 충전소 인증서의 인증 경로를 확인해야 합니다.
+|A00.FR.401 |{nbsp} |충전기는 충전기 인증서를 사용하여 CSMS에 자체 인증을 해야 합니다.
+|A00.FR.402 |{nbsp} |충전기 인증서는 TLS 클라이언트 측 인증서로 사용해야 합니다.
+|A00.FR.403 |{nbsp} |CSMS는 <<ocpp_security_3,[3]>>의 Section 6에 설정된 경로 검증 규칙에 따라 충전기 인증서의 인증 경로를 확인해야 합니다.
 
 |A00.FR.404 |{nbsp} |CSMS는 인증서의 제목 필드에 있는 O(`organizationName`) RDN에 CSO 이름이 포함되어 있는지 확인하여 인증서가 CSO(또는 CSO가 신뢰하는 조직)의 소유인지 확인해야 합니다.
-|A00.FR.405 |{nbsp} |CSMS는 인증서의 제목 필드에 있는 CN(`commonName`) RDN에 충전소의 고유한 일련 번호가 포함되어 있는지 확인하여 인증서가 이 충전소에 속하는지 확인해야 합니다(<<certificate_properties,Certificate Properties>> 참조).
-|A00.FR.406 |충전소 인증서가 CSO 소유가 아닌 경우(예: 설치 직후)
-|충전소와 통신을 계속하기 전에 인증서를 업데이트하는 것이 좋습니다(<<installation,Installation>> 참조)
+|A00.FR.405 |{nbsp} |CSMS는 인증서의 제목 필드에 있는 CN(`commonName`) RDN에 충전기의 고유한 일련 번호가 포함되어 있는지 확인하여 인증서가 이 충전기에 속하는지 확인해야 합니다(<<certificate_properties,Certificate Properties>> 참조).
+|A00.FR.406 |충전기 인증서가 CSO 소유가 아닌 경우(예: 설치 직후)
+  |충전기와 통신을 계속하기 전에 인증서를 업데이트하는 것이 좋습니다(<<installation,Installation>> 참조)
 |A00.FR.407 |A00.FR.429가 아닌 경우 및 +
-충전소가 유효한 인증서를 소유하지 않거나 인증 경로가 잘못된 경우
-|CSMS는 연결을 종료해야 합니다.
+  충전기가 유효한 인증서를 소유하지 않거나 인증 경로가 잘못된 경우
+    |CSMS는 연결을 종료해야 합니다.
 |A00.FR.408 |A00.FR.407 또는 A00.FR.429 |CSMS에서 보안 이벤트 InvalidChargingStationCertificate를 기록하는 것이 좋습니다.
 |A00.FR.409 |{nbsp} |CSMS는 TLS 서버 역할을 해야 합니다.
 |A00.FR.410 |{nbsp} |CSMS는 CSMS 인증서를 서버 측 인증서로 사용하여 자체 인증을 해야 합니다.
-|A00.FR.411 |{nbsp} |충전소는 <<ocpp_security_3,[3]>>의 섹션 6에 설정된 경로 검증 규칙에 따라 CSMS 인증서의 인증 경로를 확인해야 합니다.
-|A00.FR.412 |{nbsp} |충전소는 commonName이 CSMS의 FQDN과 일치하는지 확인해야 합니다.
+|A00.FR.411 |{nbsp} |충전기는 <<ocpp_security_3,[3]>>의 Section 6에 설정된 경로 검증 규칙에 따라 CSMS 인증서의 인증 경로를 확인해야 합니다.
+|A00.FR.412 |{nbsp} |충전기는 commonName이 CSMS의 FQDN과 일치하는지 확인해야 합니다.
 |A00.FR.413 |CSMS가 유효한 인증서를 소유하지 않거나 인증 경로가 유효하지 않은 경우
-|충전소는 InvalidCsmsCertificate 보안 이벤트를 트리거해야 합니다(보안 이벤트의 전체 목록은 2부 부록 참조).
-|A00.FR.414 |A00.FR.413 |충전소는 연결을 종료해야 합니다.
+  |충전기는 InvalidCsmsCertificate 보안 이벤트를 트리거해야 합니다(보안 이벤트의 전체 목록은 Part 2 - Appendices 참조).
+|A00.FR.414 |A00.FR.413 |충전기는 연결을 종료해야 합니다.
 |A00.FR.415 |{nbsp} |통신 채널은 TLS(전송 계층 보안) <<ocpp_security_4,[4]>>를 사용하여 보안해야 합니다.
-|A00.FR.416 |{nbsp} |충전소와 CSMS는 TLS v1.2 이상만 사용해야 합니다.
+|A00.FR.416 |{nbsp} |충전기와 CSMS는 TLS v1.2 이상만 사용해야 합니다.
 |A00.FR.417 |{nbsp} |이 두 엔드포인트는 사용된 TLS 버전을 확인해야 합니다.
 |A00.FR.418 |A00.FR.417 +
-AND +
-CSMS가 충전소에서 이전 버전의 TLS를 사용하는 연결만 허용하거나 SSL만 허용한다는 것을 감지합니다.
-|CSMS는 연결을 종료해야 합니다.
+  AND +
+  CSMS가 충전기에서 이전 버전의 TLS를 사용하는 연결만 허용하거나 SSL만 허용한다는 것을 감지합니다.
+    |CSMS는 연결을 종료해야 합니다.
 |A00.FR.419 |A00.FR.417 +
-AND +
-충전소에서 CSMS가 이전 버전의 TLS를 사용하는 연결만 허용하거나 SSL만 허용한다는 것을 감지합니다.
-|충전소는 InvalidTLSVersion 보안 이벤트를 트리거하고 연결을 종료해야 합니다(전체 보안 이벤트 목록은 2부 부록 참조).
+  AND +
+  충전기에서 CSMS가 이전 버전의 TLS를 사용하는 연결만 허용하거나 SSL만 허용한다는 것을 감지합니다.
+    |충전기는 InvalidTLSVersion 보안 이벤트를 트리거하고 연결을 종료해야 합니다(전체 보안 이벤트 목록은 Part 2 - Appendices 참조).
 
-참고: 이것은 연결이 이루어지면 큐에 넣고 CSMS로 보내야 하는 중요한 보안 이벤트입니다(사용 사례 A04에서 설명). +
-보안 이벤트는 오프라인 큐로의 오버플로를 방지하기 위해 반복적으로 실패한 연결 시도에 대해 한 번만 보내면 됩니다. A00.FR.420 TLS는 수정 없이 <<ocpp_security_4,[4]>> 또는 후속 표준과 같이 구현해야 합니다.
+    참고: 이것은 연결이 이루어지면 큐에 넣고 CSMS로 보내야 하는 중요한 보안 이벤트입니다(사용 사례 A04에서 설명). +
+    보안 이벤트는 오프라인 큐의 오버플로우를 방지하기 위해 반복적으로 실패한 연결 시도에 대해 한 번만 보내면 됩니다. A00.FR.420 TLS는 수정 없이 <<ocpp_security_4,[4]>> 또는 후속 표준과 같이 구현해야 합니다.
 |A00.FR.421 |{nbsp} |CSMS는 최소한 다음 네 가지 암호화 제품군을 지원해야 합니다. +
-*TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256* +
-*TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384* +
-*TLS_RSA_WITH_AES_128_GCM_SHA256* +
-*TLS_RSA_WITH_AES_256_GCM_SHA384* +
-참고: CSMS는 두 암호화 제품군을 모두 지원하기 위해 두 가지 다른 인증서를 제공해야 합니다. 또한 보안 프로필 3을 사용하는 경우 CSMS는 두 암호화 제품군에 대한 클라이언트 측 인증서를 생성할 수 있어야 합니다.
+  *TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256* +
+  *TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384* +
+  *TLS_RSA_WITH_AES_128_GCM_SHA256* +
+  *TLS_RSA_WITH_AES_256_GCM_SHA384* +
+  참고: CSMS는 두 암호화 제품군을 모두 지원하기 위해 두 가지 다른 인증서를 제공해야 합니다. 또한 보안 프로필 3을 사용하는 경우 CSMS는 두 암호화 제품군에 대한 클라이언트 측 인증서를 생성할 수 있어야 합니다.
 
-|A00.FR.422 |{nbsp} |충전소는 최소한 다음 암호 제품군을 지원해야 합니다. +
-(*TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256* +
-및 +
-*TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384*) +
-또는 +
-(*TLS_RSA_WITH_AES_128_GCM_SHA256* +
-및 +
-*TLS_RSA_WITH_AES_256_GCM_SHA384*)
+|A00.FR.422 |{nbsp} |충전기는 최소한 다음 암호 제품군을 지원해야 합니다. +
+  (*TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256* +
+  및 +
+  *TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384*) +
+  또는 +
+  (*TLS_RSA_WITH_AES_128_GCM_SHA256* +
+  및 +
+  *TLS_RSA_WITH_AES_256_GCM_SHA384*)
 
-참고 1: TLS_RSA는 전방 비밀성을 지원하지 않으므로 TLS_ECDHE를 권장합니다. 또한 충전소에서 보안되지 않은 알고리즘을 사용한 것을 감지하면 InvalidTLSCipherSuite 보안 이벤트를 트리거해야 합니다(보안 이벤트의 전체 목록은 2부 부록 참조).
+  참고 1: TLS_RSA는 순방향 비밀성을 지원하지 않으므로 TLS_ECDHE를 권장합니다. 또한 충전기에서 보안되지 않은 알고리즘을 사용한 것을 감지하면 InvalidTLSCipherSuite 보안 이벤트를 트리거해야 합니다(보안 이벤트의 전체 목록은 Part 2 - Appendices 참조).
 
-{nbsp}
+  {nbsp}
 
-참고 2: <<iso15118_2,ISO15118-2>>는 EV와 충전소 간 통신을 위해 다음 암호 제품군을 구현하도록 규정합니다. +
-TLS_ECDH_ECDSA_WITH_AES_128_**CBC**_SHA256,
-TLS_ECDHE_ECDSA_WITH_AES_128_**CBC**_SHA256
-|A00.FR.423 |{nbsp} |충전소와 CSMS는 <<ocpp_security_1,[1]>>에서 레거시 사용에 적합하지 않은 것으로 표시된 암호화 기본을 사용하는 암호 제품군을 사용해서는 안 됩니다. 이는 이 사양에 설명된 암호화 제품군 중 하나(또는 그 이상)가 레거시 사용에 적합하지 않다고 표시되면 더 이상 사용해서는 안 됨을 의미합니다.
-|A00.FR.424 |{nbsp} |TLS 서버와 클라이언트는 압축 사이드 채널 공격을 방지하고 <<ocpp_security_10,[10]>>의 섹션 6에 설명된 대로 상호 운용성을 보장하기 위해 TLS 압축 방법을 사용해서는 안 됩니다.
+  참고 2: <<iso15118_2,ISO15118-2>>는 EV와 충전기 간 통신을 위해 다음 암호 제품군을 구현하도록 규정합니다. +
+  TLS_ECDH_ECDSA_WITH_AES_128_**CBC**_SHA256,
+  TLS_ECDHE_ECDSA_WITH_AES_128_**CBC**_SHA256
+|A00.FR.423 |{nbsp} |충전기와 CSMS는 <<ocpp_security_1,[1]>>에서 레거시 사용에 적합하지 않은 것으로 표시된 암호화 기본을 사용하는 암호 제품군을 사용해서는 안 됩니다. 이는 이 사양에 설명된 암호화 제품군 중 하나(또는 그 이상)가 레거시 사용에 적합하지 않다고 표시되면 더 이상 사용해서는 안 됨을 의미합니다.
+|A00.FR.424 |{nbsp} |TLS 서버와 클라이언트는 압축 사이드 채널 공격을 방지하고 <<ocpp_security_10,[10]>>의 Section 6에 설명된 대로 상호 운용성을 보장하기 위해 TLS 압축 방법을 사용해서는 안 됩니다.
 |A00.FR.425 |A00.FR.424 +
-AND +
-CSMS가 충전소에서 이러한 제품군 중 하나만을 사용하는 연결만 허용한다고 감지하는 경우
-|CSMS는 연결을 종료해야 합니다.
+  AND +
+  CSMS가 충전기에서 이러한 제품군 중 하나만을 사용하는 연결만 허용한다고 감지하는 경우
+    |CSMS는 연결을 종료해야 합니다.
 |A00.FR.426 |A00.FR.424 +
-AND +
-충전소에서 CSMS가 이러한 제품군 중 하나만을 사용하는 연결을 허용한다는 것을 감지합니다.
-|충전소는 InvalidTLSCipherSuite 보안 이벤트를 트리거하고 연결을 종료해야 합니다(보안 이벤트의 전체 목록은 2부 부록 참조).
-|A00.FR.427 |{nbsp} |각 충전소에 고유한 충전소 인증서를 사용해야 합니다.
-|A00.FR.428 |{nbsp} |충전소 인증서는 <<iso15118_2,ISO15118-2>>의 SECC 인증서와 동일한 인증서일 수 있으며, 충전소와 전기 자동차 간의 TLS 연결을 설정하는 데 사용됩니다.
-|A00.FR.429 |충전소 인증서가 만료된 경우 AND +
-CSMS가 만료된 인증서가 있는 이 특정 충전소의 연결을 허용하도록 명시적으로 구성되었습니다.
-|CSMS는 BootNotification - Pending
-상태에서 이 충전소를 수락할 수 있습니다(사용 사례 B02). 그런 다음 즉시 <<update_charging_station_certificate_by_request_of_csms,A02 - CSMS 요청에 따라 충전소 인증서 업데이트>>를 실행하여 인증서를 갱신해야 합니다.
+  AND +
+  충전기에서 CSMS가 이러한 제품군 중 하나만을 사용하는 연결을 허용한다는 것을 감지합니다.
+    |충전기는 InvalidTLSCipherSuite 보안 이벤트를 트리거하고 연결을 종료해야 합니다(보안 이벤트의 전체 목록은 Part 2 - Appendices 참조).
+|A00.FR.427 |{nbsp} |각 충전기에 고유한 충전기 인증서를 사용해야 합니다.
+|A00.FR.428 |{nbsp} |충전기 인증서는 <<iso15118_2,ISO15118-2>>의 SECC 인증서와 동일한 인증서일 수 있으며, 충전기와 전기 자동차 간의 TLS 연결을 설정하는 데 사용됩니다.
+|A00.FR.429 |충전기 인증서가 만료된 경우 AND +
+  CSMS가 만료된 인증서가 있는 이 특정 충전기의 연결을 허용하도록 명시적으로 구성되었습니다.
+    |CSMS는 BootNotification - Pending 상태에서 이 충전기를 수락할 수 있습니다(사용 사례 B02). 그런 다음 즉시 <<update_charging_station_certificate_by_request_of_csms,A02 - Update Charging Station Certificate by request of CSMS>>를 실행하여 인증서를 갱신해야 합니다.
 |===
 
 [[keys_used_in_ocpp]]
@@ -328,16 +328,16 @@ CSMS가 만료된 인증서가 있는 이 특정 충전소의 연결을 허용�
 
 _이 섹션은 규범적입니다._
 
-OCPP는 보안을 위해 여러 개의 공개 개인 키 쌍을 사용합니다. 아래 표를 참조하세요. 충전소의 키를 관리하기 위해 OCPP에 메시지가 추가되었습니다. CSMS 또는 제조업체에서 키를 업데이트하는 것은 OCPP의 범위를 벗어납니다. 클라이언트 측 인증서가 있는 TLS를 사용하는 경우 충전소에는 CSMS에 대한 인증을 위해 "충전소 인증서"가 필요합니다.
+OCPP는 보안을 위해 여러 개의 공개 개인 키 쌍을 사용합니다. 아래 표를 참조하세요. 충전기의 키를 관리하기 위해 OCPP에 메시지가 추가되었습니다. CSMS 또는 제조업체에서 키를 업데이트하는 것은 OCPP의 범위를 벗어납니다. 클라이언트 측 인증서가 있는 TLS를 사용하는 경우 충전기에는 CSMS에 대한 인증을 위해 "충전기 인증서"가 필요합니다.
 
 .OCPP 보안 사양에 사용된 인증서
 [cols="^.^3,<.^2,<.^3",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |인증서 |개인 키 저장 위치 |설명
 |CSMS 인증서 |CSMS |CSMS를 인증하는 데 사용되는 키입니다.
-|충전소 인증서 |충전소 |충전소를 인증하는 데 사용되는 키입니다.
+|충전기 인증서 |충전기 |충전기를 인증하는 데 사용되는 키입니다.
 |펌웨어 서명 인증서 |제조업체 |펌웨어 서명을 확인하는 데 사용되는 키입니다.
-|SECC 인증서 |충전소 |<<iso15118_2,ISO15118-2>>에서 충전소와 전기 자동차 간의 TLS 연결을 설정하는 데 사용하는 인증서입니다.
+|SECC 인증서 |충전기 |<<iso15118_2,ISO15118-2>>에서 충전기와 전기 자동차 간의 TLS 연결을 설정하는 데 사용하는 인증서입니다.
 |===
 
 [[certificate_properties]]
@@ -350,30 +350,30 @@ _이 섹션은 규범적입니다._
 |===
 |ID |전제 조건 |요구 사항 정의
 
-|A00.FR.501 |{nbsp} |모든 인증서는 <<ocpp_security_17,[17]>>의 섹션 5.6.1에 따라 최소 112비트의 대칭 키와 동등한 보안을 제공하는 개인 키를 사용해야 합니다. 이는 NIST가 2011-2030년 기간에 권장하는 키 크기입니다.
+|A00.FR.501 |{nbsp} |모든 인증서는 <<ocpp_security_17,[17]>>의 Section 5.6.1에 따라 최소 112비트의 대칭 키와 동등한 보안을 제공하는 개인 키를 사용해야 합니다. 이는 NIST가 2011-2030년 기간에 권장하는 키 크기입니다.
 |A00.FR.502 |A00.FR.501 +
-AND +
-RSA 또는 DSA
-|이는 최소 2048비트 길이의 키로 변환됩니다.
+  AND +
+  RSA 또는 DSA
+    |이는 최소 2048비트 길이의 키로 변환됩니다.
 |A00.FR.503 |A00.FR.501 +
-AND +
-타원 곡선 암호화
-|이것은 최소 224비트 길이의 키로 변환됩니다.
-A00.FR.504 모든 암호화 작업의 경우, 향후 시스템에서 사용하기에 적합한 <<ocpp_security_12,[12]>>에서 BSI가 권장하는 알고리즘만 사용해야 합니다. 이 제한에는 인증서 계층 구조의 인증서 서명이 포함됩니다.
+  AND +
+  타원 곡선 암호화
+    |이것은 최소 224비트 길이의 키로 변환됩니다.
+|A00.FR.504 |{nbsp} |모든 암호화 작업의 경우, 향후 시스템에서 사용하기에 적합한 <<ocpp_security_12,[12]>>에서 BSI가 권장하는 알고리즘만 사용해야 합니다. 이 제한에는 인증서 계층 구조의 인증서 서명이 포함됩니다.
 |A00.FR.505 |{nbsp} |인증 기관의 서명에는 RSA-PSS 또는 ECDSA를 사용해야 합니다.
 |A00.FR.506 |{nbsp} |해시 값을 계산하려면 SHA256 알고리즘을 사용해야 합니다.
 |A00.FR.507 |{nbsp} |인증서는 Privacy-Enhanced Mail(PEM) 형식으로 인코딩된 X.509 형식으로 저장 및 전송되어야 합니다.
 |A00.FR.508 |{nbsp} |모든 인증서에는 일련 번호가 포함되어야 합니다.
 |A00.FR.509 |{nbsp} |인증서의 제목 필드에는 O(`organizationName`) RDN에 인증서 소유자의 조직 이름이 포함되어야 합니다.
 |A00.FR.510 |{nbsp} |CSMS 인증서의 경우 제목 필드에는 CN(`commonName`) RDN에 서버 엔드포인트의 FQDN이 포함되어야 합니다.
-|A00.FR.511 |{nbsp} |충전소 인증서의 경우 제목 필드에는 충전소의 고유한 일련 번호로 구성된 CN(`commonName`) RDN이 포함되어야 합니다. 이 일련 번호는 충전소 인증서와 CSMS 인증서를 구별할 수 있도록 URL 또는 IP 주소 형식이어서는 안 됩니다.
+|A00.FR.511 |{nbsp} |충전기 인증서의 경우 제목 필드에는 충전기의 고유한 일련 번호로 구성된 CN(`commonName`) RDN이 포함되어야 합니다. 이 일련 번호는 충전기 인증서와 CSMS 인증서를 구별할 수 있도록 URL 또는 IP 주소 형식이어서는 안 됩니다.
 
-{nbsp}
+  {nbsp}
 
-참고: <<rfc2818,RFC 2818>>에 따르면 `dnsName` 유형의 subjectAltName 확장자가 있는 경우 이를 ID로 사용해야 합니다. 이는 OCPP 및 <<iso15118_1,ISO 15118>>와 호환되지 않습니다. 따라서 충전소 및 CSMS 인증서에서 사용하면 안 됩니다. +
-CSMS에 여러 네트워크 경로(예: VPN에서 IP 주소를 사용하는 개인 APN + VPN을 통해, 명명된 URL을 사용하는 공용 인터넷을 통해)가 있는 경우 CSMS에 dnsName 유형의 subjectAltName 확장자를 사용할 수 있습니다.
+  참고: <<rfc2818,RFC 2818>>에 따르면 `dnsName` 유형의 subjectAltName 확장자가 있는 경우 이를 ID로 사용해야 합니다. 이는 OCPP 및 <<iso15118_1,ISO 15118>>와 호환되지 않습니다. 따라서 충전기 및 CSMS 인증서에서 사용하면 안 됩니다. +
+  CSMS에 여러 네트워크 경로(예: VPN에서 IP 주소를 사용하는 개인 APN + VPN을 통해, 명명된 URL을 사용하는 공용 인터넷을 통해)가 있는 경우 CSMS에 dnsName 유형의 subjectAltName 확장자를 사용할 수 있습니다.
 |A00.FR.512 |{nbsp} |모든 인증서에 대해 X.509 키 사용 확장 <<ocpp_security_19,[19]>>을 사용하여 인증서 사용을 해당 작업에 제한해야 합니다.
-|A00.FR.513 |{nbsp} |충전소 인증서가 ISO 15118 프로토콜에서 SECC 인증서로도 사용되는 경우 인증서는 <<iso15118_2,ISO15118-2>>의 요구 사항도 충족해야 합니다.
+|A00.FR.513 |{nbsp} |충전기 인증서가 ISO 15118 프로토콜에서 SECC 인증서로도 사용되는 경우 인증서는 <<iso15118_2,ISO15118-2>>의 요구 사항도 충족해야 합니다.
 |A00.FR.514 |{nbsp} |모든 인증서에 대해 ISO 15118 표준과 호환되도록 X.509 확장 키 사용 확장을 사용하지 않는 것이 좋습니다. 사용 가능한 대체 메커니즘이 있습니다.
 |===
 
@@ -384,20 +384,20 @@ _이 섹션은 규범적입니다._
 
 OCPP 프로토콜은 두 개의 별도 인증서 계층 사용을 지원합니다.
 
-. CSMS 및 충전소 인증서를 포함하는 충전소 운영자 계층.
+. CSMS 및 충전기 인증서를 포함하는 충전기 운영자 계층.
 . 펌웨어 서명 인증서를 포함하는 제조업체 계층.
 
-CSMS는 <<install_certificate_request,InstallCertificateRequest>> 메시지를 사용하여 충전소에 저장된 CSO 루트 인증서를 업데이트할 수 있습니다.
+CSMS는 <<install_certificate_request,InstallCertificateRequest>> 메시지를 사용하여 충전기에 저장된 CSO 루트 인증서를 업데이트할 수 있습니다.
 
 .인증서 계층 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID |전제 조건 |요구 사항 정의
 
-|A00.FR.601 |{nbsp} |충전소 운영자는 충전소 운영자 계층에 대한 인증 기관 역할을 할 수 있습니다.
-|A00.FR.602 |A00.FR.601 |충전소 운영자는 예를 들어 <<iso15118_2,ISO15118-2>>의 부록 E 및 F에 설명된 인증서 계층을 따르고 CSO Sub-CA 2 인증서를 사용하여 CSMS 및 충전소 인증서에 서명할 수 있습니다. 이를 통해 충전소 클라이언트 측 인증서의 온라인 검증을 충전소 운영자의 네트워크 내에서 수행할 수 있어 네트워크 아키텍처가 간소화될 수 있습니다.
+|A00.FR.601 |{nbsp} |충전기 운영자는 충전기 운영자 계층에 대한 인증 기관 역할을 할 수 있습니다.
+|A00.FR.602 |A00.FR.601 |충전기 운영자는 예를 들어 <<iso15118_2,ISO15118-2>>의 부록 E 및 F에 설명된 인증서 계층을 따르고 CSO Sub-CA 2 인증서를 사용하여 CSMS 및 충전기 인증서에 서명할 수 있습니다. 이를 통해 충전기 클라이언트 측 인증서의 온라인 검증을 충전기 운영자의 네트워크 내에서 수행할 수 있어 네트워크 아키텍처가 간소화될 수 있습니다.
 |A00.FR.603 |{nbsp} |CSO 루트 인증서에 속하는 개인 키는 반드시 잘 보호해야 합니다.
-|A00.FR.604 |{nbsp} |제조업체는 일반적으로 충전소 운영자와 별도의 조직이므로 신뢰할 수 있는 제3자를 인증 기관으로 사용해야 합니다. 이는 펌웨어 이미지의 부인 방지를 위해 필수적입니다.
+|A00.FR.604 |{nbsp} |제조업체는 일반적으로 충전기 운영자와 별도의 조직이므로 신뢰할 수 있는 제3자를 인증 기관으로 사용해야 합니다. 이는 펌웨어 이미지의 부인 방지(non-repudiation)를 위해 필수적입니다.
 |===
 
 === Certificate Revocation
@@ -414,7 +414,7 @@ _이 섹션은 규범적입니다._
 |인증서 |폐지
 
 |CSMS 인증서 |빠른 만료
-|충전소 인증서 |온라인 검증
+|충전기 인증서 |온라인 검증
 |펌웨어 서명 인증서 |온라인 검증
 |===
 
@@ -424,44 +424,44 @@ _이 섹션은 규범적입니다._
 |ID |전제 조건 |요구 사항 정의
 
 |A00.FR.701 |{nbsp} |빠른 만료는 CSMS 인증서를 폐지하는 데 사용해야 합니다. (참고 1 참조)
-|A00.FR.702 |{nbsp} |CSMS는 온라인 인증서 검증을 사용하여 충전소 인증서의 유효성을 확인해야 합니다.
+|A00.FR.702 |{nbsp} |CSMS는 온라인 인증서 검증을 사용하여 충전기 인증서의 유효성을 확인해야 합니다.
 |A00.FR.703 |{nbsp} |인증서를 관리하기 위해 별도의 인증 기관 서버를 사용하는 것이 좋습니다.
 |A00.FR.704 |A00.FR.703 |이 서버는 또한 어떤 인증서가 취소되었는지 추적해야 합니다.
 |A00.FR.705 |{nbsp} |CSMS는 인증 기관 서버로 인증서의 유효성을 확인해야 합니다. (참고 2 참조)
-|A00.FR.707 |{nbsp} |충전소에 펌웨어 검증을 위한 인증서를 제공하기 전에 CSMS는 인증서와 서명된 펌웨어 업데이트를 모두 검증해야 합니다.
+|A00.FR.707 |{nbsp} |충전기에 펌웨어 검증을 위한 인증서를 제공하기 전에 CSMS는 인증서와 서명된 펌웨어 업데이트를 모두 검증해야 합니다.
 |===
 
-참고 1: 빠른 만료의 경우 인증서는 24시간 미만의 짧은 기간 동안만 유효합니다. 그 후 서버는 인증 기관(CSO 자체일 수 있음)에 새 인증서를 요청해야 합니다(섹션 <<certificate_hierarchy,Certificate Hierarchy>> 참조). 이렇게 하면 충전소에서 해지 목록이나 온라인 인증서 검증을 구현할 필요가 없습니다. 이렇게 하면 충전소에서 인증서 관리를 구현하는 것이 간소화되고 충전소 측에서 통신 비용이 줄어듭니다. 빠른 만료를 요구함으로써 인증서가 손상되더라도 영향은 짧은 기간으로 줄어듭니다.
+참고 1: 빠른 만료의 경우 인증서는 24시간 미만의 짧은 기간 동안만 유효합니다. 그 후 서버는 인증 기관(CSO 자체일 수 있음)에 새 인증서를 요청해야 합니다(섹션 <<certificate_hierarchy,Certificate Hierarchy>> 참조). 이렇게 하면 충전기에서 해지 목록이나 온라인 인증서 검증을 구현할 필요가 없습니다. 이렇게 하면 충전기에서 인증서 관리를 구현하는 것이 간소화되고 충전기 측에서 통신 비용이 줄어듭니다. 빠른 만료를 요구함으로써 인증서가 손상되더라도 영향은 짧은 기간으로 줄어듭니다.
 
-인증서 체인이 손상되면 공격자는 위조된 인증서를 사용하여 충전소를 속여 "가짜" CSMS에 연결하도록 할 수 있습니다. 빠른 만료를 사용하면 충전소가 취약해지는 시간이 크게 줄어듭니다.
+인증서 체인이 손상되면 공격자는 위조된 인증서를 사용하여 충전기를 속여 "가짜" CSMS에 연결하도록 할 수 있습니다. 빠른 만료를 사용하면 충전기가 취약해지는 시간이 크게 줄어듭니다.
 
-충전소는 항상 CSMS를 통해 인증 기관과 통신하므로 충전소가 손상되더라도 충전소는 CA를 직접 공격할 수 없습니다.
+충전기는 항상 CSMS를 통해 인증 기관과 통신하므로 충전기가 손상되더라도 충전기는 CA를 직접 공격할 수 없습니다.
 
-참고 2: 이렇게 하면 충전소 인증서를 즉시 해지할 수 있습니다. 충전소 인증서 해지는 예를 들어 충전소가 제거될 때 발생합니다. 이 방법은 CSMS 인증서를 폐지하는 것보다 더 일반적입니다. CSMS 인증서 폐지는 일반적으로 인증서가 손상되었을 때만 수행됩니다.
+참고 2: 이렇게 하면 충전기 인증서를 즉시 해지할 수 있습니다. 충전기 인증서 해지는 예를 들어 충전기가 제거될 때 발생합니다. 이 방법은 CSMS 인증서를 폐지하는 것보다 더 일반적입니다. CSMS 인증서 폐지는 일반적으로 인증서가 손상되었을 때만 수행됩니다.
 
 [[installation]]
 ==== Installation
 
 _이 섹션은 규범적입니다._
 
-고유한 자격 증명은 각 충전소를 CSMS에 인증하는 데 사용해야 하며, 이는 HTTP 기본 인증에 사용되는 비밀번호(<<unsecured_transport_with_basic_authentication_profile_1,충전소 인증>> 참조) 또는 충전소 인증서인지 여부와 무관합니다. 이러한 고유한 자격 증명은 제조 또는 설치 중 어느 시점에서 충전소에 넣어야 합니다.
+고유한 자격 증명은 각 충전기를 CSMS에 인증하는 데 사용해야 하며, 이는 HTTP 기본 인증에 사용되는 비밀번호(<<unsecured_transport_with_basic_authentication_profile_1,Charging Station Authentication>> 참조) 또는 충전기 인증서인지 여부와 무관합니다. 이러한 고유한 자격 증명은 제조 또는 설치 중 어느 시점에서 충전기에 넣어야 합니다.
 
 .인증서 설치 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID |전제 조건 |요구 사항 정의
 
-|A00.FR.801 |{nbsp} |제조업체가 제조 중에 고유한 자격 증명으로 충전소를 초기화하는 것이 좋습니다.
+|A00.FR.801 |{nbsp} |제조업체가 제조 중에 고유한 자격 증명으로 충전기를 초기화하는 것이 좋습니다.
 |A00.FR.802 |A00.FR.801 |자격 증명은 암호화 난수 생성기를 사용하여 생성되어야 하며, 보안 환경에 설치되어야 합니다.
 |A00.FR.803 |A00.FR.801 |보안 채널을 통해 CSO로 전송되어야 CSO가 CSMS에 가져올 수 있습니다.
-|A00.FR.804 |충전소 인증서가 사용되는 경우.
-|제조업체는 자체 인증서를 사용하여 이에 서명할 수 있습니다.
-|A00.FR.805 |A00.FR.804 |CSO가 섹션 <<update_charging_station_password_for_http_basic_authentication,A01 - HTTP 기본 인증을 위한 충전소 비밀번호 업데이트>> 또는 <<update_charging_station_certificate_by_request_of_csms,A02 - CSMS의 요청에 의한 충전소 인증서 업데이트>>에 설명된 방법을 사용하여 설치 후 즉시 자격 증명을 업데이트하는 것이 좋습니다.
+|A00.FR.804 |충전기 인증서가 사용되는 경우.
+  |제조업체는 자체 인증서를 사용하여 이에 서명할 수 있습니다.
+|A00.FR.805 |A00.FR.804 |CSO가 섹션 <<update_charging_station_password_for_http_basic_authentication,A01 - Update Charging Station Password for HTTP Basic Authentication>> 또는 <<update_charging_station_certificate_by_request_of_csms,A02 - Update Charging Station Certificate by request of CSMS>>에 설명된 방법을 사용하여 설치 후 즉시 자격 증명을 업데이트하는 것이 좋습니다.
 |A00.FR.806 |'공장 자격 증명'이 업데이트되기 전에
-|CSMS는 충전소에서 사용할 수 있는 기능을 제한할 수 있습니다. CSMS는 이를 위해 BootNotification 상태: 보류를 사용할 수 있습니다. 보류 상태 동안 CSMS는 자격 증명을 업데이트할 수 있습니다.
+  |CSMS는 충전기에서 사용할 수 있는 기능을 제한할 수 있습니다. CSMS는 이를 위해 BootNotification state: Pending를 사용할 수 있습니다. Pending 상태 동안 CSMS는 자격 증명을 업데이트할 수 있습니다.
 |A00.FR.807 |A00.FR.804 AND +
-충전소 제조업체 인증서가 만료되었습니다.
-|CSMS는 BootNotification 이후 `보류` 상태의 충전소에서 연결을 수락하고 즉시 사용 사례 <<update_charging_station_certificate_by_request_of_csms,A02 - CSMS의 요청에 따라 충전소 인증서 업데이트>>를 실행하여 새로운 유효한 CSO 인증서를 설치할 수 있습니다.
+  충전기 제조업체 인증서가 만료되었습니다.
+    |CSMS는 BootNotification 이후 `Pending` 상태의 충전기에서 연결을 수락하고 즉시 사용 사례 <<update_charging_station_certificate_by_request_of_csms,A02 - Update Charging Station Certificate by request of CSMS>>를 실행하여 새로운 유효한 CSO 인증서를 설치할 수 있습니다.
 |===
 
 == Use cases & Requirements
@@ -474,135 +474,134 @@ _이 섹션은 규범적입니다._
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |번호 |유형 |설명
-|1 |이름 |HTTP 기본 인증을 위한 충전소 비밀번호 업데이트
+|1 |이름 |HTTP 기본 인증을 위한 충전기 비밀번호 업데이트
 |2 |ID |A01
 |{nbsp} d|_기능 블록_ |A. 보안
-|3 |목표 |이 사용 사례는 기본 및 TLS에서 기본 인증 보안 프로필로 충전소를 인증하는 데 사용되는 비밀번호인 BasicAuthPassword를 사용하는 방법을 정의합니다.
+|3 |목표 |이 사용 사례는 기본 및 TLS에서 기본 인증 보안 프로필로 충전기를 인증하는 데 사용되는 비밀번호인 BasicAuthPassword를 사용하는 방법을 정의합니다.
 |4 |설명 |CSMS가 HTTP 기본 인증을 위한 새 비밀번호를 구성할 수 있도록 CSMS는 <<basic_auth_password,`BasicAuthPassword`>> 구성 변수에 대한 새 값을 보낼 수 있습니다.
-
-|{nbsp} d|_Actors_ |충전소, CSMS
+|{nbsp} d|_Actors_ |충전기, CSMS
 |{nbsp} d|_시나리오 설명_
-|*1.* CSMS가 <<set_variables_request,SetVariablesRequest>>(ComponentName=SecurityCtrlr, VariableName=BasicAuthPassword)를 충전소로 보냅니다. +
-*2.* 충전소가 <<set_variables_response,SetVariablesResponse>>와 상태 _Accepted_로 응답합니다. +
-*3.* 충전소가 현재 연결을 끊습니다. (대기 중인 메시지를 저장합니다.) +
-*4.* 충전소가 새 비밀번호로 CSMS에 연결합니다.
-|5 |필수 조건 |보안 프로필: <<unsecured_transport_with_basic_authentication_profile_1, 기본 보안 프로필>> 또는 <<tls_with_basic_authentication_profile_2, 기본 인증이 있는 TLS>> 사용 중.
+  |*1.* CSMS가 <<set_variables_request,SetVariablesRequest>>(ComponentName=SecurityCtrlr, VariableName=BasicAuthPassword)를 충전기로 보냅니다. +
+  *2.* 충전기가 <<set_variables_response,SetVariablesResponse>>와 상태 _Accepted_ 로 응답합니다. +
+  *3.* 충전기가 현재 연결을 끊습니다. (대기 중인 메시지를 저장합니다.) +
+  *4.* 충전기가 새 비밀번호로 CSMS에 연결합니다.
+|5 |필수 조건 |보안 프로필: <<unsecured_transport_with_basic_authentication_profile_1,Basic Security Profile>> 또는 <<tls_with_basic_authentication_profile_2,TLS with Basic Authentication>> 사용 중.
 |6 |사후 조건 |*성공 사후 조건:* +
-충전소가 새 비밀번호로 CSMS에 다시 연결되었습니다.
+  충전기가 새 비밀번호로 CSMS에 다시 연결되었습니다.
 
-*실패 사후 조건:* +
-충전소가 <<set_variables_request,SetVariablesRequest>>에 _Accepted_가 아닌 상태의 <<set_variables_response,SetVariablesResponse>>로 응답하는 경우, 충전소는 이전 자격 증명을 계속 사용합니다. CSMS는 충전소의 부팅 알림을 수락하지 않는 등 충전소를 다르게 처리할 수 있습니다.
+  *실패 사후 조건:* +
+  충전기가 <<set_variables_request,SetVariablesRequest>>에 _Accepted_ 가 아닌 상태의 <<set_variables_response,SetVariablesResponse>>로 응답하는 경우, 충전기는 이전 자격 증명을 계속 사용합니다. CSMS는 충전기의 부팅 알림을 수락하지 않는 등 충전기를 다르게 처리할 수 있습니다.
 |===
 
-.HTTP 기본 인증을 위한 충전소 비밀번호 업데이트(행복한 흐름)
-image::part2/images/figure_5.svg[HTTP 기본 인증을 위한 충전소 비밀번호 업데이트(행복한 흐름)]
+.HTTP 기본 인증을 위한 충전기 비밀번호 업데이트(행복한 흐름)
+image::part2/images/figure_5.svg[HTTP 기본 인증을 위한 충전기 비밀번호 업데이트(행복한 흐름)]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7 |오류 처리 |n/a
-|8 |주의 |n/a
+|8 |참고 |n/a
 |===
 
 ==== A01 - Update Charging Station Password for HTTP Basic Authentication - Requirements
 
-.A01 - HTTP 기본 인증을 위한 충전소 비밀번호 업데이트 - 요구 사항
+.A01 - HTTP 기본 인증을 위한 충전기 비밀번호 업데이트 - 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID |전제 조건 |요구 사항 정의
 
 |A01.FR.01 |{nbsp} |비밀번호는 구성 변수 <<basic_auth_password,`BasicAuthPassword`>>에 저장되어야 합니다.
-|A01.FR.02 |{nbsp} |OCPP를 통해 충전소의 기본 인증 비밀번호를 설정하려면 CSMS가 <<basic_auth_password,`BasicAuthPassword`>> 구성 변수와 함께 충전소에 <<set_variables_request,SetVariablesRequest>> 메시지를 보내야 합니다.
+|A01.FR.02 |{nbsp} |OCPP를 통해 충전기의 기본 인증 비밀번호를 설정하려면 CSMS가 <<basic_auth_password,`BasicAuthPassword`>> 구성 변수와 함께 충전기에 <<set_variables_request,SetVariablesRequest>> 메시지를 보내야 합니다.
 |A01.FR.03 |A01.FR.02 +
-AND +
-충전소는 이 <<set_variables_request,SetVariablesRequest>>에 <<set_variables_response,SetVariablesResponse>>를 상태 _Accepted_로 응답합니다.
-|CSMS는 권한 부여 키 변경이 성공적이라고 가정하고 충전소에서 이전에 사용한 자격 증명을 더 이상 수락하지 않습니다.
+  AND +
+  충전기는 이 <<set_variables_request,SetVariablesRequest>>에 <<set_variables_response,SetVariablesResponse>>를 상태 _Accepted_ 로 응답합니다.
+    |CSMS는 권한 부여 키 변경이 성공적이라고 가정하고 충전기에서 이전에 사용한 자격 증명을 더 이상 수락하지 않습니다.
 |A01.FR.04 |A01.FR.02 +
-AND +
-충전소는 이 <<set_variables_request,SetVariablesRequest>>에 <<set_variables_response,SetVariablesResponse>>를 상태 _Accepted_가 아닌 다른 상태로 응답합니다.
-|CSMS는 충전소에서 비밀번호를 변경하지 않았다고 가정합니다. 따라서 CSMS는 이전 자격 증명을 계속 수락합니다.
-|A01.FR.05 |A01.FR.04 |CSMS는 여전히 충전소에서 연결을 수락해야 하지만 충전소에서 사용할 수 있는 기능을 제한할 수 있습니다. CSMS는 이를 위해 BootNotification 상태인 Pending을 사용할 수 있습니다. Pending 상태에서 CSMS는 예를 들어 자격 증명을 업데이트하려고 다시 시도할 수 있습니다.
-|A01.FR.06 |{nbsp} |충전소마다 다른 비밀번호를 사용해야 합니다.
+  AND +
+  충전기는 이 <<set_variables_request,SetVariablesRequest>>에 <<set_variables_response,SetVariablesResponse>>를 상태 _Accepted_ 가 아닌 다른 상태로 응답합니다.
+    |CSMS는 충전기에서 비밀번호를 변경하지 않았다고 가정합니다. 따라서 CSMS는 이전 자격 증명을 계속 수락합니다.
+|A01.FR.05 |A01.FR.04 |CSMS는 여전히 충전기에서 연결을 수락해야 하지만 충전기에서 사용할 수 있는 기능을 제한할 수 있습니다. CSMS는 이를 위해 BootNotification state :Pending을 사용할 수 있습니다. Pending 상태에서 CSMS는 예를 들어 자격 증명을 업데이트하려고 다시 시도할 수 있습니다.
+|A01.FR.06 |{nbsp} |충전기마다 다른 비밀번호를 사용해야 합니다.
 |A01.FR.07 |{nbsp} |비밀번호는 충분한 엔트로피를 갖도록 무작위로 생성해야 합니다.
 |A01.FR.08 |{nbsp} |CSMS는 비밀번호 자체가 아닌 솔트 처리된 비밀번호 해시만 저장해야 합니다.
-|A01.FR.09 |{nbsp} |CSMS는 로그 파일이나 디버그 정보에 비밀번호를 일반 텍스트로 저장해서는 안 됩니다. 이런 식으로 CSMS가 손상되더라도 모든 충전소 비밀번호가 즉시 손상되는 것은 아닙니다.
-|A01.FR.10 |{nbsp} |충전소에서 비밀번호는 일반 텍스트로 저장해야 합니다. 안전하게 저장하는 데 각별히 주의해야 합니다. 그러나 자격 증명을 안전하게 저장하는 방법에 대한 메커니즘 정의는 OCPP 보안 프로필의 범위에 포함되지 않습니다.
-|A01.FR.11 |A01.FR.02 |충전소는 보안 로그에 <<basic_auth_password,`BasicAuthPassword`>>의 변경 사항을 기록해야 합니다.
-|A01.FR.12 |A01.FR.11 |충전소는 로깅에서 BasicAuthPassword의 내용을 공개해서는 안 됩니다. 이는 진단 파일에 액세스할 수 있는 사람에게 키 자료가 노출되는 것을 방지하기 위한 것입니다.
+|A01.FR.09 |{nbsp} |CSMS는 로그 파일이나 디버그 정보에 비밀번호를 일반 텍스트로 저장해서는 안 됩니다. 이런 식으로 CSMS가 손상되더라도 모든 충전기 비밀번호가 즉시 손상되는 것은 아닙니다.
+|A01.FR.10 |{nbsp} |충전기에서 비밀번호는 일반 텍스트로 저장해야 합니다. 안전하게 저장하는 데 각별히 주의해야 합니다. 그러나 자격 증명을 안전하게 저장하는 방법에 대한 메커니즘 정의는 OCPP 보안 프로필의 범위에 포함되지 않습니다.
+|A01.FR.11 |A01.FR.02 |충전기는 보안 로그에 <<basic_auth_password,`BasicAuthPassword`>>의 변경 사항을 기록해야 합니다.
+|A01.FR.12 |A01.FR.11 |충전기는 로깅에서 BasicAuthPassword의 내용을 공개해서는 안 됩니다. 이는 진단 파일에 액세스할 수 있는 사람에게 키 자료가 노출되는 것을 방지하기 위한 것입니다.
 |===
 
 [[update_charging_station_certificate_by_request_of_csms]]
 === A02 - Update Charging Station Certificate by request of CSMS
 
-.A02 - CSMS 요청에 따른 충전소 인증서 업데이트
+.A02 - CSMS 요청에 따른 충전기 인증서 업데이트
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |번호 |유형 |설명
 
-|1 |이름 |CSMS 요청에 따른 충전소 인증서 업데이트
+|1 |이름 |CSMS 요청에 따른 충전기 인증서 업데이트
 |2 |ID |A02
 |{nbsp} d|_기능 블록_ |A. 보안
-|3 |목표 |충전소 클라이언트 측 인증서 관리를 용이하게 하기 위해 인증서 업데이트 절차가 제공됩니다.
-|4 |설명 |CSMS는 충전소에 <<trigger_message_request,TriggerMessageRequest>>를 사용하여 키를 업데이트하도록 요청하고 _requestedMessage_ 필드는 <<message_trigger_enum_type,SignChargingStationCertificate>>(또는 별도의 15118 인증서의 경우 <<message_trigger_enum_type,SignV2GCertificate>>)로 설정합니다.
+|3 |목표 |충전기 클라이언트 측 인증서 관리를 용이하게 하기 위해 인증서 업데이트 절차가 제공됩니다.
+|4 |설명 |CSMS는 충전기에 <<trigger_message_request,TriggerMessageRequest>>를 사용하여 키를 업데이트하도록 요청하고 _requestedMessage_ 필드는 <<message_trigger_enum_type,SignChargingStationCertificate>>(또는 별도의 15118 인증서의 경우 <<message_trigger_enum_type,SignV2GCertificate>>)로 설정합니다.
 
-충전소에 각 EVSE에 대한 별도의 ISO15118Ctrlr(ISO 15118의 SECC)이 있는 경우 CSMS는 각각에 대한 요청을 보내야 합니다. 충전소의 장치 모델은 ISO15118Ctrlr이 최상위 또는 EVSE 수준에 있는지 알려줍니다. +
-충전소에 각각 여러 EVSE를 제어하는 ​​여러 SECC가 있는 경우 장치 모델에서 각 EVSE에 대한 ISO15118Ctrlr로 표현됩니다. 동일한 SECC에서 제어하는 ​​EVSE는 동일한 "SeccId"를 사용하여 ISO15118Ctrlr을 보고합니다.
-|{nbsp} d|_Actors_ |충전소, CSMS, 인증 기관 서버
+  충전기에 각 EVSE에 대한 별도의 ISO15118Ctrlr(ISO 15118의 SECC)이 있는 경우 CSMS는 각각에 대한 요청을 보내야 합니다. 충전기의 장치 모델은 ISO15118Ctrlr이 최상위 또는 EVSE 수준에 있는지 알려줍니다. +
+  충전기에 각각 여러 EVSE를 제어하는 ​​여러 SECC가 있는 경우 장치 모델에서 각 EVSE에 대한 ISO15118Ctrlr로 표현됩니다. 동일한 SECC에서 제어하는 EVSE는 동일한 "SeccId"를 사용하여 ISO15118Ctrlr을 보고합니다.
+|{nbsp} d|_Actors_ |충전기, CSMS, 인증 기관 서버
 |{nbsp} d|_시나리오 설명_ |_SignChargingStationCertificate_
 
-**1.** CSMS는 <<trigger_message_request,TriggerMessageRequest>>를 사용하여 충전소에 인증서를 업데이트하도록 요청하고 _requestedMessage_ 필드는 <<message_trigger_enum_type,SignChargingStationCertificate>>로 설정합니다. +
-**2.** 충전소는 <<trigger_message_response,TriggerMessageResponse>>로 응답합니다. +
-**3.** 충전소는 새로운 공개/비공개 키 쌍을 생성합니다. +
-**4.** 충전소는 _certificateType_ = `ChargingStationCertificate`를 포함하는 <<sign_certificate_request,SignCertificateRequest>>를 CSMS로 보냅니다. +
-**5.** CSMS는 _Accepted_ 상태의 <<sign_certificate_response,SignCertificateResponse>>로 응답합니다. +
-**6.** CSMS는 CSR을 인증 기관 서버로 전달합니다. +
-**7.** 인증 기관 서버가 인증서에 서명합니다. +
-**8.** 인증 기관 서버는 서명된 인증서를 CSMS로 반환합니다. +
-**9.** CSMS는 <<certificate_signed_request,CertificateSignedRequest>>를 충전소로 보냅니다. +
-**10.** 충전소는 서명된 인증서를 확인합니다. +
-**11.** 충전소는 <<certificate_signed_response,CertificateSignedResponse>>로 CSMS에 _Accepted_ 또는 _Rejected_ 상태로 응답합니다.
+  **1.** CSMS는 <<trigger_message_request,TriggerMessageRequest>>를 사용하여 충전기에 인증서를 업데이트하도록 요청하고 _requestedMessage_ 필드는 <<message_trigger_enum_type,SignChargingStationCertificate>>로 설정합니다. +
+  **2.** 충전기는 <<trigger_message_response,TriggerMessageResponse>>로 응답합니다. +
+  **3.** 충전기는 새로운 공개/비공개 키 쌍을 생성합니다. +
+  **4.** 충전기는 _certificateType_ = `ChargingStationCertificate` 를 포함하는 <<sign_certificate_request,SignCertificateRequest>>를 CSMS로 보냅니다. +
+  **5.** CSMS는 _Accepted_ 상태의 <<sign_certificate_response,SignCertificateResponse>>로 응답합니다. +
+  **6.** CSMS는 CSR을 인증 기관 서버로 전달합니다. +
+  **7.** 인증 기관 서버가 인증서에 서명합니다. +
+  **8.** 인증 기관 서버는 서명된 인증서를 CSMS로 반환합니다. +
+  **9.** CSMS는 <<certificate_signed_request,CertificateSignedRequest>>를 충전기로 보냅니다. +
+  **10.** 충전기는 서명된 인증서를 확인합니다. +
+  **11.** 충전기는 <<certificate_signed_response,CertificateSignedResponse>>로 CSMS에 _Accepted_ 또는 _Rejected_ 상태로 응답합니다.
 |{nbsp} |_대체 시나리오_ |_SignV2GCertificate_ +
 
-**1.** CSMS는 _componentVariable.component_ "ISO15118Ctrlr" 및 _componentVariable.variable_ "SeccId"에 대한 <<get_report_request,GetReportRequest>>를 보내 구성 요소 ISO15118Ctrlr에 대한 정보를 요청합니다. +
-**2.** 반환된 **고유** SeccId마다: +
+  **1.** CSMS는 _componentVariable.component_ "ISO15118Ctrlr" 및 _componentVariable.variable_ "SeccId"에 대한 <<get_report_request,GetReportRequest>>를 보내 구성 요소 ISO15118Ctrlr에 대한 정보를 요청합니다. +
+  **2.** 반환된 **고유** SeccId마다: +
 
-**2.1.** CSMS는 충전소에 <<trigger_message_request,TriggerMessageRequest>>를 사용하여 인증서를 업데이트하도록 요청합니다. 여기서 _requestedMessage_ 필드는 15118 인증서의 경우 <<message_trigger_enum_type,SignV2GCertificate>>로 설정되고 evse는 ISO15118Ctrlr의 EVSE로 설정됩니다. (ISO15118Ctrlr이 최상위에서 하나의 구성 요소로만 존재하는 경우 evse를 생략할 수 있습니다.) +
-**2.2.** 충전소는 <<trigger_message_response,TriggerMessageResponse>>로 응답합니다. +
-**2.3.** 충전소는 새로운 공개/비공개 키 쌍을 생성합니다. +
-**2.4.** 충전소는 _certificateType_ = `V2GCertificate`와 CommonName(CN)이 SeccId 값으로 설정된 csr을 포함하는 <<sign_certificate_request,SignCertificateRequest>>를 CSMS로 전송합니다. +
-**2.5.** CSMS는 _Accepted_ 상태의 <<sign_certificate_response,SignCertificateResponse>>로 응답합니다. +
-**2.6.** CSMS는 CSR을 인증 기관 서버로 전달합니다. +
-**2.7.** 인증 기관 서버가 인증서에 서명합니다. +
-**2.8.** 인증 기관 서버는 서명된 인증서를 CSMS로 반환합니다. +
-**2.9.** CSMS는 <<certificate_signed_request,CertificateSignedRequest>>를 충전소로 전송합니다. +
-**2.10.** 충전소는 서명된 인증서를 확인합니다. +
-**2.11.** 충전소는 <<certificate_signed_response,CertificateSignedResponse>>로 CSMS에 _Accepted_ 또는 _Rejected_ 상태로 응답합니다.
+  **2.1.** CSMS는 충전기에 <<trigger_message_request,TriggerMessageRequest>>를 사용하여 인증서를 업데이트하도록 요청합니다. 여기서 _requestedMessage_ 필드는 15118 인증서의 경우 <<message_trigger_enum_type,SignV2GCertificate>>로 설정되고 evse는 ISO15118Ctrlr의 EVSE로 설정됩니다. (ISO15118Ctrlr이 최상위에서 하나의 구성 요소로만 존재하는 경우 evse를 생략할 수 있습니다.) +
+  **2.2.** 충전기는 <<trigger_message_response,TriggerMessageResponse>>로 응답합니다. +
+  **2.3.** 충전기는 새로운 공개/비공개 키 쌍을 생성합니다. +
+  **2.4.** 충전기는 _certificateType_ = `V2GCertificate` 와 CommonName(CN)이 SeccId 값으로 설정된 csr을 포함하는 <<sign_certificate_request,SignCertificateRequest>>를 CSMS로 전송합니다. +
+  **2.5.** CSMS는 _Accepted_ 상태의 <<sign_certificate_response,SignCertificateResponse>>로 응답합니다. +
+  **2.6.** CSMS는 CSR을 인증 기관 서버로 전달합니다. +
+  **2.7.** 인증 기관 서버가 인증서에 서명합니다. +
+  **2.8.** 인증 기관 서버는 서명된 인증서를 CSMS로 반환합니다. +
+  **2.9.** CSMS는 <<certificate_signed_request,CertificateSignedRequest>>를 충전기로 전송합니다. +
+  **2.10.** 충전기는 서명된 인증서를 확인합니다. +
+  **2.11.** 충전기는 <<certificate_signed_response,CertificateSignedResponse>>로 CSMS에 _Accepted_ 또는 _Rejected_ 상태로 응답합니다.
 |5 |필수 조건 |표준 구성 변수 "OrganizationName"을 설정해야 합니다. <<message_trigger_enum_type,SignV2GCertificate>>의 경우 변수 ISO15118Ctrlr.SeccId를 설정해야 합니다.
 |6 |사후 조건 |**성공 사후 조건:** +
-충전소에 새 클라이언트 측 인증서가 설치되었습니다. +
-**실패 사후 조건:** +
-새 클라이언트 측 인증서가 거부되고 삭제됩니다.
+  충전기에 새 클라이언트 측 인증서가 설치되었습니다. +
+  **실패 사후 조건:** +
+  새 클라이언트 측 인증서가 거부되고 삭제됩니다.
 |===
 
-.충전소 인증서 업데이트
-image::part2/images/figure_6.svg[충전소 인증서 업데이트]
+.충전기 인증서 업데이트
+image::part2/images/figure_6.svg[충전기 인증서 업데이트]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7 |오류 처리 |CSMS는 충전소에서 CSR 요청을 수락한 후 CA로 전달합니다. 하지만 CA에 도달할 수 없거나 CSR을 거부하면 충전소는 결코 알 수 없습니다. CSMS는 CSR에 대한 몇 가지 검사를 수행할 수 있지만 CA가 수행하는 모든 검사를 수행할 수 없으며 CA에 대한 연결 시간 초과를 방지하지 못합니다. 이와 같은 문제가 발생하면 CA에 따르면 CA가 오프라인이거나 충전소에서 보낸 CSR이 올바르지 않습니다. 두 경우 모두 CSO의 운영자에게 알려야 할 사항입니다. 그런 다음 운영자는 문제를 조사해야 합니다. 문제가 해결되면 운영자는 A02를 다시 실행할 수 있습니다. +
-인증서가 X분 또는 시간 내에 전송되지 않을 때 충전소가 재시도하도록 하는 것은 권장되지 않습니다. CSR이 올바르지 않으면 자동으로 해결되지 않습니다. 새 펌웨어로만 이를 해결할 수 있습니다.
-|8 |참고 |충전소 운영자는 충전소 운영자 계층에 대한 인증 기관 역할을 할 수 있습니다.
+|7 |오류 처리 |CSMS는 충전기에서 CSR 요청을 수락한 후 CA로 전달합니다. 하지만 CA에 도달할 수 없거나 CSR을 거부하면 충전기는 결코 알 수 없습니다. CSMS는 CSR에 대한 몇 가지 검사를 수행할 수 있지만 CA가 수행하는 모든 검사를 수행할 수 없으며 CA에 대한 연결 시간 초과를 방지하지 못합니다. CA에 따르면, 이와 같은 문제는 CA가 오프라인이거나 충전기에서 보낸 CSR이 올바르지 않을 때 발생합니다. 두 경우 모두 CSO의 운영자에게 알려야 할 사항입니다. 그런 다음 운영자는 문제를 조사해야 합니다. 문제가 해결되면 운영자는 A02를 다시 실행할 수 있습니다. +
+  인증서가 X분 또는 시간 내에 전송되지 않을 때 충전기가 재시도하도록 하는 것은 권장되지 않습니다. CSR이 올바르지 않으면 자동으로 해결되지 않습니다. 새 펌웨어로만 이를 해결할 수 있습니다.
+|8 |참고 |충전기 운영자는 충전기 운영자 계층에 대한 인증 기관 역할을 할 수 있습니다.
 
-해당 인증 기관은 CSR의 정보를 확인해야 합니다. +
-올바르면 인증 기관은 CSR에 서명하고 CSO로 보내고 CSO는 <<certificate_signed_request,CertificateSignedRequest>> 메시지로 충전소로 다시 보냅니다. +
-인증 기관은 인증서 서명 개인 키를 안전하게 유지하기 위한 강력한 조치를 구현해야 합니다.
+  해당 인증 기관은 CSR의 정보를 확인해야 합니다. +
+  올바르면 인증 기관은 CSR에 서명하고 CSO로 보내고 CSO는 <<certificate_signed_request,CertificateSignedRequest>> 메시지로 충전기로 다시 보냅니다. +
+  인증 기관은 인증서 서명 개인 키를 안전하게 유지하기 위한 강력한 조치를 구현해야 합니다.
 
-{nbsp}
+  {nbsp}
 
-<<certificate_signed_request,CertificateSignedRequest>> 메시지(사용 사례 <<update_charging_station_certificate_by_request_of_csms,A02>> 및 <<update_charging_station_certificate_initiated_by_the_charging_station,A03>> 참조)와 <<install_certificate_request,InstallCertificateRequest>>(사용 사례 <<install_ca_certificate_in_a_charging_station,M05 - 충전소에 CA 인증서 설치>>)는 모두 인증서를 보내는 데 사용되지만 그 용도는 다릅니다. <<certificate_signed_request,CertificateSignedRequest>>는 충전소 자체의 공개 인증서와 인증 기관에서 서명한 V2G 인증서를 반환하는 데 사용됩니다. <<install_certificate_request,InstallCertificateRequest>>는 루트 인증서를 설치하는 데 사용됩니다.
+  <<certificate_signed_request,CertificateSignedRequest>> 메시지(사용 사례 <<update_charging_station_certificate_by_request_of_csms,A02>> 및 <<update_charging_station_certificate_initiated_by_the_charging_station,A03>> 참조)와 <<install_certificate_request,InstallCertificateRequest>>(사용 사례 <<install_ca_certificate_in_a_charging_station,M05 - Install CA Certificate in a Charging Station>>)는 모두 인증서를 보내는 데 사용되지만 그 용도는 다릅니다. <<certificate_signed_request,CertificateSignedRequest>>는 충전기 자체의 공개 인증서와 인증 기관에서 서명한 V2G 인증서를 반환하는 데 사용됩니다. <<install_certificate_request,InstallCertificateRequest>>는 루트 인증서를 설치하는 데 사용됩니다.
 
-{nbsp}
+  {nbsp}
 
-V2G 인증서 처리에 대해서는 사용 사례 <<retrieve_list_of_available_certificates_from_a_charging_station, M03 - 충전소에서 사용 가능한 인증서 목록 검색>>, <<delete_a_specific_certificate_from_a_charging_station, M04 - 충전소에서 특정 인증서 삭제>> 및 <<get_v2g_charging_station_certificate_status, M06 - 충전소 인증서 상태 가져오기>>를 참조하세요.
+  V2G 인증서 처리에 대해서는 사용 사례 <<retrieve_list_of_available_certificates_from_a_charging_station,M03 - Retrieve list of available certificates from a Charging Station>>, <<delete_a_specific_certificate_from_a_charging_station,M04 - Delete a specific certificate from a Charging Station>> 및 <<get_v2g_charging_station_certificate_status,M06 - Get Charging Station Certificate status>>를 참조하세요.
 |===
 
 ==== A02 - Update Charging Station Certificate by request of CSMS - Requirements
@@ -612,86 +611,84 @@ V2G 인증서 처리에 대해서는 사용 사례 <<retrieve_list_of_available_
 |===
 |ID |전제 조건 |요구 사항 정의
 
-|A02.FR.01 |{nbsp} |충전소 설치 후 키 업데이트를 수행하여 제조업체에서 처음 제공한 키(아마도 기본 키)에서 키를 변경해야 합니다.
+|A02.FR.01 |{nbsp} |충전기 설치 후 키 업데이트를 수행하여 제조업체에서 처음 제공한 키(아마도 기본 키)에서 키를 변경해야 합니다.
 |A02.FR.02 |<<trigger_message_response,TriggerMessageResponse>>를 보낸 후.
-|충전소는 <<ocpp_security_16,[16]>>의 섹션 4.2.1.3에 설명된 키 생성 기능 중 하나를 사용하여 새 공개/비공개 키 쌍을 생성해야 합니다.
-
-|A02.FR.03 |A02.FR.02 |충전소는 RFC 2986 <<ocpp_security_22,[22]>>에 설명된 대로 공개 키를 인증서 서명 요청(CSR) 형태로 보낸 다음 <<sign_certificate_request,SignCertificateRequest>> 메시지를 사용하여 PEM 인코딩해야 합니다.
-|A02.FR.04 |{nbsp} |CSMS는 인증서 자체에 서명해서는 안 되지만, 대신 CSR을 충전소 인프라의 인증서를 관리하는 전담 인증 기관 서버로 전달해야 합니다. 전담 기관 서버는 CSO에서 운영할 수 있습니다.
-|A02.FR.05 |{nbsp} |키 업데이트 프로세스 중에 충전소에서 생성한 개인 키는 언제든지 충전소를 떠나서는 안 되며, OCPP 또는 기타(원격) 통신 연결을 통해 읽을 수 없어야 합니다.
-|A02.FR.06 |{nbsp} |충전소는 <<certificate_signed_request,CertificateSignedRequest>> 메시지에서 서명된 인증서의 유효성을 검증해야 하며, 최소한 인증서가 유효한 기간, <<certificate_properties,Certificate Properties>>의 속성, <<certificate_hierarchy,Certificate Hierarchy>>에 설명된 대로 충전소 운영자 인증서 계층의 일부인지 확인해야 합니다.
-|A02.FR.07 |{nbsp} |인증서가 유효하지 않은 경우. 충전소는 CertificateSignedRequest에 _Rejected_ 상태로 응답하고 인증서를 삭제하고 _InvalidChargingStationCertificate_ 보안 이벤트를 트리거해야 합니다(보안 이벤트의 전체 목록은 2부 부록 참조).
-|A02.FR.08 |{nbsp} |충전소는 현재 날짜와 시간이 인증서의 '이전에는 유효하지 않음' 필드 뒤에 오는 즉시 새 인증서로 전환해야 합니다(예: 웹소켓 및 TLS 연결을 닫고 새 인증서로 다시 연결).
-|A02.FR.09 |충전소에 _ChargingStationCertificate_ 유형의 유효한 인증서가 두 개 이상 있는 경우.
-|충전소는 유효 기간의 시작을 기준으로 최신 인증서를 사용해야 합니다.
+  |충전기는 <<ocpp_security_16,[16]>>의 Section 4.2.1.3에 설명된 키 생성 기능 중 하나를 사용하여 새 공개/비공개 키 쌍을 생성해야 합니다.
+|A02.FR.03 |A02.FR.02 |충전기는 RFC 2986 <<ocpp_security_22,[22]>>에 설명된 대로 공개 키를 인증서 서명 요청(CSR) 형태로 보낸 다음 <<sign_certificate_request,SignCertificateRequest>> 메시지를 사용하여 PEM 인코딩해야 합니다.
+|A02.FR.04 |{nbsp} |CSMS는 인증서 자체에 서명해서는 안 되지만, 대신 CSR을 충전기 인프라의 인증서를 관리하는 전담 인증 기관 서버로 전달해야 합니다. 전담 기관 서버는 CSO에서 운영할 수 있습니다.
+|A02.FR.05 |{nbsp} |키 업데이트 프로세스 중에 충전기에서 생성한 개인 키는 언제든지 충전기를 떠나서는 안 되며, OCPP 또는 기타(원격) 통신 연결을 통해 읽을 수 없어야 합니다.
+|A02.FR.06 |{nbsp} |충전기는 <<certificate_signed_request,CertificateSignedRequest>> 메시지에서 서명된 인증서의 유효성을 검증해야 하며, 최소한 인증서가 유효한 기간, <<certificate_properties,Certificate Properties>>의 속성, <<certificate_hierarchy,Certificate Hierarchy>>에 설명된 대로 충전기 운영자 인증서 계층의 일부인지 확인해야 합니다.
+|A02.FR.07 |{nbsp} |인증서가 유효하지 않은 경우. 충전기는 CertificateSignedRequest에 _Rejected_ 상태로 응답하고 인증서를 삭제하고 _InvalidChargingStationCertificate_ 보안 이벤트를 트리거해야 합니다(보안 이벤트의 전체 목록은 Part 2 - Appendices 참조).
+|A02.FR.08 |{nbsp} |충전기는 현재 날짜와 시간이 인증서의 '이전에는 유효하지 않음' 필드 뒤에 오는 즉시 새 인증서로 전환해야 합니다(예: 웹소켓 및 TLS 연결을 닫고 새 인증서로 다시 연결).
+|A02.FR.09 |충전기에 _ChargingStationCertificate_ 유형의 유효한 인증서가 두 개 이상 있는 경우.
+  |충전기는 유효 기간의 시작을 기준으로 최신 인증서를 사용해야 합니다.
 |A02.FR.10 |A02.FR.09 +
-그리고 충전소가 새 인증서가 작동하는지 검증한 경우
-|충전소는 이전 인증서를 삭제할 수 있습니다. 대체 수단으로 이전 인증서를 한 달 동안 저장하는 것이 좋습니다.
+  AND 충전기가 새 인증서가 작동하는지 검증한 경우
+    |충전기는 이전 인증서를 삭제할 수 있습니다. 대체 수단으로 이전 인증서를 한 달 동안 저장하는 것이 좋습니다.
 |A02.FR.11 | <<sign_certificate_request,SignCertificateRequest>>를 수신하고 요청을 처리할 수 있는 경우
-|CSMS는 <<sign_certificate_response,SignCertificateResponse>>에서 상태를 _Accepted_로 설정해야 합니다.
+  |CSMS는 <<sign_certificate_response,SignCertificateResponse>>에서 상태를 _Accepted_ 로 설정해야 합니다.
 |A02.FR.12 | <<sign_certificate_request,SignCertificateRequest>>를 수신하고 요청을 처리할 수 없는 경우
-|CSMS는 <<sign_certificate_response,SignCertificateResponse>>에서 상태를 _Rejected_로 설정해야 합니다.
-
-|A02.FR.13 |15118 연결과 충전소에서 CSMS 연결에 다른 인증서를 사용하는 경우
-|충전소는 <<sign_certificate_request,SignCertificateRequest>>의 <<certificate_signing_use_enum_type,certificateType>> 필드를 업데이트가 트리거된 인증서로 설정해야 합니다.
+  |CSMS는 <<sign_certificate_response,SignCertificateResponse>>에서 상태를 _Rejected_ 로 설정해야 합니다.
+|A02.FR.13 |15118 연결과 충전기에서 CSMS 연결에 다른 인증서를 사용하는 경우
+  |충전기는 <<sign_certificate_request,SignCertificateRequest>>의 <<certificate_signing_use_enum_type,certificateType>> 필드를 업데이트가 트리거된 인증서로 설정해야 합니다.
 |A02.FR.14 |<<certificate_signing_use_enum_type,certificateType>>이 포함된 <<sign_certificate_request,SignCertificateRequest>>를 수신하는 경우
-|CSMS가 <<certificate_signed_request,CertificateSignedRequest>>의 <<certificate_signing_use_enum_type,certificateType>> 필드를 <<sign_certificate_request,SignCertificateRequest>>의 인증서 유형으로 설정하는 것이 좋습니다.
-|A02.FR.15 |충전소에 동일한 루트 인증서에서 파생된 두 개 이상의 유효한 V2G 인증서가 있는 경우.
-|충전소는 유효 기간의 시작을 기준으로 최신 인증서를 사용해야 합니다.
-|A02.FR.16 |구성 변수 <<max_certificate_chainsize,MaxCertificateChainSize>>가 구현되고 충전소가 <<certificate_signed_request,CertificateSignedRequest>> 메시지를 수신하고 크기가 <<max_certificate_chainsize,MaxCertificateChainSize>>에서 구성된 설정 값을 초과하는 인증서(체인)가 있는 경우
-|충전소는 <<certificate_signed_response,CertificateSignedResponse>> 메시지를 _Rejected_ 상태로 응답해야 합니다.
-|A02.FR.17 |CSMS가 CSR에 대한 SignCertificateRequest를 수락하고 충전소가 아직 이 CSR에 대한 CertificateSignedRequest를 수신하지 못했으며 <<cert_signing_wait_minimum,CertSigningWaitMinimum>>에서 구성된 초 수가 만료된 경우
-|충전소는 CSR에 대한 새 SignCertificateRequest를 보내야 합니다. 선택적으로 이 CSR은 새로 생성된 키 쌍에 대한 것일 수 있습니다.
-|A02.FR.18 |A02.FR.17 |충전소는 이 CSR에 대한 CertificateSignedRequest를 수신하지 않고 백오프 시간이 만료될 때마다 <<cert_signing_wait_minimum,CertSigningWaitMinimum>>에서 구성된 초 수부터 시작하여 이전 백오프 시간을 두 배로 늘려야 합니다.
+  |CSMS가 <<certificate_signed_request,CertificateSignedRequest>>의 <<certificate_signing_use_enum_type,certificateType>> 필드를 <<sign_certificate_request,SignCertificateRequest>>의 인증서 유형으로 설정하는 것이 좋습니다.
+|A02.FR.15 |충전기에 동일한 루트 인증서에서 파생된 두 개 이상의 유효한 V2G 인증서가 있는 경우.
+  |충전기는 유효 기간의 시작을 기준으로 최신 인증서를 사용해야 합니다.
+|A02.FR.16 |구성 변수 <<max_certificate_chainsize,MaxCertificateChainSize>>가 구현되고 충전기가 <<certificate_signed_request,CertificateSignedRequest>> 메시지를 수신하고 크기가 <<max_certificate_chainsize,MaxCertificateChainSize>>에서 구성된 설정 값을 초과하는 인증서(체인)가 있는 경우
+  |충전기는 <<certificate_signed_response,CertificateSignedResponse>> 메시지를 _Rejected_ 상태로 응답해야 합니다.
+|A02.FR.17 |CSMS가 CSR에 대한 SignCertificateRequest를 수락하고 충전기가 아직 이 CSR에 대한 CertificateSignedRequest를 수신하지 못했으며 <<cert_signing_wait_minimum,CertSigningWaitMinimum>>에서 구성된 초가 경과된 경우
+  |충전기는 CSR에 대한 새 SignCertificateRequest를 보내야 합니다. 선택적으로 이 CSR은 새로 생성된 키 쌍에 대한 것일 수 있습니다.
+|A02.FR.18 |A02.FR.17 |충전기는 이 CSR에 대한 CertificateSignedRequest를 수신하지 않고 백오프 시간이 만료될 때마다 <<cert_signing_wait_minimum,CertSigningWaitMinimum>>에서 구성된 초부터 시작하여 이전 백오프 시간을 두 배로 늘려야 합니다.
 |A02.FR.19 |A02.FR.18 AND +
-최대 증가 수에 도달했습니다.
-|충전소는 CSMS가 `SignChargingStationCertificate`, `SignV2GCertificate` 또는 `SignCombinedCertificate`에 대한 TriggerMessageRequest를 통해 요청할 때까지 SignCertificateRequest 재전송을 중단해야 합니다.
-|A02.FR.20 |A02.FR.07 |충전소는 CSMS가 `SignChargingStationCertificate`, `SignV2GCertificate` 또는 `SignCombinedCertificate`에 대한 TriggerMessageRequest를 통해 요청할 때까지 백오프 메커니즘을 시작하고 SignCertificateRequest를 재전송해서는 안 됩니다.
-|A02.FR.21 |충전소가 signcertificateRequest에 대한 certificateType _V2GCertificate_에 대한 응답으로 _Rejected_ 상태의 SignCertificateResponse를 수신하는 경우
-|충전소가 재부팅될 때까지 <<iso15118_pnc_enabled,ISO15118PnCEnabled>>를 끄는 것이 좋습니다.
+  최대 증가 수에 도달했습니다.
+    |충전기는 CSMS가 `SignChargingStationCertificate`, `SignV2GCertificate` 또는 `SignCombinedCertificate` 에 대한 TriggerMessageRequest를 통해 요청할 때까지 SignCertificateRequest 재전송을 중단해야 합니다.
+|A02.FR.20 |A02.FR.07 |충전기는 CSMS가 `SignChargingStationCertificate`, `SignV2GCertificate` 또는 `SignCombinedCertificate` 에 대한 TriggerMessageRequest를 통해 요청할 때까지 백오프 메커니즘을 시작하고 SignCertificateRequest를 재전송해서는 안 됩니다.
+|A02.FR.21 |충전기가 signcertificateRequest에 대한 certificateType _V2GCertificate_ 에 대한 응답으로 _Rejected_ 상태의 SignCertificateResponse를 수신하는 경우
+  |충전기가 재부팅될 때까지 <<iso15118_pnc_enabled,ISO15118PnCEnabled>>를 끄는 것이 좋습니다.
 |===
 
 [[update_charging_station_certificate_initiated_by_the_charging_station]]
 === A03 - Update Charging Station Certificate initiated by the Charging Station
 
-.A03 - 충전소에서 시작된 충전소 인증서 업데이트
+.A03 - 충전기에서 시작된 충전기 인증서 업데이트
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |번호 |유형 |설명
 
-|1 |이름 |충전소에서 시작된 충전소 인증서 업데이트
+|1 |이름 |충전기에서 시작된 충전기 인증서 업데이트
 |2 |ID |A03
 |{nbsp} d|_기능 블록_ |A. 보안
-|3 |목표 |충전소 클라이언트 측 인증서 관리를 용이하게 하기 위해 인증서 업데이트 절차가 제공됩니다.
-|4 |설명 |충전소에서 사용 중인 인증서(<<certificate_signing_use_enum_type,ChargingStationCertificate>> 또는 <<certificate_signing_use_enum_type,V2GCertificate>> for 15118)가 한 달 후에 만료됨을 감지합니다. 충전소는 <<sign_certificate_request,SignCertificateRequest>>를 사용하여 키를 업데이트하는 프로세스를 시작하고, <<certificate_signing_use_enum_type,CertificateSigningUse>> 필드에 요청된 인증서를 표시합니다.
-|{nbsp} d|_Actors_ |충전소, CSMS, 인증 기관 서버
+|3 |목표 |충전기 클라이언트 측 인증서 관리를 용이하게 하기 위해 인증서 업데이트 절차가 제공됩니다.
+|4 |설명 |충전기에서 사용 중인 인증서(<<certificate_signing_use_enum_type,ChargingStationCertificate>> 또는 <<certificate_signing_use_enum_type,V2GCertificate>> for 15118)가 한 달 후에 만료됨을 감지합니다. 충전기는 <<sign_certificate_request,SignCertificateRequest>>를 사용하여 키를 업데이트하는 프로세스를 시작하고, <<certificate_signing_use_enum_type,CertificateSigningUse>> 필드에 요청된 인증서를 표시합니다.
+|{nbsp} d|_Actors_ |충전기, CSMS, 인증 기관 서버
 |{nbsp} d|_시나리오 설명_ |
-**1.** 충전소는 충전소 인증서가 만료될 예정임을 감지합니다. +
-**2.** 충전소는 새로운 공개/비공개 키 쌍을 생성합니다. +
-**3.** 충전소는 해당 <<certificate_signing_use_enum_type,CertificateSigningUse>>가 포함된 <<sign_certificate_request,SignCertificateRequest>>를 CSMS로 보냅니다. +
-**4.** CSMS는 SignCertificateResponse로 응답하고 상태는 _Accepted_입니다. +
-**5.** CSMS가 CSR을 인증 기관 서버로 전달합니다. +
-**6.** 인증 기관 서버가 인증서에 서명합니다. +
-**7.** 인증 기관 서버가 서명된 인증서를 CSMS로 반환합니다. +
-**8.** CSMS가 <<certificate_signed_request,CertificateSignedRequest>>를 충전소로 보냅니다. +
-**9.** 충전소가 서명된 인증서를 확인합니다. +
-**10.** 충전소가 <<certificate_signed_response,CertificateSignedResponse>>로 CSMS에 _Accepted_ 또는 _Rejected_ 상태로 응답합니다.
-|5 |필수 조건 |표준 구성 변수 `OrganizationName`을 설정해야 합니다.
-|6 |사후 조건 |
-**성공한 사후 조건:** +
-충전소에 새 클라이언트 측 인증서가 설치되었습니다. +
-**실패한 사후 조건:** +
-새 클라이언트 측 인증서가 거부되고 삭제됩니다.
+  **1.** 충전기는 충전기 인증서가 만료될 예정임을 감지합니다. +
+  **2.** 충전기는 새로운 공개/비공개 키 쌍을 생성합니다. +
+  **3.** 충전기는 해당 <<certificate_signing_use_enum_type,CertificateSigningUse>>가 포함된 <<sign_certificate_request,SignCertificateRequest>>를 CSMS로 보냅니다. +
+  **4.** CSMS는 SignCertificateResponse로 응답하고 상태는 _Accepted_ 입니다. +
+  **5.** CSMS가 CSR을 인증 기관 서버로 전달합니다. +
+  **6.** 인증 기관 서버가 인증서에 서명합니다. +
+  **7.** 인증 기관 서버가 서명된 인증서를 CSMS로 반환합니다. +
+  **8.** CSMS가 <<certificate_signed_request,CertificateSignedRequest>>를 충전기로 보냅니다. +
+  **9.** 충전기가 서명된 인증서를 확인합니다. +
+  **10.** 충전기가 <<certificate_signed_response,CertificateSignedResponse>>로 CSMS에 _Accepted_ 또는 _Rejected_ 상태로 응답합니다.
+|5 |필수 조건 |표준 구성 변수 `OrganizationName` 을 설정해야 합니다.
+|6 |사후 조건 
+  |**성공한 사후 조건:** +
+  충전기에 새 클라이언트 측 인증서가 설치되었습니다. +
+  **실패한 사후 조건:** +
+  새 클라이언트 측 인증서가 거부되고 삭제됩니다.
 |===
 
-.충전소에서 시작된 충전소 인증서 업데이트
-image::part2/images/figure_7.svg[충전소에서 시작된 충전소 인증서 업데이트]
+.충전기에서 시작된 충전기 인증서 업데이트
+image::part2/images/figure_7.svg[충전기에서 시작된 충전기 인증서 업데이트]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7 |오류 처리 |CSMS는 충전소에서 CSR 요청을 수락한 후 CA로 전달합니다. 하지만 CA에 도달할 수 없거나 CSR을 거부하면 충전소는 알 수 없습니다. CSMS는 CSR에 대한 몇 가지 검사를 수행할 수 있지만 CA가 수행하는 모든 검사를 수행할 수 없으며 CA에 대한 연결 시간 초과를 방지하지 못합니다. 이와 같은 문제가 발생하면 CA에 따르면 CA가 오프라인이거나 충전소에서 보낸 CSR이 올바르지 않습니다. 두 경우 모두 CSO의 운영자에게 알려야 할 사항입니다. 그런 다음 운영자는 문제를 조사해야 합니다. 문제가 해결되면 운영자는 A02를 다시 실행할 수 있습니다. +
-인증서가 X분 또는 시간 내에 전송되지 않을 때 충전소가 재시도하도록 하는 것은 권장되지 않습니다. CSR이 올바르지 않으면 자동으로 해결되지 않습니다. 새 펌웨어로만 이를 수정할 수 있습니다.
-|8 |주의사항 |<<update_charging_station_certificate_by_request_of_csms,A02 - CSMS 요청에 따라 충전소 인증서 업데이트>>와 동일한 주의 사항이 적용됩니다.
+|7 |오류 처리 |CSMS는 충전기에서 CSR 요청을 수락한 후 CA로 전달합니다. 하지만 CA에 도달할 수 없거나 CSR을 거부하면 충전기는 알 수 없습니다. CSMS는 CSR에 대한 몇 가지 검사를 수행할 수 있지만 CA가 수행하는 모든 검사를 수행할 수 없으며 CA에 대한 연결 시간 초과를 방지하지 못합니다. CA에 따르면, 이와 같은 문제는 CA가 오프라인이거나 충전기에서 보낸 CSR이 올바르지 않는 경우 발생합니다. 두 경우 모두 CSO의 운영자에게 알려야 할 사항입니다. 그런 다음 운영자는 문제를 조사해야 합니다. 문제가 해결되면 운영자는 A02를 다시 실행할 수 있습니다. +
+  인증서가 X분 또는 시간 내에 전송되지 않을 때 충전기가 재시도하도록 하는 것은 권장되지 않습니다. CSR이 올바르지 않으면 자동으로 해결되지 않습니다. 새 펌웨어로만 이를 수정할 수 있습니다.
+|8 |참고 |<<update_charging_station_certificate_by_request_of_csms,A02 - Update Charging Station Certificate by request of CSMS>>와 동일한 주의 사항이 적용됩니다.
 |===
 
 ==== A03 - Update Charging Station Certificate initiated by the Charging Station - Requirements
@@ -701,43 +698,42 @@ image::part2/images/figure_7.svg[충전소에서 시작된 충전소 인증서 �
 |===
 |ID |전제 조건 |요구 사항 정의
 
-|A03.FR.01 |{nbsp} |충전소 설치 후 키 업데이트를 수행하여 제조업체에서 처음 제공한 키(아마도 기본 키)에서 키를 변경할 수 있습니다.
-|A03.FR.02 |충전소에서 현재 충전소 인증서가 한 달 후에 만료됨을 감지하는 경우.
-|충전소는 <<ocpp_sescurity_16,[16]>>의 섹션 4.2.1.3에 설명된 키 생성 기능 중 하나를 사용하여 새 공개/비공개 키 쌍을 생성해야 합니다.
-|A03.FR.03 |A03.FR.02 |충전소는 RFC 2986 <<ocpp_security_22,[22]>>에 설명된 대로 인증서 서명 요청(CSR) 형태로 공개 키를 전송한 다음 <<sign_certificate_request,SignCertificateRequest>> 메시지를 사용하여 PEM 인코딩해야 합니다.
-|A03.FR.04 |{nbsp} |CSMS는 인증서 자체에 서명해서는 안 되지만, 대신 CSR을 충전소 인프라의 인증서를 관리하는 전담 인증 기관 서버로 전달해야 합니다. 전담 기관 서버는 CSO에서 운영할 수 있습니다.
-|A03.FR.05 |{nbsp} |키 업데이트 프로세스 중에 충전소에서 생성한 개인 키는 언제든지 충전소를 떠나서는 안 되며, OCPP 또는 기타(원격) 통신 연결을 통해 읽을 수 없어야 합니다.
-|A03.FR.06 |{nbsp} |충전소는 <<certificate_signed_request,CertificateSignedRequest>> 메시지에서 서명된 인증서의 유효성을 검증해야 하며, 최소한 인증서가 유효한 기간, <<certificate_properties,Certificate Properties>>의 속성, <<certificate_hierarchy,Certificate Hierarchy>>에 설명된 대로 충전소 운영자 인증서 계층의 일부인지 확인해야 합니다.
+|A03.FR.01 |{nbsp} |충전기 설치 후 키 업데이트를 수행하여 제조업체에서 처음 제공한 키(아마도 기본 키)에서 키를 변경할 수 있습니다.
+|A03.FR.02 |충전기에서 현재 충전기 인증서가 한 달 후에 만료됨을 감지하는 경우.
+  |충전기는 <<ocpp_sescurity_16,[16]>>의 Section 4.2.1.3에 설명된 키 생성 기능 중 하나를 사용하여 새 공개/비공개 키 쌍을 생성해야 합니다.
+|A03.FR.03 |A03.FR.02 |충전기는 RFC 2986 <<ocpp_security_22,[22]>>에 설명된 대로 인증서 서명 요청(CSR) 형태로 공개 키를 전송한 다음 <<sign_certificate_request,SignCertificateRequest>> 메시지를 사용하여 PEM 인코딩해야 합니다.
+|A03.FR.04 |{nbsp} |CSMS는 인증서 자체에 서명해서는 안 되지만, 대신 CSR을 충전기 인프라의 인증서를 관리하는 전담 인증 기관 서버로 전달해야 합니다. 전담 기관 서버는 CSO에서 운영할 수 있습니다.
+|A03.FR.05 |{nbsp} |키 업데이트 프로세스 중에 충전기에서 생성한 개인 키는 절대 충전기를 떠나서는 안 되며, OCPP 또는 기타(원격) 통신 연결을 통해 읽을 수 없어야 합니다.
+|A03.FR.06 |{nbsp} |충전기는 <<certificate_signed_request,CertificateSignedRequest>> 메시지에서 서명된 인증서의 유효성을 검증해야 하며, 최소한 인증서가 유효한 기간, <<certificate_properties,Certificate Properties>>의 속성, <<certificate_hierarchy,Certificate Hierarchy>>에 설명된 대로 충전기 운영자 인증서 계층의 일부인지 확인해야 합니다.
 |A03.FR.07 |인증서가 유효하지 않은 경우.
-|충전소는 CertificateSignedRequest에 거부됨 상태로 응답하고 인증서를 삭제하고 _InvalidChargingStationCertificate_ 보안 이벤트를 트리거해야 합니다(보안 이벤트의 전체 목록은 2부 부록 참조).
-|A03.FR.08 |{nbsp} |충전소는 현재 날짜와 시간이 인증서의 '이전에는 유효하지 않음' 필드 뒤에 오는 즉시 새 인증서로 전환해야 합니다(예: 웹소켓 및 TLS 연결을 닫고 새 인증서로 다시 연결).
-|A03.FR.09 |충전소에 _ChargingStationCertificate_ 유형의 유효한 인증서가 두 개 이상 있는 경우.
-|충전소는 유효 기간의 시작을 기준으로 최신 인증서를 사용해야 합니다.
+  |충전기는 CertificateSignedRequest에 Rejected 상태로 응답하고 인증서를 삭제하고 _InvalidChargingStationCertificate_ 보안 이벤트를 트리거해야 합니다(보안 이벤트의 전체 목록은 Part 2 - Appendices 참조).
+|A03.FR.08 |{nbsp} |충전기는 현재 날짜와 시간이 인증서의 '이전에는 유효하지 않음' 필드 뒤에 오는 즉시 새 인증서로 전환해야 합니다(예: 웹소켓 및 TLS 연결을 닫고 새 인증서로 다시 연결).
+|A03.FR.09 |충전기에 _ChargingStationCertificate_ 유형의 유효한 인증서가 두 개 이상 있는 경우.
+  |충전기는 유효 기간의 시작을 기준으로 최신 인증서를 사용해야 합니다.
 
 |A03.FR.10 |A03.FR09 +
-AND 충전소에서 새 인증서가 작동하는지 검증한 경우
-|충전소는 이전 인증서를 삭제할 수 있습니다. 대체 수단으로 이전 인증서를 한 달 동안 저장하는 것이 좋습니다.
+  AND 충전기에서 새 인증서가 작동하는지 검증한 경우
+    |충전기는 이전 인증서를 삭제할 수 있습니다. 대체 수단으로 이전 인증서를 한 달 동안 저장하는 것이 좋습니다.
 |A03.FR.11 |<<sign_certificate_request,SignCertificateRequest>>를 수신하고 요청을 처리할 수 있는 경우
-|CSMS는 <<sign_certificate_response,SignCertificateResponse>>에서 상태를 _Accepted_로 설정해야 합니다.
+  |CSMS는 <<sign_certificate_response,SignCertificateResponse>>에서 상태를 _Accepted_ 로 설정해야 합니다.
 |A03.FR.12 |<<sign_certificate_request,SignCertificateRequest>>를 수신하고 요청을 처리할 수 없는 경우
-|CSMS는 <<sign_certificate_response,SignCertificateResponse>>에서 상태를 _Rejected_로 설정해야 합니다.
-
-|A03.FR.13 |15118 연결과 충전소에서 CSMS 연결에 다른 인증서를 사용하는 경우
-|충전소는 <<sign_certificate_request,SignCertificateRequest>>에 <<certificate_signing_use_enum_type,certificateType>> 필드를 포함하여 업데이트하려는 인증서를 지정해야 합니다.
+  |CSMS는 <<sign_certificate_response,SignCertificateResponse>>에서 상태를 _Rejected_ 로 설정해야 합니다.
+|A03.FR.13 |15118 연결과 충전기에서 CSMS 연결에 다른 인증서를 사용하는 경우
+  |충전기는 <<sign_certificate_request,SignCertificateRequest>>에 <<certificate_signing_use_enum_type,certificateType>> 필드를 포함하여 업데이트하려는 인증서를 지정해야 합니다.
 |A03.FR.14 |<<certificate_signing_use_enum_type,certificateType>>이 포함된 <<sign_certificate_request,SignCertificateRequest>>를 수신하는 경우
-|CSMS가 CertificateSignedRequest의 <<certificate_signing_use_enum_type,certificateType>> 필드를 <<sign_certificate_request,SignCertificateRequest>>의 인증서 유형으로 설정하는 것이 좋습니다.
-|A03.FR.15 |충전소에 동일한 루트 인증서에서 파생된 두 개 이상의 유효한 V2G 인증서가 있는 경우.
-|충전소는 유효 기간의 시작을 기준으로 최신 인증서를 사용해야 합니다.
-|A03.FR.16 |구성 변수 <<max_certificate_chainsize,MaxCertificateChainSize>>가 구현되고 충전소가 <<certificate_signed_request,CertificateSignedRequest>> 메시지를 수신하고 크기가 <<max_certificate_chainsize,MaxCertificateChainSize>>에서 구성된 설정 값을 초과하는 인증서(체인)가 포함된 경우
-|충전소는 <<certificate_signed_response,CertificateSignedResponse>> 메시지를 Rejected 상태로 응답해야 합니다.
+  |CSMS가 CertificateSignedRequest의 <<certificate_signing_use_enum_type,certificateType>> 필드를 <<sign_certificate_request,SignCertificateRequest>>의 인증서 유형으로 설정하는 것이 좋습니다.
+|A03.FR.15 |충전기에 동일한 루트 인증서에서 파생된 두 개 이상의 유효한 V2G 인증서가 있는 경우.
+  |충전기는 유효 기간의 시작을 기준으로 최신 인증서를 사용해야 합니다.
+|A03.FR.16 |구성 변수 <<max_certificate_chainsize,MaxCertificateChainSize>>가 구현되고 충전기가 <<certificate_signed_request,CertificateSignedRequest>> 메시지를 수신하고 크기가 <<max_certificate_chainsize,MaxCertificateChainSize>>에서 구성된 설정 값을 초과하는 인증서(체인)가 포함된 경우
+  |충전기는 <<certificate_signed_response,CertificateSignedResponse>> 메시지를 Rejected 상태로 응답해야 합니다.
 |A03.FR.17 |CSMS가 CSR에 대한 SignCertificateRequest를 수락하고 +
-충전소가 아직 이 CSR에 대한 CertificateSignedRequest를 수신하지 못하고 +
-<<cert_signing_wait_minimum,CertSigningWaitMinimum>>에서 구성된 초 수가 만료된 경우
-|충전소는 CSR에 대한 새 SignCertificateRequest를 보내야 합니다. 선택적으로 이 CSR은 새로 생성된 키 쌍에 대한 것일 수 있습니다.
-|A03.FR.18 |A03.FR.17 |충전소는 이 CSR에 대한 CertificateSignedRequest를 수신하지 않고 백오프 시간이 만료될 때마다 <<cert_signing_wait_minimum,CertSigningWaitMinimum>>에서 구성된 초 수부터 시작하여 이전 백오프 시간을 두 배로 늘려야 합니다.
+  충전기가 아직 이 CSR에 대한 CertificateSignedRequest를 수신하지 못하고 +
+  <<cert_signing_wait_minimum,CertSigningWaitMinimum>>에서 구성된 초 수가 만료된 경우
+    |충전기는 CSR에 대한 새 SignCertificateRequest를 보내야 합니다. 선택적으로 이 CSR은 새로 생성된 키 쌍에 대한 것일 수 있습니다.
+|A03.FR.18 |A03.FR.17 |충전기는 이 CSR에 대한 CertificateSignedRequest를 수신하지 않고 백오프 시간이 만료될 때마다 <<cert_signing_wait_minimum,CertSigningWaitMinimum>>에서 구성된 초 수부터 시작하여 이전 백오프 시간을 두 배로 늘려야 합니다.
 |A03.FR.19 |A03.FR.18 AND +
-최대 증가 수에 도달했습니다.
-|충전소는 CSMS가 `SignChargingStationCertificate`, `SignV2GCertificate` 또는 `SignCombinedCertificate`에 대한 TriggerMessageRequest를 통해 요청할 때까지 SignCertificateRequest 재전송을 중단해야 합니다.
+  최대 증가 수에 도달했습니다.
+    |충전기는 CSMS가 `SignChargingStationCertificate`, `SignV2GCertificate` 또는 `SignCombinedCertificate` 에 대한 TriggerMessageRequest를 통해 요청할 때까지 SignCertificateRequest 재전송을 중단해야 합니다.
 |===
 
 === A04 - Security Event Notification.
@@ -750,24 +746,24 @@ AND 충전소에서 새 인증서가 작동하는지 검증한 경우
 |1 |이름 |보안 이벤트 알림
 |2 |ID |A04
 |{nbsp} d|_기능 블록_ |A. 보안
-|3 |목표 |CSMS에 중요한 보안 이벤트를 알립니다.
-|4 |설명 |이 사용 사례를 통해 충전소는 시스템 보안의 변경 사항을 CSMS에 즉시 알릴 수 있습니다.
-|{nbsp} d|_행위자_ |CSMS, 충전소
+|3 |목표 |CSMS에 중요한(critical) 보안 이벤트를 알립니다.
+|4 |설명 |이 사용 사례를 통해 충전기는 시스템 보안의 변경 사항을 CSMS에 즉시 알릴 수 있습니다.
+|{nbsp} d|_Actors_ |CSMS, 충전기
 |{nbsp} d|_시나리오 설명_
-|**1.** _중요한_ 보안 이벤트가 발생합니다. +
-**2.** 충전소는 <<security_event_notification_request,SecurityEventNotificationRequest>>를 CSMS로 전송합니다. +
-**3.** CSMS는 <<security_event_notification_response,SecurityEventNotificationResponse>>로 충전소에 응답합니다.
+  |**1.** _중요한(critical)_ 보안 이벤트가 발생합니다. +
+  **2.** 충전기는 <<security_event_notification_request,SecurityEventNotificationRequest>>를 CSMS로 전송합니다. +
+  **3.** CSMS는 <<security_event_notification_response,SecurityEventNotificationResponse>>로 충전기에 응답합니다.
 |5 |필수 조건 |해당 없음
-|6 |사후 조건|충전소는 <<security_event_notification_request,SecurityEventNotificationRequest>>를 CSMS로 전송하여 CSMS에 중요한 보안 이벤트를 _성공적으로_ 알립니다.
+|6 |사후 조건|충전기는 <<security_event_notification_request,SecurityEventNotificationRequest>>를 CSMS로 전송하여 CSMS에 중요한 보안 이벤트를 _성공적으로_ 알립니다.
 |===
-
+ 
 .보안 이벤트 알림
 image::part2/images/figure_8.svg[보안 이벤트 알림]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7 |오류 처리 |n/a
-|8 |주의 |보안 관련 이벤트 목록과 해당 '중요도'는 부록(_부록 1. 보안 이벤트_)에 제공됩니다.
+|8 |참고 |보안 관련 이벤트 목록과 해당 '중요도'는 부록(_Appendix 1. Security Events_)에 제공됩니다.
 |===
 
 ==== A04 - Security Event Notification - Requirements
@@ -777,77 +773,77 @@ image::part2/images/figure_8.svg[보안 이벤트 알림]
 |===
 |ID |전제 조건 |요구 사항 정의 |참고
 |A04.FR.01 |_중요_ 보안 이벤트가 발생하는 경우
-|충전소는 CSMS에 <<security_event_notification_request,SecurityEventNotificationRequest>>를 보내 보안 이벤트를 알려야 합니다. |{nbsp}
+  |충전기는 CSMS에 <<security_event_notification_request,SecurityEventNotificationRequest>>를 보내 보안 이벤트를 알려야 합니다. |{nbsp}
 |A04.FR.02 |A04.FR.01 AND +
-충전소가 연결 해제됩니다.
-|보안 이벤트 알림은 CSMS에서 보장된 전달로 대기열에 있어야 합니다. |{nbsp}
+  충전기가 연결 해제됩니다.
+    |보안 이벤트 알림은 CSMS에서 보장된 전달로 대기열에 있어야 합니다. |{nbsp}
 |A04.FR.03 |A04.FR.01 |CSMS는 <<security_event_notification_response,SecurityEventNotificationResponse>> 메시지를 사용하여 알림 수신을 확인해야 합니다. |{nbsp}
 |A04.FR.04 |보안 이벤트가 발생하는 경우(중요하지 않은 경우)
-|충전소는 보안 로그에 보안 이벤트를 저장해야 합니다.
-|이 로그는 롤링 형식으로 구현하는 것이 좋습니다.
+  |충전기는 보안 로그에 보안 이벤트를 저장해야 합니다.
+    |이 로그는 롤링 형식으로 구현하는 것이 좋습니다.
 |===
 
 === A05 - Upgrade Charging Station Security Profile
 
-.A05 - 충전소 보안 프로필 업그레이드
+.A05 - 충전기 보안 프로필 업그레이드
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |번호 |유형 |설명
 
-|1 |이름 |충전소 보안 프로필 업그레이드
+|1 |이름 |충전기 보안 프로필 업그레이드
 |2 |ID |A05
 |{nbsp} d|_기능 블록_ |A. 보안
-|3 |목표 |CSO는 CSMS와 충전소 간 OCPP 연결의 보안을 강화하고자 합니다.
+|3 |목표 |CSO는 CSMS와 충전기 간 OCPP 연결의 보안을 강화하고자 합니다.
 |4 |설명 |보안 프로필이 없는 OCPP 1.6에서 보안 프로필이 있는 OCPP 1.6 또는 OCPP 2.0.1로 마이그레이션할 때의 사용 사례 보안 프로필로 마이그레이션하기 전에 설치된 인증서 또는 비밀번호와 같은 필수 조건을 구성해야 합니다.
-|{nbsp} d|_Actors_ |CSMS, 충전소
+|{nbsp} d|_Actors_ |CSMS, 충전기
 |{nbsp} d|_시나리오 설명_
-|*1.* CSMS는 <<set_variables_request,SetVariablesRequest>>를 통해 <<network_configuration_priority,`NetworkConfigurationPriority`>> 구성 변수에 대한 새 값을 설정하여 새(더 높은) 보안 프로필에 대한 <<network_connection_profile_type,NetworkConnectionProfile>>이 목록에서 첫 번째가 되고 기존 연결 프로필이 목록에서 두 번째가 됩니다. +
-2. 충전소는 <<set_variables_response,SetVariablesResponse>>로 응답하고 상태는 _Accepted_입니다. +
-3. CSMS는 <<reset_request,ResetRequest>>(OnIdle)를 보냅니다. +
-4. 충전소는 재부팅하고 새 기본 <<network_connection_profile_type,NetworkConnectionProfile>>을 통해 연결합니다.
+  |*1.* CSMS는 <<set_variables_request,SetVariablesRequest>>를 통해 <<network_configuration_priority,`NetworkConfigurationPriority`>> 구성 변수에 대한 새 값을 설정하여 새(더 높은) 보안 프로필에 대한 <<network_connection_profile_type,NetworkConnectionProfile>>이 목록에서 첫 번째가 되고 기존 연결 프로필이 목록에서 두 번째가 됩니다. +
+  *2.* 충전기는 <<set_variables_response,SetVariablesResponse>>로 응답하고 상태는 _Accepted_ 입니다. +
+  *3.* CSMS는 <<reset_request,ResetRequest>>(OnIdle)를 보냅니다. +
+  *4.* 충전기는 재부팅하고 새 기본 <<network_connection_profile_type,NetworkConnectionProfile>>을 통해 연결합니다.
 |5 |필수 조건 |CSO는 <<network_connection_profile_type,NetworkConnectionProfile>>이 (더 높은) 보안 프로필을 사용하여 설정되었는지 확인합니다. +
-그리고 +
-더 높은 보안 프로필로 변경하라는 명령을 보내기 전에 더 높은 보안 프로필로 이동하기 위한 필수 조건이 충족되었는지 확인합니다.
-|6 |사후 조건 |충전소가 더 높은 보안 프로필로 성공적으로 업그레이드되었습니다.
+  AND +
+  더 높은 보안 프로필로 변경하라는 명령을 보내기 전에 더 높은 보안 프로필로 이동하기 위한 필수 조건이 충족되었는지 확인합니다.
+|6 |사후 조건 |충전기가 더 높은 보안 프로필로 성공적으로 업그레이드되었습니다.
 |===
 
-.충전소 보안 프로필 업그레이드
-image::part2/images/figure_9.svg[충전소 보안 프로필 업그레이드]
+.충전기 보안 프로필 업그레이드
+image::part2/images/figure_9.svg[충전기 보안 프로필 업그레이드]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7 |오류 처리 |해당 없음
-|8 |주의 |보안상의 이유로 OCPP를 사용하여 더 낮은 보안 프로필로 되돌릴 수 없습니다.
+|8 |참고 |보안상의 이유로 OCPP를 사용하여 더 낮은 보안 프로필로 되돌릴 수 없습니다.
 |===
 
 ==== - Upgrade Charging Station Security Profile - Requirements
 
-.A05 - 충전소 보안 프로필 업그레이드
+.A05 - 충전기 보안 프로필 업그레이드
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID |전제 조건 |요구 사항 정의
 
-|A05.FR.02 |충전소는 <<network_configuration_priority,`NetworkConfigurationPriority`>>에 대한 <<set_variables_request,SetVariablesRequest>>를 수신합니다. 여기에는 현재 값보다 높은 'securityProfile' 값을 가진 <<network_connection_profile_type,NetworkConnectionProfile>>에 대한 프로필 슬롯이 포함됩니다. +
-그리고 +
-새 값은 2 또는 3입니다. +
-그리고 +
-유효한 CSMSRootCertificate가 설치되지 않았습니다.
-|충전소는 <<set_variables_response,SetVariablesResponse>>(거부됨)로 응답해야 하며 값을 업데이트하지 않아야 합니다. <<security_profile,`SecurityProfile`>> 및/또는 CSMS에 다시 연결합니다.
-|A05.FR.03 |충전소는 <<network_configuration_priority,`NetworkConfigurationPriority`>>에 대한 <<set_variables_request,SetVariablesRequest>>를 수신하며, 여기에는 현재 값보다 높은 'securityProfile' 값을 가진 <<network_connection_profile_type,NetworkConnectionProfile>>에 대한 프로필 슬롯이 포함됩니다. +
-그리고 +
-새 값은 3입니다. +
-그리고 +
-유효한 ChargingStationCertificate가 설치되지 않았습니다.
-|충전소는 <<set_variables_response,SetVariablesResponse>>(거부됨)로 응답해야 하며, <<security_profile,`SecurityProfile`>>에 대한 값을 업데이트하거나 CSMS에 다시 연결해서는 안 됩니다.
-
-|A05.FR.04 |충전소는 <<network_configuration_priority,`NetworkConfigurationPriority`>>에 대한 <<set_variables_request,SetVariablesRequest>>를 수신합니다. 여기에는 현재 값과 같거나 더 높은 'securityProfile' 값을 가진 <<network_connection_profile_type,NetworkConnectionProfile>>에 대한 프로필 슬롯이 포함됩니다. +
-그리고 +
-모든 전제 조건이 충족됩니다. |충전소는 <<set_variables_response,SetVariablesResponse>>(Accepted)로 응답해야 합니다.
-|A05.FR.05 |A05.FR.04 그리고 +
-재부팅 후
-|충전소는 <<network_configuration_priority,`NetworkConfigurationPriority`>>의 첫 번째 항목에 연결을 시작해야 합니다.
-|A05.FR.06 |A05.FR.05 그리고 +
-충전소는 (새로운) <<network_connection_profile_type,NetworkConnectionProfile>>
-|충전소는 구성 변수 SecurityProfile의 값을 업데이트해야 하며 SecurityProfile에 저장된 것보다 낮은 securityProfile을 가진 모든 <<network_connection_profile_type,NetworkConnectionProfile>>을 제거하고 그에 따라 <<network_configuration_priority,`NetworkConfigurationPriority`>>를 업데이트해야 합니다.
-|A05.FR.07 |A05.FR.06 |CSMS는 더 이상 충전소가 낮은 보안 프로필로 연결하도록 허용해서는 안 됩니다.
+|A05.FR.02 |충전기는 <<network_configuration_priority,`NetworkConfigurationPriority`>>에 대한 <<set_variables_request,SetVariablesRequest>>를 수신합니다. 여기에는 현재 값보다 높은 'securityProfile' 값을 가진 <<network_connection_profile_type,NetworkConnectionProfile>>에 대한 프로필 슬롯이 포함됩니다. +
+  AND +
+  새 값은 2 또는 3입니다. +
+  AND +
+  유효한 CSMSRootCertificate가 설치되지 않았습니다.
+    |충전기는 <<set_variables_response,SetVariablesResponse>>(Rejected)로 응답해야 하며 값을 업데이트하지 않아야 합니다. <<security_profile,`SecurityProfile`>> 및/또는 CSMS에 다시 연결합니다.
+|A05.FR.03 |충전기는 <<network_configuration_priority,`NetworkConfigurationPriority`>>에 대한 <<set_variables_request,SetVariablesRequest>>를 수신하며, 여기에는 현재 값보다 높은 'securityProfile' 값을 가진 <<network_connection_profile_type,NetworkConnectionProfile>>에 대한 프로필 슬롯이 포함됩니다. +
+  AND +
+  새 값은 3입니다. +
+  AND +
+  유효한 ChargingStationCertificate가 설치되지 않았습니다.
+    |충전기는 <<set_variables_response,SetVariablesResponse>>(Rejected)로 응답해야 하며, <<security_profile,`SecurityProfile`>>에 대한 값을 업데이트하거나 CSMS에 다시 연결해서는 안 됩니다.
+|A05.FR.04 |충전기는 <<network_configuration_priority,`NetworkConfigurationPriority`>>에 대한 <<set_variables_request,SetVariablesRequest>>를 수신합니다. 여기에는 현재 값과 같거나 더 높은 'securityProfile' 값을 가진 <<network_connection_profile_type,NetworkConnectionProfile>>에 대한 프로필 슬롯이 포함됩니다. +
+  AND +
+  모든 전제 조건이 충족됩니다.
+    |충전기는 <<set_variables_response,SetVariablesResponse>>(Accepted)로 응답해야 합니다.
+|A05.FR.05 |A05.FR.04 AND +
+  재부팅 후
+    |충전기는 <<network_configuration_priority,`NetworkConfigurationPriority`>>의 첫 번째 항목에 연결을 시작해야 합니다.
+|A05.FR.06 |A05.FR.05 AND +
+  충전소가 (새로운) <<network_connection_profile_type,NetworkConnectionProfile>>을 사용하여 CSMS에 성공적으로 연결되었습니다.
+    |충전기는 구성 변수 SecurityProfile의 값을 업데이트해야 하며 SecurityProfile에 저장된 것보다 낮은 securityProfile을 가진 모든 <<network_connection_profile_type,NetworkConnectionProfile>>을 제거하고 그에 따라 <<network_configuration_priority,`NetworkConfigurationPriority`>>를 업데이트해야 합니다.
+|A05.FR.07 |A05.FR.06 |CSMS는 더 이상 충전기가 낮은 보안 프로필로 연결하도록 허용해서는 안 됩니다.
 |===
