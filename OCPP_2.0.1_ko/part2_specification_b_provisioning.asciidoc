@@ -6,20 +6,20 @@
 
 == Introduction
 
-This Functional Block describes all the functionalities that help a CSO provision their Charging Stations, allowing them on their network and retrieving configuration information from these Charging Stations. Additionally, it consists of the ability to retrieve information about the configuration of Charging Stations, make changes to the configuration etc. This chapter also covers resetting a Charging Station and migrating to a new NetworkConnectionProfile.
+이 기능 블록은 CSO가 충전기를 프로비저닝하고, 네트워크에서 충전기를 허용하고, 충전기에서 구성 정보를 검색하는 데 도움이 되는 모든 기능을 설명합니다. 또한 충전기 구성에 대한 정보를 검색하고, 구성을 변경하는 등의 기능으로 구성됩니다. 이 장에서는 충전기를 재설정하고 새 NetworkConnectionProfile로 마이그레이션하는 방법도 다룹니다.
 
 [[transactions_before_being_accepted_by_a_csms]]
 === Transactions before being accepted by a CSMS
 
-A Charging Station Operator MAY choose to configure a Charging Station to accept transactions before the Charging Station is accepted by a CSMS. Parties who want to implement this such behavior should realize that it is uncertain if those transactions can ever be delivered to the CSMS.
+충전기 운영자는 CSMS에서 충전기를 수락하기 전에 충전기가 트랜잭션을 수락하도록 구성할 수 있습니다. 이러한 동작을 구현하려는 당사자는 해당 트랜잭션이 CSMS에 전달될 수 있는지 여부가 불확실하다는 점을 알아야 합니다.
 
-After a restart (for instance due to a remote reset command, power outage, firmware update, software error etc.) the Charging Station MUST again contact the CSMS and SHALL send a BootNotification request. If the Charging Station fails to receive a <<boot_notification_response,BootNotificationResponse>> from the CSMS, and has no in-built non-volatile real-time clock hardware that has been correctly preset, the Charging Station may not have a valid date and time setting, making it difficult or even impossible to later determine the date and time of transactions.
+재시작(예: 원격 재설정 명령, 정전, 펌웨어 업데이트, 소프트웨어 오류 등으로 인해) 후 충전기는 반드시 CSMS에 다시 연락하여 BootNotification 요청을 보내야 합니다. 충전기가 CSMS에서 <<boot_notification_response,BootNotificationResponse>>를 수신하지 못하고 올바르게 사전 설정된 내장형 비휘발성 실시간 클록 하드웨어가 없는 경우, 충전기에 유효한 날짜 및 시간 설정이 없어 나중에 트랜잭션의 날짜와 시간을 확인하기 어렵거나 불가능할 수 있습니다.
 
-It might also be the case (e.g. due to configuration error) that the CSMS indicates a status other than Accepted for an extended period of time, or indefinitely.
+또한 CSMS가 장시간 또는 무기한으로 수락됨이 아닌 상태를 표시하는 경우도 있습니다(예: 구성 오류로 인해).
 
-It is usually advisable to deny all charging services at a Charging Station if the Charging Station has never before been Accepted by the CSMS (using the current connection settings, URL, etc.) since users cannot be authenticated and running transactions could conflict with provisioning processes.
+CSMS가 충전기를 수락(Accepted)한 적이 없는 경우(현재 연결 설정, URL 등을 사용하여) 충전기에서 모든 충전 서비스를 거부하는 것이 좋습니다. 사용자를 인증할 수 없고 실행 중인 트랜잭션이 프로비저닝 프로세스와 충돌할 수 있기 때문입니다.
 
-If this is supported, this behaviour can be configured via the Configuration Variable: <<tx_before_accepted_enabled,`TxBeforeAcceptedEnabled`>>.
+이것이 지원되는 경우 이 동작은 구성 변수 <<tx_before_accepted_enabled,`TxBeforeAcceptedEnabled`>>를 통해 구성할 수 있습니다.
 
 <<<
 
@@ -31,176 +31,176 @@ If this is supported, this behaviour can be configured via the Configuration Var
 [[cold_boot_charging_station]]
 === B01 - Cold Boot Charging Station
 
-.B01 - Cold Boot Charging Station
+.B01 - 충전기 콜드 부트
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Cold Boot Charging Station
-|2   |ID              |B01
-|{nbsp} d|_Functional block_ |B. Provisioning
-|3   |Objective(s)    |The objective of this use case is to enable a Charging Station that is powering up to register itself at a CSMS and provide the right state information.
-|4   |Description     |This use case describes how the CSMS can control which Charging Stations access it. To be able to control Charging Stations connecting to a CSMS, Charging Stations are required to send <<boot_notification_request,BootNotificationRequest>>. This request contains some general information about the Charging Station.
-|{nbsp} d|_Actors_    |Charging Station, CSMS
-|{nbsp} d|_Scenario description_ 
-  |**1.** The Charging Station is powered up. +
-  **2.** The Charging Station sends <<boot_notification_request,BootNotificationRequest>> to the CSMS. +
-  **3.** The CSMS returns with <<boot_notification_response,BootNotificationResponse>> with the status _Accepted_. +
-  **4.** _Optional:_ The Charging Station sends <<status_notification_request,StatusNotificationRequest>> with status _Unavailable_ to the CSMS for each Connector. +
-  **5.** The Charging Station sends <<status_notification_request,StatusNotificationRequest>> to the CSMS for each Connector. If the status was set to _Unavailable_ or _Reserved_ from the CSMS prior to the (re)boot, the Connector should return to this status, otherwise the status should be _Available_ or, when it resumes a transaction that was ongoing, the status should be _Occupied_. +
-  **6.** Normal operational is resumed. +
-  **7.** The Charging Station sends HeartbeatRequest to the CSMS.
-|{nbsp} |_Alternative scenario(s)_ 
+|1 |이름 |충전기 콜드 부트
+|2 |ID |B01
+|{nbsp} d|_기능 블록_ |B. 프로비저닝
+|3 |목표 |이 사용 사례의 목적은 전원이 켜지는 충전기가 CSMS에 등록하고 올바른 상태 정보를 제공할 수 있도록 하는 것입니다.
+|4 |설명 |이 사용 사례는 CSMS가 어떤 충전기가 CSMS에 액세스하는지 제어하는 ​​방법을 설명합니다. CSMS에 연결된 충전기를 제어하려면 충전기가 <<boot_notification_request,BootNotificationRequest>>를 보내야 합니다. 이 요청에는 충전기에 대한 몇 가지 일반 정보가 포함되어 있습니다.
+|{nbsp} d|_Actors_ |충전기, CSMS
+|{nbsp} d|_시나리오 설명_
+  |**1.** 충전기에 전원이 공급됩니다. +
+  **2.** 충전기에서 <<boot_notification_request,BootNotificationRequest>>를 CSMS로 전송합니다. +
+  **3.** CSMS에서 <<boot_notification_response,BootNotificationResponse>>를 _Accepted_ 상태로 반환합니다. +
+  **4.** _선택 사항:_ 충전기에서 <<status_notification_request,StatusNotificationRequest>>를 각 커넥터에 대한 CSMS로 _Unavailable_ 상태로 전송합니다. +
+  **5.** 충전기에서 각 커넥터에 대한 <<status_notification_request,StatusNotificationRequest>>를 CSMS로 전송합니다. (재)부팅 전에 CSMS에서 상태가 _Unavailable_ 또는 _Reserved_ 으로 설정된 경우 커넥터는 이 상태로 돌아가야 하며, 그렇지 않은 경우 상태가 _Available_ 이어야 하고, 진행 중이었던 트랜잭션을 재개할 때 상태가 _Occupied_ 이어야 합니다. +
+  **6.** 정상적인 운영이 재개됩니다. +
+  **7.** 충전기가 CSMS에 HeartbeatRequest를 보냅니다.
+|{nbsp} |_대체 시나리오_
   |<<cold_boot_charging_station_pending,B02 - Cold Boot Charging Station - Pending>> +
   <<cold_boot_charging_station_rejected,B03 - Cold Boot Charging Station - Rejected>>
-|5   |Prerequisite(s)  |The Charging Station is powered down.
-|6   |Postcondition(s)
-  |**Successful postcondition:** +
-  The Charging Station is in _Idle_ status, and _Accepted_.
+|5 |필수 조건 |충전기의 전원이 꺼졌습니다.
+|6 |사후 조건
+  |**성공한 사후 조건:** +
+  충전기가 _Idle_ 상태이고 _Accepted_ 입니다.
 
-  **Failure postcondition:** +
-  The Charging Station received the status _Rejected_ , <<cold_boot_charging_station_rejected,B03 - Cold Boot Charging Station - Rejected>> applies.
+  **실패 사후 조건:** +
+  충전기가 _Rejected_ 상태를 수신했습니다. <<cold_boot_charging_station_rejected,B03 - Cold Boot Charging Station - Rejected>>이 적용됩니다.
 
-  The Charging Station received the status _Pending_ , <<cold_boot_charging_station_pending,B02 - Cold Boot Charging Station - Pending>> applies.
+  충전기가 _Pending_ 상태를 수신했습니다. <<cold_boot_charging_station_pending,B02 - Cold Boot Charging Station - Pending>>이 적용됩니다.
 |===
 
-.Sequence Diagram: Cold Boot Charging Station
-image::part2/images/figure_10.svg[Sequence Diagram: Cold Boot Charging Station]
+.시퀀스 다이어그램: 충전기 콜드 부트
+image::part2/images/figure_10.svg[시퀀스 다이어그램: 충전기 콜드 부트]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error handling 
-  |**1.** No initial establishment of connection of communication between the CSMS and Charging Station: Retry Connection with the CSMS. +
-  **2.** No response / time-out from the CSMS: The Charging Station resends <<boot_notification_request,BootNotificationRequest>> after a waiting interval. The Charging Station chooses this interval on its own (since it dit not get a <<boot_notification_response,BootNotificationResponse>> containing this interval), in a way that avoids flooding the CSMS with requests.
-|8   |Remark(s)
-  |Multiple options for a self check are possible: some Charging Stations boot and send status notifications with _Unavailable_ , then perform a check of all the hardware and send new StatusNotifications with status _Available_ when the Charging Station is up and running. However, there is no required order for a self check and sending a <<boot_notification_request,BootNotificationRequest>>. A Charging Stations can also do the self check _before_ sending a <<boot_notification_request,BootNotificationRequest>> and determine the status before a (mobile) network connection is established and a <<boot_notification_request,BootNotificationRequest>> is sent. +
-  When something is wrong with the Charging Station or EVSE, the status SHALL be set to _Faulted_. _Reserved_ and _Unavailable_ states persist after a reboot.
+|7 |오류 처리
+  |**1.** CSMS와 충전기 간의 통신 연결 초기 설정 안 됨: CSMS와의 연결을 다시 시도하세요. +
+  **2.** CSMS에서 응답 없음/시간 초과: 충전기는 대기 간격 후에 <<boot_notification_request,BootNotificationRequest>>를 다시 보냅니다. 충전기는 이 간격을 스스로 선택합니다(이 간격을 포함하는 <<boot_notification_response,BootNotificationResponse>>를 받지 못했기 때문에). 이렇게 하면 CSMS에 요청이 넘쳐나는 것을 방지할 수 있습니다.
+|8 |참고
+  |자체 검사를 위한 여러 옵션이 가능합니다. 일부 충전기는 부팅하고 _Unavailable_ 로 상태 알림을 보낸 다음, 모든 하드웨어를 검사하고 충전기가 가동되면 _Available_ 상태로 새 StatusNotifications를 보냅니다. 그러나 자체 검사를 수행하고 <<boot_notification_request,BootNotificationRequest>>를 보내는 데 필요한 순서는 없습니다. 충전기는 <<boot_notification_request, BootNotificationRequest>>를 보내기 _전에_ 자체 검사를 수행하고 (모바일) 네트워크 연결이 설정되고 <<boot_notification_request, BootNotificationRequest>>가 전송되기 전에 상태를 확인할 수도 있습니다. +
+  충전기나 EVSE에 문제가 있는 경우 상태는 _Faulted_ 로 설정해야 합니다. _Reserved_ 및 _Unavailable_ 상태는 재부팅 후에도 지속됩니다.
 |===
 
 [[cold_boot_charging_station_requirements]]
 === B01 - Cold Boot Charging Station - Requirements
 
-.B01 - Requirements
+.B01 - 요구 사항
 [cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition     |Note
+|ID |전제 조건 |요구 사항 정의 |참고
 
-|B01.FR.01  |After start-up.      |The Charging Station SHALL send <<boot_notification_request,BootNotificationRequest>> to the CSMS with information about its configuration.
-  |Information: e.g. version, vendor, etc.
-|B01.FR.02  |B01.FR.01 +
-  The CSMS has received <<boot_notification_request,BootNotificationRequest>> from the Charging Station.
-    |The CSMS SHALL respond to indicate whether it will accept the Charging Station. |{nbsp}
-|B01.FR.03  |After a reboot (for instance due to a remote reset command, power outage, firmware update, software error etc.)
-  |The Charging Station SHALL again connect to the CSMS and SHALL send a <<boot_notification_request,BootNotificationRequest>> each time it boots or reboots. |{nbsp}
-|B01.FR.04  |When the CSMS responds with <<boot_notification_response,BootNotificationResponse>> with the status `Accepted` AND +
-  `interval` > 0
-    |The Charging Station SHALL adjust the heartbeat interval in accordance with the interval from the response message. |{nbsp}
-|B01.FR.05  |When the CSMS responds with <<boot_notification_response,BootNotificationResponse>> with the status Accepted.
-  |The Charging Station SHALL send a <<status_notification_request,StatusNotificationRequest>> for each Connector with its current state. |{nbsp}
-|B01.FR.06  |The Charging Station has received <<boot_notification_response,BootNotificationResponse>>. +
+|B01.FR.01 |시작 후. |충전기는 구성에 대한 정보와 함께 <<boot_notification_request,BootNotificationRequest>>를 CSMS로 보내야 합니다.
+  |정보: 버전, 공급업체 등
+|B01.FR.02 |B01.FR.01 +
+  CSMS는 충전기에서 <<boot_notification_request,BootNotificationRequest>>를 수신했습니다.
+    |CSMS는 충전기를 수락할지 여부를 나타내기 위해 응답해야 합니다. |{nbsp}
+|B01.FR.03 |리부팅 후(예: 원격 재설정 명령, 정전, 펌웨어 업데이트, 소프트웨어 오류 등)
+  |충전기는 CSMS에 다시 연결하고 부팅하거나 재부팅할 때마다 <<boot_notification_request,BootNotificationRequest>>를 전송해야 합니다. |{nbsp}
+|B01.FR.04 |CSMS가 <<boot_notification_response,BootNotificationResponse>>로 응답하고 상태가 `Accepted` 이고 +
+  `interval` > 0인 경우
+    |충전기는 응답 메시지의 간격에 따라 heartbeat 간격을 조정해야 합니다. |{nbsp}
+|B01.FR.05 |CSMS가 <<boot_notification_response,BootNotificationResponse>>로 응답하고 상태가 Accepted인 경우
+  |충전기는 각 커넥터에 대해 현재 상태와 함께 <<status_notification_request,StatusNotificationRequest>>를 보내야 합니다. |{nbsp}
+|B01.FR.06 |충전기는 <<boot_notification_response,BootNotificationResponse>>를 수신했습니다. +
   AND +
-  Charging Station is configured to use Heartbeats for time synchronization <<timesource,`TimeSource`>>
-    |The Charging Station SHALL synchronize the Charging Station’s internal clock with the supplied CSMS’s current time. |{nbsp}
-|B01.FR.07  |When a Charging Station or an EVSE is set to status _Unavailable_ by a Change Availability command.
-  |The _Unavailable_ status MUST be persistent across reboots. |{nbsp}
-|B01.FR.08  |Between the physical power-on/reboot and the successful completion of a BootNotification, where the CSMS returns _Accepted_ or _Pending_.
-  |The Charging Station SHALL NOT send any other OCPP requests to the CSMS (Except <<boot_notification_request,BootNotificationRequest>>). This includes cached OCPP messages that are still present in the Charging Station from prior sessions.
-    |Refer to <<cold_boot_charging_station_pending,B02 - Cold Boot Charging Station - Pending>> (for example B02.FR.02) for more details on sending messages on the _Pending_ status.
-|B01.FR.09  |B01.FR.01 |The Charging Station SHALL indicate the reason for sending the <<boot_notification_request,BootNotificationRequest>> message in the reason field.
-  |For which reason to use, see <<boot_reason_enum_type,BootReasonEnumType>>.
-|B01.FR.10  |The Charging Station has received a <<boot_notification_response,BootNotificationResponse>> in which status is not _Accepted_ +
+  충전기는 heartbeat를 사용하여 시간 동기화의 <<timesource,`TimeSource`>>로 설정합니다
+    |충전기는 충전기의 내부 시계를 제공된 CSMS의 현재 시간과 동기화해야 합니다. |{nbsp}
+|B01.FR.07 |충전기 또는 EVSE가 Change Availability 명령에 의해 _Unavailable_ 상태로 설정된 경우.
+  |_Unavailable_ 상태는 재부팅 시에도 지속되어야 합니다. |{nbsp}
+|B01.FR.08 |물리적 전원 켜기/재부팅과 BootNotification의 성공적인 완료 사이, CSMS가 _Accepted_ 또는 _Pending_ 을 반환하는 경우.
+  |충전기는 CSMS에 다른 OCPP 요청을 보내서는 안 됩니다(<<boot_notification_request,BootNotificationRequest>> 제외). 여기에는 이전 세션에서 충전기에 여전히 있는 캐시된 OCPP 메시지가 포함됩니다.
+    |_Pending_ 상태에서 메시지를 보내는 것에 대한 자세한 내용은 <<cold_boot_charging_station_pending,B02 - Cold Boot Charging Station - Pending>>(예: B02.FR.02)을 참조하세요.
+|B01.FR.09 |B01.FR.01 |충전기는 reason 필드에 <<boot_notification_request,BootNotificationRequest>> 메시지를 보낸 이유를 표시해야 합니다.
+  |사용할 이유에 대해서는 <<boot_reason_enum_type,BootReasonEnumType>>을 참조하세요.
+|B01.FR.10 |충전기가 상태가 _Accepted_ 가 아닌 <<boot_notification_response,BootNotificationResponse>>를 수신했습니다. +
   AND +
-  the Charging Station sends a RPC Framework: CALL message that is NOT a <<boot_notification_request,BootNotificationRequest>> or a message triggered by one of the following messages: <<trigger_message_request,TriggerMessageRequest>>, <<get_base_report_reuqest,GetBaseReportRequest>>, <<get_report_request,GetReportRequest>>.
-    |The CSMS SHALL respond with RPC Framework: +
+  충전기가 RPC Framework: CALL 메시지를 전송하는데, 이 메시지는 <<boot_notification_request,BootNotificationRequest>>가 아니거나 다음 메시지 중 하나에 의해 트리거된 메시지가 아닙니다. <<trigger_message_request,TriggerMessageRequest>>, <<get_base_report_reuqest,GetBaseReportRequest>>, <<get_report_request,GetReportRequest>>.
+    |CSMS는 RPC Framework로 응답해야 합니다. +
     CALLERROR: SecurityError.
-      |The Charging Station is not allowed to initiate sending other messages before being accepted.
-|B01.FR.11 |B01.FR.01 AND +
-  Security profile 3 is used
-    |The CSMS SHALL check the SerialNumber in the <<boot_notification_request,BootNotificationRequest>> against the Serial Number in the Certificate Common Name. |{nbsp}
-|B01.FR.12  |B01.FR.11 AND +
-  the SerialNumber in the <<boot_notification_request,BootNotificationRequest>> does NOT equal the Serial Number in the Certificate Common Name
-    |The CSMS SHALL close WebSocket connection. |{nbsp}
-|B01.FR.13    |When an EVSE has been reserved| The _Reserved_ state MUST be persistent across reboots. |{nbsp}
+      |충전기는 수락되기 전에 다른 메시지를 보내는 것을 시작할 수 없습니다.
+|B01.FR.11 |B01.FR.01 및 +
+  보안 프로필 3이 사용됩니다.
+    |CSMS는 <<boot_notification_request,BootNotificationRequest>>의 일련 번호를 인증서 일반 이름의 일련 번호와 비교해야 합니다. |{nbsp}
+|B01.FR.12 |B01.FR.11 및 +
+  <<boot_notification_request,BootNotificationRequest>>의 일련 번호가 인증서 일반 이름의 일련 번호와 같지 않습니다.
+    |CSMS는 WebSocket 연결을 닫아야 합니다. |{nbsp}
+|B01.FR.13 |EVSE가 예약된 경우| _Reserved_ 상태는 재부팅 시에도 지속되어야 합니다. |{nbsp}
 |===
 
 [[cold_boot_charging_station_pending]]
 === B02 - Cold Boot Charging Station - Pending
 
-.B02 - Cold Boot Charging Station - Pending
+.B02 - 충전기 콜드 부트 - 보류 중
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Cold Boot Charging Station - Pending
-|2   |ID              |B02
-|{nbsp} d|_Functional block_  |B. Provisioning
-|{nbsp} d|_Parent use case_   |<<cold_boot_charging_station,B01 - Cold Boot Charging Station>>
-|3   |Objective(s)
-  |**1.** To inform the Charging Station that it is not yet accepted by the CSMS: _Pending_ status. +
-  **2.** To give the CSMS a way to retrieve or set certain configuration information. +
-  **3.** To give the CSMS a way of limiting the load on the CSMS after e.g. a reboot of the CSMS.
-|4   |Description     |This use case describes the behavior of the CSMS and a Charging Station when the Charging Station is informed by the CSMS that it is not yet accepted using the _Pending_ status.
-|{nbsp} d|_Actors_     |Charging Station, CSMS
-|{nbsp} d|_Scenario description_ 
-  |**1.** The Charging Station is powered up. +
-  **2.** The Charging Station sends <<boot_notification_request,BootNotificationRequest>> to the CSMS. +
-  **3.** The CSMS responds with <<boot_notification_response,BootNotificationResponse>> with the status _Pending_. +
-  **4.** The CSMS then, is able to send messages to the Charging Station in order to change the configuration of the Charging Station. +
-  **5.** The Charging Station resends <<boot_notification_request,BootNotificationRequest>> after the number of seconds indicated by the interval field. (Interval from <<boot_notification_response,BootNotificationResponse>>)
-|5   |Prerequisite(s) 
-  |**1.** The CSMS requires to set the Charging Station in _Pending_ status. +
-  **2.** The Charging Station is starting up (i.e. powering up after being powered down).
-|6   |Postcondition(s) 
-  |**Successful postcondition:** +
-  The Charging Station is in _Pending_ status.
+|1 |이름 |충전기 콜드 부트 - 보류 중
+|2 |ID |B02
+|{nbsp} d|_기능 블록_ |B. 프로비저닝
+|{nbsp} d|_부모 사용 사례_ |<<cold_boot_charging_station,B01 - Cold Boot Charging Station>>
+|3 |목표
+  |**1.** 충전기에 아직 CSMS에서 수락되지 않았음을 알리는 것: _Pending_ 상태. +
+  **2.** CSMS에 특정 구성 정보를 검색하거나 설정하는 방법을 제공하는 것. +
+  **3.** CSMS가 예를 들어 CSMS 재부팅 후 CSMS의 부하를 제한할 수 있는 방법을 제공합니다.
+|4 |설명 |이 사용 사례는 CSMS가 _Pending_ 상태를 사용하여 아직 수락되지 않았다고 충전기에 알렸을 때 CSMS와 충전기의 동작을 설명합니다.
+|{nbsp} d|_Actors_ |충전기, CSMS
+|{nbsp} d|_시나리오 설명_
+  |**1.** 충전기에 전원이 켜졌습니다. +
+  **2.** 충전기가 <<boot_notification_request,BootNotificationRequest>>를 CSMS로 보냅니다. +
+  **3.** CSMS가 <<boot_notification_response,BootNotificationResponse>>를 _Pending_ 상태로 응답합니다. +
+  **4.** 그런 다음 CSMS가 충전기에 메시지를 보내 충전기의 구성을 변경할 수 있습니다. +
+  **5.** 충전기는 간격 필드에 표시된 초 수 후에 <<boot_notification_request,BootNotificationRequest>>를 다시 전송합니다. (<<boot_notification_response,BootNotificationResponse>>부터의 간격)
+|5 |필수 조건(들)
+  |**1.** CSMS는 충전기를 _Pending_ 상태로 설정해야 합니다. +
+  **2.** 충전기가 시작됩니다(즉, 전원이 꺼진 후 전원이 켜짐).
+|6 |사후 조건(들)
+  |**성공 사후 조건:** +
+  충전기가 _Pending_ 상태입니다.
 
-  **Failure postcondition:** +
-  The Charging Station received the status _Rejected_ , <<cold_boot_charging_station_rejected,B03 - Cold Boot Charging Station - Rejected>>.
+  **실패 사후 조건:** +
+  충전기가 _Rejected_ 상태, <<cold_boot_charging_station_rejected,B03 - Cold Boot Charging Station - Rejected>>을 수신했습니다.
 |===
 
-.Sequence Diagram: Cold Boot Charging Station - Pending
-image::part2/images/figure_11.svg[Sequence Diagram: Cold Boot Charging Station - Pending]
+.시퀀스 다이어그램: 충전기 콜드 부트 - 보류 중
+image::part2/images/figure_11.svg[시퀀스 다이어그램: 충전기 콜드 부트 - 보류 중]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error handling
-  |**1.** When no initial connection established between CSMS and Charging Station: Retry Connection to the CSMS and resend <<boot_notification_request,BootNotificationRequest>>. +
-  **2.** No response / time-out from the CSMS: The Charging Station resends <<boot_notification_request,BootNotificationRequest>> after a waiting interval. This waiting interval can be based on the interval from a previous <<boot_notification_response,BootNotificationResponse>> or chosen by the Charging Station itself. In the latter case, the Charging Station chooses this interval in a way that avoids flooding the CSMS with requests.
-|8   |Remark(s)   |When the CSMS returns with <<boot_notification_response,BootNotificationResponse>> with the status _Accepted_ , <<cold_boot_charging_station,B01 - Cold Boot Charging Station>> applies.
+|7 |오류 처리
+  |**1.** CSMS와 충전기 간에 초기 연결이 설정되지 않은 경우: CSMS에 연결을 다시 시도하고 <<boot_notification_request,BootNotificationRequest>>를 다시 보냅니다. +
+  **2.** CSMS에서 응답 없음/시간 초과: 충전기는 대기 간격 후에 <<boot_notification_request,BootNotificationRequest>>를 다시 보냅니다. 이 대기 간격은 이전 <<boot_notification_response,BootNotificationResponse>>의 간격을 기반으로 하거나 충전기 자체에서 선택할 수 있습니다. 후자의 경우, 충전기는 CSMS에 요청이 범람하는 것을 방지하는 방식으로 이 간격을 선택합니다.
+|8 |참고 |CSMS가 <<boot_notification_response,BootNotificationResponse>>를 _Accepted_ 상태로 반환하면 <<cold_boot_charging_station,B01 - Cold Boot Charging Station>>이 적용됩니다.
 |===
 
 ==== B02 - Cold Boot Charging Station - Pending - Requirements
 
-.B02 - Requirements
+.B02 - 요구 사항
 [cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition     |Note
+|ID |전제 조건 |요구 사항 정의 |참고
 
-|B02.FR.01  |After the Charging Station received the _Pending_ status.
-  |The CSMS MAY send messages to retrieve information from the Charging Station (as described in use cases B06, B07, B08) or change its configuration by <<set_variables_request,SetVariablesRequest>> (as described in use case B05). The Charging Station SHALL respond to these messages.
-    |The Pending status can thus indicate that the CSMS wants to retrieve or set certain information on the Charging Station before it will accept the Charging Station.
-|B02.FR.02  |While the CSMS has not yet responded to a <<boot_notification_request,BootNotificationRequest>> with an _Accepted_ status in the <<boot_notification_response,BootNotificationResponse>>.
-  |The Charging Station SHALL NOT send RPC Framework: CALL messages (Except <<boot_notification_request,BootNotificationRequest>>) to the CSMS, unless it has been instructed by the CSMS to do so, using one of the following messages: <<trigger_message_request,TriggerMessageRequest>>, <<get_base_report_reuqest,GetBaseReportRequest>>, <<get_report_request,GetReportRequest>>. |{nbsp}
-|B02.FR.03  |While the CSMS has not yet responded to a <<boot_notification_request,BootNotificationRequest>> with an _Accepted_ status in the <<boot_notification_response,BootNotificationResponse>>.
-  |A Charging Station Operator MAY choose to configure a Charging Station to accept transactions and queue <<transaction_event_response,TransactionEventRequest>> messages to be sent to the CSMS
-    |Parties who want to implement this behavior must realize that it is uncertain if those transactions can ever be delivered to the CSMS.
-|B02.FR.04  |While the CSMS has not yet responded to a <<boot_notification_request,BootNotificationRequest>> with an _Accepted_ status in the <<boot_notification_response,BootNotificationResponse>>.
-  |A Charging Station SHALL NOT send <<boot_notification_request,BootNotificationRequest>> earlier than the value of the Interval field in <<boot_notification_response,BootNotificationResponse>>, unless requested to do so with <<trigger_message_request,TriggerMessageRequest>>. |{nbsp}
-|B02.FR.05  |While in _Pending_ status AND receiving a <<request_start_transaction_request,RequestStartTransactionRequest>> or <<request_stop_transaction_request,RequestStopTransactionRequest>>
-  |The Charging Station SHALL respond with a <<request_start_transaction_response,RequestStartTransactionResponse>> or <<request_stop_transaction_response,RequestStopTransactionResponse>> with status _Rejected_. (Even if the Charging Station is allowed to start transaction, see B02.FR.03. If the CSMS wants to use RequestStartTransaction etc. it SHALL first accept the Charging Station) |{nbsp}
-|B02.FR.06  |When the CSMS returns the Pending status
-  |The communication channel SHALL NOT be closed by either the Charging Station or the CSMS. |{nbsp}
-|B02.FR.07  |If the interval in the <<boot_notification_response,BootNotificationResponse>> equals 0, and the status is other than _Accepted_,
-  |The Charging Station SHALL choose a waiting interval on its own, in a way that avoids flooding the CSMS with requests. |{nbsp}
-|B02.FR.08  |If the interval in the <<boot_notification_response,BootNotificationResponse>> > 0, and the status is other than _Accepted_,
-  |The Charging Station SHALL send a <<boot_notification_request,BootNotificationRequest>> after the set interval has past. |{nbsp}
-|B02.FR.09  |The Charging Station has received a <<boot_notification_response,BootNotificationResponse>> with status _Pending_ +
+|B02.FR.01 |충전기가 _Pending_ 상태를 수신한 후.
+  |CSMS는 충전기에서 정보를 검색하기 위해 메시지를 보내거나(사용 사례 B06, B07, B08에서 설명한 대로) <<set_variables_request,SetVariablesRequest>>를 통해 구성을 변경할 수 있습니다(사용 사례 B05에서 설명한 대로). 충전기는 이러한 메시지에 응답해야 합니다.
+    |Pending 상태는 CSMS가 충전기를 수락하기 전에 충전기에서 특정 정보를 검색하거나 설정하려고 한다는 것을 나타낼 수 있습니다.
+|B02.FR.02 |CSMS가 아직 <<boot_notification_request,BootNotificationRequest>>에 <<boot_notification_response,BootNotificationResponse>>에서 _Accepted_ 상태로 응답하지 않은 경우.
+  |충전기는 CSMS가 다음 메시지 중 하나를 사용하여 그렇게 하도록 지시하지 않는 한 CSMS에 RPC Framework: CALL 메시지(<<boot_notification_request,BootNotificationRequest>> 제외)를 보내서는 안 됩니다. <<trigger_message_request,TriggerMessageRequest>>, <<get_base_report_reuqest,GetBaseReportRequest>>, <<get_report_request,GetReportRequest>>. |{nbsp}
+|B02.FR.03 |CSMS가 아직 <<boot_notification_request,BootNotificationRequest>>에 <<boot_notification_response,BootNotificationResponse>>에서 _Accepted_ 상태를 나타내는 응답을 하지 않은 경우.
+  |충전기 운영자는 충전기를 구성하여 트랜잭션을 수락하고 CSMS로 보낼 <<transaction_event_response,TransactionEventRequest>> 메시지를 대기열에 넣을 수 있습니다.
+    |이 동작을 구현하려는 당사자는 해당 트랜잭션이 CSMS에 전달될 수 있는지 여부가 불확실하다는 것을 알아야 합니다.
+|B02.FR.04 |CSMS가 아직 <<boot_notification_response,BootNotificationResponse>>에서 _Accepted_ 상태를 나타내는 <<boot_notification_request,BootNotificationRequest>>에 응답하지 않은 경우.
+  |충전기는 <<trigger_message_request,TriggerMessageRequest>>로 요청하지 않는 한 <<boot_notification_response,BootNotificationResponse>>의 Interval 필드 값보다 일찍 <<boot_notification_request,BootNotificationRequest>>를 보내서는 안 됩니다. |{nbsp}
+|B02.FR.05 |_Pending_ 상태이고 <<request_start_transaction_request,RequestStartTransactionRequest>> 또는 <<request_stop_transaction_request,RequestStopTransactionRequest>>를 수신하는 경우
+  |충전기는 <<request_start_transaction_response,RequestStartTransactionResponse>> 또는 <<request_stop_transaction_response,RequestStopTransactionResponse>>에 _Rejected_ 상태로 응답해야 합니다. (충전기가 트랜잭션을 시작할 수 있도록 허용된 경우에도 B02.FR.03 참조. CSMS가 RequestStartTransaction 등을 사용하려면 먼저 충전기를 수락(accept)해야 함) |{nbsp}
+|B02.FR.06 |CSMS가 Pending 상태를 반환하는 경우
+  |통신 채널은 충전기나 CSMS에 의해 닫히지 않아야 함 |{nbsp}
+|B02.FR.07 |<<boot_notification_response,BootNotificationResponse>>의 간격이 0이고 상태가 _Accepted_ 가 아닌 경우
+  |충전기는 CSMS에 요청이 범람하지 않도록 자체적으로 대기 간격을 선택해야 함. |{nbsp}
+|B02.FR.08 |<<boot_notification_response,BootNotificationResponse>>의 간격이 0보다 크고 상태가 _Accepted_ 가 아닌 경우,
+  |충전기는 설정된 간격이 지난 후 <<boot_notification_request,BootNotificationRequest>>를 보내야 합니다. |{nbsp}
+|B02.FR.09 |충전기에서 <<boot_notification_response,BootNotificationResponse>>를 수신했으며 상태는 _Pending_ 입니다. +
   AND +
-  the Charging Station sends a RPC Framework: CALL message that is NOT a <<boot_notification_request,BootNotificationRequest>> or a message triggered by one of the following messages: +
+  충전기에서 RPC 프레임워크: CALL 메시지를 전송하는데, 이 메시지는 <<boot_notification_request,BootNotificationRequest>>가 아니고 다음 메시지 중 하나에 의해 트리거된 메시지도 아닙니다. +
   <<trigger_message_request,TriggerMessageRequest>>, <<get_base_report_reuqest,GetBaseReportRequest>>, <<get_report_request,GetReportRequest>>.
-    |The CSMS SHALL respond with RPC Framework: +
-    CALLERROR: SecurityError.
-      |The Charging Station is not allowed to initiate sending other messages before being accepted.
+|CSMS는 RPC 프레임워크로 응답해야 합니다. +
+  CALLERROR: SecurityError.
+  |충전기는 수락되기 전에 다른 메시지를 보내는 것을 시작할 수 없습니다.
 |===
 
 <<<
@@ -208,70 +208,69 @@ image::part2/images/figure_11.svg[Sequence Diagram: Cold Boot Charging Station -
 [[cold_boot_charging_station_rejected]]
 === B03 - Cold Boot Charging Station - Rejected
 
-.B03 - Cold Boot Charging Station - Rejected
+.B03 - 충전기 콜드 부트 - 거부됨
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1    |Name           |Cold Boot Charging Station - Rejected
-|2    |ID             |B03
-|{nbsp} d|_Functional block_  |B. Provisioning
-|{nbsp} d|_Parent use case_ |<<cold_boot_charging_station,B01 - Cold Boot Charging Station>>
-|3    |Objective(s)   |To inform the Charging Station that its _not_ (yet) accepted by the CSMS: _Rejected_ status.
-|4    |Description    |This use case describes the behavior of the CSMS and a Charging Station, when the Charging Station is informed by the CSMS that it is not (yet) accepted using the _Rejected_ status.
-|{nbsp} |_Actors_     |Charging Station, CSMS
-|{nbsp} |_Scenario description_ 
-  |**1.** The Charging Station is powered up. +
-  **2.** The Charging Station sends <<boot_notification_request,BootNotificationRequest>> to the CSMS. +
-  **3** The CSMS responds with <<boot_notification_response,BootNotificationResponse>> with the status _Rejected_ to the Charging Station. +
-  **4.** The Charging Station will resend <<boot_notification_request,BootNotificationRequest>> after the number of seconds indicated by the interval field. (Interval from <<boot_notification_response,BootNotificationResponse>>).
-|5    |Prerequisite(s) 
-  |**1.** The CSMS requires to set the Charging Station in the _Rejected_ status. +
-  **2.** The Charging Station is powered down.
-|6    |Postcondition(s) |The Charging Station remains in the _Rejected_ status.
+|1 |이름 |충전기 콜드 부트 - 거부됨
+|2 |ID |B03
+|{nbsp} d|_기능 블록_ |B. 프로비저닝
+|{nbsp} d|_부모 사용 사례_ |<<cold_boot_charging_station,B01 - Cold Boot Charging Station>>
+|3 |목표 |충전기에 CSMS에서 아직 수락되지 않았다는 사실을 알리는 것: _Rejected_ 상태.
+|4 |설명 |이 사용 사례는 CSMS와 충전기의 동작을 설명하는데, 충전기가 CSMS로부터 _Rejected_ 상태를 사용하여 (아직) 수락되지 않았다는 통보를 받을 때입니다.
+|{nbsp} |_Actors_ |충전기, CSMS
+|{nbsp} |_시나리오 설명_
+  |**1.** 충전기에 전원이 공급됩니다. +
+  **2.** 충전기가 <<boot_notification_request,BootNotificationRequest>>를 CSMS로 보냅니다. +
+  **3** CSMS가 <<boot_notification_response,BootNotificationResponse>>를 충전기에 _Rejected_ 상태로 응답합니다. +
+  **4.** 충전기는 간격 필드에 표시된 초 후에 <<boot_notification_request,BootNotificationRequest>>를 다시 보냅니다. (<<boot_notification_response,BootNotificationResponse>>부터의 간격).
+|5 |필수 조건(들)
+  |**1.** CSMS는 충전기를 _Rejected_ 상태로 설정해야 합니다. +
+  **2.** 충전기의 전원이 꺼졌습니다.
+|6 |사후 조건(들) |충전기는 _Rejected_ 상태를 유지합니다.
 |===
 
-.Sequence Diagram: Cold Boot Charging Station - Rejected
-image::part2/images/figure_12.svg[Sequence Diagram: Cold Boot Charging Station - Rejected]
+.시퀀스 다이어그램: 충전기 콜드 부트 - 거부됨
+image::part2/images/figure_12.svg[시퀀스 다이어그램: 충전기 콜드 부트 - 거부됨]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error handling  |When there is no response or a time-out from the CSMS: The Charging Station resends <<boot_notification_request,BootNotificationRequest>> after a waiting interval. This waiting interval can be based on the interval from a previous <<boot_notification_response,BootNotificationResponse>> or chosen by the Charging Station itself. In the latter case, the Charging Station chooses this interval in a way that avoids flooding the CSMS with requests.
-|8   |Remark(s)       |During the status _Rejected_, the Charging Station may no longer be reachable from the CSMS. The Charging Station MAY e.g. close its communication channel or shut down its communication
-hardware. +
-  Additionally, the CSMS MAY close the communication channel, for instance to free up system resources.
+|7 |오류 처리 |CSMS에서 응답이 없거나 시간 초과가 발생하는 경우: 충전기는 대기 간격 후에 <<boot_notification_request,BootNotificationRequest>>를 다시 보냅니다. 이 대기 간격은 이전 <<boot_notification_response,BootNotificationResponse>>의 간격을 기반으로 하거나 충전기 자체에서 선택할 수 있습니다. 후자의 경우 충전기는 CSMS에 요청이 넘쳐나는 것을 방지하는 방식으로 이 간격을 선택합니다.
+|8 |참고 |_Rejected_ 상태 동안 충전기는 더 이상 CSMS에서 도달할 수 없습니다. 충전기는 예를 들어 통신 채널을 닫거나 통신 하드웨어를 종료할 수 있습니다. +
+  또한 CSMS는 예를 들어 시스템 리소스를 확보하기 위해 통신 채널을 닫을 수 있습니다.
 
-  It is advised not to accept any transactions until the BootNotification of the Charging Station has been accepted by the CSMS. See: <<transactions_before_being_accepted_by_a_csms,Transactions before being accepted by a CSMS>>
-  
-  When the CSMS returns with <<boot_notification_response,BootNotificationResponse>> with the status Accepted , <<cold_boot_charging_station,B01 - Cold Boot Charging Station>> applies.
+  충전기의 BootNotification이 CSMS에서 수락될 때까지 어떠한 트랜잭션도 수락하지 않는 것이 좋습니다. 참조: <<transactions_before_being_accepted_by_a_csms,Transactions before being accepted by a CSMS>>
+
+  CSMS가 <<boot_notification_response,BootNotificationResponse>>와 _Accepted_ 상태를 반환하면 <<cold_boot_charging_station,B01 - Cold Boot Charging Station>>이 적용됩니다.
 |===
 
 ==== B03 - Cold Boot Charging Station - Rejected - Requirements
 
-.B03 - Requirements
+.B03 - 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition
+|ID |전제 조건 |요구 사항 정의
 
-|B03.FR.01  |If the Charging Station is configured to accept <<transactions_before_being_accepted_by_a_csms,Transactions before being accepted by a CSMS>>
-  |The Charging Station MAY allow locally authorized transactions.
-|B03.FR.02  |If the CSMS returns the status _Rejected_. For example when a Charging Station is blacklisted.
-  |The Charging Station SHALL NOT send any OCPP message to the CSMS until the retry interval has expired.
-|B03.FR.03  |When the CSMS has Rejected the <<boot_notification_request,BootNotificationRequest>> from the Charging Station.
-  |The CSMS SHALL NOT initiate any messages.
-|B03.FR.04  |B03.FR.03            |The Charging Station MAY close the connection until it needs to send the next <<boot_notification_request,BootNotificationRequest>>.
-|B03.FR.05  |If the interval in the <<boot_notification_response,BootNotificationResponse>> equals 0, and the status is other than _Accepted_
-  |The Charging Station SHALL choose a waiting interval on its own, in a way that avoids flooding the CSMS with requests.
-|B03.FR.06  |If the interval in the <<boot_notification_response,BootNotificationResponse>> is greater than 0, and the status is other than _Accepted_
-  |The Charging Station SHALL send a <<boot_notification_request,BootNotificationRequest>> after the set interval has passed.
-|B03.FR.07  |B03.FR.03 +
+|B03.FR.01 |충전기가 <<transactions_before_being_accepted_by_a_csms,Transactions before being accepted by a CSMS>>를 허용하도록 구성된 경우
+  |충전기는 로컬에서 인증된 트랜잭션을 허용할 수 있습니다.
+|B03.FR.02 |CSMS가 _Rejected_ 상태를 반환하는 경우. 예를 들어 충전기가 블랙리스트에 있는 경우.
+  |충전기는 재시도 간격이 만료될 때까지 CSMS에 OCPP 메시지를 보내서는 안 됩니다.
+|B03.FR.03 |CSMS가 충전기에서 <<boot_notification_request,BootNotificationRequest>>를 거부한 경우
+  |CSMS는 어떠한 메시지도 시작해서는 안 됩니다.
+|B03.FR.04 |B03.FR.03 |충전기는 다음 <<boot_notification_request,BootNotificationRequest>>를 보내야 할 때까지 연결을 닫을 수 있습니다.
+|B03.FR.05 |<<boot_notification_response,BootNotificationResponse>>의 간격이 0이고 상태가 _Accepted_ 가 아닌 경우
+  |충전기는 CSMS에 요청이 범람하지 않도록 자체적으로 대기 간격을 선택해야 합니다.
+|B03.FR.06 |<<boot_notification_response,BootNotificationResponse>>의 간격이 0보다 크고 상태가 _Accepted_ 가 아닌 경우
+  |충전기는 설정된 간격이 지난 후 <<boot_notification_request,BootNotificationRequest>>를 보내야 합니다.
+|B03.FR.07 |B03.FR.03 +
   AND +
-  Charging Station sends a message that is not a <<boot_notification_request,BootNotificationRequest>>
-    |CSMS SHALL respond with RPC Framework: CALLERROR: SecurityError.
-|B03.FR.08  |B03.FR.03 +
+  충전기에서 <<boot_notification_request,BootNotificationRequest>>가 아닌 메시지를 보냅니다.
+    |CSMS는 RPC 프레임워크로 응답해야 합니다: CALLERROR: SecurityError.
+|B03.FR.08 |B03.FR.03 +
   AND +
-  CSMS sends a message that is not a response to a <<boot_notification_request,BootNotificationRequest>> from Charging Station
-    |Charging Station SHALL respond with RPC Framework: CALLERROR: SecurityError.
+  CSMS에서 충전기에서 <<boot_notification_request,BootNotificationRequest>>에 대한 응답이 아닌 메시지를 보냅니다.
+    |충전기에서 RPC 프레임워크로 응답해야 합니다: CALLERROR: SecurityError.
 |===
 
 <<<
@@ -279,49 +278,49 @@ hardware. +
 [[b04_offline_behavior_idle_charging_station]]
 === B04 - Offline Behavior Idle Charging Station
 
-.B04 - Offline Behavior Idle Charging Station
+.B04 - 오프라인 동작 유휴 충전기
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Offline Behavior Idle Charging Station
-|2   |ID              |B04
-|{nbsp} d|_Functional block_ |B. Provisioning
-|3   |Objective(s)    |To attain stand-alone operation of the Charging Station.
-|4   |Description     |This use case describes that, in the event of unavailability of the communication, the Charging Station is designed to operate stand-alone. In that situation, the Charging Station is said to be _Offline_.
-|{nbsp} d|_Actors_    |Charging Station, CSMS
-|{nbsp} d|_Scenario description_ 
-  |**1.** The CSMS or communication is unavailable. +
-  **2.** The Charging Station operates stand-alone. +
-  **3.** The connection is restored. +
-  **4.** If the _Offline_ period exceeds the value of the <<offline_threshold,OfflineThreshold>> Configuration Variable: the Charging Station sends a <<status_notification_request,StatusNotificationRequest>> to the CSMS for each connector. Otherwise it only sends a <<status_notification_request,StatusNotificationRequest>> for Connectors with a status change during the offline period. +
-  **5.** The Charging Station sends <<heartbeat_request,HeartbeatRequest>> to the CSMS. +
-  **6.** The CSMS responds with <<heartbeat_response,HeartbeatResponse>>.
-|5   |Prerequisite(s)  |The BootNotification was previously accepted and the Charging Station is able to operate stand- alone.
-|6   |Postcondition(s) |When connection is restored after a period of _Offline_ behavior, the CSMS knows the Charging Stations' and EVSEs' state.
+|1 |이름 |오프라인 동작 유휴 충전기
+|2 |ID |B04
+|{nbsp} d|_기능 블록_ |B. 프로비저닝
+|3 |목표 |충전기의 독립 실행형 작동을 달성합니다.
+|4 |설명 |이 사용 사례는 통신이 불가능한 경우 충전기가 독립 실행형으로 작동하도록 설계되었음을 설명합니다. 이 상황에서 충전기는 _Offline_ 이라고 합니다.
+|{nbsp} d|_Actors_ |충전기, CSMS
+|{nbsp} d|_시나리오 설명_
+  |**1.** CSMS 또는 통신을 사용할 수 없습니다. +
+  **2.** 충전기는 단독으로 작동합니다. +
+  **3.** 연결이 복구되었습니다. +
+  **4.** _Offline_ 기간이 <<offline_threshold,OfflineThreshold>> 구성 변수의 값을 초과하는 경우: 충전기는 각 커넥터에 대해 <<status_notification_request,StatusNotificationRequest>>를 CSMS로 보냅니다. 그렇지 않으면 오프라인 기간 동안 상태가 변경된 커넥터에 대해서만 <<status_notification_request,StatusNotificationRequest>>를 보냅니다. +
+  **5.** 충전기는 <<heartbeat_request,HeartbeatRequest>>를 CSMS로 보냅니다. +
+  **6.** CSMS는 <<heartbeat_response,HeartbeatResponse>>로 응답합니다.
+|5 |필수 조건 |BootNotification이 이전에 수락되었고 충전기가 단독으로 작동할 수 있습니다.
+|6 |사후 조건 |_Offline_ 동작 기간 후 연결이 복구되면 CSMS는 충전기와 EVSE의 상태를 알게 됩니다.
 |===
 
-.Sequence Diagram: Offline Behavior Idle Charging Station
-image::part2/images/figure_13.svg[Sequence Diagram: Offline Behavior Idle Charging Station]
+.시퀀스 다이어그램: 오프라인 동작 유휴 충전기
+image::part2/images/figure_13.svg[시퀀스 다이어그램: 오프라인 동작 유휴 충전기]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7    |Error handling   |The offline situation is an non preferred mode of operation that needs to be handled by the Charging Station by trying to re-establish the connection.
-|8    |Remark(s)        |n/a
+|7 |오류 처리 |오프라인 상황은 충전기가 연결을 다시 설정하려고 시도하여 처리해야 하는 선호되지 않는 작동 모드입니다.
+|8 |비고 |n/a
 |===
 
 ==== B04 - Offline Behavior Idle Charging Station - Requirements
 
-.B04 - Requirements
+.B04 - 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition
+|ID |전제 조건 |요구 사항 정의
 
-|B04.FR.01  |After having been _Offline_ AND +
-  the _Offline_ period exceeds the value of the <<offline_threshold,OfflineThreshold>> Configuration Variable.
-    |The Charging Station SHALL send <<status_notification_request,StatusNotificationRequest>> to report the current status of all its Connectors.
-|B04.FR.02  |After having been _Offline_ AND the _Offline_ period does NOT exceed the value of the <<offline_threshold,OfflineThreshold>> Configuration Variable.
-  |The Charging Station SHALL send <<status_notification_request,StatusNotificationRequest>> to report the current status of only the Connectors for which a state change occurred.
+|B04.FR.01 |_Offline_ 이 되고 +
+  _Offline_ 기간이 <<offline_threshold,OfflineThreshold>> 구성 변수의 값을 초과한 후.
+    |충전기는 <<status_notification_request,StatusNotificationRequest>>을 보내 모든 커넥터의 현재 상태를 보고해야 합니다.
+|B04.FR.02 |_Offline_ 이 되고 _Offline_ 기간이 <<offline_threshold,OfflineThreshold>> 구성 변수의 값을 초과하지 않은 후.
+  |충전기는 <<status_notification_request,StatusNotificationRequest>>를 보내서 상태 변경이 발생한 커넥터의 현재 상태만 보고해야 합니다.
 |===
 
 :sectnums:
@@ -329,363 +328,362 @@ image::part2/images/figure_13.svg[Sequence Diagram: Offline Behavior Idle Chargi
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===
-|NOTE |For managing the configuration of a Charging Station a basic understanding of Device Model concepts is essential. These concepts are explained in "OCPP 2.0.1: Part 1 - Architecture & Topology", chapter 4. 
+|NOTE |충전기 구성을 관리하려면 장치 모델 개념에 대한 기본적인 이해가 필수적입니다. 이러한 개념은 "OCPP 2.0.1: Part 1 - Architecture & Topology", chapter 4에서 설명합니다.
 |===
 
 :sectnums!:
 === B05 - Set Variables
 
-.B05 - Set Variables
+.B05 - 변수 설정
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Set Variables
-|2   |ID              |B05
-|{nbsp} d|_Functional block_ |B. Provisioning
-|3   |Objective(s)    |To give the CSMS the ability to make changes to variables in the Charging Station.
-|4   |Description     |A Charging Station can have a lot of variables that can be configured/changed by the CSMS. A CSMS can use these variables to for example influence the behavior of a Charging Station. This use case describes how the CSMS requests a Charging Station to set the value of variables of a component. The CSMS can request to set more than one value per request.
-|{nbsp} d|_Actors_    |CSMS, Charging Station
-|{nbsp} d|_Scenario description_ 
-  |**1.** The CSO triggers the CSMS to request setting one or more variables in a Charging Station. +
-  **2.** The CSMS sends a <<set_variables_request,SetVariablesRequest>> to the Charging Station. +
-  **3.** The Charging Station responds with a <<set_variables_response,SetVariablesResponse>> indicating whether it was able to executed the change(s).
-|5   |Prerequisite(s) |n/a
-|6   |Postcondition(s)
-  |**Successful postconditions:** +
-  **1.** The change was executed _Successfully_. +
-  **Failure postconditions:** +
-  **1.** The variable is supported, but setting could not be changed, the Charging Station responds with the status _Rejected_. +
-  **2.** The variable is _not_ supported, the Charging Station responds with the status _UnknownVariable_.
+|1 |이름 |변수 설정
+|2 |ID |B05
+|{nbsp} d|_기능 블록_ |B. 프로비저닝
+|3 |목표 |CSMS가 충전기의 변수를 변경할 수 있는 기능을 제공합니다.
+|4 |설명 |충전기에는 CSMS가 구성/변경할 수 있는 많은 변수가 있을 수 있습니다. CSMS는 이러한 변수를 사용하여 예를 들어 충전기의 동작에 영향을 미칠 수 있습니다. 이 사용 사례는 CSMS가 충전기에 구성 요소의 변수 값을 설정하도록 요청하는 방법을 설명합니다. CSMS는 요청당 두 개 이상의 값을 설정하도록 요청할 수 있습니다.
+|{nbsp} d|_Actors_ |CSMS, 충전기
+|{nbsp} d|_시나리오 설명_
+  |**1.** CSO가 CSMS를 트리거하여 충전기에서 하나 이상의 변수를 설정하도록 요청합니다. +
+  **2.** CSMS가 충전기에 <<set_variables_request,SetVariablesRequest>>를 보냅니다. +
+  **3.** 충전기는 <<set_variables_response,SetVariablesResponse>>로 응답하여 변경을 실행할 수 있었는지 여부를 나타냅니다.
+|5 |필수 조건 |n/a
+|6 |사후 조건
+  |**성공한 사후 조건:** +
+  **1.** 변경이 _성공적으로_ 실행되었습니다. +
+  **실패한 사후 조건:** +
+  **1.** 변수는 지원되지만 설정을 변경할 수 없으며 충전기는 _Rejected_ 상태로 응답합니다. +
+  **2.** 변수는 _지원되지 않습니다_, 충전기는 _UnknownVariable_ 상태로 응답합니다.
 |===
 
-
-.Sequence Diagram: Set Variables
-image::part2/images/figure_14.svg[Sequence Diagram: Set Variables]
+.시퀀스 다이어그램: 변수 설정
+image::part2/images/figure_14.svg[시퀀스 다이어그램: 변수 설정]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error handling |n/a
-|8   |Remark(s) 
-  |The attributeType Actual corresponds with the actual value of the Variable, whereas the attributeTypes Target, MinSet and MaxSet correspond to the target, minimum and maximum values that have been set for this variable.
+|7 |오류 처리 |n/a
+|8 |참고 사항
+  |속성 유형 Actual은 변수의 실제 값에 해당하는 반면 속성 유형 Target, MinSet 및 MaxSet은 이 변수에 설정된 대상, 최소 및 최대 값에 해당합니다.
 
-  This is best explained by an example: the cooling system is configured to operate with a fan speed between 1000 and 5000 rpm. These boundaries are represented by the MinSet and MaxSet attributes. The current fan speed is represented by the Actual attribute. The desired fan speed is represented by the Target attribute.
+  이는 예를 들어 가장 잘 설명할 수 있습니다. 냉각 시스템은 1000~5000rpm 사이의 팬 속도로 작동하도록 구성되어 있습니다. 이러한 경계는 MinSet 및 MaxSet 속성으로 표현됩니다. 현재 팬 속도는 실제 속성으로 표현됩니다. 원하는 팬 속도는 목표 속성으로 표현됩니다.
 |===
 
 ==== B05 - Set Variables - Requirements
 
-.B05 - Requirements
+.B05 - 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition
+|ID |전제 조건 |요구 사항 정의
 
-|B05.FR.01  |When the Charging Station receives a <<set_variables_request,SetVariablesRequest>> with an X number of <<set_variable_data_type,SetVariableData>> elements
-  |The Charging Station SHALL respond with an <<set_variables_response,SetVariablesResponse>> with an equal (X) number of <<set_variable_result_type,SetVariableResult>> elements, one for every <<set_variable_data_type,SetVariableData>> element in the <<set_variables_request,SetVariablesRequest>>.
-|B05.FR.02  |B05.FR.01            |Every <<set_variable_result_type,SetVariableResult>> element in the <<set_variables_response,SetVariablesResponse>> SHALL contain the same component and variable combination as one of the <<set_variable_data_type,SetVariableData>> elements in the <<set_variables_request,SetVariablesRequest>>.
-|B05.FR.03  |B05.FR.02 +
+|B05.FR.01 |충전기가 X개의 <<set_variables_data_type,SetVariableData>> 요소가 있는 <<set_variables_request,SetVariablesRequest>>를 수신할 때
+  |충전기는 <<set_variables_response,SetVariablesResponse>>로 응답해야 하며, <<set_variables_request,SetVariablesRequest>>의 모든 <<set_variable_data_type,SetVariableData>> 요소에 대해 동일한(X)개의 <<set_variables_result_type,SetVariableResult>> 요소가 있어야 합니다.
+|B05.FR.02 |B05.FR.01 |<<set_variables_response,SetVariablesResponse>>의 모든 <<set_variable_result_type,SetVariableResult>> 요소에는 <<set_variables_request,SetVariablesRequest>>의 <<set_variable_data_type,SetVariableData>> 요소 중 하나와 동일한 구성 요소와 변수 조합이 포함되어야 합니다.
+|B05.FR.03 |B05.FR.02 +
   AND +
-  If the <<set_variables_request,SetVariablesRequest>> contains an _attributeType_
-    |The corresponding <<set_variable_result_type,SetVariableResult>> element in the <<set_variables_response,SetVariablesResponse>> SHALL also contain the same _attributeType_
-|B05.FR.04  |When the Charging Station receives a <<set_variables_request,SetVariablesRequest>> with an unknown <<component_type,Component>> in the <<set_variable_data_type,SetVariableData>>
-  |The Charging Station SHALL set the _attributeStatus_ field in the corresponding <<set_variable_result_type,SetVariableResult>> to: <<set_variable_status_enum_type,UnknownComponent>>.
-|B05.FR.05  |When the Charging Station receives a <<set_variables_request,SetVariablesRequest>> with a Variable that is unknown for the given <<component_type,Component>> in the <<set_variable_data_type,SetVariableData>>
-  |The Charging Station SHALL set the _attributeStatus_ field in the corresponding <<set_variable_result_type,SetVariableResult>> to: <<set_variable_status_enum_type,UnknownVariable>>.
-|B05.FR.06  |When the Charging Station receives a <<set_variables_request,SetVariablesRequest>> with an <<attribute_enum_type,attributeType>> that is unknown for the given <<variable_type,Variable>> in the <<set_variable_data_type,SetVariableData>>
-  |The Charging Station SHALL set the _attributeStatus_ field in the corresponding <<set_variable_result_type,SetVariableResult>> to: <<set_variable_status_enum_type,NotSupportedAttributeType>>.
-|B05.FR.07  |When the Charging Station receives a <<set_variables_request,SetVariablesRequest>> with a _value_ that is incorrectly formatted for the given <<variable_type,Variable>> in the <<set_variable_data_type,SetVariableData>>
-  |The Charging Station SHALL set the _attributeStatus_ field in the corresponding <<set_variable_result_type,SetVariableResult>> to: <<set_variable_status_enum_type,Rejected>>. (More information can be provided in the optional _statusInfo_ element.)
-|B05.FR.08  |When the Charging Station receives a <<set_variables_request,SetVariablesRequest>> with a _value_ that is lower or higher than the range of the given <<variable_type,Variable>> in the <<set_variable_data_type,SetVariableData>>
-  |The Charging Station SHALL set the _attributeStatus_ field in the corresponding <<set_variable_result_type,SetVariableResult>> to: <<set_variable_status_enum_type,Rejected>>. (More information can be provided in the optional _statusInfo_ element.)
-|B05.FR.09  |NOT (B05.FR.04 to B05.FR.08) AND +
-  When the Charging Station receives a <<set_variables_request,SetVariablesRequest>> for a <<variable_type,Variable>> in the <<set_variable_data_type,SetVariableData>>, but is not able to set it
-    |The Charging Station SHALL set the _attributeStatus_ field in the corresponding <<set_variable_result_type,SetVariableResult>> to: <<set_variable_status_enum_type,Rejected>>. +
-    (This happens if the variable is _ReadOnly_ , but may also occur when setting the variable fails because of technical problems.)
-|B05.FR.10  |When the Charging Station was able to set the given _value_ from the <<set_variable_data_type,SetVariableData>>
-  |The Charging Station SHALL set the _attributeStatus_ field in the corresponding <<set_variable_result_type,SetVariableResult>> to: <<set_variable_status_enum_type,Accepted>>.
-|B05.FR.11  |{nbsp}
-  |The CSMS SHALL NOT send more <<set_variable_data_type,SetVariableData>> elements in a <<set_variables_request,SetVariablesRequest>> than reported by the Charging Station via <<items_per_message_set_variables,`ItemsPerMessageSetVariables`>>.
-|B05.FR.12  |When the Charging Station receives a <<set_variables_request,SetVariablesRequest>> without an _attributeType_.
-  |The corresponding <<set_variable_result_type,SetVariableResult>> element in the <<set_variables_response,SetVariablesResponse>> SHALL contain the _attributeType_ Actual.
-|B05.FR.13  |{nbsp}
-  |The CSMS SHALL NOT include multiple <<set_variable_data_type,SetVariableData>> elements, in a single <<set_variables_request,SetVariablesRequest>>, with the same <<component_type,Component>>, <<variable_type,Variable>> and _AttributeType_ combination. Note that an omitted _AttributeType_ counts as the value _Actual_.
+  <<set_variables_request,SetVariablesRequest>>에 _attributeType_ 이 포함된 경우
+    |<<set_variables_response,SetVariablesResponse>>의 해당 <<set_variable_result_type,SetVariableResult>> 요소에도 동일한 _attributeType_ 이 포함되어야 합니다.
+|B05.FR.04 | 충전기가 <<set_variables_request,SetVariablesRequest>>를 수신하고 <<set_variable_data_type,SetVariableData>>에 알 수 없는 <<component_type,Component>>가 포함된 경우
+  |충전기는 해당 <<set_variable_result_type,SetVariableResult>>의 _attributeStatus_ 필드를 <<set_variable_status_enum_type,UnknownComponent>>로 설정해야 합니다.
+|B05.FR.05 |충전기가 <<set_variables_request,SetVariablesRequest>>를 수신할 때, <<component_type,Component>>에 대해 알려지지 않은 변수가 <<set_variable_data_type,SetVariableData>>에 있는 경우
+  |충전기는 해당 <<set_variable_result_type,SetVariableResult>>의 _attributeStatus_ 필드를 <<set_variable_status_enum_type,UnknownVariable>>로 설정해야 합니다.
+|B05.FR.06 |충전기가 <<set_variables_request,SetVariablesRequest>>를 수신하고 <<attribute_enum_type,attributeType>>이 <<set_variable_data_type,SetVariableData>>의 주어진 <<variable_type,Variable>>에 대해 알려지지 않은 경우
+  |충전기는 해당 <<set_variable_result_type,SetVariableResult>>의 _attributeStatus_ 필드를 <<set_variable_status_enum_type,NotSupportedAttributeType>>으로 설정해야 합니다.
+|B05.FR.07 |충전기가 <<set_variables_request,SetVariablesRequest>>를 수신하고 <<set_variable_data_type,SetVariableData>>의 주어진 <<variable_type,Variable>>에 대해 잘못 포맷된 _value_ 를 포함하는 경우
+  |충전기는 해당 <<set_variable_result_type,SetVariableResult>>의 _attributeStatus_ 필드를 <<set_variable_status_enum_type,Rejected>>로 설정해야 합니다. (자세한 내용은 선택 사항인 _statusInfo_ 요소에서 제공할 수 있습니다.)
+|B05.FR.08 |충전기가 <<set_variables_request,SetVariablesRequest>>를 수신하고 _value_ 가 <<set_variable_data_type,SetVariableData>>의 주어진 <<variable_type,Variable>>의 범위보다 낮거나 높을 때
+  |충전기는 해당 <<set_variable_result_type,SetVariableResult>>의 _attributeStatus_ 필드를 <<set_variable_status_enum_type,Rejected>>로 설정해야 합니다. (자세한 정보는 선택 사항인 _statusInfo_ 요소에서 제공할 수 있습니다.)
+|B05.FR.09 |NOT (B05.FR.04 to B05.FR.08) AND +
+  충전기가 <<set_variables_request,SetVariablesRequest>>를 <<set_variable_data_type,SetVariableData>>의 <<variable_type,Variable>>에 대해 수신했지만 설정할 수 없는 경우
+    |충전기는 해당 <<set_variable_result_type,SetVariableResult>>의 _attributeStatus_ 필드를 <<set_variable_status_enum_type,Rejected>>로 설정해야 합니다. +
+    (변수가 _ReadOnly_ 인 경우 발생하지만, 기술적 문제로 인해 변수 설정이 실패할 때도 발생할 수 있습니다.)
+|B05.FR.10 |충전기가 <<set_variable_data_type,SetVariableData>>에서 주어진 _value_ 를 설정할 수 있는 경우
+  |충전기는 해당 <<set_variable_result_type,SetVariableResult>>의 _attributeStatus_ 필드를 <<set_variable_status_enum_type,Accepted>>로 설정해야 합니다.
+|B05.FR.11 |{nbsp}
+  |CSMS는 <<items_per_message_set_variables,`ItemsPerMessageSetVariables`>>를 통해 충전기에서 보고한 것보다 더 많은 <<set_variable_data_type,SetVariableData>> 요소를 <<set_variables_request,SetVariablesRequest>>에 보내서는 안 됩니다.
+|B05.FR.12 |충전기가 _attributeType_ 없이 <<set_variables_request,SetVariablesRequest>>를 수신하는 경우.
+  |<<set_variables_response,SetVariablesResponse>>의 해당 <<set_variable_result_type,SetVariableResult>> 요소에는 _attributeType_ Actual이 포함되어야 합니다.
+|B05.FR.13 |{nbsp}
+  |CSMS는 동일한 <<component_type,Component>>, <<variable_type,Variable>> 및 _AttributeType_ 조합을 사용하여 단일 <<set_variable_data_type,SetVariableData>> 요소를 여러 개 포함해서는 안 됩니다. 생략된 _AttributeType_ 은 _Actual_ 값으로 간주됩니다.
 |===
 
 <<<
 
 === B06 - Get Variables
 
-.B06 - Get Variables
+.B06 - 변수 가져오기
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Get Variables
-|2   |ID              |B06
-|{nbsp} d|_Functional block_ |B. Provisioning
-|3   |Objective(s)    |To give the CSMS the ability to retrieve the value of an attribute for one or more Variables of one or more Components.
-|4   |Description     |This use case describes how the CSMS requests a Charging Station to send the value of an attribute for one or more variables of one or more components. It is not possible to get all attributes of all variables in one call.
-|{nbsp} d|_Actors_    |Charging Station, CSMS
-|{nbsp} d|_Scenario description_ 
-  |**1.** The CSO triggers the CSMS to request for a number of variables in a Charging Station. +
-  **2.** The CSMS request the Charging Station for a number of variables with <<get_variables_request,GetVariablesRequest>> with a list of requested variables. +
-  **3.** The Charging Station responds with a <<get_variabels_response,GetVariablesResponse>> with the requested variables. +
-  **4.** The CSMS sends an optional notification to the CSO.
-|5   |Prerequisite(s) |n/a
-|6   |Postcondition(s) 
-  |**Successful postcondition:** +
-  The Charging Station was able to send all the requested variables. +
-  **Failure postcondition:** +
-  The Charging Station was not able to send all requested variables.
+|1 |이름 |변수 가져오기
+|2 |ID |B06
+|{nbsp} d|_기능 블록_ |B. 프로비저닝
+|3 |목표 |CSMS에 하나 이상의 구성 요소의 하나 이상의 변수에 대한 속성 값을 검색할 수 있는 기능을 제공합니다.
+|4 |설명 |이 사용 사례는 CSMS가 충전기에 하나 이상의 구성 요소의 하나 이상의 변수에 대한 속성 값을 보내도록 요청하는 방법을 설명합니다. 한 번의 호출로 모든 변수의 모든 속성을 가져오는 것은 불가능합니다.
+|{nbsp} d|_Actors_ |충전기, CSMS
+|{nbsp} d|_시나리오 설명_
+  |**1.** CSO가 CSMS를 트리거하여 충전기에서 여러 변수를 요청합니다. +
+  **2.** CSMS가 <<get_variables_request,GetVariablesRequest>>와 요청된 변수 목록을 사용하여 충전기에 여러 변수를 요청합니다. +
+  **3.** 충전기가 <<get_variabels_response,GetVariablesResponse>>와 함께 요청된 변수로 응답합니다. +
+  **4.** CSMS가 CSO에 선택적 알림을 보냅니다.
+|5 |필수 조건 |n/a
+|6 |사후 조건
+  |**성공한 사후 조건:** +
+  충전기가 요청된 모든 변수를 보낼 수 있었습니다. +
+  **실패한 사후 조건:** +
+  충전기가 요청된 모든 변수를 보낼 수 없었습니다.
 |===
 
-.Sequence Diagram: Get Variables
-image::part2/images/figure_15.svg[Sequence Diagram: Get Variables]
+.시퀀스 다이어그램: 변수 가져오기
+image::part2/images/figure_15.svg[시퀀스 다이어그램: 변수 가져오기]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error handling |n/a
-|8   |Remark(s)      |n/a
+|7 |오류 처리 |n/a
+|8 |참고 |n/a
 |===
 
 ==== B06 - Get Variables - Requirements
 
-.B06 - Requirements
+.B06 - 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition
+|ID |전제 조건 |요구 사항 정의
 
-|B06.FR.01  |When the Charging Station receives a <<get_variables_request,GetVariablesRequest>> with an X number of <<get_variable_data_type,GetVariableData>> elements
-  |The Charging Station SHALL respond with an <<get_variabels_response,GetVariablesResponse>> with an equal (X) number of <<get_variable_result_type,GetVariableResult>> elements, one for every <<get_variable_data_type,GetVariableData>> element in the <<get_variables_request,GetVariablesRequest>>.
-|B06.FR.02  |B06.FR.01            |Every <<get_variable_result_type,GetVariableResult>> element in the <<get_variabels_response,GetVariablesResponse>> SHALL contain the same _component_ and _variable_ combination as one of the <<get_variable_data_type,GetVariableData>> elements in the <<get_variables_request,GetVariablesRequest>>.
-|B06.FR.03  |B06.FR.02 +
+|B06.FR.01 |충전기가 X개의 <<get_variables_data_type,GetVariableData>> 요소가 포함된 <<get_variables_request,GetVariablesRequest>>를 수신할 때
+  |충전기는 <<get_variables_response,GetVariablesResponse>>로 응답해야 하며, X개의 <<get_variable_result_type,GetVariableResult>> 요소가 동일해야 하며, <<get_variables_request,GetVariablesRequest>>의 모든 <<get_variable_data_type,GetVariableData>> 요소에 대해 하나씩 응답해야 합니다.
+|B06.FR.02 |B06.FR.01 |<<get_variables_response,GetVariablesResponse>>의 모든 <<get_variable_result_type,GetVariableResult>> 요소는 <<get_variables_request,GetVariablesRequest>>의 <<get_variable_data_type,GetVariableData>> 요소 중 하나와 동일한 _component_ 및 _variable_ 조합을 포함해야 합니다.
+|B06.FR.03 |B06.FR.02 +
   AND +
-  If the <<get_variables_request,GetVariablesRequest>> contains an _attributeType_
-    |The corresponding <<get_variable_result_type,GetVariableResult>> element in the <<get_variabels_response,GetVariablesResponse>> SHALL also contain the same _attributeType_
-|B06.FR.04  |B06.FR.01 |Every <<get_variable_result_type,GetVariableResult>> element in the <<get_variabels_response,GetVariablesResponse>> SHALL contain an _attributeValue_ with the value of an attribute from the requested _attributeType_ in the <<get_variables_request,GetVariablesRequest>>.
-|B06.FR.05  |{nbsp}
-  |The CSMS SHALL NOT send more GetVariableData elements in a <<get_variables_request,GetVariablesRequest>> than reported by the Charging Station via <<items_per_message_get_variables,`ItemsPerMessageGetVariables`>>.
-|B06.FR.06  |When the Charging Station receives a <<get_variables_request,GetVariablesRequest>> with an unknown <<component_type,Component>> in the <<get_variable_data_type,GetVariableData>>
-  |The Charging Station SHALL set the _attributeStatus_ field in the corresponding <<get_variable_result_type,GetVariableResult>> to: <<set_variable_status_enum_type,UnknownComponent>> AND SHALL omit the _attributeValue_.
-|B06.FR.07  |When the Charging Station receives a <<get_variables_request,GetVariablesRequest>> with a <<variable_type,Variable>> that is unknown for the given <<component_type,Component>> in the <<get_variable_data_type,GetVariableData>>
-  |The Charging Station SHALL set the _attributeStatus_ field in the corresponding <<get_variable_result_type,GetVariableResult>> to: UnknownVariable AND SHALL omit the _attributeValue_.
-|B06.FR.08  |When the Charging Station receives a <<get_variables_request,GetVariablesRequest>> with an <<attribute_enum_type,attributeType>> that is unknown for the given <<variable_type,Variable>> in the <<get_variable_data_type,GetVariableData>>
-  |The Charging Station SHALL set the _attributeStatus_ field in the corresponding <<get_variable_result_type,GetVariableResult>> to: <<set_variable_status_enum_type,NotSupportedAttributeType>> AND SHALL omit the _attributeValue_.
-|B06.FR.09  |When the Charging Station receives a <<get_variables_request,GetVariablesRequest>> for a <<variable_type,Variable>> in the <<get_variable_data_type,GetVariableData>> that is _WriteOnly_
-  |The Charging Station SHALL set the _attributeStatus_ field in the corresponding <<get_variable_result_type,GetVariableResult>> to: <<set_variable_status_enum_type,Rejected>>.
-|B06.FR.10  |When the Charging Station was able to get the _value_ requested from a <<get_variables_request,GetVariablesRequest>>
-  |The Charging Station SHALL set the _attributeStatus_ field in the corresponding <<get_variable_result_type,GetVariableResult>> to: <<set_variable_status_enum_type,Accepted>> and set the _attributeValue_ to the found value.
-|B06.FR.11  |When the Charging Station receives a <<get_variables_request,GetVariablesRequest>> without an _attributeType_.
-  |The corresponding <<get_variable_result_type,GetVariableResult>> element in the <<get_variabels_response,GetVariablesResponse>> SHALL contain the _attributeType_ Actual.
-|B06.FR.13  |NOT B06.FR.08 +
+  <<get_variables_request,GetVariablesRequest>>에 _attributeType_ 이 포함된 경우
+    |<<get_variables_response,GetVariablesResponse>>의 해당 <<get_variable_result_type,GetVariableResult>> 요소에도 동일한 _attributeType_ 이 포함되어야 합니다.
+|B06.FR.04 |B06.FR.01 | <<get_variables_response,GetVariablesResponse>>의 모든 <<get_variable_result_type,GetVariableResult>> 요소에는 <<get_variables_request,GetVariablesRequest>>의 요청된 _attributeType_ 의 속성 값이 있는 _attributeValue_ 가 포함되어야 합니다.
+|B06.FR.05 |{nbsp}
+  |CSMS는 충전기에서 <<items_per_message_get_variables,`ItemsPerMessageGetVariables`>>를 통해 보고한 것보다 더 많은 GetVariableData 요소를 <<get_variables_request,GetVariablesRequest>>에 보내서는 안 됩니다.
+|B06.FR.06 |충전기가 <<get_variable_data_type,GetVariableData>>에 알 수 없는 <<component_type,Component>>가 포함된 <<get_variables_request,GetVariablesRequest>>를 수신하는 경우
+  |충전기는 해당 <<get_variable_result_type,GetVariableResult>>의 _attributeStatus_ 필드를 <<set_variable_status_enum_type,UnknownComponent>>로 설정하고 _attributeValue_ 를 생략해야 합니다.
+|B06.FR.07 |충전기가 <<get_variables_request,GetVariablesRequest>>를 수신하고 <<component_type,Component>>에 대해 알려지지 않은 <<get_variable_data_type,GetVariableData>> 에 있는 <<get_variables_request,GetVariablesRequest>>를 수신하는 경우
+  |충전기는 해당 <<get_variable_result_type,GetVariableResult>>의 _attributeStatus_ 필드를 UnknownVariable로 설정하고 _attributeValue_ 를 생략해야 합니다.
+|B06.FR.08 |충전기가 <<get_variables_request,GetVariablesRequest>>를 수신하고 <<attribute_enum_type,attributeType>>이 <<get_variable_data_type,GetVariableData>>의 주어진 <<variable_type,Variable>>에 대해 알려지지 않은 경우
+  |충전기는 해당 <<get_variable_result_type,GetVariableResult>>의 _attributeStatus_ 필드를 <<set_variable_status_enum_type,NotSupportedAttributeType>>으로 설정하고 _attributeValue_ 를 생략해야 합니다.
+|B06.FR.09 |충전기가 <<get_variables_request,GetVariablesRequest>>를 수신하면 <<get_variable_data_type,GetVariableData>>의 <<variable_type,Variable>>이 _WriteOnly_ 인 경우
+  |충전기는 해당 <<get_variable_result_type,GetVariableResult>>의 _attributeStatus_ 필드를 <<set_variable_status_enum_type,Rejected>>로 설정해야 합니다.
+|B06.FR.10 |충전기가 <<get_variables_request,GetVariablesRequest>>에서 요청한 _value_ 를 가져올 수 있는 경우
+  |충전기는 해당 <<get_variable_result_type,GetVariableResult>>의 _attributeStatus_ 필드를 <<set_variable_status_enum_type,Accepted>>로 설정하고 _attributeValue_ 를 찾은 값으로 설정해야 합니다.
+|B06.FR.11 |충전기가 _attributeType_ 없이 <<get_variables_request,GetVariablesRequest>>를 수신하는 경우.
+  |<<get_variabels_response,GetVariablesResponse>>의 해당 <<get_variable_result_type,GetVariableResult>> 요소에는 _attributeType_ Actual이 포함되어야 합니다.
+|B06.FR.13 |NOT B06.FR.08 +
   AND +
-  the Charging Station has no _attributeValue_ for the requested _attributeType_ of the componentvariable
-    |Charging Station SHALL return an empty string as _attributeValue_. +
-    Note: this can happen, for example, when the _attributeType_ `Target` has not yet been set, even though it is supported.
-|B06.FR.14  |B06.FR.01 AND +
-  a value for _instance_ is provided in the _component_ and/or _variable_ in <<get_variable_data_type,GetVariableData>>
-    |Charging Station SHALL return the specified instance of that component and/or variable in <<get_variable_result_type,GetVariableResult>>.
-|B06.FR.15  |B06.FR.01 AND +
-  no value or an empty string is provided for _instance_ in the _component_ and/or _variable_ in <<get_variable_data_type,GetVariableData>> AND +
-  a component and/or variable without an _instance_ does not exist
-    |Charging Station SHALL return the _attributeStatus_ `UnknownComponent` or `UnknownVariable` in the <<get_variable_result_type,GetVariableResult>> entry for <<get_variable_data_type,GetVariableData>>.
-|B06.FR.16  |Charging Station receives a <<get_variables_request,GetVariablesRequest>> with more <<get_variable_data_type,GetVariableData>> elements than allowed by <<items_per_message_get_variables,`ItemsPerMessageGetVariables`>>
-  |The Charging Station MAY respond with a CALLERROR(OccurenceConstraintViolation)
-|B06.FR.17  |Charging Station receives a <<get_variables_request,GetVariablesRequest>> with a length of more bytes than allowed by <<bytes_per_message_get_variables,`BytesPerMessageGetVariables`>>
-  |The Charging Station MAY respond with a CALLERROR(FormatViolation)
+  충전기에 요청된 구성 요소 변수의 _attributeType_ 에 대한 _attributeValue_ 가 없습니다.
+    |충전기는 _attributeValue_ 로 빈 문자열을 반환해야 합니다. +
+    참고: 예를 들어 _attributeType_ `Target`이 지원되더라도 아직 설정되지 않은 경우 발생할 수 있습니다.
+|B06.FR.14 |B06.FR.01 AND +
+  _instance_ 에 대한 값이 <<get_variable_data_type,GetVariableData>>의 _component_ 및/또는 _variable_ 에 제공됩니다.
+    |충전기는 <<get_variable_result_type,GetVariableResult>>에서 해당 구성 요소 및/또는 변수의 지정된 인스턴스를 반환해야 합니다.
+|B06.FR.15 |B06.FR.01 AND +
+  <<get_variable_data_type,GetVariableData>>의 _component_ 및/또는 _variable_ 에 대한 _instance_ 에 값이 제공되지 않거나 빈 문자열이 제공되지 않음 AND +
+  _instance_ 가 없는 구성 요소 및/또는 변수가 존재하지 않음
+    |충전기는 <<get_variable_data_type,GetVariableResult>> 항목에서 <<get_variable_data_type,GetVariableData>>에 대한 _attributeStatus_ `UnknownComponent` 또는 `UnknownVariable` 을 반환해야 합니다.
+|B06.FR.16 |충전기가 <<items_per_message_get_variables,`ItemsPerMessageGetVariables`>>에서 허용하는 것보다 더 많은 <<get_variable_data_type,GetVariableData>> 요소가 포함된 <<get_variables_request,GetVariablesRequest>>를 수신합니다.
+  |충전기는 CALLERROR(OccurenceConstraintViolation)로 응답할 수 있습니다.
+|B06.FR.17 |충전기가 <<bytes_per_message_get_variables,`BytesPerMessageGetVariables`>>에서 허용하는 것보다 더 많은 바이트 길이의 <<get_variables_request,GetVariablesRequest>>를 수신합니다.
+  |충전기는 CALLERROR(FormatViolation)로 응답할 수 있습니다.
 |===
 
 <<<
 
 === B07 - Get Base Report
 
-.B07 - Get Base Report
+.B07 - 기본 보고서 가져오기
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Get Base Report
-|2   |ID              |B07
-|{nbsp} d|_Functional block_ |B. Provisioning
-|3   |Objective(s)    |To give the CSMS the ability to request a predefined report as defined in <<report_base_enum_type,ReportBase>>.
-|4   |Description     |This use case describes how the CSMS requests a Charging Station to send a predefined report as defined in <<report_base_enum_type,ReportBase>>. The result will be returned asynchronously in one or more <<notify_report_request,NotifyReportRequest>> messages.
-|{nbsp} d|_Actors_    |Charging Station, CSMS
-|{nbsp} d|_Scenario description_ 
-  |**1.** The CSO triggers the CSMS to request a report from a Charging Station. +
-  **2.** The CSMS requests the Charging Station for a report with <<get_base_report_reuqest,GetBaseReportRequest>>. +
-  **3.** The Charging Station responds with <<get_base_report_response,GetBaseReportResponse>>.
-  **4.** The Charging Station asynchronously sends the results in one or more <<notify_report_request,NotifyReportRequest>> messages. +
-  **5.** The CSMS responds with <<notify_report_response,NotifyReportResponse>> for each <<notify_report_request,NotifyReportRequest>>.
-|5    |Prerequisite(s) |n/a
-|6    |Postcondition(s)
-  |**Successful postcondition:** +
-  The Charging Station was able to send the requested report.
+|1 |이름 |기본 보고서 가져오기
+|2 |ID |B07
+|{nbsp} d|_기능 블록_ |B. 프로비저닝
+|3 |목표 |CSMS가 <<report_base_enum_type,ReportBase>>에 정의된 대로 미리 정의된 보고서를 요청할 수 있도록 합니다.
+|4 |설명 |이 사용 사례는 CSMS가 충전기에 <<report_base_enum_type,ReportBase>>에 정의된 대로 미리 정의된 보고서를 보내도록 요청하는 방법을 설명합니다. 결과는 하나 이상의 <<notify_report_request,NotifyReportRequest>> 메시지에서 비동기적으로 반환됩니다.
+|{nbsp} d|_Actors_ |충전기, CSMS
+|{nbsp} d|_시나리오 설명_
+  |**1.** CSO가 CSMS를 트리거하여 충전기에 보고서를 요청합니다. +
+  **2.** CSMS가 <<get_base_report_reuqest,GetBaseReportRequest>>로 충전기에 보고서를 요청합니다. +
+  **3.** 충전기가 <<get_base_report_response,GetBaseReportResponse>>로 응답합니다.
+  **4.** 충전기가 비동기적으로 하나 이상의 <<notify_report_request,NotifyReportRequest>> 메시지로 결과를 보냅니다. +
+  **5.** CSMS가 <<notify_report_request,NotifyReportRequest>>마다 <<notify_report_response,NotifyReportResponse>>로 응답합니다.
+|5 |필수 조건 |n/a
+|6 |사후 조건
+  |**성공한 사후 조건:** +
+  충전기에서 요청한 보고서를 보낼 수 있었습니다.
 
-  **Failure postcondition:** +
-  The Charging Station was _not_ able to send the requested report.
+  **실패한 사후 조건:** +
+  충전기에서 요청한 보고서를 보낼 수 _없었습니다_.
 |===
 
-.Sequence Diagram: Get Base Report
-image::part2/images/figure_16.svg[Sequence Diagram: Get Base Report]
+.시퀀스 다이어그램: 기본 보고서 가져오기
+image::part2/images/figure_16.svg[시퀀스 다이어그램: 기본 보고서 가져오기]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error handling    |n/a
-|8   |Remark(s)         |n/a
+|7 |오류 처리 |n/a
+|8 |비고 |n/a
 |===
 
 ==== B07 - Get Base Report - Requirements
 
-.B07 - Requirements
+.B07 - 요구 사항
 [cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition     |Note
+|ID |전제 조건 |요구 사항 정의 |참고
 
-|B07.FR.01  |When the Charging Station receives a <<get_base_report_reuqest,getBaseReportRequest>> for a supported _reportBase_ +
-  AND NOT B07.FR.13
-    |The Charging Station SHALL send a <<get_base_report_response,getBaseReportResponse>> with `Accepted`. |{nbsp}
-|B07.FR.02  |When the Charging Station receives a <<get_base_report_reuqest,getBaseReportRequest>> for a _reportBase_ that is not supported
-  |The Charging Station SHALL send a <<get_base_report_response,getBaseReportResponse>> with `NotSupported`. |{nbsp}
-|B07.FR.03  |B07.FR.01 |The Charging Station SHALL send the requested information via one or more <<notify_report_request,NotifyReportRequest>> messages to the CSMS. |{nbsp}
-|B07.FR.04  |B07.FR.01 +
+|B07.FR.01 |충전기가 지원되는 _reportBase_ 에 대한 <<get_base_report_reuqest,getBaseReportRequest>>를 수신하고 +
+  B07.FR.13이 아닌 경우
+    |충전기는 `Accepted` 와 함께 <<get_base_report_response,getBaseReportResponse>>를 보내야 합니다. |{nbsp}
+|B07.FR.02 |충전기가 지원되지 않는 _reportBase_ 에 대한 <<get_base_report_reuqest,getBaseReportRequest>>를 수신하는 경우
+  |충전기는 `NotSupported` 로 <<get_base_report_response,getBaseReportResponse>>를 보내야 합니다. |{nbsp}
+|B07.FR.03 |B07.FR.01 |충전기는 하나 이상의 <<notify_report_request,NotifyReportRequest>> 메시지를 통해 요청된 정보를 CSMS로 보내야 합니다. |{nbsp}
+|B07.FR.04 |B07.FR.01 +
   AND +
-  The <<get_base_report_reuqest,getBaseReportRequest>> contained a _requestId_
-    |Every <<notify_report_request,NotifyReportRequest>> send for this <<get_base_report_reuqest,getBaseReportRequest>> SHALL contain the same _requestId_. |{nbsp}
-|B07.FR.05  |B07.FR.02 |The Charging Station SHALL NOT send a <<notify_report_request,NotifyReportRequest>> to the CSMS. |{nbsp}
-|B07.FR.07  |B07.FR.01 AND +
-  When _reportBase_ is <<report_base_enum_type,ConfigurationInventory>>
-    |Then the Charging Station SHALL respond with a <<notify_report_request,NotifyReportRequest>> to report on all component-variables that can be set by the operator including their _VariableCharacteristics_. | {nbsp}
-|B07.FR.08  |B07.FR.01 AND +
-  When _reportBase_ is <<report_base_enum_type,FullInventory>>
-    |Then the Charging Station SHALL respond with a <<notify_report_request,NotifyReportRequest>> to report on all component-variables including their _VariableCharacteristics_.
-      |As a minimum the required variables mentioned in <<charging_infrastructure_related,Charging Infrastructure related>> shall be reported as well as the required variables in <<controller_components,Section 1 Controller Components>> that are relevant to each functional block that has been implemented.
-|B07.FR.09  |B07.FR.01 AND +
-  When _reportBase_ is <<report_base_enum_type,SummaryInventory>>
-    |Then the Charging Station SHALL respond with a <<notify_report_request,NotifyReportRequest>> to report on components and variables related to the availability and condition of the Charging Station, notably operationalStatus of the Charging Station, EVSE and Connectors and any error condition.
-      |A (summary) report that lists Components/Variables relating to the Charging Station’s current charging availability, and to any existing problem conditions.
+  <<get_base_report_reuqest,getBaseReportRequest>>에는 _requestId_ 가 포함되어 있습니다.
+    |이 <<get_base_report_reuqest,getBaseReportRequest>>에 대한 모든 <<notify_report_request,NotifyReportRequest>> 전송에는 동일한 _requestId_ 가 포함되어야 합니다. |{nbsp}
+|B07.FR.05 |B07.FR.02 |충전기는 CSMS에 <<notify_report_request,NotifyReportRequest>>를 보내서는 안 됩니다. |{nbsp}
+|B07.FR.07 |B07.FR.01 및 +
+  _reportBase_ 가 <<report_base_enum_type,ConfigurationInventory>>인 경우
+    |그러면 충전기는 <<notify_report_request,NotifyReportRequest>>로 응답하여 운영자가 설정할 수 있는 모든 구성 요소 변수(_VariableCharacteristics_ 포함)를 보고해야 합니다. | {nbsp}
+|B07.FR.08 |B07.FR.01 및 +
+  _reportBase_ 가 <<report_base_enum_type,FullInventory>>인 경우
+    |그러면 충전기는 <<notify_report_request,NotifyReportRequest>>로 응답하여 모든 구성 요소 변수(_VariableCharacteristics_ 포함)를 보고해야 합니다.
+    최소한 <<charging_infrastructure_related,Charging Infrastructure related>>에 언급된 필수 변수는 보고되어야 하며, 구현된 각 기능 블록과 관련된 <<controller_components,Section 1 Controller Components>>에 있는 필수 변수도 보고되어야 합니다.
+|B07.FR.09 |B07.FR.01 AND +
+  _reportBase_ 가 <<report_base_enum_type,SummaryInventory>>인 경우
+    |그러면 충전기는 <<notify_report_request,NotifyReportRequest>>로 응답하여 충전기의 가용성 및 상태와 관련된 구성 요소 및 변수, 특히 충전기, EVSE 및 커넥터의 운영 상태와 오류 상태를 보고해야 합니다.
+      |충전기의 현재 충전 가용성과 기존 문제 상태와 관련된 구성 요소/변수를 나열하는 (요약) 보고서입니다.
 
-      For the Charging Station Component: +
+      충전기 구성 요소의 경우: +
       - AvailabilityState. +
-      For each EVSE Component: +
+      각 EVSE 구성 요소의 경우: +
       - AvailabilityState. +
-      For each Connector Component: +
-      - AvailabilityState (if known and different from EVSE). +
-      For all Components in an abnormal State: +
-      - Active (Problem, Tripped, Overload, Fallback) variables. +
-      - Any other diagnostically relevant Variables of the Components.
-|B07.FR.10  |{nbsp} |The sequence number contained in the seqNo field of the <<notify_report_request,NotifyReportRequest>> is incremental per report. So the <<notify_report_request,NotifyReportRequest>> message which contains the first report part, SHALL have a seqNo with value _0_. |{nbsp}
-|B07.FR.11  |B07.FR.08  |All attribute types of a variable, that are supported by the Charging Station, SHALL be reported, even if they have no value (are unset).
-  |This allows a CSMS to know which attribute types are supported by the Charging Station.
-|B07.FR.12  |{nbsp} |The Charging Station SHALL support at least the base reports: <<report_base_enum_type,ConfigurationInventory>> and <<report_base_enum_type,FullInventory>>. |{nbsp}
-|B07.FR.13  |When the Charging Station is temporarily unable to execute a report request
-  |The Charging Station SHALL send a <<get_base_report_response,getBaseReportResponse>> with `Rejected`. |{nbsp}
-|B07.FR.14  |When a Charging Station connects to CSMS for the first time OR whenever CSMS suspects that the device model of the Charging Station has changed (e.g. after a firmware update or hardware change)
-  |CSMS SHOULD request a <<get_base_report_reuqest,GetBaseReportRequest>> with _reportBase_ = `FullInventory` to retrieve a complete list of all its device model components and variables.
-    |It is not mandated, because implementations may exist that are based on a known set of charging stations with fixed device models that will not change.
+      각 커넥터 구성 요소의 경우: +
+      - AvailabilityState(알려져 있고 EVSE와 다른 경우). +
+      비정상 상태의 모든 구성 요소의 경우: +
+      - Active (Problem, Tripped, Overload, Fallback) 변수. +
+      - 구성 요소의 다른 진단 관련 변수.
+|B07.FR.10 |{nbsp} |<<notify_report_request,NotifyReportRequest>>의 seqNo 필드에 포함된 시퀀스 번호는 보고서당 증가합니다. 따라서 첫 번째 보고서 부분을 포함하는 <<notify_report_request,NotifyReportRequest>> 메시지는 값이 _0_ 인 seqNo를 가져야 합니다. |{nbsp}
+|B07.FR.11 |B07.FR.08 |충전기에서 지원하는 변수의 모든 속성 유형은 값이 없더라도(설정되지 않은 경우에도) 보고되어야 합니다.
+  |이를 통해 CSMS는 충전기에서 지원하는 속성 유형을 알 수 있습니다.
+|B07.FR.12 |{nbsp} |충전기는 최소한 기본 보고서인 <<report_base_enum_type,ConfigurationInventory>> 및 <<report_base_enum_type,FullInventory>>를 지원해야 합니다. |{nbsp}
+|B07.FR.13 |충전기가 일시적으로 보고서 요청을 실행할 수 없는 경우
+  |충전기는 `Rejected` 와 함께 <<get_base_report_response,getBaseReportResponse>>를 보내야 합니다. |{nbsp}
+|B07.FR.14 |충전기가 처음으로 CSMS에 연결되거나 CSMS가 충전기의 기기 모델이 변경되었을 것으로 의심할 때마다(예: 펌웨어 업데이트 또는 하드웨어 변경 후)
+  |CSMS는 _reportBase_ = `FullInventory` 로 <<get_base_report_reuqest,GetBaseReportRequest>>를 요청하여 모든 기기 모델 구성 요소와 변수의 전체 목록을 검색해야 합니다.
+    |고정된 기기 모델이 변경되지 않는 알려진 충전기 세트를 기반으로 하는 구현이 있을 수 있으므로 의무화되지 않습니다.
 |===
 
 ==== B08 - Get Custom Report
 
-.B08 - Get Custom Report
+.B08 - 사용자 정의 보고서 가져오기
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Get Custom Report
-|2   |ID              |B08
-|{nbsp} d|_Functional block_  |B. Provisioning
-|3 |Objective(s)      |To give the CSMS the ability to request a report of all Components and Variables limited to those that match ComponentCriteria and/or the list of ComponentVariables.
-|4   |Description     |This use case describes how the CSMS requests a Charging Station to send a report of all Components and Variables limited to those that match ComponentCriteria and/or the list of ComponentVariables. The result will be returned asynchronously in one or more <<notify_report_request,NotifyReportRequest>> messages.
-|{nbsp} d|_Actors_    |Charging Station, CSMS
-|{nbsp} d|_Scenario description_ 
-  |**1.** The CSO triggers the CSMS to request a report from a Charging Station. +
-  **2.** The CSMS requests the Charging Station for a report with a <<get_report_request,GetReportRequest>>. +
-  **3.** The Charging Station responds with a <<get_report_response,GetReportResponse>>. +
-  **4.** The Charging Station asynchronously sends the results in one or more <<notify_report_request,NotifyReportRequest>> messages. +
-  **5.** The CSMS responds with a NotifyReportResponse.
-|5   |Prerequisite(s) |n/a
-|6   |Postcondition(s) 
-  |**Successful postcondition:** +
-  The Charging Station was able to send the requested report.
+|1 |이름 |사용자 정의 보고서 가져오기
+|2 |ID |B08
+|{nbsp} d|_기능 블록_ |B. 프로비저닝
+|3 |목표 |CSMS에 ComponentCriteria 및/또는 ComponentVariables 목록과 일치하는 모든 구성 요소 및 변수에 대한 보고서를 요청할 수 있는 기능을 제공합니다.
+|4 |설명 |이 사용 사례는 CSMS가 충전기에 ComponentCriteria 및/또는 ComponentVariables 목록과 일치하는 모든 구성 요소 및 변수에 대한 보고서를 보내도록 요청하는 방법을 설명합니다. 결과는 하나 이상의 <<notify_report_request,NotifyReportRequest>> 메시지로 비동기적으로 반환됩니다.
+|{nbsp} d|_Actors_ |충전기, CSMS
+|{nbsp} d|_시나리오 설명_
+  |**1.** CSO가 CSMS를 트리거하여 충전기에 보고서를 요청합니다. +
+  **2.** CSMS가 <<get_report_request,GetReportRequest>>로 충전기에 보고서를 요청합니다. +
+  **3.** 충전기가 <<get_report_response,GetReportResponse>>로 응답합니다. +
+  **4.** 충전기가 하나 이상의 <<notify_report_request,NotifyReportRequest>> 메시지로 비동기적으로 결과를 보냅니다. +
+  **5.** CSMS가 NotifyReportResponse로 응답합니다.
+|5 |필수 조건 |n/a
+|6 |사후 조건
+  |**성공한 사후 조건:** +
+  충전기에서 요청한 보고서를 보낼 수 있었습니다.
 
-  **Failure postcondition:** +
-  The Charging Station was _not_ able to send the requested report.
+  **실패한 사후 조건:** +
+  충전기에서 요청한 보고서를 보낼 수 _없었습니다_.
 |===
 
-.Sequence Diagram: Get Custom Report
-image::part2/images/figure_17.svg[Sequence Diagram: Get Custom Report]
+.시퀀스 다이어그램: 사용자 지정 보고서 가져오기
+image::part2/images/figure_17.svg[시퀀스 다이어그램: 사용자 지정 보고서 가져오기]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error handling  |n/a
-|8   |Remark(s)       |n/a
+|7 |오류 처리 |n/a
+|8 |비고 |n/a
 |===
 
 ==== B08 - Get Custom Report - Requirements
 
-.B08 - Requirements
+.B08 - 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition
+|ID |전제 조건 |요구 사항 정의
 
-|B08.FR.01  |NOT B08.FR.15 AND +
-  When the Charging Station receives a <<get_report_request,getReportRequest>> for supported _criteria_
-    |The Charging Station SHALL send a <<get_report_response,getReportResponse>> with <<generic_device_model_status_enum_type,Accepted>>
-|B08.FR.02  |When the Charging Station receives a <<get_report_request,getReportRequest>> for not supported _criteria_
-    |The Charging Station SHALL send a <<get_report_response,getReportResponse>> with <<generic_device_model_status_enum_type,NotSupported>>
-|B08.FR.03  |B08.FR.01            |The Charging Station SHALL send the requested information via one or more <<notify_report_request,NotifyReportRequest>> messages to the CSMS.
-|B08.FR.04  |B08.FR.01 AND +
-  The <<get_report_request,getReportRequest>> contained a _requestId_
-    |Every <<notify_report_request,NotifyReportRequest>> sent for this <<get_report_request,getReportRequest>> SHALL contain the same _requestId_.
-|B08.FR.05  |B08.FR.01 AND +
-  _componentCriteria_ and _componentVariables_ are NOT both empty.
-    |Every <<notify_report_request,NotifyReportRequest>> sent for this <<get_report_request,getReportRequest>> SHALL be limited to the set _componentCriteria_ and _componentVariables_.
-|B08.FR.06  |{nbsp}               |The maximum number of _componentVariables_ in one <<get_report_request,getReportRequest>> message is given by the <<items_per_message_get_report,`ItemsPerMessageGetReport`>> Configuration Variable
-|B08.FR.07  |B08.FR.01 AND +
-  _ComponentCriteria_ contains: _Active_
-    |The Charging Station SHALL report every component that has the variable _Active_ set to _true_, or does not have the _Active_ variable in a <<notify_report_request,NotifyReportRequest>>.
-|B08.FR.08  |B08.FR.01 +
+|B08.FR.01 |NOT B08.FR.15 AND +
+  충전기가 지원되는 _기준(criteria)_ 에 대한 <<get_report_request,getReportRequest>>를 수신하는 경우
+    |충전기는 <<generic_device_model_status_enum_type,Accepted>>와 함께 <<get_report_response,getReportResponse>>를 보내야 합니다.
+|B08.FR.02 |충전기가 지원되지 않는 _기준(criteria)_ 에 대한 <<get_report_request,getReportRequest>>를 수신하는 경우
+  |충전기는 <<get_report_response,getReportResponse>>와 함께 <<generic_device_model_status_enum_type,NotSupported>>
+|B08.FR.03 |B08.FR.01 |충전기는 요청된 정보를 하나 이상의 <<notify_report_request,NotifyReportRequest>> 메시지를 통해 CSMS로 전송해야 합니다.
+|B08.FR.04 |B08.FR.01 및 +
+  <<get_report_request,getReportRequest>>에는 _requestId_ 가 포함되어 있습니다.
+    |이 <<get_report_request,getReportRequest>>에 대해 전송된 모든 <<notify_report_request,NotifyReportRequest>>에는 동일한 _requestId_ 가 포함되어야 합니다.
+|B08.FR.05 |B08.FR.01 및 +
+  _componentCriteria_ 와 _componentVariables_ 가 모두 비어 있지 않습니다.
+    |이 <<get_report_request,getReportRequest>>에 대해 전송된 모든 <<notify_report_request,NotifyReportRequest>>는 _componentCriteria_ 및 _componentVariables_ 집합으로 제한되어야 합니다.
+|B08.FR.06 |{nbsp} |한 <<get_report_request,getReportRequest>> 메시지에서 _componentVariables_ 의 최대 수는 <<items_per_message_get_report,`ItemsPerMessageGetReport`>> 구성 변수에서 제공됩니다.
+|B08.FR.07 |B08.FR.01 AND +
+  _ComponentCriteria_ 에는 다음이 포함됩니다. _Active_
+    |충전기는 변수 _Active_ 가 _true_ 로 설정된 모든 구성 요소 또는 <<notify_report_request,NotifyReportRequest>>에서 _Active_ 변수가 없는 모든 구성 요소를 보고해야 합니다.
+|B08.FR.08 |B08.FR.01 +
   AND +
-  _ComponentCriteria_ contains: _Available_
-    |The Charging Station SHALL report every component that has the variable _Available_ set to _true_, or does not have the _Available_ variable, in a <<notify_report_request,NotifyReportRequest>>.
-|B08.FR.09  |B08.FR.01 AND +
-  _ComponentCriteria_ contains: _Enabled_
-    |The Charging Station SHALL report every component that has the variable _Enabled_ set to _true_, or does not have the _Enabled_ variable, in a <<notify_report_request,NotifyReportRequest>>.
-|B08.FR.10  |B08.FR.01 AND +
-  _ComponentCriteria_ contains: _Problem_
-    |The Charging Station SHALL report every component that has the variable _Problem_ set to _true_ in a <<notify_report_request,NotifyReportRequest>>.
-|B08.FR.11  |B08.FR.01 AND +
-  _componentCriteria_ is absent AND +
-  _componentVariables_ is NOT empty.
-    |Every <<notify_report_request,NotifyReportRequest>> sent for this getReportRequest is limited to the set in _componentVariables_.
-|B08.FR.12  |B08.FR.01            |The reported variables in <<notify_report_request,NotifyReportRequest>> SHALL contain _variableCharacteristics_.
-|B08.FR.13  |B08.FR.01 AND +
-  More than one _componentCriteria_ is given.
-    |The Charging Station SHALL report all components that have at least one of the given criteria (logical OR).
-|B08.FR.14  |{nbsp}               |The sequence number contained in the seqNo field of the <<notify_report_request,NotifyReportRequest>> is incremental per report. So the <<notify_report_request,NotifyReportRequest>> message which contains the first report part, SHALL have a seqNo with value _0_.
-|B08.FR.15  |When the Charging Station receives a <<get_report_request,GetReportRequest>> with a combination of criteria which results in an empty result set.
-  |The Charging Station SHALL respond with a <<get_report_response,GetReportResponse>>(_status_=`EmptyResultSet`).
-|B08.FR.16  |When the Charging Station is temporarily unable to execute a report request
-  |The Charging Station SHALL send a <<get_base_report_response,getBaseReportResponse>> with `Rejected`.
-|B08.FR.17  |Charging Station receives a <<get_report_request,GetReportRequest>> with more ComponentVariableType elements than allowed by <<items_per_message_get_report,`ItemsPerMessageGetReport`>>
-  |The Charging Station MAY respond with a CALLERROR(OccurenceConstraintViolation)
-|B08.FR.18  |Charging Station receives a <<get_report_request,GetReportRequest>> with a length of more bytes than allowed by <<bytes_per_message_get_report,`BytesPerMessageGetReport`>>
-  |The Charging Station MAY respond with a CALLERROR(FormatViolation)
-|B08.FR.20  |When Charging Station receives a <<get_report_request,GetReportRequest>> with _componentVariable_ elements in which _variable_ is missing
-  |The Charging Station SHALL report for every _variable_ of the _component_ in _componentVariable_.
-|B08.FR.21  |When Charging Station receives a <<get_report_request,GetReportRequest>> with _componentVariable_ elements in which _variable_ is present, but _instance_ is missing
-  |The Charging Station SHALL report for every instance of the _variable_ of the _component_ in _componentVariable_.
-|B08.FR.22  |B08.FR.11 AND +
-  When Charging Station receives a <<get_report_request,GetReportRequest>> with a _component_ in a _componentVariable_ element that has a _component.evse.id_ , but _component.evse.connector_ is missing
-    |The Charging Station SHALL report the component(s) with this _component.name_, _component.instance_ and _component.evse.id_ for every _component.evse.connector_, whilst taking into account B08.FR.24.
-|B08.FR.23  |B08.FR.11 AND +
-  When Charging Station receives a <<get_report_request,GetReportRequest>> with a _component_ in a _componentVariable_ element that has no _component.evse.id_
-    |The Charging Station SHALL report the component(s) with this _component.name_, _component.instance_ for every _component.evse_ field (including top level component without _component.evse_), whilst taking into account B08.FR.24.
-|B08.FR.24  |B08.FR.11 AND +
-  When Charging Station receives a <<get_report_request,GetReportRequest>> with a _component_ in a _componentVariable_ element that has a value for _component.instance_
-    |The Charging Station SHALL report the component(s) with this _component.name_ for every _component.instance_ field, whilst taking into account B08.FR.22, B08.FR.23.
-|B08.FR.25  |B08.FR.11 AND +
-  When Charging Station receives a <<get_report_request,GetReportRequest>> with a _component_ in a _componentVariable_ element that has no _component.instance_ field
-    |The Charging Station SHALL report the component(s) with this _component.name_ for every _component.instance_ field or the component(s) without _component.instance_ field, whichever is the case, whilst taking into account B08.FR.22, B08.FR.23.
+  _ComponentCriteria_ 에는 다음이 포함됩니다. _Available_
+    |충전기는 변수 _Available_ 이 _true_ 로 설정된 모든 구성 요소 또는 _Available_ 변수가 없는 모든 구성 요소를 <<notify_report_request,NotifyReportRequest>>에 보고해야 합니다.
+|B08.FR.09 |B08.FR.01 AND +
+  _ComponentCriteria_ 에는 다음이 포함됩니다. _Enabled_
+    |충전기는 변수 _Enabled_ 가 _true_ 로 설정된 모든 구성 요소 또는 _Enabled_ 변수가 없는 모든 구성 요소를 <<notify_report_request,NotifyReportRequest>>에 보고해야 합니다.
+|B08.FR.10 |B08.FR.01 AND +
+  _ComponentCriteria_ 에는 다음이 포함됩니다. _Problem_
+    |충전기는 <<notify_report_request,NotifyReportRequest>>에서 변수 _Problem_ 이 _true_ 로 설정된 모든 구성 요소를 보고해야 합니다.
+|B08.FR.11 |B08.FR.01 AND +
+  _componentCriteria_ 가 없고 AND +
+  _componentVariables_ 가 비어 있지 않습니다.
+    |이 getReportRequest에 대해 전송된 모든 <<notify_report_request,NotifyReportRequest>>는 _componentVariables_ 의 집합으로 제한됩니다.
+|B08.FR.12 |B08.FR.01 |<<notify_report_request,NotifyReportRequest>>에서 보고된 변수는 _variableCharacteristics_ 를 포함해야 합니다.
+|B08.FR.13 |B08.FR.01 AND +
+  두 개 이상의 _componentCriteria_ 가 제공됩니다.
+    |충전기는 제공된 기준 중 하나 이상을 갖는 모든 구성 요소를 보고해야 합니다(논리적 OR).
+|B08.FR.14 |{nbsp} |<<notify_report_request,NotifyReportRequest>>의 seqNo 필드에 포함된 시퀀스 번호는 보고서마다 증가합니다. 따라서 첫 번째 보고서 부분을 포함하는 <<notify_report_request,NotifyReportRequest>> 메시지는 값이 _0_ 인 seqNo를 가져야 합니다.
+|B08.FR.15 |충전기가 기준 조합으로 <<get_report_request,GetReportRequest>>를 수신하여 빈 결과 집합이 생성되는 경우.
+  |충전기는 <<get_report_response,GetReportResponse>>(_status_=`EmptyResultSet`)로 응답해야 합니다.
+|B08.FR.16 |충전기가 일시적으로 보고서 요청을 실행할 수 없는 경우
+  |충전기는 `Rejected` 로 <<get_base_report_response,getBaseReportResponse>>를 보내야 합니다.
+|B08.FR.17 |충전기가 <<items_per_message_get_report,`ItemsPerMessageGetReport`>>에서 허용하는 것보다 더 많은 ComponentVariableType 요소가 포함된 <<get_report_request,GetReportRequest>>를 수신합니다.
+  |충전기는 CALLERROR(OccurenceConstraintViolation)로 응답할 수 있습니다.
+|B08.FR.18 |충전기가 <<bytes_per_message_get_report,`BytesPerMessageGetReport`>>에서 허용하는 것보다 더 많은 바이트 길이의 <<get_report_request,GetReportRequest>>를 수신합니다.
+  |충전기는 CALLERROR(FormatViolation)로 응답할 수 있습니다.
+|B08.FR.20 |충전기가 _variable_ 이 누락된 _componentVariable_ 요소가 포함된 <<get_report_request,GetReportRequest>>를 수신하는 경우
+  |충전기는 _componentVariable_ 의 _component_ 의 모든 _variable_ 에 대해 보고해야 합니다.
+|B08.FR.21 |충전기가 _componentVariable_ 요소가 있는 <<get_report_request,GetReportRequest>>를 수신하고 _variable_ 은 있지만 _instance_ 가 없는 경우
+  |충전기는 _componentVariable_ 의 _component_ 의 _variable_ 의 모든 인스턴스에 대해 보고해야 합니다.
+|B08.FR.22 |B08.FR.11 AND +
+  충전기가 _component.evse.id_ 가 있는 _componentVariable_ 요소에 _component_ 가 포함된 <<get_report_request,GetReportRequest>>를 수신하지만 _component.evse.connector_ 가 없는 경우
+    |충전기는 모든 _component.evse.connector_ 에 대해 이 _component.name_, _component.instance_ 및 _component.evse.id_ 가 있는 구성 요소를 보고해야 하며, 이때 B08.FR.24를 고려해야 합니다.
+|B08.FR.23 |B08.FR.11 AND +
+  충전기가 _component.evse.id_ 가 없는 _componentVariable_ 요소에 _component_ 가 포함된 <<get_report_request,GetReportRequest>>를 수신하는 경우
+    |충전기는 _component.evse_ 필드(_component.evse_ 가 없는 최상위 구성 요소 포함)에 대해 이 _component.name_, _component.instance_ 가 있는 구성 요소를 보고해야 하며, B08.FR.24를 고려해야 합니다.
+|B08.FR.24 |B08.FR.11 AND +
+  충전기가 _component.instance_ 에 대한 값이 있는 _componentVariable_ 요소에 _component_ 가 포함된 <<get_report_request,GetReportRequest>>를 수신하는 경우
+    |충전기는 B08.FR.22, B08.FR.23을 고려하면서 모든 _component.instance_ 필드에 대해 이 _component.name_ 이 포함된 구성 요소를 보고해야 합니다.
+|B08.FR.25 |B08.FR.11 AND +
+  충전기가 _component.instance_ 필드가 없는 _componentVariable_ 요소에 _component_ 가 포함된 <<get_report_request,GetReportRequest>>를 수신하는 경우
+    |충전기는 모든 _component.instance_ 필드에 대해 이 _component.name_ 이 있는 구성 요소 또는 _component.instance_ 필드가 없는 구성 요소를 보고해야 하며, B08.FR.22, B08.FR.23을 고려합니다.
 |===
 
 <<<
@@ -693,53 +691,53 @@ image::part2/images/figure_17.svg[Sequence Diagram: Get Custom Report]
 [[setting_a_new_networkconnectionprofile]]
 === B09 - Setting a new NetworkConnectionProfile
 
-.B09 - Setting a new NetworkConnectionProfile
+.B09 - 새 NetworkConnectionProfile 설정
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Setting a new NetworkConnectionProfile.
-|2   |ID              |B09
-|{nbsp} d|_Functional block_ |B. Provisioning
-|3   |Objectives      |To enable the CSMS to update the connection details on the Charging Station.
-|4   |Description     |The CSMS updates the connection details on the Charging Station. For instance in preparation of a migration to a new CSMS. After completion of this use case, the Charging Station to CSMS connection data has been updated.
-|{nbsp} d|_Actors_    |Charging Station, CSMS
-|{nbsp} d|_Scenario description_ |A Charging Station supports at least two network configuration slots, that are identified by a number. The available slot numbers are reported by the Charging Station in the _valuesList_ of variable <<network_configuration_priority,NetworkConfigurationPriority>>. +
-  For example: valuesList  "0,1,2" in the base report tells CSMS that three configuration slots, numbered 0, 1 and 2, are available (but not necessarily set). +
-  The configuration slot number that is used for the active connection is reported by variable OCPPCommCtrlr.ActiveNetworkProfile.
+|1 |이름 |새 NetworkConnectionProfile 설정.
+|2 |ID |B09
+|{nbsp} d|_기능 블록_ |B. 프로비저닝
+|3 |목표 |CSMS가 충전기의 연결 세부 정보를 업데이트할 수 있도록 합니다.
+|4 |설명 |CSMS가 충전기의 연결 세부 정보를 업데이트합니다. 예를 들어 새 CSMS로 마이그레이션을 준비할 때입니다. 이 사용 사례를 완료한 후 충전기에서 CSMS로의 연결 데이터가 업데이트되었습니다.
+|{nbsp} d|_Actors_ |충전기, CSMS
+|{nbsp} d|_시나리오 설명_ |충전기는 숫자로 식별되는 최소 두 개의 네트워크 구성 슬롯을 지원합니다. 사용 가능한 슬롯 번호는 충전기에서 변수 <<network_configuration_priority,NetworkConfigurationPriority>>의 _valuesList_ 에 보고합니다. +
+  예를 들어: 기본 보고서의 valuesList "0,1,2"는 CSMS에 0, 1, 2로 번호가 매겨진 세 개의 구성 슬롯을 사용할 수 있음을 알려줍니다(반드시 설정되지는 않음). +
+  활성 연결에 사용되는 구성 슬롯 번호는 변수 OCPPCommCtrlr.ActiveNetworkProfile에 의해 보고됩니다.
 
-  **1.** The CSMS sends a <<set_network_profile_request,SetNetworkProfileRequest>> PDU containing an updated connection profile and a _configurationSlot_ out of the _valuesList_ of <<network_configuration_priority,NetworkConfigurationPriority>>. +
-  **2.** The Charging Station receives the PDU, validates the content and stores the new data +
-  **3.** The Charging Station responds by sending a <<set_network_profile_response,SetNetworkProfileResponse>> PDU, with status _Accepted_
-|5   |Prerequisites    |The data supplied by the CSMS matches the Charging Station’s capabilities
-|6   |Postcondition(s) |The Charging Station was able to store the new connection data
+  **1.** CSMS는 업데이트된 연결 프로필과 <<network_configuration_priority,NetworkConfigurationPriority>>의 _valuesList_ 에서 _configurationSlot_ 을 포함하는 <<set_network_profile_request,SetNetworkProfileRequest>> PDU를 보냅니다. +
+  **2.** 충전기는 PDU를 수신하고, 콘텐츠를 검증하고, 새 데이터를 저장합니다. +
+  **3.** 충전기는 _Accepted_ 상태로 <<set_network_profile_response,SetNetworkProfileResponse>> PDU를 보내 응답합니다. 
+|5 |필수 조건 |CSMS에서 제공한 데이터가 충전기의 기능과 일치합니다.
+|6 |사후 조건 |충전기가 새 연결 데이터를 저장할 수 있었습니다.
 |===
 
-.Sequence Diagram: Set Network Connection Profile
-image::part2/images/figure_18.svg[Sequence Diagram: Set Network Connection Profile]
+.시퀀스 다이어그램: 네트워크 연결 프로필 설정
+image::part2/images/figure_18.svg[시퀀스 다이어그램: 네트워크 연결 프로필 설정]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|8   |Error Handling |Activation of a new NetworkConnectionProfile is described in <<migrate_to_new_csms,B10 - Migrate to new CSMS>>. Errors during this use-case are not destructive to the current data connection. Error handling is further described in <<migrate_to_new_csms,B10 - Migrate to new CSMS>>
-|9   |Remarks        |Even when changes are made to the currenctly active NetworkConnectionProfile, these will not activated until a reboot has occured, as described in <<migrate_to_new_csms,B10 - Migrate to new CSMS>>.
+|8 |오류 처리 |새 NetworkConnectionProfile의 활성화는 <<migrate_to_new_csms,B10 - Migrate to new CSMS>>. 이 사용 사례 중 오류는 현재 데이터 연결에 파괴적이지 않습니다. 오류 처리에 대한 자세한 설명은 <<migrate_to_new_csms,B10 - Migrate to new CSMS>>
+|9 |참고 |현재 활성화된 NetworkConnectionProfile에 변경 사항이 적용되더라도 <<migrate_to_new_csms,B10 - Migrate to new CSMS>>에서 설명한 대로 재부팅이 발생할 때까지는 활성화되지 않습니다.
 |===
 
 ==== B09 - Setting a new NetworkConnectionProfile - Requirements
 
-.B09 - Requirements
+.B09 - 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition
+|ID |전제 조건 |요구 사항 정의
 
-|B09.FR.01  |On receipt of the <<set_network_profile_request,SetNetworkProfileRequest>> |The Charging Station SHALL validate the content, store the new data and if successful, respond by sending a <<set_network_profile_response,SetNetworkProfileResponse>> message, with status _Accepted_
-|B09.FR.02  |On receipt of the <<set_network_profile_request,SetNetworkProfileRequest>> |The Charging Station SHALL validate the content. If the content is invalid, the Charging Station SHALL respond by sending a <<set_network_profile_response,SetNetworkProfileResponse>> message, with status _Rejected_
-|B09.FR.03  |If setting the new networkprofile fails. |The Charging Station SHALL respond by sending a <<set_network_profile_response,SetNetworkProfileResponse>> message, with status _Failed_
-|B09.FR.04  |On receipt of the <<set_network_profile_request,SetNetworkProfileRequest>> AND +
-  the <<network_connection_profile_type,NetworkConnectionProfile>> contains a lower securityProfile than stored at the configuration variable <<security_profile,SecurityProfile>>
-    |The Charging Station SHALL respond by sending a <<set_network_profile_response,SetNetworkProfileResponse>> message, with status _Rejected_
-|B09.FR.05  |When the value of _configurationSlot_ in <<set_network_profile_request,SetNetworkProfileRequest>> does not match an entry in valuesList of <<network_configuration_priority,NetworkConfigurationPriority>>
-  |The Charging Station SHALL respond by sending a <<set_network_profile_response,SetNetworkProfileResponse>> message with status _Rejected_
-|B09.FR.06  |{nbsp}               |A Charging Station SHALL support at least two configuration slots for network connection profiles.
+|B09.FR.01 |<<set_network_profile_request,SetNetworkProfileRequest>>를 수신하면 |충전기는 콘텐츠를 검증하고, 새 데이터를 저장하고, 성공하면 <<set_network_profile_response,SetNetworkProfileResponse>> 메시지를 보내 응답해야 합니다. 메시지의 상태는 _Accepted_ 입니다.
+|B09.FR.02 |<<set_network_profile_request,SetNetworkProfileRequest>>를 수신하면 |충전기는 콘텐츠를 검증해야 합니다. 콘텐츠가 유효하지 않은 경우 충전기는 <<set_network_profile_response,SetNetworkProfileResponse>> 메시지를 보내서 응답해야 하며, 메시지의 상태는 _Rejected_ 입니다.
+|B09.FR.03 |새로운 네트워크 프로필 설정이 실패하는 경우입니다. |충전기는 <<set_network_profile_response,SetNetworkProfileResponse>> 메시지를 보내서 응답해야 합니다. 메시지의 상태는 _Failed_ 입니다.
+|B09.FR.04 | <<set_network_profile_request,SetNetworkProfileRequest>>를 수신하고 +
+  <<network_connection_profile_type,NetworkConnectionProfile>>에 구성 변수 <<security_profile,SecurityProfile>>에 저장된 것보다 낮은 securityProfile이 포함되어 있는 경우
+    |충전기는 <<set_network_profile_response,SetNetworkProfileResponse>> 메시지를 보내서 응답해야 합니다. 메시지의 상태는 _Rejected_ 입니다.
+|B09.FR.05 | <<set_network_profile_request,SetNetworkProfileRequest>>의 _configurationSlot_ 값이 <<network_configuration_priority,NetworkConfigurationPriority>>의 valuesList에 있는 항목과 일치하지 않는 경우
+  |충전기는 <<set_network_profile_response,SetNetworkProfileResponse>> 메시지를 _Rejected_ 상태로 보내 응답합니다.
+|B09.FR.06 |{nbsp} |충전기는 네트워크 연결 프로필에 대해 최소 두 개의 구성 슬롯을 지원해야 합니다.
 |===
 
 <<<
@@ -747,70 +745,69 @@ image::part2/images/figure_18.svg[Sequence Diagram: Set Network Connection Profi
 [[migrate_to_new_csms]]
 ==== B10 - Migrate to new CSMS
 
-.B10 - Migrate to new CSMS
+.B10 - 새 CSMS로 마이그레이션
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Migrate to new CSMS, using a different NetworkConnectionProfile.
-|2   |ID              |B10
-|{nbsp} d|_Functional block_ |B. Provisioning
-|3   |Objectives      |After completion of this use case, the Charging Station connects to a new CSMS.
-|4   |Description     |This use case describes how a Charging Station can be instructed to connect to a new CSMS, by changing the order of <<network_connection_profile_type,NetworkConnectionProfiles>> in <<network_configuration_priority,`NetworkConfigurationPriority`>>.
-|{nbsp} d|_Actors_    |Charging Station, CSMS 1, CSMS 2
-|{nbsp} d|_Scenario description_ |A Charging Station supports at least two network configuration slots, that are identified by a number. The available slot numbers are reported by the Charging Station in the _valuesList_ of variable <<network_configuration_priority,NetworkConfigurationPriority>>. +
-  For example: _valuesList_ = "0,1,2" in the base report tells CSMS that three configuration slots, numbered 0, 1 and 2, are available (but not necessarily set). +
-  The _value_ of <<network_configuration_priority,NetworkConfigurationPriority>> reports the order in which network configurations are tried to make a connection. +
-  For example: value  "1,0" means that Charging Station will first try configuration slot 1 and if that fails after the number of attempts configured in <<network_profile_connection_attempts,NetworkProfileConnectionAttempts>>, it will try to connect with configuration slot 0.
+|1 |이름 |다른 NetworkConnectionProfile을 사용하여 새 CSMS로 마이그레이션합니다.
+|2 |ID |B10
+|{nbsp} d|_기능 블록_ |B. 프로비저닝
+|3 |목표 |이 사용 사례를 완료한 후 충전기는 새 CSMS에 연결합니다.
+|4 |설명 |이 사용 사례는 <<network_configuration_priority,`NetworkConfigurationPriority`>>에서 <<network_connection_profile_type,NetworkConnectionProfiles>>의 순서를 변경하여 충전기에 새 CSMS에 연결하도록 지시하는 방법을 설명합니다.
+|{nbsp} d|_Actors_ |충전기, CSMS 1, CSMS 2
+|{nbsp} d|_시나리오 설명_ |충전기는 숫자로 식별되는 최소 두 개의 네트워크 구성 슬롯을 지원합니다. 사용 가능한 슬롯 번호는 충전기에서 변수 <<network_configuration_priority,NetworkConfigurationPriority>>의 _valuesList_ 에 보고합니다. +
+  예를 들어: 기본 보고서의 _valuesList_ = "0,1,2"는 CSMS에 0, 1, 2로 번호가 매겨진 세 개의 구성 슬롯을 사용할 수 있음을 알려줍니다(하지만 반드시 설정되지는 않음). +
+  <<network_configuration_priority,NetworkConfigurationPriority>>의 _value_ 는 네트워크 구성이 연결을 시도하는 순서를 보고합니다. +
+  예를 들어: 값 "1,0"은 충전기가 먼저 구성 슬롯 1을 시도하고 <<network_profile_connection_attempts,NetworkProfileConnectionAttempts>>에 구성된 시도 횟수 이후에 실패하면 구성 슬롯 0에 연결을 시도한다는 것을 의미합니다.
 
-  **1.** CSMS 1 sets a new value for the <<network_configuration_priority,`NetworkConfigurationPriority`>> Configuration Variable via <<set_variables_request,SetVariablesRequest>>, such that the NetworkConnectionProfile for CSMS 2 becomes first in the list and the existing connection to CSMS 1 becomes second in the list. +
-  **2.** The Charging Station responds with a SetVariablesResponse with status _Accepted_ +
-  **3.** CSMS 1 instructs the Charging Station to perform a Reset `OnIdle`. +
-  **4.** The Charging Station reboots and connects via the new primary NetworkConnectionProfile to CSMS 2.
-|5   |Prerequisites   |Use case <<setting_a_new_networkconnectionprofile,B09 - Setting a new NetworkConnectionProfile>> was executed successfully prior to this use case +
-  The data supplied by the CSMS matches the Charging Station’s capabilities
-|6   |Postcondition(s) |The Charging Station is connected via a different <<network_connection_profile_type,NetworkConnectionProfiles>>.
+  **1.** CSMS 1은 <<set_variables_request,SetVariablesRequest>>를 통해 <<network_configuration_priority,`NetworkConfigurationPriority`>> 구성 변수에 대한 새 값을 설정하여 CSMS 2의 NetworkConnectionProfile이 목록에서 첫 번째가 되고 CSMS 1에 대한 기존 연결이 목록에서 두 번째가 되도록 합니다. +
+  **2.** 충전기는 _Accepted_ 상태의 SetVariablesResponse로 응답합니다. +
+  **3.** CSMS 1은 충전기에 `OnIdle` 재설정을 수행하도록 지시합니다. +
+  **4.** 충전기가 재부팅되고 새로운 기본 NetworkConnectionProfile을 통해 CSMS 2에 연결됩니다.
+|5 |필수 조건 |사용 사례 <<setting_a_new_networkconnectionprofile,B09 - Setting a new NetworkConnectionProfile>>이 이 사용 사례 이전에 성공적으로 실행되었습니다. +
+  CSMS에서 제공한 데이터가 충전기의 기능과 일치합니다.
+|6 |사후 조건 |충전기가 다른 <<network_connection_profile_type,NetworkConnectionProfiles>>를 통해 연결됩니다.
 |===
 
-
-.Sequence Diagram: Migrate to new ConnectionProfile
-image::part2/images/figure_19.svg[Sequence Diagram: Migrate to new ConnectionProfile]
+.시퀀스 다이어그램: 새 ConnectionProfile로 마이그레이션
+image::part2/images/figure_19.svg[시퀀스 다이어그램: 새 ConnectionProfile로 마이그레이션]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error Handling  |n/a
-|8   |Remarks         |As in line with <<reset_with_ongoing_transaction,B12 - Reset - With Ongoing Transaction>>, when there are ongoing transactions, the Charging Station waits for these to be finished before performing the Reset and then connecting to a different CSMS. +
-  When an operator wants to perform an immediate switch, he should stop the transactions first.
+|7 |오류 처리 |n/a
+|8 |참고 |<<reset_with_ongoing_transaction,B12 - Reset - With Ongoing Transaction>>과 마찬가지로 진행 중인 트랜잭션이 있는 경우 충전기는 이러한 트랜잭션이 완료될 때까지 기다렸다가 Reset을 수행한 다음 다른 CSMS에 연결합니다. +
+  운영자가 즉시 전환을 수행하려면 먼저 트랜잭션을 중지해야 합니다.
 |===
 
 [[migrate_to_new_network_connection_profile_requirements]]
 ==== B10 - Migrate to new NetworkConnectionProfile - Requirements
 
-.B10 - Requirements
+.B10 - 요구 사항
 [cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition     |Note
+|ID |전제 조건 |요구 사항 정의 |참고
 
-|B10.FR.01  |On receipt of a <<set_variables_request,SetVariablesRequest>>, containing Configuration Variable <<network_configuration_priority,`NetworkConfigurationPriority`>> AND the NetworkProfile slots in the message all contain valid configurations |{nbsp}
-  The Charging Station SHALL send <<set_variables_response,SetVariablesResponse>> with status _Accepted_, or _RebootRequired_. |{nbsp}
-|B10.FR.02  |On receipt of a <<set_variables_request,SetVariablesRequest>>, containing Configuration Variable <<network_configuration_priority,`NetworkConfigurationPriority`>> AND any of the NetworkProfile slots in the message does not contain a valid configuration
-  |The Charging Station SHALL send <<set_variables_response,SetVariablesResponse>> with status _Rejected_.
-    |The optional element _statusInfo_ can be used to provide more information.
-|B10.FR.03  |B10.FR.04 AND +
-  When connecting fails
-    |The Charging Station SHALL make the number of attempts as configured in <<network_profile_connection_attempts,`NetworkProfileConnectionAttempts`>> per entry of <<network_configuration_priority,`NetworkConfigurationPriority`>>. |{nbsp}
-|B10.FR.04  |B10.FR.01 OR B09.FR.01 AND +
-  After a reboot
-    |The Charging Station SHALL begin connecting to the first entry of <<network_configuration_priority,`NetworkConfigurationPriority`>> |{nbsp}
-|B10.FR.05  |{nbsp}
-  |It is RECOMMENDED to set the Charging Station to Inoperative (via <<change_availability_request,ChangeAvailabilityRequest>>) to ensure that no new transactions can be started and wait until the transaction message queue in the Charging Station is empty before sending the <<reset_request,ResetRequest>>. Otherwise the Charging Station might send transaction related messages to the new CSMS that has not received the start of the Transaction, and the old system will miss the ended messages. To determine if there are still transaction for an ongoing transaction in the queue, the <<get_transaction_status_request,getTransactionStatusRequest>> message can be used. |{nbsp}
-|B10.FR.06  |{nbsp}
-  |The Charging Station SHALL disconnect from the old CSMS, before trying to connect to the new CSMS.
+|B10.FR.01 |구성 변수 <<network_configuration_priority,`NetworkConfigurationPriority`>>를 포함하는 <<set_variables_request,SetVariablesRequest>>를 수신하고 메시지의 NetworkProfile 슬롯에 모두 유효한 구성이 포함된 경우 
+  |충전기는 <<set_variables_response,SetVariablesResponse>>를 _Accepted_ 또는 _RebootRequired_ 상태로 전송해야 합니다. |{nbsp}
+|B10.FR.02 |<<set_variables_request,SetVariablesRequest>>를 수신하고 구성 변수 <<network_configuration_priority,`NetworkConfigurationPriority`>>를 포함하고 메시지의 NetworkProfile 슬롯 중 하나에 유효한 구성이 없는 경우
+  |충전기는 <<set_variables_response,SetVariablesResponse>>를 _Rejected_ 상태로 전송해야 합니다.
+    |선택적 요소 _statusInfo_ 를 사용하여 추가 정보를 제공할 수 있습니다.
+|B10.FR.03 |B10.FR.04 AND +
+  연결에 실패하는 경우
+    |충전기는 <<network_configuration_priority,`NetworkConfigurationPriority`>>의 항목당 <<network_profile_connection_attempts,`NetworkProfileConnectionAttempts`>>에 구성된 횟수만큼 시도해야 합니다. |{nbsp}
+|B10.FR.04 |B10.FR.01 또는 B09.FR.01 AND +
+  재부팅 후
+    |충전기는 <<network_configuration_priority,`NetworkConfigurationPriority`>>의 첫 번째 항목에 연결을 시작해야 합니다. |{nbsp}
+|B10.FR.05 |{nbsp}
+  |충전기를 Inoperative으로 설정하는 것이 좋습니다(<<change_availability_request,ChangeAvailabilityRequest>>를 통해). 이렇게 하면 새 트랜잭션을 시작할 수 없고, <<reset_request,ResetRequest>>를 보내기 전에 충전기의 트랜잭션 메시지 대기열이 비어 있을 때까지 기다릴 수 있습니다. 그렇지 않으면 충전기가 트랜잭션 시작을 받지 못한 새 CSMS에 트랜잭션 관련 메시지를 보낼 수 있으며, 이전 시스템은 종료된 메시지를 놓치게 됩니다. 대기열에 진행 중인 트랜잭션에 대한 트랜잭션이 아직 있는지 확인하려면 <<get_transaction_status_request,getTransactionStatusRequest>> 메시지를 사용할 수 있습니다. |{nbsp}
+|B10.FR.06 |{nbsp}
+  |충전기는 새 CSMS에 연결을 시도하기 전에 이전 CSMS에서 연결을 끊어야 합니다.
     |{nbsp}
-|B10.FR.07  |B10.FR.03 AND +
-  All <<network_profile_connection_attempts,`NetworkProfileConnectionAttempts`>> for every entry of <<network_configuration_priority,`NetworkConfigurationPriority`>> failed.
-    |The Charging Station SHOULD fallback and start 'reconnecting' to the <<network_connection_profile_type,NetworkConnectionProfile>> for which the last successful connection was made.
-      |'reconnecting' in this requirement, refers to the reconnection mechanism described at section 5.3. Reconnecting from "Part 4 - JSON over WebSockets implementation guide".
+|B10.FR.07 |B10.FR.03 AND +
+  <<network_configuration_priority,`NetworkConfigurationPriority`>>의 모든 항목에 대한 <<network_profile_connection_attempts,`NetworkProfileConnectionAttempts`>>가 모두 실패했습니다.
+    |충전기는 폴백하여 마지막으로 성공적으로 연결한 <<network_connection_profile_type,NetworkConnectionProfile>>에 'reconnecting'을 시작해야 합니다.
+      |이 요구 사항에서 'reconnecting'은 "Part 4 - JSON over WebSockets implementation guide"의 Section 5.3에서 설명한 재연결 메커니즘을 말합니다.
 |===
 
 :sectnums:
@@ -820,85 +817,84 @@ image::part2/images/figure_19.svg[Sequence Diagram: Migrate to new ConnectionPro
 [[reset_without_ongoing_transaction]]
 === B11 - Reset - Without Ongoing Transaction
 
-.B11 - Reset - Without Ongoing Transaction
+.B11 - 재설정 - 진행 중인 트랜잭션 없음
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Reset - Without Ongoing Transaction
-|2   |ID              |B11
-|{nbsp} d|_Functional block_ |B. Provisioning
-|3   |Objective(s)    |To enable the CSMS to request a Charging Station to reset itself or an EVSE, while there is no ongoing transaction.
-|4   |Description     |This use case covers how the CSMS can request the Charging Station to reset itself or an EVSE by sending <<reset_request,ResetRequest>>. (If <<reset_request,ResetRequest>> contains an optional paramater _evseId_, then only a reset of the specific EVSE is requested.) This could for example be necessary if the Charging Station is not functioning correctly.
-|{nbsp} d|_Actors_    |Charging Station, CSMS, CSO
-|{nbsp} d|_Scenario description_ 
-  |**1.** The CSO requests the CSMS to reset the Charging Station or EVSE. +
-  **2.** The CSMS sends <<reset_request,ResetRequest>> requesting the Charging Station to reset itself or EVSE. +
-  **3.** The CSMS requests for an OnIdle or Immediate reset. +
-  **4.** The Charging Station responds with ResetResponse, indicating whether the Charging Station is +
-  able to reset itself or EVSE. +
-  **5.** The CSMS sends an optional notification to the CSO. +
-  **6.** Only if no evseId was supplied, then after the reset, the Charging Station will proceed as in use case B01.
-|{nbsp} d|_Alternative scenario(s)_ |<<reset_with_ongoing_transaction,B12 - Reset With Ongoing Transaction>>
-|5   |Prerequisite(s) |No transaction is ongoing.
-|6   |Postcondition(s) 
-  |**Successful postcondition:** +
-  The Charging Station was able to reset itself or EVSE.
+|1 |이름 |재설정 - 진행 중인 트랜잭션 없음
+|2 |ID |B11
+|{nbsp} d|_기능 블록_ |B. 프로비저닝
+|3 |목표 |CSMS가 진행 중인 트랜잭션이 없는 동안 충전기에 자체 또는 EVSE를 재설정하도록 요청할 수 있도록 합니다.
+|4 |설명 |이 사용 사례는 CSMS가 <<reset_request,ResetRequest>>를 보내 충전기에 자체 또는 EVSE를 재설정하도록 요청하는 방법을 다룹니다. (<<reset_request,ResetRequest>>에 선택적 매개변수 _evseId_ 가 포함된 경우 특정 EVSE의 재설정만 요청됩니다.) 예를 들어 충전기가 제대로 작동하지 않는 경우 필요할 수 있습니다.
+|{nbsp} d|_Actors_ |충전기, CSMS, CSO
+|{nbsp} d|_시나리오 설명_
+  |**1.** CSO가 CSMS에 충전기 또는 EVSE를 재설정하도록 요청합니다. +
+  **2.** CSMS가 <<reset_request,ResetRequest>>를 보내 충전기가 자체 또는 EVSE를 재설정하도록 요청합니다. +
+  **3.** CSMS가 OnIdle 또는 Immediate 재설정을 요청합니다. +
+  **4.** 충전기가 ResetResponse로 응답하여 충전기가 자체 또는 EVSE를 재설정할 수 있는지 여부를 나타냅니다. +
+  **5.** CSMS가 CSO에 선택적 알림을 보냅니다. +
+  **6.** evseId가 제공되지 않은 경우에만 재설정 후 충전기는 사용 사례 B01과 같이 진행됩니다.
+|{nbsp} d|_대체 시나리오_ |<<reset_with_ongoing_transaction,B12 - Reset With Ongoing Transaction>>
+|5 |필수 조건 |진행 중인 트랜잭션이 없습니다.
+|6 |사후 조건
+  |**성공적인 사후 조건:** +
+  충전기가 자체 또는 EVSE를 재설정할 수 있었습니다.
 
-  **Failure postcondition:** +
-  The Charging Station _not_ was able to reset itself or EVSE.
+  **실패 사후 조건:** +
+  충전기가 자체 또는 EVSE를 재설정할 수 _없었습니다_.
 |===
 
-.Sequence Diagram: Reset Without Transaction
-image::part2/images/figure_20.svg[Sequence Diagram: Reset Without Transaction]
+.시퀀스 다이어그램: 트랜잭션 없이 재설정
+image::part2/images/figure_20.svg[시퀀스 다이어그램: 트랜잭션 없이 재설정]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error handling  |n.a
-|8   |Remark(s)       |Persistent states: for example, EVSE set to _Unavailable_ SHALL persist.
+|7 |오류 처리 |n.a
+|8 |참고 |지속적인 상태: 예를 들어 EVSE가 _Unavailable_ 로 설정된 경우 지속되어야 합니다.
 
-  The Charging Station responds with <<reset_response,ResetResponse>>.
+  충전기는 <<reset_response,ResetResponse>>로 응답합니다.
 |===
 
 ==== B11 - Reset - Without Ongoing Transaction - Requirements
 
-.B11 - Requirements
+.B11 - 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition
+|ID |전제 조건 |요구 사항 정의
 
-|B11.FR.01  |When the Charging Station receives a <<reset_request,ResetRequest>>.
-  |The Charging Station SHALL respond with a <<reset_response,ResetResponse>>.
-|B11.FR.02  |If the status was set to _Inoperative_ by the CSMS.
-  |After a reboot of the Charging Station, the EVSEs SHALL return to the state _Unavailable_ as prior to the reboot.
-|B11.FR.03  |B11.FR.01 +
-  AND no _evseId_ parameter is supplied +
+|B11.FR.01 |충전기가 <<reset_request,ResetRequest>>를 수신할 때.
+  |충전기는 <<reset_response,ResetResponse>>로 응답해야 합니다.
+|B11.FR.02 |CSMS에서 상태가 _Inoperative_ 로 설정된 경우.
+  |충전기를 재부팅한 후 EVSE는 재부팅 전과 마찬가지로 _Unavailable_ 상태로 돌아가야 합니다.
+|B11.FR.03 |B11.FR.01 +
+  AND _evseId_ 매개변수가 제공되지 않음 +
   AND +
-  <<reset_response,ResetResponse>> was _Accepted_.
-    |The Charging Station MAY send a StatusNotification(Unavailable) and SHALL start a reboot.
-|B11.FR.04  |B11.FR.03            |The Charging Station SHALL proceed as described in use case <<cold_boot_charging_station,B01 - Cold Boot Charging Station>>.
-|B11.FR.05  |If the status of an EVSE was _Reserved_.
-  |After a reboot of the Charging Station or resetting of EVSE, the EVSE(s) SHALL return to the state _Reserved_.
-|B11.FR.06  |B11.FR.01 +
+  <<reset_response,ResetResponse>>가 _Accepted_ 되었습니다.
+    |충전기는 StatusNotification(Unavailable)을 보낼 수 있으며 재부팅을 시작해야 합니다.
+|B11.FR.04 |B11.FR.03 |충전기는 사용 사례 <<cold_boot_charging_station,B01 - Cold Boot Charging Station>>에 설명된 대로 진행해야 합니다.
+|B11.FR.05 |EVSE의 상태가 _Reserved_ 인 경우.
+  |충전기 재부팅 또는 EVSE 재설정 후 EVSE는 _Reserved_ 상태로 돌아가야 합니다.
+|B11.FR.06 |B11.FR.01 +
   AND +
-  For example there is a firmware update ongoing that cannot be interrupted.
-    |The Charging Station SHALL respond with a status _Rejected_.
-|B11.FR.07  |B11.FR.01 +
+  예를 들어 중단할 수 없는 펌웨어 업데이트가 진행 중입니다.
+    |충전기는 _Rejected_ 상태로 응답해야 합니다.
+|B11.FR.07 |B11.FR.01 +
   AND +
-  Charging Station cannot perform the reset now, but has scheduled the reset for later
-    |The Charging Station SHALL respond with a status _Scheduled_.
-|B11.FR.08  |B11.FR.01 +
-  AND an _evseId_ parameter is supplied +
+  충전기는 지금 재설정을 수행할 수 없지만 나중에 재설정을 예약했습니다.
+    |충전기는 _Scheduled_ 상태로 응답해야 합니다.
+|B11.FR.08 |B11.FR.01 +
+  AND _evseId_ 매개변수가 제공됩니다. +
   AND +
-  <<reset_response,ResetResponse>> was _Accepted_.
-    |The Charging Station MAY send a StatusNotification(Unavailable) for the EVSE and SHALL start a reset of EVSE that is referred to by _evseId_ parameter.
-|B11.FR.09  |B11.FR.01 +
-  AND an _evseId_ parameter is supplied +
+  <<reset_response,ResetResponse>>가 _Accepted_ 이었습니다.
+    |충전기는 EVSE에 대한 StatusNotification(Unavailable)을 보낼 수 있으며 _evseId_ 매개변수로 참조되는 EVSE 재설정을 시작해야 합니다.
+|B11.FR.09 |B11.FR.01 +
+  AND _evseId_ 매개변수가 제공됨 +
   AND +
-  Charging Station does not support resetting an individual EVSE
-    |The Charging Station SHALL return a <<reset_response,ResetResponse>> _Rejected_
-|B11.FR.10  |When the Charging Station supports resetting of an individual EVSE
-    |The Charging Station SHOULD set the device model variable <<allow_reset,AllowReset>> to true for the EVSE.
+  충전기가 개별 EVSE 재설정을 지원하지 않음
+    |충전기는 <<reset_response,ResetResponse>> _Rejected_ 를 반환해야 함
+|B11.FR.10 |충전기가 개별 EVSE 재설정을 지원하는 경우
+  |충전기는 EVSE에 대해 장치 모델 변수 <<allow_reset,AllowReset>>을 true로 설정해야 함
 |===
 
 <<<
@@ -906,82 +902,82 @@ image::part2/images/figure_20.svg[Sequence Diagram: Reset Without Transaction]
 [[reset_with_ongoing_transaction]]
 === B12 - Reset - With Ongoing Transaction
 
-.B12 - Reset - With Ongoing Transaction
+.B12 - 재설정 - 진행 중인 트랜잭션
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Reset - With Ongoing Transaction
-|2   |ID              |B12
-|{nbsp} d|_Functional block_ |B. Provisioning
-|3   |Objective(s)    |To enable the CSMS to request a Charging Station to reset itself or EVSE, while there is an ongoing transaction.
-|4   |Description     |This use case covers how the CSMS can request the Charging Station to reset itself or an EVSE by sending <<reset_request,ResetRequest>>. (If <<reset_request,ResetRequest>> contains an optional paramater evseId , then only a reset of the specific EVSE is requested.) This could for example be necessary if the Charging Station is not functioning correctly. The CSMS has the possibility to let the Charging Station end all transactions itself and reboot or wait until all ongoing transactions are ended normally (by an EV user) and then reboot.
-|{nbsp} d|_Actors_    |Charging Station, CSMS, CSO
-|{nbsp} d|_Scenario description_
-  |**1.** The CSO requests the CSMS to reset the Charging Station or EVSE. +
-  **2.** The CSMS sends <<reset_request,ResetRequest>> requesting the Charging Station to reset itself or EVSE. +
-  **3a.** On receipt of an OnIdle reset, the Charging Station responds with <<reset_response,ResetResponse(Scheduled)>>, indicating the Charging Station will try to reset itself or EVSE after all ongoing transactions have ended. The Charging Station continues charging and sets all EVSEs (or only the one provided in the request, if _evseId_ was supplied) that are Available to status _Unavailable_ , waits until all transactions are finished and all <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) messages are sent. +
-  **3b.** On receipt of an Immediate reset, the Charging Station responds with <<reset_response,ResetResponse(Accepted)>>, indicating the Charging Station will try to reset itself or EVSE. The Charging Station attempts to terminate any transaction (or only those running on the EVSE provided in the request, if _evseId_ was supplied) in progress, and sending a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) message. +
-  **4.** Only if no evseId was supplied the Charging Station reboots and returns to a state as just having been booted, <<cold_boot_charging_station,B01 - Cold Boot Charging Station applies>>.
-|{nbsp} d|_Alternative scenario(s)_ |<<reset_without_ongoing_transaction,B11 - Reset Without Ongoing Transaction>>
-|5   |Prerequisite(s) |A transaction is ongoing.
-|6   |Postcondition(s) 
-  |**Successful postcondition:** +
-  The Charging Station was able to reset itself or EVSE.
+|1 |이름 |재설정 - 진행 중인 트랜잭션
+|2 |ID |B12
+|{nbsp} d|_기능 블록_ |B. 프로비저닝
+|3 |목표 |CSMS가 진행 중인 트랜잭션이 있는 동안 충전기에 자체 또는 EVSE를 재설정하도록 요청할 수 있도록 합니다.
+|4 |설명 |이 사용 사례는 CSMS가 <<reset_request,ResetRequest>>를 보내 충전기에 자체 또는 EVSE를 재설정하도록 요청하는 방법을 다룹니다. (<<reset_request,ResetRequest>>에 선택적 매개변수 evseId가 포함된 경우 특정 EVSE의 재설정만 요청됩니다.) 예를 들어 충전기가 제대로 작동하지 않는 경우 필요할 수 있습니다. CSMS는 충전기가 모든 트랜잭션을 스스로 종료하고 재부팅하거나 모든 진행 중인 트랜잭션이 정상적으로 종료될 때까지(EV 사용자가) 기다린 다음 재부팅할 수 있습니다.
+|{nbsp} d|_Actors_ |충전기, CSMS, CSO
+|{nbsp} d|_시나리오 설명_
+  |**1.** CSO가 CSMS에 충전기 또는 EVSE를 재설정하도록 요청합니다. +
+  **2.** CSMS가 <<reset_request,ResetRequest>>를 보내 충전기가 스스로 또는 EVSE를 재설정하도록 요청합니다. +
+  **3a.** OnIdle 재설정을 수신하면 충전기는 <<reset_response,ResetResponse(Scheduled)>>로 응답하여 모든 진행 중인 트랜잭션이 종료된 후 충전기가 자체 또는 EVSE를 재설정하려고 시도할 것임을 나타냅니다. 충전기는 충전을 계속하고 사용 가능한 모든 EVSE(또는 _evseId_ 가 제공된 경우 요청에서 제공된 EVSE만)를 상태 _Unavailable_ 로 설정하고 모든 트랜잭션이 완료되고 모든 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>) 메시지가 전송될 때까지 기다립니다. +
+  **3b.** 즉시 재설정을 수신하면 충전기는 <<reset_response,ResetResponse(Accepted)>>로 응답하여 충전기가 자체 또는 EVSE를 재설정하려고 시도할 것임을 나타냅니다. 충전기는 진행 중인 모든 트랜잭션(또는 요청에서 제공된 EVSE에서 ​​실행 중인 트랜잭션만, _evseId_ 가 제공된 경우)를 종료하고 <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) 메시지를 전송하려고 시도합니다. +
+  **4.** evseId가 제공되지 않은 경우에만 충전기가 재부팅되고 방금 부팅된 상태로 돌아갑니다. <<cold_boot_charging_station,B01 - Cold Boot Charging Station applies>>.
+|{nbsp} d|_대체 시나리오_ |<<reset_without_ongoing_transaction,B11 - Reset Without Ongoing Transaction>>
+|5 |필수 조건 |트랜잭션이 진행 중입니다.
+|6 |사후 조건
+  |**성공한 사후 조건:** +
+  충전기가 자체 또는 EVSE를 재설정할 수 있었습니다.
 
-  **Failure postcondition:** +
-  The Charging Station _not_ was able to reset itself or EVSE.
+  **실패 사후 조건:** +
+  충전기가 자체 또는 EVSE를 재설정할 수 없습니다.
 |===
 
 :figure-caption!: 
-.Figure 21a: Sequence Diagram: Reset OnIdle With Ongoing Transaction
-image::part2/images/figure_21a.svg[Sequence Diagram: Reset OnIdle With Ongoing Transaction]
+.그림 21a: 시퀀스 다이어그램: 진행 중인 트랜잭션으로 OnIdle 재설정
+image::part2/images/figure_21a.svg[시퀀스 다이어그램: 진행 중인 트랜잭션으로 OnIdle 재설정]
 
-.Figure 21b: Sequence Diagram: Reset Immediate With Ongoing Transaction
-image::part2/images/figure_21b.svg[Sequence Diagram: Reset Immediate With Ongoing Transaction]
+.그림 21b: 시퀀스 다이어그램: 진행 중인 트랜잭션으로 즉시 재설정
+image::part2/images/figure_21b.svg[시퀀스 다이어그램: 진행 중인 트랜잭션으로 즉시 재설정]
 
 :figure-caption: Figure
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error handling    |After having accepted the <<reset_request,ResetRequest>>, <<transaction_event_request,TransactionEventRequest>> messages that cannot be delivered to the CSMS MUST be queued.
-|8   |Remark(s)         |n/a
+|7 |오류 처리 |<<reset_request,ResetRequest>>를 수락한 후, CSMS에 전달할 수 없는 <<transaction_event_request,TransactionEventRequest>> 메시지는 반드시 큐에 넣어야 합니다.
+|8 |참고 |n/a
 |===
 
 ==== B12 - Reset - With Ongoing Transaction - Requirements
 
-.B12 - Requirements
+.B12 - 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition
+|ID |전제 조건 |요구 사항 정의
 
-|B12.FR.01  |When the Charging Station receives a <<reset_request,ResetRequest(OnIdle)>> AND a transaction is ongoing
-  |The Charging Station SHALL respond with a <<reset_response,ResetResponse(Scheduled)>>, to indicate whether the Charging Station will attempt to reset itself or EVSE after all transactions on Charging Station or EVSE have ended.
-|B12.FR.02  |When the Charging Station receives a <<reset_request,ResetRequest(Immediate)>> AND a transaction is ongoing
-  |The Charging Station SHALL respond with a <<reset_response,ResetResponse(Accepted)>>, to indicate whether the Charging Station will attempt to reset itself or EVSE.
-|B12.FR.03 |If no _evseId_ is supplied +
+|B12.FR.01 |충전기가 <<reset_request,ResetRequest(OnIdle)>>를 수신하고 트랜잭션이 진행 중인 경우
+  |충전기는 <<reset_response,ResetResponse(Scheduled)>>로 응답하여 충전기 또는 EVSE의 모든 트랜잭션이 종료된 후 충전기가 자체 또는 EVSE를 재설정할지 여부를 표시해야 합니다.
+|B12.FR.02 |충전기가 <<reset_request,ResetRequest(Immediate)>>를 수신하고 트랜잭션이 진행 중인 경우
+  |충전기는 <<reset_response,ResetResponse(Accepted)>>로 응답하여 충전기가 자체 또는 EVSE를 재설정할지 여부를 나타냅니다.
+|B12.FR.03 |_evseId_ 가 제공되지 않은 경우 +
   AND +
-  If any transaction is in progress and an OnIdle reset is received.
-    |The transaction of the Charging Station SHALL be terminated normally, before the reboot, as in <<e06_stop_transaction_options,E06 - Stop Transaction>>.
-|B12.FR.04 |If no _evseId_ is supplied +
+  트랜잭션이 진행 중이고 OnIdle 재설정이 수신된 경우.
+    |충전기의 트랜잭션은 <<e06_stop_transaction_options,E06 - Stop Transaction>>과 같이 재부팅 전에 정상적으로 종료되어야 합니다.
+|B12.FR.04 |_evseId_ 가 제공되지 않은 경우 +
   AND +
-  If any transaction is in progress and an Immediate Reset is received.
-    |The Charging Station SHALL attempt to terminate any transaction in progress and send a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) message before performing a reboot.
-|B12.FR.05 |If an Immediate Reset without _evseId_ is received and the <<transaction_event_response,TransactionEventResponse>> is not received within timeout.
-  |The Charging Station SHALL queue the <<transaction_event_request,TransactionEventRequest>>, reboot and resend the <<transaction_event_request,TransactionEventRequest>> after the reboot.
-|B12.FR.06 |If the status was set to _Inoperative_ by the CSMS.
-  |After a reboot of the Charging Station or resetting of EVSE, the EVSE(s) SHALL return to the state _Unavailable_ as prior to the reboot of Charging Station or reset of EVSE.
-|B12.FR.07 |If an _evseId_ is supplied +
+  트랜잭션이 진행 중이고 Immediate Reset이 수신된 경우.
+    |충전기는 진행 중인 모든 트랜잭션을 종료하고 재부팅을 수행하기 전에 <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) 메시지를 보내야 합니다.
+|B12.FR.05 |_evseId_ 없이 Immediate Reset을 수신하고 <<transaction_event_response,TransactionEventResponse>>가 시간 초과 내에 수신되지 않는 경우.
+  |충전기는 <<transaction_event_request,TransactionEventRequest>>를 대기열에 넣고 재부팅한 후 <<transaction_event_request,TransactionEventRequest>>를 다시 보내야 합니다.
+|B12.FR.06 |CSMS에서 상태가 _Inoperative_ 로 설정된 경우.
+  |충전기 재부팅 또는 EVSE 재설정 후 EVSE는 충전기 재부팅 또는 EVSE 재설정 이전과 마찬가지로 _Unavailable_ 상태로 돌아가야 합니다.
+|B12.FR.07 |_evseId_ 가 제공된 경우 +
   AND +
-  If a transaction is in progress on the EVSE and an OnIdle reset is received.
-    |The transaction on the EVSE SHALL be terminated normally, before the reset, as in <<e06_stop_transaction_options,E06 - Stop Transaction>>.
-|B12.FR.08 |If an _evseId_ is supplied +
+  EVSE에서 ​​트랜잭션이 진행 중이고 OnIdle 재설정이 수신된 경우.
+    |EVSE의 트랜잭션은 <<e06_stop_transaction_options,E06 - Stop Transaction>>과 같이 재설정 전에 정상적으로 종료되어야 합니다.
+|B12.FR.08 |_evseId_ 가 제공된 경우 +
   AND +
-  If a transaction is in progress on the EVSE and an Immediate Reset is received.
-    |The Charging Station SHALL attempt to terminate the transaction in progress on the EVSE and send a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) message before performing a reset.
+  EVSE에서 ​​트랜잭션이 진행 중이고 Immediate Reset이 수신된 경우.
+    |충전기는 EVSE에서 ​​진행 중인 트랜잭션을 종료하고 재설정을 수행하기 전에 <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) 메시지를 보내야 합니다.
 |B12.FR.09 |B12.FR.01 +
-  AND an _evseId_ parameter is supplied +
+  AND _evseId_ 매개변수가 제공됨 +
   AND +
-  Charging Station does not support resetting an individual EVSE
-    |The Charging Station SHALL return a <<reset_response,ResetResponse>> _Rejected_
+  충전기는 개별 EVSE 재설정을 지원하지 않음
+    |충전기는 <<reset_response,ResetResponse>> _Rejected_ 를 반환해야 합니다.
 |===
