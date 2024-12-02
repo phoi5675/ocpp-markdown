@@ -6,8 +6,7 @@
 
 == OCPP Security
 
-This Functional Block describes the security requirements for the OCPP protocol. The security part was developed to strengthen and mature the future development and standardization of OCPP. It is based amongst others on the end-to-end security design by LaQuSo <<ocpp_security_21,[21]>>. Security requirements are included on security measures at Charging Station and CSMS, to support users of the
-OCPP.
+This Functional Block describes the security requirements for the OCPP protocol. The security part was developed to strengthen and mature the future development and standardization of OCPP. It is based amongst others on the end-to-end security design by LaQuSo <<ocpp_security_21,[21]>>. Security requirements are included on security measures at Charging Station and CSMS, to support users of the OCPP.
 
 === Security Objectives
 
@@ -41,6 +40,7 @@ This section defines the different OCPP security profiles and their requirement.
                             Authentication
                                             |Communication +
                                             Security
+
 |1. Unsecured Transport with Basic Authentication
   |HTTP Basic Authentication |- |-
 |2. TLS with Basic Authentication |HTTP Basic Authentication 
@@ -131,25 +131,24 @@ image::part2/images/figure_2.svg[Sequence Diagram: HTTP Basic Authentication seq
 .Sequence Diagram: TLS with Basic Authentication sequence diagram
 image::part2/images/figure_3.svg[Sequence Diagram: TLS with Basic Authentication sequence diagram]
 
-
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7   |Remark(s)         |TLS allows a number of configurations, not all of which provide sufficient security. The requirements below describe the configurations allowed for OCPP.
 
-The Charging Station should include the same header as used in Basic Auth RFC 2617, while requesting to upgrade the http connection to a websocket connection as described in RFC 6455. The server first needs to validate the Authorization header before upgrading the connection.
+  The Charging Station should include the same header as used in Basic Auth RFC 2617, while requesting to upgrade the http connection to a websocket connection as described in RFC 6455. The server first needs to validate the Authorization header before upgrading the connection.
 
-**Example:** +
-_GET /ws HTTP/1.1_ +
-_(Remote-Addr: 127.0.0.1)_ +
-_UPGRADE: websocket_ +
-_CONNECTION: Upgrade_ +
-_HOST: 127.0.0.1:9999_ +
-_ORIGIN: http://127.0.0.1:9999_ +
-_SEC-WEBSOCKET-KEY: Pb4obWo2214EfaPQuazMjA==_ +
-_SEC-WEBSOCKET-VERSION: 13_ +
-_AUTHORIZATION: Basic <Base64 encoded(<ChargePointId>:<AuthorizationKey>)>_
+  **Example:** +
+  _GET /ws HTTP/1.1_ +
+  _(Remote-Addr: 127.0.0.1)_ +
+  _UPGRADE: websocket_ +
+  _CONNECTION: Upgrade_ +
+  _HOST: 127.0.0.1:9999_ +
+  _ORIGIN: http://127.0.0.1:9999_ +
+  _SEC-WEBSOCKET-KEY: Pb4obWo2214EfaPQuazMjA==_ +
+  _SEC-WEBSOCKET-VERSION: 13_ +
+  _AUTHORIZATION: Basic <Base64 encoded(<ChargePointId>:<AuthorizationKey>)>_
 
-Please note, that the encoding of the basic authentication password in OCPP 2.0.1 (A00.FR.304) differs from how this was done in OCPP 1.6.
+  Please note, that the encoding of the basic authentication password in OCPP 2.0.1 (A00.FR.304) differs from how this was done in OCPP 1.6.
 |===
 
 ==== TLS with Basic Authentication Profile - Requirements
@@ -185,7 +184,7 @@ Please note, that the encoding of the basic authentication password in OCPP 2.0.
 
     NOTE: This is a critical security event that will need to be queued and sent to CSMS once a successful connection has been made, as described in use case A04. +
     A security event only needs to be sent once for repeated failed connection attempts, in order to avoid overflow to the offline queue.
-|A00.FR.317 |{nbsp}               |TLS SHALL be implemented as in [4] or its successor standards without any modifications.
+|A00.FR.317 |{nbsp}               |TLS SHALL be implemented as in <<ocpp_security_4,[4]>> or its successor standards without any modifications.
 |A00.FR.318 |{nbsp}               |The CSMS SHALL support at least the following four cipher suites: +
   *TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256* +
   *TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384* +
@@ -321,8 +320,7 @@ image::part2/images/figure_4.svg[Sequence Diagram: TLS with Client Side Certific
 |A00.FR.428 |{nbsp}               |The Charging Station Certificate MAY be the same certificate as the SECC Certificate in <<iso15118_2,ISO15118-2>>, used to set up a TLS connection between the Charging Station and an Electric Vehicle.
 |A00.FR.429 |If Charging Station certificate has been expired AND +
   CSMS has been explicitly configured to accept a connection by this specific Charging Station with an expired certificate.
-    |CSMS MAY accept this Charging Station in a BootNotification - Pending
-state (use case B02) after which it SHALL immediately execute <<update_charging_station_certificate_by_request_of_csms,A02 - Update Charging Station Certificate by request of CSMS>> to renew the certificate.
+    |CSMS MAY accept this Charging Station in a BootNotification - Pending state (use case B02) after which it SHALL immediately execute <<update_charging_station_certificate_by_request_of_csms,A02 - Update Charging Station Certificate by request of CSMS>> to renew the certificate.
 |===
 
 [[keys_used_in_ocpp]]
@@ -361,7 +359,7 @@ _This section is normative._
   AND +
   elliptic curve cryptography
     |This translates into a key that SHALL be at least 224 bits long.
-A00.FR.504 For all cryptographic operations, only the algorithms recommended by BSI in <<ocpp_security_12,[12]>>, which are suitable for use in future systems, SHALL be used. This restriction includes the signing of certificates in the certificate hierarchy
+|A00.FR.504 |{nbsp}               |For all cryptographic operations, only the algorithms recommended by BSI in <<ocpp_security_12,[12]>>, which are suitable for use in future systems, SHALL be used. This restriction includes the signing of certificates in the certificate hierarchy
 |A00.FR.505 |{nbsp}               |For signing by the certificate authority RSA-PSS, or ECDSA SHOULD be used.
 |A00.FR.506 |{nbsp}               |For computing hash values the SHA256 algorithm SHOULD be used.
 |A00.FR.507 |{nbsp}               |The certificates SHALL be stored and transmitted in the X.509 format encoded in Privacy-Enhanced Mail (PEM) format.
@@ -676,13 +674,12 @@ image::part2/images/figure_6.svg[Update Charging Station Certificate]
   **9.** The Charging Station verifies the Signed Certificate. +
   **10.** The Charging Station responds with a <<certificate_signed_response,CertificateSignedResponse>> to the CSMS with the status _Accepted_ or _Rejected_.
 |5     |Prerequisite(s)  |The standard configuration variable `OrganizationName` MUST be set.
-|6     |Postcondition(s) |
-  **Successful postcondition:** +
+|6     |Postcondition(s) 
+  |**Successful postcondition:** +
   New Client Side certificate installed in the Charging Station. +
   **Failure postcondition:** +
   New Client Side certificate is rejected and discarded.
 |===
-
 
 .Update Charging Station Certificate initiated by Charging Station
 image::part2/images/figure_7.svg[Update Charging Station Certificate initiated by Charging Station]
@@ -801,9 +798,9 @@ image::part2/images/figure_8.svg[Security Event Notification]
 |{nbsp} d|_Actors_    |CSMS, Charging Station
 |{nbsp} d|_Scenario description_ 
   |*1.* The CSMS sets a new value for the <<network_configuration_priority,`NetworkConfigurationPriority`>> Configuration Variable via <<set_variables_request,SetVariablesRequest>>, such that the <<network_connection_profile_type,NetworkConnectionProfile>> for the new (higher) security profile becomes first in the list and the existing connection profile becomes second in the list. +
-  2. The Charging Station responds with a <<set_variables_response,SetVariablesResponse>> with status _Accepted_ +
-  3. The CSMS sends a <<reset_request,ResetRequest>>(OnIdle) +
-  4. The Charging Station reboots and connects via the new primary <<network_connection_profile_type,NetworkConnectionProfile>>
+  *2.* The Charging Station responds with a <<set_variables_response,SetVariablesResponse>> with status _Accepted_ +
+  *3.* The CSMS sends a <<reset_request,ResetRequest>>(OnIdle) +
+  *4.* The Charging Station reboots and connects via the new primary <<network_connection_profile_type,NetworkConnectionProfile>>
 |5   |Prerequisite(s) |The CSO ensures that a <<network_connection_profile_type,NetworkConnectionProfile>> has been set using (higher) security profile +
   AND +
   that the prerequisite(s) for going to a higher security profile are met before sending the command to change to a higher security profile.

@@ -383,7 +383,7 @@ a|image::asset/info-icon.svg[info-icon,32,32] |잘못된 식별자의 경우, �
 
 === Transaction in relation to Energy Transfer Period
 
-이 섹션은 정보 제공 용도입니다.
+이 섹션은 정보 제공을 목적으로 합니다.
 
 <<energy_transfer_period,Energy Transfer Period>>는 EV와 EVSE 간에 에너지가 전송되는 기간입니다. +
 <<transaction,Transaction>> 중에 여러 에너지 전송 기간이 있을 수 있습니다.
