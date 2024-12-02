@@ -6,8 +6,7 @@
 
 == OCPP Security
 
-This Functional Block describes the security requirements for the OCPP protocol. The security part was developed to strengthen and mature the future development and standardization of OCPP. It is based amongst others on the end-to-end security design by LaQuSo <<ocpp_security_21,[21]>>. Security requirements are included on security measures at Charging Station and CSMS, to support users of the
-OCPP.
+This Functional Block describes the security requirements for the OCPP protocol. The security part was developed to strengthen and mature the future development and standardization of OCPP. It is based amongst others on the end-to-end security design by LaQuSo <<ocpp_security_21,[21]>>. Security requirements are included on security measures at Charging Station and CSMS, to support users of the OCPP.
 
 === Security Objectives
 
@@ -130,7 +129,6 @@ image::part2/images/figure_2.svg[Sequence Diagram: HTTP Basic Authentication seq
 
 .Sequence Diagram: TLS with Basic Authentication sequence diagram
 image::part2/images/figure_3.svg[Sequence Diagram: TLS with Basic Authentication sequence diagram]
-
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
