@@ -4,17 +4,16 @@
 :sectnums:
 == Introduction
 
-This Functional Block describes the functionality that enables parties to extend existing commands with custom attributes or add new custom commands to OCPP
+이 기능 블록은 당사자가 기존 명령을 사용자 정의 속성으로 확장하거나 OCPP에 새 사용자 정의 명령을 추가할 수 있는 기능을 설명합니다.
 
-OCPP offers two mechanisms to create vendor-specific custom extension.
+OCPP는 공급업체별 사용자 정의 확장을 만드는 두 가지 메커니즘을 제공합니다.
 
-. The <<data_transfer_request,DataTransferRequest>> message allows for the exchange of data or messages not standardized in OCPP. As such, it offers a framework within OCPP for experimental functionality that may find its way into future OCPP versions. Experimenting can be done without creating new (possibly incompatible) OCPP dialects. Secondly, it offers a possibility to implement additional functionality agreed upon between specific CSMS and Charging Station vendors.
-. A CustomData element exists as an optional element in the JSON schemas of all types. CustomData is the only class in the JSON schema files that allows additional properties. It can thus be used to add additional custom attributes to any type. The CustomData has been deliberately left out of the specification document, because it would introduce a lot of clutter and it is not meant to be used in standard implementations. See also <<ocpp2_0_part4,[OCPP2.0-PART4]>>.
+. <<data_transfer_request,DataTransferRequest>> 메시지는 OCPP에서 표준화되지 않은 데이터 또는 메시지를 교환할 수 있도록 합니다. 따라서 OCPP 내에서 실험적 기능을 위한 프레임워크를 제공하며, 이는 향후 OCPP 버전에 도입될 수 있습니다. 새(호환되지 않을 수 있는) OCPP 변형을 만들지 않고도 실험할 수 있습니다. 둘째, 특정 CSMS 및 충전기 공급업체 간에 합의된 추가 기능을 구현할 수 있는 가능성을 제공합니다.
+. CustomData 요소는 모든 유형의 JSON 스키마에서 선택적 요소로 존재합니다. CustomData는 JSON 스키마 파일에서 추가 속성을 허용하는 유일한 클래스입니다. 따라서 모든 유형에 추가 사용자 정의 속성을 추가하는 데 사용할 수 있습니다. CustomData는 사양 문서에서 의도적으로 제외되었습니다. 많은 혼란을 야기하고 표준 구현에서 사용하도록 의도된 것이 아니기 때문입니다. <<ocpp2_0_part4,[OCPP2.0-PART4]>>도 참조하세요.
 
-The DataTransferRequest/Response contains a field without a length or type specification. It can be convenient to use this field as
-structured JSON content.
+DataTransferRequest/Response에는 길이 또는 유형 사양이 없는 필드가 포함되어 있습니다. 이 필드를 구조화된 JSON 콘텐츠로 사용하면 편리할 수 있습니다.
 
-_Example of embedded JSON_
+_임베디드 JSON의 예_
 
 ```json
 [2,
@@ -30,7 +29,7 @@ _Example of embedded JSON_
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===
-|IMPORTANT |Please use with extreme caution and only for optional functionality, since it will impact your compatibility with other systems that do not make use of this option. We recommend mentioning the usage explicitly in your documentation and/or communication. Please consider consulting the Open Charge Alliance before turning to this option to add functionality.
+|IMPORTANT |이 옵션을 사용하지 않는 다른 시스템과의 호환성에 영향을 미치므로, 매우 신중하게 선택적 기능에만 사용하십시오. 설명서 및/또는 커뮤니케이션에서 사용법을 명시적으로 언급하는 것이 좋습니다. 이 옵션을 사용하여 기능을 추가하기 전에 Open Charge Alliance에 문의하는 것을 고려하십시오.
 |===
 
 <<<
@@ -40,62 +39,62 @@ _Example of embedded JSON_
 [[p01_data_transfer_to_the_charging_station]]
 === P01 - Data Transfer to the Charging Station
 
-.P01 - Data Transfer to the Charging Station
+.P01 - 충전기로의 데이터 전송
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Data Transfer to the Charging Station
-|2   |ID              |P01
-|{nbsp} d|_Functional block_ |P. Data Transfer
-|3   |Objective(s)    |To send information from the CSMS to the Charging Station for a function that is not supported by OCPP.
-|4   |Description     |This use case covers the functionality of sending a DataTransfer message to the Charging Station from the CSMS.
-|{nbsp} d|_Actors_    |Charging Station, CSMS
-|{nbsp} d|_Scenario description_
-  |**1.** The CSMS sends information to a Charging Station for a function not supported by OCPP with <<data_transfer_request,DataTransferRequest>>. +
-  **2.** The Charging Station responds to the CSMS with <<data_transfer_response,DataTransferResponse>>.
-|5   |Prerequisite(s) |n/a
-|6   |Postcondition(s)
-  |**Successful postcondition:** +
-  <<data_transfer_request,DataTransferRequest>> is received _Successfully_ and _Accepted_
+|1 |이름 |충전기로의 데이터 전송
+|2 |ID |P01
+|{nbsp} d|_기능 블록_ |P. 데이터 전송
+|3 |목표 |OCPP에서 지원하지 않는 기능에 대한 정보를 CSMS에서 충전기로 전송합니다.
+|4 |설명 |이 사용 사례는 CSMS에서 충전기로 DataTransfer 메시지를 전송하는 기능을 다룹니다.
+|{nbsp} d|_Actors_ |충전기, CSMS
+|{nbsp} d|_시나리오 설명_
+  |**1.** CSMS는 <<data_transfer_request,DataTransferRequest>>를 사용하여 OCPP에서 지원하지 않는 기능에 대한 정보를 충전기로 전송합니다. +
+  **2.** 충전기는 <<data_transfer_response,DataTransferResponse>>를 사용하여 CSMS에 응답합니다.
+|5 |필수 조건 |해당 없음
+|6 |사후 조건
+  |**성공한 사후 조건:** +
+  <<data_transfer_request,DataTransferRequest>>가 _성공적으로_ 수신되고 _Accepted_ 됨
 
-  **Failure postcondition:** +
-  Message has been _Accepted_ but the contained request is _Rejected_. +
-  In all other cases the usage of status _Accepted_ or _Rejected_ and the data element is part of the vendor-specific agreement between the parties involved.
+  **실패 사후 조건:** +
+  메시지가 _Accepted_ 되었지만 포함된 요청은 _Rejected_ 됩니다. +
+  다른 모든 경우 _Accepted_ 또는 _Rejected_ 상태와 데이터 요소의 사용은 관련 당사자 간의 공급업체별 계약의 일부입니다.
 |===
 
-.Sequence Diagram: Data Transfer to the Charging Station
-image::part2/images/figure_147.svg[Sequence Diagram: Data Transfer to the Charging Station]
+.시퀀스 다이어그램: 충전기로의 데이터 전송
+image::part2/images/figure_147.svg[시퀀스 다이어그램: 충전기로의 데이터 전송]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error handling  |n/a
-|8   |Remark(s)       |Data Transfer is used if information for a function is not supported by OCPP.
+|7 |오류 처리 |해당 없음
+|8 |참고 |데이터 전송은 OCPP에서 함수에 대한 정보를 지원하지 않는 경우에 사용됩니다.
 
-The length of data in both the request and response message is undefined and it is RECOMMENDED that this is agreed upon by all parties involved.
+  요청 및 응답 메시지의 데이터 길이는 정의되지 않으며 모든 관련 당사자가 이에 동의하는 것이 좋습니다.
 |===
 
 ==== P01 - Data Transfer to the Charging Station - Requirements
 
-.P01 - Requirements
+.P01 - 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition
+|ID |전제 조건 |요구 사항 정의
 
-|P01.FR.01  |{nbsp}
-  |The Charging Station SHALL only use <<data_transfer_request,DataTransferRequest>> for a function which is not supported by OCPP.
-|P01.FR.02  |{nbsp}
-  |The vendorId SHOULD be a value from the reversed DNS namespace, where the top tiers of the name, when reversed, should correspond to the publicly registered primary DNS name of the Vendor organization.
-|P01.FR.03  |{nbsp}
-  |The messageId in the request message MAY be used to indicate a specific message or implementation.
-|P01.FR.04  |{nbsp}
-  |The length of data in both the request and response message is undefined and it is RECOMMENDED that this is agreed upon by all parties involved.
-|P01.FR.05  |If the recipient of the request has no implementation for the specific vendorId.
-  |The recipient SHALL return a status _UnknownVendor_.
-|P01.FR.06  |Upon receipt of <<data_transfer_request,DataTransferRequest>> and in case of a messageId mismatch (if used).
-  |The recipient SHALL return status _UnknownMessageId_.
-|P01.FR.07  |{nbsp}
-  |The usage of status _Accepted_ or _Rejected_ and the data element SHALL be part of the vendor-specific agreement between the parties involved.
+|P01.FR.01 |{nbsp}
+  |충전기는 OCPP에서 지원하지 않는 함수에 대해서만 <<data_transfer_request,DataTransferRequest>>를 사용해야 합니다.
+|P01.FR.02 |{nbsp}
+  |vendorId는 역순 DNS 네임스페이스의 값이어야 하며, 이름의 최상위 계층은 역순으로 공급업체 조직의 공개적으로 등록된 기본 DNS 이름과 일치해야 합니다.
+|P01.FR.03 |{nbsp}
+  |요청 메시지의 messageId는 특정 메시지 또는 구현을 나타내는 데 사용될 수 있습니다.
+|P01.FR.04 |{nbsp}
+  |요청 및 응답 메시지의 데이터 길이는 정의되지 않았으며 관련 당사자 모두가 이에 동의하는 것이 좋습니다.
+|P01.FR.05 |요청 수신자가 특정 vendorId에 대한 구현이 없는 경우.
+  |수신자는 상태 _UnknownVendor_ 를 반환해야 합니다.
+|P01.FR.06 |<<data_transfer_request,DataTransferRequest>>를 수신하고 messageId가 일치하지 않는 경우(사용된 경우).
+  |수신자는 상태 _UnknownMessageId_ 를 반환해야 합니다.
+|P01.FR.07 |{nbsp}
+  |상태 _Accepted_ 또는 _Rejected_ 및 데이터 요소의 사용은 관련 당사자 간의 공급업체별 계약의 일부가 되어야 합니다.
 |===
 
 <<<
@@ -105,60 +104,60 @@ The length of data in both the request and response message is undefined and it 
 .P02 - Data Transfer to the CSMS
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Data Transfer to the CSMS
-|2   |ID              |P02
-|{nbsp} d|_Functional block_ |P. Data Transfer
-|3   |Objective(s)    |To send information from the Charging Station to the CSMS for a function which is not supported by OCPP.
-|4   |Description     |This use case covers the functionality of sending a DataTransfer message to the CSMS from the Charging Station.
-|{nbsp} d|_Actors_    |Charging Station, CSMS
-|{nbsp} d|_Scenario description_
-  |**1.** The Charging Station sends information to the CSMS for a function not supported by OCPP with <<data_transfer_request,DataTransferRequest>>. +
-  **2.** The CSMS responds to the Charging Station with <<data_transfer_response,DataTransferResponse>>.
-|5   |Prerequisite(s) |n/a
-|6   |Postcondition(s)
-  |**Successful postcondition:** +
-  <<data_transfer_request,DataTransferRequest>> is received _Successfully_ and _Accepted_
+|1 |이름 |CSMS로의 데이터 전송
+|2 |ID |P02
+|{nbsp} d|_기능 블록_ |P. 데이터 전송
+|3 |목표 |OCPP에서 지원하지 않는 기능에 대한 정보를 충전기에서 CSMS로 전송합니다.
+|4 |설명 |이 사용 사례는 충전기에서 CSMS로 DataTransfer 메시지를 전송하는 기능을 다룹니다.
+|{nbsp} d|_Actors_ |충전기, CSMS
+|{nbsp} d|_시나리오 설명_
+  |**1.** 충전기는 <<data_transfer_request,DataTransferRequest>>를 사용하여 OCPP에서 지원하지 않는 기능에 대한 정보를 CSMS로 전송합니다. +
+  **2.** CSMS는 <<data_transfer_response,DataTransferResponse>>를 사용하여 충전기에 응답합니다.
+|5 |필수 조건 |해당 없음
+|6 |사후 조건
+  |**성공한 사후 조건:** +
+  <<data_transfer_request,DataTransferRequest>>가 _성공적으로_ 수신되고 _Accepted_ 됨
 
-  **Failure postcondition:** +
-  Message has been accepted but the contained request is _Rejected_.
+  **실패 사후 조건:** +
+  메시지가 수락되었지만 포함된 요청은 _Rejected_ 됩니다.
 
-  In all other cases the usage of status _Accepted_ or _Rejected_ and the data element is part of the vendor-specific agreement between the parties involved.
+  다른 모든 경우 _Accepted_ 또는 _Rejected_ 상태와 데이터 요소의 사용은 관련 당사자 간의 공급업체별 계약의 일부입니다.
 |===
 
-.Sequence Diagram: Data Transfer to the CSMS
-image::part2/images/figure_148.svg[Sequence Diagram: Data Transfer to the CSMS]
+.시퀀스 다이어그램: CSMS로의 데이터 전송
+image::part2/images/figure_148.svg[시퀀스 다이어그램: CSMS로의 데이터 전송]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error handling |n/a
-|8   |Remark(s)      |Data Transfer is used if information for a function is _not_ supported by OCPP.
+|7 |오류 처리 |해당 없음
+|8 |참고 |데이터 전송은 함수에 대한 정보가 OCPP에서 지원되지 _않는_ 경우 사용됩니다.
 
-The length of data in both the request and response message is undefined and should be agreed upon by all parties involved.
+  요청 및 응답 메시지의 데이터 길이는 정의되지 않으며 관련된 모든 당사자가 합의해야 합니다.
 |===
 
 ==== P02 - Data Transfer to the CSMS - Requirements
 
-.P02 - Requirements
+.P02 - 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition
+|ID |전제 조건 |요구 사항 정의
 
-|P02.FR.01  |{nbsp}
-  |The vendorId in the request message SHOULD be known to the Charging Station and uniquely identify the vendor-specific implementation.
-|P02.FR.02  |{nbsp}
-  |The Charging Station SHALL only use <<data_transfer_request,DataTransferRequest>> for a function which is not supported by OCPP.
-|P02.FR.03  |{nbsp}
-  |The VendorId SHOULD be a value from the reversed DNS namespace, where the top tiers of the name, when reversed, should correspond to the publicly registered primary DNS name of the Vendor organization.
-|P02.FR.04  |{nbsp}
-  |The messageId in the request message MAY be used to indicate a specific message or implementation.
-|P02.FR.05  |{nbsp}
-  |The length of data in both the request and response message is undefined and it is RECOMMENDED that this is agreed upon by all parties involved.
-|P02.FR.06  |If the recipient of the request has no implementation for the specific vendorId.
-  |The recipient SHALL return a status _UnknownVendor_.
-|P02.FR.07  |Upon receipt of <<data_transfer_request,DataTransferRequest>> and in case of a messageId mismatch (if used).
-  |The recipient SHALL return status UnknownMessageId.
-|P02.FR.08  |{nbsp}
-  |The usage of status _Accepted_ or _Rejected_ and the data element SHALL be part of the vendor-specific agreement between the parties involved.
+|P02.FR.01 |{nbsp}
+  |요청 메시지의 vendorId는 충전기에서 알아야 하며 공급업체별 구현을 고유하게 식별해야 합니다.
+|P02.FR.02 |{nbsp}
+  |충전기는 OCPP에서 지원하지 않는 함수에 대해서만 <<data_transfer_request,DataTransferRequest>>를 사용해야 합니다.
+|P02.FR.03 |{nbsp}
+  |VendorId는 역순 DNS 네임스페이스의 값이어야 하며, 이름의 최상위 계층은 역순으로 변경되면 Vendor 조직의 공개적으로 등록된 기본 DNS 이름과 일치해야 합니다.
+|P02.FR.04 |{nbsp}
+  |요청 메시지의 messageId는 특정 메시지 또는 구현을 나타내는 데 사용될 수 있습니다.
+|P02.FR.05 |{nbsp}
+  |요청 및 응답 메시지의 데이터 길이는 정의되지 않으며 관련된 모든 당사자가 이에 동의하는 것이 좋습니다.
+|P02.FR.06 |요청 수신자가 특정 vendorId에 대한 구현이 없는 경우.
+  |수신자는 _UnknownVendor_ 상태를 반환해야 합니다.
+|P02.FR.07 |<<data_transfer_request,DataTransferRequest>>를 수신하고 messageId가 일치하지 않는 경우(사용된 경우).
+  |수신자는 UnknownMessageId 상태를 반환해야 합니다.
+|P02.FR.08 |{nbsp}
+  |_Accepted_ 또는 _Rejected_ 상태와 데이터 요소의 사용은 관련 당사자 간의 공급업체별 계약의 일부가 되어야 합니다.
 |===
