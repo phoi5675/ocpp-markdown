@@ -2,7 +2,7 @@
 :!chapter-number:
 
 :sectnums:
-== 소개
+== Introduction
 
 이 기능 블록은 당사자가 기존 명령을 사용자 정의 속성으로 확장하거나 OCPP에 새 사용자 정의 명령을 추가할 수 있는 기능을 설명합니다.
 
@@ -59,7 +59,7 @@ _임베디드 JSON의 예_
 <<data_transfer_request,DataTransferRequest>>가 _성공적으로_ 수신되고 _Accepted_ 됨
 
 **실패 사후 조건:** +
-메시지가 _Accepted_ 되었지만 포함된 요청은 _거부됨_입니다. +
+메시지가 _Accepted_ 되었지만 포함된 요청은 _Rejected_ 됩니다. +
 다른 모든 경우 _Accepted_ 또는 _Rejected_ 상태와 데이터 요소의 사용은 관련 당사자 간의 공급업체별 계약의 일부입니다.
 |===
 
@@ -121,7 +121,7 @@ image::part2/images/figure_147.svg[시퀀스 다이어그램: 충전기로의 �
 <<data_transfer_request,DataTransferRequest>>가 _성공적으로_ 수신되고 _Accepted_ 됨
 
 **실패 사후 조건:** +
-메시지가 수락되었지만 포함된 요청은 _거부됨_입니다.
+메시지가 수락되었지만 포함된 요청은 _Rejected_ 됩니다.
 
 다른 모든 경우 _Accepted_ 또는 _Rejected_ 상태와 데이터 요소의 사용은 관련 당사자 간의 공급업체별 계약의 일부입니다.
 |===
