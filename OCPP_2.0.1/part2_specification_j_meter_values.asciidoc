@@ -45,8 +45,7 @@ Frequent (e.g. 1-5 minute interval) meter readings taken and transmitted (usuall
 
 <<sampled_data_tx_ended_measurands,`SampledDataTxEndedMeasurands`>> is a comma separated list that prescribes the sampled measurands to be included in the _meterValues_ field of a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>), these measurands have to be taken every <<sampled_data_tx_ended_interval,`SampledDataTxEndedInterval`>> seconds from the start of the transaction, and will only be sent in the <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>).
 
-Care should be taken to ensure that the amount of measurands that is expected at the end of a transaction fits in one
-<<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) message. Keep the number of measurands in <<sampled_data_tx_ended_measurands,`SampledDataTxEndedMeasurands`>> to a minimum and configure a large interval in <<sampled_data_tx_ended_interval,`SampledDataTxEndedInterval`>> to keep the number of samples small.
+Care should be taken to ensure that the amount of measurands that is expected at the end of a transaction fits in one <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) message. Keep the number of measurands in <<sampled_data_tx_ended_measurands,`SampledDataTxEndedMeasurands`>> to a minimum and configure a large interval in <<sampled_data_tx_ended_interval,`SampledDataTxEndedInterval`>> to keep the number of samples small.
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===
@@ -337,7 +336,7 @@ image::part2/images/figure_92.svg[Sequence Diagram: Sending transaction related 
     |Except in the case of a meter replacement. See <<measurand_enum_type,MeasurandEnumType>>.
 |J02.FR.17  |{nbsp}
   |For improved auditability, ".Register" values SHOULD be reported exactly as they are directly read from a non-volatile register in the electrical metering hardware, and SHOULD NOT be re-based to zero at the start of transactions
-    |This allows any "missing energy" between sequential transactions, due to hardware fault, meter replacement, mis- wiring, fraud, etc. to be identified, by allowing the CSMS to confirm that the starting register value of any transaction is identical to the finishing register value of the preceding transaction on the same connector.
+    |This allows any "missing energy" between sequential transactions, due to hardware fault, meter replacement, mis-wiring, fraud, etc. to be identified, by allowing the CSMS to confirm that the starting register value of any transaction is identical to the finishing register value of the preceding transaction on the same connector.
 |J02.FR.18  |{nbsp}
   |The timestamp of a <<meter_value_type,MeterValue>> SHALL apply to all its <<sampled_value_type,SampledValues>>. |{nbsp}
 |J02.FR.19  |When CSMS receives a <<transaction_event_request,TransactionEventRequest>>
