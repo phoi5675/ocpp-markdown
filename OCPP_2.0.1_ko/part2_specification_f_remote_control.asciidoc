@@ -14,13 +14,13 @@
 
 <<<
 
-== 사용 사례 및 요구 사항
+== Use cases & Requirements
 
-=== 원격 트랜잭션 제어
+=== Remote Transaction Control
 
 :sectnums!:
 [[f01_remote_start_transaction_cable_plugin_first]]
-=== F01 - 원격 시작 트랜잭션 - 케이블 플러그인 먼저
+=== F01 - Remote Start Transaction - Cable Plugin First
 
 .F01 - 원격 시작 트랜잭션 - 케이블 플러그인 먼저
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
@@ -43,13 +43,13 @@
   **3.** CSMS는 <<status_notification_response,StatusNotificationResponse>>로 응답하여 <<status_notification_request,StatusNotificationRequest>>가 수신되었음을 확인합니다. +
   **4.** 충전기는 <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>)를 보내 CSMS에 시작된 트랜잭션에 대해 알립니다(운전자가 아직 알려지지 않은 경우에도 해당). +
   **5.** CSMS는 <<transaction_event_response,TransactionEventResponse>>로 응답하여 <<transaction_event_request,TransactionEventRequest>>가 수신되었음을 확인합니다. +
-  **6.** 외부 트리거(이 사용 사례의 예: EV Driver)가 원격 시동을 트리거합니다. +
+  **6.** 외부 트리거(이 사용 사례의 예: EV Driver)가 원격 시작을 트리거합니다. +
   **7.** CSMS는 <<request_start_transaction_request,RequestStartTransactionRequest>>를 충전기로 보냅니다. +
   **8** 충전기는 이미 시작된 트랜잭션의 _transactionId_ 를 CSMS에 포함하여 <<request_start_transaction_response,RequestStartTransactionResponse>>로 응답합니다. +
-  **9.** 선택적으로: EV 운전자는 CSMS에서 승인을 받습니다. +
+  **9.** 선택적으로: EV 운전자는 CSMS에서 인증을 받습니다. +
   **10.** 충전기는 <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>, <<charging_state_enum_type,chargingState = Charging>>) 메시지를 보내 CSMS에 충전이 시작되었음을 알립니다.
 |{nbsp} d|_대체 시나리오_
-|원격 시작 트랜잭션 - 원격 시작 먼저 <<f02_remote_start_transaction_remote_start_first,F02 - 원격 시작 트랜잭션 - 원격 시작 먼저>>
+|원격 시작 트랜잭션 - 원격 시작 먼저 <<f02_remote_start_transaction_remote_start_first,F02 - Remote Start Transaction - Remote Start First>>
 |5 |필수 조건 |충전 케이블을 먼저 꽂습니다.
 |6 |사후 조건
   |충전기에서 에너지를 제공합니다. <<authorize_remote_start,`AuthorizeRemoteStart`>>의 값이 _true_ 이면 충전기는 <<local_authorization_list,Local Authorization List>>, <<authorization_cache,Authorization Cache>> 및/또는 <<authorize_request,AuthorizeRequest>>를 사용하여 IdToken을 성공적으로 인증했을 때만 에너지를 제공합니다.
@@ -64,17 +64,17 @@ image::part2/images/figure_65.svg[Sequence Diagram: Remote Start Transaction - C
 |8 충전기
   |외부 트리거는 예를 들어 충전기 운영자 또는 EV 운전자 앱일 수 있습니다.
 
-<<request_start_transaction_response,RequestStartTransactionResponse>>에는 충전기가 요청을 수락했는지 여부를 나타내는 상태가 포함되어 있으며 트랜잭션을 시작하려고 시도합니다.
+  <<request_start_transaction_response,RequestStartTransactionResponse>>에는 충전기가 요청을 수락했는지 여부를 나타내는 상태가 포함되어 있으며 트랜잭션을 시작하려고 시도합니다.
 
-CSMS는 <<id_token_type,IdTokenType>> 유형의 <<request_start_transaction_request,RequestStartTransactionRequest>>를 보낼 수 있습니다.
-<<id_token_enum_type,NoAuthorization>>. 운영자는 충전기가 로컬 중지 트랜잭션을 지원하는 경우 누구나 이 트랜잭션을 중지할 수 있다는 점을 알고 있어야 합니다.
+  CSMS는 <<id_token_enum_type,NoAuthorization>>유형의 <<id_token_type,IdTokenType>>의 <<request_start_transaction_request,RequestStartTransactionRequest>>를 보낼 수 있습니다. 
+  운영자는 충전기가 로컬 중지 트랜잭션을 지원하는 경우 누구나 이 트랜잭션을 중지할 수 있다는 점을 알고 있어야 합니다.
 
-위의 시나리오 설명과 시퀀스 다이어그램은 시작 트랜잭션을 위한 구성 변수가 다음과 같이 구성되는 것을 기반으로 합니다. +
-<<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,EVConnected, Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
-이 사용 사례는 다른 구성에도 유효하지만 트랜잭션이 다른 순간에 시작/중지될 수 있으며, 이는 메시지가 전송되는 순서를 변경할 수 있습니다. 자세한 내용은 사용 사례를 참조하세요. <<e01_start_transaction_options,E01 - Start Transaction options>>.
+  위의 시나리오 설명과 시퀀스 다이어그램은 시작 트랜잭션을 위한 구성 변수가 다음과 같이 구성되는 것을 기반으로 합니다. +
+  <<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,EVConnected, Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
+  이 사용 사례는 다른 구성에서도 유효하지만, 그 경우 트랜잭션이 다른 시점에서 시작/종료될 수 있으며, 이는 메시지가 전송되는 순서에 영향을 미칠 수 있습니다. 자세한 내용은 다음 사용 사례를 참조하세요. <<e01_start_transaction_options,E01 - Start Transaction options>>.
 |===
 
-==== F01 - 원격 시작 트랜잭션 - 케이블 플러그인 우선 - 요구 사항
+==== F01 - Remote Start Transaction - Cable Plugin First - Requirements
 
 .F01 - 요구 사항
 [cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
@@ -83,16 +83,16 @@ CSMS는 <<id_token_type,IdTokenType>> 유형의 <<request_start_transaction_requ
 
 |F01.FR.01 |<<authorize_remote_start,`AuthorizeRemoteStart`>>의 값이 true이고 +
 충전기가 <<request_start_transaction_request,RequestStartTransactionRequest>>를 수신하는 경우
-  |충전기는 <<request_start_transaction_request,RequestStartTransactionRequest>> 메시지에서 제공된 IdToken의 성공적인 승인 후 에너지 전송을 허용하기 위해 충전기에서 로컬 작업에 대한 응답으로 동작해야 합니다.
-    |충전기는 먼저 요청에 응답한 다음 로컬 승인 목록, 승인 캐시 및/또는 <<authorize_request,AuthorizeRequest>>를 사용하여 IdToken을 승인하려고 시도합니다. +
-에너지 전송은 승인을 받은 후에만 허용됩니다.
+  |충전기는 <<request_start_transaction_request,RequestStartTransactionRequest>> 메시지에서 제공된 IdToken의 성공적인 인증 후 에너지 전송을 허용하기 위해 충전기에서 로컬 작업에 대한 응답으로 동작해야 합니다.
+    |충전기는 먼저 요청에 응답한 다음 로컬 인증 목록, 인증 캐시 및/또는 <<authorize_request,AuthorizeRequest>>를 사용하여 IdToken을 인증하려고 시도합니다. +
+에너지 전송은 인증을 받은 후에만 허용됩니다.
 |F01.FR.02 |<<authorize_remote_start,`AuthorizeRemoteStart`>>의 값이 false이고 +
 충전기가 <<request_start_transaction_request,RequestStartTransactionRequest>>를 수신하는 경우
-  |충전기는 승인을 확인하지 않고 <<request_start_transaction_request,RequestStartTransactionRequest>> 메시지에 제공된 IdToken에 대한 에너지 전송을 허용해야 합니다.
-    |충전기는 먼저 요청에 응답하고 idToken과 함께 <<transaction_event_request,TransactionEventRequest>>를 CSMS로 보내고 CSMS는 이 <<transaction_event_request,TransactionEventRequest>>를 처리할 때 IdToken의 권한 상태를 확인합니다.
+  |충전기는 인증을 확인하지 않고 <<request_start_transaction_request,RequestStartTransactionRequest>> 메시지에 제공된 IdToken에 대한 에너지 전송을 허용해야 합니다.
+    |충전기는 먼저 요청에 응답하고 idToken과 함께 <<transaction_event_request,TransactionEventRequest>>를 CSMS로 보낼 때 CSMS는 이 <<transaction_event_request,TransactionEventRequest>>를 처리할 때 IdToken의 권한 상태를 확인합니다.
 |F01.FR.03 |F01.FR.01 또는 F01.FR.02
-  |충전기는 <<transaction_event_request,TransactionEventRequest>>를 CSMS로 보내야 하며 CSMS는 이 <<transaction_event_request,TransactionEventRequest>>를 처리할 때 IdToken의 권한 상태를 확인합니다.
-    |CSMS가 수락되지 않은 권한 상태를 반환하는 경우 충전기는 사용 사례 E05에 따라 에너지 전송을 중지해야 합니다.
+  |충전기는 <<transaction_event_request,TransactionEventRequest>>를 CSMS로 보내야 하며 CSMS는 이 <<transaction_event_request,TransactionEventRequest>>를 처리할 때 IdToken의 인증 상태를 확인합니다.
+    |CSMS가 `Accepted` 가 아닌 인증 상태를 반환하는 경우 충전기는 사용 사례 E05에 따라 에너지 전송을 중지해야 합니다.
 |F01.FR.04 |{nbsp}
   |<<request_start_transaction_request,RequestStartTransactionRequest>>에는 IdToken이 포함되어야 하며, 충전기는 CSMS로 전송된 <<transaction_event_request,TransactionEventRequest>>에서 트랜잭션을 시작할 수 있는 경우 이 토큰을 사용해야 합니다. |{nbsp}
 |F01.FR.05 |{nbsp}
@@ -113,7 +113,7 @@ CSMS는 <<id_token_type,IdTokenType>> 유형의 <<request_start_transaction_requ
 |F01.FR.12 |스마트 충전을 지원하지 않는 충전기가 <<request_start_transaction_request,RequestStartTransactionRequest>>를 <<charging_profile_type,ChargingProfile>>과 함께 수신하는 경우.
   |충전기는 지정된 <<charging_profile_type,ChargingProfile>>을 무시해야 합니다.
     |장치 모델 변수 SmartChargingCtrlr.Enabled는 CSMS에 스마트 충전이 지원되는지 여부를 알려줍니다.
-|F01.FR.13 |충전기에서 트랜잭션이 생성되었지만 승인되지 않은 경우. +
+|F01.FR.13 |충전기에서 트랜잭션이 생성되었지만 인증되지 않은 경우. +
 그리고 +
 <<request_start_transaction_request,RequestStartTransactionRequest>>가 수신되는 경우.
   |충전기는 <<request_start_transaction_response,RequestStartTransactionResponse>>에서 _transactionId_ 를 반환해야 합니다. |{nbsp}
@@ -126,7 +126,7 @@ AND +
 1 <<transaction_event_request,TransactionEventRequest>>에 대한 미터 데이터 양이 너무 많습니다(<<transaction_event_enum_type,eventType = Updated>>)
   |충전기는 미터 데이터를 동일한 _timestamp_ 를 사용하여 여러 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) 메시지로 분할할 수 있습니다. |{nbsp}
 |F01.FR.17 | <<transaction_event_request,TransactionEventRequest>>를 보낼 때
-  |충전기는 <<trigger_reason_enum_type,triggerReason>>을 설정하여 CSMS에 이벤트를 트리거한 원인을 알려야 합니다. 사용할 이유는 <<trigger_reason_enum_type,TriggerReasonEnumType>>의 설명에 설명되어 있습니다. |{nbsp}
+  |충전기는 <<trigger_reason_enum_type,triggerReason>>을 설정하여 CSMS에 이벤트를 트리거한 원인을 알려야 합니다. 어떤 사유를 사용해야하는지는 <<trigger_reason_enum_type,TriggerReasonEnumType>>에 설명되어 있습니다. |{nbsp}
 |F01.FR.18 |트랜잭션이 시작된 후
   |충전기는 트리거 이벤트가 발생할 때 트랜잭션 중에 추가 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) 메시지를 보낼 수 있습니다. |{nbsp}
 |F01.FR.19 |<<request_start_transaction_request,RequestStartTransactionRequest>>가 수신될 때.
@@ -142,11 +142,11 @@ AND +
 |F01.FR.23 |<<request_start_transaction_request,RequestStartTransactionRequest>>에 대한 _evse_ 가 `Unavailable` 또는 `Faulted` 인 경우
   |충전기는 _status_ = `Rejected` 인 <<request_start_transaction_response,RequestStartTransactionResponse>>로 응답해야 합니다. |{nbsp}
 |F01.FR.24 |<<request_start_transaction_request,RequestStartTransactionRequest>>에 대한 _evseId_ 가 `Occupied` 이고 +
-이 _evseId_ 에 승인된 트랜잭션이 있는 경우
+이 _evseId_ 에 인증된 트랜잭션이 있는 경우
   |충전기는 _status_ = `Rejected` 인 <<request_start_transaction_response,RequestStartTransactionResponse>>로 응답해야 합니다.
-    |트랜잭션이 없거나 아직 승인되지 않은 트랜잭션이 있는 EVSE만 <<request_start_transaction_request,RequestStartTransactionRequest>>와 일치할 수 있습니다.
+    |트랜잭션이 없거나 아직 인증되지 않은 트랜잭션이 있는 EVSE만 <<request_start_transaction_request,RequestStartTransactionRequest>>와 일치될 수 있습니다.
 |F01.FR.25 |F01.FR.13
-  |충전기는 연관된 트랜잭션에 대해 보내는 다음 <<transaction_event_request,TransactionEventRequest>>에 _remoteStartId_ 를 넣어야 합니다. |{nbsp}
+  |충전기는 연관된 트랜잭션에 대해 다음 보내는 <<transaction_event_request,TransactionEventRequest>>에 _remoteStartId_ 를 넣어야 합니다. |{nbsp}
 |F01.FR.26 |스마트 충전을 **지원하는** 충전기가 잘못된 <<charging_profile_type,ChargingProfile>>이 있는 <<request_start_transaction_request,RequestStartTransactionRequest>>를 수신하는 경우.
   |충전기는 _status_ = `Rejected` 및 선택적으로 _reasonCode_ = "InvalidProfile" 또는 "InvalidSchedule"인 <<request_start_transaction_response,RequestStartTransactionResponse>>로 응답해야 합니다.
     |장치 모델 변수 SmartChargingCtrlr.Enabled는 CSMS에 스마트 충전이 지원되는지 여부를 알려줍니다.
@@ -155,7 +155,7 @@ AND +
 <<<
 
 [[f02_remote_start_transaction_remote_start_first]]
-=== F02 - 원격 시작 트랜잭션 - 원격 시작 먼저
+=== F02 - Remote Start Transaction - Remote Start First
 
 .F02 - 원격 시작 트랜잭션 - 원격 시작 먼저
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
@@ -165,7 +165,7 @@ AND +
 |1 |이름 |원격 시작 트랜잭션 - 원격 시작 먼저
 |2 |ID |F02
 |{nbsp} d|_기능 블록_ |F. 원격 제어
-|{nbsp} d|_부모 사용 사례_ |<<f01_remote_start_transaction_cable_plugin_first,F01 - 원격 시작 트랜잭션 - 케이블 플러그인 먼저>>
+|{nbsp} d|_부모 사용 사례_ |<<f01_remote_start_transaction_cable_plugin_first,F01 - Remote Start Transaction - Cable Plugin First>>
 |3 |목표 |충전기와 EV 간의 연결이 설정되기 전에 <<request_start_transaction_request,RequestStartTransactionRequest>>가 먼저 전송되는 동안 CSMS가 원격으로 트랜잭션을 시작할 수 있도록 합니다.
 |4 |설명 |이 사용 사례는 CSMS가 사용자를 위해 원격으로 트랜잭션을 시작하는 방법을 다룹니다.
 |{nbsp} d|_행위자_ |충전기, CSMS, 외부 트리거
@@ -173,9 +173,9 @@ AND +
   |**1.** 외부 트리거가 원격 시작을 트리거합니다. +
   **2.** CSMS가 충전기로 <<request_start_transaction_request,RequestStartTransactionRequest>>를 보냅니다. +
   **3.** 충전기는 <<request_start_transaction_response,RequestStartTransactionResponse>>로 CSMS에 응답합니다. +
-  **4.** EV 운전자는 구성 변수 설정에 따라 CSMS에서 권한을 부여받습니다. +
+  **4.** EV 운전자는 구성 변수 설정에 따라 CSMS에서 인증됩니다. +
   **5.** 충전기는 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Started>>)를 보내서 CSMS에 시작된 트랜잭션에 대해 알립니다. +
-  **6.** 케이블이 꽂혀 있습니다. +
+  **6.** 케이블이 꽂습니다. +
   **6a.** 충전기는 <<status_notification_request,StatusNotificationRequest>>를 _Occupied_ 로 보냅니다. +
   **6b.** CSMS는 <<status_notification_response,StatusNotificationResponse>>를 충전기로 보냅니다. +
   **7.** 에너지 제공이 시작됩니다. +
@@ -207,14 +207,14 @@ image::part2/images/figure_67.svg[Sequence Diagram: Remote Start Transaction - R
 
   EVSE가 시작될지 불확실하기 때문에 evseId 없이 원격으로 트랜잭션을 시작하지 않는 것이 좋습니다. 많은 EVSE가 있는 로직 컨트롤러의 경우 EV 운전자가 활성화된 EVSE 앞에 없을 수 있습니다.
 
-  CSMS는 <<id_token_type,IdTokenType>>을 사용하여 <<id_token_enum_type,NoAuthorization>> 유형의 <<request_start_transaction_request,RequestStartTransactionRequest>>를 보낼 수 있습니다. 운영자는 충전기가 로컬 중지 트랜잭션을 지원하는 경우 누구나 이 트랜잭션을 중지할 수 있다는 점을 알고 있어야 합니다.
+  CSMS는 <<id_token_enum_type,NoAuthorization>> 유형의 <<id_token_type,IdTokenType>>을 사용하여 <<request_start_transaction_request,RequestStartTransactionRequest>>를 보낼 수 있습니다. 운영자는 충전기가 로컬 중지 트랜잭션을 지원하는 경우 누구나 이 트랜잭션을 중지할 수 있다는 점을 알고 있어야 합니다.
 
   위의 시나리오 설명과 시퀀스 다이어그램은 시작 트랜잭션을 위한 구성 변수가 다음과 같이 구성된 것을 기반으로 합니다. +
   <<tx_start_point,`TxStartPoint`>>: <<tx_start_stop_point_values,EVConnected, Authorized, DataSigned, PowerPathClosed, EnergyTransfer>> +
-  이 사용 사례는 다른 구성에도 유효하지만 트랜잭션이 다른 순간에 시작/중지될 수 있으며, 이는 메시지가 전송되는 순서를 변경할 수 있습니다. 자세한 내용은 사용 사례를 참조하세요. <<e01_start_transaction_options,E01 - Start Transaction options>>.
+  이 사용 사례는 다른 구성에서도 유효하지만, 그 경우 트랜잭션이 다른 시점에서 시작/종료될 수 있으며, 이는 메시지가 전송되는 순서에 영향을 미칠 수 있습니다. 자세한 내용은 사용 사례를 참조하세요. <<e01_start_transaction_options,E01 - Start Transaction options>>.
 |===
 
-==== F02 - 원격 시작 트랜잭션 - 원격 시작 먼저 - 요구 사항
+==== F02 - Remote Start Transaction - Remote Start First - Requirements
 .F02 - 요구 사항
 [cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
@@ -235,28 +235,28 @@ AND +
 |F02.FR.06 |이 트랜잭션은 특정 IdToken에 대한 예약을 종료합니다.
   |다음 <<transaction_event_request,TransactionEventRequest>>에는 reservationId가 포함되어야 합니다.
     |<<h_reservation,H. Reservation>>을 참조하세요.
-|F02.FR.07 |EV 운전자가 구성 변수에서 설정한 시간 초과 전에 충전 케이블을 연결하지 않은 경우: +
-<<ev_connection_timeout,`EVConnectionTimeOut`>> 및 +
+|F02.FR.07 |EV 운전자가 <<ev_connection_timeout,`EVConnectionTimeOut`>> 구성 변수에서 설정한 시간 초과 전에 충전 케이블을 연결하지 않은 경우 +
+AND +
 TxStopPoint에 `ParkingBayOccupancy` 가 포함되지 않은 경우
   |충전기는 트랜잭션을 종료하고 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>, ceaseReason = Timeout, _triggerReason_ = `EVConnectionTimeout`)를 CSMS로 전송해야 합니다.
     |그렇지 않으면 TxStopPoint에 Authorized가 포함되지 않은 경우 트랜잭션이 종료되지 않습니다.
-|F02.FR.08 |EV 운전자가 구성 변수에서 설정한 시간 초과 전에 충전 케이블을 연결하지 않는 경우: +
-<<ev_connection_timeout,`EVConnectionTimeOut`>> AND +
+|F02.FR.08 |EV 운전자가 <<ev_connection_timeout,`EVConnectionTimeOut`>> 구성 변수에서 설정한 시간 초과 전에 충전 케이블을 연결하지 않는 경우 +
+AND +
 TxStopPoint에 `ParkingBayOccupancy` 가 포함되어 있음
-  |충전기는 트랜잭션을 승인 취소하고 <<transaction_event_request,TransactionEventRequest>> (_triggerReason_ = `EVConnectionTimeout`)를 CSMS로 전송해야 합니다.
+  |충전기는 트랜잭션을 인증 취소하고 <<transaction_event_request,TransactionEventRequest>> (_triggerReason_ = `EVConnectionTimeout`)를 CSMS로 전송해야 합니다.
     |운전자가 주차 공간을 떠나면 트랜잭션이 정상적으로 종료됩니다.
 |F02.FR.09 |<<authorize_remote_start,`AuthorizeRemoteStart`>>의 값이 true이고 +
 충전기가 <<request_start_transaction_request,RequestStartTransactionRequest>>를 수신합니다.
-  |충전기는 <<request_start_transaction_request,RequestStartTransactionRequest>> 메시지에서 제공된 IdToken의 성공적인 승인 후 트랜잭션을 시작하기 위해 충전기에서 로컬 작업에 대한 응답으로 동작해야 합니다.
-    |충전기는 먼저 요청에 응답한 다음 로컬 승인 목록, 승인 캐시 및/또는 <<authorize_request,AuthorizeRequest>>를 사용하여 IdToken을 승인하려고 시도합니다. +
-    승인이 획득된 후에만 트랜잭션이 시작됩니다.
+  |충전기는 <<request_start_transaction_request,RequestStartTransactionRequest>> 메시지에서 제공된 IdToken의 성공적인 인증 후 트랜잭션을 시작하기 위해 충전기에서 로컬 작업에 대한 응답으로 동작해야 합니다.
+    |충전기는 먼저 요청에 응답한 다음 로컬 인증 목록, 인증 캐시 및/또는 <<authorize_request,AuthorizeRequest>>를 사용하여 IdToken을 인증하려고 시도합니다. +
+    인증이 획득된 후에만 트랜잭션이 시작됩니다.
 |F02.FR.10 |<<authorize_remote_start,`AuthorizeRemoteStart`>>의 값이 false +
 AND +
 충전기가 <<request_start_transaction_request,RequestStartTransactionRequest>>를 수신합니다.
   |충전기는 권한 확인 없이 <<request_start_transaction_request,RequestStartTransactionRequest>> 메시지에 제공된 IdToken에 대한 트랜잭션을 시작해야 합니다.
-    |트랜잭션이 시작된 후 충전기는 idToken과 함께 <<transaction_event_request,TransactionEventRequest>>를 CSMS로 보내고 CSMS는 이 <<transaction_event_request,TransactionEventRequest>>를 처리할 때 IdToken의 권한 상태를 확인합니다.
+    |트랜잭션이 시작된 후 충전기는 idToken과 함께 <<transaction_event_request,TransactionEventRequest>>를 CSMS로 보내고 CSMS는 이 <<transaction_event_request,TransactionEventRequest>>를 처리할 때 IdToken의 인증 상태를 확인합니다.
 |F02.FR.11  |F02.FR.09 OR F02.FR.10 
-  |충전기는 CSMS에 <<transaction_event_request,TransactionEventRequest>>를 보내야 하며, CSMS는 이 <<transaction_event_request,TransactionEventRequest>>를 처리할 때 IdToken의 권한 상태를 확인합니다. |{nbsp}
+  |충전기는 CSMS에 <<transaction_event_request,TransactionEventRequest>>를 보내야 하며, CSMS는 이 <<transaction_event_request,TransactionEventRequest>>를 처리할 때 IdToken의 인증 상태를 확인합니다. |{nbsp}
 |F02.FR.12 |{nbsp}
   |<<request_start_transaction_request,RequestStartTransactionRequest>>에는 IdToken이 포함되어야 하며, 충전기는 CSMS에 전송된 <<transaction_event_request,TransactionEventRequest>>에서 트랜잭션을 시작할 수 있는 경우 이를 사용해야 합니다. |{nbsp}
 |F02.FR.13 |{nbsp}
@@ -284,31 +284,31 @@ AND +
 충전기가 EVSE를 선택할 수 있는 경우
   |충전기는 작업에 대한 _evseId_ 값으로 사용할 EVSE를 선택해야 합니다.
     |충전기가 임의의 EVSE에서 ​​시작하는 것을 지원하지 않는 경우 F02.FR.15도 참조하세요.
-|F02.FR.23 |<<request_start_transaction_request,RequestStartTransactionRequest>>에 대한 _evseId_ 가 요청의 _idToken_ 과 다른 _idToken_ 에 대해 `예약` 되고 +
+|F02.FR.23 |<<request_start_transaction_request,RequestStartTransactionRequest>>에 대한 _evseId_ 가 요청의 _idToken_ 과 다른 _idToken_ 에 대해 `Reserved` 되고 +
 _groupIdToken_ 에 대한 예약이 없는 경우
-  |충전기는 _status_ = `거부됨` 인 <<request_start_transaction_response,RequestStartTransactionResponse>>로 응답해야 합니다. |{nbsp}
-|F02.FR.24 |<<request_start_transaction_request,RequestStartTransactionRequest>>에 대한 _evseId_ 가 요청의 _idToken_ 과 다른 _idToken_ 에 대해 `예약` 되고 +가 요청의 _groupIdToken_ 과 다른 _groupIdToken_ 에 대해 `예약` 되는 경우
+  |충전기는 _status_ = `Rejected` 인 <<request_start_transaction_response,RequestStartTransactionResponse>>로 응답해야 합니다. |{nbsp}
+|F02.FR.24 |<<request_start_transaction_request,RequestStartTransactionRequest>>에 대한 _evseId_ 가 요청의 _idToken_ 과 다른 _idToken_ 에 대해 `Reserved` 되고 요청의 _groupIdToken_ 과 다른 _groupIdToken_ 에 대해 `Reserved` 되는 경우
   |충전기는 _status_ = `Rejected` 인 <<request_start_transaction_response,RequestStartTransactionResponse>>로 응답해야 합니다.
     |_idToken_ 과 _idGroupToken_ 이 예약과 일치하지 않으면 EV가 스테이션을 사용할 수 없습니다.
 |F02.FR.25 |<<request_start_transaction_request,RequestStartTransactionRequest>>에 대한 _evseId_ 가 `Unavailable` 또는 `Faulted` 인 경우
   |충전기는 <<request_start_transaction_response,RequestStartTransactionResponse>>로 _status_ = `Rejected` 로 응답해야 합니다. |{nbsp}
 |F02.FR.26 |<<request_start_transaction_request,RequestStartTransactionRequest>>에 대한 _evseId_ 가 `Occupied` 이고 +
-이 `evseId` 에 승인된 트랜잭션이 있는 경우
+이 `evseId` 에 인증된 트랜잭션이 있는 경우
   |충전기는 <<request_start_transaction_response,RequestStartTransactionResponse>>로 `status` = `Rejected` 로 응답해야 합니다.
-    |트랜잭션이 없거나 아직 승인되지 않은 트랜잭션이 있는 EVSE만 <<request_start_transaction_request,RequestStartTransactionRequest>>와 일치할 수 있습니다.
-|F02.FR.27  |If a Charging Station **with** support for Smart Charging receives a <<request_start_transaction_request,RequestStartTransactionRequest>> with an invalid <<charging_profile_type,ChargingProfile>>.
+    |트랜잭션이 없거나 아직 인증되지 않은 트랜잭션이 있는 EVSE만 <<request_start_transaction_request,RequestStartTransactionRequest>>와 일치할 수 있습니다.
+|F02.FR.27  |스마트 충전을 **지원하는** 충전기가 잘못된 <<charging_profile_type,ChargingProfile>>이 포함된 <<request_start_transaction_request,RequestStartTransactionRequest>>를 수신하는 경우.
   |충전기는 <<request_start_transaction_response,RequestStartTransactionResponse>>와 _status_ = `Rejected` 및 선택적으로 _reasonCode_ = "InvalidProfile" 또는 "InvalidSchedule"로 응답해야 합니다.
-    |장치 모델 변수 SmartChargingCtrlr.Enabl ed는 CSMS에 스마트 충전이 지원되는지 여부를 알려줍니다.
+    |장치 모델 변수 SmartChargingCtrlr.Enabled는 CSMS에 스마트 충전이 지원되는지 여부를 알려줍니다.
 |===
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===
-|참고 |이전 사용 사례의 요구 사항: <<f01_remote_start_transaction_cable_plugin_first,F01 - 원격 시작 트랜잭션 - 케이블 플러그인 먼저>>는 <<f02_remote_start_transaction_remote_start_first,F02 - 원격 시작 트랜잭션 - 원격 시작 먼저>>에도 관련이 있는 것으로 간주됩니다.
+|참고 |이전 사용 사례의 요구 사항: <<f01_remote_start_transaction_cable_plugin_first,F01 - Remote Start Transaction - Cable Plugin First>>는 <<f02_remote_start_transaction_remote_start_first,F02 - Remote Start Transaction - Remote Start First>>에도 관련이 있는 것으로 간주됩니다.
 |===
 
 <<<
 
-==== F03 - 원격 중지 트랜잭션
+==== F03 - Remote Stop Transaction
 
 .F03 - 원격 중지 트랜잭션
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
@@ -333,9 +333,9 @@ _groupIdToken_ 에 대한 예약이 없는 경우
 |5 |필수 조건 |트랜잭션이 진행 중입니다.
 |6 |사후 조건
   |**성공한 사후 조건:** +
-  정류장이 요청된 트랜잭션이 종료되었습니다. +
+  중지가 요청된 트랜잭션이 종료되었습니다. +
   **실패한 사후 조건:** +
-  정류장이 요청된 트랜잭션이 아직 진행 중입니다.
+  중지가 요청된 트랜잭션이 아직 진행 중입니다.
 |===
 
 .Sequence Diagram: Remote Stop Transaction
@@ -347,10 +347,10 @@ image::part2/images/figure_68.svg[Sequence Diagram: Remote Stop Transaction]
 
 
 위의 시나리오 설명과 시퀀스 다이어그램은 트랜잭션 중지 구성 변수가 다음과 같이 구성된 것을 기반으로 합니다. <<tx_stop_point,`TxStopPoint`>>: <<tx_start_stop_point_values,ParkingBayOccupancy, EVConnected>> +
-이 사용 사례는 다른 구성에도 유효하지만 트랜잭션이 다른 순간에 중지될 수 있으며, 이는 메시지를 보내는 순서를 변경할 수 있습니다. 자세한 내용은 사용 사례를 참조하세요. <<e06_stop_transaction_options,E06 - Stop Transaction options>>
+이 사용 사례는 다른 구성에서도 유효하지만, 그 경우 트랜잭션이 다른 시점에서 중지될 수 있으며, 이는 메시지가 전송되는 순서에 영향을 미칠 수 있습니다. 자세한 내용은 사용 사례를 참조하세요. <<e06_stop_transaction_options,E06 - Stop Transaction options>>
 |===
 
-==== F03 - 원격 Stop Transaction - 요구 사항
+==== F03 - Remote Stop Transaction - Requirements
 
 .F03 - 요구 사항
 [cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
@@ -377,14 +377,14 @@ TxStopPoint 구성으로 인해 트랜잭션이 종료됩니다(예: TxStopPoint
 |F03.FR.07 |충전기가 <<request_stop_transaction_request,RequestStopTransactionRequest>>를 수신하는 경우
   |그리고 TransactionId가 활성 트랜잭션와 일치할 수 있는 경우; 충전기는 <<request_stop_transaction_response,RequestStopTransactionResponse>>로 응답해야 하며, 상태는 _Accepted_ 로 설정해야 합니다. |{nbsp}
 |F03.FR.08 |충전기가 <<request_stop_transaction_request,RequestStopTransactionRequest>>를 수신하는 경우
-  |그리고 TransactionId가 활성 트랜잭션와 일치할 수 없는 경우; 충전기는 <<request_stop_transaction_response,RequestStopTransactionResponse>>로 응답해야 하며, 상태는 _Rejected_ 로 설정해야 합니다. |{nbsp}
+  |그리고 TransactionId가 활성 트랜잭션와 일치하지 않는 경우; 충전기는 <<request_stop_transaction_response,RequestStopTransactionResponse>>로 응답해야 하며, 상태는 _Rejected_ 로 설정해야 합니다. |{nbsp}
 |F03.FR.09 |<<transaction_event_request,TransactionEventRequest>>를 보낼 때
-  |충전기는 <<trigger_reason_enum_type,triggerReason>>을 설정하여 CSMS에 이벤트를 트리거한 원인을 알려야 합니다. 사용할 이유는 <<trigger_reason_enum_type,TriggerReasonEnumType>>의 설명에 설명되어 있습니다. |{nbsp}
+  |충전기는 <<trigger_reason_enum_type,triggerReason>>을 설정하여 CSMS에 이벤트를 트리거한 원인을 알려야 합니다. 사용해야할 이유는 <<trigger_reason_enum_type,TriggerReasonEnumType>>에 설명되어 있습니다. |{nbsp}
 |===
 
 <<<
 
-=== F04 - CSMS에서 원격 정지 ISO 15118 충전
+=== F04 - Remote Stop ISO 15118 Charging from CSMS
 
 .F04 - CSMS에서 인터럽트가 있는 충전 루프
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
@@ -422,7 +422,7 @@ image::part2/images/figure_69.svg[충전기에서 인터럽트가 있는 충전 
 |10 |비고 |해당 없음
 |===
 
-==== F04 - CSMS에서 원격 ISO 15118 충전 중지 - 요구 사항
+==== F04 - Remote Stop ISO 15118 Charging from CSMS - Requirements
 
 _이러한 요구 사항은 규범적입니다._
 
@@ -490,7 +490,7 @@ image::part2/images/figure_70.svg[시퀀스 다이어그램: 커넥터 잠금 �
 <<unlock_connector_request,UnlockConnectorRequest>>는 커넥터 액세스 도어를 잠금 해제하는 것이 아니라 커넥터의 케이블 고정 잠금을 잠금 해제하기 위한 것입니다.
 |===
 
-==== F05 - 원격으로 커넥터 잠금 해제 - 요구 사항
+==== F05 - Remotely Unlock Connector - Requirements
 
 .F05 - 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
@@ -501,7 +501,7 @@ image::part2/images/figure_70.svg[시퀀스 다이어그램: 커넥터 잠금 �
   |충전기는 <<unlock_connector_response,UnlockConnectorResponse>>로 응답해야 합니다.
 |F05.FR.02 |F05.FR.01 +
 AND +
-지정된 커넥터에서 진행 중인 승인된 트랜잭션이 있습니다.
+지정된 커넥터에서 진행 중인 인증된 트랜잭션이 있습니다.
   |충전기는 커넥터 잠금을 해제하거나 트랜잭션을 중지하려고 시도해서는 안 되지만 <<unlock_connector_response,UnlockConnectorResponse>>에서 `OngoingAuthorizedTransaction` 상태를 사용해야 합니다.
 |F05.FR.03 |F05.FR.01 +
 AND +
@@ -543,14 +543,14 @@ AND +
 |{nbsp} d|_시나리오 설명_
   |**1.** CSMS가 충전기에 <<trigger_message_request,TriggerMessageRequest>>를 보냅니다. +
   **2.** 충전기는 <<trigger_message_response,TriggerMessageResponse>>로 응답하여 _Accepted_, _Rejected_ 또는 _NotImplemented_ 를 반환하여 보낼지 여부를 나타냅니다. +
-  **3.** CSMS에서 요청한 메시지로, 충전기가 _Accepted_ 로 표시되어 전송되고 있습니다.
+  **3.** CSMS에서 요청하였고 충전기가 _Accepted_ 로 표시한 메시지가 전송됩니다.
 |5 |필수 조건 |기능 블록 _Remote Trigger_ 가 설치되어 있습니다.
 |6 |사후 조건
   |**성공한 사후 조건:** +
   **1.** CSMS가 <<trigger_message_response,TriggerMessageResponse>> 메시지를 _성공적으로_ 수신했습니다. +
   **2.** CSMS는 상태가 _Accepted_ 인 <<trigger_message_response,TriggerMessageResponse>> 메시지를 _성공적으로_ 수신했으며 요청된 메시지를 _성공적으로_ 수신했습니다. +
   **실패 사후 조건:** +
-  **1.** CSMS는 상태가 _Accepted_ 인 <<trigger_message_response,TriggerMessageResponse>> 메시지를 수신하지 않았습니다. +
+  **1.** CSMS는 <<trigger_message_response,TriggerMessageResponse>> 메시지를 수신하지 않았습니다. +
   **2.** CSMS는 상태가 _Accepted_ 인 <<trigger_message_response,TriggerMessageResponse>> 메시지를 _성공적으로_ 수신했으며 요청된 메시지를 수신하지 않았습니다.
 |===
 
@@ -566,7 +566,7 @@ image::part2/images/figure_72.svg[시퀀스 다이어그램: 트리거 메시지
 |8 |참고 |TriggerMessage 메커니즘은 과거 데이터를 검색하도록 의도되지 않았습니다.
 |===
 
-==== F06 - 트리거 메시지 - 요구 사항
+==== F06 - Trigger Message - Requirements
 
 .F06 - 요구 사항
 [cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
@@ -588,7 +588,7 @@ image::part2/images/figure_72.svg[시퀀스 다이어그램: 트리거 메시지
 |F06.FR.06 |충전기가 _requestedMessage_ 가 _MeterValues_ 로 설정된 <<trigger_message_request,TriggerMessageRequest>>를 수락하는 경우
   |충전기는 구성 변수 <<aligned_data_measurands,`AlignedDataMeasurands`>>에 구성된 모든 측정량에 대한 최신 측정값과 함께 <<metervalues_request,MeterValuesRequest>>를 CSMS로 전송해야 합니다. |{nbsp}
 |F06.FR.07 |충전기가 _requestedMessage_ 가 _TransactionEvent_ 로 설정된 <<trigger_message_request,TriggerMessageRequest>>를 수락하는 경우
-  |충전기는 _triggerReason_ = _Trigger_, _transactionInfo_(최소 _chargingState_, _meterValue_)를 구성 변수 <<sampled_data_tx_updated_measurands,`SampledDataTxUpdatedMeasurands`>>에 구성된 모든 측정량에 대한 최신 측정값을 포함하는 <<transaction_event_request,TransactionEventRequest>>를 CSMS로 보내야 합니다. |{nbsp}
+  |충전기는 _triggerReason_ = _Trigger_, _transactionInfo_(최소 _chargingState_, _meterValue_)와 구성 변수 <<sampled_data_tx_updated_measurands,`SampledDataTxUpdatedMeasurands`>>에 구성된 모든 측정량에 대한 최신 측정값을 포함하는 <<transaction_event_request,TransactionEventRequest>>를 CSMS로 보내야 합니다. |{nbsp}
 |F06.FR.08 |충전기가 구현되지 않은 요청된 메시지를 포함하는 <<trigger_message_request,TriggerMessageRequest>>를 수신하는 경우
   |충전기는 <<trigger_message_response,TriggerMessageResponse>>로 _NotImplemented_ 상태로 응답해야 합니다. |{nbsp}
 |F06.FR.09 |{nbsp}
