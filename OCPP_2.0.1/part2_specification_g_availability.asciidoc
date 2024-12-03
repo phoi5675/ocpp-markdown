@@ -263,6 +263,7 @@ image::part2/images/figure_75.svg[Sequence Diagram: Change Availability]
 |===
 |NOTE |2. It is only required to report a status change of a connector. StatusNotificationRequest only supports the reporting of connector statuses.
 |===
+
 <<<
 
 [[g04_change_availability_charging_station]]
