@@ -237,7 +237,7 @@ d|_S1_ d|_Scenario objective_ |Use an EVSE reserved by the same IdToken
   **2.** Upon receipt of the <<reserve_now_request,ReserveNowRequest>>, the Charging Station responds with a <<reserve_now_response,ReserveNowResponse>>. +
   **3.** When a specific EVSE is reserved for this reservation, the Charging Station sends a <<status_notification_request,StatusNotificationRequest>> with the status _Reserved_ for all the Connectors of that EVSE. +
   **4.** The CSMS responds with a <<status_notification_response,StatusNotificationResponse>> to the Charging Station. +
-  **5.** The EV Driver presents an <<id_token_type,IdTokenType>> at the Charging Station, and the <<id_token_type,IdTokenType>> is the same as the reservation’s <<id_token_type,IdTokenType>>, the Charging Station recognizes the <<id_token_type,IdTokenType>> and starts charging and <<e02_start_transaction_cable_plugin_first,E02 - Start Transaction - Cable Plugin First applies>>.
+  **5.** The EV Driver presents an <<id_token_type,IdTokenType>> at the Charging Station, and the <<id_token_type,IdTokenType>> is the same as the reservation’s <<id_token_type,IdTokenType>>, the Charging Station recognizes the <<id_token_type,IdTokenType>> and starts charging and <<e02_start_transaction_cable_plugin_first,E02 - Start Transaction - Cable Plugin First>> applies.
 |5   |Prerequisite(s) |n/a
 |6   |Postcondition(s) |n/a
 |===
@@ -255,7 +255,7 @@ d|_S2_ d|_Scenario objective_ |Use an EVSE reserved by the same GroupIdToken
   **4.** The CSMS responds with a <<status_notification_response,StatusNotificationResponse>> to the Charging Station. +
   **5.** The EV Driver presents an <<id_token_type,IdTokenType>> at the Charging Station, and the <<id_token_type,IdTokenType>> is different from the reservation’s <<id_token_type,IdTokenType>>, the Charging Station sends an <<authorize_request,AuthorizeRequest>> to the CSMS. +
   **6.** The CSMS responds with an <<authorize_response,AuthorizeResponse>>. This response message includes the GroupId. +
-  **7.** Based on the matching GroupId information in both responses, the Charging Station starts charging and <<e02_start_transaction_cable_plugin_first,E02 - Start Transaction - Cable Plugin First applies>>.
+  **7.** Based on the matching GroupId information in both responses, the Charging Station starts charging and <<e02_start_transaction_cable_plugin_first,E02 - Start Transaction - Cable Plugin First>> applies.
 |5   |Prerequisite(s) |n/a
 |6   |Postcondition(s) |n/a
 |===
