@@ -6,28 +6,28 @@
 :sectnums:
 == Introduction
 
-This Functional Block describes the functionality that enables a Charging Station to send periodic, possibly clock-aligned MeterValues.
+이 기능 블록은 충전기가 주기적이고 시계에 맞춰진(clock-aligned) MeterValues를 보낼 수 있도록 하는 기능을 설명합니다.
 
-The transfer of the MeterValues from the Charging Station to the CSMS will be taken over by the new Device Management Monitoring feature, however this mechanism has not been proven in the field yet. So the old <<metervalues_request,MeterValuesRequest>> message remains available for use for now.
+충전기에서 CSMS로 MeterValues를 전송하는 것은 새로운 장치 관리 모니터링 기능이 담당하지만 이 메커니즘은 아직 현장에서 검증되지 않았습니다. 따라서 이전의 <<metervalues_request, MeterValuesRequest>> 메시지는 현재 사용할 수 있습니다.
 
-Extensive metering data relating to transactions can be recorded and transmitted in different ways depending on its intended purpose. There are two obvious use cases (but the use of meter values is not limited to these two):
+트랜잭션과 관련된 광범위한 계량 데이터는 의도된 목적에 따라 다양한 방식으로 기록 및 전송할 수 있습니다. 두 가지 명백한 사용 사례가 있지만(하지만 계량기 값의 사용은 이 두 가지에 국한되지 않음):
 
 - <<transaction_meter_values,Transaction Meter Values>>
 - <<clock_aligned_meter_values,Clock-Aligned Meter Values>>
 
-Both types of meter readings MAY be reported in the _meterValue_ element of the <<transaction_event_request,TransactionEventRequest>> message. <<clock_aligned_meter_values,Clock-Aligned Meter Values>> MAY be reported in standalone <<metervalues_request,MeterValuesRequest>> messages.
+두 가지 유형의 계량기 판독값은 <<transaction_event_request,TransactionEventRequest>> 메시지의 _meterValue_ 요소에서 보고될 수 있습니다. <<clock_aligned_meter_values,Clock-Aligned Meter Values>>는 독립형 <<metervalues_request,MeterValuesRequest>> 메시지에서 보고될 수 있습니다.
 
 <<<
 
 [[metervalues_configuration]]
 == Configuration
 
-_This section is normative._
+_이 섹션은 규범적입니다._
 
 [[transaction_meter_values]]
 === Transaction Meter Values
 
-Frequent (e.g. 1-5 minute interval) meter readings taken and transmitted (usually in "real time") to the CSMS, to allow it to provide information updates to the EV user (who is usually not at the Charging Station), via web, app, SMS, etc., as to the progress of the transaction. In OCPP, this is called "sampled meter data", as the exact frequency and time of readings is not very significant, as long as it is "frequent enough". "Sampled meter data" can be configured with the following Configuration Variables:
+자주(예: 1-5분 간격) 미터 판독값을 측정하여 CSMS로 전송(일반적으로 "실시간")하여 웹, 앱, SMS 등을 통해 EV 사용자(일반적으로 충전기 주변에 없음)에게 트랜잭션 진행 상황에 대한 정보 업데이트를 제공할 수 있도록 합니다. OCPP에서는 이를 "샘플링된 미터 데이터"라고 합니다. 판독값의 정확한 빈도와 시간은 "충분히 자주" 측정되는 한 그다지 중요하지 않기 때문입니다. "샘플링된 미터 데이터"는 다음 구성 변수로 구성할 수 있습니다.
 
 - <<sampled_data_tx_started_measurands,`SampledDataTxStartedMeasurands`>>
 - <<sampled_data_tx_updated_measurands,`SampledDataTxUpdatedMeasurands`>>
@@ -35,30 +35,29 @@ Frequent (e.g. 1-5 minute interval) meter readings taken and transmitted (usuall
 - <<sampled_data_tx_ended_measurands,`SampledDataTxEndedMeasurands`>>
 - <<sampled_data_tx_ended_interval,`SampledDataTxEndedInterval`>>
 
-<<sampled_data_tx_updated_interval,`SampledDataTxUpdatedInterval`>> is the time (in seconds) between sampling of metering (or other) data, intended to be transmitted by <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>) messages during a transaction. A value of "0" (numeric zero), by convention, is to be interpreted to mean that no sampled data should be transmitted.
+<<sampled_data_tx_updated_interval,`SampledDataTxUpdatedInterval`>>은 트랜잭션 중에 <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>) 메시지를 통해 전송되도록 의도된 미터링(또는 기타) 데이터 샘플링 사이의 시간(초)입니다. 관례에 따라 "0"(숫자 0) 값은 샘플링된 데이터가 전송되지 않아야 함을 의미하는 것으로 해석됩니다.
 
-<<sampled_data_tx_ended_interval,`SampledDataTxEndedInterval`>> is the time (in seconds) between sampling of metering (or other) data, intended to be transmitted in the <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) message.
+<<sampled_data_tx_ended_interval,`SampledDataTxEndedInterval`>>은 <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) 메시지에서 전송되도록 의도된 미터링(또는 기타) 데이터 샘플링 사이의 시간(초)입니다.
 
-<<sampled_data_tx_started_measurands,`SampledDataTxStartedMeasurands`>> is a comma separated list that prescribes the set of measurands to be included in the _meterValues_ field of a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Started>>).
+<<sampled_data_tx_started_measurands,`SampledDataTxStartedMeasurands`>>는 <<transaction_event_request,TransactionEventRequest>>의 _meterValues_ 필드에 포함될 측정량 세트를 규정하는 쉼표로 구분된 목록입니다(<<transaction_event_enum_type,eventType = Started>>).
 
-<<sampled_data_tx_updated_measurands,`SampledDataTxUpdatedMeasurands`>> is a comma separated list that prescribes the set of measurands to be included in the _meterValues_ field of a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>), every SampledDataTxUpdatedInterval seconds.
+<<sampled_data_tx_updated_measurands,`SampledDataTxUpdatedMeasurands`>>는 <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>)의 _meterValues_ 필드에 포함될 측정값 세트를 SampledDataTxUpdatedInterval초마다 규정하는 쉼표로 구분된 목록입니다.
 
-<<sampled_data_tx_ended_measurands,`SampledDataTxEndedMeasurands`>> is a comma separated list that prescribes the sampled measurands to be included in the _meterValues_ field of a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>), these measurands have to be taken every <<sampled_data_tx_ended_interval,`SampledDataTxEndedInterval`>> seconds from the start of the transaction, and will only be sent in the <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>).
+<<sampled_data_tx_ended_measurands,`SampledDataTxEndedMeasurands`>>는 <<transaction_event_request,TransactionEventRequest>>의 _meterValues_ 필드에 포함될 샘플링된 측정값을 규정하는 쉼표로 구분된 목록입니다(<<transaction_event_enum_type,eventType = Ended>>). 이러한 측정값은 트랜잭션 시작부터 <<sampled_data_tx_ended_interval,`SampledDataTxEndedInterval`>>초마다 가져와야 하며 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>)에서만 전송됩니다.
 
-Care should be taken to ensure that the amount of measurands that is expected at the end of a transaction fits in one
-<<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) message. Keep the number of measurands in <<sampled_data_tx_ended_measurands,`SampledDataTxEndedMeasurands`>> to a minimum and configure a large interval in <<sampled_data_tx_ended_interval,`SampledDataTxEndedInterval`>> to keep the number of samples small.
+트랜잭션이 끝날 때 예상되는 측정량 양이 하나의 <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) 메시지에 맞는지 확인해야 합니다. <<sampled_data_tx_ended_measurands,`SampledDataTxEndedMeasurands`>>의 측정량 수를 최소한으로 유지하고 <<sampled_data_tx_ended_interval,`SampledDataTxEndedInterval`>>에서 큰 간격을 구성하여 샘플 수를 작게 유지합니다.
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===
-|NOTE |Please note: _Transaction related_ MeterValues are never transmitted in <<metervalues_request,MeterValuesRequest>>.
+|NOTE |_트랜잭션 관련_ MeterValues는 <<metervalues_request,MeterValuesRequest>>에서 전송되지 않습니다.
 |===
 
 [[clock_aligned_meter_values]]
 === Clock-Aligned Meter Values
 
-Grid Operator might require meter readings to be taken from fiscally certified energy meters, at specific Clock aligned times (usually every quarter hour, or half hour).
+그리드 운영자는 재정적으로 인증된 에너지 미터에서 특정 시계 정렬 시간(일반적으로 15분 또는 30분)에 미터 판독값을 가져오도록 요구할 수 있습니다.
 
-"Clock-Aligned Meter Values" can be configured with the following Configuration Variables:
+"클럭 정렬 미터 값"은 다음 구성 변수로 구성할 수 있습니다.
 
 - <<aligned_data_measurands,`AlignedDataMeasurands`>>
 - <<aligned_data_interval,`AlignedDataInterval`>>
@@ -66,70 +65,69 @@ Grid Operator might require meter readings to be taken from fiscally certified e
 - <<aligned_data_tx_ended_interval,`AlignedDataTxEndedInterval`>>
 - <<aligned_data_send_during_idle,`AlignedDataSendDuringIdle`>>
 
-<<aligned_data_interval,`AlignedDataInterval`>> is the size of the clock-aligned data interval (in seconds). This defines the set of evenly spaced meter data aggregation intervals per day, starting at 00:00:00 (midnight), at which time the Charging Station should take measurements and send them to the CSMS in a <<metervalues_request,MeterValuesRequest>> message. A value of "0" (numeric zero), by convention, is to be interpreted to mean that no clock-aligned data should be transmitted.
+<<aligned_data_interval,`AlignedDataInterval`>>는 클록 정렬 데이터 간격의 크기(초)입니다. 이는 00:00:00(자정)부터 시작하여 하루에 균등하게 간격을 둔 미터 데이터 집계 간격 세트를 정의하며, 이 시간에 충전기는 측정을 수행하여 <<metervalues_request, MeterValuesRequest>> 메시지로 CSMS에 전송해야 합니다. 관례에 따라 "0"(숫자 0) 값은 클록 정렬된 데이터가 전송되지 않아야 함을 의미하는 것으로 해석됩니다.
 
-<<aligned_data_tx_ended_interval,`AlignedDataTxEndedInterval`>> is the size of the clock-aligned data interval (in seconds). This defines the set of evenly spaced meter data aggregation intervals per day, starting at 00:00:00 (midnight) intended to be transmitted in the <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) message.
+<<aligned_data_tx_ended_interval,`AlignedDataTxEndedInterval`>>은 클록 정렬된 데이터 간격의 크기(초)입니다. 이는 00:00:00(자정)부터 시작하여 하루에 균등하게 간격을 둔 미터 데이터 집계 간격 세트를 정의하며, <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>) 메시지로 전송되도록 의도되었습니다.
 
-For example, a value of 900 (15 minutes) indicates that every day should be broken into 96 15-minute intervals, starting at 0:00 and then measured every 15 minutes: 0:15, 0:30, 0:45, 1:00, 1:15 etc.
+예를 들어, 900(15분)의 값은 0:15, 0:30, 0:45, 1:00, 1:15 등 매일 0:00에서 시작하여 15분 간격으로 96개로 나누어야 함을 나타냅니다. 
 
-<<aligned_data_measurands,`AlignedDataMeasurands`>> is a comma separated list that prescribes the set of measurands to be included in a <<metervalues_request,MeterValuesRequest>> PDU, every <<aligned_data_interval,`AlignedDataInterval`>> seconds.
+<<aligned_data_measurands,`AlignedDataMeasurands`>>는 <<metervalues_request,MeterValuesRequest>> PDU에 <<aligned_data_interval,`AlignedDataInterval`>>초마다 포함될 측정량 세트를 규정하는 쉼표로 구분된 목록입니다.
 
-<<aligned_data_tx_ended_measurands,`AlignedDataTxEndedMeasurands`>> is a comma separated list that prescribes the set of clock-aligned periodic measurands to be included in the _meterValue_ elements of <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) PDU for every <<aligned_data_tx_ended_interval,`AlignedDataTxEndedInterval`>> of the transaction.
+<<aligned_data_tx_ended_measurands,`AlignedDataTxEndedMeasurands`>>는 <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>) PDU의 _meterValue_ 요소에 포함될 클록 정렬 주기적 측정값 집합을 트랜잭션의 모든 <<aligned_data_tx_ended_interval,`AlignedDataTxEndedInterval`>>에 대해 규정하는 쉼표로 구분된 목록입니다.
 
-<<aligned_data_send_during_idle,`AlignedDataSendDuringIdle`>> can be used to only send clock aligned meter values when there are no ongoing transactions.
-
+<<aligned_data_send_during_idle,`AlignedDataSendDuringIdle`>>는 진행 중인 트랜잭션이 없는 경우에만 클록 정렬 미터 값을 전송하는 데 사용할 수 있습니다.
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===
-|NOTE |Clock-aligned meter values for an EVSE that is involved in a transaction MAY be transmitted in TransactionEventRequests with _context_ = `Sample.Clock` instead of in MeterValuesRequests.
+|NOTE |트랜잭션에 관련된 EVSE의 시계 정렬 미터 값은 MeterValuesRequests가 아닌 _context_ = `Sample.Clock` 인 TransactionEventRequests에서 전송될 수 있습니다.
 |===
 
 === Multiple Locations/Phases
 
-When a Charging Station can measure the same measurand on multiple locations or phases, all possible locations and/or phases SHALL be reported when configured in one of the relevant Configuration Variables.
+충전기가 여러 위치 또는 위상에서 동일한 측정량을 측정할 수 있는 경우, 관련 구성 변수 중 하나에서 구성될 때 모든 가능한 위치 및/또는 위상을 보고해야 합니다.
 
-For example: A Charging Station capable of measuring _Current.Import_ on _Inlet_ (all 3 phases) (grid connection) and _Outlet_ (3 phases per EVSE on both its EVSEs). _Current.Import_ is set in <<aligned_data_measurands,`AlignedDataMeasurands`>>. <<aligned_data_interval,`AlignedDataInterval`>> is set to 900 (seconds). Then the Charging Station should send: (every 15 minutes)
+예: _Inlet_(모든 3상)(그리드 연결) 및 _Outlet_(두 EVSE 모두에서 EVSE당 3상)에서 _Current.Import_ 를 측정할 수 있는 충전소를 예로 들어봅니다. _Current.Import_ 는 <<aligned_data_measurands,`AlignedDataMeasurands`>>에 설정되어 있습니다. <<aligned_data_interval,`AlignedDataInterval`>>은 900(초)으로 설정되어 있습니다. 그런 다음 충전소는 다음을 보내야 합니다. (15분마다)
 
-- a <<metervalues_request,MeterValuesRequest>> with: evseId = 0; with 3 SampledValue elements, one per phase with location = Inlet.
-- a <<metervalues_request,MeterValuesRequest>> with: evseId = 1; with 3 SampledValue elements, one per phase with location = Outlet.
-- a <<metervalues_request,MeterValuesRequest>> with: evseId = 2; with 3 SampledValue elements, one per phase with location = Outlet.
+- <<metervalues_request,MeterValuesRequest>>: evseId = 0; 3개의 SampledValue 요소, location = Inlet인 위상당 하나씩.
+- <<metervalues_request,MeterValuesRequest>>: evseId = 1; 3개의 SampledValue 요소, location = Outlet인 위상당 하나씩.
+- <<metervalues_request,MeterValuesRequest>>: evseId = 2; 3개의 SampledValue 요소, location = Outlet인 위상당 하나씩.
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===
-|NOTE |When the configuration variable <<sampled_data_register_values_without_phases,`SampledDataRegisterValuesWithoutPhases`>> has the value _true_, then meter values of measurand `Energy.Active.Import.Register` will only report the total energy over all phases without reporting the individual phase values.
+|NOTE |구성 변수 <<sampled_data_register_values_without_phases,`SampledDataRegisterValuesWithoutPhases`>>의 값이 _true_ 인 경우 측정 대상 `Energy.Active.Import.Register` 의 미터 값은 개별 위상 값을 보고하지 않고 모든 위상에 대한 총 에너지만 보고합니다.
 |===
 
 === Signed Meter Values
 
-OCPP 2.0.1 supports signed meter values. When a Charging Station support signed meter values it can use the Configuration Variables <<aligned_data_sign_readings,`AlignedDataSignReadings`>> and <<sampled_data_sign_readings,`SampledDataSignReadings`>> to report this. The CSMS can then use this same variables to turn the use of signed meter values _on_ or _off_.
+OCPP 2.0.1은 서명된 미터 값을 지원합니다. 충전기가 서명된 미터 값을 지원하는 경우 구성 변수 <<aligned_data_sign_readings,`AlignedDataSignReadings`>> 및 <<sampled_data_sign_readings,`SampledDataSignReadings`>>를 사용하여 이를 보고할 수 있습니다. 그런 다음 CSMS는 이 동일한 변수를 사용하여 서명된 미터 값의 사용을 _켜거나_ _끌_ 수 있습니다.
 
-When enabled the Charging Station shall put the signed meter value in the _SignedMeterValue_ field of the <<sampled_value_type,SampledValue>>.
+활성화된 경우 충전기는 서명된 미터 값을 <<sampled_value_type,SampledValue>>의 _SignedMeterValue_ 필드에 넣습니다.
 
 === Configuration Examples
 
-Below are a few examples of configurations for transaction-related measurands:
+다음은 트랜잭션 관련 측정항목에 대한 구성의 몇 가지 예입니다.
 
-**Only sampled energy register values for start/stop at end of transaction**
+**트랜잭션 종료 시 시작/중지에 대한 샘플링된 에너지 레지스터 값만**
 
-- SampledDataCtrlr.TxStartedMeasurands and TxUpdatedMeasurands are left empty.
+- SampledDataCtrlr.TxStartedMeasurands 및 TxUpdatedMeasurands는 비어 있습니다.
 - SampledDataCtrlr.TxEndedMeasurands = "Energy.Active.Import.Register"
 - SampledDataCtrlr.TxEndedInterval = 0
 
-**Values of energy register at start, during and end of transaction**
+**트랜잭션 시작, 트랜잭션 중, 트랜잭션 종료 시 에너지 레지스터 값**
 
 - SampledDataCtrlr.TxStartedMeasurands = "Energy.Active.Import.Register"
 - SampledDataCtrlr.TxUpdatedMeasurands = "Energy.Active.Import.Register"
-- SampledDataCtrlr.TxUpdatedInterval = 300 (every 5 minutes)
+- SampledDataCtrlr.TxUpdatedInterval = 300(5분마다)
 - SampledDataCtrlr.TxEndedMeasurands = "Energy.Active.Import.Register"
 - SampledDataCtrlr.TxEndedInterval = 0
 
-**Only clock-aligned register values during and start/stop at end of transction**
+**트랜잭션 중, 트랜잭션 종료 시 시작/중지되는 클록 정렬 레지스터 값만**
 
-- SampledDataCtrlr.TxStartedMeasurands and TxUpdatedMeasurands are left empty.
+- SampledDataCtrlr.TxStartedMeasurands 및 TxUpdatedMeasurands는 비어 있습니다.
 - SampledDataCtrlr.TxEndedMeasurands = "Energy.Active.Import.Register"
 - SampledDataCtrlr.TxEndedInterval = 0
 - AlignedDataCtrlr.Measurands = "Energy.Active.Import.Register"
-- AlignedDataCtrlr.Interval = 300 (every 5 minutes)
+- AlignedDataCtrlr.Interval = 300(5분마다)
 
 <<<
 
@@ -140,217 +138,217 @@ Below are a few examples of configurations for transaction-related measurands:
 :sectnums!:
 === J01 - Sending Meter Values not related to a transaction
 
-.J01 - Sending Meter Values not related to a transaction
+.J01 - 트랜잭션과 관련 없는 미터 값 전송
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Sending Meter Values not related to a transaction
-|2   |ID              |J01
-|{nbsp} d|_Functional block_ |J. Meter Values
-|3   |Objective(s)    |To sample the electrical meter or other sensor/transducer hardware to provide information about the Charging Stations' Meter Values.
-|4   |Description     |The Charging Station samples the electrical meter or other sensor/transducer hardware to provide information about its Meter Values. Depending on configuration settings, the Charging Station will send Meter Values.
-|{nbsp} d|_Actors_    |Charging Station, CSMS
-|{nbsp} d|_Scenario description_ 
-  |**1.** The Charging Station sends a <<metervalues_request,MeterValuesRequest>> message, for offloading Meter Values to the CSMS. +
-  **2.** Upon receipt of a <<metervalues_request,MeterValuesRequest>> message, the CSMS responds with a <<meter_values_response,MeterValuesResponse>> message.
-|5   |Prerequisite(s) |The Charging Station is configured to send Meter values every XX seconds. +
-  No transaction is running.
-|6   |Postcondition(s)
-  |**Successful postcondition:** +
+|1 |이름 |트랜잭션과 관련 없는 미터 값 전송
+|2 |ID |J01
+|{nbsp} d|_기능 블록_ |J. 미터 값
+|3 |목표 |충전기 미터 값에 대한 정보를 제공하기 위해 전기 미터 또는 기타 센서/트랜스듀서 하드웨어를 샘플링합니다.
+|4 |설명 |충전기는 미터 값에 대한 정보를 제공하기 위해 전기 미터 또는 기타 센서/트랜스듀서 하드웨어를 샘플링합니다. 구성 설정에 따라 충전기는 미터 값을 전송합니다.
+|{nbsp} d|_Actors_ |충전기, CSMS
+|{nbsp} d|_시나리오 설명_
+  |**1.** 충전기는 미터 값을 CSMS로 오프로드하기 위해 <<metervalues_request, MeterValuesRequest>> 메시지를 보냅니다. +
+  **2.** <<metervalues_request, MeterValuesRequest>> 메시지를 수신하면 CSMS는 <<meter_values_response, MeterValuesResponse>> 메시지로 응답합니다.
+|5 |필수 조건 |충전기는 XX초마다 미터 값을 보내도록 구성되어 있습니다. +
+실행 중인 트랜잭션이 없습니다.
+|6 |사후 조건(들)
+  |**성공 사후 조건:** +
   n/a +
-  **Failure postcondition:** +
+  **실패 사후 조건:** +
   n/a
 |===
 
-.Sequence Diagram: Sending Meter Values
-image::part2/images/figure_91.svg[Sequence Diagram: Sending Meter Values]
+.시퀀스 다이어그램: 미터 값 전송
+image::part2/images/figure_91.svg[시퀀스 다이어그램: 미터 값 전송]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error handling  |n/a
-|8   |Remark(s)       
-  |The phase field is not applicable to all <<measurand_enum_type,Measurands>>.
+|7 |오류 처리 |n/a
+|8 |참고 사항(들)
+  |위상 필드는 모든 <<measurand_enum_type,Measurands>>에 적용되지 않습니다.
 
-  The phase rotation of a Connector relative to the grid connection can be derived by querying the <<phase_rotation,`PhaseRotation`>> Configuration Variables of all components in the chain from grid connection up to Connector.
+  그리드 연결에 대한 커넥터의 위상 회전은 그리드 연결에서 커넥터까지 체인의 모든 구성 요소의 <<phase_rotation,`PhaseRotation`>> 구성 변수를 쿼리하여 파생할 수 있습니다.
 
-  The nature of each <<sampled_value_type,sampledValue>> is determined by the optional <<measurand_enum_type,Measurand>>, <<reading_context_enum_type,context>>, <<location_enum_type,location>>, <<sampled_value_type,unit>> and <<phase_enum_type,phase>> fields.
+  각 <<sampled_value_type,sampledValue>>의 특성은 선택 사항인 <<measurand_enum_type,Measurand>>, <<reading_context_enum_type,context>>, <<location_enum_type,location>>, <<sampled_value_type,unit>> 및 <<phase_enum_type,phase>> 필드에 의해 결정됩니다.
 
-  The optional SignedMeterValue field can contain digitally signed binary meter value data.
+  선택 사항인 SignedMeterValue 필드에는 디지털 서명된 이진 미터 값 데이터가 포함될 수 있습니다.
 |===
 
 ==== J01 - Sending Meter Values not related to a transaction - Requirements
 
-.J01 - Requirements
+.J01 - 요구 사항
 [cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition     |Note
+|ID |전제 조건 |요구 사항 정의 |참고
 
-|J01.FR.01  |{nbsp} 
-  |The Charging Station MAY sample the energy meter (or other sensor/transducer hardware) to provide extra information about its Meter Values.
-    |It is up to the Charging Station when it will send Meter Values. This can be configured using the <<set_variables_request,SetVariablesRequest>> message to data acquisition intervals and specify data to be acquired & reported.
-|J01.FR.02  |{nbsp}
-  |The <<metervalues_request,MeterValuesRequest>> message SHALL contain the id of the EVSE from which samples were taken. |{nbsp}
-|J01.FR.03  |J01.FR.02 AND +
-  The evseId is 0.
-    |The <<metervalues_request,MeterValuesRequest>> message SHALL be associated with the entire Charging Station. |{nbsp}
-|J01.FR.04  |J01.FR.03 AND +
-  <<measurand_enum_type,Measurand>> is energy related.
-    |The sample SHALL be taken from the main energy meter. |{nbsp}
-|J01.FR.05  |If all captured at the same point in time.
-  |Each MeterValue element SHALL contain a timestamp. |{nbsp}
-|J01.FR.06  |If all captured at the same point in time.
-  |Each MeterValue(s) element SHALL contain a set of one or more individual SampledValue elements. |{nbsp}
-|J01.FR.07  |{nbsp}
-  |The optional measurand field SHALL specify the type of value being measured/reported. |{nbsp}
-|J01.FR.08  |{nbsp}
-  |The optional context field SHALL specify the reason/event triggering the reading. |{nbsp}
-|J01.FR.09  |{nbsp}
-  |The optional location field SHALL specify where the measurement is taken.
-    |(e.g. Inlet, Outlet).
-|J01.FR.10  |{nbsp}
-  |The optional phase field SHALL specify to which phase or phases of the electric installation the value applies. |{nbsp}
-|J01.FR.11  |{nbsp}
-  |The Charging Station SHALL report all phase number dependent values from the electrical meter (or grid connection when absent) point of view. |{nbsp}
-|J01.FR.13  |When reporting phase rotation of a component
-  |The Charging Station SHALL report the phase rotation relative to the grid connection |{nbsp}
-|J01.FR.14  |When <<aligned_data_interval,AlignedDataCtrlr.Interval>> > 0 +
+|J01.FR.01 |{nbsp}
+  |충전기는 에너지 미터(또는 다른 센서/트랜스듀서 하드웨어)를 샘플링하여 미터 값에 대한 추가 정보를 제공할 수 있습니다.
+    |충전기가 미터 값을 언제 보낼지는 충전기에 달려 있습니다. 이는 <<set_variables_request,SetVariablesRequest>> 메시지를 사용하여 데이터 수집 간격을 구성하고 수집 및 보고할 데이터를 지정할 수 있습니다.
+|J01.FR.02 |{nbsp}
+  |<<metervalues_request,MeterValuesRequest>> 메시지에는 샘플을 가져온 EVSE의 ID가 포함되어야 합니다. |{nbsp}
+|J01.FR.03 |J01.FR.02 AND +
+  evseId는 0입니다.
+    |<<metervalues_request, MeterValuesRequest>> 메시지는 전체 충전기와 연결되어야 합니다. |{nbsp}
+|J01.FR.04 |J01.FR.03 AND +
+  <<measurand_enum_type,Measurand>>는 에너지와 관련이 있습니다.
+    |샘플은 주 에너지 미터에서 가져와야 합니다. |{nbsp}
+|J01.FR.05 |모두 동일한 시점에 캡처된 경우.
+  |각 MeterValue 요소에는 타임스탬프가 포함되어야 합니다. |{nbsp}
+|J01.FR.06 |모두 동일한 시점에 캡처된 경우.
+  |각 MeterValue(s) 요소에는 하나 이상의 개별 SampledValue 요소 집합이 포함되어야 합니다. |{nbsp}
+|J01.FR.07 |{nbsp}
+  |선택적 측정량 필드는 측정/보고되는 값의 유형을 지정해야 합니다. |{nbsp}
+|J01.FR.08 |{nbsp}
+  |선택적 컨텍스트 필드는 판독을 트리거하는 이유/이벤트를 지정해야 합니다. |{nbsp}
+|J01.FR.09 |{nbsp}
+  |선택적 위치 필드는 측정이 수행되는 위치를 지정해야 합니다.
+    |(예: 입구, 출구).
+|J01.FR.10 |{nbsp}
+  |선택적 위상 필드는 값이 적용되는 전기 설비의 위상 또는 위상을 지정해야 합니다. |{nbsp}
+|J01.FR.11 |{nbsp}
+  |충전기는 전기 미터(또는 없는 경우 그리드 연결) 관점에서 모든 위상 번호 종속 값을 보고해야 합니다. |{nbsp}
+|J01.FR.13 |구성 요소의 위상 회전을 보고할 때
+  |충전기는 그리드 연결을 기준으로 위상 회전을 보고해야 합니다. |{nbsp}
+|J01.FR.14 |<<aligned_data_interval,AlignedDataCtrlr.Interval>> > 0 +
   AND +
-  EVSE for which measurands are sent, is not involved in a transaction
-    |The Charging Station SHALL send a <<metervalues_request,MeterValuesRequest>> message to the CSMS for the measurands in <<aligned_data_measurands,AlignedDataCtrlr.Measurands>> at every AlignedDataCtrlr.Interval for all _evseIds_, locations and phases for which a configured measurand is supported.
-      |It is possible that certain measurands are not available for every location. For example, _evseId_ = 0 (grid meter) will not have a "Current.Offered" or "SoC" measurand. See also J01.FR.22
-|J01.FR.15  |J01.FR.14 +
+  측정량이 전송되는 EVSE가 트랜잭션에 관련되지 않은 경우
+    |충전기는 모든 _evseId_, 위치 및 구성된 측정량이 지원되는 위상에 대해 모든 AlignedDataCtrlr.Interval에서 <<aligned_data_measurands,AlignedDataCtrlr.Measurands>>의 측정량에 대한 <<metervalues_request,MeterValuesRequest>> 메시지를 CSMS에 전송해야 합니다.
+      |특정 측정량이 모든 위치에서 사용 가능하지 않을 수 있습니다. 예를 들어, _evseId_ = 0(그리드 미터)에는 "Current.Offered" 또는 "SoC" 측정값이 없습니다. J01.FR.22도 참조하세요.
+|J01.FR.15 |J01.FR.14 +
   AND +
-  Amount of measurands is too much for 1 <<metervalues_request,MeterValuesRequest>>
-    |The Charging Station MAY use multiple <<metervalues_request,MeterValuesRequest>> messages to send all measurands. |{nbsp}
-|J01.FR.17  |{nbsp}
-  |The timestamp of a MeterValue SHALL apply to all its <<sampled_value_type,SampledValues>>. |{nbsp}
-|J01.FR.18  |When CSMS receives a <<metervalues_request,MeterValuesRequest>>
-  |CSMS SHALL respond with <<meter_values_response,MeterValuesResponse>>.
-    |Failing to respond with <<meter_values_response,MeterValuesResponse>> might cause the Charging Station to try the same message again.
-|J01.FR.19  |If `AlignedDataSendDuringIdle` is set to true for an EVSE AND +
-  the specified EVSE has an ongoing transaction.
-    |The Charging Station SHALL stop sending the clock aligned meter values for this EVSE. |{nbsp}
-|J01.FR.20  |If `AlignedDataSendDuringIdle` is set to true for a Charging Station AND the Charging Station has an ongoing transaction.
-  |The Charging Station SHALL stop sending the clock aligned meter values for all EVSEs and the main power meter. |{nbsp}
-|J01.FR.21  |<<aligned_data_sign_readings,`AlignedDataSignReadings`>> is _true_
-  |The Charging Station SHALL retrieve signed meter values from components that support data signing and put them in the _signedMeterValue_ field. |{nbsp}
-|J01.FR.22  |When <<aligned_data_interval,AlignedDataCtrlr.Interval>> > 0 +
+  측정량 양이 1 <<metervalues_request, MeterValuesRequest>>에 비해 너무 많습니다.
+    |충전기는 모든 측정량을 보내기 위해 여러 <<metervalues_request, MeterValuesRequest>> 메시지를 사용할 수 있습니다. |{nbsp}
+|J01.FR.17 |{nbsp}
+  |MeterValue의 타임스탬프는 모든 <<sampled_value_type,SampledValues>>에 적용되어야 합니다. |{nbsp}
+|J01.FR.18 |CSMS가 <<metervalues_request, MeterValuesRequest>>를 수신하면
+  |CSMS는 <<meter_values_response, MeterValuesResponse>>로 응답해야 합니다.
+    |<<meter_values_response, MeterValuesResponse>>로 응답하지 못하면 충전기에서 동일한 메시지를 다시 시도할 수 있습니다.
+|J01.FR.19 |EVSE에 대해 `AlignedDataSendDuringIdle` 이 true로 설정되고 +
+  지정된 EVSE에 진행 중인 트랜잭션이 있는 경우.
+    |충전기는 이 EVSE에 대해 클록 정렬 미터 값 전송을 중지해야 합니다. |{nbsp}
+|J01.FR.20 |충전기에 대해 `AlignedDataSendDuringIdle` 이 true로 설정되고 충전기에 진행 중인 트랜잭션이 있는 경우.
+  |충전기는 모든 EVSE와 주 전력 미터에 대해 클록 정렬 미터 값 전송을 중지해야 합니다. |{nbsp}
+|J01.FR.21 |<<aligned_data_sign_readings,`AlignedDataSignReadings`>>는 _true_ 입니다.
+  |충전기는 데이터 서명을 지원하는 구성 요소에서 서명된 미터 값을 검색하여 _signedMeterValue_ 필드에 넣어야 합니다. |{nbsp}
+|J01.FR.22 |<<aligned_data_interval,AlignedDataCtrlr.Interval>> > 0 +
   AND +
-  EVSE for which measurands are sent, is involved in a transaction
-    |The Charging Station SHALL send either: +
-      - a <<metervalues_request,MeterValuesRequest>> message or +
-      - a <<transaction_event_request,TransactionEventRequest>> with _triggerReason_ = `Sample.Clock` +
-      to the CSMS for the measurands in <<aligned_data_measurands,AlignedDataCtrlr.Measurands>> at every AlignedDataCtrlr.Interval.
-        |See also J01.FR.14
+  측정량이 전송된 EVSE가 트랜잭션에 관여하는 경우
+    |충전기는 다음 중 하나를 전송해야 합니다. +
+    - <<metervalues_request,MeterValuesRequest>> 메시지 또는 +
+    - <<transaction_event_request,TransactionEventRequest>>(_triggerReason_ = `Sample.Clock`) +
+    <<aligned_data_measurands,AlignedDataCtrlr.Measurands>>의 측정량에 대한 CSMS에 AlignedDataCtrlr.Interval마다 전송합니다.
+|J01.FR.14도 참조하세요.
 |===
 
 <<<
 
 === J02 - Sending transaction related Meter Values
 
-.J02 - Sending transaction related Meter Values
+.J02 - 트랜잭션 관련 미터 값 전송
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Sending transaction related Meter Values
-|2   |ID              |J02
-|{nbsp} d|_Functional block_  |J. Meter Values
-|3   |Objective(s)    |To sample the energy meter or other sensor/transducer hardware to provide information about the Charging Stations' transaction related Meter Values.
-|4   |Description     |The Charging Station samples the energy meter or other sensor/transducer hardware to provide information about its transaction related Meter Values. Depending on configuration settings, the Charging Station will send Meter Values during a transaction.
-|{nbsp} d|_Actors_    |Charging Station, CSMS
-|{nbsp} d|_Scenario description_ 
-  |**1.** The Charging Station sends a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>) message, for offloading Meter Values to the CSMS. +
-  **2.** Upon receipt of a <<transaction_event_request,TransactionEventRequest>> message, the CSMS responds with a <<transaction_event_response,TransactionEventResponse>> message.
-|5   |Prerequisite(s) |The Charging Station is configured to send Meter Values every XX seconds. +
-  A transaction is running.
-|6   |Postcondition(s) 
-  |**Successful postcondition:** +
+|1 |이름 |트랜잭션 관련 미터 값 전송
+|2 |ID |J02
+|{nbsp} d|_기능 블록_ |J. 미터 값
+|3 |목표 |에너지 미터 또는 기타 센서/트랜스듀서 하드웨어를 샘플링하여 충전기의 트랜잭션 관련 미터 값에 대한 정보를 제공합니다.
+|4 |설명 |충전기는 에너지 미터 또는 기타 센서/트랜스듀서 하드웨어를 샘플링하여 트랜잭션 관련 미터 값에 대한 정보를 제공합니다. 구성 설정에 따라 충전기는 트랜잭션 중에 미터 값을 전송합니다.
+|{nbsp} d|_Actors_ |충전기, CSMS
+|{nbsp} d|_시나리오 설명_
+  |**1.** 충전기는 <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>) 메시지를 보내 미터 값을 CSMS로 오프로드합니다. +
+  **2.** <<transaction_event_request,TransactionEventRequest>> 메시지를 수신하면 CSMS는 <<transaction_event_response,TransactionEventResponse>> 메시지로 응답합니다.
+|5 |필수 조건 |충전기는 XX초마다 미터 값을 보내도록 구성되어 있습니다. +
+  트랜잭션이 실행 중입니다.
+|6 |사후 조건(들)
+  |**성공 사후 조건:** +
   n/a +
-  **Failure postcondition:** +
+  **실패 사후 조건:** +
   n/a
 |===
 
-.Sequence Diagram: Sending transaction related Meter Values
-image::part2/images/figure_92.svg[Sequence Diagram: Sending transaction related Meter Values]
+.시퀀스 다이어그램: 트랜잭션 관련 미터 값 전송
+image::part2/images/figure_92.svg[시퀀스 다이어그램: 트랜잭션 관련 미터 값 전송]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error handling
-  |When _Offline_, the Charging Station MUST queue any transaction-related messages (Meter Values belonging to a transaction) that it would have sent to the CSMS if the Charging Station had been online.
-|8   |Remark(s) 
-  |The phase field is not applicable to all <<measurand_enum_type,Measurands>>.
+|7 |오류 처리
+|_Offline_ 일 때, 충전기는 충전기가 온라인 상태였다면 CSMS에 전송했을 트랜잭션 관련 메시지(트랜잭션에 속하는 미터 값)를 큐에 넣어야 합니다.
+|8 |주의 사항(들)
+  |위상 필드는 모든 <<measurand_enum_type,Measurands>>에 적용되지 않습니다.
 
-  The phase rotation of a Connector relative to the grid connection can be derived by querying the <<phase_rotation,`PhaseRotation`>> Configuration Variables of all components in the chain from grid connection up to Connector.
+  그리드 연결에 대한 Connector의 위상 회전은 그리드 연결에서 Connector까지 체인의 모든 구성 요소의 <<phase_rotation,`PhaseRotation`>> 구성 변수를 쿼리하여 얻을 수 있습니다.
 
-  The nature of each <<sampled_value_type,sampledValue>> is determined by the optional <<measurand_enum_type,Measurand>>, <<reading_context_enum_type,context>>, <<location_enum_type,location>>, <<sampled_value_type,unit>> and <<phase_enum_type,phase>> fields.
+  각 <<sampled_value_type,sampledValue>>의 특성은 선택적 <<measurand_enum_type,Measurand>>, <<reading_context_enum_type,context>>, <<location_enum_type,location>>, <<sampled_value_type,unit>> 및 <<phase_enum_type,phase>> 필드에 의해 결정됩니다.
 
-  The optional SignedMeterValue field can contain digitally signed binary meter value data.
+  선택적 SignedMeterValue 필드에는 디지털 서명된 이진 미터 값 데이터가 포함될 수 있습니다.
 |===
 
 ==== J02 - Sending transaction related Meter Values - Requirements
 
-.J02 - Requirements
+.J02 - 요구 사항
 [cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition     |Note
+|ID |전제 조건 |요구 사항 정의 |참고
 
-|J02.FR.01  |{nbsp}
-  |The Charging Station MAY sample the energy meter (or other sensor/transducer hardware) to provide extra information about its Meter Values.
-    |It is up to the Charging Station when it will send Meter Values. This can be configured using the <<set_variables_request,SetVariablesRequest>> message to data acquisition intervals and specify data to be acquired & reported.
-|J02.FR.02  |If all captured at the same point in time.
-  |Each MeterValue element SHALL contain a set of one or more individual SampledValue elements. |{nbsp}
-|J02.FR.03  |{nbsp}
-  |The optional measurand field SHALL specify the type of value being measured/reported. |{nbsp}
-|J02.FR.04  |{nbsp}
-  |The optional context field SHALL specify the reason/event triggering the reading. |{nbsp}
-|J02.FR.05  |{nbsp}
-  |The optional location field SHALL specify where the measurement is taken.
-    |(e.g. Inlet, Outlet).
-|J02.FR.06  |{nbsp}
-  |The optional phase field SHALL specify to which phase or phases of the electric installation the value applies. |{nbsp}
-|J02.FR.07  |{nbsp}
-  |The Charging Station SHALL report all phase number dependent values from the power meter (or grid connection when absent) point of view. |{nbsp}
-|J02.FR.09  |When reporting phase rotation of a component
-  |The Charging Station SHALL report the phase rotation relative to the grid connection. |{nbsp}
-|J02.FR.10  |If a <<transaction_event_request,TransactionEventRequest>> message with <<transaction_event_enum_type,eventType = Started>> or <<transaction_event_enum_type,eventType = Update>> contains multiple _meterValue_ elements, rather than one _meterValue_ with one or more _sampledValue_ elements
-  |All _meterValue_ elements SHALL have a timestamp that is within the current sampling interval, i.e.: (transaction event timestamp - <<sampled_data_tx_updated_interval,`SampledDataTxUpdatedInterval`>>) < _meterValue.timestamp_ <= transaction event timestamp
-    |Only for _eventType_ = `Ended` can a TransactionEventRequest have meter values for multiple intervals.
-|J02.FR.11  |When <<sampled_data_tx_updated_interval,`SampledDataTxUpdatedInterval`>> > 0
-  |The Charging Station SHALL send a <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) with _triggerReason_ = `MeterValuePeriodic` with the measurands configured in <<sampled_data_tx_updated_interval,SampledDataCtrlr.TxUpdatedMeasurands>> in the meterValue field at every SampledDataCtrlr.TxUpdatedInterval.
-    |See E01 for sending of <<sampled_data_tx_started_measurands,SampledDataCtrlr.TxStartedMeasurands>> and E06 for <<sampled_data_tx_ended_measurands,SampledDataCtrlr.TxEndedMeasurands>>.
-|J02.FR.12  |J02.FR.11 +
+|J02.FR.01 |{nbsp}
+  |충전기는 에너지 미터(또는 다른 센서/트랜스듀서 하드웨어)를 샘플링하여 미터 값에 대한 추가 정보를 제공할 수 있습니다.
+    |충전기가 미터 값을 보내는 시점은 충전기에 달려 있습니다. 이는 <<set_variables_request,SetVariablesRequest>> 메시지를 사용하여 데이터 수집 간격을 구성하고 수집 및 보고할 데이터를 지정할 수 있습니다.
+|J02.FR.02 |모두 동일한 시점에 캡처된 경우.
+  |각 MeterValue 요소에는 하나 이상의 개별 SampledValue 요소 집합이 포함되어야 합니다. |{nbsp}
+|J02.FR.03 |{nbsp}
+  |선택적 측정량 필드는 측정/보고되는 값의 유형을 지정해야 합니다. |{nbsp}
+|J02.FR.04 |{nbsp}
+  |선택적 컨텍스트 필드는 판독을 트리거하는 이유/이벤트를 지정해야 합니다. |{nbsp}
+|J02.FR.05 |{nbsp}
+  |선택적 위치 필드는 측정이 수행되는 위치를 지정해야 합니다.
+    |(예: 입구, 출구).
+|J02.FR.06 |{nbsp}
+  |선택적 위상 필드는 값이 적용되는 전기 설비의 위상 또는 위상을 지정해야 합니다. |{nbsp}
+|J02.FR.07 |{nbsp}
+  |충전기는 전력계(또는 없는 경우 그리드 연결) 관점에서 모든 위상 번호 종속 값을 보고해야 합니다. |{nbsp}
+|J02.FR.09 |구성 요소의 위상 회전을 보고할 때
+  |충전기는 그리드 연결을 기준으로 위상 회전을 보고해야 합니다. |{nbsp}
+|J02.FR.10 |<<transaction_event_request,TransactionEventRequest>> 메시지에 <<transaction_event_enum_type,eventType = Started>> 또는 <<transaction_event_enum_type,eventType = Update>>가 하나 이상의 _sampledValue_ 요소가 있는 하나의 _meterValue_ 가 아닌 여러 _meterValue_ 요소가 포함된 경우
+  |모든 _meterValue_ 요소에는 현재 샘플링 간격 내에 있는 타임스탬프가 있어야 합니다. 즉, (트랜잭션 이벤트 타임스탬프 - <<sampled_data_tx_updated_interval,`SampledDataTxUpdatedInterval`>>) < _meterValue.timestamp_ <= 트랜잭션 이벤트 타임스탬프
+    |_eventType_ = `Ended` 인 경우에만 TransactionEventRequest에 여러 간격에 대한 미터 값이 있을 수 있습니다.
+|J02.FR.11 |<<sampled_data_tx_updated_interval,`SampledDataTxUpdatedInterval`>> > 0일 때
+  |충전기는 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>)를 _triggerReason_ = `MeterValuePeriodic` 로 전송해야 하며, 측정값은 SampledDataCtrlr.TxUpdatedInterval마다 MeterValue 필드에 <<sampled_data_tx_updated_interval,SampledDataCtrlr.TxUpdatedMeasurands>>에 구성되어야 합니다.
+    |<<sampled_data_tx_started_measurands,SampledDataCtrlr.TxStartedMeasurands>>를 전송하려면 E01을 참조하고, <<sampled_data_tx_ended_measurands,SampledDataCtrlr.TxEndedMeasurands>>를 전송하려면 E06을 참조하세요.
+|J02.FR.12 |J02.FR.11 +
   AND +
   _Offline_ +
   AND +
-  The Charging Station is running low on memory
-    |The Charging Station MAY drop <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) messages. |{nbsp}
-|J02.FR.13  |J02.FR.12 
-  |When dropping <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) messages, the Charging Station SHALL drop intermediate messages first (1st message, 3th message, 5th message etc.), not start dropping messages from the start or stop adding messages to the queue. |{nbsp}
-|J02.FR.14  |J02.FR.11 +
+  충전기의 메모리가 부족합니다.
+    |충전기는 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) 메시지를 삭제할 수 있습니다. |{nbsp}
+|J02.FR.13 |J02.FR.12
+  |<<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) 메시지를 삭제할 때 충전기는 중간 메시지를 먼저 삭제해야 하며(첫 번째 메시지, 세 번째 메시지, 다섯 번째 메시지 등), 처음부터 메시지를 삭제하거나 큐에 메시지를 추가하는 것을 중단해서는 안 됩니다. |{nbsp}
+|J02.FR.14 |J02.FR.11 +
   AND +
-  Amount of meter data is too much for 1 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>)
-    |The Charging Station MAY use multiple <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) messages with the same _timestamp_ to send all measurands. |{nbsp}
-|J02.FR.16  |{nbsp}
-  |All "Register" values relating to a single charging transaction, or a non-transactional consumer (e.g. Charging Station internal power supply, overall supply) MUST be monotonically increasing in time.
-    |Except in the case of a meter replacement. See <<measurand_enum_type,MeasurandEnumType>>.
-|J02.FR.17  |{nbsp}
-  |For improved auditability, ".Register" values SHOULD be reported exactly as they are directly read from a non-volatile register in the electrical metering hardware, and SHOULD NOT be re-based to zero at the start of transactions
-    |This allows any "missing energy" between sequential transactions, due to hardware fault, meter replacement, mis- wiring, fraud, etc. to be identified, by allowing the CSMS to confirm that the starting register value of any transaction is identical to the finishing register value of the preceding transaction on the same connector.
-|J02.FR.18  |{nbsp}
-  |The timestamp of a <<meter_value_type,MeterValue>> SHALL apply to all its <<sampled_value_type,SampledValues>>. |{nbsp}
-|J02.FR.19  |When CSMS receives a <<transaction_event_request,TransactionEventRequest>>
-  |CSMS SHALL respond with <<transaction_event_response,TransactionEventResponse>>.
-    |Failing to respond with <<transaction_event_response,TransactionEventResponse>> might cause the Charging Station to try the same message again.
-|J02.FR.20  |When configured to send meter data in the <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>) AND +
-  amount of meter data is too much for one <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>) message
-    |Charging Station MAY remove samples until it fits in a message. When removing samples, the Charging Station SHOULD remove intermediate samples first (for example: 2nd sample, 4th sample, 6th sample etc.).
-      |Samples should be removed in a way that it does not affect billing. See also E06.FR.12.
-|J02.FR.21  |<<sampled_data_sign_readings,`SampledDataSignReadings`>> is _true_
-  |The Charging Station SHALL retrieve signed meter values from components that support data signing and put them in the _signedMeterValue_ field. |{nbsp}
-|J02.FR.22  |{nbsp}
-  |Meter values reported in a <<transaction_event_request,TransactionEventRequest>> message SHALL all be related to EVSE on which the transaction is taking place. |{nbsp}
+  1 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>)에 대한 미터 데이터 양이 너무 많습니다.
+    |충전기는 모든 측정값을 보내기 위해 동일한 _timestamp_ 를 사용하여 여러 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) 메시지를 사용할 수 있습니다. |{nbsp}
+|J02.FR.16 |{nbsp}
+  |단일 충전 트랜잭션 또는 비 트랜잭션 소비자(예: 충전기 내부 전원 공급, 전체 공급)와 관련된 모든 "등록" 값은 시간에 따라 단조롭게 증가해야 합니다.
+    |미터 교체의 경우는 제외합니다. <<measurand_enum_type,MeasurandEnumType>>을 참조하세요.
+|J02.FR.17 |{nbsp}
+  |추적성을 향상시키기 위해, ".Register" 값은 전력 계량 하드웨어의 비휘발성 레지스터에서 직접 읽어온 그대로 보고되어야 하며, 트랜잭션 시작 시 0으로 재설정(re-base)되어서는 안 됩니다.
+    |이렇게 하면 하드웨어 오류, 미터 교체, 오배선, 사기 등으로 인해 연속 트랜잭션 간에 "누락된 에너지"를 식별할 수 있으며, CSMS가 모든 트랜잭션의 시작 레지스터 값이 동일한 커넥터에서 이전 트랜잭션의 완료 레지스터 값과 동일함을 확인할 수 있습니다.
+|J02.FR.18 |{nbsp}
+  |<<meter_value_type,MeterValue>>의 타임스탬프는 모든 <<sampled_value_type,SampledValues>>에 적용해야 합니다. |{nbsp}
+|J02.FR.19 |CSMS가 <<transaction_event_request,TransactionEventRequest>>를 수신하는 경우
+  |CSMS는 <<transaction_event_response,TransactionEventResponse>>로 응답해야 합니다.
+    |<<transaction_event_response,TransactionEventResponse>>로 응답하지 못하면 충전기가 동일한 메시지를 다시 시도할 수 있습니다.
+|J02.FR.20 |<<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>)에 미터 데이터를 보내도록 구성 한 경우 AND +
+  미터 데이터 양이 하나의 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>) 메시지에 포함되기에 양이 너무 많습니다.
+    |충전기는 메시지에 맞을 때까지 샘플을 제거할 수 있습니다. 샘플을 제거할 때 충전기는 중간 샘플을 먼저 제거해야 합니다(예: 2번째 샘플, 4번째 샘플, 6번째 샘플 등).
+      |샘플은 청구에 영향을 미치지 않는 방식으로 제거해야 합니다. E06.FR.12도 참조하세요.
+|J02.FR.21 |<<sampled_data_sign_readings,`SampledDataSignReadings`>>는 _true_ 입니다.
+  |충전기는 데이터 서명을 지원하는 구성 요소에서 서명된 미터 값을 검색하여 _signedMeterValue_ 필드에 입력해야 합니다. |{nbsp}
+|J02.FR.22 |{nbsp}
+  |<<transaction_event_request,TransactionEventRequest>> 메시지에서 보고된 미터 값은 모두 트랜잭션이 발생하는 EVSE와 관련이 있어야 합니다. |{nbsp}
 |===
 
 :sectnums:
@@ -359,48 +357,48 @@ image::part2/images/figure_92.svg[Sequence Diagram: Sending transaction related 
 :sectnums!:
 === J03 - Charging Loop with metering information exchange
 
-.J03 - Charging Loop with metering information exchange
+.J03 - 계량 정보 교환이 있는 충전 루프
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Charging Loop with metering information exchange
-|2   |ID              |J03
-|{nbsp} d|_Functional block_ |J. Meter Values
-|{nbsp} d|_Reference_ |<<iso15118_1,ISO15118-1>> F1
-|3   |Objective(s)    |See <<iso15118_1,ISO15118-1>>, use case Objective F1, page 37.
-|4   |Description     |See <<iso15118_1,ISO15118-1>>, use case Description F1, page 37.
-|5   |Prerequisites
-  |- If authorization according use cases in Functional Block C is applied, it SHALL be finished successfully.
+|1 |이름 |계량 정보 교환이 있는 충전 루프
+|2 |ID |J03
+|{nbsp} d|_기능 블록_ |J. 미터 값
+|{nbsp} d|_참조_ |<<iso15118_1,ISO15118-1>> F1
+|3 |목표 |<<iso15118_1,ISO15118-1>> 참조, 사용 사례 목표 F1, 37페이지.
+|4 |설명 |<<iso15118_1,ISO15118-1>> 참조, 사용 사례 설명 F1, 37페이지.
+|5 |필수 조건
+  |- 기능 블록 C의 사용 사례에 따른 권한이 적용되는 경우 성공적으로 완료되어야 합니다.
 
-  See <<iso15118_1,ISO15118-1>>, use case Prerequisites F1, page 37.
-|6   d|_Actors_        |EV, EVSE, Charging Station
-|7   |Combined scenario description
+  <<iso15118_1,ISO15118-1>>, 사용 사례 전제 조건 F1, 37페이지를 참조하세요.
+|6 d|_Actors_ |EV, EVSE, 충전기
+|7 |통합 시나리오 설명
   |**15118**
 
-  **1a.** The EV sends a ChargingStatusReq (in case of AC charging) message to the Charging Station, upon which EVSE returns a ChargingStatusRes containing the meter value from the fiscal meter. +
-  **1b.** The EV sends a CurrentDemandReq (in case of DC charging) message to the Charging Station, upon which EVSE returns a CurrentDemandRes containing the meter value from the fiscal meter. +
-  **2.** The EV sends a MeteringReceiptReq to the Charging Station to acknowledge receipt of the meter value.
-|8   |Postcondition(s) |See <<iso15118_1,ISO15118-1>>, use case End conditions F1, page 37.
+  **1a.** EV가 충전기에 ChargingStatusReq(AC 충전의 경우) 메시지를 보내고, EVSE가 재정 미터의 미터 값이 포함된 ChargingStatusRes를 반환합니다. +
+  **1b.** EV가 충전기에 CurrentDemandReq(DC 충전의 경우) 메시지를 보내고, EVSE가 재정 미터의 미터 값이 포함된 CurrentDemandRes를 반환합니다. +
+  **2.** EV가 충전기에 MeteringReceiptReq를 보내 미터 값 수신을 확인합니다.
+|8 |사후 조건 |<<iso15118_1,ISO15118-1>> 참조, 사용 사례 종료 조건 F1, 37페이지.
 |===
 
-.Charging Loop with metering information exchange
-image::part2/images/figure_93.svg[Charging Loop with metering information exchange]
+.측정 정보 교환이 있는 충전 루프
+image::part2/images/figure_93.svg[측정 정보 교환이 있는 충전 루프]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|9   |Error handling |n/a
-|10  |Remark(s)      |n/a
+|9 |오류 처리 |n/a
+|10 |비고 |n/a
 |===
 
 ==== J03 - Charging Loop with metering information exchange - Requirements
 
-.J03 - Requirements
+.J03 - 요구 사항
 [cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition     |Note
+|ID |전제 조건 |요구 사항 정의 |참고
 
-|J03.FR.04  |When the Charging Station receives ISO 15118 signed MeteringReceiptReq message from EV
-  |The Charging Station SHOULD NOT pass the meter value from the MeteringReceiptReq message to CSMS in a <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>) message. Instead, Charging Station sends transaction-related meter values as described in use case J02.
-    |This does not imply that a Charging Station cannot require EV to send MeteringReceiptReq messages. An implementation at a Charging Station can be such, that every meter value from the fiscal meter that is send to CSMS (as per use case J02) must first have been acknowledged by a MeterReceiptReq from the EV.
+|J03.FR.04 |충전기가 EV로부터 ISO 15118로 서명된 MeteringReceiptReq 메시지를 수신할 때
+  |충전기는 MeteringReceiptReq 메시지의 미터 값을 <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Updated>>) 메시지로 CSMS에 전달해서는 안 됩니다. 대신 충전기는 사용 사례 J02에 설명된 대로 트랜잭션 관련 미터 값을 보냅니다.
+    |이는 충전기가 EV에 MeteringReceiptReq 메시지를 보내도록 요구할 수 없다는 것을 의미하지 않습니다. 충전기에서의 구현은 재정 미터(fiscal meter)에서 CSMS로 전송된 모든 미터 값(사용 사례 J02에 따라)이 먼저 EV의 MeterReceiptReq에 의해 확인되어야 하는 방식일 수 있습니다.
 |===
