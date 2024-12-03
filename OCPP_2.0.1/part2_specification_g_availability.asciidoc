@@ -263,6 +263,7 @@ image::part2/images/figure_75.svg[Sequence Diagram: Change Availability]
 |===
 |NOTE |2. It is only required to report a status change of a connector. StatusNotificationRequest only supports the reporting of connector statuses.
 |===
+
 <<<
 
 [[g04_change_availability_charging_station]]
@@ -287,7 +288,7 @@ image::part2/images/figure_75.svg[Sequence Diagram: Change Availability]
 |{nbsp} d|_Actors_    |Charging Station, CSMS
 |{nbsp} d|_Scenario description_
   |**1.** The CSMS sends a <<change_availability_request,ChangeAvailabilityRequest>> for requesting a Charging Station to change its availability. +
-  **2**. Upon receipt of a <<change_availability_request,ChangeAvailabilityRequest>>, the Charging Station responds with <<change_availability_response,ChangeAvailabilityResponse>>.
+  **2.** Upon receipt of a <<change_availability_request,ChangeAvailabilityRequest>>, the Charging Station responds with <<change_availability_response,ChangeAvailabilityResponse>>.
 |5   |Prerequisite(s) |n/a
 |6   |Postcondition(s) 
   |**Successful postcondition:** +
