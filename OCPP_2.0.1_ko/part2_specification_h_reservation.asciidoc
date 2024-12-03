@@ -5,353 +5,353 @@
 
 == Introduction
 
-This Functional Block describes the reservation functionality of OCPP. The reservation functionality enables an EV Driver to make a reservation of a Charging Station/EVSE, ensuring an available Connector at a Charging Station when he arrives.
+이 기능 블록은 OCPP의 예약 기능을 설명합니다. 예약 기능을 통해 EV 운전자는 충전기/EVSE를 예약하여 도착 시 충전기에서 사용 가능한 커넥터를 확보할 수 있습니다.
 
-With Charging Stations not being abundantly available, and EVs having limited range, EV Drivers plan their trips from Charging Station to Charging Station. They need to know for sure they can use a Charging Station they plan to go to. They don’t like it when another EV Driver has started using the Charging Station in the time they were traveling to the Charging Station.
+충전기가 풍부하게 제공되지 않고 EV의 주행 범위가 제한되어 EV 운전자는 충전기에서 충전기로 이동할 계획을 세웁니다. 그들은 가려고 하는 충전기를 사용할 수 있는지 확실히 알아야 합니다. 충전기로 이동하는 동안 다른 EV 운전자가 충전기를 사용하기 시작하면 그들은 좋아하지 않습니다.
 
-For the EV Driver it is useful to be able to reserve a specific Type of Connector, or, when the EV Driver has no preference, an unspecified EVSE at a Charging Station. So he knows for sure he can charge at the Charging Station when he arrives.
+EV 운전자에게는 특정 유형의 커넥터를 예약하거나 EV 운전자가 선호하지 않는 경우 충전기에서 지정되지 않은 EVSE를 예약할 수 있는 것이 유용합니다. 그러면 도착 시 충전기에서 충전할 수 있다는 것을 확실히 알 수 있습니다.
 
 == Use cases & Requirements
 
 :sectnums!:
 === H01 - Reservation
 
-.H01 - Reservation
+.H01 - 예약
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Reservation
-|2   |ID              |H01
-|{nbsp} d|_Functional block_ |H. Reservation
-|3   |Objective(s)    |To ensure the EV Driver can charge his EV at a Charging Station, the EV Driver can make a reservation until a certain expiry time.
-|4   |Description     |This use case describes how a Charging Station can be reserved for a specific <<id_token_type,IdTokenType>>.
-|5   d|_Actors_       |Charging Station, CSMS, EV Driver
-d|_S1_ d|_Scenario objective_ |Reserve an unspecified EVSE at a Charging Station
-|{nbsp} d|_Scenario description_ 
-  |**1.** EV Driver asks the CSMS to reserve an unspecified EVSE at the Charging Station. +
-  **2.** The CSMS sends <<reserve_now_request,ReserveNowRequest>> without _evseId_ to a Charging Station. +
-  **3.** Upon receipt of <<reserve_now_request,ReserveNowRequest>>, the Charging Station responds with <<reserve_now_response,ReserveNowResponse>> with status _Accepted_.
-|{nbsp} d|_Prerequisite(s)_ |The Charging Station has at least one available EVSE
-|{nbsp} d|_Postcondition(s)_
-  |**Successful postcondition:** +
-  The Charging Station has accepted the <<reserve_now_request,ReserveNowRequest>> +
-  **Failure postcondition:** +
-  The Charging Station has rejected the <<reserve_now_request,ReserveNowRequest>>
+|1 |이름 |예약
+|2 |ID |H01
+|{nbsp} d|_기능 블록_ |H. 예약
+|3 |목표 |EV 운전자가 충전기에서 EV를 충전할 수 있도록 하기 위해 EV 운전자는 특정 만료 시간까지 예약을 할 수 있습니다.
+|4 |설명 |이 사용 사례는 특정 <<id_token_type,IdTokenType>>에 대해 충전기를 예약하는 방법을 설명합니다.
+|5 d|_Actors_ |충전기, CSMS, EV 운전자
+d|_S1_ d|_시나리오 목표_ |충전기에서 지정되지 않은 EVSE 예약
+|{nbsp} d|_시나리오 설명_
+  |**1.** EV 운전자가 CSMS에 충전기에서 지정되지 않은 EVSE를 예약해 달라고 요청합니다. +
+  **2.** CSMS가 _evseId_ 없이 <<reserve_now_request,ReserveNowRequest>>를 충전기로 보냅니다. +
+  **3.** <<reserve_now_request,ReserveNowRequest>>를 수신하면 충전기는 <<reserve_now_response,ReserveNowResponse>>로 응답하고 상태는 _Accepted_ 입니다.
+|{nbsp} d|_필수 조건_ |충전기에 사용 가능한 EVSE가 하나 이상 있음
+|{nbsp} d|_사후 조건_
+  |**성공 사후 조건:** +
+  충전기에서 <<reserve_now_request,ReserveNowRequest>>를 수락했습니다. +
+  **실패 사후 조건:** +
+  충전기에서 <<reserve_now_request,ReserveNowRequest>>를 거부했습니다.
 |===
 
-.Sequence Diagram: S1 - Reserve a unspecified EVSE at a Charging Station
-image::part2/images/figure_78.svg[Sequence Diagram: S1 - Reserve a unspecified EVSE at a Charging Station]
+.시퀀스 다이어그램: S1 - 충전기에서 지정되지 않은 EVSE 예약
+image::part2/images/figure_78.svg[시퀀스 다이어그램: S1 - 충전기에서 지정되지 않은 EVSE 예약]
 
 [cols="^.^1,<.^2,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|_S2_  |_Scenario objective_ |Reserve a specific EVSE at a Charging Station
-|{nbsp} |_Scenario description_ 
-  |**1.** EV Driver asks the CSMS to reserve a specific EVSE at the Charging Station. +
-  **2.** The CSMS sends <<reserve_now_request,ReserveNowRequest>> with a EVSE to a Charging Station. +
-  **3.** Upon receipt of <<reserve_now_request,ReserveNowRequest>>, the Charging Station responds with <<reserve_now_response,ReserveNowResponse>> with status _Accepted_. +
-  **4.** The Charging Station sends <<status_notification_request,StatusNotificationRequest>> with the status _Reserved_ for all Connectors of that EVSE. +
-  **5.** The CSMS responds with <<status_notification_response,StatusNotificationResponse>> to the Charging Station. 
-|{nbsp} |_Alternative scenario description_
-  |Steps 1, 2 and 3 as above. +
-  **4.** Instead of a <<status_notification_request,StatusNotificationRequest>> a Charging Station can send a <<notify_event_request,NotifyEventRequest>> with _trigger_ = `Delta` for _component.name_ = "Connector" and the EVSE number in _evse.id_ and the connector number in _evse.connectorId_, _variable_ = "AvailabilityState" and _actualValue_ = "Reserved". +
-  **5a.** Optionally, Charging Station can also report a <<notify_event_request,NotifyEventRequest>> for _component_ = "EVSE", _variable_ = "AvailabilityState" and _actualValue_ = "Reserved", and when applicable, also report this for _component_ = "ChargingStation".
-|{nbsp} |_Prerequisite(s)_ 
-  |The specified EVSE of the Charging Station has status _Available_
-|{nbsp} |_Postcondition(s)_
-  |**Successful postcondition:** +
-  The Charging Station has accepted the <<reserve_now_request,ReserveNowRequest>> +
-  AND +
-  sent <<status_notification_request,StatusNotificationRequest>> with status _Reserved_. +
-  **Failure postcondition:** +
-  The Charging Station has rejected the <<reserve_now_request,ReserveNowRequest>> +
-  OR +
-  The Charging Station has NOT sent <<status_notification_request,StatusNotificationRequest>> with status _Reserved_.
-|===
-
-.Sequence Diagram: S2 - Reserve a specified EVSE at a Charging Station
-image::part2/images/figure_79.svg[Sequence Diagram: S2 - Reserve a specified EVSE at a Charging Station]
-
-[cols="^.^1,<.^2,<.^7",%autowidth.stretch,frame=all,grid=all]
-|===
-|_S3_   |_Scenario objective_ |Reserve a connector type at a Charging Station
-|{nbsp} |_Scenario description_ 
-  |**1.** EV Driver asks the CSMS to reserve a connector type at the Charging Station. +
-  **2.** The CSMS sends <<reserve_now_request,ReserveNowRequest>> with a connector type to a Charging Station. +
-  **3.** Upon receipt of <<reserve_now_request,ReserveNowRequest>>, the Charging Station responds with <<reserve_now_response,ReserveNowResponse>> with status _Accepted_.
+|_S2_ |_시나리오 목표_ |충전기에서 특정 EVSE 예약
+|{nbsp} |_시나리오 설명_
+  |**1.** EV 운전자가 CSMS에 충전기에서 특정 EVSE를 예약해 달라고 요청합니다. +
+  **2.** CSMS가 충전기에 EVSE와 함께 <<reserve_now_request,ReserveNowRequest>>를 보냅니다. +
+  **3.** <<reserve_now_request,ReserveNowRequest>>를 수신하면 충전기는 <<reserve_now_response,ReserveNowResponse>>를 _Accepted_ 상태로 응답합니다. +
+  **4.** 충전기는 해당 EVSE의 모든 커넥터에 대해 <<status_notification_request,StatusNotificationRequest>>를 _Reserved_ 상태로 보냅니다. +
+  **5.** CSMS가 충전기에 <<status_notification_response,StatusNotificationResponse>>를 응답합니다.
+|{nbsp} |_대체 시나리오 설명_
+  |위의 1, 2, 3단계. +
+  **4.** <<status_notification_request,StatusNotificationRequest>> 대신 충전기는 _component.name_ = "Connector"에 대한 _trigger_ = `Delta`, _evse.id_ 의 EVSE 번호, _evse.connectorId_ 의 커넥터 번호, _variable_ = "AvailabilityState", _actualValue_ = "Reserved"인 <<notify_event_request,NotifyEventRequest>>를 보낼 수 있습니다. +
+  **5a.** 선택적으로 충전기는 _component_ = "EVSE", _variable_ = "AvailabilityState" 및 _actualValue_ = "Reserved"에 대해 <<notify_event_request,NotifyEventRequest>>를 보고할 수 있으며, 해당되는 경우 _component_ = "ChargingStation"에 대해서도 이를 보고할 수 있습니다.
 |{nbsp} |_Prerequisite(s)_
-  |The Charging Station has at least one available EVSE with the specified connector type
-|{nbsp} |_Postcondition(s)_ 
-  |**Successful postcondition:** +
-  The Charging Station has accepted the <<reserve_now_request,ReserveNowRequest>> +
-  **Failure postcondition:** +
-  The Charging Station has rejected the <<reserve_now_request,ReserveNowRequest>>
+  |충전기의 지정된 EVSE는 _Available_ 상태입니다.
+|{nbsp} |_Postcondition(s)_
+  |**성공 사후 조건:** +
+  충전기는 <<reserve_now_request,ReserveNowRequest>>를 수락했습니다. +
+  AND +
+  <<status_notification_request,StatusNotificationRequest>>를 _Reserved_ 상태로 보냈습니다. +
+  **실패 사후 조건:** +
+  충전기가 <<reserve_now_request,ReserveNowRequest>>를 거부했습니다. +
+  OR +
+  충전기가 <<status_notification_request,StatusNotificationRequest>>를 _Reserved_ 상태로 보내지 않았습니다.
 |===
 
-.Sequence Diagram: S3 - Reserve a connector type at a Charging Station
-image::part2/images/figure_80.svg[Sequence Diagram: S3 - Reserve a connector type at a Charging Station]
+.시퀀스 다이어그램: S2 - 충전기에서 지정된 EVSE 예약
+image::part2/images/figure_79.svg[시퀀스 다이어그램: S2 - 충전기에서 지정된 EVSE 예약]
+
+[cols="^.^1,<.^2,<.^7",%autowidth.stretch,frame=all,grid=all]
+|===
+|_S3_ |_시나리오 목표_ |충전기에서 커넥터 유형 예약
+|{nbsp} |_시나리오 설명_
+  |**1.** EV 드라이버가 CSMS에 충전기에서 커넥터 유형을 예약하도록 요청합니다. +
+  **2.** CSMS가 커넥터 유형과 함께 <<reserve_now_request,ReserveNowRequest>>를 충전기로 보냅니다. +
+  **3.** <<reserve_now_request,ReserveNowRequest>>를 수신하면 충전기는 <<reserve_now_response,ReserveNowResponse>>를 _Accepted_ 상태로 응답합니다.
+|{nbsp} |_필수 조건_
+|충전기에 지정된 커넥터 유형이 있는 사용 가능한 EVSE가 하나 이상 있음
+|{nbsp} |_사후 조건_
+  |**성공 사후 조건:** +
+  충전기가 <<reserve_now_request,ReserveNowRequest>>를 수락했습니다. +
+  **실패 사후 조건:** +
+  충전기가 <<reserve_now_request,ReserveNowRequest>>를 거부했습니다.
+|===
+
+.시퀀스 다이어그램: S3 - 충전기에서 커넥터 유형 예약
+image::part2/images/figure_80.svg[시퀀스 다이어그램: S3 - 충전기에서 커넥터 유형 예약]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|6   |Error handling |n/a
-|7   |Remark(s)      |It is RECOMMENDED to validate the Identifier with an <<authorize_request,AuthorizeRequest>> after reception of <<reserve_now_request,ReserveNowRequest>> and before the start of the transaction.
+|6 |오류 처리 |n/a
+|7 |참고 |<<reserve_now_request,ReserveNowRequest>>를 수신한 후, 트랜잭션을 시작하기 전에 <<authorize_request,AuthorizeRequest>>로 식별자를 검증하는 것이 좋습니다.
 |===
 
 ==== H01 - Reservation - Requirements
 
-.H01 - Requirements
+.H01 - 요구 사항
 [cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition     |Note
+|ID |전제 조건 |요구 사항 정의 |참고
 
-|H01.FR.01  |If the Charging Station is configured not to accept reservations.
-  |The Charging Station SHALL return _Rejected_. |{nbsp}
-|H01.FR.02  |If the _id_ in the <<reserve_now_request,ReserveNowRequest>> matches a reservation in the Charging station.
-  |The Charging Station SHALL replace that reservation with the new reservation in the request. |{nbsp}
-|H01.FR.03  |If the _id_ in the <<reserve_now_request,ReserveNowRequest>> does not match any reservation in the Charging Station.
-  |The Charging Station SHALL return the status value _Accepted_ if it succeeds in reserving an EVSE. |{nbsp}
-|H01.FR.04  |If the Charging Station receives a <<reserve_now_request,ReserveNowRequest>> without _evseId_ +
-  AND at least one EVSE is _Available_ +
+|H01.FR.01 |충전기가 예약을 수락하지 않도록 구성된 경우.
+  |충전기는 _Rejected_ 를 반환해야 합니다. |{nbsp}
+|H01.FR.02 |<<reserve_now_request,ReserveNowRequest>>의 _id_ 가 충전기의 예약과 일치하는 경우.
+  |충전기는 해당 예약을 요청의 새 예약으로 대체해야 합니다. |{nbsp}
+|H01.FR.03 |<<reserve_now_request,ReserveNowRequest>>의 _id_ 가 충전기의 어떤 예약과도 일치하지 않는 경우.
+  |충전기는 EVSE 예약에 성공하면 상태 값 _Accepted_ 를 반환해야 합니다. |{nbsp}
+|H01.FR.04 |충전기가 _evseId_ 없이 <<reserve_now_request,ReserveNowRequest>>를 수신하는 경우 +
+  AND 최소 하나의 EVSE가 _Available_ 인 경우 +
   AND H01.FR.18
-    |The Charging Station SHALL accept the reservation AND respond with a <<reserve_now_response,ReserveNowResponse>> with status _Accepted_. |{nbsp}
-|H01.FR.06  |If the Charging Station receives a <<reserve_now_request,ReserveNowRequest>> with a connector type +
-  AND at least one EVSE with the specified connector type is _Available_ +
+    |충전기는 예약을 수락하고 <<reserve_now_response,ReserveNowResponse>>로 응답해야 합니다. 상태는 _Accepted_ 입니다. |{nbsp}
+|H01.FR.06 |충전기가 커넥터 유형이 있는 <<reserve_now_request,ReserveNowRequest>>를 수신 +
+  AND 지정된 커넥터 유형이 있는 EVSE가 하나 이상 _Available_ +
   AND H01.FR.18
-    |The Charging Station SHALL accept the reservation AND respond with a <<reserve_now_response,ReserveNowResponse>> with status _Accepted_. |{nbsp}
-|H01.FR.07  |When the Charging Station has _Accepted_ a <<reserve_now_request,ReserveNowRequest>> without _evseId_
-  |The Charging Station SHALL make sure that at any time during the validity of the reservation, one EVSE remains available for the reserved <<id_token_type,IdTokenType>>. |{nbsp}
-|H01.FR.09  |When the Charging Station has _Accepted_ a <<reserve_now_request,ReserveNowRequest>> with a connector type
-  |The Charging Station SHALL make sure that at any time during the validity of the reservation, one Connector with the specified type remains available for the reserved <<id_token_type,IdTokenType>>. |{nbsp}
-|H01.FR.11  |When receiving a <<reserve_now_request,ReserveNowRequest>> AND +
-  (all) targeted EVSEs have status _Reserved_ or _Occupied_
-    |The Charging Station SHALL return _Occupied_. |{nbsp}
-|H01.FR.12  |When receiving a <<reserve_now_request,ReserveNowRequest>> AND (all) targeted EVSEs have status _Faulted_
-  |The Charging Station SHALL return _Faulted_. |{nbsp}
-|H01.FR.14  |When receiving a <<reserve_now_request,ReserveNowRequest>> AND (all) targeted EVSEs have status _Unavailable_
-  |The Charging Station SHALL return _Unavailable_. |{nbsp}
-|H01.FR.15  |If a transaction for the reserved <<id_token_type,IdTokenType>> is started.
-  |The Charging Station SHALL send the reservationId in a <<transaction_event_request,TransactionEventRequest>>.
-    |To notify the CSMS that the reservation is terminated. See <<e_transaction,E. Transactions>>.
-|H01.FR.16  |When the status of a targeted EVSE changes to _Faulted_
-  |The Charging Stations SHALL cancel the reservation AND send a <<reservation_status_update,ReservationStatusUpdate>> with status _Removed_. |{nbsp}
-|H01.FR.17  |When the status of a targeted EVSE changes to _Unavailable_
-  |The Charging Stations SHALL cancel the reservation AND send a <<reservation_status_update,ReservationStatusUpdate>> with status _Removed_. |{nbsp}
-|H01.FR.18  |If the Configuration Variable: <<reservation_non_evse_specific,`ReservationNonEvseSpecific`>> is set to _true_.
-  |The Charging Station SHALL accept reservations on an unspecified EVSE. |{nbsp}
-|H01.FR.19  |If the Configuration Variable: <<reservation_non_evse_specific,`ReservationNonEvseSpecific`>> is not set or set to _false_.
-  |The Charging Station SHALL reject reservations on an unspecified EVSE. |{nbsp}
-|H01.FR.20  |H01.FR.04 +
+    |충전기는 예약을 수락하고 상태가 _Accepted_ 인 <<reserve_now_response,ReserveNowResponse>>로 응답해야 합니다. |{nbsp}
+|H01.FR.07 |충전기가 _evseId_ 없이 <<reserve_now_request,ReserveNowRequest>>를 _Accepted_ 한 경우
+  |충전기는 예약 유효 기간 동안 언제든지 예약된 <<id_token_type,IdTokenType>>에 대해 하나의 EVSE가 사용 가능한 상태로 유지되도록 해야 합니다. |{nbsp}
+|H01.FR.09 |충전기가 커넥터 유형이 있는 <<reserve_now_request,ReserveNowRequest>>를 _Accepted_ 한 경우
+  |충전기는 예약의 유효 기간 동안 언제든지 지정된 유형의 커넥터 하나가 예약된 <<id_token_type,IdTokenType>>에 사용 가능한지 확인해야 합니다. |{nbsp}
+|H01.FR.11 |<<reserve_now_request,ReserveNowRequest>>를 수신 +
+  AND (모든) 대상 EVSE가 _Reserved_ 또는 _Occupied_ 상태인 경우
+    |충전기는 _Occupied_ 를 반환해야 합니다. |{nbsp}
+|H01.FR.12 |<<reserve_now_request,ReserveNowRequest>>를 수신하고 (모든) 대상 EVSE가 _Faulted_ 상태인 경우
+  |충전기는 _Faulted_ 를 반환해야 합니다. |{nbsp}
+|H01.FR.14 | <<reserve_now_request,ReserveNowRequest>>를 수신하고 (모든) 대상 EVSE가 _Unavailable_ 상태인 경우
+  |충전기는 _Unavailable_ 을 반환해야 합니다. |{nbsp}
+|H01.FR.15 |예약된 <<id_token_type,IdTokenType>>에 대한 트랜잭션이 시작된 경우.
+  |충전기는 <<transaction_event_request,TransactionEventRequest>>에서 reservationId를 보내야 합니다.
+    |CSMS에 예약이 종료되었음을 알리기 위해. <<e_transaction,E. Transactions>>를 참조하세요.
+|H01.FR.16 |대상 EVSE의 상태가 _Faulted_ 로 변경된 경우
+  |충전기는 예약을 취소하고 <<reservation_status_update,ReservationStatusUpdate>>를 _Removed_ 상태로 보내야 합니다. |{nbsp}
+|H01.FR.17 |대상 EVSE의 상태가 _Faulted_ 로 변경된 경우
+  |충전기는 예약을 취소하고 <<reservation_status_update,ReservationStatusUpdate>>를 _Removed_ 상태로 전송해야 합니다. |{nbsp}
+|H01.FR.18 |구성 변수 <<reservation_non_evse_specific,`ReservationNonEvseSpecific`>>가 _true_ 로 설정된 경우.
+  |충전기는 지정되지 않은 EVSE에 대한 예약을 수락해야 합니다. |{nbsp}
+|H01.FR.19 |구성 변수 <<reservation_non_evse_specific,`ReservationNonEvseSpecific`>>가 설정되지 않았거나 _false_ 로 설정된 경우.
+  |충전기는 지정되지 않은 EVSE에 대한 예약을 거부해야 합니다. |{nbsp}
+|H01.FR.20 |H01.FR.04 +
   AND +
-  amount of EVSEs available equals the amount of reservations
-    |The Charging Station SHALL send for all connectors of the EVSE: +
-    - a <<status_notification_request,StatusNotificationRequest>> with _connectorStatus_ = `Reserved`, OR +
-    - a <<notify_event_request,NotifyEventRequest>> with _component_ = "Connector", _variable_ = "AvailabilityState", _trigger_ = "Delta", _actualValue_ = "Reserved"
-      |If an EVSE is reserved, all of its connectors are reported as reserved.
-|H01.FR.23  |If the Charging Station receives a <<reserve_now_request,ReserveNowRequest>> for _evseId_ AND this EVSE is Available
-  |The Charging Station SHALL respond with a <<reserve_now_response,ReserveNowResponse>> with status _Accepted_ AND SHALL send for all connectors of the EVSE: +
-  - a <<status_notification_request,StatusNotificationRequest>> with _connectorStatus_ = `Reserved`, OR +
-  - a <<notify_event_request,NotifyEventRequest>> with _component_ = "Connector", _variable_ = "AvailabilityState", _trigger_ = "Delta", _actualValue_ = "Reserved"
-    |If an EVSE is reserved, all of its connectors are reported as reserved.
-|H01.FR.24  |H01.FR.06 +
+  사용 가능한 EVSE의 수는 예약 수와 같음
+    |충전기는 EVSE의 모든 커넥터에 대해 다음을 전송해야 합니다. +
+    - <<status_notification_request,StatusNotificationRequest>>(_connectorStatus_ = `Reserved`) 또는 +
+    - <<notify_event_request,NotifyEventRequest>>(_component_ = "Connector", _variable_ = "AvailabilityState", _trigger_ = "Delta", _actualValue_ = "Reserved")
+      |EVSE가 예약된 경우 모든 커넥터가 예약된 것으로 보고됩니다.
+|H01.FR.23 |충전기가 _evseId_ 에 대한 <<reserve_now_request,ReserveNowRequest>>를 수신하고 이 EVSE가 사용 가능한 경우
+  |충전기는 <<reserve_now_response,ReserveNowResponse>>를 _Accepted_ 상태로 응답하고 EVSE의 모든 커넥터에 대해 다음을 전송해야 합니다. +
+  - <<status_notification_request,StatusNotificationRequest>>가 _connectorStatus_ = `Reserved`이거나, +
+  - <<notify_event_request,NotifyEventRequest>>가 _component_ = "Connector", _variable_ = "AvailabilityState", _trigger_ = "Delta", _actualValue_ = "Reserved"인 경우
+    |EVSE가 예약된 경우 모든 커넥터가 예약된 것으로 보고됩니다.
+|H01.FR.24 |H01.FR.06 +
   AND +
-  amount of reservations for a specific _connectorType_ equals the amount of available EVSEs with that specific _connectorType_
-    |The Charging Station SHALL send for all connectors of the EVSEs that have the specific _connectorType_ +
-    - a <<status_notification_request,StatusNotificationRequest>> with _connectorStatus_ = `Reserved`, OR +
-    - a <<notify_event_request,NotifyEventRequest>> with _component_ = "Connector", _variable_  "AvailabilityState", _trigger_ = "Delta", _actualValue_ = "Reserved"
-      |If an EVSE is reserved for a specific _connectorType_, all connectors on the EVSE are reported as reserved.
+  특정 _connectorType_ 에 대한 예약 수는 해당 특정 _connectorType_ 을 가진 사용 가능한 EVSE의 수와 같습니다.
+    |충전기는 특정 _connectorType_ 을 가진 EVSE의 모든 커넥터에 대해 다음을 전송해야 합니다. +
+    - _connectorStatus_ = `Reserved` 인 <<status_notification_request,StatusNotificationRequest>> 또는 +
+    - _component_ = "Connector", _variable_ "AvailabilityState", _trigger_ = "Delta", _actualValue_ = "Reserved"인 <<notify_event_request,NotifyEventRequest>>
+      |EVSE가 특정 _connectorType_ 에 대해 예약된 경우 EVSE의 모든 커넥터가 예약된 것으로 보고됩니다.
 |===
 
 <<<
 
 === H02 - Cancel Reservation
 
-.H02 - Cancel Reservation
+.H02 - 예약 취소
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Cancel Reservation
-|2   |ID              |H02
-|{nbsp} d|_Functional block_ |H. Reservation
-|3   |Objective(s)    |To cancel a reservation on a Charging Station.
-|4   |Description     |This use case describes how an EV Driver can cancel an existing reservation. The CSMS can cancel the reservation the EV Driver has on a Charging Station.
-|{nbsp} d|_Actors_    |Charging Station, CSMS, EV Driver
-|{nbsp} d|_Scenario description_ 
-  |**1.** EV Driver asks the CSMS to cancel a reservation. +
-  **2.** To cancel a reservation the CSMS sends <<cancel_reservation_request,CancelReservationRequest>> to the Charging Station. +
-  **3.** If the Charging Station has a reservation matching the reservationId in the request PDU, it returns the status _Accepted_. +
-  **4.** If a specific EVSE was reserved for this reservation, the Charging Station sends <<status_notification_request,StatusNotificationRequest>> with the status _Available_ for all the Connectors of that EVSE. +
-  **5.** The CSMS responds with <<status_notification_response,StatusNotificationResponse>> to the Charging Station. +
-  **6.** The reservation is cancelled.
-|5   |Prerequisite(s) 
-  |- The Functional Block _Reservation_ is installed. +
-  - EV Driver has a reservation at the Charging Station.
-|6   |Postcondition(s) 
-  |**Successful postcondition:** +
-  The CSMS was able to cancel the EV Driver’s reservation at the Charging Stations.
+|1 |이름 |예약 취소
+|2 |ID |H02
+|{nbsp} d|_기능 블록_ |H. 예약
+|3 |목표 |충전기에서 예약을 취소합니다.
+|4 |설명 |이 사용 사례는 EV 운전자가 기존 예약을 취소하는 방법을 설명합니다. CSMS는 EV 운전자가 충전기에서 예약한 것을 취소할 수 있습니다.
+|{nbsp} d|_Actors_ |충전기, CSMS, EV 운전자
+|{nbsp} d|_시나리오 설명_
+  |**1.** EV 운전자가 CSMS에 예약 취소를 요청합니다. +
+  **2.** 예약을 취소하려면 CSMS가 <<cancel_reservation_request,CancelReservationRequest>>를 충전기로 보냅니다. +
+  **3.** 충전기에 요청 PDU의 reservationId와 일치하는 예약이 있는 경우 _Accepted_ 상태를 반환합니다. +
+  **4.** 특정 EVSE가 이 예약에 예약된 경우 충전기는 해당 EVSE의 모든 커넥터에 대한 _Available_ 상태와 함께 <<status_notification_request,StatusNotificationRequest>>를 보냅니다. +
+  **5.** CSMS가 <<status_notification_response,StatusNotificationResponse>>로 충전기에 응답합니다. +
+  **6.** 예약이 취소됩니다.
+|5 |필수 조건
+  |- 기능 블록 _Reservation_ 이 설치되었습니다. +
+  - EV Driver가 충전기에서 예약을 했습니다.
+|6 |사후 조건(들)
+  |**성공 사후 조건:** +
+  CSMS가 충전기에서 EV 운전자의 예약을 취소할 수 있었습니다.
 
-  **Failure postcondition:** +
-  n/a.
+  **실패 사후 조건:** +
+  n/a
 |===
 
-.Sequence Diagram: Cancel Reservation
-image::part2/images/figure_81.svg[Sequence Diagram: Cancel Reservation]
+.시퀀스 다이어그램: 예약 취소
+image::part2/images/figure_81.svg[시퀀스 다이어그램: 예약 취소]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error handling |n/a
-|8   |Remark(s)      |The Charging Station does not send a <<reservation_status_update,ReservationStatusUpdate>>, because it was explicitly cancelled by CSMS, so it is already aware of the event.
+|7 |오류 처리 |n/a
+|8 |참고 |충전기는 <<reservation_status_update,ReservationStatusUpdate>>를 보내지 않습니다. CSMS가 명시적으로 취소했기 때문에 이미 이벤트를 알고 있습니다.
 |===
 
 ==== H02 - Cancel Reservation - Requirements
 
-.H02 - Requirements
+.H02 - 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition
+|ID |전제 조건 |요구 사항 정의
 
-|H02.FR.01  |The Charging Station has received a <<cancel_reservation_request,CancelReservationRequest>> and no matching reservationId.
-  |The Charging Station SHALL return _Rejected_.
-|H02.FR.02  |If a Charging Station receives a <<cancel_reservation_request,CancelReservationRequest>> with a valid, known reservationId.
-  |The reservation SHALL be cancelled.
+|H02.FR.01 |충전기에서 <<cancel_reservation_request,CancelReservationRequest>>를 수신했지만 일치하는 reservationId가 없습니다.
+  |충전기는 _Rejected_ 를 반환해야 합니다.
+|H02.FR.02 |충전기에서 유효하고 알려진 reservationId가 있는 <<cancel_reservation_request,CancelReservationRequest>>를 수신한 경우.
+  |예약이 취소되어야 합니다.
 |===
 
 <<<
 
 === H03 - Use a reserved EVSE
 
-.H03 - Use a reserved EVSE
+.H03 - 예약된 EVSE 사용
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Use a reserved EVSE
-|2   |ID              |H03
-|{nbsp} d|_Functional block_ |H. Reservation
-|3   |Objective(s)    |Use a reserved EVSE
-|4   |Description     |This use cases covers how a reserved EVSE can be used based on IdToken and GroupIdToken information.
-|{nbsp} d|_Actors_    |Charging Station, CSMS, EV Driver
-d|_S1_ d|_Scenario objective_ |Use an EVSE reserved by the same IdToken
-|{nbsp} d|_Scenario description_ 
-  |**1.** The CSMS sends a <<reserve_now_request,ReserveNowRequest>> to a Charging Station to reserve an EVSE for use by a specific <<id_token_type,IdTokenType>>. +
-  **2.** Upon receipt of the <<reserve_now_request,ReserveNowRequest>>, the Charging Station responds with a <<reserve_now_response,ReserveNowResponse>>. +
-  **3.** When a specific EVSE is reserved for this reservation, the Charging Station sends a <<status_notification_request,StatusNotificationRequest>> with the status _Reserved_ for all the Connectors of that EVSE. +
-  **4.** The CSMS responds with a <<status_notification_response,StatusNotificationResponse>> to the Charging Station. +
-  **5.** The EV Driver presents an <<id_token_type,IdTokenType>> at the Charging Station, and the <<id_token_type,IdTokenType>> is the same as the reservation’s <<id_token_type,IdTokenType>>, the Charging Station recognizes the <<id_token_type,IdTokenType>> and starts charging and <<e02_start_transaction_cable_plugin_first,E02 - Start Transaction - Cable Plugin First applies>>.
-|5   |Prerequisite(s) |n/a
-|6   |Postcondition(s) |n/a
+|1 |이름 |예약된 EVSE 사용
+|2 |ID |H03
+|{nbsp} d|_기능 블록_ |H. 예약
+|3 |목표 |예약된 EVSE 사용
+|4 |설명 |이 사용 사례는 IdToken 및 GroupIdToken 정보를 기반으로 예약된 EVSE를 사용하는 방법을 다룹니다.
+|{nbsp} d|_Actors_ |충전기, CSMS, EV 운전자
+d|_S1_ d|_시나리오 목표_ |동일한 IdToken으로 예약된 EVSE 사용
+|{nbsp} d|_시나리오 설명_
+  |**1.** CSMS는 특정 <<id_token_type,IdTokenType>>에서 사용할 EVSE를 예약하기 위해 충전기에 <<reserve_now_request,ReserveNowRequest>>를 보냅니다. +
+  **2.** <<reserve_now_request,ReserveNowRequest>>를 수신하면 충전기는 <<reserve_now_response,ReserveNowResponse>>로 응답합니다. +
+  **3.** 특정 EVSE가 이 예약에 이용된 경우 충전기는 해당 EVSE의 모든 커넥터에 대해 상태가 _Reserved_ 인 <<status_notification_request,StatusNotificationRequest>>를 전송합니다. +
+  **4.** CSMS는 충전기에 <<status_notification_response,StatusNotificationResponse>>로 응답합니다. +
+  **5.** EV 운전자가 충전기에 <<id_token_type,IdTokenType>>을 제시하고 <<id_token_type,IdTokenType>>이 예약의 <<id_token_type,IdTokenType>>과 동일하면 충전기는 <<id_token_type,IdTokenType>>을 인식하고 충전을 시작하고 <<e02_start_transaction_cable_plugin_first,E02 - Start Transaction - Cable Plugin First>>가 적용됩니다.
+|5 |필수 조건 |n/a
+|6 |사후 조건 |n/a
 |===
 
-.Sequence Diagram: Use a reserved EVSE with IdToken
-image::part2/images/figure_82.svg[Sequence Diagram: Use a reserved EVSE with IdToken]
+.시퀀스 다이어그램: IdToken이 있는 예약된 EVSE 사용
+image::part2/images/figure_82.svg[시퀀스 다이어그램: IdToken이 있는 예약된 EVSE 사용]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-d|_S2_ d|_Scenario objective_ |Use an EVSE reserved by the same GroupIdToken
-|{nbsp} d|_Scenario description_ 
-  |**1.** The CSMS sends a <<reserve_now_request,ReserveNowRequest>> with the GroupId to a Charging Station to reserve a EVSE for use by a specific <<id_token_type,IdTokenType>>. +
-  **2.** Upon receipt of the <<reserve_now_request,ReserveNowRequest>>, the Charging Station responds with a <<reserve_now_response,ReserveNowResponse>>. +
-  **3.** When a specific EVSE is reserved for this reservation, the Charging Station sends a <<status_notification_request,StatusNotificationRequest>> with the status _Reserved_ for all the Connectors of that EVSE. +
-  **4.** The CSMS responds with a <<status_notification_response,StatusNotificationResponse>> to the Charging Station. +
-  **5.** The EV Driver presents an <<id_token_type,IdTokenType>> at the Charging Station, and the <<id_token_type,IdTokenType>> is different from the reservation’s <<id_token_type,IdTokenType>>, the Charging Station sends an <<authorize_request,AuthorizeRequest>> to the CSMS. +
-  **6.** The CSMS responds with an <<authorize_response,AuthorizeResponse>>. This response message includes the GroupId. +
-  **7.** Based on the matching GroupId information in both responses, the Charging Station starts charging and <<e02_start_transaction_cable_plugin_first,E02 - Start Transaction - Cable Plugin First applies>>.
-|5   |Prerequisite(s) |n/a
-|6   |Postcondition(s) |n/a
+d|_S2_ d|_시나리오 목표_ |동일한 GroupIdToken으로 예약된 EVSE 사용
+|{nbsp} d|_시나리오 설명_
+  |**1.** CSMS는 GroupId가 포함된 <<reserve_now_request,ReserveNowRequest>>를 충전기로 보내 특정 <<id_token_type,IdTokenType>>에서 사용할 EVSE를 예약합니다. +
+  **2.** <<reserve_now_request,ReserveNowRequest>>를 수신하면 충전기는 <<reserve_now_response,ReserveNowResponse>>로 응답합니다. +
+  **3.** 특정 EVSE가 이 예약에 예약된 경우 충전기는 해당 EVSE의 모든 커넥터에 대해 _Reserved_ 상태가 포함된 <<status_notification_request,StatusNotificationRequest>>를 보냅니다. +
+  **4.** CSMS는 충전기에 <<status_notification_response,StatusNotificationResponse>>로 응답합니다. +
+  **5.** EV 운전자가 충전기에 <<id_token_type,IdTokenType>>을 제시하고, <<id_token_type,IdTokenType>>이 예약의 <<id_token_type,IdTokenType>>과 다르면, 충전기는 <<authorize_request,AuthorizeRequest>>를 CSMS로 보냅니다. +
+  **6.** CSMS는 <<authorize_response,AuthorizeResponse>>로 응답합니다. 이 응답 메시지에는 GroupId가 포함됩니다. +
+  **7.** 두 응답의 일치하는 GroupId 정보를 기반으로 충전기는 충전을 시작하고 <<e02_start_transaction_cable_plugin_first,E02 - Start Transaction - Cable Plugin First>>가 적용됩니다.
+|5 |필수 조건 |n/a
+|6 |사후 조건 |n/a
 |===
 
-.Sequence Diagram: Use a reserved EVSE with GroupId
-image::part2/images/figure_83.svg[Sequence Diagram: Use a reserved EVSE with GroupId]
+.시퀀스 다이어그램: GroupId가 있는 예약된 EVSE 사용
+image::part2/images/figure_83.svg[시퀀스 다이어그램: GroupId가 있는 예약된 EVSE 사용]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error handling |n/a
-|8   |Remark(s)      |It is RECOMMENDED to validate the Identifier with an <<authorize_request,AuthorizeRequest>> after reception of <<reserve_now_request,ReserveNowRequest>> and before the start of the transaction.
+|7 |오류 처리 |n/a
+|8 |참고 |<<reserve_now_request,ReserveNowRequest>>를 수신한 후, 트랜잭션을 시작하기 전에 <<authorize_request,AuthorizeRequest>>로 식별자를 검증하는 것이 좋습니다.
 |===
 
 ==== H03 - Use a reserved EVSE - Requirements
 
-.H03 - Requirements
+.H03 - 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition
+|ID |전제 조건 |요구 사항 정의
 
-|H03.FR.01  |Reservation is pending for a specific _idToken_ for a specific _evseId_
-  |The Charging Station SHALL allow charging on that EVSE when <<id_token_type,IdToken>> presented for authorization matches the specific _idToken_ from the reservation.
-|H03.FR.02  |Reservation is pending for a specific _idToken_ for a specific _connectorType_
-  |The Charging Station SHALL allow charging on an EVSE with a connector of type _connectorType_ when <<id_token_type,IdToken>> presented for authorization matches the specific _idToken_ from the reservation.
-|H03.FR.03  |Reservation is pending for a specific _idToken_ without a specific _evseId_ or _connectorType_
-  |The Charging Station SHALL allow charging on an EVSE when <<id_token_type,IdToken>> presented for authorization matches the specific _idToken_ from the reservation.
-|H03.FR.04  |H03.FR.01 AND +
-  attribute _groupIdToken_ in reservation has a value
-    |The Charging Station SHALL allow charging on that EVSE when <<id_token_type,IdToken>> presented for authorization matches the specific _idToken_ from the reservation or when the associated _groupIdToken_ matches.
-|H03.FR.05  |H03.FR.02 AND +
-  attribute _groupIdToken_ in reservation has a value
-    |The Charging Station SHALL allow charging on an EVSE with a connector of type _connectorType_ when <<id_token_type,IdToken>> presented for authorization matches the specific _idToken_ from the reservation or when the associated _groupIdToken_ matches.
-|H03.FR.06  |H03.FR.03 AND +
-  attribute _groupIdToken_ in reservation has a value
-    |The Charging Station SHALL allow charging on any EVSE when <<id_token_type,IdToken>> presented for authorization matches the specific _idToken_ from the reservation or when the associated _groupIdToken_ matches.
-|H03.FR.07  |If attribute _groupIdToken_ in the reservation has a value (it is optional).
-  |In order to determine the _groupIdToken_ that is associated with an incoming <<id_token_type,IdToken>>, the Charging Station MAY look it up in its Local Authorization List or Authorization Cache.
-|H03.FR.08  |H03.FR.07 AND +
-  If the incoming <<id_token_type,IdToken>> is not found in the Local Authorization List or Authorization Cache.
-    |The Charging Station SHALL send an <<authorize_request,AuthorizeRequest>> for the incoming <<id_token_type,IdToken>> to the CSMS in order to get its associated _groupIdToken_. +
-    (Note: This AuthorizeRequest may already have been performed when the idToken was presented for authorization.)
-|H03.FR.09  |When an _idToken_ or _groupIdToken_ is presented that matches a reservation
-  |Charging Station SHALL consider the reservation to be used (consumed)
-|H03.FR.10  |H03.FR.09 AND +
-  Connector associated with reservation has status `Reserved`
-    |Charging Station SHALL set connector status to `Available` if no cable has been plugged-in, or `Occupied` if a cable has already been plugged-in.
+|H03.FR.01 |특정 _evseId_ 에 대한 특정 _idToken_ 에 대한 예약이 보류 중입니다.
+  |충전기는 인증을 위해 제시된 <<id_token_type,IdToken>>이 예약의 특정 _idToken_ 과 일치할 때 해당 EVSE에서 ​​충전을 허용해야 합니다.
+|H03.FR.02 |특정 _connectorType_ 에 대한 특정 _idToken_ 에 대한 예약이 보류 중입니다.
+  |충전기는 인증을 위해 제시된 <<id_token_type,IdToken>>이 예약의 특정 _idToken_ 과 일치할 때 _connectorType_ 유형의 커넥터가 있는 EVSE에서 ​​충전을 허용해야 합니다.
+|H03.FR.03 |특정 _evseId_ 또는 _connectorType_ 없이 특정 _idToken_ 에 대한 예약이 보류 중입니다.
+|충전기는 인증을 위해 제시된 <<id_token_type,IdToken>>이 예약의 특정 _idToken_ 과 일치할 때 EVSE에서 ​​충전을 허용해야 합니다.
+|H03.FR.04 |H03.FR.01 AND +
+  예약의 _groupIdToken_ 속성에 값이 있습니다.
+    |충전기는 인증을 위해 제시된 <<id_token_type,IdToken>>이 예약의 특정 _idToken_ 과 일치하거나 연관된 _groupIdToken_ 이 일치할 때 해당 EVSE에서 ​​충전을 허용해야 합니다.
+|H03.FR.05 |H03.FR.02 AND +
+  예약의 _groupIdToken_ 속성에 값이 있습니다.
+    |충전기는 인증을 위해 제시된 <<id_token_type,IdToken>>이 예약의 특정 _idToken_ 과 일치하거나 연관된 _groupIdToken_ 이 일치할 때 _connectorType_ 유형의 커넥터가 있는 EVSE에서 ​​충전을 허용해야 합니다.
+|H03.FR.06 |H03.FR.03 AND +
+  예약의 _groupIdToken_ 속성에 값이 있습니다.
+    |충전기는 인증을 위해 제시된 <<id_token_type,IdToken>>이 예약의 특정 _idToken_ 과 일치하거나 연관된 _groupIdToken_ 이 일치할 때 모든 EVSE에서 ​​충전을 허용해야 합니다.
+|H03.FR.07 |예약의 _groupIdToken_ 속성에 값이 있는 경우(선택 사항).
+  |수신한 <<id_token_type,IdToken>>과 연관된 _groupIdToken_ 을 확인하기 위해 충전기는 로컬 인증 목록 또는 인증 캐시를 조회할 수 있습니다.
+|H03.FR.08 |H03.FR.07 및 +
+  수신한 <<id_token_type,IdToken>>이 로컬 인증 목록 또는 인증 캐시에서 발견되지 않는 경우.
+    |충전기는 수신 <<id_token_type,IdToken>>에 대한 <<authorize_request,AuthorizeRequest>>를 CSMS로 보내 연관된 _groupIdToken_ 을 가져와야 합니다. +
+    (참고: 이 AuthorizeRequest는 idToken이 승인을 위해 제시되었을 때 이미 수행되었을 수 있습니다.)
+|H03.FR.09 |예약과 일치하는 _idToken_ 또는 _groupIdToken_ 이 제시될 때
+  |충전기는 예약을 사용(소비)한 것으로 간주해야 합니다.
+|H03.FR.10 |H03.FR.09 AND +
+  예약과 관련된 커넥터는 `Reserved` 상태입니다.
+    |충전기는 케이블이 연결되지 않은 경우 커넥터 상태를 `Available` 로 설정하고, 케이블이 이미 연결된 경우 `Occupied` 로 설정해야 합니다.
 |===
 
 <<<
 
 === H04 - Reservation Ended, not used
 
-.H04 - Reservation Ended, not used
+.H04 - 예약 종료, 사용 안 함
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Reservation Ended, not used
-|2   |ID              |H04
-|{nbsp} d|_Functional block_ |H. Reservation
-|3   |Objective(s)    |To enable a Charging Station to notify the CSMS about a reservation that has expired.
-|4   |Description     |This use cases covers how the Charging Station notifies the CSMS about a reservation, that has ended/timed out before the EV Driver starts using the Charging Station.
-|{nbsp} d|_Actors_    |Charging Station, CSMS
-|{nbsp} d|_Scenario description_ 
-  |**1.** The Charging Station has a reservation. +
-  **2.** The expiryDate of the reservation is reached. +
-  **3.** The Charging Station removes the reservation. +
-  **4.** If a specific EVSE was reserved for this reservation, the Charging Station makes the EVSE available again and notifies the CSMS about this by sending a <<status_notification_request,StatusNotificationRequest>> with the status _Available_ for that all the Connectors of that EVSE. +
-  **5.** The CSMS responds with a <<status_notification_response,StatusNotificationResponse>>. +
-  **6.** The Charging Station sends a <<reservation_status_update_request,ReservationStatusUpdateRequest>> with status _Expired_ to the CSMS. +
-  **7.** The CSMS responds with a <<reservation_status_update_response,ReservationStatusUpdateResponse>>.
-|5   |Prerequisite(s)   |n/a
-|6   |Postcondition(s)  |n/a
+|1 |이름 |예약 종료, 사용 안 함
+|2 |ID |H04
+|{nbsp} d|_기능 블록_ |H. 예약
+|3 |목표 |충전기가 만료된 예약에 대해 CSMS에 알릴 수 있도록 합니다.
+|4 |설명 |이 사용 사례는 EV 운전자가 충전기를 사용하기 전에 충전기가 종료/시간 초과된 예약에 대해 CSMS에 알리는 방법을 다룹니다.
+|{nbsp} d|_Actors_ |충전기, CSMS
+|{nbsp} d|_시나리오 설명_
+  |**1.** 충전기에 예약이 있습니다. +
+  **2.** 예약의 만료 날짜에 도달했습니다. +
+  **3.** 충전기가 예약을 제거합니다. +
+  **4.** 이 예약에 특정 EVSE가 예약된 경우 충전기는 EVSE를 다시 사용할 수 있게 만들고 해당 EVSE의 모든 커넥터에 대한 <<status_notification_request,StatusNotificationRequest>>를 _Available_ 상태로 전송하여 CSMS에 알립니다. +
+  **5.** CSMS가 <<status_notification_response,StatusNotificationResponse>>로 응답합니다. +
+  **6.** 충전기가 <<reservation_status_update_request,ReservationStatusUpdateRequest>>를 _Expired_ 상태로 CSMS에 전송합니다. +
+  **7.** CSMS가 <<reservation_status_update_response,ReservationStatusUpdateResponse>>로 응답합니다.
+|5 |필수 조건 |n/a
+|6 |사후 조건 |n/a
 |===
 
-.Sequence Diagram: Reservation Ended, not used
-image::part2/images/figure_84.svg[Sequence Diagram: Reservation Ended, not used]
+.시퀀스 다이어그램: 예약 종료, 미사용
+image::part2/images/figure_84.svg[시퀀스 다이어그램: 예약 종료, 미사용]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error handling  |n/a
-|8   |Remark(s)       |n/a
+|7 |오류 처리 |n/a
+|8 |비고 |n/a
 |===
 
 ==== H04 - Reservation Ended, not used - Requirements
 
-.H04 - Requirements
+.H04 - 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition
+|ID |전제 조건 |요구 사항 정의
 
-|H04.FR.01  |The reservation ends (_expiryDateTime_ reached)
-  |The Charging Station SHALL send a <<reservation_status_update_request,ReservationStatusUpdateRequest>> with status _Expired_.
-|H04.FR.02  |H04.FR.01 AND +
-  If a specific EVSE was reserved for this reservation
-    |The Charging Station SHALL allow charging again on this EVSE.
-|H04.FR.03  |H04.FR.02 
-  |The Charging Station SHALL send a <<status_notification_request,StatusNotificationRequest>> with status _Available_ to the CSMS, notifying the CSMS the all the connectors of this EVSE are available again for any EV Driver.
+|H04.FR.01 |예약이 종료됨(_expiryDateTime_ 에 도달)
+  |충전기는 <<reservation_status_update_request,ReservationStatusUpdateRequest>>를 _Expired_ 상태로 전송해야 합니다.
+|H04.FR.02 |H04.FR.01 AND +
+  이 예약에 특정 EVSE가 예약된 경우
+    |충전기는 이 EVSE에서 ​​다시 충전을 허용해야 합니다.
+|H04.FR.03 |H04.FR.02
+  |충전기는 CSMS에 <<status_notification_request,StatusNotificationRequest>>를 _Available_ 상태로 보내 이 EVSE의 모든 커넥터가 모든 EV 운전자에게 다시 사용 가능하다는 것을 CSMS에 알려야 합니다.
 |===

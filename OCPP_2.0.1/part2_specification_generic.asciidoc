@@ -137,7 +137,7 @@ This section contains the terminology that is used throughout this document.
 |Cost                 |Cost to be paid by an EV Driver for consumed energy/time etc. Including taxes.
 |Cryptographic hash function |Cryptographic hash functions should behave as one-way functions. They must be preimage resistant, 2nd preimage resistant, and collision-resistant. Changes in the input must produce explicitly different results in the output. Example: SHA-256. See also ENISA <<ocpp_security_1,OCPP Security [1]>>.
 |Cryptography         |The ENISA Algorithms, Key Sizes and Parameters Report [1] provides an overview of the current state of the art.
-|CSMS <tab>           |Charging Station Management System. The system that manages Charging Stations and has the information for authorizing Users for using its Charging Stations.
+|CSMS                 |Charging Station Management System. The system that manages Charging Stations and has the information for authorizing Users for using its Charging Stations.
 |Data Integrity       |See Integrity and Message authentication.
 |Digital Signature    |Authenticates the sender. In practice digital signatures are implemented using elliptic curves (EC).
 |Encryption           |Using a cryptographic scheme, the message is mapped to a random-looking undecipherable string (ciphertext). Decryption reverses the encryption process and can only be performed with the corresponding decryption key. This decryption key is either the same as the encryption key (symmetric cryptography) or the private key in a public-key cryptosystem. The confidentiality of the message can be guaranteed only while the keys are kept secret.
@@ -161,7 +161,7 @@ This section contains the terminology that is used throughout this document.
 |Phase Rotation           |Defines the wiring order of the phases between the electrical meter (or if absent, the grid connection), and the Charging Station Connector.
 |Price                    |Specific price tag of a single tariff entry, for example: 0.35 per kWh incl. 18% VAT.
 
-|Public-key cryptography  |"Cryptographic scheme where a public key is published and henceforth can be used for encryption of messages or verification of digital signatures. Each public key has a counterpart, the corresponding private key. This key must be kept secret and is used for decryption or digital signing of messages. Public-key primitives have a high computational complexity for encryption and therefore are mostly used as part of a hybrid encryption scheme where the public key is used to communicate a common symmetric session key under which all further communication is encrypted. Certificates administered by a public-key infrastructure are used to establish the authenticity of the public key. See also ENISA OCPP Security [12]. The most popular public-key encryption scheme is RSA. Digital signatures can be generated most efficiently with elliptic-curve based (EC) mechanisms."
+|Public-key cryptography  |"Cryptographic scheme where a public key is published and henceforth can be used for encryption of messages or verification of digital signatures. Each public key has a counterpart, the corresponding private key. This key must be kept secret and is used for decryption or digital signing of messages. Public-key primitives have a high computational complexity for encryption and therefore are mostly used as part of a hybrid encryption scheme where the public key is used to communicate a common symmetric session key under which all further communication is encrypted. Certificates administered by a public-key infrastructure are used to establish the authenticity of the public key. See also ENISA <<ocpp_security_12,OCPP Security [12]>>. The most popular public-key encryption scheme is RSA. Digital signatures can be generated most efficiently with elliptic-curve based (EC) mechanisms."
 |Public-key infrastructure |System to generate, administer, and revoke certificates.
 |Resume regular transaction |Used in sequence diagrams to indicate that this use case/sequence diagram has ended, but the transaction has not ended and will continue, but that is outside of scope of that specific use case.
 |Requirement              |Provision that conveys criteria to be fulfilled. ISO/IEC Guide 2:2004, 7.5.
@@ -187,6 +187,7 @@ The ISO 15118 terminology is more comprehensive when referring to specific compo
 [cols="<.^,<.^",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ISO 15118                              |OCPP
+
 |ChargingProfile (contains the power over time the EV is planned to consume)
   |Loosely corresponds to ChargingSchedule in NotifyEVChargingSchedule message.
 |SASchedule (the power limits from a secondary actor for charging an EV for a specific time)
@@ -213,7 +214,7 @@ This section contains the abbreviations that are used throughout this document.
 |AES            |Advanced Encryption Standard. Original name for this block cipher was Rijndael named after its designers Vincent Rijmen and Joan Daemen.
 |BEV            |Battery Electric Vehicle
 |CMP            |Certificate Management Protocol
-|CS Charging    |Station
+|CS             |Charging Station
 |CSL            |Comma Separated List
 |CSMS           |Charging Station Management System
 |CSO            |Charging Station Operator
@@ -225,7 +226,7 @@ This section contains the abbreviations that are used throughout this document.
 |ECDSA          |Elliptic Curve Digital Signature Algorithm.
 |EMS            |Energy Management System
 |ENISA          |European Union Agency for Network and Information Security.
-|EV Electric    |Vehicle
+|EV             |Electric Vehicle
 |EVSE           |EV Supply Equipment <<iec61851_1,IEC61851-1>>
 |FQDN           |Fully Qualified Domain Name
 |FTP(S)         |File Transport Protocol (Secure)
@@ -241,14 +242,14 @@ This section contains the abbreviations that are used throughout this document.
 |PHEV           |Plugin Hybrid Electric Vehicle
 |RDN            |Relative Distinguished Name
 |RSA            |Public-key cryptosystem named after its inventors Rivest, Shamir, and Adleman.
-|RSA            |PSS RSA-PSS is a new signature scheme that is based on the RSA cryptosystem and provides increased security assurance. It was added in version 2.1 of PKCS #1, following <<ocpp_security_23,OCPP Security [23]>>
+|RSA-PSS        |RSA-PSS is a new signature scheme that is based on the RSA cryptosystem and provides increased security assurance. It was added in version 2.1 of PKCS #1, following <<ocpp_security_23,OCPP Security [23]>>
 |RST            |3 phase power connection, Standard Reference Phasing
 |RTS            |3 phase power connection, Reversed Reference Phasing
 |SRT            |3 phase power connection, Reversed 240 degree rotation
 |STR            |3 phase power connection, Standard 120 degree rotation
 |TRS            |3 phase power connection, Standard 240 degree rotation
 |TSR            |3 phase power connection, Reversed 120 degree rotation
-|SC Smart       |Charging
+|SC             |Smart Charging
 |TLS            |Transport Layer Security
 |TSO            |Transmission System Operator
 |URI            |Uniform Resource Identifier RFC-3986 <<rfc3986,[RFC3986]>>
@@ -290,6 +291,7 @@ In OCPP, system actors are covering functions or devices.
 [cols="<.^2,<.^2,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Actor name       |Actor type     |Actor description
+
 |EV Driver        |Actor          |The Driver of an EV who wants to charge the EV at a Charging Station.
 |Connector        |Device         |The term "Connector", as used in this specification, refers to an independently operated and managed electrical outlet on a Charging Station. In other words, this corresponds to a single physical Connector. In some cases an EVSE may have multiple Connectors: multiple physical socket types and/or types (e.g. four-wheeled EVs and electric scooters).
 |CSMS             |System         |Charging Station Management System: manages Charging Stations and has the information for authorizing Users for using its Charging Stations.
@@ -316,7 +318,7 @@ In OCPP, system actors are covering functions or devices.
 |[[iec61851_1]][IEC61851-1] |"IEC 61851-1 2017: EV conductive charging system - Part 1: General requirements" https://webstore.iec.ch/publication/33644
 |[[iec62196]][IEC62196] |IEC 62196: Plugs, socket-outlets, vehicle couplers and vehicle inlets - Conductive charging of electric vehicles. https://webstore.iec.ch/publication/6582
 |[[iso15118_1]][ISO15118-1] |ISO 15118-1 specifies terms and definitions, general requirements and use cases as the basis for the other parts of ISO 15118. It provides a general overview and a common understanding of aspects influencing the charge process, payment and load leveling. https://webstore.iec.ch/publication/9272
-|[[iso15118_2]][ISO15118-2] |Road vehicles – Vehicle to grid communication interface – Part 2: Technical protocol description and Open Systems Interconnection (OSI) layer requirements, Document Identifier: 69/216/CDV. https://webstore.iec.ch/publication/9273
+|[[iso15118_2]][ISO15118-2] |Road vehicles - Vehicle to grid communication interface - Part 2: Technical protocol description and Open Systems Interconnection (OSI) layer requirements, Document Identifier: 69/216/CDV. https://webstore.iec.ch/publication/9273
 |[[iso4217]][ISO4217] |"ISO 4217: Currency codes" http://www.iso.org/iso/home/standards/currency_codes.htm
 |[[ocpp2_0_part4]][OCPP2.0-PART4] |"OCPP 2.0.1: Part 4 - JSON over WebSockets implementation guide". http://www.openchargealliance.org/downloads/
 |[[open_adr]][OpenADR] |"Open Automated Demand Response" http://www.openadr.org/
@@ -333,6 +335,7 @@ In OCPP, system actors are covering functions or devices.
 [cols="^.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Reference            |Description
+
 |[[ocpp_security_1]][1]   |ENISA European Network and Information Security Agency, Algorithms, key size and parameters report 2014, 2014. (last accessed on 17 January 2016) https://www.enisa.europa.eu/publications/algorithms-key-size-and-parameters-report-2014
 |[[ocpp_security_2]][2]   |National Institute of Standards and Technology. FIPS PUB 140-2, Security Requirements for Cryptographic Modules, May 2001. http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.140-2.pdf
 |[[ocpp_security_3]][3]   |Cooper, D., et al., Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile, Internet Engineering Task Force, Request for Comments 5280, May 2008, http://www.ietf.org/rfc/rfc5280.txt
@@ -350,14 +353,14 @@ In OCPP, system actors are covering functions or devices.
 |[[ocpp_security_15]][15]   |P. Hoffman and W.C.A. Wijngaards, Elliptic Curve Digital Signature Algorithm (DSA) for DNNSEC, Internet Engineering Task Force (IETF) RFC 6605, April 2012. http://www.ietf.org/rfc/rfc6605.txt
 |[[ocpp_security_16]][16]   |Adams, C., Farrell, S., Kause, T., and T. Mononen, "Internet X.509 Public Key Infrastructure Certificate Management Protocol (CMP)", RFC 4210, September 2005. https://www.ietf.org/rfc/rfc4210.txt
 |[[ocpp_security_17]][17]   |National Institute of Standards and Technology. Special Publication 800-57 Part 1 Rev. 4, Recommendation for Key Management. January 2016. https://csrc.nist.gov/publications/detail/sp/800-57-part-1/rev-4/final
-|[[ocpp_security_18]][18]   |(^) RFC 2617. HTTP Authentication: Basic and Digest Access Authentication. https://www.ietf.org/rfc/rfc2617.txt
+|[[ocpp_security_18]][18]   |RFC 2617. HTTP Authentication: Basic and Digest Access Authentication. https://www.ietf.org/rfc/rfc2617.txt
 |[[ocpp_security_19]][19]   |RFC 5280. Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile. https://www.ietf.org/rfc/rfc5280.txt
 |[[ocpp_security_20]][20]   |OCPP 1.6. Interface description between Charging Station and CSMS. October 2015. http://www.openchargealliance.org/downloads/
 |[[ocpp_security_21]][21]   |Eekelen, M. van, Poll, E., Hubbers, E., Vieira, B., Broek, F. van den: An end-to-end security design for smart EV-charging for Enexis and ElaadNL by LaQuSo1. December 2, 2014. https://www.elaad.nl/smart-charging-end2end-security-design/
-|[[ocpp_security_22]][22]   |(^) RFC 2986. PKCS #10: Certification Request Syntax Specification, Version 1.7. https://www.ietf.org/rfc/rfc2986.txt
-|[[ocpp_security_23]][23]   |(^) RSA-PSS. https://tools.ietf.org/html/rfc8017
+|[[ocpp_security_22]][22]   |RFC 2986. PKCS #10: Certification Request Syntax Specification, Version 1.7. https://www.ietf.org/rfc/rfc2986.txt
+|[[ocpp_security_23]][23]   |RSA-PSS. https://tools.ietf.org/html/rfc8017
 |[[ocpp_security_24]][24]   |Santesson, et al. "X.509 Internet Public Key Infrastructure Online Certificate Status Protocol - OCSP" RFC 6960. June 2013
-|[[ocpp_security_25]][[rfc2818]][25]   |(^) RFC 2818. HTTP Over TLS. https://tools.ietf.org/html/rfc2818
+|[[ocpp_security_25]][[rfc2818]][25]   |RFC 2818. HTTP Over TLS. https://tools.ietf.org/html/rfc2818
 |===
 
 [[transaction]]
@@ -404,6 +407,8 @@ For reference, the current timing constrains for 15118 edition 1 are:
 |CertificateInstallationReq/Res |5 seconds
 |===
 
+<<<
+
 == Generic Requirements
 
 _This section is normative._
@@ -424,8 +429,18 @@ The generic requirements build the basis for defining the use case elements desc
 |FR.04  |When the CSMS did not accept the BootNotificationRequest from the Charging Station AND The Charging Station sends a message other than BootNotificationRequest
   |The CSMS SHALL respond with a RPC Framework: CALLERROR: SecurityError. |{nbsp}
 |FR.05  |There are a few messages that do not provide their result in the response message, but send one or more messages that contain the result. When one of the following messages is received; GetReport, GetBaseReport, GetMonitoringReport, GetDisplayMessages, CustomerInformation, GetChargingProfiles, GetLog, UpdateFirmware, PublishFirmware, TriggerMessage(<message>)
-  |The Charging Station SHALL acknowledge the requests in the list below with a response message(shown after the arrow "→") with the same requestId as the request: GetReport → NotifyReport GetBaseReport → NotifyReport GetMonitoringReport → NotifyMonitoringReport GetDisplayMessages → NotifyDisplayMessage CustomerInformation → NotifyCustomerInformation GetChargingProfiles → ReportChargingProfiles GetLog → LogStatusNotification UpdateFirmware → FirmwareStatusNotification PublishFirmware → PublishFirmwareStatusNotification TriggerMessage(<message>) → <requested message>
-    |The CSMS needs to know that a request for _requestId = X_ was accepted, so that it can expect result messages for this requestId. TriggerMessage does not have a requestId , but the requirement still applies in the sense that a TriggerMessageResponse must be sent before the sending the requested message.
+  |The Charging Station SHALL acknowledge the requests in the list below with a response message(shown after the arrow "→") with the same _requestId_ as the request: +
+  GetReport → NotifyReport +
+  GetBaseReport → NotifyReport +
+  GetMonitoringReport → NotifyMonitoringReport +
+  GetDisplayMessages → NotifyDisplayMessage +
+  CustomerInformation → NotifyCustomerInformation +
+  GetChargingProfiles → ReportChargingProfiles +
+  GetLog → LogStatusNotification +
+  UpdateFirmware → FirmwareStatusNotification +
+  PublishFirmware → PublishFirmwareStatusNotification +
+  TriggerMessage(<message>) → <requested message>
+    |The CSMS needs to know that a request for _requestId = X_ was accepted, so that it can expect result messages for this _requestId_. TriggerMessage does not have a _requestId_, but the requirement still applies in the sense that a TriggerMessageResponse must be sent before the sending the requested message.
 |===
 
 === Time Format Requirements

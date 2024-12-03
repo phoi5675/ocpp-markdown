@@ -6,24 +6,24 @@
 
 == Introduction
 
-This Functional Block specifies how the Charging Station can inform the CSMS of its current availability for starting new transactions.
+이 기능 블록은 충전기가 CSMS에 새 트랜잭션을 시작하기 위한 현재 가용성을 알리는 방법을 지정합니다.
 
-For the CSO it is important to know if a Charging Station is available for new EVs to be charged. The CSO wants to know this information so they can tell EV Drivers whether the Charging Station is available. To know this, the Charging Station should send any status changes of itself or one of its EVSEs to the CSMS. See for an example: <<b04_offline_behavior_idle_charging_station,B04 - Offline Behavior Idle Charging Station>>.
+CSO의 경우 새 EV를 충전할 수 있는 충전기가 있는지 아는 것이 중요합니다. CSO는 이 정보를 확인하고 EV 운전자에게 충전기가 사용 가능한지 알려줍니다. 이를 알기 위해 충전기는 자체 또는 EVSE 중 하나의 상태 변경 사항을 CSMS로 전송해야 합니다. 예를 보려면 <<b04_offline_behavior_idle_charging_station,B04 - Offline Behavior Idle Charging Station>>을 참조하세요.
 
-For the CSO it is very helpful to know the status of the transaction, therefore the Charging Station can send detailed statuses to the CSMS. This can be very useful when helping an EV Driver when he experiences problems during charging.
+CSO의 경우 트랜잭션 상태를 아는 것이 매우 유용하므로 충전기는 자세한 상태를 CSMS로 전송할 수 있습니다. 이는 충전 중에 문제가 발생하는 EV 운전자를 도울 때 매우 유용할 수 있습니다.
 
-When a fault is detected by the Charging Station it can send a message notifying the CSMS about the fault.
+충전기에서 오류가 감지되면 CSMS에 오류에 대한 메시지를 보낼 수 있습니다.
 
-When the CSO wants the Charging Station to no longer start new transactions, it can change the availability. For example: they need to do maintenance on the Charging Station, and for this reason they don’t want the Charging Station to be in use.
+CSO가 충전기에서 더 이상 새 트랜잭션을 시작하지 않기를 원하는 경우 가용성을 변경할 수 있습니다. 예를 들어, 충전기에서 유지관리를 해야 하기 때문에 충전기를 사용하지 않으려고 합니다.
 
-The CSO can also change the availability for one or more EVSEs. For example: A customer calls, complaining about a broken EVSE on the Charging Station. The CSO can then set the Connector to unavailable, making it impossible for an EV Driver to use that
-Connector.
+CSO는 하나 이상의 EVSE에 대한 가용성을 변경할 수도 있습니다. 예를 들어, 고객이 전화를 걸어 충전기의 EVSE가 고장났다고 불평합니다. 그런 다음 CSO는 커넥터를 사용할 수 없게 설정하여 EV 운전자가 해당
+커넥터를 사용할 수 없게 할 수 있습니다.
 
-Obviously, it is also possible to make the Charging Station or a Connector available again with a command from the CSMS.
+물론 CSMS의 명령으로 충전기나 커넥터를 다시 사용할 수 있게 할 수도 있습니다.
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===
-|NOTE |An overview of the Connectors Statuses can be found in: <<connector_status_enum_type,ConnectorStatusEnumType>>.
+|NOTE |커넥터 상태 개요는 <<connector_status_enum_type,ConnectorStatusEnumType>>에서 확인할 수 있습니다.
 |===
 
 <<<
@@ -33,151 +33,146 @@ Obviously, it is also possible to make the Charging Station or a Connector avail
 :sectnums!:
 === G01 - Status Notification
 
-.G01 - Status Notification
+.G01 - 상태 알림
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Status Notification
-|2   |ID              |G01
-|{nbsp} d|_Functional block_ |G. Availability
-|3   |Objective(s)    |To inform the CSMS about a Connector status change.
-|4   |Description     |This use case covers the functionality that a Charging Station sends a notification to the CSMS to inform the CSMS about a Connector status change.
-|{nbsp} d|_Actors_    |Charging Station, CSMS
-|{nbsp} d|_Scenario description_
-  |**1.** A connector status changed, the Charging Station sends a <<status_notification_request,StatusNotificationRequest>> to the CSMS to inform the CSMS about the new status. +
-  **2.** The CSMS responds with <<status_notification_response,StatusNotificationResponse>> to the Charging Station.
-|{nbsp} d|_Alternative scenario_
-  |**1.** Instead of a <<status_notification_request,StatusNotificationRequest>> a Charging Station can send a <<notify_event_request,NotifyEventRequest>> with _trigger_ = `Delta` for _component.name_  "Connector" and the EVSE number in _evse.id_ and the connector number in _evse.connectorId_, and _variable_ = "AvailabilityState" with the value of the new status to the CSMS. +
-  **1a.** Optionally, Charging Station can also include the state of _component_ = "ChargingStation" and _component_ = "EVSE" in the <<notify_event_request,NotifyEventRequest>>. +
-  **2.** The CSMS responds with <<notify_event_response,NotifyEventResponse>> to the Charging Station.
-|5   |Prerequisite(s) |n/a
-|6   |Postcondition(s) 
-  |**Successful postconditions:** +
-  The CSMS is _Successfully_ informed about the status change. +
-  **Failure postconditions:** +
+|1 |이름 |상태 알림
+|2 |ID |G01
+|{nbsp} d|_기능 블록_ |G. 가용성
+|3 |목표 |커넥터 상태 변경을 CSMS에 알리는 것.
+|4 |설명 |이 사용 사례는 충전기가 CSMS에 알림을 보내 커넥터 상태 변경을 CSMS에 알리는 기능을 다룹니다.
+|{nbsp} d|_Actors_ |충전기, CSMS
+|{nbsp} d|_시나리오 설명_
+  |**1.** 커넥터 상태가 변경되어 충전기에서 <<status_notification_request,StatusNotificationRequest>>를 CSMS로 보내 CSMS에 새 상태를 알립니다. +
+  **2.** CSMS에서 <<status_notification_response,StatusNotificationResponse>>로 충전기에 응답합니다.
+|{nbsp} d|_대체 시나리오_
+  |**1.** <<status_notification_request,StatusNotificationRequest>> 대신 충전기는 _component.name_ "Connector"에 대한 _trigger_ = `Delta` 와 _evse.id_ 의 EVSE 번호, _evse.connectorId_ 의 커넥터 번호, _variable_ = "AvailabilityState"와 새 상태 값을 CSMS에 포함하는 <<notify_event_request,NotifyEventRequest>>를 보낼 수 있습니다. +
+  **1a.** 선택적으로 충전기는 <<notify_event_request,NotifyEventRequest>>에 _component_ = "ChargingStation"과 _component_ = "EVSE"의 상태를 포함할 수도 있습니다. +
+  **2.** CSMS는 충전기에 <<notify_event_response,NotifyEventResponse>>로 응답합니다.
+|5 |필수 조건 |n/a
+|6 |사후 조건
+  |**성공한 사후 조건:** +
+  CSMS는 상태 변경에 대해 _성공적으로_ 통보받았습니다. +
+  **실패한 사후 조건:** +
   n/a
 |===
 
-.Sequence Diagram: Status Notification
-image::part2/images/figure_73.svg[Sequence Diagram: Status Notification]
+.시퀀스 다이어그램: 상태 알림
+image::part2/images/figure_73.svg[시퀀스 다이어그램: 상태 알림]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error handling  |n/a
-|8   |Remark(s)       |The Charging Station MAY use the _Unavailable_ status internally for other purposes (e.g. while updating firmware or waiting for an initial _Accepted_ RegistrationStatus). When one of the connectors on an EVSE is Reserved/Occupied, the CSMS has to take care of the status of the other connectors when presenting availability information to another system or user. The CSMS knows which connectors belong to the same EVSE.
+|7 |오류 처리 |n/a
+|8 |참고 |충전기는 _Unavailable_ 상태를 다른 목적으로 내부적으로 사용할 수 있습니다(예: 펌웨어 업데이트 중 또는 초기 _Accepted_ RegistrationStatus를 기다리는 동안). EVSE의 커넥터 중 하나가 예약/점유 중이면 CSMS는 다른 시스템이나 사용자에게 가용성 정보를 제공할 때 다른 커넥터의 상태를 처리해야 합니다. CSMS는 어떤 커넥터가 동일한 EVSE에 속하는지 알고 있습니다.
 
-Notifying a connector status from the Charging Station to the CSMS will be taken over by the new Device Management Monitoring feature, however this mechanism has not been proven in the field yet. So the old <<status_notification_request,StatusNotificationRequest>> message remains available for use for now.
+  충전기에서 CSMS로 커넥터 상태를 알리는 작업은 새로운 장치 관리 모니터링 기능이 담당하지만 이 메커니즘은 아직 현장에서 검증되지 않았습니다. 따라서 이전의 <<status_notification_request,StatusNotificationRequest>> 메시지는 현재 사용할 수 있습니다.
 |===
 
 ==== G01 - Status Notification - State transition overview for connecting/disconnecting
 
 [cols="<.^2,<.^4,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|Initial      |Cable plugin             |Cable unplug
+|초기 |케이블 플러그인 |케이블 언플러그
 
-|Available    |→ Occupied               |-
-|Occupied     |-                        |→ Available +
-  ( → Unavailable, if scheduled to become Unavailable)
-|Reserved     |- +
-  ( → Occupied, only if authorized for reserved IdToken )
+|사용 가능 |→ 점유 |-
+|점유 |- |→ 사용 가능 +
+  ( → 사용 불가능, 사용 불가능으로 예약된 경우)
+|예약됨 |- +
+  ( → 점유, 예약된 IdToken에 대해 권한이 부여된 경우에만)
     |-
-|Unavailable  |-                        |-
-|Faulted      |-                        |-
+|사용 불가능 |- |-
+|오류 발생 |- |-
 |===
 
 ==== G01 - Status Notification - Requirements
 
-.G01 - Requirements
+.G01 - 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition
+|ID |전제 조건 |요구 조건 정의
 
-|G01.FR.01  |{nbsp}
-  |A Charging Station Connector MUST have one of the valid statuses from the <<connector_status_enum_type,ConnectorStatus>> enumeration.
-|G01.FR.02  |When an EVSE is set to status _Unavailable_ by a <<change_availability_request,ChangeAvailabilityRequest>> message.
-  |The EVSE’s _Unavailable_ status SHALL be persistent across reboots.
-|G01.FR.03  |The connector is `Available` when an EV is connecting
-  |The Charging Station SHALL send a <<status_notification_request,StatusNotificationRequest>> with _connectorStatus_ = `Occupied` +
-  or a <<notify_event_request,NotifyEventRequest>> for _component_ = "Connector", _variable_ = "AvailabilityState", _actualValue_ = "Occupied" and _trigger_ = "Delta".
-|G01.FR.04  |The connector is `Occupied` when an EV is disconnecting AND +
-  connector is not scheduled to become `Unavailable` (G03.FR.05)
-    |The Charging Station SHALL send a <<status_notification_request,StatusNotificationRequest>> with _connectorStatus_ = `Available` when an EV is disconnected or a <<notify_event_request,NotifyEventRequest>> for _component_ = "Connector", _variable_ = "AvailabilityState", _actualValue_ = "Available" and _trigger_ = "Delta".
-|G01.FR.05  |The connector is `Occupied` when an EV is disconnecting AND +
-  connector is scheduled to become `Unavailable` (G03.FR.05)
-    |The Charging Station SHALL send a <<status_notification_request,StatusNotificationRequest>> with _connectorStatus_ = `Unavailable` when an EV is disconnected +
-    or a <<notify_event_request,NotifyEventRequest>> for _component_ = "Connector", _variable_ = "AvailabilityState", _actualValue_ = "Unavailable" and _trigger_ = "Delta".
-|G01.FR.06  |The connector is `Reserved` when an EV is connecting AND +
-  EV driver presents an IdToken matching the reservation
-    |The Charging Station SHALL send a <<status_notification_request,StatusNotificationRequest>> with _connectorStatus_ = `Occupied` +
-    or a <<notify_event_request,NotifyEventRequest>> for _component_ = "Connector", _variable_ = "AvailabilityState", _actualValue_ = "Occupied" and _trigger_ = "Delta".
-|G01.FR.07  |When a <<change_availability_request,ChangeAvailabilityRequest>> leads to a connector status change
-  |The Charging Station SHALL send a <<status_notification_request,StatusNotificationRequest>> with the corresponding _connectorStatus_ +
-  or a <<notify_event_request,NotifyEventRequest>> for _component_ = "Connector", _variable_ = "AvailabilityState", _trigger_ = "Delta" and the corresponding _actualValue_ of "AvailabilityState".
-|G01.FR.08  |When a cable is plugged in to a connector of an EVSE AND +
-  The EVSE has multiple connectors
-    |The Charging Station SHOULD NOT send a <<status_notification_request,StatusNotificationRequest>> for the other connector(s), even though they are no longer usable.
+|G01.FR.01 |{nbsp} |충전기 커넥터는 반드시 <<connector_status_enum_type,ConnectorStatus>> 열거형의 유효한 상태 중 하나를 가져야 합니다.
+|G01.FR.02 |<<change_availability_request,ChangeAvailabilityRequest>> 메시지에 의해 EVSE의 상태가 _Unavailable_ 로 설정되었을 때
+  |EVSE의 _Unavailable_ 상태는 재부팅 후에도 지속되어야 합니다.
+|G01.FR.03 |EV가 연결 중일 때 커넥터 상태는 `Available` 입니다.
+  |충전기는 _connectorStatus_ = `Occupied` 상태로 <<status_notification_request,StatusNotificationRequest>>를 전송하거나, _component_ = "Connector", _variable_ = "AvailabilityState", _actualValue_ = "Occupied" 및 _trigger_ = "Delta"로 설정된 <<notify_event_request,NotifyEventRequest>>를 전송해야 합니다.
+|G01.FR.04 |EV가 연결을 끊고 있고 +
+  커넥터가 `Unavailable` 상태가 되도록 예약되지 않은 경우 (G03.FR.05)
+    |EV가 연결을 끊었을 때 충전기는 _connectorStatus_ = `Available` 상태로 <<status_notification_request,StatusNotificationRequest>>를 전송하거나, _component_ = "Connector", _variable_ = "AvailabilityState", _actualValue_ = "Available" 및 _trigger_ = "Delta"로 설정된 <<notify_event_request,NotifyEventRequest>>를 전송해야 합니다.
+|G01.FR.05 |EV가 연결을 끊고 있으며 +
+  커넥터가 `Unavailable` 상태가 되도록 예약된 경우 (G03.FR.05)
+    |EV가 연결을 끊었을 때 충전기는 _connectorStatus_ = `Unavailable` 상태로 <<status_notification_request,StatusNotificationRequest>>를 전송하거나, _component_ = "Connector", _variable_ = "AvailabilityState", _actualValue_ = "Unavailable" 및 _trigger_ = "Delta"로 설정된 <<notify_event_request,NotifyEventRequest>>를 전송해야 합니다.                                              
+|G01.FR.06 |EV가 연결 중이고 +
+  EV 드라이버가 예약과 일치하는 IdToken을 제시한 경우
+    |충전기는 _connectorStatus_ = `Occupied` 상태로 <<status_notification_request,StatusNotificationRequest>>를 전송하거나, _component_ = "Connector", _variable_ = "AvailabilityState", _actualValue_ = "Occupied" 및 _trigger_ = "Delta"로 설정된 <<notify_event_request,NotifyEventRequest>>를 전송해야 합니다.
+|G01.FR.07 |<<change_availability_request,ChangeAvailabilityRequest>>에 의해 커넥터 상태가 변경되었을 때
+  |충전기는 해당 _connectorStatus_로 <<status_notification_request,StatusNotificationRequest>>를 전송하거나, _component_ = "Connector", _variable_ = "AvailabilityState", _trigger_ = "Delta" 및 해당 _actualValue_로 설정된 <<notify_event_request,NotifyEventRequest>>를 전송해야 합니다.
+|G01.FR.08 |케이블이 EVSE의 커넥터에 연결되어 있고 +
+  EVSE에 다수의 커넥터가 있는 경우
+    |충전기는 다른 커넥터가 더 이상 사용 불가능하더라도, 해당 커넥터에 대해 <<status_notification_request,StatusNotificationRequest>>를 전송하지 않아야 합니다.
 |===
 
 <<<
 
 === G02 - Heartbeat
 
-.G02 - Heartbeat
+.G02 - 하트비트
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Heartbeat
-|2   |ID              |G02
-|{nbsp} d|_Functional block_ |G. Availability
-|3   |Objective(s)    |To let the CSMS know that a Charging Station is still connected, optionally the Heartbeat can be used for time synchronisation.
-|4   |Description     |This use case describes a way to let the CSMS know the Charging Station is still connected, a Charging Station sends a heartbeat after a configurable time interval. Depending on the configuration the Heartbeat can be used for time synchronisation.
-|{nbsp} d|_Actors_    |Charging Station, CSMS
-|{nbsp} d|_Scenario description_ 
-  |**1.** If there is no activity for a certain time, the Charging Station sends <<heartbeat_request,HeartbeatRequest>> for ensuring that the CSMS knows that a Charging Station is still alive. +
-  **2.** Upon receipt of <<heartbeat_request,HeartbeatRequest>>, the CSMS responds with <<heartbeat_response,HeartbeatResponse>>. The response message contains the current time of the CSMS, which the Charging Station MAY use to synchronize its internal clock.
-|5   |Prerequisite(s) |The heartbeat interval is set.
-|6   |Postcondition(s) 
-  |**Successful postconditions:** +
-  The CSMS knows the Charging Station is still connected.
+|1 |이름 |하트비트
+|2 |ID |G02
+|{nbsp} d|_기능 블록_ |G. 가용성
+|3 |목표 |충전기가 여전히 연결되어 있음을 CSMS에 알리기 위해, 선택적으로 하트비트를 시간 동기화에 사용할 수 있습니다.
+|4 |설명 |이 사용 사례는 충전기가 여전히 연결되어 있음을 CSMS에 알리는 방법을 설명합니다. 충전기는 구성 가능한 시간 간격 후에 하트비트를 보냅니다. 구성에 따라 하트비트를 시간 동기화에 사용할 수 있습니다.
+|{nbsp} d|_Actors_ |충전기, CSMS
+|{nbsp} d|_시나리오 설명_
+  |**1.** 일정 시간 동안 활동이 없으면 충전기는 <<heartbeat_request,HeartbeatRequest>>를 보내 CSMS가 충전기가 여전히 살아 있음을 알 수 있도록 합니다. +
+  **2.** <<heartbeat_request,HeartbeatRequest>>를 수신하면 CSMS는 <<heartbeat_response,HeartbeatResponse>>로 응답합니다. 응답 메시지에는 CSMS의 현재 시간이 포함되어 있으며, 충전기는 이를 사용하여 내부 시계를 동기화할 수 있습니다.
+|5 |필수 조건 |하트비트 간격이 설정됩니다.
+|6 |사후 조건
+  |**성공한 사후 조건:** +
+  CSMS는 충전기가 여전히 연결되어 있음을 알고 있습니다.
 
-  **Failure postconditions:** +
-  The CSMS concludes that the Charging Station is _Offline_.
+  **실패한 사후 조건:** +
+  CSMS는 충전기가 _Offline_ 이라고 결론 내립니다.
 |===
 
-.Sequence Diagram: Heartbeat
-image::part2/images/figure_74.svg[Sequence Diagram: Heartbeat]
+.시퀀스 다이어그램: 하트비트
+image::part2/images/figure_74.svg[시퀀스 다이어그램: 하트비트]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error handling |n/a
-|8   |Remark(s)      |With JSON over WebSocket, sending heartbeats is _not_ instrumental to keeping websockets alive, since websockets already provide a mechanism for this. However, if the Charging Station uses the heartbeat for time synchronization, it is advised to at least send one heartbeat per 24 hours.
+|7 |오류 처리 |n/a
+|8 |참고 |웹소켓을 통한 JSON의 경우, 하트비트를 보내는 것은 웹소켓을 유지하는 데 _중요하지 않습니다_. 웹소켓은 이미 이를 위한 메커니즘을 제공하기 때문입니다. 그러나 충전기가 시간 동기화를 위해 하트비트를 사용하는 경우, 적어도 24시간에 한 번은 하트비트를 보내는 것이 좋습니다.
 |===
 
 === G02 - Heartbeat - Requirements
 
-.G02 - Requirements
+.G02 - 요구 사항
 [cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition     |Note
+|ID |전제 조건 |요구 사항 정의 |참고
 
-|G02.FR.01  |When the CSMS responds with <<boot_notification_response,BootNotificationResponse>> with a status _Accepted_.
-  |The Charging Station SHALL adjust the heartbeat interval in accordance with the interval from the response message. |{nbsp}
-|G02.FR.02  |{nbsp}
-  |The Charging Station SHALL send <<heartbeat_request,HeartbeatRequest>> after a configurable time interval.
-    |To ensure that the CSMS knows that a Charging Station is still alive.
-|G02.FR.03  |{nbsp}
-  |The <<heartbeat_response,HeartbeatResponse>> message SHALL contain the current time of the CSMS. |{nbsp}
-|G02.FR.04  |Whenever a message from a Charging Station has been received.
-  |The CSMS SHALL assume availability of that Charging Station. |{nbsp}
-|G02.FR.05  |{nbsp}
-  |It is RECOMMENDED that the Charging Station resets its heartbeat interval timer when another message has been sent to the CSMS. |{nbsp}
-|G02.FR.06  |When the Charging Station receives a <<heartbeat_response,HeartbeatResponse>>.
-  |It is RECOMMENDED that the Charging Station uses the current time to synchronize its internal clock. |{nbsp}
-|G02.FR.07  |When the heartbeat interval timer is continuously reset because of continuous sending of messages AND +
-  <<heartbeat_request,HeartbeatRequest>> is used for time synchronisation
-    |It is RECOMMENDED that the Charging Station sends a <<heartbeat_request,HeartbeatRequest>> at least once every 24 hours to synchronise the clock. |{nbsp}
+|G02.FR.01 |CSMS가 <<boot_notification_response,BootNotificationResponse>>로 응답하고 상태가 _Accepted_ 인 경우.
+  |충전기는 응답 메시지의 간격에 따라 하트비트 간격을 조정해야 합니다. |{nbsp}
+|G02.FR.02 |{nbsp}
+  |충전기는 구성 가능한 시간 간격 후에 <<heartbeat_request,HeartbeatRequest>>를 보내야 합니다.
+    |충전기가 여전히 온라인 상태인 것을 CSMS가 알 수 있도록 합니다.
+|G02.FR.03 |{nbsp}
+  |<<heartbeat_response,HeartbeatResponse>> 메시지에는 CSMS의 현재 시간이 포함되어야 합니다. |{nbsp}
+|G02.FR.04 |충전기에서 메시지를 수신할 때마다.
+  |CSMS는 해당 충전기의 가용성을 가정해야 합니다. |{nbsp}
+|G02.FR.05 |{nbsp}
+  |다른 메시지가 CSMS로 전송되면 충전기가 하트비트 간격 타이머를 재설정하는 것이 좋습니다. |{nbsp}
+|G02.FR.06 |충전기가 <<heartbeat_response,HeartbeatResponse>>를 수신할 때.
+  |충전기가 내부 시계를 동기화하기 위해 현재 시간을 사용하는 것이 좋습니다. |{nbsp}
+|G02.FR.07 |메시지가 지속적으로 전송되어 하트비트 간격 타이머가 지속적으로 재설정되고 +
+  <<heartbeat_request,HeartbeatRequest>>가 시간 동기화에 사용되는 경우
+    |충전기가 시계를 동기화하기 위해 최소 24시간마다 <<heartbeat_request,HeartbeatRequest>>를 보내는 것이 좋습니다. |{nbsp}
 |===
 
 <<<
@@ -185,216 +180,217 @@ image::part2/images/figure_74.svg[Sequence Diagram: Heartbeat]
 [[g03_change_availability_evse_connector]]
 === G03 - Change Availability EVSE/Connector
 
-.G03 - Change Availability EVSE/Connector
+.G03 - 가용성 EVSE/커넥터 변경
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Change Availability EVSE/Connector
-|2   |ID              |G03
-|{nbsp} d|_Functional block_ |G. Availability
-|3   |Objective(s)    |To enable the CSMS to change the availability of an EVSE or Connector to Operative or _Inoperative_.
-|4   |Description     |This use case covers how the CSMS requests the Charging Station to change the availability of one of the EVSEs or Connectors to _Operative_ or _Inoperative_. An EVSE/Connector is considered _Operative_ in any status other than _Faulted_ and _Unavailable_.
-|{nbsp} d|_Actors_    |Charging Station, CSMS
-|{nbsp} d|_Scenario description_
-  |**1.** The CSMS sends <<change_availability_request,ChangeAvailabilityRequest>> requesting a Charging Station to change the availability of an EVSE or Connector. +
-  **2.** The Charging Station changes the availability to the EVSE/Connector to the requested <<operational_status_enum_type,operationalStatus>> from the <<change_availability_request,ChangeAvailabilityRequest>>. +
-  **3**. Upon receipt of <<change_availability_request,ChangeAvailabilityRequest>>, the Charging Station responds with <<change_availability_response,ChangeAvailabilityResponse>>. In case that the status 'Scheduled' is reported in the <<change_availability_response,ChangeAvailabilityResponse>>, a transaction was running and this will be finished first. +
-  **4**. The Charging Station reports the status of the EVSE/Connector using a <<status_notification_request,StatusNotification>>.
-|{nbsp} d|_Alternative scenario(s)_
+|1 |이름 |가용성 EVSE/커넥터 변경
+|2 |ID |G03
+|{nbsp} d|_기능 블록_ |G. 가용성
+|3 |목표 |CSMS가 EVSE 또는 커넥터의 가용성을 작동 가능 또는 _작동 불가능_으로 변경할 수 있도록 합니다.
+|4 |설명 |이 사용 사례는 CSMS가 충전기에 EVSE 또는 커넥터 중 하나의 가용성을 _Operative_ 또는 _Inoperative_ 으로 변경하도록 요청하는 방법을 다룹니다. EVSE/커넥터는 _Faulted_ 및 _Unavailable_ 이 아닌 모든 상태에서 _Operative_ 로 간주됩니다.
+|{nbsp} d|_Actors_ |충전기, CSMS
+|{nbsp} d|_시나리오 설명_
+  |**1.** CSMS가 <<change_availability_request,ChangeAvailabilityRequest>>를 보내 충전기에 EVSE 또는 커넥터의 가용성을 변경하도록 요청합니다. +
+  **2.** 충전기가 EVSE/커넥터의 가용성을 <<change_availability_request,ChangeAvailabilityRequest>>에서 요청한 <<operational_status_enum_type,operationalStatus>>로 변경합니다. +
+  **3**. <<change_availability_request,ChangeAvailabilityRequest>>를 수신하면 충전기가 <<change_availability_response,ChangeAvailabilityResponse>>로 응답합니다. <<change_availability_response,ChangeAvailabilityResponse>>에서 'Scheduled' 상태가 보고된 경우 트랜잭션이 실행 중이었으며 이 트랜잭션이 먼저 완료됩니다. +
+  **4**. 충전기는 <<status_notification_request,StatusNotification>>을 사용하여 EVSE/커넥터의 상태를 보고합니다.
+|{nbsp} d|_대체 시나리오_
   |<<g04_change_availability_charging_station,G04 - Change Availability Charging Station>>
-|5   |Prerequisite(s) |n/a
-|6   |Postcondition(s) 
-  |**Successful postcondition:** +
-  When changing the availability of an EVSE/Connector to _Operative_, the status of the EVSE has changed to _Available_, _Occupied_ or _Reserved_. +
-  When changing the availability of an EVSE/Connector to _Inoperative_, the status of the EVSE has changed to _Unavailable_.
+|5 |필수 조건 |n/a
+|6 |사후 조건
+  |**성공한 사후 조건:** +
+  EVSE/커넥터의 가용성을 _Operative_ 으로 변경할 때 EVSE의 상태가 _Available_, _Occupied_ 또는 _Reserved_ 로 변경되었습니다. +
+  EVSE/커넥터의 가용성을 _Inoperative_ 로 변경할 때 EVSE의 상태가 _Unavailable_ 로 변경되었습니다.
 
-  **Failure postcondition:** +
-  The status of the EVSE is as it was just before the Charging Station received <<change_availability_request,ChangeAvailabilityRequest>> and not according to the requested Availability.
+  **실패 사후 조건:** +
+  EVSE의 상태는 충전기가 <<change_availability_request,ChangeAvailabilityRequest>>를 수신하기 직전의 상태이며 요청된 가용성 변경에 따른 것이 아닙니다.
 |===
 
-.Sequence Diagram: Change Availability
-image::part2/images/figure_75.svg[Sequence Diagram: Change Availability]
+.시퀀스 다이어그램: 가용성 변경
+image::part2/images/figure_75.svg[시퀀스 다이어그램: 가용성 변경]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error handling |n/a
-|8   |Remark(s)      |Persistent states, for example: +
-  EVSE set to _Available_ SHALL persist a reboot.
+|7 |오류 처리 |n/a
+|8 |참고 |영구 상태, 예: +
+  EVSE가 _Available_ 로 설정되면 재부팅 이후에도 지속되어야 합니다.
 |===
 
 ==== G03 - Change Availability EVSE - Requirements
 
-.G03 - Requirements
+.G03 - 요구 사항
 [cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition     |Note
+|ID |전제 조건 |요구 사항 정의 |참고
 
-|G03.FR.01  |Upon receipt of <<change_availability_request,ChangeAvailabilityRequest>>.
-  |The Charging Station SHALL respond with <<change_availability_response,ChangeAvailabilityResponse>>. |{nbsp}
-|G03.FR.02  |G03.FR.01 
-  |This response message SHALL indicate whether the Charging Station is able to change to the requested availability. |{nbsp}
-|G03.FR.03  |In the event that CSMS requests the Charging Station to change an EVSE or Connector to the state it is already in.
-  |The Charging Station SHALL respond with availability status _Accepted_. |{nbsp}
-|G03.FR.04  |When an availability change request with <<change_availability_request,ChangeAvailabilityRequest>> has changed the state of a Connector.
-  |The Charging Station SHALL inform the CSMS of its new Connector availability status with <<status_notification_request,StatusNotificationRequest>>
-    |As described in <<change_availability_status_enum_type,ChangeAvailabilityStatusEnumType>>
-|G03.FR.05  |When a transaction is in progress AND NOT G03.FR.03
-  |The Charging Station SHALL respond with availability status _Scheduled_ to indicate that it is scheduled to occur after the transaction has finished. |{nbsp}
-|G03.FR.06  |When the availability of an EVSE becomes Inoperative ( _Unavailable_, _Faulted_)
-  |All operative connectors (i.e. not _Faulted_) of that EVSE SHALL become _Unavailable_. |{nbsp}
-|G03.FR.07  |When the availability of an EVSE becomes Operative
-  |The Charging Station SHALL revert the status of all connectors of that EVSE to their original status.
-    |See Note 1.
-|G03.FR.08  |When the availability of an EVSE or Connector has been set explicitly via <<change_availability_request,ChangeAvailabilityRequest>>
-  |The set availability state SHALL be persistent across reboot/power loss. |{nbsp}
-|G03.FR.09  |The connector is Reserved when an EV is connecting AND +
-  EV driver has not presented an IdToken matching the reservation
-    |Connector status SHALL not change.
-      |Connector stays reserved until IdToken matching reservation is presented or reservation expires.
-|===
-
-[cols="^.^1s,10",%autowidth.stretch]
-|===
-|NOTE |1. The Charging Station, EVSEs and Connectors have separate / individual states. This means (for example) that when setting a connector to Inoperative, then setting the connected EVSE to Inoperative and thereafter change the EVSE back to operative, the connector will remain Inoperative.
+|G03.FR.01 |<<change_availability_request,ChangeAvailabilityRequest>>를 수신하면.
+  |충전기는 <<change_availability_response,ChangeAvailabilityResponse>>로 응답해야 합니다. |{nbsp}
+|G03.FR.02 |G03.FR.01
+  |이 응답 메시지는 충전기가 요청된 가용성으로 변경할 수 있는지 여부를 나타냅니다. |{nbsp}
+|G03.FR.03 |CSMS가 충전기에 EVSE 또는 커넥터를 이미 있는 상태로 변경하도록 요청하는 경우.
+  |충전기는 가용성 상태 _Accepted_ 로 응답해야 합니다. |{nbsp}
+|G03.FR.04 |<<change_availability_request,ChangeAvailabilityRequest>>를 사용한 가용성 변경 요청이 커넥터 상태를 변경한 경우.
+  |충전기는 <<status_notification_request,StatusNotificationRequest>>를 사용하여 CSMS에 새 커넥터 가용성 상태를 알려야 합니다.
+    |<<change_availability_status_enum_type,ChangeAvailabilityStatusEnumType>>에 설명된 대로
+|G03.FR.05 |트랜잭션이 진행 중이고 G03.FR.03이 아닌 경우
+  |충전기는 트랜잭션이 완료된 후에 발생하도록 예약되었음을 나타내기 위해 가용성 상태 _Scheduled_ 로 응답해야 합니다. |{nbsp}
+|G03.FR.06 |EVSE의 가용성이 Inoperative(_Unavailable_, _Faulted_)가 되는 경우
+  |해당 EVSE의 모든 동작하는 커넥터(즉, _Faulted_ 가 아닌)는 _Unavailable_ 이 됩니 다. |{nbsp}
+|G03.FR.07 |EVSE의 가용성이 Operative가 되는 경우
+  |충전기는 해당 EVSE의 모든 커넥터 상태를 원래 상태로 되돌려야 합니다.
+    |NOTE 1 참조.
+|G03.FR.08 |<<change_availability_request,ChangeAvailabilityRequest>>를 통해 EVSE 또는 커넥터의 가용성이 명시적으로 설정된 경우
+  |설정된 가용성 상태는 재부팅/전원 손실 시에도 지속되어야 합니다. |{nbsp}
+|G03.FR.09 |EV가 연결되고 +
+  EV 운전자가 예약과 일치하는 IdToken을 제시하지 않으면 커넥터가 예약됩니다.
+    |커넥터 상태는 변경되지 않아야 합니다.
+      |예약과 일치하는 IdToken이 제시되거나 예약이 만료될 때까지 커넥터는 예약된 상태로 유지됩니다.
 |===
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===
-|NOTE |2. It is only required to report a status change of a connector. StatusNotificationRequest only supports the reporting of connector statuses.
+|NOTE |1. 충전기, EVSE 및 커넥터는 별도의 개별 상태를 갖습니다. 즉, (예를 들어) 커넥터를 작동 불능으로 설정한 다음 연결된 EVSE를 작동 불능으로 설정한 다음 EVSE를 다시 작동으로 변경하면 커넥터는 작동 불능 상태로 유지됩니다.
 |===
+
+[cols="^.^1s,10",%autowidth.stretch]
+|===
+|NOTE |2. 커넥터의 상태 변경을 보고하는 데만 필요합니다. StatusNotificationRequest는 커넥터 상태 보고만 지원합니다.
+|===
+
 <<<
 
 [[g04_change_availability_charging_station]]
 === G04 - Change Availability Charging Station
 
-.G04 - Change Availability Charging Station
+.G04 - 가용성 변경 충전기
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Change Availability Charging Station
-|2   |ID              |G04
-|{nbsp} d|_Functional block_ |G. Availability
-|{nbsp} d|_Parent use case_  |<<g03_change_availability_evse_connector,G03 - Change Availability EVSE/Connector>>
-|3   |Objective(s)    |To enable the CSMS to change the availability of a Charging Station.
-|4   |Description
-  |This use case describes how the CSMS requests the Charging Station to change the availability.
+|1 |이름 |가용성 변경 충전기
+|2 |ID |G04
+|{nbsp} d|_기능 블록_ |G. 가용성
+|{nbsp} d|_부모 사용 사례_ |<<g03_change_availability_evse_connector,G03 - Change Availability EVSE/Connector>>
+|3 |목표 |CSMS가 충전기의 가용성을 변경할 수 있도록 합니다.
+|4 |설명
+  |이 사용 사례는 CSMS가 충전기에 가용성을 변경하도록 요청하는 방법을 설명합니다.
 
-  A Charging Station is considered _Operative_ when it is charging or ready for charging.
+  충전기는 충전 중이거나 충전할 준비가 되면 _Operative_ 하는 것으로 간주됩니다.
 
-  A Charging Station is considered _Inoperative_ when it does _not_ allow any charging.
-|{nbsp} d|_Actors_    |Charging Station, CSMS
-|{nbsp} d|_Scenario description_
-  |**1.** The CSMS sends a <<change_availability_request,ChangeAvailabilityRequest>> for requesting a Charging Station to change its availability. +
-  **2**. Upon receipt of a <<change_availability_request,ChangeAvailabilityRequest>>, the Charging Station responds with <<change_availability_response,ChangeAvailabilityResponse>>.
-|5   |Prerequisite(s) |n/a
-|6   |Postcondition(s) 
-  |**Successful postcondition:** +
-  The CSMS was able to change the availability of the Charging Station. +
-  When changing the availability of a Charging Station to _Operative_, the status of the Charging Station has changed to _Available_. +
-  When changing the availability of a Charging Station to _Inoperative_, the status of the Charging Station has changed to _Unavailable_.
+  충전기는 충전을 허용하지 _않을 때_ _Inoperative_ 으로 간주됩니다.
+|{nbsp} d|_Actors_ |충전기, CSMS
+|{nbsp} d|_시나리오 설명_
+  |**1.** CSMS가 충전기의 가용성을 변경하도록 요청하는 <<change_availability_request,ChangeAvailabilityRequest>>를 보냅니다. +
+  **2.** <<change_availability_request,ChangeAvailabilityRequest>>를 수신하면 충전기는 <<change_availability_response,ChangeAvailabilityResponse>>로 응답합니다.
+|5 |필수 조건 |n/a
+|6 |사후 조건
+  |**성공한 사후 조건:** +
+  CSMS가 충전기의 가용성을 변경할 수 있었습니다. +
+  충전기의 가용성을 _Operative_ 으로 변경할 때 충전기의 상태가 _Available_ 으로 변경되었습니다. +
+  충전기의 가용성을 _Inoperative_ 으로 변경하면 충전기의 상태가 _Unavailable_ 로 변경되었습니다.
 
-  **Failure postcondition:** +
-  The CSMS was _not_ able to change the requested Charging Station’s availability.
+  **실패 사후 조건:** +
+  CSMS가 요청된 충전기의 가용성을 변경할 수 _없었습니다_.
 |===
 
-.Sequence Diagram: Change Availability Charging Station
-image::part2/images/figure_76.svg[Sequence Diagram: Change Availability Charging Station]
+.시퀀스 다이어그램: 충전기 가용성 변경
+image::part2/images/figure_76.svg[시퀀스 다이어그램: 충전기 가용성 변경]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error handling |n/a
-|8   |Remark(s)      |Persistent states: for example, Charging Station set to _Unavailable_ SHALL persist a reboot.
+|7 |오류 처리 |n/a
+|8 |참고 |지속적인 상태: 예를 들어, 충전기가 _Unavailable_ 로 설정된 경우 재부팅 이후에도 상태가 지속되어야 합니다.
 |===
 
 ==== G04 - Change Availability Charging Station - Requirements
 
-.G04 - Requirements
+.G04 - 요구 사항
 [cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition     |Note
+|ID |전제 조건 |요구 사항 정의 |참고
 
-|G04.FR.01  |In the case the evse field is omitted in <<change_availability_request,ChangeAvailabilityRequest>>.
-  |The Charging Station status change SHALL apply to the whole Charging Station. |{nbsp}
-|G04.FR.02  |Upon receipt of <<change_availability_request,ChangeAvailabilityRequest>>.
-  |The Charging Station SHALL respond with <<change_availability_response,ChangeAvailabilityResponse>>. |{nbsp}
-|G04.FR.03  |G04.FR.02 
-  |This response message SHALL indicate whether the Charging Station is able to change to the requested availability. |{nbsp}
-|G04.FR.04  |In the event that CSMS requests the Charging Station to change to the state it is already in.
-  |The Charging Station SHALL respond with availability status _Accepted_. |{nbsp}
-|G04.FR.05  |When an availability change request with <<change_availability_request,ChangeAvailabilityRequest>> has happened.
-  |The Charging Station SHALL inform the CSMS by sending the status of each of the changed connectors via a <<status_notification_request,StatusNotificationRequest>>
-    |As described in <<connector_status_enum_type,ConnectorStatusEnumType>>
-|G04.FR.06  |When a transaction is in progress.
-  |The Charging Station SHALL respond with availability status _Scheduled_ to indicate that it is scheduled to occur after the transaction has finished. |{nbsp}
-|G04.FR.07  |When the availability of the Charging Station becomes Inoperative (_Unavailable_, _Faulted_)
-  |All operative EVSEs and connectors (i.e. not _Faulted_) SHALL become _Unavailable_. |{nbsp}
-|G04.FR.08  |When the availability of the Charging Station becomes Operative
-  |The Charging Station SHALL revert the status of all EVSEs and connectors to their original status.
-    |See Note 1.
-|G04.FR.09  |When the availability of a Charging Station has been set explicitly via <<change_availability_request,ChangeAvailabilityRequest>>
-  |The set availability state SHALL be persistent across reboot/power loss. |{nbsp}
-|===
-
-[cols="^.^1s,10",%autowidth.stretch]
-|===
-|NOTE |1. The Charging Station, EVSEs and Connectors have separate / individual states. This means (for example) that when setting a connector to Inoperative, then setting the connected EVSE to Inoperative and thereafter change the EVSE back to operative, the connector will remain Inoperative.
+|G04.FR.01 |<<change_availability_request,ChangeAvailabilityRequest>>에서 evse 필드가 생략된 경우.
+  |충전기 상태 변경은 전체 충전기에 적용되어야 합니다. |{nbsp}
+|G04.FR.02 |<<change_availability_request,ChangeAvailabilityRequest>>를 수신하면.
+  |충전기는 <<change_availability_response,ChangeAvailabilityResponse>>로 응답해야 합니다. |{nbsp}
+|G04.FR.03 |G04.FR.02
+  |이 응답 메시지는 충전기가 요청된 가용성으로 변경할 수 있는지 여부를 나타냅니다. |{nbsp}
+|G04.FR.04 |CSMS가 충전기에 이미 있는 상태로 변경하도록 요청하는 경우.
+  |충전기는 가용성 상태 _Accepted_ 로 응답합니다. |{nbsp}
+|G04.FR.05 |<<change_availability_request,ChangeAvailabilityRequest>>를 사용하여 가용성 변경 요청이 발생한 경우.
+  |충전기는 <<status_notification_request,StatusNotificationRequest>>를 통해 변경된 각 커넥터의 상태를 전송하여 CSMS에 알립니다.
+    |<<connector_status_enum_type,ConnectorStatusEnumType>>에 설명된 대로
+|G04.FR.06 |트랜잭션이 진행 중인 경우.
+  |충전기는 트랜잭션이 완료된 후 발생하도록 예약되었음을 나타내기 위해 가용성 상태 _Scheduled_ 로 응답해야 합니다. |{nbsp}
+|G04.FR.07 |충전기의 가용성이 Inoperative(_Unavailable_, _Faulted_)가 되는 경우
+  |모든 작동 EVSE 및 커넥터(즉, _Faulted_ 가 아닌)는 _Unavailable_ 이 됩니다. |{nbsp}
+|G04.FR.08 |충전기의 가용성이 Operative가 되는 경우
+  |충전기는 모든 EVSE 및 커넥터의 상태를 원래 상태로 되돌려야 합니다.
+    |NOTE 1을 참조하세요.
+|G04.FR.09 |충전기의 가용성이 <<change_availability_request,ChangeAvailabilityRequest>>를 통해 명시적으로 설정된 경우
+  |설정된 가용성 상태는 재부팅/전원 손실 시에도 지속되어야 합니다. |{nbsp}
 |===
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===
-|NOTE |2. It is only required to report a status change of a connector. StatusNotificationRequest only supports the reporting of connector statuses.
+|NOTE |1. 충전기, EVSE 및 커넥터는 별도의/개별 상태를 갖습니다. 즉, (예를 들어) 커넥터를 작동 불능으로 설정한 다음 연결된 EVSE를 작동 불능으로 설정한 다음 EVSE를 다시 작동으로 변경하면 커넥터는 작동 불능 상태로 유지됩니다.
+|===
+
+[cols="^.^1s,10",%autowidth.stretch]
+|===
+|NOTE |2. 커넥터의 상태 변경을 보고하는 데만 필요합니다. StatusNotificationRequest는 커넥터 상태 보고만 지원합니다.
 |===
 
 <<<
 
 === G05 - Lock Failure
 
-.G05 - Lock Failure
+.G05 - 잠금 실패
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Lock Failure
-|2   |ID              |G05
-|{nbsp} d|_Functional block_ |G. Availability
-|3   |Objective(s)    |To prevent the EV Driver from charging while the Connector is not properly locked.
-|4   |Description     |This use case describes how the EV Driver is prevented from starting a charge session at the Charging Station while the Connector is not locked properly.
-|{nbsp} d|_Actors_    |Charging Station, CSMS, EV Driver
-|{nbsp} d|_Scenario description_
-  |**1.** The EV Driver is authorized by the Charging Station and/or CSMS. +
-  **2.** The lock Connector attempt fails. +
-  **3.** A <<notify_event_request,NotifyEventRequest>> for the ConnectorPlugRetentionLock component, variable = Problem, value = _true_.
-|5   |Prerequisite(s) |Charging Cable plugged in (status = _Occupied_) +
-  Charging Station has the ConnectorPlugRetentionLock component defined in its Device Model. +
-  MonitoringLevel is set to a level that a connector lock event failure will be reported.
-|6   |Postcondition(s) |Transaction is not started and connector lock event failure is reported.
+|1 |이름 |잠금 실패
+|2 |ID |G05
+|{nbsp} d|_기능 블록_ |G. 가용성
+|3 |목표 |커넥터가 제대로 잠기지 않은 상태에서 EV 드라이버가 충전되지 않도록 합니다.
+|4 |설명 |이 사용 사례는 커넥터가 제대로 잠기지 않은 상태에서 EV 드라이버가 충전기에서 충전 세션을 시작하지 못하도록 하는 방법을 설명합니다.
+|{nbsp} d|_액터_ |충전기, CSMS, EV 드라이버
+|{nbsp} d|_시나리오 설명_
+  |**1.** EV 드라이버가 충전기 및/또는 CSMS에서 승인되었습니다. +
+  **2.** 커넥터 잠금 시도가 실패합니다. +
+  **3.** ConnectorPlugRetentionLock 구성 요소에 대한 <<notify_event_request,NotifyEventRequest>>, variable = Proble, value = _true_.
+|5 |필수 조건 |충전 케이블이 연결됨(status = _Occupied_) +
+  충전기에는 해당 장치 모델에 정의된 ConnectorPlugRetentionLock 구성 요소가 있습니다. +
+  MonitoringLevel은 커넥터 잠금 이벤트 실패가 보고되는 수준으로 설정됩니다.
+|6 |사후 조건 |트랜잭션이 시작되지 않고 커넥터 잠금 이벤트 실패가 보고됩니다.
 |===
 
-.Sequence Diagram: Lock Failure
-image::part2/images/figure_77.svg[Sequence Diagram: Lock Failure]
+.시퀀스 다이어그램: 잠금 실패
+image::part2/images/figure_77.svg[시퀀스 다이어그램: 잠금 실패]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error handling |n/a
-|8   |Remark(s)      |It is advisable to provide some sort of notification to the EV Driver ("cable cannot be locked").
+|7 |오류 처리 |n/a
+|8 |참고 |EV 드라이버에게 어떤 종류의 알림을 제공하는 것이 좋습니다("케이블을 잠글 수 없습니다").
 |===
 
 ==== G05 - Lock Failure - Requirements
 
-.G05 - Requirements
+.G05 - 요구 사항
 [cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition     |Note
+|ID |전제 조건 |요구 사항 정의 |참고
 
-|G05.FR.01  |If the locking of the connector retention lock fails.
-  |The Charging Station SHALL NOT start charging. |{nbsp}
-|G05.FR.02  |G05.FR.01 
-  |The Charging Station SHALL send a <<notify_event_request,NotifyEventRequest>> to the CSMS for the _ConnectorPlugRetentionLock_ component with variable = Problem, Value = _True_. |{nbsp}
-|G05.FR.03  |G05.FR.02
-  |The CSMS SHALL respond with a <<notify_event_response,NotifyEventResponse>>. |{nbsp}
-|G05.FR.04  |G05.FR.01 
-  |The Charging Station MAY show an optional notification to the EV Driver.
-    |To notify the EV driver of the lock failure.
+|G05.FR.01 |커넥터 고정 잠금 장치의 잠금이 실패하는 경우.
+  |충전기는 충전을 시작해서는 안 됩니다. |{nbsp}
+|G05.FR.02 |G05.FR.01
+  |충전기는 _ConnectorPlugRetentionLock_ 구성 요소에 대한 <<notify_event_request,NotifyEventRequest>>를 CSMS로 보내야 합니다. variable = Problem, Value = _True_. |{nbsp}
+|G05.FR.03 |G05.FR.02
+  |CSMS는 <<notify_event_response,NotifyEventResponse>>로 응답해야 합니다. |{nbsp}
+|G05.FR.04 |G05.FR.01
+  |충전기는 EV 운전자에게 선택적 알림을 표시할 수 있습니다.
+    |EV 운전자에게 잠금 장치 오류를 알리기 위해.
 |===
