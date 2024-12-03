@@ -4,45 +4,45 @@
 :sectnums:
 == Introduction
 
-With the DisplayMessage feature, OCPP enables a CSO to display a message or a cycle of messages on a Charging Station, that is not part of the firmware of the Charging Station. The CSO gets control over these messages: the CSO can set, retrieve (get), replace and clear messages.
+DisplayMessage 기능을 사용하면 OCPP를 통해 CSO가 충전기 펌웨어에 포함되지 않은 충전기에 메시지나 메시지 주기를 표시할 수 있습니다. CSO는 이러한 메시지를 제어합니다. CSO는 메시지를 설정, 검색(가져오기), 바꾸기 및 지울 수 있습니다.
 
-Every message can be configured in different languages and different message formats. See <<display_message_supported_formats,DisplayMessageSupportedFormats>>. So the Charging Station can select the correct format/language when it needs to display a message to a user. Every message the CSO sends to the Charging Station has some parameters to control when and how a message is shown: priority, state, start/end time etc. See <<display_message_supported_priorities,DisplayMessageSupportedPriorities>>.
+모든 메시지는 다양한 언어와 다양한 메시지 형식으로 구성할 수 있습니다. <<display_message_supported_formats,DisplayMessageSupportedFormats>>를 참조하세요. 따라서 충전기는 사용자에게 메시지를 표시해야 할 때 올바른 형식/언어를 선택할 수 있습니다. CSO가 충전기에 보내는 모든 메시지에는 메시지를 표시할 시기와 방법을 제어하는 ​​몇 가지 매개변수가 있습니다. 우선순위, 상태, 시작/종료 시간 등입니다. <<display_message_supported_priorities,DisplayMessageSupportedPriorities>>를 참조하세요.
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===
-|NOTE |It is not possible to retrieve/modify messages not configured via SetDisplayMessageRequest. (In other words: Message coded in the firmware of a Charging Station cannot be modified.)
+|참고 |SetDisplayMessageRequest를 통해 구성되지 않은 메시지는 검색/수정할 수 없습니다. (즉, 충전기 펌웨어에 코딩된 메시지는 수정할 수 없습니다.)
 |===
 
 <<<
 
-== Use cases & Requirements
+== 사용 사례 및 요구 사항
 
 :sectnums!:
 [[o01_set_display_message]]
-=== O01 - Set DisplayMessage
+=== O01 - 디스플레이 메시지 설정
 
-.O01 - Set DisplayMessage
+.O01 - 디스플레이 메시지 설정
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Set DisplayMessage
-|2   |ID              |O01
-|{nbsp} d|_Functional block_ |O. DisplayMessage
-|3   |Objectives      |To enable a CSO to display additional messages on a Charging Station that are not part of the firmware.
-|4   |Description     |This use case describes how a CSO can set a message to be displayed on a Charging Station. +
-  Depending on the given parameters the message shall be displayed a certain way and at a certain moment on the Charging Station.
-|{nbsp} d|_Actors_    |CSO, CSMS, Charging Station
-|{nbsp} d|_Scenario description_ 
-  |**1.** The CSO configures the CSMS to send a request to set a new message. +
-  **2.** The CSMS sends a <<set_display_message_request,SetDisplayMessageRequest>> message to the Charging Station. +
-  **3.** The Charging Station accepts the request by sending a <<set_display_message_response,SetDisplayMessageResponse>> message to the CSMS. +
-  **4.** The Charging Station shows the new message on the display at the configured moment.
-|{nbsp} d|_Alternative scenario(s)_
-  |<<o02_set_display_message_for_transaction,O02 - Set DisplayMessage for Transaction>> +
-  <<o06_replace_display_message,O06 - Replace DisplayMessage>>
-|5   |Prerequisites   |No messages configured with the same IDs.
-|6   |Postcondition(s) |The new message will be displayed on the Charging Station (time, duration and position depending on configuration)
+|1 |이름 |디스플레이 메시지 설정
+|2 |ID |O01
+|{nbsp} d|_기능 블록_ |O. 디스플레이 메시지
+|3 |목표 |CSO가 펌웨어에 포함되지 않은 추가 메시지를 충전기에 표시할 수 있도록 합니다.
+|4 |설명 |이 사용 사례는 CSO가 충전기에 표시할 메시지를 설정하는 방법을 설명합니다. +
+주어진 매개변수에 따라 메시지는 특정 방식과 특정 순간에 충전기에 표시됩니다.
+|{nbsp} d|_Actors_ |CSO, CSMS, 충전기
+|{nbsp} d|_시나리오 설명_
+  |**1.** CSO는 CSMS를 구성하여 새 메시지를 설정하라는 요청을 보냅니다. +
+  **2.** CSMS는 <<set_display_message_request,SetDisplayMessageRequest>> 메시지를 충전기로 보냅니다. +
+  **3.** 충전기는 <<set_display_message_response,SetDisplayMessageResponse>> 메시지를 CSMS로 보내 요청을 수락합니다. +
+  **4.** 충전기는 구성된 순간에 디스플레이에 새 메시지를 표시합니다.
+|{nbsp} d|_대체 시나리오(들)_
+  |<<o02_set_display_message_for_transaction,O02 - 거래에 대한 DisplayMessage 설정>> +
+  <<o06_replace_display_message,O06 - DisplayMessage 바꾸기>>
+|5 |필수 조건 |동일한 ID로 구성된 메시지가 없습니다.
+|6 |사후 조건(들) ​​|새 메시지가 충전기에 표시됩니다(시간, 기간 및 위치는 구성에 따라 다름)
 |===
 
 .Set DisplayMessage sequence diagram
@@ -50,51 +50,51 @@ image::part2/images/figure_141.svg[Set DisplayMessage sequence diagram]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error Handling |n/a
-|8   |Remarks        |The maximum number of messages that can be stored in a Charging Station can be read by the CSMS in the Configuration Variable:<<number_of_display_messages,`NumberOfDisplayMessages`>>.maxLimit.
+|7 |오류 처리 |해당 없음
+|8 |설명 |충전기에 저장할 수 있는 최대 메시지 수는 CSMS에서 구성 변수 <<number_of_display_messages,`NumberOfDisplayMessages`>>.maxLimit에서 읽을 수 있습니다.
 |===
 
-==== O01 - Set DisplayMessage - Requirements
+==== O01 - DisplayMessage 설정 - 요구 사항
 
-.O01 - Set DisplayMessage - Requirements
+.O01 - DisplayMessage 설정 - 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition
+|ID |전제 조건 |요구 사항 정의
 
-|O01.FR.01  |When the Charging Station receives a <<message_info_type,MessageInfo>> object via a <<set_display_message_request,SetDisplayMessageRequest>> and the priority of the message is not supported by the Charging Station
-  |The Charging Station SHALL send a <<set_display_message_response,SetDisplayMessageResponse>> with status: <<display_message_status_enum_type,**NotSupportedPriority**>>.
-|O01.FR.02  |When the Charging Station receives a <<message_info_type,MessageInfo>> object via a <<set_display_message_request,SetDisplayMessageRequest>> and the <<message_state_enum_type,state>> of the message is not supported by the Charging Station
-  |The Charging Station SHALL send a <<set_display_message_response,SetDisplayMessageResponse>> with status: <<display_message_status_enum_type,**NotSupportedState**>>.
-|O01.FR.03  |When the Charging Station receives a <<message_info_type,MessageInfo>> object via a <<set_display_message_request,SetDisplayMessageRequest>> and the <<message_format_enum_type,format>> of the message is not supported by the Charging Station
-  |The Charging Station SHALL send a <<set_display_message_response,SetDisplayMessageResponse>> with status: <<display_message_status_enum_type,**NotSupportedMessageFormat**>>.
-|O01.FR.04  |{nbsp}
-  |When a CSMS sends a message to a Charging Station that does not belong to a transaction, the field: *transactionId* in the <<message_info_type,Message>> field SHALL be omitted.
-|O01.FR.05  |{nbsp}
-  |The CSMS MAY include a <<message_info_type,startTime>> and <<message_info_type,endTime>> when setting a message.
-|O01.FR.06  |O01.FR.05
-  |The Charging Station SHALL NOT display the DisplayMessage message before the <<message_info_type,startTime>>.
-|O01.FR.07  |O01.FR.05
-  |The Charging Station SHALL remove a DisplayMessage message after the <<message_info_type,endTime>>.
-|O01.FR.08  |When the Charging Station knows the language preferences of the EV Driver
-  |The Charging Station SHALL display the DisplayMessage message in the preferred language, if available.
-|O01.FR.09  |O01.FR.08
-  |When no matching language is available, it is RECOMMENDED to show a DisplayMessage message in English as fall-back, if available.
-|O01.FR.10  |{nbsp}
-  |The Charging Station SHALL store the messages in persistent storage, so they survive a power cycle/reboot of the Charging Station.
-|O01.FR.11  |When the Charging Station receives a <<set_display_message_request,SetDisplayMessageRequest>> and the total number of messages after having handled this request will exceed <<number_of_display_messages,`NumberOfDisplayMessages`>>.maxLimit.
-  |The Charging Station SHALL respond with status: <<display_message_status_enum_type,Rejected>>.
-|O01.FR.12  |When the Charging Station receives a <<set_display_message_request,SetDisplayMessageRequest>> and the <<message_priority_enum_type,priority>> of the message is _NormalCycle_
-  |The Charging Station SHALL show this message at the configured moment in the normal cycle of messages.
-|O01.FR.13  |When the Charging Station receives a <<set_display_message_request,SetDisplayMessageRequest>> and the <<message_priority_enum_type,priority>> of the message is _InFront_
-  |The Charging Station SHALL show this message at the configured moment, regardless of the normal cycle of messages.
-|O01.FR.14  |When multiple messages with <<message_priority_enum_type,priority>> _InFront_ are configured to be shown at the same time
-  |The Charging Station SHALL cycle these messages.
-|O01.FR.15  |When the Charging Station receives a <<set_display_message_request,SetDisplayMessageRequest>> and the <<message_priority_enum_type,priority>> of the message is _AlwaysFront_
-  |The Charging Station SHALL show this message at the configured moment, regardless of other installed messages. Hence, it shall not cycle it with other messages and the Charging Station’s own messages shall not override this message.
-|O01.FR.16  |O01.FR.15 AND +
-  Another message with <<message_priority_enum_type,priority>> _AlwaysFront_ is already set
-    |The Charging Station SHALL replace the old message with the newly set message.
-|O01.FR.17  |{nbsp} |Language SHALL be specified as RFC-5646 tags, see: <<rfc5646,[RFC5646]>>, example: US English is: "en-US"
+|O01.FR.01 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 통해 <<message_info_type,MessageInfo>> 객체를 수신하고 메시지의 우선순위가 충전기에서 지원되지 않는 경우
+  |충전기는 <<set_display_message_response,SetDisplayMessageResponse>>를 <<display_message_status_enum_type,**NotSupportedPriority**>> 상태로 전송해야 합니다.
+|O01.FR.02 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 통해 <<message_info_type,MessageInfo>> 객체를 수신하고 메시지의 <<message_state_enum_type,state>>가 충전기에서 지원되지 않는 경우
+  |충전기는 <<display_message_status_enum_type,**NotSupportedState**>> 상태와 함께 <<set_display_message_response,SetDisplayMessageResponse>>를 보내야 합니다.
+|O01.FR.03 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 통해 <<message_info_type,MessageInfo>> 객체를 수신하고 메시지의 <<message_format_enum_type,format>>이 충전기에서 지원되지 않는 경우
+  |충전기는 <<display_message_status_enum_type,**NotSupportedMessageFormat**>> 상태와 함께 <<set_display_message_response,SetDisplayMessageResponse>>를 보내야 합니다.
+|O01.FR.04 |{nbsp}
+  |CSMS가 거래에 속하지 않는 충전기로 메시지를 보내는 경우 <<message_info_type,Message>> 필드의 *transactionId* 필드는 생략해야 합니다.
+|O01.FR.05 |{nbsp}
+  |CSMS는 메시지를 설정할 때 <<message_info_type,startTime>> 및 <<message_info_type,endTime>>을 포함할 수 있습니다.
+|O01.FR.06 |O01.FR.05
+  |충전기는 <<message_info_type,startTime>> 전에 DisplayMessage 메시지를 표시해서는 안 됩니다.
+|O01.FR.07 |O01.FR.05
+  |충전기는 <<message_info_type,endTime>> 뒤에 있는 DisplayMessage 메시지를 제거해야 합니다.
+|O01.FR.08 |충전기가 EV 운전자의 언어 기본 설정을 알고 있는 경우
+  |충전기는 사용 가능한 경우 기본 언어로 DisplayMessage 메시지를 표시해야 합니다.
+|O01.FR.09 |O01.FR.08
+  |일치하는 언어를 사용할 수 없는 경우, 가능한 경우 대체 수단으로 영어로 DisplayMessage 메시지를 표시하는 것이 좋습니다.
+|O01.FR.10 |{nbsp}
+  |충전기는 메시지를 영구 저장소에 저장해야 하므로 충전기의 전원 주기/재부팅을 견뎌낼 수 있습니다.
+|O01.FR.11 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 수신하고 이 요청을 처리한 후의 총 메시지 수가 <<number_of_display_messages,`NumberOfDisplayMessages`>>.maxLimit을 초과하는 경우.
+  |충전기는 <<display_message_status_enum_type,Rejected>> 상태로 응답해야 합니다.
+|O01.FR.12 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 수신하고 메시지의 <<message_priority_enum_type,priority>>가 _NormalCycle_ 인 경우
+  |충전기는 메시지의 정상적인 주기에서 구성된 순간에 이 메시지를 표시해야 합니다.
+|O01.FR.13 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 수신하고 메시지의 <<message_priority_enum_type,priority>>가 _InFront_ 인 경우
+  |충전기는 메시지의 정상적인 주기와 관계없이 구성된 순간에 이 메시지를 표시해야 합니다.
+|O01.FR.14 |<<message_priority_enum_type,priority>> _InFront_ 인 여러 메시지가 동시에 표시되도록 구성된 경우
+  |충전기는 이러한 메시지를 순환해야 합니다.
+|O01.FR.15 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 수신하고 메시지의 <<message_priority_enum_type,priority>>가 _AlwaysFront_ 인 경우
+  |충전기는 다른 설치된 메시지와 관계없이 구성된 순간에 이 메시지를 표시해야 합니다. 따라서 다른 메시지와 순환하지 않으며 충전기 자체의 메시지는 이 메시지를 재정의하지 않습니다.
+|O01.FR.16 |O01.FR.15 AND +
+<<message_priority_enum_type,priority>> _AlwaysFront_ 가 있는 다른 메시지가 이미 설정되어 있음
+  |충전기는 이전 메시지를 새로 설정된 메시지로 대체해야 합니다.
+|O01.FR.17 |{nbsp} |언어는 RFC-5646 태그로 지정해야 합니다. 참조: <<rfc5646,[RFC5646]>>, 예: 미국 영어는 "en-US"입니다.
 |===
 
 <<<
@@ -105,34 +105,34 @@ image::part2/images/figure_141.svg[Set DisplayMessage sequence diagram]
 .O02 - Set DisplayMessage for Transaction
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Set DisplayMessage for Transaction
-|2   |ID              |O02
-|{nbsp} d|_Functional block_ |O. DisplayMessage
-|{nbsp} d|_Parent use case_ |<<o01_set_display_message,O01 - Set DisplayMessage>>
-|3   |Objectives      |To enable a CSO to display messages during an ongoing transaction on a Charging Station that are not build in to the firmware.
-|4   |Description     |This use case describes how a CSO can set a message to be displayed on a Charging Station for a specific transaction. Depending on the given parameters the message shall be displayed a certain way on the Charging Station.
-|{nbsp} d|_Actors_    |CSO, CSMS, Charging Station
-|{nbsp} d|_Scenario description_
-  |**1.** The CSO configures the CSMS to send a request to show a new message during a given transaction. +
-  **2.** The CSMS sends a <<set_display_message_request,SetDisplayMessageRequest>> message with the transactionId to the Charging Station. +
-  **3.** The Charging Station accepts the request by sending a <<set_display_message_response,SetDisplayMessageResponse>> message to the CSMS. +
-  **4.** The Charging Station shows the new message on the display while the transaction is ongoing.
-|{nbsp} d|_Alternative scenario(s)_
-  |<<o01_set_display_message,O01 - Set DisplayMessage>>
-  <<o06_replace_display_message,O06 - Replace DisplayMessage>>
-|5   |Prerequisites   |No messages configured with the same IDs.
-|6   |Postcondition(s) |The new message will be displayed on the Charging Station while the transaction is ongoing (time, duration and position depend on configuration)
+|1 |이름 |거래에 대한 DisplayMessage 설정
+|2 |ID |O02
+|{nbsp} d|_기능 블록_ |O. DisplayMessage
+|{nbsp} d|_부모 사용 사례_ |<<o01_set_display_message,O01 - Set DisplayMessage>>
+|3 |목표 |CSO가 펌웨어에 내장되지 않은 충전기에서 진행 중인 거래 중에 메시지를 표시할 수 있도록 합니다.
+|4 |설명 |이 사용 사례는 CSO가 특정 거래에 대해 충전기에 표시할 메시지를 설정하는 방법을 설명합니다. 제공된 매개변수에 따라 메시지는 충전기에 특정 방식으로 표시됩니다.
+|{nbsp} d|_행위자_ |CSO, CSMS, 충전기
+|{nbsp} d|_시나리오 설명_
+  |**1.** CSO는 CSMS를 구성하여 주어진 거래 중에 새 메시지를 표시하라는 요청을 보냅니다. +
+  **2.** CSMS는 <<set_display_message_request,SetDisplayMessageRequest>> 메시지를 충전기로 전송합니다. +
+  **3.** 충전기는 <<set_display_message_response,SetDisplayMessageResponse>> 메시지를 CSMS로 전송하여 요청을 수락합니다. +
+  **4.** 충전기는 거래가 진행되는 동안 디스플레이에 새 메시지를 표시합니다.
+|{nbsp} d|_대체 시나리오_
+|<<o01_set_display_message,O01 - 디스플레이 메시지 설정>>
+<<o06_replace_display_message,O06 - 디스플레이 메시지 바꾸기>>
+|5 |필수 조건 |동일한 ID로 구성된 메시지가 없습니다.
+|6 |사후 조건 |거래가 진행되는 동안 충전기에 새 메시지가 표시됩니다(시간, 기간 및 위치는 구성에 따라 다름)
 |===
 
-.Set DisplayMessage for transaction sequence diagram
-image::part2/images/figure_142.svg[Set DisplayMessage for transaction sequence diagram]
+.거래 순서도에 대한 DisplayMessage 설정
+image::part2/images/figure_142.svg[거래 순서도에 대한 DisplayMessage 설정]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error Handling  |n/a
-|8   |Remarks         |The maximum number of messages that can be stored in a Charging Station can be read by the CSMS in the Configuration Variable:<<number_of_display_messages,`NumberOfDisplayMessages`>>.maxLimit.
+|7 |오류 처리 |해당 없음
+|8 |설명 |충전기에 저장할 수 있는 최대 메시지 수는 CSMS에서 구성 변수 <<number_of_display_messages,`NumberOfDisplayMessages`>>.maxLimit에서 읽을 수 있습니다.
 |===
 
 ==== O02 - Set DisplayMessage for Transaction - Requirements
@@ -140,42 +140,42 @@ image::part2/images/figure_142.svg[Set DisplayMessage for transaction sequence d
 .O02 - Set DisplayMessage for Transaction - Requirements
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition
+|ID |전제 조건 |요구 사항 정의
 
-|O02.FR.01  |When the Charging Station receives a <<message_info_type,Message>> object via a <<set_display_message_request,SetDisplayMessageRequest>> and the *transactionId* of the message is not known by the Charging Station
-  |The Charging Station SHALL send a <<set_display_message_response,SetDisplayMessageResponse>> with status: <<display_message_status_enum_type,**UnknownTransaction**>>.
-|O02.FR.02  |When the transaction with the given *transactionId* ends
-  |The Charging Station SHALL remove the message from the list of messages.
-|O02.FR.03  |When the Charging Station receives a <<message_info_type,MessageInfo>> object via a <<set_display_message_request,SetDisplayMessageRequest>> and the <<message_priority_enum_type,priority>> of the message is not supported by the Charging Station
-  |The Charging Station SHALL send a <<set_display_message_response,SetDisplayMessageResponse>> with status: <<display_message_status_enum_type,**NotSupportedPriority**>>.
-|O02.FR.04  |When the Charging Station receives a <<message_info_type,MessageInfo>> object via a <<set_display_message_request,SetDisplayMessageRequest>> and the <<message_state_enum_type,state>> of the message is not supported by the Charging Station
-  |The Charging Station SHALL send a <<set_display_message_response,SetDisplayMessageResponse>> with status: <<display_message_status_enum_type,**NotSupportedState**>>.
-|O02.FR.05  |When the Charging Station receives a <<message_info_type,MessageInfo>> object via a <<set_display_message_request,SetDisplayMessageRequest>> and the <<message_format_enum_type,format>> of the message is not supported by the Charging Station
-  |The Charging Station SHALL send a <<set_display_message_response,SetDisplayMessageResponse>> with status: <<display_message_status_enum_type,**NotSupportedMessageFormat**>>.
-|O02.FR.06  |{nbsp}
-  |The Charging Station SHALL NOT display the DisplayMessage message before the <<message_info_type,startTime>>.
-|O02.FR.07  |{nbsp} |The Charging Station SHALL remove a DisplayMessage message after the <<message_info_type,endTime>>.
-|O02.FR.08  |When the Charging Station knows the language preferences of the EV Driver
-  |The Charging Station SHALL display the DisplayMessage message in the preferred language, if available.
-|O02.FR.09  |O02.FR.08
-  |When no matching language is available, it is RECOMMENDED to show a DisplayMessage message in English as fall-back, if available.
-|O02.FR.10  |{nbsp}
-  |The Charging Station SHALL store the messages in persistent storage, so they survive a power cycle/reboot of the Charging Station.
-|O02.FR.11  |When the Charging Station receives a <<set_display_message_request,SetDisplayMessageRequest>> and the total number of messages after having handled this request will exceed <<number_of_display_messages,`NumberOfDisplayMessages`>>.maxLimit.
-  |The Charging Station SHALL respond with status: <<display_message_status_enum_type,Rejected>>.
-|O02.FR.12  |{nbsp}
-  |Language SHALL be specified as RFC-5646 tags, see: <<rfc5646,[RFC5646]>>, example: US English is: "en-US"
-|O02.FR.14  |When the Charging Station receives a <<set_display_message_request,SetDisplayMessageRequest>> and the <<message_priority_enum_type,priority>> of the message is _NormalCycle_
-  |The Charging Station SHALL show this message in the normal cycle of messages.
-|O02.FR.15  |When the Charging Station receives a <<set_display_message_request,SetDisplayMessageRequest>> and the <<message_priority_enum_type,priority>> of the message is _InFront_
-  |The Charging Station SHALL show this message at the configured moment, regardless of the normal cycle of messages.
-|O02.FR.16  |When multiple messages with <<message_priority_enum_type,priority>> _InFront_ are configured to be shown at the same time
-  |The Charging Station SHALL cycle these messages.
-|O02.FR.17  |When the Charging Station receives a <<set_display_message_request,SetDisplayMessageRequest>> and the <<message_priority_enum_type,priority>> of the message is _AlwaysFront_
-  |The Charging Station SHALL show this message at the configured moment, regardless of other installed messaged. Hence, it shall not cycle it with other messages and the Charging Station’s own message shall not override this message.
-|O02.FR.18  |O02.FR.17 AND +
-  Another message with <<message_priority_enum_type,priority>> _AlwaysFront_ is already set
-    |The Charging Station SHALL replace the old message with the newly set message.
+|O02.FR.01 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 통해 <<message_info_type,Message>> 객체를 수신하고 충전기에서 메시지의 *transactionId*를 알 수 없는 경우
+  |충전기는 <<display_message_status_enum_type,**UnknownTransaction**>> 상태와 함께 <<set_display_message_response,SetDisplayMessageResponse>>를 보내야 합니다.
+|O02.FR.02 |지정된 *transactionId*가 있는 거래가 종료되는 경우
+  |충전기는 메시지 목록에서 메시지를 제거해야 합니다.
+|O02.FR.03 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 통해 <<message_info_type,MessageInfo>> 객체를 수신하고 메시지의 <<message_priority_enum_type,priority>>가 충전기에서 지원되지 않는 경우
+  |충전기는 <<display_message_status_enum_type,**NotSupportedPriority**>> 상태와 함께 <<set_display_message_response,SetDisplayMessageResponse>>를 보내야 합니다.
+|O02.FR.04 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 통해 <<message_info_type,MessageInfo>> 객체를 수신하고 메시지의 <<message_state_enum_type,state>>가 충전기에서 지원되지 않는 경우
+  |충전기는 <<display_message_status_enum_type,**NotSupportedState**>> 상태와 함께 <<set_display_message_response,SetDisplayMessageResponse>>를 보내야 합니다.
+|O02.FR.05 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 통해 <<message_info_type,MessageInfo>> 객체를 수신하고 메시지의 <<message_format_enum_type,format>>이 충전기에서 지원되지 않는 경우
+  |충전기는 <<display_message_status_enum_type,**NotSupportedMessageFormat**>> 상태와 함께 <<set_display_message_response,SetDisplayMessageResponse>>를 보내야 합니다.
+|O02.FR.06 |{nbsp}
+  |충전기는 <<message_info_type,startTime>> 전에 DisplayMessage 메시지를 표시해서는 안 됩니다.
+|O02.FR.07 |{nbsp} |충전기는 <<message_info_type,endTime>> 후에 DisplayMessage 메시지를 제거해야 합니다.
+|O02.FR.08 |충전기가 EV 운전자의 언어 기본 설정을 알고 있는 경우
+  |충전기는 가능한 경우 기본 언어로 DisplayMessage 메시지를 표시해야 합니다.
+|O02.FR.09 |O02.FR.08
+  |일치하는 언어를 사용할 수 없는 경우, 가능한 경우 대체 수단으로 영어로 DisplayMessage 메시지를 표시하는 것이 좋습니다.
+|O02.FR.10 |{nbsp}
+  |충전기는 메시지를 영구 저장소에 저장하여 충전기의 전원 주기/재부팅을 견뎌내야 합니다.
+|O02.FR.11 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 수신하고 이 요청을 처리한 후의 총 메시지 수가 <<number_of_display_messages,`NumberOfDisplayMessages`>>.maxLimit을 초과하는 경우
+  |충전기는 <<display_message_status_enum_type,Rejected>> 상태로 응답해야 합니다.
+|O02.FR.12 |{nbsp}
+  |언어는 RFC-5646 태그로 지정해야 합니다. 참조: <<rfc5646,[RFC5646]>>, 예: 미국 영어는 "en-US"입니다.
+|O02.FR.14 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 수신하고 메시지의 <<message_priority_enum_type,priority>>가 _NormalCycle_ 인 경우
+  |충전기는 이 메시지를 정상적인 메시지 주기로 표시해야 합니다.
+|O02.FR.15 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 수신하고 메시지의 <<message_priority_enum_type,priority>>가 _InFront_ 인 경우
+  |충전기는 메시지의 정상적인 주기와 관계없이 구성된 순간에 이 메시지를 표시해야 합니다.
+|O02.FR.16 |<<message_priority_enum_type,priority>>가 _InFront_ 인 여러 메시지가 동시에 표시되도록 구성된 경우
+  |충전기는 이러한 메시지를 순환해야 합니다.
+|O02.FR.17 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 수신하고 메시지의 <<message_priority_enum_type,priority>>가 _AlwaysFront_ 인 경우
+  |충전기는 다른 설치된 메시지와 관계없이 구성된 순간에 이 메시지를 표시해야 합니다. 따라서 다른 메시지와 함께 순환되지 않으며 충전기 자체의 메시지는 이 메시지를 재정의하지 않습니다.
+|O02.FR.18 |O02.FR.17 AND +
+<<message_priority_enum_type,priority>> _AlwaysFront_ 가 있는 다른 메시지가 이미 설정되어 있습니다.
+  |충전기는 이전 메시지를 새로 설정된 메시지로 대체해야 합니다.
 |===
 
 === O03 - Get All DisplayMessages
@@ -183,82 +183,82 @@ image::part2/images/figure_142.svg[Set DisplayMessage for transaction sequence d
 .O03 - Get All DisplayMessage IDs
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Get All DisplayMessages
-|2   |ID              |O03
-|{nbsp} d|_Functional block_ |O. DisplayMessage
-|3   |Objectives      |Enable a CSO to retrieve all messages currently configured in a Charging Station.
-|4   |Description     |This use case describes how a CSO can request all the installed DisplayMessages configured via OCPP in a Charging Station. +
-  The Charging Station can remove messages when they are outdated, or transactions have ended. +
-  It can be very useful for a CSO to be able to view to current list of messages, so the CSO knows which messages are (still) configured.
-|{nbsp} d|_Actors_    |CSO, CSMS, Charging Station
-|{nbsp} d|_Scenario description_
-  |**1.** The CSO asks the CSMS to retrieve all messages. +
-  **2.** The CSMS sends a <<get_display_messages_request,GetDisplayMessagesRequest>> message to the Charging Station. +
-  **3.** The Charging Station responds with a <<get_display_messages_response,GetDisplayMessagesResponse>> _Accepted_, indicating it has configured messages and will send them. +
-  **4.** The Charging Station sends one or more <<notify_display_messages_request,NotifyDisplayMessagesRequest>> messages to the CSMS (depending on the amount of messages to be sent). +
-  **5.** The CSMS responds to every notify with a <<notify_display_messages_response,NotifyDisplayMessagesResponse>> message.
-|5   |Prerequisites   |There is at least one message configured in the Charging Station
-|6   |Postcondition(s) |n/a
+|1 |이름 |모든 DisplayMessage 가져오기
+|2 |ID |O03
+|{nbsp} d|_기능 블록_ |O. DisplayMessage
+|3 |목표 |CSO가 충전기에 현재 구성된 모든 메시지를 검색할 수 있도록 합니다.
+|4 |설명 |이 사용 사례는 CSO가 충전기에서 OCPP를 통해 구성된 모든 설치된 DisplayMessage를 요청하는 방법을 설명합니다. +
+충전기는 메시지가 오래되었거나 거래가 종료되면 메시지를 제거할 수 있습니다. +
+CSO가 현재 메시지 목록을 볼 수 있으면 매우 유용할 수 있으므로 CSO는 어떤 메시지가 (여전히) 구성되어 있는지 알 수 있습니다.
+|{nbsp} d|_Actors_ |CSO, CSMS, 충전기
+|{nbsp} d|_시나리오 설명_
+  |**1.** CSO가 CSMS에 모든 메시지를 검색하도록 요청합니다. +
+  **2.** CSMS가 충전기에 <<get_display_messages_request,GetDisplayMessagesRequest>> 메시지를 보냅니다. +
+  **3.** 충전기가 <<get_display_messages_response,GetDisplayMessagesResponse>> _Accepted_ 로 응답하여 메시지를 구성했으며 이를 보낼 것임을 나타냅니다. +
+  **4.** 충전기가 CSMS에 하나 이상의 <<notify_display_messages_request,NotifyDisplayMessagesRequest>> 메시지를 보냅니다(보낼 메시지 양에 따라 다름). +
+  **5.** CSMS가 모든 알림에 <<notify_display_messages_response,NotifyDisplayMessagesResponse>> 메시지로 응답합니다.
+|5 |필수 조건 |충전 스테이션에 구성된 메시지가 하나 이상 있음
+|6 |사후 조건 |해당 없음
 |===
 
-.Get All DisplayMessages sequence diagram
-image::part2/images/figure_143.svg[Get All DisplayMessages sequence diagram]
+.Get All DisplayMessages 시퀀스 다이어그램
+image::part2/images/figure_143.svg[Get All DisplayMessages 시퀀스 다이어그램]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error Handling |n/a
-|8   |Remarks        |Only messages configured via OCPP can be retrieved via a <<get_display_messages_request,GetDisplayMessagesRequest>>.
+|7 |오류 처리 |해당 없음
+|8 |주의 |OCPP를 통해 구성된 메시지만 <<get_display_messages_request,GetDisplayMessagesRequest>>를 통해 검색할 수 있습니다.
 |===
 
-==== O03 - Get All DisplayMessages - Requirements
+==== O03 - 모든 DisplayMessage 가져오기 - 요구 사항
 
-.O03 - Get All DisplayMessage IDs - Requirements
+.O03 - 모든 DisplayMessage ID 가져오기 - 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition
+|ID |전제 조건 |요구 사항 정의
 
-|O03.FR.01  |When all fields except _requestId_ in a <<get_display_messages_request,GetDisplayMessagesRequest>> are omitted AND +
-  at least one display message is configured.
-    |The Charging Station SHALL respond with _Accepted_.
-|O03.FR.02  |O03.FR.01
-  |The Charging Station SHALL send all configured DisplayMessages via <<notify_display_messages_request,NotifyDisplayMessagesRequest>>.
-|O03.FR.03  |O03.FR.02 +
-  AND +
-  There are more DisplayMessages than the Charging Station can send in 1 <<notify_display_messages_request,NotifyDisplayMessagesRequest>>
-    |The Charging Station SHALL split the DisplayMessages over multiple <<notify_display_messages_request,NotifyDisplayMessagesRequest>> messages.
-|O03.FR.04  |O03.FR.03
-  |The Charging Station SHALL set the _tbc_ field is _true_ in every <<notify_display_messages_request,NotifyDisplayMessagesRequest>> messages, except the last.
-|O03.FR.05  |O03.FR.04
-  |The Charging Station SHALL set the _requestId_ field to the same value as the _requestId_ in the <<get_display_messages_request,GetDisplayMessagesRequest>>.
-|O03.FR.06  |When NO DisplayMessages are configured
-  |The Charging Station SHALL respond with _Unknown_.
+|O03.FR.01 | <<get_display_messages_request,GetDisplayMessagesRequest>>에서 _requestId_ 를 제외한 모든 필드가 생략되고 +
+적어도 하나의 디스플레이 메시지가 구성된 경우.
+  |충전기는 _Accepted_ 로 응답해야 합니다.
+|O03.FR.02 |O03.FR.01
+  |충전기는 <<notify_display_messages_request,NotifyDisplayMessagesRequest>>를 통해 구성된 모든 디스플레이 메시지를 전송해야 합니다.
+|O03.FR.03 |O03.FR.02 +
+그리고 +
+충전기가 1개의 <<notify_display_messages_request,NotifyDisplayMessagesRequest>>로 전송할 수 있는 것보다 많은 디스플레이 메시지가 있는 경우
+  |충전기는 디스플레이 메시지를 여러 개의 <<notify_display_messages_request,NotifyDisplayMessagesRequest>> 메시지로 분할해야 합니다.
+|O03.FR.04 |O03.FR.03
+  |충전기는 모든 <<notify_display_messages_request,NotifyDisplayMessagesRequest>> 메시지에서 _tbc_ 필드를 _true_ 로 설정해야 합니다(마지막 메시지 제외).
+|O03.FR.05 |O03.FR.04
+  |충전기는 _requestId_ 필드를 <<get_display_messages_request,GetDisplayMessagesRequest>>의 _requestId_ 와 동일한 값으로 설정해야 합니다.
+|O03.FR.06 |DisplayMessage가 구성되지 않은 경우
+  |충전기는 _Unknown_ 으로 응답해야 합니다.
 |===
 
 <<<
 
-=== O04 - Get Specific DisplayMessages
+=== O04 - 특정 DisplayMessage 가져오기
 
-.O04 - Get a Specific DisplayMessages
+.O04 - 특정 DisplayMessage 가져오기
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Get Specific DisplayMessages
-|2   |ID              |O04
-|{nbsp} d|_Functional block_ |O. DisplayMessage
-|3   |Objectives      |Enable a CSO to retrieve one or more specific DisplayMessages, currently configured in a Charging Station.
-|4   |Description     |This use case describes how a CSO can request/query for (specific) DisplayMessage, configured via OCPP in a Charging Station. The Charging Station can remove messages when they are outdated, or transactions have ended. It can be very useful for a CSO to be able query the Charging Station for installed DisplayMessages, so the CSO known which messages are (still) configured.
-|{nbsp} d|_Actors_    |CSO, CSMS, Charging Station
-|{nbsp} d|_Scenario description_
-  |**1.** The CSO asks the CSMS to query for DisplayMessages. +
-  **2.** The CSMS sends a <<get_display_messages_request,GetDisplayMessagesRequest>> message with the query parameters to the Charging Station. +
-  **3.** When the Charging Station has DisplayMessages that match the requested parameters, it responds with <<get_display_messages_response,GetDisplayMessagesResponse>> _Accepted_. +
-  **4.** The Charging Station sends one or more <<notify_display_messages_request,NotifyDisplayMessagesRequest>> message to the CSMS (depending on the amount of messages to be send). +
-  **5.** The CSMS response every notify with a <<notify_display_messages_response,NotifyDisplayMessagesResponse>> message.
-|5   |Prerequisites   |There is a message with the given id configured in the Charging Station
-|6   |Postcondition(s) |n/a
+|1 |이름 |특정 DisplayMessage 가져오기
+|2 |ID |O04
+|{nbsp} d|_기능 블록_ |O. DisplayMessage
+|3 |목표 |CSO가 현재 충전기에 구성된 하나 이상의 특정 DisplayMessage를 검색할 수 있도록 합니다.
+|4 |설명 |이 사용 사례는 CSO가 충전기에서 OCPP를 통해 구성된 (특정) DisplayMessage를 요청/쿼리하는 방법을 설명합니다. 충전기는 메시지가 오래되었거나 거래가 종료된 경우 메시지를 제거할 수 있습니다. CSO가 설치된 DisplayMessages에 대해 충전기를 쿼리할 수 있으면 매우 유용할 수 있으므로 CSO는 (아직) 구성된 메시지를 알 수 있습니다.
+|{nbsp} d|_Actors_ |CSO, CSMS, 충전기
+|{nbsp} d|_시나리오 설명_
+  |**1.** CSO가 CSMS에 DisplayMessages를 쿼리하도록 요청합니다. +
+  **2.** CSMS가 쿼리 매개변수가 포함된 <<get_display_messages_request,GetDisplayMessagesRequest>> 메시지를 충전기로 보냅니다. +
+  **3.** 충전기에 요청된 매개변수와 일치하는 DisplayMessages가 있으면 <<get_display_messages_response,GetDisplayMessagesResponse>> _Accepted_ 로 응답합니다. +
+  **4.** 충전기가 하나 이상의 <<notify_display_messages_request,NotifyDisplayMessagesRequest>> 메시지를 CSMS로 보냅니다(보낼 메시지 양에 따라 다름). +
+  **5.** CSMS 응답은 <<notify_display_messages_response,NotifyDisplayMessagesResponse>> 메시지로 모든 알림을 보냅니다.
+|5 |필수 조건 |충전기에 구성된 주어진 ID가 있는 메시지가 있습니다.
+|6 |사후 조건(들) ​​|해당 없음
 |===
 
 .Get a specific DisplayMessages sequence diagram
@@ -266,60 +266,61 @@ image::part2/images/figure_144.svg[Get a specific DisplayMessages sequence diagr
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error Handling |n/a
-|8   |Remarks        |Only message configured via OCPP can be retrieved via <<get_display_messages_request,GetDisplayMessagesRequest>>.
+|7 |오류 처리 |해당 없음
+|8 |설명 |OCPP를 통해 구성된 메시지만 <<get_display_messages_request,GetDisplayMessagesRequest>>를 통해 검색할 수 있습니다.
 |===
 
-==== O04 - Get Specific DisplayMessage - Requirements
+==== O04 - 특정 DisplayMessage 가져오기 - 요구 사항
 
-.O04 - Get Specific DisplayMessages - Requirements
+.O04 - 특정 DisplayMessage 가져오기 - 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition
+|ID |전제 조건 |요구 사항 정의
 
-|O04.FR.01  |When one or more of the fields in a <<get_display_messages_request,GetDisplayMessagesRequest>> are used AND +
-  The Charging Station has DisplayMessages configured that match the parameters in the request
-    |The Charging Station SHALL respond with _Accepted_.
-|O04.FR.02  |When one or more of the fields in a <<get_display_messages_request,GetDisplayMessagesRequest>> are used AND +
-  The Charging Station has NO DisplayMessages configured that match the parameters in the request
-    |The Charging Station SHALL respond with _Unknown_.
-|O04.FR.03  |O04.FR.01
-  |The Charging Station SHALL send all configured DisplayMessages via <<notify_display_messages_request,NotifyDisplayMessagesRequest>>.
-|O04.FR.04  |O04.FR.03 +
-  AND +
-  There are more DisplayMessages than the Charging Station can send in 1 <<notify_display_messages_request,NotifyDisplayMessagesRequest>>
-    |The Charging Station SHALL split the DisplayMessages over multiple <<notify_display_messages_request,NotifyDisplayMessagesRequest>> messages.
-|O04.FR.05  |O04.FR.04
-  |The Charging Station SHALL set the _tbc_ field is _true_ in every <<notify_display_messages_request,NotifyDisplayMessagesRequest>> messages, except the last.
-|O04.FR.06  |O04.FR.05 
-  |The Charging Station SHALL set the _requestId_ field to the same value as the _requestId_ in the <<get_display_messages_request,GetDisplayMessagesRequest>>.
-|O04.FR.07  |When NO DisplayMessages are configured
-  |The Charging Station SHALL respond with _Unknown_.
+|O04.FR.01 |<<get_display_messages_request,GetDisplayMessagesRequest>>의 필드 중 하나 이상이 사용되고 +
+충전기에 요청의 매개변수와 일치하는 DisplayMessage가 구성되어 있어야 함
+  |충전기는 _Accepted_ 로 응답해야 함.
+|O04.FR.02 | <<get_display_messages_request,GetDisplayMessagesRequest>>의 필드 중 하나 이상이 사용되고 +
+충전기에 요청의 매개변수와 일치하는 구성된 DisplayMessage가 없는 경우
+  |충전기는 _Unknown_ 으로 응답해야 합니다.
+|O04.FR.03 |O04.FR.01
+  |충전기는 구성된 모든 DisplayMessage를 <<notify_display_messages_request,NotifyDisplayMessagesRequest>>를 통해 보내야 합니다.
+|O04.FR.04 |O04.FR.03 +
+그리고 +
+충전기가 1개의 <<notify_display_messages_request,NotifyDisplayMessagesRequest>>에서 보낼 수 있는 것보다 많은 DisplayMessage가 있는 경우
+  |충전기는 DisplayMessage를 여러 개의 <<notify_display_messages_request,NotifyDisplayMessagesRequest>> 메시지로 분할해야 합니다.
+|O04.FR.05 |O04.FR.04
+  |충전기는 마지막 메시지를 제외한 모든 <<notify_display_messages_request,NotifyDisplayMessagesRequest>> 메시지에서 _tbc_ 필드를 _true_ 로 설정해야 합니다.
+|O04.FR.06 |O04.FR.05
+  |충전기는 _requestId_ 필드를 <<get_display_messages_request,GetDisplayMessagesRequest>>의 _requestId_ 와 동일한 값으로 설정해야 합니다.
+|O04.FR.07 |DisplayMessage가 구성되지 않은 경우
+  |충전기는 _Unknown_ 으로 응답해야 합니다.
 |===
 
 <<<
 
 [[o05_clear_a_display_message]]
-=== O05 - Clear a DisplayMessage
+=== O05 - DisplayMessage 지우기
 
-.O05 - Clear a DisplayMessage
+.O05 - DisplayMessage 지우기
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Clear a DisplayMessage
-|2   |ID              |O05
-|{nbsp} d|_Functional block_ |O. DisplayMessage
-|3   |Objectives      |Enable a CSO to remove a specific message, currently configured in a Charging Station.
-|4   |Description     |This use case describes how a CSO can remove a specific message, configured via OCPP in a Charging Station.
-|{nbsp} d|_Actors_    |CSO, CSMS, Charging Station
-|{nbsp} d|_Scenario description_
-  |**1.** The CSO asks the CSMS to remove a specific message. +
-  **2.** The CSMS sends a <<clear_display_message_request,ClearDisplayMessageRequest>> message with the id of the specific message to the Charging Station. +
-  **3.** The Charging Station removes the message. +
-  **4.** The Charging Station response by sending a <<clear_display_message_response,ClearDisplayMessageResponse>> message to the CSMS.
-|5   |Prerequisites   |There is a message with the given id configured in the Charging Station
-|6   |Postcondition(s) |The message with the given id is removed from the Charging Station
+|1 |이름 |DisplayMessage 지우기
+|2 |ID |O05
+|{nbsp} d|_기능 블록_ |O. DisplayMessage
+|3 |목표 |CSO가 현재 충전기에 구성된 특정 메시지를 제거할 수 있도록 합니다.
+|4 |설명 |이 사용 사례는 CSO가 충전기에서 OCPP를 통해 구성된 특정 메시지를 제거하는 방법을 설명합니다.
+
+|{nbsp} d|_Actors_ |CSO, CSMS, 충전기
+|{nbsp} d|_시나리오 설명_
+  |**1.** CSO가 CSMS에 특정 메시지를 제거하도록 요청합니다. +
+  **2.** CSMS가 특정 메시지의 ID가 포함된 <<clear_display_message_request,ClearDisplayMessageRequest>> 메시지를 충전기로 보냅니다. +
+  **3.** 충전기가 메시지를 제거합니다. +
+  **4.** 충전기가 <<clear_display_message_response,ClearDisplayMessageResponse>> 메시지를 CSMS로 보내 응답합니다.
+|5 |필수 조건 |충전기에 구성된 지정된 ID의 메시지가 있습니다.
+|6 |사후 조건(들) ​​|지정된 ID의 메시지가 충전기에서 제거됩니다.
 |===
 
 .Clear a DisplayMessage sequence diagram
@@ -327,66 +328,66 @@ image::part2/images/figure_145.svg[Clear a DisplayMessage sequence diagram]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error Handling |n/a
-|8   |Remarks        |Only messages configured via OCPP can be cleared/removed via <<clear_display_message_request,ClearDisplayMessageRequest>>
+|7 |오류 처리 |해당 없음
+|8 |주의 |OCPP를 통해 구성된 메시지만 <<clear_display_message_request,ClearDisplayMessageRequest>>를 통해 지우거나 제거할 수 있습니다.
 |===
 
-==== O05 - Clear a DisplayMessage - Requirements
+==== O05 - DisplayMessage 지우기 - 요구 사항
 
-.O05 - Clear a DisplayMessage - Requirements
+.O05 - DisplayMessage 지우기 - 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition
+|ID |전제 조건 |요구 사항 정의
 
-|O05.FR.01  |When a Charging Station receives a <<clear_display_message_request,ClearDisplayMessageRequest>> AND there is a message configured in the Charging Station with that id
-  |The Charging Station SHALL respond with a <<clear_display_message_response,ClearDisplayMessageResponse>> message with status: _Accepted_.
-|O05.FR.02  |When a Charging Station receives a <<clear_display_message_request,ClearDisplayMessageRequest>> AND there is no message configured in the Charging Station with the given id
-  |The Charging Station SHALL respond with a <<clear_display_message_response,ClearDisplayMessageResponse>> message with status: _Unknown_.
+|O05.FR.01 |충전기가 <<clear_display_message_request,ClearDisplayMessageRequest>>를 수신하고 해당 ID로 충전기에 구성된 메시지가 있는 경우
+  |충전기는 <<clear_display_message_response,ClearDisplayMessageResponse>> 메시지로 응답해야 하며 상태는 _Accepted_ 입니다.
+|O05.FR.02 |충전기가 <<clear_display_message_request,ClearDisplayMessageRequest>>를 수신하고 해당 ID로 구성된 메시지가 충전기에 없는 경우
+  |충전기는 <<clear_display_message_response,ClearDisplayMessageResponse>> 메시지로 응답해야 하며 상태는 _Unknown_ 입니다.
 |===
 
 <<<
 
 [[o06_replace_display_message]]
-=== O06 - Replace DisplayMessage
+=== O06 - DisplayMessage 교체
 
-.O06 - Replace DisplayMessage
+.O06 - DisplayMessage 교체
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Replace DisplayMessage
-|2   |ID              |O06
-|{nbsp} d|_Functional block_ |O. DisplayMessage
-|3   |Objectives      |Enable a CSO to replace DisplayMessages, already configured on a Charging Station.
-|4   |Description     |This use case describes how a CSO can replace a DisplayMessage that is previously configured in a Charging Station. Replace the message content, but also all the given parameters with the new one.
-|{nbsp} d|_Actors_    |CSO, CSMS, Charging Station
-|{nbsp} d|_Scenario description_ 
-  |**1.** The CSO asks the CSMS to replace an existing DisplayMessage. +
-  **2.** The CSMS sends a <<set_display_message_request,SetDisplayMessageRequest>> message to the Charging Station with the a DisplayMessage with the same ID as already configured in the Charging Station. +
-  **3.** The Charging Station accepts the request by sending a <<set_display_message_response,SetDisplayMessageResponse>> message to the CSMS. +
-  **4.** The Charging Station shows the updated/replaced message on the display at the configured moment.
-|{nbsp} d|_Alternative scenario(s)_ |<<o01_set_display_message,O01 - Set DisplayMessage>> and +
-  <<o02_set_display_message_for_transaction,O02 - Set DisplayMessage for Transaction>>
-|5   |Prerequisites |There is a message with the same id configured in the Charging Station
-|6   |Postcondition(s) |The DisplayMessage is replaced by the one provided with the same ID.
+|1 |이름 |DisplayMessage 교체
+|2 |ID |O06
+|{nbsp} d|_기능 블록_ |O. DisplayMessage
+|3 |목표 |CSO가 충전기에 이미 구성된 DisplayMessage를 대체할 수 있도록 합니다.
+|4 |설명 |이 사용 사례는 CSO가 충전기에 이전에 구성된 DisplayMessage를 대체하는 방법을 설명합니다. 메시지 내용과 제공된 모든 매개변수를 새 메시지로 대체합니다.
+|{nbsp} d|_Actors_ |CSO, CSMS, 충전기
+|{nbsp} d|_시나리오 설명_
+  |**1.** CSO가 CSMS에 기존 DisplayMessage를 대체하도록 요청합니다. +
+  **2.** CSMS가 충전기에 이미 구성된 것과 동일한 ID를 가진 DisplayMessage와 함께 <<set_display_message_request,SetDisplayMessageRequest>> 메시지를 충전기로 보냅니다. +
+  **3.** 충전기가 CSMS에 <<set_display_message_response,SetDisplayMessageResponse>> 메시지를 보내 요청을 수락합니다. +
+  **4.** 충전기는 구성된 순간에 디스플레이에 업데이트/대체된 메시지를 표시합니다.
+|{nbsp} d|_대체 시나리오_ |<<o01_set_display_message,O01 - 디스플레이 메시지 설정>> 및 +
+<<o02_set_display_message_for_transaction,O02 - 거래에 대한 디스플레이 메시지 설정>>
+|5 |필수 조건 |충전기에 구성된 동일한 ID가 있는 메시지가 있습니다.
+|6 |사후 조건 |디스플레이 메시지는 동일한 ID가 제공된 메시지로 대체됩니다.
 |===
 
-.Replace DisplayMessage sequence diagram
-image::part2/images/figure_146.svg[Replace DisplayMessage sequence diagram]
+.DisplayMessage 시퀀스 다이어그램 대체
+image::part2/images/figure_146.svg[DisplayMessage 시퀀스 다이어그램 대체]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error Handling  |n/a
-|8   |Remarks         |n/a
+|7 |오류 처리 |n/a
+|8 |설명 |n/a
 |===
 
-==== O06 - Replace DisplayMessage - Requirements
+==== O06 - DisplayMessage 대체 - 요구 사항
 
-.O06 - Replace DisplayMessage - Requirements
+.O06 - DisplayMessage 대체 - 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition
+|ID |전제 조건 |요구 사항 정의
 
-|O06.FR.01  |When a Charging Station receives a <<set_display_message_request,SetDisplayMessageRequest>> AND there is a message configured in the Charging Station with the same id
-  |The Charging Station SHALL replace the existing message with the new message (including all the new parameters) AND respond with a <<set_display_message_response,SetDisplayMessageResponse>> message with status: _Accepted_ for this message.
+|O06.FR.01 |충전기에서 <<set_display_message_request,SetDisplayMessageRequest>>를 수신하고 해당 동일한 ID를 가진 충전기
+  |충전기는 기존 메시지를 새 메시지(모든 새 매개변수 포함)로 대체하고 <<set_display_message_response,SetDisplayMessageResponse>> 메시지로 응답해야 하며, 이 메시지에 대해 상태: _Accepted_ 를 지정해야 합니다.
 |===
