@@ -60,17 +60,17 @@ image::part2/images/figure_117.svg[Sequence diagram secure firmware upgrade (hap
 |7   |Error handling  |n/a
 |8   |Remark(s)       |As an example in this use case the requestId = 123, but this could be any value.
 
-Measures SHOULD be taken to secure the firmware when it is stored on a server or workstation.
+  Measures SHOULD be taken to secure the firmware when it is stored on a server or workstation.
 
-The Charging Station has a required Configuration Variable that reports which file transfer protocols it supports: <<file_transfer_protocols,`FileTransferProtocols`>>
+  The Charging Station has a required Configuration Variable that reports which file transfer protocols it supports: <<file_transfer_protocols,`FileTransferProtocols`>>
 
-When migrating to a new version of OCPP it is RECOMMENDED to install a fallback NetworkConnectionProfile with the new configuration.
+  When migrating to a new version of OCPP it is RECOMMENDED to install a fallback NetworkConnectionProfile with the new configuration.
 
-The requirements for the Firmware Signing Certificate are described in the: <<certificate_properties,Certificate Properties>> section.
+  The requirements for the Firmware Signing Certificate are described in the: <<certificate_properties,Certificate Properties>> section.
 
-The manufacturer SHALL NOT use intermediate certificates for the firmware signing certificate in the Charging Station.
+  The manufacturer SHALL NOT use intermediate certificates for the firmware signing certificate in the Charging Station.
 
-FTP needs to be able to use Passive FTP, to be able to transverse over as much different typologies as possible.
+  FTP needs to be able to use Passive FTP, to be able to transverse over as much different typologies as possible.
 |===
 
 .Firmware status transitions
@@ -141,9 +141,7 @@ image::part2/images/figure_118.svg[Firmware status transitions]
 |L01.FR.25  |Charging Station receives a <<trigger_message_request,TriggerMessageRequest>> for `FirmwareStatusNotification` AND +
   last sent <<firmware_status_notification_request,FirmwareStatusNotificationRequest>> had _status_ = <<firmware_status_enum_type,Installed>>
     |Charging Station SHALL return a <<firmware_status_notification_request,FirmwareStatusNotificationRequest>> with _status_ = <<firmware_status_enum_type,Idle>>. |{nbsp}
-|L01.FR.26  |Charging Station receives a
-<<trigger_message_request,TriggerMessageRequest>> for
-`FirmwareStatusNotification` AND +
+|L01.FR.26  |Charging Station receives a <<trigger_message_request,TriggerMessageRequest>> for `FirmwareStatusNotification` AND +
   last sent <<firmware_status_notification_request,FirmwareStatusNotificationRequest>> had NOT _status_ = <<firmware_status_enum_type,Installed>>
     |Charging Station SHALL return a <<firmware_status_notification_request,FirmwareStatusNotificationRequest>> with the last sent _status_. |{nbsp}
 |L01.FR.27  |L01.FR.24 +
@@ -249,7 +247,7 @@ FTP needs to be able to use Passive FTP, to be able to transverse over as much d
 |L02.FR.04  |L02.FR.03 or L02.FR.22 AND +
   configuration variable <<allow_new_sessions_pending_firmware_update,`AllowNewSessionsPendingFirmwareUpdate`>> is _false_ or does not exist
     |The Charging Station SHALL set all EVSE that are not in use to UNAVAILABLE while the Charging Station waits for the ongoing transactions to end. Until the firmware is installed, any EVSE that becomes available SHALL be set to UNAVAILABLE. |{nbsp}
-|L02.FR.05  |{nbps}
+|L02.FR.05  |{nbsp}
   |It is RECOMMENDED that the firmware is sent encrypted to the Charging Station. This can either be done by using a secure protocol (such as HTTPS, SFTP, or FTPS) to send the firmware, or by encrypting the firmware itself before sending it. |{nbsp}
 |L02.FR.06  |{nbsp}
   |Every <<firmware_status_notification_request,FirmwareStatusNotificationRequest>> sent for a firmware update SHALL contain the same requestId as the <<update_firmware_request,UpdateFirmwareRequest>> that started this firmware update. |{nbsp}
@@ -275,7 +273,7 @@ FTP needs to be able to use Passive FTP, to be able to transverse over as much d
   last sent <<firmware_status_notification_request,FirmwareStatusNotificationRequest>> had _status_ = `Installed`
     |Charging Station SHALL return a <<firmware_status_notification_request,FirmwareStatusNotificationRequest>> with _status_ = `Idle`. |{nbsp}
 |L02.FR.17  |Charging Station receives a <<trigger_message_request,TriggerMessageRequest>> for `FirmwareStatusNotification` AND +
-  last sent <<firmware_status_notification_request,FirmwareStatusNotificationRequest>> had NOT status = `Installed` 
+  last sent <<firmware_status_notification_request,FirmwareStatusNotificationRequest>> had NOT _status_ = `Installed` 
     |Charging Station SHALL return a <<firmware_status_notification_request,FirmwareStatusNotificationRequest>> with the last sent _status_. |{nbsp}
 |L02.FR.18  |L02.FR.15 +
   AND +

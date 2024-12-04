@@ -6,9 +6,9 @@
 :sectnums:
 == Introduction
 
-이 기능 블록은 CSO가 충전소의 펌웨어를 업데이트할 수 있는 기능을 설명합니다.
+이 기능 블록은 CSO가 충전기의 펌웨어를 업데이트할 수 있는 기능을 설명합니다.
 
-충전소를 새 펌웨어로 업데이트해야 하는 경우 CSMS는 충전소가 새 펌웨어를 다운로드할 수 있는 시간을 충전소에 알립니다. 충전소는 새 펌웨어를 다운로드하고 설치할 때마다 각 단계마다 CSMS에 알려야 합니다.
+충전기를 새 펌웨어로 업데이트해야 하는 경우 CSMS는 충전기가 새 펌웨어를 다운로드할 수 있는 시간을 충전기에 알립니다. 충전기는 새 펌웨어를 다운로드하고 설치할 때마다 각 단계마다 CSMS에 알려야 합니다.
 
 <<<
 
@@ -27,29 +27,29 @@
 |2 |ID |L01
 |{nbsp} d|_기능 블록_ |L. 펌웨어 관리
 |3 |목표 |보안 펌웨어 업데이트를 다운로드하고 설치합니다.
-|4 |설명 |충전소가 보안 펌웨어 업데이트를 처리하는 방법을 설명합니다.
-|{nbsp} d|_Actors_ |CSMS, 충전소, 충전소 제조업체
+|4 |설명 |충전기가 보안 펌웨어 업데이트를 처리하는 방법을 설명합니다.
+|{nbsp} d|_Actors_ |CSMS, 충전기, 충전기 제조업체
 |{nbsp} d|_시나리오 설명_
-|**1.** CSMS는 펌웨어 위치, 펌웨어를 검색해야 하는 시간, 충전소가 펌웨어 다운로드를 다시 시도해야 하는 횟수에 대한 정보가 포함된 <<update_firmware_request,UpdateFirmwareRequest>> 메시지를 보냅니다. +
-**2.** 충전소는 제조업체 루트 인증서와 인증서의 유효성을 확인합니다. +
-**3.** 인증서가 유효한 경우 충전소는 펌웨어 다운로드를 시작하고 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 <<firmware_status_enum_type,Downloading>> 상태로 보냅니다. +
-인증서가 유효하지 않거나 확인할 수 없는 경우 충전소는 펌웨어 업데이트 프로세스를 중단하고 상태가 <<firmware_status_enum_type,InvalidCertificate>>인 <<update_firmware_response,UpdateFirmwareResponse>>와 보안 이벤트가 InvalidFirmwareSigningCertificate인 <<security_event_notification_request,SecurityEventNotificationRequest>>를 보냅니다(보안 이벤트 전체 목록은 2부 부록 참조). +
-**4.** 펌웨어가 성공적으로 다운로드된 경우 충전소는 상태가 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 보냅니다(<firmware_status_enum_type,Downloaded>>). +
-그렇지 않은 경우 상태가 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 보냅니다(<firmware_status_enum_type,DownloadFailed>>). +
-**5.** 검증이 성공하면 충전소는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,Installing>>으로 전송합니다. +
-펌웨어 검증이 실패하거나 서명이 전혀 없는 경우 충전소는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,InvalidSignature>>로 전송하고 <<security_event_notification_request,SecurityEventNotificationRequest>>를 보안 이벤트 InvalidFirmwareSignature로 전송합니다(보안 이벤트 전체 목록은 2부 부록 참조). +
-**6.** 설치가 성공하면 충전소는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,Installed>>로 전송합니다. +
-그렇지 않으면 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,InstallationFailed>>로 보냅니다.
-|{nbsp} d|_대체 시나리오_ |<<l02_non_secure_firmware_update,L02 - 비보안 펌웨어 업데이트>>
-|5 |필수 조건 |충전소 제조업체에서 펌웨어 업데이트를 제공했습니다.
+  |**1.** CSMS는 펌웨어 위치, 펌웨어를 검색해야 하는 시간, 충전기가 펌웨어 다운로드를 다시 시도해야 하는 횟수에 대한 정보가 포함된 <<update_firmware_request,UpdateFirmwareRequest>> 메시지를 보냅니다. +
+  **2.** 충전기는 제조업체 루트 인증서와 인증서의 유효성을 확인합니다. +
+  **3.** 인증서가 유효한 경우 충전기는 펌웨어 다운로드를 시작하고 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 <<firmware_status_enum_type,Downloading>> 상태로 보냅니다. +
+  인증서가 유효하지 않거나 확인할 수 없는 경우 충전기는 펌웨어 업데이트 프로세스를 중단하고 상태가 <<firmware_status_enum_type,InvalidCertificate>>인 <<update_firmware_response,UpdateFirmwareResponse>>와 보안 이벤트가 InvalidFirmwareSigningCertificate인 <<security_event_notification_request,SecurityEventNotificationRequest>>를 보냅니다(보안 이벤트 전체 목록은 Part 2 - Appendices 참조). +
+  **4.** 펌웨어가 성공적으로 다운로드되면 충전소는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,Downloaded>>로 전송합니다. +
+  그렇지 않으면 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,DownloadFailed>>로 전송합니다. +
+  **5.** 검증이 성공하면 충전기는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,Installing>>으로 전송합니다. +
+  펌웨어 검증이 실패하거나 서명이 전혀 없는 경우 충전기는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,InvalidSignature>>로 전송하고 <<security_event_notification_request,SecurityEventNotificationRequest>>를 보안 이벤트 InvalidFirmwareSignature로 전송합니다(보안 이벤트 전체 목록은 Part 2 - Appendices 참조). +
+  **6.** 설치가 성공하면 충전기는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,Installed>>로 전송합니다. +
+  그렇지 않으면 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,InstallationFailed>>로 보냅니다.
+|{nbsp} d|_대체 시나리오_ |<<l02_non_secure_firmware_update,L02 - Non-Secure Firmware Update>>
+|5 |필수 조건 |충전기 제조업체에서 펌웨어 업데이트를 제공했습니다.
 |6 |사후 조건
-|**성공 사후 조건:** +
-펌웨어가 업데이트되고 충전소가 _Installed_ 상태입니다. +
-**실패 사후 조건:** +
-인증서가 유효하지 않거나 확인할 수 없으며 충전소가 _InvalidCertificate_ 상태입니다. +
-펌웨어 다운로드가 실패하고 충전소가 _DownloadFailed_ 상태입니다. +
-펌웨어 디지털 서명 검증에 실패했고 충전소가 _InvalidSignature_ 상태입니다. +
-펌웨어 설치에 성공하지 못했고 충전소가 _InstallationFailed_ 상태입니다.
+  |**성공 사후 조건:** +
+  펌웨어가 업데이트되고 충전기가 _Installed_ 상태입니다. +
+  **실패 사후 조건:** +
+  인증서가 유효하지 않거나 확인할 수 없으며 충전기가 _InvalidCertificate_ 상태입니다. +
+  펌웨어 다운로드가 실패하고 충전기가 _DownloadFailed_ 상태입니다. +
+  펌웨어 디지털 서명 검증에 실패했고 충전기가 _InvalidSignature_ 상태입니다. +
+  펌웨어 설치에 성공하지 못했고 충전기가 _InstallationFailed_ 상태입니다.
 |===
 
 .시퀀스 다이어그램 보안 펌웨어 업그레이드(행복한 흐름)
@@ -60,17 +60,17 @@ image::part2/images/figure_117.svg[시퀀스 다이어그램 보안 펌웨어 �
 |7 |오류 처리 |n/a
 |8 |참고 |이 사용 사례의 예로 requestId = 123이지만 이는 모든 값일 수 있습니다.
 
-서버나 워크스테이션에 저장될 때 펌웨어를 보호하기 위한 조치를 취해야 합니다.
+  펌웨어가 서버나 워크스테이션에 저장될 때 펌웨어를 보호하기 위한 조치를 취해야 합니다.
 
-충전소에는 지원하는 파일 전송 프로토콜을 보고하는 필수 구성 변수가 있습니다: <<file_transfer_protocols,`FileTransferProtocols`>>
+  충전기에는 지원하는 파일 전송 프로토콜을 보고하는 필수 구성 변수가 있습니다: <<file_transfer_protocols,`FileTransferProtocols`>>
 
-새 버전의 OCPP로 마이그레이션할 때 새 구성으로 대체 NetworkConnectionProfile을 설치하는 것이 좋습니다.
+  새 버전의 OCPP로 마이그레이션할 때 새 구성으로 대체 NetworkConnectionProfile을 설치하는 것이 좋습니다.
 
-펌웨어 서명 인증서에 대한 요구 사항은 <<certificate_properties,Certificate Properties>> 섹션에 설명되어 있습니다.
+  펌웨어 서명 인증서에 대한 요구 사항은 <<certificate_properties,Certificate Properties>> 섹션에 설명되어 있습니다.
 
-제조업체는 충전소의 펌웨어 서명 인증서에 중간 인증서를 사용해서는 안 됩니다.
+  제조업체는 충전기의 펌웨어 서명 인증서에 중간 인증서를 사용해서는 안 됩니다.
 
-FTP는 가능한 한 많은 다른 유형을 횡단할 수 있도록 수동 FTP를 사용할 수 있어야 합니다.
+  FTP는 가능한 다양한 네트워크 토폴로지를 통과하기 위해 Passive FTP를 사용할 수 있어야 합니다.
 |===
 
 .펌웨어 상태 전환
@@ -83,100 +83,100 @@ image::part2/images/figure_118.svg[펌웨어 상태 전환]
 |===
 |ID |전제 조건 |요구 사항 정의 |참고
 
-|L01.FR.01 |충전소가 펌웨어 업데이트 프로세스에서 새로운 상태로 전환될 때마다.
-|충전소는 이 새로운 상태와 함께 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>> 메시지를 CSMS로 보내야 합니다. 사용 이유는 <<firmware_status_enum_type,FirmwareStatusEnumType>> 설명에 설명되어 있습니다. |{nbsp}
-|L01.FR.02 |충전소가 펌웨어 프로세스에서 잘못된 인증서 상태로 전환될 때.
-|충전소는 보안 이벤트 InvalidFirmwareSigningCertificate와 함께 CSMS에 <<security_event_notification_request,SecurityEventNotificationRequest>> 메시지를 보내야 합니다(보안 이벤트 전체 목록은 2부 부록 참조). |{nbsp}
-|L01.FR.03 |충전소가 Invalid Signature 상태로 전환될 때.
-|충전소는 보안 이벤트 InvalidFirmwareSignature와 함께 CSMS에 <<security_event_notification_request,SecurityEventNotificationRequest>> 메시지를 보내야 합니다(보안 이벤트 전체 목록은 2부 부록 참조). |{nbsp}
-|L01.FR.04 |충전소가 새 펌웨어를 성공적으로 다운로드할 때
-|서명은 서명을 위해 RSA-PSS 또는 ECSchnorr 알고리즘을 사용하고 해시 값을 계산하기 위해 SHA256 알고리즘을 사용하여 전체 펌웨어 파일에 대한 서명을 계산하여 검증해야 합니다. |{nbsp}
+|L01.FR.01 |충전기가 펌웨어 업데이트 프로세스에서 새로운 상태로 전환될 때마다.
+  |충전기는 이 새로운 상태와 함께 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>> 메시지를 CSMS로 보내야 합니다. 사용 이유는 <<firmware_status_enum_type,FirmwareStatusEnumType>> 설명에 설명되어 있습니다. |{nbsp}
+|L01.FR.02 |충전기가 펌웨어 프로세스에서 잘못된 인증서 상태로 전환될 때.
+  |충전기는 보안 이벤트 InvalidFirmwareSigningCertificate와 함께 CSMS에 <<security_event_notification_request,SecurityEventNotificationRequest>> 메시지를 보내야 합니다(보안 이벤트 전체 목록은 Part 2 - Appendices 참조). |{nbsp}
+|L01.FR.03 |충전기가 Invalid Signature 상태로 전환될 때.
+  |충전기는 보안 이벤트 InvalidFirmwareSignature와 함께 CSMS에 <<security_event_notification_request,SecurityEventNotificationRequest>> 메시지를 보내야 합니다(보안 이벤트 전체 목록은 Part 2 - Appendices 참조). |{nbsp}
+|L01.FR.04 |충전기가 새 펌웨어를 성공적으로 다운로드할 때
+  |서명은 서명을 위해 RSA-PSS 또는 ECSchnorr 알고리즘을 사용하고 해시 값을 계산하기 위해 SHA256 알고리즘을 사용하여 전체 펌웨어 파일에 대한 서명을 계산하여 검증해야 합니다. |{nbsp}
 |L01.FR.05 |L01.FR.04 AND +
-( _installDateTime_이 설정되지 않음 또는 현재 시간 >= _installDateTime_ )
-|충전소는 가능한 한 빨리 새 펌웨어를 설치해야 합니다. |{nbsp}
+  (_installDateTime_ 이 설정되지 않음 또는 현재 시간 >= _installDateTime_)
+    |충전기는 가능한 한 빨리 새 펌웨어를 설치해야 합니다. |{nbsp}
 |L01.FR.06 |L01.FR.05 +
-AND +
-충전소에 진행 중인 거래가 있음 +
-AND +
-거래가 진행 중인 동안 펌웨어 설치를 시작할 수 없는 경우
-|충전소는 설치를 시작하기 전에 모든 거래가 끝날 때까지 기다려야 합니다. |{nbsp}
+  AND +
+  충전기에 진행 중인 트랜잭션이 있음 +
+  AND +
+  트랜잭션이 진행 중인 동안 펌웨어 설치를 시작할 수 없는 경우
+    |충전기는 설치를 시작하기 전에 모든 트랜잭션이 끝날 때까지 기다려야 합니다. |{nbsp}
 |L01.FR.07 |L01.FR.06 또는 L01.FR.33 AND +
-구성 변수 <<allow_new_sessions_pending_firmware_update,`AllowNewSessionsPendingFirmwareUpdate`>>가 _false_이거나 존재하지 않습니다.
-|충전소는 진행 중인 거래가 끝날 때까지 충전소가 사용하지 않는 모든 EVSE를 UNAVAILABLE로 설정해야 합니다. 펌웨어가 설치될 때까지 사용 가능해지는 모든 EVSE는 UNAVAILABLE로 설정해야 합니다. |{nbsp}
+  구성 변수 <<allow_new_sessions_pending_firmware_update,`AllowNewSessionsPendingFirmwareUpdate`>>가 _false_ 이거나 존재하지 않습니다.
+    |충전기는 진행 중인 트랜잭션이 끝날 때까지 충전기가 사용하지 않는 모든 EVSE를 UNAVAILABLE로 설정해야 합니다. 펌웨어가 설치될 때까지 사용 가능해지는 모든 EVSE는 UNAVAILABLE로 설정해야 합니다. |{nbsp}
 |L01.FR.08 |{nbsp}
-|펌웨어는 충전소로 암호화하여 보내는 것이 좋습니다. 이는 보안 프로토콜(HTTPS, SFTP 또는 FTPS 등)을 사용하여 펌웨어를 보내거나 펌웨어 자체를 암호화한 다음 보내면 됩니다. |{nbsp}
+  |펌웨어는 충전기로 암호화하여 보내는 것이 좋습니다. 이는 보안 프로토콜(HTTPS, SFTP 또는 FTPS 등)을 사용하여 펌웨어를 보내거나 펌웨어 자체를 암호화한 다음 보내면 됩니다. |{nbsp}
 |L01.FR.09 |{nbsp}
-|펌웨어 업데이트는 진위성을 보장하고 출처 증명을 제공하기 위해 디지털로 보호되어야 합니다.
-|이 보호는 펌웨어 이미지의 해시 값에 디지털 서명을 적용하여 달성됩니다. 이상적으로는 이 서명이 제조업체에서 이미 계산되어 있어야 합니다. 이렇게 하면 펌웨어 이미지의 출처 증명을 펌웨어의 원래 작성자에게 추적할 수 있습니다.
+  |펌웨어 업데이트는 진위성을 보장하고 출처 증명을 제공하기 위해 디지털로 보호되어야 합니다.
+    |이 보호는 펌웨어 이미지의 해시 값에 디지털 서명을 적용하여 달성됩니다. 이상적으로는 이 서명이 제조업체에서 이미 계산되어 있어야 합니다. 이렇게 하면 펌웨어 이미지의 출처 증명을 펌웨어의 원래 작성자에게 추적할 수 있습니다.
 |L01.FR.10 |{nbsp}
-|펌웨어 업데이트를 위해 전송된 모든 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>에는 이 펌웨어 업데이트를 시작한 <<update_firmware_request,UpdateFirmwareRequest>>와 동일한 requestId가 포함되어야 합니다. |{nbsp}
+  |펌웨어 업데이트를 위해 전송된 모든 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>에는 이 펌웨어 업데이트를 시작한 <<update_firmware_request,UpdateFirmwareRequest>>와 동일한 requestId가 포함되어야 합니다. |{nbsp}
 |L01.FR.11 |{nbsp}
-|보안상의 이유로 CSMS는 펌웨어 서명 인증서(<<keys_used_in_ocpp, OCPP에서 사용되는 키>> 참조)를 <<update_firmware_request, UpdateFirmwareRequest>>에 포함해야 합니다. |{nbsp}
+  |보안상의 이유로 CSMS는 펌웨어 서명 인증서(<<keys_used_in_ocpp,Keys used in OCPP>> 참조)를 <<update_firmware_request,UpdateFirmwareRequest>>에 포함해야 합니다. |{nbsp}
 |L01.FR.12 |{nbsp}
-|인증서를 검증하려면(<<certificate_hierarchy, 인증서 계층>> 참조) X.509 인증서 규칙 <<ocpp_security_19,[19]>>을 사용해야 합니다. 충전소는 펌웨어 서명 인증서를 사용하여 파일의 디지털 서명을 검증해야 합니다. |{nbsp}
-|L01.FR.13 |충전소가 펌웨어 다운로드를 시작하지 않는 경우, 충전 중이거나 _retrieveDateTime_이 미래이기 때문
-|충전소는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 <<firmware_status_enum_type,DownloadScheduled>> 상태로 전송해야 합니다. |{nbsp}
-|L01.FR.14 |충전 스테이션이 다운로드 일시 중지 상태로 전환될 때.
-|충전 스테이션은 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,DownloadPaused>>로 전송해야 합니다.
-|예를 들어, 충전 스테이션에 우선순위가 더 높은 작업이 있는 경우.
-|L01.FR.15 |다운로드한 펌웨어를 설치하기 전에 충전 스테이션을 재부팅해야 하는 경우.
-|충전 스테이션은 재부팅하기 전에 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,InstallRebooting>>로 전송해야 합니다. |{nbsp}
+  |인증서를 검증하려면(<<certificate_hierarchy,Certificate Hierarchy>> 참조) X.509 인증서 규칙 <<ocpp_security_19,[19]>>을 사용해야 합니다. 충전기는 펌웨어 서명 인증서를 사용하여 파일의 디지털 서명을 검증해야 합니다. |{nbsp}
+|L01.FR.13 |충전 중이거나 _retrieveDateTime_ 이 미래이기 때문에 충전기가 펌웨어 다운로드를 시작하지 않는 경우
+  |충전기는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 <<firmware_status_enum_type,DownloadScheduled>> 상태로 전송해야 합니다. |{nbsp}
+|L01.FR.14 |충전기가 다운로드 일시 중지 상태로 전환될 때.
+  |충전기는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,DownloadPaused>>로 전송해야 합니다.
+    |예를 들어, 충전기에 우선순위가 더 높은 작업이 있는 경우.
+|L01.FR.15 |다운로드한 펌웨어를 설치하기 전에 충전기을 재부팅해야 하는 경우.
+  |충전기는 재부팅하기 전에 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,InstallRebooting>>로 전송해야 합니다. |{nbsp}
 |L01.FR.16 |L01.FR.04 AND +
-_installDateTime_이 미래의 시간으로 설정된 경우
-|충전소는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,InstallScheduled>>로 전송하고 지정된 설치 시간에 펌웨어를 설치해야 합니다. |{nbsp}
+  _installDateTime_ 이 미래의 시간으로 설정된 경우
+    |충전기는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,InstallScheduled>>로 전송하고 지정된 설치 시간에 펌웨어를 설치해야 합니다. |{nbsp}
 |L01.FR.20 |{nbsp}
-|<<firmware_status_notification_request,FirmwareStatusNotificationRequest>>의 필드 _requestId_는 _status_ = <<firmware_status_enum_type,Idle>>이 아닌 한 필수입니다. |{nbsp}
-|L01.FR.21 |충전소가 <<update_firmware_request,UpdateFirmwareRequest>>를 수신하는 경우
-|충전소는 메시지를 수락하기 전에 인증서를 검증해야 합니다. |{nbsp}
+  |<<firmware_status_notification_request,FirmwareStatusNotificationRequest>>의 필드 _requestId_ 는 _status_ = <<firmware_status_enum_type,Idle>>이 아닌 한 필수입니다. |{nbsp}
+|L01.FR.21 |충전기가 <<update_firmware_request,UpdateFirmwareRequest>>를 수신하는 경우
+  |충전기는 메시지를 수락하기 전에 인증서를 검증해야 합니다. |{nbsp}
 |L01.FR.22 |L01.FR.21 AND +
-인증서가 유효하지 않습니다. |충전소는 <<update_firmware_response,UpdateFirmwareResponse>>로 응답해야 하며 상태는 `InvalidCertificate`입니다. |{nbsp}
-|L01.FR.23 |펌웨어 업데이트 중에 충전소가 재부팅해야 하고 부트로더가 OCPP 메시지를 보낼 수 없는 경우
-|충전소는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>> 메시지를 생략할 수 있으며 상태는 <<firmware_status_enum_type,Installing>>입니다. |{nbsp}
-|L01.FR.24 |충전소에서 새 펌웨어를 설치 중이거나 +
-새 펌웨어를 설치하려고 하지만 나중에 설치하라는 UpdateFirmware 명령을 받았고 +
-충전소에서 새 <<update_firmware_request,UpdateFirmwareRequest>>를 수신한 경우
-|충전소는 진행 중인 펌웨어 업데이트를 취소하고 `AcceptedCanceled` 상태로 응답해야 합니다.
-|충전소는 먼저 새 펌웨어 파일이 있는지 확인하지 않아야 합니다. 이렇게 하면 CSMS가 새 펌웨어 업데이트를 시작하지 않고도 진행 중인 펌웨어 업데이트를 취소할 수 있습니다. 충전소는 현재 취소된 펌웨어 업데이트에 대해 _status_ `DownloadFailed` 또는 `InstallationFailed`로 FirmwareStatusNotificationRequest를 보낼 수 있습니다.
-|L01.FR.25 |충전소는 `FirmwareStatusNotification`에 대한 <<trigger_message_request,TriggerMessageRequest>>를 수신하고 +
-마지막으로 보낸 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>는 _status_ = <<firmware_status_enum_type,Installed>>을 가졌습니다. |충전소는 _status_ = <<firmware_status_enum_type,Idle>>인 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 반환해야 합니다. |{nbsp}
-|L01.FR.26 |충전소가
-<<trigger_message_request,TriggerMessageRequest>>를 수신합니다.
-`FirmwareStatusNotification` AND +
-마지막으로 전송된 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>는 _status_ = <<firmware_status_enum_type,Installed>>가 아니었습니다.
-|충전소는 마지막으로 전송된 _status_와 함께 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 반환해야 합니다. |{nbsp}
+  인증서가 유효하지 않습니다. |충전기는 <<update_firmware_response,UpdateFirmwareResponse>>로 응답해야 하며 상태는 `InvalidCertificate` 입니다. |{nbsp}
+|L01.FR.23 |펌웨어 업데이트 중에 충전기가 재부팅해야 하고 부트로더가 OCPP 메시지를 보낼 수 없는 경우
+  |충전기는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>> 메시지를 생략할 수 있으며 상태는 <<firmware_status_enum_type,Installing>>입니다. |{nbsp}
+|L01.FR.24 |충전기에서 새 펌웨어를 설치 중이거나 +
+  새 펌웨어를 설치하려고 하지만 나중에 설치하라는 UpdateFirmware 명령을 받았고 +
+  충전기에서 새 <<update_firmware_request,UpdateFirmwareRequest>>를 수신한 경우
+    |충전기는 진행 중인 펌웨어 업데이트를 취소하고 `AcceptedCanceled` 상태로 응답해야 합니다.
+      |충전기는 먼저 새 펌웨어 파일이 있는지 확인하지 않아야 합니다. 이렇게 하면 CSMS가 새 펌웨어 업데이트를 시작하지 않고도 진행 중인 펌웨어 업데이트를 취소할 수 있습니다. 충전기는 현재 취소된 펌웨어 업데이트에 대해 _status_ `DownloadFailed` 또는 `InstallationFailed` 로 FirmwareStatusNotificationRequest를 보낼 수 있습니다.
+|L01.FR.25 |충전기는 `FirmwareStatusNotification` 에 대한 <<trigger_message_request,TriggerMessageRequest>>를 수신하고 +
+  마지막으로 보낸 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>는 _status_ = <<firmware_status_enum_type,Installed>>을 가졌습니다.
+    |충전기는 _status_ = <<firmware_status_enum_type,Idle>>인 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 반환해야 합니다. |{nbsp}
+|L01.FR.26 |충전기가 `FirmwareStatusNotification` 에 대한 <<trigger_message_request,TriggerMessageRequest>>를 수신합니다.
+   AND +
+  마지막으로 전송된 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>는 _status_ = <<firmware_status_enum_type,Installed>>가 아니었습니다.
+    |충전기는 마지막으로 전송된 _status_ 와 함께 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 반환해야 합니다. |{nbsp}
 |L01.FR.27 |L01.FR.24 +
-AND +
-충전소가 펌웨어 설치를 취소할 수 없습니다.
-|충전소는 _status_ = `Rejected`로 응답할 수 있습니다. |{nbsp}
-|L01.FR.28 |충전소가 새 펌웨어를 성공적으로 설치한 경우
-|충전소는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,Installed>> AND +로 보내야 합니다.
-충전소는 이미 새 펌웨어를 활성화했거나 즉시 활성화해야 합니다.
-|새 펌웨어를 활성화하려면 자동 재부팅이 필요할 수 있지만 반드시 그럴 필요는 없습니다.
+  AND +
+  충전기가 펌웨어 설치를 취소할 수 없습니다.
+    |충전기는 _status_ = `Rejected` 로 응답할 수 있습니다. |{nbsp}
+|L01.FR.28 |충전기가 새 펌웨어를 성공적으로 설치한 경우
+  |충전기는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,Installed>> 로 보내야 합니다. AND +
+  충전기는 이미 새 펌웨어를 활성화했거나 즉시 활성화해야 합니다.
+    |새 펌웨어를 활성화하려면 자동 재부팅이 필요할 수 있지만 반드시 그럴 필요는 없습니다.
 |L01.FR.29 |새 펌웨어 검증(예: 체크섬 또는 다른 수단 사용)이 실패한 경우
-|충전소는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 `InstallVerificationFailed`로 보내야 합니다. |{nbsp}
-|L01.FR.30 |충전소가 실패한 경우 펌웨어 다운로드를 위한 모든 재시도.
-|충전소는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,DownloadFailed>>로 보내야 합니다.
-|충전소는 재시도할 때마다 새로운 <<firmware_status_enum_type,Downloading>> 상태를 보낼 수 있습니다.
+  |충전기는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 `InstallVerificationFailed` 로 보내야 합니다. |{nbsp}
+|L01.FR.30 |충전기가 실패한 경우 펌웨어 다운로드를 위한 모든 재시도.
+  |충전기는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,DownloadFailed>>로 보내야 합니다.
+    |충전기는 재시도할 때마다 새로운 <<firmware_status_enum_type,Downloading>> 상태를 보낼 수 있습니다.
 |L01.FR.31 |L01.FR.28
-|충전소는 <<security_event_notification_request,SecurityEventNotificationRequest>> 메시지를 _type_ = "FirmwareUpdated"로 보내야 합니다. |{nbsp}
-|L01.FR.32 |충전소가 새 펌웨어를 성공적으로 설치하고 +
-새 펌웨어를 활성화하기 전에 충전소를 재부팅해야 하는 경우
-|충전소는 다음 중 하나를 수행해야 합니다. +
-(a) 재부팅하기 전에 _status_ = `InstallRebooting`인 선택적 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 보내고 새로 활성화된 펌웨어에서 _status_ = `Installed`인 필수 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 보내거나 +
-(b) 재부팅 및 새 펌웨어 활성화를 보고하지 않고 상태가 `Installed`로 설정된 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>만 보냅니다.
-|옵션(a)가 선호됩니다. 이는 CSMS에 충전소의 다가올 재부팅을 알리고, 최종 _상태_ = `설치됨`이 새 펌웨어 이미지에서 전송되므로 CSMS가 새 펌웨어가 활성화되어 있는지 확인할 수 있기 때문입니다. 새 펌웨어 재부팅이 실패할 경우 옵션(b)에서는 이를 보장하지 않습니다.
+  |충전기는 <<security_event_notification_request,SecurityEventNotificationRequest>> 메시지를 _type_ = "FirmwareUpdated"로 보내야 합니다. |{nbsp}
+|L01.FR.32 |충전기가 새 펌웨어를 성공적으로 설치하고 +
+  새 펌웨어를 활성화하기 전에 충전기를 재부팅해야 하는 경우
+    |충전기는 다음 중 하나를 수행해야 합니다. +
+    (a) 재부팅하기 전에 _status_ = `InstallRebooting` 인 선택적 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 보내고 새로 활성화된 펌웨어에서 _status_ = `Installed` 인 필수 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 보내거나 +
+    (b) 재부팅 및 새 펌웨어 활성화를 보고하지 않고 상태가 `Installed` 로 설정된 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>만 보냅니다.
+      |옵션(a)가 선호됩니다. 이는 CSMS에 충전기의 다가올 재부팅을 알리고, 최종 _status_ = `Installed` 이 새 펌웨어 이미지에서 전송되므로 CSMS가 새 펌웨어가 활성화되어 있는지 확인할 수 있기 때문입니다. 새 펌웨어 재부팅이 실패할 경우 옵션(b)에서는 이를 보장하지 않습니다.
 |L01.FR.33 |L01.FR.05 +
-및 +
-충전소에 진행 중인 거래가 있음 +
-및 +
-설치된 펌웨어를 활성화하려면 재부팅이 필요함
-|충전소는 설치된 펌웨어를 활성화하기 전에 모든 거래가 끝날 때까지 기다려야 합니다.
-|예: A/B 펌웨어 업데이트의 경우
+  AND +
+  충전기에 진행 중인 트랜잭션이 있음 +
+  AND +
+  설치된 펌웨어를 활성화하려면 재부팅이 필요함
+    |충전기는 설치된 펌웨어를 활성화하기 전에 모든 트랜잭션이 끝날 때까지 기다려야 합니다.
+      |예: A/B 펌웨어 업데이트의 경우
 |L01.FR.34 |L01.FR.04 AND +
-_installDateTime_이 설정되지 않음 AND +
-충전소가 거래가 완료되기를 기다리고 있음
-|충전소는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,InstallScheduled>>로 보낼 수 있음.
-|_installDateTime_이 설정된 경우는 L01.FR.16에 해당합니다.
+  _installDateTime_ 이 설정되지 않음 AND +
+  충전기가 트랜잭션이 완료되기를 기다리고 있음
+    |충전기는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,InstallScheduled>>로 보낼 수 있음.
+      |_installDateTime_ 이 설정된 경우는 L01.FR.16에 해당합니다.
 |===
 
 [[l02_non_secure_firmware_update]]
@@ -191,26 +191,26 @@ _installDateTime_이 설정되지 않음 AND +
 |2 |ID |L02
 |{nbsp} d|_기능 블록_ |L. 펌웨어 관리
 |3 |목표 |비보안 펌웨어 업데이트를 다운로드하고 설치합니다.
-|4 |설명 |충전소가 비보안 펌웨어 업데이트를 처리하는 방법을 설명합니다.
-|{nbsp} d|_Actors_ |CSMS, 충전소
+|4 |설명 |충전기가 비보안 펌웨어 업데이트를 처리하는 방법을 설명합니다.
+|{nbsp} d|_Actors_ |CSMS, 충전기
 |{nbsp} d|_시나리오 설명_
-|**1.** CSMS는 펌웨어 위치, 펌웨어를 검색해야 하는 시간, 충전소가 펌웨어 다운로드를 재시도해야 하는 횟수에 대한 정보가 포함된 <<update_firmware_request,UpdateFirmwareRequest>> 메시지를 보냅니다. +
-**2.** 충전소는 <<update_firmware_response,UpdateFirmwareResponse>>로 응답합니다. +
-**3.** 충전소는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 _Downloading_ 상태로 보냅니다. +
-**4.** CSMS는 <<firmware_status_notification_response,FirmwareStatusNotificationResponse>>로 응답합니다. +
-**5.** 충전소는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 _Downloaded_로 전송합니다. +
-**6.** CSMS는 <<firmware_status_notification_response,FirmwareStatusNotificationResponse>>로 응답합니다. +
-**7.** 충전소는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 _Installing_으로 전송합니다. +
-**8.** CSMS는 <<firmware_status_notification_response,FirmwareStatusNotificationResponse>>로 응답합니다. +
-**9.** 충전소는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 _Installed_로 전송합니다. +
-**10.** CSMS는 <<firmware_status_notification_response,FirmwareStatusNotificationResponse>>로 응답합니다.
-|{nbsp} d|_대체 시나리오_ |<<l01_secure_firmware_update,L01 - 보안 펌웨어 업데이트>>
-|5 |필수 조건 |충전소 제조업체에서 펌웨어 업데이트를 제공했습니다.
+  |**1.** CSMS는 펌웨어 위치, 펌웨어를 검색해야 하는 시간, 충전기가 펌웨어 다운로드를 재시도해야 하는 횟수에 대한 정보가 포함된 <<update_firmware_request,UpdateFirmwareRequest>> 메시지를 보냅니다. +
+  **2.** 충전기는 <<update_firmware_response,UpdateFirmwareResponse>>로 응답합니다. +
+  **3.** 충전기는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 _Downloading_ 상태로 보냅니다. +
+  **4.** CSMS는 <<firmware_status_notification_response,FirmwareStatusNotificationResponse>>로 응답합니다. +
+  **5.** 충전기는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 _Downloaded_ 로 전송합니다. +
+  **6.** CSMS는 <<firmware_status_notification_response,FirmwareStatusNotificationResponse>>로 응답합니다. +
+  **7.** 충전기는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 _Installing_ 으로 전송합니다. +
+  **8.** CSMS는 <<firmware_status_notification_response,FirmwareStatusNotificationResponse>>로 응답합니다. +
+  **9.** 충전기는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 _Installed_ 로 전송합니다. +
+  **10.** CSMS는 <<firmware_status_notification_response,FirmwareStatusNotificationResponse>>로 응답합니다.
+|{nbsp} d|_대체 시나리오_ |<<l01_secure_firmware_update,L01 - Secure Firmware Update>>
+|5 |필수 조건 |충전기 제조업체에서 펌웨어 업데이트를 제공했습니다.
 |6 |사후 조건
-|**성공한 사후 조건:** +
-펌웨어 업데이트가 성공적으로 설치되었습니다. +
-**실패한 사후 조건:** +
-펌웨어 업데이트가 실패했습니다.
+  |**성공 사후 조건:** +
+  펌웨어 업데이트가 성공적으로 설치되었습니다. +
+  **실패 사후 조건:** +
+  펌웨어 업데이트가 실패했습니다.
 |===
 
 .시퀀스 다이어그램 비보안 펌웨어 업그레이드
@@ -219,11 +219,11 @@ image::part2/images/figure_119.svg[시퀀스 다이어그램 비보안 펌웨어
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7 |오류 처리 |n/a
-|8 |주의 |서버나 워크스테이션에 저장된 펌웨어를 보호하기 위한 조치를 취해야 합니다.
+|8 |참고 |서버나 워크스테이션에 저장된 펌웨어를 보호하기 위한 조치를 취해야 합니다.
 
-새로운 버전의 OCPP로 마이그레이션할 때는 새로운 구성으로 대체 NetworkConnectionProfile을 설치하는 것이 좋습니다.
+  새로운 버전의 OCPP로 마이그레이션할 때는 새로운 구성으로 대체 NetworkConnectionProfile을 설치하는 것이 좋습니다.
 
-FTP는 가능한 한 많은 다른 유형을 횡단할 수 있도록 수동 FTP를 사용할 수 있어야 합니다.
+  FTP는 가능한 다양한 네트워크 토폴로지를 통과하기 위해 Passive FTP를 사용할 수 있어야 합니다.
 |===
 
 ==== L02 - Non-Secure Firmware Update - Requirements
@@ -233,74 +233,76 @@ FTP는 가능한 한 많은 다른 유형을 횡단할 수 있도록 수동 FTP�
 |===
 |ID |전제 조건 |요구 사항 정의 |참고
 
-|L02.FR.01 |충전소가 펌웨어 업데이트 프로세스에서 새 상태로 전환될 때마다.
-|충전소는 이 새 상태와 함께 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>> 메시지를 CSMS로 보내야 합니다. |{nbsp}
-|L02.FR.02 |충전소가 새 펌웨어를 성공적으로 다운로드하고 +
-( _installDateTime_이 설정되지 않았거나 현재 시간이 _installDateTime_보다 크거나 같음)
-|충전소는 가능한 한 빨리 새 펌웨어를 설치해야 합니다. |{nbsp}
+|L02.FR.01 |충전기가 펌웨어 업데이트 프로세스에서 새 상태로 전환될 때마다.
+  |충전기는 이 새 상태와 함께 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>> 메시지를 CSMS로 보내야 합니다. |{nbsp}
+|L02.FR.02 |충전기가 새 펌웨어를 성공적으로 다운로드하고 +
+  (_installDateTime_이 설정되지 않았거나 현재 시간 >= _installDateTime_)
+    |충전기는 가능한 한 빨리 새 펌웨어를 설치해야 합니다. |{nbsp}
 |L02.FR.03 |L02.FR.02 +
-AND +
-충전소에 진행 중인 거래가 있는 경우 +
-AND +
-거래가 진행되는 동안 펌웨어 설치를 시작할 수 없는 경우
-|충전소는 설치를 시작하기 전에 모든 거래가 끝날 때까지 기다려야 합니다. |{nbsp}
+  AND +
+  충전기에 진행 중인 트랜잭션이 있는 경우 +
+  AND +
+  트랜잭션이 진행되는 동안 펌웨어 설치를 시작할 수 없는 경우
+    |충전기는 설치를 시작하기 전에 모든 트랜잭션이 끝날 때까지 기다려야 합니다. |{nbsp}
 |L02.FR.04 |L02.FR.03 또는 L02.FR.22 AND +
-구성 변수 <<allow_new_sessions_pending_firmware_update,`AllowNewSessionsPendingFirmwareUpdate`>>가 _false_이거나 존재하지 않습니다. |충전소는 진행 중인 거래가 끝날 때까지 사용하지 않는 모든 EVSE를 UNAVAILABLE로 설정해야 합니다. 펌웨어가 설치될 때까지 사용 가능해지는 모든 EVSE는 UNAVAILABLE로 설정해야 합니다. |{nbsp}
-|L02.FR.05 |{nbps}
-|펌웨어는 충전소로 암호화하여 보내는 것이 좋습니다. 이는 보안 프로토콜(HTTPS, SFTP 또는 FTPS 등)을 사용하여 펌웨어를 보내거나 펌웨어 자체를 암호화한 다음 보내는 방식으로 수행할 수 있습니다. |{nbsp}
+  구성 변수 <<allow_new_sessions_pending_firmware_update,`AllowNewSessionsPendingFirmwareUpdate`>>가 _false_ 이거나 존재하지 않습니다.
+    |충전기는 진행 중인 트랜잭션이 끝날 때까지 사용하지 않는 모든 EVSE를 UNAVAILABLE로 설정해야 합니다. 펌웨어가 설치될 때까지 사용 가능해지는 모든 EVSE는 UNAVAILABLE로 설정해야 합니다. |{nbsp}
+|L02.FR.05 |{nbsp}
+  |펌웨어는 충전기로 암호화하여 보내는 것이 좋습니다. 이는 보안 프로토콜(HTTPS, SFTP 또는 FTPS 등)을 사용하여 펌웨어를 보내거나 펌웨어 자체를 암호화한 다음 보내는 방식으로 수행할 수 있습니다. |{nbsp}
 |L02.FR.06 |{nbsp}
-|펌웨어 업데이트를 위해 보낸 모든 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>에는 이 펌웨어 업데이트를 시작한 <<update_firmware_request,UpdateFirmwareRequest>>와 동일한 requestId가 포함되어야 합니다. |{nbsp}
-|L02.FR.07 |충전 스테이션이 펌웨어 다운로드를 시작하지 않는 경우, 충전 중이거나 _retrieveDateTime_이 미래이기 때문
-|충전 스테이션은 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,DownloadScheduled>>로 전송해야 합니다. |{nbsp}
-|L02.FR.08 |충전 스테이션이 다운로드 일시 중지 상태로 전환되는 경우.
-|충전 스테이션은 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,DownloadPaused>>로 전송해야 합니다.
-|예를 들어, 충전 스테이션에 우선순위가 높은 작업이 있는 경우.
-|L02.FR.09 |다운로드한 펌웨어를 설치하기 전에 충전 스테이션을 재부팅해야 하는 경우.
-|충전소는 재부팅하기 전에 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,InstallRebooting>>로 전송해야 합니다. |{nbsp}
-|L02.FR.10 |충전소가 새 펌웨어를 성공적으로 다운로드하고 +
-_installDateTime_이 미래의 시간으로 설정된 경우
-|충전소는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,InstallScheduled>>로 전송하고 지정된 설치 시간에 펌웨어를 설치해야 합니다. |{nbsp}
+  |펌웨어 업데이트를 위해 보낸 모든 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>에는 이 펌웨어 업데이트를 시작한 <<update_firmware_request,UpdateFirmwareRequest>>와 동일한 requestId가 포함되어야 합니다. |{nbsp}
+|L02.FR.07 |충전 중이거나 _retrieveDateTime_ 이 미래이기 때문에 충전기가 펌웨어 다운로드를 시작하지 않는 경우
+  |충전기는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,DownloadScheduled>>로 전송해야 합니다. |{nbsp}
+|L02.FR.08 |충전기가 다운로드 일시 중지 상태로 전환되는 경우.
+  |충전기는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,DownloadPaused>>로 전송해야 합니다.
+    |예를 들어, 충전기에 우선순위가 높은 작업이 있는 경우.
+|L02.FR.09 |다운로드한 펌웨어를 설치하기 전에 충전기을 재부팅해야 하는 경우.
+  |충전기는 재부팅하기 전에 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,InstallRebooting>>로 전송해야 합니다. |{nbsp}
+|L02.FR.10 |충전기가 새 펌웨어를 성공적으로 다운로드하고 +
+  _installDateTime_ 이 미래의 시간으로 설정된 경우
+    |충전기는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,InstallScheduled>>로 전송하고 지정된 설치 시간에 펌웨어를 설치해야 합니다. |{nbsp}
 |L02.FR.14 |{nbsp}
-|<<firmware_status_notification_request,FirmwareStatusNotificationRequest>>의 필드 _requestId_는 _status_ = `Idle`이 아닌 한 필수입니다. |{nbsp}
-|L02.FR.15 |충전소에서 새 펌웨어를 설치 중이거나 +
-새 펌웨어를 설치하려고 하지만 나중에 설치하라는 UpdateFirmware 명령을 받았고 +
-충전소에서 새 <<update_firmware_request,UpdateFirmwareRequest>>
-를 수신하는 경우 |충전소는 진행 중인 펌웨어 업데이트를 취소해야 하며 +
-_AcceptedCanceled_ 상태로 응답해야 합니다.
-|충전소는 새 펌웨어 파일이 있는지 먼저 확인하지 않아야 합니다. 이렇게 하면 CSMS가 새 펌웨어 업데이트를 시작하지 않고도 진행 중인 펌웨어 업데이트를 취소할 수 있습니다.
-|L02.FR.16 |충전소는 `FirmwareStatusNotification`에 대한 <<trigger_message_request,TriggerMessageRequest>>를 수신하고 +
-마지막으로 보낸 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>는 _status_ = `Installed`
-|충전소는 _status_ = `Idle`인 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 반환해야 합니다. |{nbsp}
-|L02.FR.17 |충전소가 `FirmwareStatusNotification`에 대한 <<trigger_message_request,TriggerMessageRequest>>를 수신하고 +
-마지막으로 전송된 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>는 상태 = `Installed`가 아니었습니다.
-|충전소는 마지막으로 전송된 _status_와 함께 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 반환해야 합니다. |{nbsp}
+  |<<firmware_status_notification_request,FirmwareStatusNotificationRequest>>의 필드 _requestId_는 _status_ = `Idle` 이 아닌 한 필수입니다. |{nbsp}
+|L02.FR.15 |충전기에서 새 펌웨어를 설치 중이거나 +
+  새 펌웨어를 설치하려고 하지만 나중에 설치하라는 UpdateFirmware 명령을 받음 AND +
+  충전기에서 새 <<update_firmware_request,UpdateFirmwareRequest>>를 수신하는 경우
+    |충전기는 진행 중인 펌웨어 업데이트를 취소해야 하며 +
+    _AcceptedCanceled_ 상태로 응답해야 합니다.
+      |충전기는 새 펌웨어 파일이 있는지 먼저 확인하지 않아야 합니다. 이렇게 하면 CSMS가 새 펌웨어 업데이트를 시작하지 않고도 진행 중인 펌웨어 업데이트를 취소할 수 있습니다.
+|L02.FR.16 |충전기는 `FirmwareStatusNotification` 에 대한 <<trigger_message_request,TriggerMessageRequest>>를 수신하고 +
+  마지막으로 보낸 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>는 _status_ = `Installed` 입니다
+    |충전기는 _status_ = `Idle` 인 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 반환해야 합니다. |{nbsp}
+|L02.FR.17 |충전기가 `FirmwareStatusNotification` 에 대한 <<trigger_message_request,TriggerMessageRequest>>를 수신하고 +
+  마지막으로 전송된 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>는 _status_ = `Installed` 가 아니었습니다.
+    |충전기는 마지막으로 전송된 _status_ 와 함께 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 반환해야 합니다. |{nbsp}
 |L02.FR.18 |L02.FR.15 +
-그리고 +
-충전소가 펌웨어 설치를 취소할 수 없습니다. |충전소는 _status_ = `Rejected`로 응답할 수 있습니다. |{nbsp}
-|L02.FR.19 |충전소가 실패하면 펌웨어 다운로드를 위한 모든 재시도가 실패합니다.
-|충전소는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,DownloadFailed>>로 전송해야 합니다.
-|충전소는 재시도할 때마다 새로운 <<firmware_status_enum_type,Downloading>> 상태를 전송할 수 있습니다.
-|L02.FR.20 |충전소가 새 펌웨어를 성공적으로 설치하고 활성화한 경우
-|충전소는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,Installed>>로 전송해야 합니다.
-|새 펌웨어 활성화에는 재부팅이 필요할 수 있습니다.
-|L02.FR.21 |충전소가 새 펌웨어를 성공적으로 설치하고 +
-새 펌웨어를 활성화하기 전에 충전소를 재부팅해야 하는 경우
-|충전소는 다음 중 하나를 수행해야 합니다. +
-(a) 재부팅하기 전에 _status_ = `InstallRebooting`인 선택적 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 보내고 새로 활성화된 펌웨어에서 _status_ = `Installed`인 필수 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 보내거나, +
-(b) 재부팅 및 새 펌웨어 활성화를 보고하지 않고 상태가 `Installed`로 설정된 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>만 보냅니다.
-|옵션(a)가 선호됩니다. 이는 CSMS에 충전소의 다가올 재부팅을 알리고, 최종 _상태_ = `설치됨`이 새 펌웨어 이미지에서 전송되므로 CSMS가 새 펌웨어가 활성화되어 있는지 확인할 수 있기 때문입니다. 새 펌웨어 재부팅이 실패할 경우 옵션(b)에서는 이를 보장하지 않습니다.
+  AND +
+  충전기가 펌웨어 설치를 취소할 수 없습니다.
+    |충전기는 _status_ = `Rejected` 로 응답할 수 있습니다. |{nbsp}
+|L02.FR.19 |충전기가 실패하면 펌웨어 다운로드를 위한 모든 재시도가 실패합니다.
+  |충전기는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,DownloadFailed>>로 전송해야 합니다.
+    |충전기는 재시도할 때마다 새로운 <<firmware_status_enum_type,Downloading>> 상태를 전송할 수 있습니다.
+|L02.FR.20 |충전기가 새 펌웨어를 성공적으로 설치하고 활성화한 경우
+  |충전기는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,Installed>>로 전송해야 합니다.
+    |새 펌웨어 활성화에는 재부팅이 필요할 수 있습니다.
+|L02.FR.21 |충전기가 새 펌웨어를 성공적으로 설치하고 +
+  새 펌웨어를 활성화하기 전에 충전기를 재부팅해야 하는 경우
+    |충전기는 다음 중 하나를 수행해야 합니다. +
+    (a) 재부팅하기 전에 _status_ = `InstallRebooting` 인 선택적 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 보내고 새로 활성화된 펌웨어에서 _status_ = `Installed` 인 필수 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 보내거나, +
+    (b) 재부팅 및 새 펌웨어 활성화를 보고하지 않고 상태가 `Installed` 로 설정된 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>만 보냅니다.
+      |옵션(a)가 선호됩니다. 이는 CSMS에 충전기의 다가올 재부팅을 알리고, 최종 _status_ = `Installed` 가 새 펌웨어 이미지에서 전송되므로 CSMS가 새 펌웨어가 활성화되어 있는지 확인할 수 있기 때문입니다. 새 펌웨어 재부팅이 실패할 경우 옵션(b)에서는 이를 보장하지 않습니다.
 |L02.FR.22 |L02.FR.02 +
-및 +
-충전소에 진행 중인 거래가 있음 +
-및 +
-설치된 펌웨어를 활성화하려면 재부팅이 필요함
-|충전소는 설치된 펌웨어를 활성화하기 전에 모든 거래가 끝날 때까지 기다려야 합니다.
-|예: A/B 펌웨어 업데이트의 경우
-|L02.FR.23 |충전소가 펌웨어를 성공적으로 다운로드하고 +
-_installDateTime_이 설정되지 않고 +
-충전소가 거래가 완료되기를 기다리는 경우
-|충전소는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,InstallScheduled>>로 보낼 수 있습니다.
-|installDateTime이 설정된 경우는 L02.FR.10에 포함됩니다.
+  AND +
+  충전기에 진행 중인 트랜잭션이 있음 +
+  AND +
+  설치된 펌웨어를 활성화하려면 재부팅이 필요함
+    |충전기는 설치된 펌웨어를 활성화하기 전에 모든 트랜잭션이 끝날 때까지 기다려야 합니다.
+      |예: A/B 펌웨어 업데이트의 경우
+|L02.FR.23 |충전기가 펌웨어를 성공적으로 다운로드하고 +
+  _installDateTime_ 이 설정되지 않고 +
+  충전기가 트랜잭션이 완료되기를 기다리는 경우
+    |충전기는 <<firmware_status_notification_request,FirmwareStatusNotificationRequest>>를 상태 <<firmware_status_enum_type,InstallScheduled>>로 보낼 수 있습니다.
+      |installDateTime이 설정된 경우는 L02.FR.10에 포함됩니다.
 |===
 
 === L03 - Publish Firmware file on Local Controller
@@ -313,25 +315,25 @@ _installDateTime_이 설정되지 않고 +
 |1 |이름 |로컬 컨트롤러에 펌웨어 파일 게시.
 |2 |ID |L03
 |{nbsp} d|_기능 블록_ |L. 펌웨어 관리
-|3 |목표 |충전소가 로컬 컨트롤러에서 직접 펌웨어 업데이트를 다운로드할 수 있도록 합니다.
-|4 |설명 |로컬 컨트롤러가 지정된 URL에서 펌웨어 업데이트를 다운로드하고 게시합니다. 이를 통해 CSMS는 로컬 컨트롤러를 가리키는 URI와 함께 <<update_firmware_request,UpdateFirmwareRequests>>를 로컬 컨트롤러에 연결된 모든 충전소로 보낼 수 있습니다. 이를 통해 사이트에서 WAN 인터페이스의 대역폭과 데이터를 절약할 수 있습니다.
+|3 |목표 |충전기가 로컬 컨트롤러에서 직접 펌웨어 업데이트를 다운로드할 수 있도록 합니다.
+|4 |설명 |로컬 컨트롤러가 지정된 URL에서 펌웨어 업데이트를 다운로드하고 게시합니다. 이를 통해 CSMS는 로컬 컨트롤러를 가리키는 URI와 함께 <<update_firmware_request,UpdateFirmwareRequests>>를 로컬 컨트롤러에 연결된 모든 충전기로 보낼 수 있습니다. 이를 통해 사이트에서 WAN 인터페이스의 대역폭과 데이터를 절약할 수 있습니다.
 |{nbsp} d|_Actors_ |로컬 컨트롤러, CSMS
 |{nbsp} d|_시나리오 설명_
-|**1.** CSMS가 <<publish_firmware_request,PublishFirmwareRequest>>를 보내 로컬 컨트롤러에 펌웨어 파일의 MD5 체크섬을 포함하여 펌웨어를 다운로드하고 게시하도록 지시합니다. +
-**2.** <<publish_firmware_request,PublishFirmwareRequest>>를 수신하면 로컬 컨트롤러가 <<publish_firmware_response,PublishFirmwareResponse>>로 응답합니다. +
-**3.** 로컬 컨트롤러가 펌웨어 다운로드를 시작합니다. +
-**4.** 로컬 컨트롤러가 MD5 체크섬을 확인합니다. +
-**5.** 로컬 컨트롤러가 <<publish_firmware_status_notification_request,PublishFirmwareStatusNotificationRequest>>에 명시된 URI에서 펌웨어 파일을 게시합니다. +
-**6.** CSMS는 사용 사례 L01 - 보안 펌웨어 업데이트에 설명된 대로 충전소에 펌웨어를 업데이트하도록 지시합니다.
-|5 |필수 조건 |해당 없음
+  |**1.** CSMS가 <<publish_firmware_request,PublishFirmwareRequest>>를 보내 로컬 컨트롤러에 펌웨어 파일의 MD5 체크섬을 포함하여 펌웨어를 다운로드하고 게시하도록 지시합니다. +
+  **2.** <<publish_firmware_request,PublishFirmwareRequest>>를 수신하면 로컬 컨트롤러가 <<publish_firmware_response,PublishFirmwareResponse>>로 응답합니다. +
+  **3.** 로컬 컨트롤러가 펌웨어 다운로드를 시작합니다. +
+  **4.** 로컬 컨트롤러가 MD5 체크섬을 확인합니다. +
+  **5.** 로컬 컨트롤러가 <<publish_firmware_status_notification_request,PublishFirmwareStatusNotificationRequest>>에 명시된 URI에서 펌웨어 파일을 게시합니다. +
+  **6.** CSMS는 사용 사례 L01 - Secure Firmware Update에 설명된 대로 충전기에 펌웨어를 업데이트하도록 지시합니다.
+|5 |필수 조건 |n/a
 |6 |사후 조건
-|**성공 사후 조건:** +
-펌웨어가 로컬 컨트롤러에 의해 성공적으로 게시되었습니다.
+  |**성공 사후 조건:** +
+  펌웨어가 로컬 컨트롤러에 의해 성공적으로 게시되었습니다.
 
-**실패 사후 조건:** +
-로컬 컨트롤러가 펌웨어 파일을 다운로드할 수 없었고 _DownloadFailed_ 상태를 보냈습니다. +
-로컬 컨트롤러가 MD5 체크섬을 확인할 수 없었고 _InvalidChecksum_ 상태를 보냈습니다. +
-로컬 컨트롤러가 펌웨어 파일을 게시할 수 없었고 _PublishFailed_ 상태를 보냈습니다.
+  **실패 사후 조건:** +
+  로컬 컨트롤러가 펌웨어 파일을 다운로드할 수 없었고 _DownloadFailed_ 상태를 보냈습니다. +
+  로컬 컨트롤러가 MD5 체크섬을 확인할 수 없었고 _InvalidChecksum_ 상태를 보냈습니다. +
+  로컬 컨트롤러가 펌웨어 파일을 게시할 수 없었고 _PublishFailed_ 상태를 보냈습니다.
 |===
 
 .시퀀스 다이어그램: 펌웨어 게시(행복한 흐름)
@@ -339,8 +341,8 @@ image::part2/images/figure_120.svg[시퀀스 다이어그램: 펌웨어 게시(�
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7 |오류 처리 |해당 없음
-|8 |주의 |MD5 체크섬에 대한 정보는 RFC-1321 [RFC1321]을 참조하세요.
+|7 |오류 처리 |n/a
+|8 |참고 |MD5 체크섬에 대한 정보는 RFC-1321 [RFC1321]을 참조하세요.
 |===
 
 ==== L03 - Publish Firmware file on Local Controller - Requirements
@@ -351,30 +353,31 @@ image::part2/images/figure_120.svg[시퀀스 다이어그램: 펌웨어 게시(�
 |ID |전제 조건 |요구 사항 정의
 
 |L03.FR.01 |{nbsp}
-|로컬 컨트롤러가 게시 프로세스에서 새 상태를 입력할 때마다 CSMS에 <<publish_firmware_status_notification_request,PublishFirmwareStatusNotificationRequest>> 메시지를 보내야 합니다.
+  |로컬 컨트롤러가 게시 프로세스에서 새 상태를 입력할 때마다 CSMS에 <<publish_firmware_status_notification_request,PublishFirmwareStatusNotificationRequest>> 메시지를 보내야 합니다.
 |L03.FR.02 |{nbsp}
-|MD5 체크섬은 전체 펌웨어 파일에 대해 계산해야 합니다.
+  |MD5 체크섬은 전체 펌웨어 파일에 대해 계산해야 합니다.
 |L03.FR.03 |{nbsp}
-|로컬 컨트롤러는 지원되는 모든 프로토콜(예: HTTP, HTTPS 및 FTP)을 사용하여 펌웨어 파일을 게시해야 합니다.
+  |로컬 컨트롤러는 지원되는 모든 프로토콜(예: HTTP, HTTPS 및 FTP)을 사용하여 펌웨어 파일을 게시해야 합니다.
 |L03.FR.04 |{nbsp}
-|로컬 컨트롤러는 지원되는 모든 프로토콜(예: HTTP, HTTPS 및 FTP)에 대한 URI를 <<publish_firmware_status_notification_request,PublishFirmwareStatusNotificationRequest>> 메시지의 _location_ 필드에 _Published_ 상태로 설정해야 합니다.
-|L03.FR.05 |<<publish_firmware_request,PublishFirmwareRequest>> 메시지를 수신하면.
-|로컬 컨트롤러는 <<publish_firmware_response,PublishFirmwareResponse>> 메시지로 응답하여 요청을 수락했는지 여부를 표시해야 합니다.
+  |로컬 컨트롤러는 지원되는 모든 프로토콜(예: HTTP, HTTPS 및 FTP)에 대한 URI를 <<publish_firmware_status_notification_request,PublishFirmwareStatusNotificationRequest>> 메시지의 _location_ 필드에 _Published_ 상태로 설정해야 합니다.
+|L03.FR.05 |<<publish_firmware_request,PublishFirmwareRequest>> 메시지를 수신하는 경우
+  |로컬 컨트롤러는 <<publish_firmware_response,PublishFirmwareResponse>> 메시지로 응답하여 요청을 수락했는지 여부를 표시해야 합니다.
 |L03.FR.06 |로컬 컨트롤러가 펌웨어 파일을 다운로드할 수 없는 경우.
-|로컬 컨트롤러는 <<publish_firmware_status_notification_request,PublishFirmwareStatusNotificationRequest>>를 상태 _DownloadFailed_로 전송해야 합니다.
+  |로컬 컨트롤러는 <<publish_firmware_status_notification_request,PublishFirmwareStatusNotificationRequest>>를 상태 _DownloadFailed_ 로 전송해야 합니다.
 |L03.FR.07 |로컬 컨트롤러가 MD5 체크섬을 확인할 수 없는 경우.
-|로컬 컨트롤러는 <<publish_firmware_status_notification_request,PublishFirmwareStatusNotificationRequest>>를 상태 _InvalidChecksum_로 전송해야 합니다.
+  |로컬 컨트롤러는 <<publish_firmware_status_notification_request,PublishFirmwareStatusNotificationRequest>>를 상태 _InvalidChecksum_ 로 전송해야 합니다.
 |L03.FR.08 |로컬 컨트롤러가 펌웨어 파일을 게시할 수 없는 경우.
-|로컬 컨트롤러는 <<publish_firmware_status_notification_request,PublishFirmwareStatusNotificationRequest>>를 상태 _PublishFailed_로 전송해야 합니다.
+  |로컬 컨트롤러는 <<publish_firmware_status_notification_request,PublishFirmwareStatusNotificationRequest>>를 상태 _PublishFailed_ 로 전송해야 합니다.
 |L03.FR.09 |펌웨어 파일을 성공적으로 게시한 후.
-|로컬 컨트롤러는 <<publish_firmware_status_notification_request,PublishFirmwareStatusNotificationRequest>>를 상태 _Published_로 전송해야 합니다.
-|L03.FR.10 |충전소는 `PublishFirmwareStatusNotification`에 대한 <<trigger_message_request,TriggerMessageRequest>>를 수신합니다. +
-그리고 +
-마지막으로 보낸 <<publish_firmware_status_notification_request,PublishFirmwareStatusNotificationRequest>>는 _status_ = `Published`였습니다. |충전소는 _status_ = `Idle`인 <<publish_firmware_status_notification_request,PublishFirmwareStatusNotificationRequest>>를 반환해야 합니다.
-|L03.FR.11 |충전소는 `PublishFirmwareStatusNotification`에 대한 <<trigger_message_request,TriggerMessageRequest>>를 수신합니다. +
-그리고 +
-마지막으로 전송된 <<publish_firmware_status_notification_request,PublishFirmwareStatusNotificationRequest>>는 `Published` _status_가 아닙니다.
-|충전소는 마지막으로 전송된 _status_와 함께 <<publish_firmware_status_notification_request,PublishFirmwareStatusNotificationRequest>>를 반환해야 합니다.
+  |로컬 컨트롤러는 <<publish_firmware_status_notification_request,PublishFirmwareStatusNotificationRequest>>를 상태 _Published_ 로 전송해야 합니다.
+|L03.FR.10 |충전기는 `PublishFirmwareStatusNotification` 에 대한 <<trigger_message_request,TriggerMessageRequest>>를 수신합니다. +
+  AND +
+  마지막으로 보낸 <<publish_firmware_status_notification_request,PublishFirmwareStatusNotificationRequest>>는 _status_ = `Published` 였습니다.
+    |충전기는 _status_ = `Idle` 인 <<publish_firmware_status_notification_request,PublishFirmwareStatusNotificationRequest>>를 반환해야 합니다.
+|L03.FR.11 |충전기는 `PublishFirmwareStatusNotification` 에 대한 <<trigger_message_request,TriggerMessageRequest>>를 수신합니다. +
+  AND +
+  마지막으로 전송된 <<publish_firmware_status_notification_request,PublishFirmwareStatusNotificationRequest>>는 _status_ `Published` 가 아닙니다.
+    |충전기는 마지막으로 전송된 _status_ 와 함께 <<publish_firmware_status_notification_request,PublishFirmwareStatusNotificationRequest>>를 반환해야 합니다.
 |===
 
 === L04 - Unpublish Firmware file on Local Controller
@@ -387,19 +390,19 @@ image::part2/images/figure_120.svg[시퀀스 다이어그램: 펌웨어 게시(�
 |1 |이름 |로컬 컨트롤러에서 펌웨어 파일 게시 취소
 |2 |ID |L04
 |{nbsp} d|_기능 블록_ |L. 펌웨어 관리
-|3 |목표 |로컬 컨트롤러가 충전소에 펌웨어 업데이트를 게시하는 것을 중지합니다.
-|4 |설명 |연결된 충전소에 펌웨어 업데이트를 제공하는 것을 중지합니다.
+|3 |목표 |로컬 컨트롤러가 충전기에 펌웨어 업데이트를 게시하는 것을 중지합니다.
+|4 |설명 |연결된 충전기에 펌웨어 업데이트를 제공하는 것을 중지합니다.
 |{nbsp} d|_Actors_ |로컬 컨트롤러, CSMS
 |{nbsp} d|_시나리오 설명_
-|**1.** CSMS가 <<unpublish_firmware_request,UnpublishFirmwareRequest>>를 보내 로컬 컨트롤러에 펌웨어를 게시 취소하도록 지시합니다. +
-**2.** 로컬 컨트롤러가 펌웨어를 게시 취소합니다. +
-**3.** 로컬 컨트롤러가 <<unpublish_firmware_response,UnpublishFirmwareResponse>>로 응답합니다.
+  |**1.** CSMS가 <<unpublish_firmware_request,UnpublishFirmwareRequest>>를 보내 로컬 컨트롤러에 펌웨어를 게시 취소하도록 지시합니다. +
+  **2.** 로컬 컨트롤러가 펌웨어를 게시 취소합니다. +
+  **3.** 로컬 컨트롤러가 <<unpublish_firmware_response,UnpublishFirmwareResponse>>로 응답합니다.
 |5 |필수 조건 |로컬 컨트롤러가 성공적으로 게시한 펌웨어.
 |6 |사후 조건
-|**성공한 사후 조건:** +
-펌웨어 파일이 더 이상 게시되지 않습니다. +
-**실패 사후 조건:** +
-해당 없음
+  |**성공 사후 조건:** +
+  펌웨어 파일이 더 이상 게시되지 않습니다. +
+  **실패 사후 조건:** +
+  n/a
 |===
 
 .시퀀스 다이어그램: 펌웨어 파일 게시 취소
@@ -407,8 +410,8 @@ image::part2/images/figure_121.svg[시퀀스 다이어그램: 펌웨어 파일 �
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7 |오류 처리 |해당 없음
-|8 |주의 |CSMS는 전체 펌웨어 파일에 대한 MD5 체크섬을 고유 식별자로 사용하여 어떤 펌웨어 파일을 게시 취소해야 하는지 나타냅니다.
+|7 |오류 처리 |n/a
+|8 |참고 |CSMS는 전체 펌웨어 파일에 대한 MD5 체크섬을 고유 식별자로 사용하여 어떤 펌웨어 파일을 게시 취소해야 하는지 나타냅니다.
 |===
 
 ==== L04 - Unpublish Firmware file on Local Controller - Requirements
@@ -419,14 +422,14 @@ image::part2/images/figure_121.svg[시퀀스 다이어그램: 펌웨어 파일 �
 |ID |전제 조건 |요구 사항 정의
 
 |L04.FR.01 |로컬 컨트롤러가 <<unpublish_firmware_request,UnpublishFirmwareRequest>> 메시지를 수신하고 +
-진행 중인 다운로드가 없는 경우.
-|펌웨어 파일은 게시 취소되어야 합니다.
+  진행 중인 다운로드가 없는 경우.
+    |펌웨어 파일은 게시 취소되어야 합니다.
 |L04.FR.02 |펌웨어 파일을 성공적으로 게시 취소한 후.
-|로컬 컨트롤러는 <<unpublish_firmware_response,UnpublishFirmwareResponse>> 메시지를 _Unpublished_ 상태로 전송해야 합니다.
+  |로컬 컨트롤러는 <<unpublish_firmware_response,UnpublishFirmwareResponse>> 메시지를 _Unpublished_ 상태로 전송해야 합니다.
 |L04.FR.03 |로컬 컨트롤러가 <<unpublish_firmware_request,UnpublishFirmwareRequest>> 메시지를 수신하고 +
-게시된 파일이 없는 경우.
-|로컬 컨트롤러는 <<unpublish_firmware_response,UnpublishFirmwareResponse>> 메시지를 _NoFirmware_ 상태로 보내야 합니다.
+  게시된 파일이 없는 경우.
+    |로컬 컨트롤러는 <<unpublish_firmware_response,UnpublishFirmwareResponse>> 메시지를 _NoFirmware_ 상태로 보내야 합니다.
 |L04.FR.04 |로컬 컨트롤러가 <<unpublish_firmware_request,UnpublishFirmwareRequest>> 메시지를 수신하고 +
-충전소가 펌웨어 파일을 다운로드하는 경우.
-|로컬 컨트롤러는 _Downloading_ 상태로 응답하고 펌웨어 파일을 게시 취소하지 *않아야* 합니다.
+  충전기가 펌웨어 파일을 다운로드하는 경우.
+    |로컬 컨트롤러는 _Downloading_ 상태로 응답하고 펌웨어 파일을 게시 취소하지 *않아야* 합니다.
 |===
