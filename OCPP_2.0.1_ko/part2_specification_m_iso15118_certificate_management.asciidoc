@@ -4,42 +4,43 @@
 :sectnums:
 == Introduction
 
-The ISO/IEC JWG 15118 for the Vehicle to Grid Communication Interface (V2G CI) was founded in 2009 with means to the need of a complementary international standard to IEC 61851-1 <<iec61851_1,[IEC61851-1]>> providing bi-directional digital communication based on Internet protocols. The major purpose of 15118 is to establish a more advanced and autonomously working charge control mechanism between EVs and charging infrastructures. The standard is currently under development and will ultimately provide means for various authentication schemes (e.g. plug charge vs. external identification means, like RFID cards), automatic handling of charging services as well as (proprietary) value added services, charge scheduling and advance planning, etc.
+ISO/IEC JWG 15118 for the Vehicle to Grid Communication Interface(V2G CI)는 2009년에 설립되었으며, 인터넷 프로토콜을 기반으로 양방향 디지털 통신을 제공하는 IEC 61851-1 <<iec61851_1,[IEC61851-1]>>에 대한 보완적인 국제 표준이 필요하다는 필요성을 충족하기 위해 만들어졌습니다. 15118의 주요 목적은 EV와 충전 인프라 간에 보다 진보적이고 자율적으로 작동하는 충전 제어 메커니즘을 구축하는 것입니다. 이 표준은 현재 개발 중이며 궁극적으로 다양한 인증 방식(예: 플러그 충전 대 RFID 카드와 같은 외부 식별 수단), 충전 서비스의 자동 처리 및 (독점적인) 부가가치 서비스, 충전 일정 및 사전 계획 등을 위한 수단을 제공할 것입니다.
 
-The 15118 standard is of interest to the Open Charge Alliance, as it provides the exchange of charging schedules and enables to control the amount of power that an EV may draw from a Charging Station, in which some form of vehicle to grid communication is necessary. Especially the second part, which specifies the messages to be exchanged between the communication partners (Application Layer), the associated data and data types (Presentation Layer) via TCP/IP based Transport and Network Layer, is important to acknowledge in this specification. The authorization for charging is provided either by External Identification Means (EIM), such as an RFID card, or by the Plug and Charge (PnC) mechanism using a contract certificate stored in the EV, handled by the certificate handling process in use case elements "C", eliminating the need of other authorization means.
+15118 표준은 충전 일정을 교환하고 EV가 충전기에서 소모할 수 있는 전력량을 제어할 수 있기 때문에 Open Charge Alliance의 관심을 끌고 있으며, 여기에는 차량과 그리드 간 통신의 어떤 형태가 필요합니다. 특히, TCP/IP 기반 전송 및 네트워크 계층을 통해 통신 파트너(애플리케이션 계층), 연관된 데이터 및 데이터 유형(프레젠테이션 계층) 간에 교환할 메시지를 지정하는 두 번째 부분은 이 사양에서 인식하는 것이 중요합니다. 충전에 대한 승인은 RFID 카드와 같은 외부 식별 수단(EIM) 또는 EV에 저장된 계약 인증서를 사용하는 플러그 앤 충전(PnC) 메커니즘을 통해 제공되며, 사용 사례 요소 "C"의 인증서 처리 프로세스에서 처리되므로 다른 승인 수단이 필요하지 않습니다.
 
-This 15118 OCPP Functional Block has been designed to meet a number of alignment objectives:
+이 15118 OCPP 기능 블록은 여러 정렬 목표를 충족하도록 설계되었습니다.
 
-- To allow the communication between an EV (BEV or a PHEV) and an EVSE.
-- To allow the support of certificate-based authentication and authorization at the Charging Station, i.e. plug and charge.
+- EV(BEV 또는 PHEV)와 EVSE 간의 통신을 허용합니다.
+- 충전기에서 인증서 기반 인증 및 승인(즉, 플러그 앤 충전)을 지원합니다.
 
-For illustration purposes: the figure below shows a complete sequence with authorization and scheduling.
+설명을 위해 아래 그림은 승인 및 스케줄링이 포함된 전체 시퀀스를 보여줍니다.
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===
-|NOTE |To the below figure: this sequence only applies for AC charging, although the certificate handling (which is the focus in this section) does not differ in AC or DC.
+|NOTE |아래 그림에: 이 시퀀스는 AC 충전에만 적용되지만, 인증서 처리(이 섹션에서 중점적으로 다루는 부분)는 AC나 DC에서 다르지 않습니다.
 |===
 
 <<<
 
-.Sequence with Authorization and Scheduling
-image::part2/images/figure_122.svg[Sequence with Authorization and Scheduling]
+.권한 부여 및 스케줄링이 있는 시퀀스
+image::part2/images/figure_122.svg[권한 부여 및 스케줄링이 있는 시퀀스]
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===
-|NOTE |The time-out on the ChargeParameterDiscoveryReq is 2 seconds, but this can be prolonged up to 60 seconds to wait for charging profile to be provided by the CSMS. See ISO 15118-2 <<iso15118_2,[ISO15118-2]>>.
+|NOTE |ChargeParameterDiscoveryReq의 시간 초과는 2초이지만, CSMS에서 제공하는 충전 프로필을 기다리기 위해 최대 60초까지 연장할 수 있습니다. ISO 15118-2 <<iso15118_2,[ISO15118-2]>>를 참조하세요.
 |===
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===
-|NOTE |Please note that it is highly RECOMMENDED to use one of the TLS based security profiles from functional blockA, not doing this might "break" the ISO 15118 security.
+|NOTE |기능 블록A의 TLS 기반 보안 프로필 중 하나를 사용하는 것이 좋습니다. 이렇게 하지 않으면 ISO 15118 보안이 "파괴"될 수 있습니다.
+
 |===
 
-In order to control the amount of power that an EV may draw from a Charging Station, some form of vehicle to grid communication is necessary. OCPP has been designed to support the <<iso15118_1,ISO 15118>> standard for communication between the EV and Charging Station (EVSE). However, it is anticipated that for the coming years, the majority of EVs will only support the control pilot PWM signal <<iec61851_1,IEC61851>>, so care has been taken to support smart charging with this as well.
+EV가 충전기에서 소모할 수 있는 전력량을 제어하려면 어떤 형태의 차량-그리드 통신이 필요합니다. OCPP는 EV와 충전기(EVSE) 간 통신을 위한 <<iso15118_1,ISO 15118>> 표준을 지원하도록 설계되었습니다. 그러나 앞으로 몇 년 동안 대부분의 EV는 제어 파일럿 PWM 신호 <<iec61851_1,IEC61851>>만 지원할 것으로 예상되므로 이를 통해 스마트 충전을 지원하는 데 주의를 기울였습니다.
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===
-|NOTE |A mapping of the ISO 15118 and OCPP terminology is provided in <<iso_15118_and_ocpp_terminology_mapping,ISO 15118 and OCPP terminology mapping>> and abbreviations used in ISO 15118 are listed in <<iso_15118_abbreviations,ISO 15118 Abbreviations>>.
+|NOTE |ISO 15118 및 OCPP 용어 매핑은 <<iso_15118_and_ocpp_terminology_mapping,ISO 15118 and OCPP terminology mapping>>에 제공되고 ISO 15118에서 사용되는 약어는 <<iso_15118_abbreviations,ISO 15118 Abbreviations>>에 나열되어 있습니다.
 |===
 
 <<<
@@ -48,165 +49,165 @@ In order to control the amount of power that an EV may draw from a Charging Stat
 
 === ISO 15118 Certificate structure
 
-The ISO 15118 standard provides a Plug & Charge mechanism. This is an identification and authorization mode where the customer just has to plug his electric vehicle into the EVSE and all aspects of authentication, authorization, load control and billing are automatically taken care of without the need for further user interaction. This is facilitated by the application of digital signatures and exchange of X.509 certificates bound to a Public Key Infrastructures (PKI) model.
+ISO 15118 표준은 Plug & Charge 메커니즘을 제공합니다. 이는 고객이 전기 자동차를 EVSE에 연결하기만 하면 모든 인증, 승인, 부하 제어 및 청구 측면이 추가 사용자 상호 작용 없이 자동으로 처리되는 식별 및 승인 모드입니다. 이는 디지털 서명을 적용하고 공개 키 인프라(PKI) 모델에 바인딩된 X.509 인증서를 교환하여 용이하게 합니다.
 
-The PKI structure defined by ISO 15118 is shown in the figure below. In general, four PKIs need to be in place.
+ISO 15118에서 정의한 PKI 구조는 아래 그림에 나와 있습니다. 일반적으로 4개의 PKI가 있어야 합니다.
 
-- PKI for the Charging Station Operator (CSO)
-- PKI for the Certificate Provisioning Service (CPS)
-- PKI for the Mobility Operator (MO)
-- PKI for the car manufacturer (OEM)
+- 충전기 운영자(CSO)용 PKI
+- 인증서 제공 서비스(CPS)용 PKI
+- 모빌리티 운영자(MO)용 PKI
+- 자동차 제조업체(OEM)용 PKI
 
-The trust anchor (root CA) for the CSO and CPS is the so-called V2G Root CA. On the other hand, it is up to the respective OEM and MO to operate a Root CA of their own or derive their certificates from a V2G Root CA (indicated by the dotted lines between V2G Root and MO Sub-CA 1 and OEM Sub-CA 1, respectively).
+CSO 및 CPS용 트러스트 앵커(루트 CA)는 소위 V2G 루트 CA입니다. 반면, 각 OEM과 MO는 자체 루트 CA를 운영하거나 V2G 루트 CA에서 인증서를 파생해야 합니다(각각 V2G 루트와 MO 하위 CA 1 및 OEM 하위 CA 1 사이의 점선으로 표시).
 
-.PKIs applied for Plug & Charge identification mode
-image::part2/images/figure_123.svg[PKIs applied for Plug & Charge identification mode]
+.플러그 및 충전 식별 모드에 적용된 PKI
+image::part2/images/figure_123.svg[플러그 및 충전 식별 모드에 적용된 PKI]
 
-If only one Sub-CA layer is used, i.e. a Sub-CA signed by a Root CA directly signs leaf certificates, the profile of Sub-CA 2 shall apply for that Sub-CA (Source: <<iso15118_2,ISO15118-2>>)
+하위 CA 계층이 하나만 사용되는 경우, 즉 루트 CA가 서명한 하위 CA가 리프 인증서에 직접 서명하는 경우 하위 CA 2의 프로필이 해당 하위 CA에 적용됩니다(출처: <<iso15118_2,ISO15118-2>>)
 
-OCPP needs to make sure that the necessary information can be exchanged between the EV, the Charging Station and a backend IT infrastructure to facilitate the contract provisioning. Contract provisioning is a process defined within ISO 15118 that describes how an EV can retrieve a valid contract certificate during a communication session in order to authenticate and authorize itself for the charging process.
+OCPP는 계약 제공을 용이하게 하기 위해 EV, 충전기 및 백엔드 IT 인프라 간에 필요한 정보를 교환할 수 있는지 확인해야 합니다. 계약 프로비저닝은 ISO 15118에 정의된 프로세스로, EV가 통신 세션 중에 유효한 계약 인증서를 검색하여 충전 프로세스에 대한 인증 및 권한을 부여하는 방법을 설명합니다.
 
-Given the PKI structure in the figure above, OCPP must provide messages which are able to transmit the following certificates:
+위 그림의 PKI 구조를 고려할 때 OCPP는 다음 인증서를 전송할 수 있는 메시지를 제공해야 합니다.
 
-- **CPS certificate chain** +
-  Comprised of Prov Sub-CA 1, Prov Sub-CA 2 and leaf provisioning certificate. Sent with the CertificateInstallationRes and CertificateUpdateRes message.
-- **MO certificate chain** +
-  Comprised of MO Sub-CA 1, MO Sub-CA 2 and contract certificate. Sent with the messages CertificateInstallationRes, CertificateUpdateReq, and CertificateUpdateRes.
-- **OEM provisioning certificate** +
-  Sent with the CertificateInstallationReq message.
+- **CPS 인증서 체인** +
+Prov Sub-CA 1, Prov Sub-CA 2 및 리프 프로비저닝 인증서로 구성됨. CertificateInstallationRes 및 CertificateUpdateRes 메시지와 함께 전송됨.
+- **MO 인증서 체인** +
+MO Sub-CA 1, MO Sub-CA 2 및 계약 인증서로 구성됨. CertificateInstallationRes, CertificateUpdateReq 및 CertificateUpdateRes 메시지와 함께 전송됨.
+- **OEM 프로비저닝 인증서** +
+CertificateInstallationReq 메시지와 함께 전송됨.
 
-Furthermore, some ISO 15118 messages require digital XML-based signatures. Those signatures need to be validated by the receiving party by using the corresponding certificate chain and verifying the chain of signatures all the way up to the respective trust anchor (V2G root, MO root or OEM root). Table 13 on page 45 of <<iso15118_2,ISO15118-2>> provides an overview of applied XML-based signatures in ISO 15118. As you can see in there, the Charging Station (EVSE is part of a Charging Station) needs to verify the signature of the following messages.
+또한 일부 ISO 15118 메시지에는 디지털 XML 기반 서명이 필요합니다. 이러한 서명은 해당 인증서 체인을 사용하여 수신 당사자가 검증하고 해당 신뢰 앵커(V2G 루트, MO 루트 또는 OEM 루트)까지 서명 체인을 검증해야 합니다. <<iso15118_2,ISO15118-2>>의 45페이지에 있는 표 13은 ISO 15118에서 적용된 XML 기반 서명에 대한 개요를 제공합니다. 거기에서 볼 수 있듯이 충전기(EVSE는 충전기의 일부)는 다음 메시지의 서명을 검증해야 합니다.
 
 - **AuthorizationReq** +
-  Certificate chain needed to verify signature is provided with PaymentDetailsReq.
+서명을 검증하는 데 필요한 인증서 체인은 PaymentDetailsReq와 함께 제공됩니다.
 - **MeteringReceiptReq** +
-  Certificate chain needed to verify signature is provided with PaymentDetailsReq.
+서명을 검증하는 데 필요한 인증서 체인은 PaymentDetailsReq와 함께 제공됩니다.
 - **CertificateUpdateReq** +
-  Certificate chain needed to verify signature is provided with this message.
+서명을 검증하는 데 필요한 인증서 체인은 이 메시지와 함께 제공됩니다.
 
-The signature verification as well as the check of the validity of each certificate provided by the EV can be done offline. These three messages are signed with the private key belonging to the public key of the contract certificate that is installed in the EV. The CSO needs to make sure that the corresponding MO root CA certificate (MO trust anchor) is installed on the Charging Station to enable signature verification offline (the chain of contract certificates and sub-CA certificates is already fulfilled by the EV in the PaymentDetailsReq message so only the MO root CA is required).
+EV에서 제공하는 각 인증서의 유효성 검사와 서명 검증은 오프라인에서 수행할 수 있습니다. 이 세 가지 메시지는 EV에 설치된 계약 인증서의 공개 키에 속하는 개인 키로 서명됩니다. CSO는 해당 MO 루트 CA 인증서(MO 신뢰 앵커)가 충전기에 설치되어 오프라인에서 서명 검증이 가능하도록 해야 합니다(계약 인증서와 하위 CA 인증서 체인은 EV에서 PaymentDetailsReq 메시지에서 이미 충족되므로 MO 루트 CA만 필요합니다).
 
-The PaymentDetailsReq message is sent before the AuthorizationReq and MeteringReceiptReq message. Therefore, the Charging Station must temporarily save the certificate chain provided with the PaymentDetailsReq message as long as the current transaction is active in order to be able to verify the signature created by the EV. After the transaction has been terminated, the temporarily saved certificate chain must be deleted on the Charging Station side. +
-Please note that the Charging Station only needs to check the contract certificate upon the receipt of the PaymentDetailsReq message _from_ the EV which delivers the ContractSignatureCertChain, containing the contract certificate and possible sub-CA certificates, excluding the root CA certificate. _However_, it does not need to check the contract certificate upon installation or update of the contract certificate, upon delivery _to_ the EV.
+PaymentDetailsReq 메시지는 AuthorizationReq 및 MeteringReceiptReq 메시지보다 먼저 전송됩니다. 따라서 충전기는 EV에서 생성한 서명을 검증하기 위해 현재 트랜잭션이 활성화된 동안 PaymentDetailsReq 메시지와 함께 제공된 인증서 체인을 일시적으로 저장해야 합니다. 트랜잭션이 종료된 후에는 충전기 측에서 일시적으로 저장된 인증서 체인을 삭제해야 합니다. +
+충전기는 계약 인증서와 루트 CA 인증서를 제외한 가능한 하위 CA 인증서가 포함된 ContractSignatureCertChain을 전달하는 EV에서 PaymentDetailsReq 메시지를 수신할 때만 계약 인증서를 확인하면 됩니다. _그러나_ EV에_ 전달될 때 계약 인증서를 설치하거나 업데이트할 때는 계약 인증서를 확인할 필요가 없습니다.
 
-On the contrary, the signature provided with the **CertificateInstallationReq** needs to be verified by a so-called secondary actor, a market stakeholder communicating with the CSO backend. This means that OCPP needs to provide means for transmitting the complete CertificateInstallationReq message.
+반대로 **CertificateInstallationReq**와 함께 제공된 서명은 CSO 백엔드와 통신하는 시장 이해 관계자인 소위 보조 행위자가 확인해야 합니다. 즉, OCPP는 전체 CertificateInstallationReq 메시지를 전송하는 수단을 제공해야 합니다.
 
-The CertificateUpdateRes and CertificateInstallationRes need to be sent from the CSO backend to the charging station as Base64 encoded binary data. The Charging Station removes the Base64 encoding and sends it to the EV as a binary EXI message.
+CertificateUpdateRes 및 CertificateInstallationRes는 CSO 백엔드에서 충전기로 Base64 인코딩된 바이너리 데이터로 전송해야 합니다. 충전기는 Base64 인코딩을 제거하고 EV로 바이너리 EXI 메시지로 전송합니다.
 
-Finally, the Charging Station certificate (labelled as EVSE Leaf Certificate in figure 1) together with its private key is used to establish a secure connection between EV and EVSE via TLS. According to ISO 15118, this certificate should be valid for only 2 to 3 months. To install or update the Charging Station certificate, please refer to <<update_charging_station_certificate_by_request_of_csms,Certificate installation Charging Station>>.
+마지막으로, 충전기 인증서(그림 1에서 EVSE Leaf 인증서로 표시됨)와 개인 키는 TLS를 통해 EV와 EVSE 간에 보안 연결을 설정하는 데 사용됩니다. ISO 15118에 따르면 이 인증서는 2~3개월 동안만 유효해야 합니다. 충전기 인증서를 설치하거나 업데이트하려면 <<update_charging_station_certificate_by_request_of_csms,Certificate installation Charging Station>>을 참조하세요.
 
-While the Charging Station can verify the signature and validity period of each certificate in the MO contract certificate chain offline, there are two things which the Charging Station cannot verify offline: +
+충전기는 MO 계약 인증서 체인의 각 인증서의 서명과 유효 기간을 오프라인에서 확인할 수 있지만, 충전기는 오프라인에서 확인할 수 없는 두 가지 사항이 있습니다.+
 
-1. **The authorization status of the EMAID** +
-The EMAID is a unique identifier issued by the MO together with the contract certificate. Therefore, only the MO can provide information on whether the user is authorized for charging based on this EMAID or not. The Charging Station needs to forward the EMAID to the CSO after having checked that the signature of each certificate in the contract certificate chain is valid. This order of steps is necessary because the contract certificate protects the EMAID against manipulation by means of the digital signature of its issuer. The Charging Station could also work with a white list of EMAIDs cached locally. However, white lists need to be frequently updated to ensure that the authorization information used is not outdated. +
-2. **The revocation status of each certificate** +
-Reasons for revoking a certificate are e.g. that the private key belonging to the public key of a certificate has been corrupted or that the algorithm used to create a signature is not considered to be secure anymore. Revocation status is checked using an OCSP responder whose address is given as an attribute value of an X.509 certificate.
+1. **EMAID의 승인 상태** +
+EMAID는 MO가 계약 인증서와 함께 발급한 고유 식별자입니다. 따라서 MO만이 이 EMAID를 기반으로 사용자가 충전을 승인받았는지 여부에 대한 정보를 제공할 수 있습니다. 충전기는 계약 인증서 체인의 각 인증서의 서명이 유효한지 확인한 후 EMAID를 CSO에 전달해야 합니다. 이러한 단계 순서는 계약 인증서가 발급자의 디지털 서명을 통한 조작으로부터 EMAID를 보호하기 때문에 필요합니다. 충전기는 로컬에 캐시된 EMAID의 허용 목록으로 작업할 수도 있습니다. 그러나 사용되는 승인 정보가 오래되지 않도록 허용 목록을 자주 업데이트해야 합니다.+
+2. **각 인증서의 해지 상태** +
+인증서를 해지하는 이유는 다음과 같습니다. 인증서의 공개 키에 속하는 개인 키가 손상되었거나 서명을 만드는 데 사용된 알고리즘이 더 이상 안전하지 않은 것으로 간주된다는 것입니다. 해지 상태는 X.509 인증서의 속성 값으로 주소가 제공된 OCSP 응답자를 사용하여 확인됩니다.
 
 === Using ISO 15118 Certificates in OCPP
 
-From an OCPP perspective, based on the above paragraph, the Charging Station needs to have one or more of each of the following certificate types:
+OCPP 관점에서, 위의 문단을 기준으로, 충전기는 다음 인증서 유형 중 하나 이상을 가져야 합니다.
 
 [cols="<.^2s,<.^8",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|Type            |Description
+|유형 |설명
 
-|V2GChargingStation Certificate
-  |Certificate of the Charging Station. In 15118 this is called the _SECC Certificate_ (or _EVSE Leaf Certificate_). This certificate is used during the set-up of the TLS connection between the Charging Station and the EV.
+|V2GChargingStation 인증서
+|충전기 인증서. 15118에서는 이를 _SECC 인증서_(또는 _EVSE Leaf 인증서_)라고 합니다. 이 인증서는 충전기와 EV 간의 TLS 연결을 설정하는 동안 사용됩니다.
 |V2GRootCertificate
-  |Certificate of the ISO15118 V2G Root. The V2G Charging Station Certificate MUST BE derived from this root.
+|ISO15118 V2G 루트 인증서. V2G 충전기 인증서는 반드시 이 루트에서 파생되어야 합니다.
 |MORootCertificate
-  |Certificate from an eMobility Service provider. To support PnC charging with contracts from service providers that not derived their certificates from the V2G root.
+|eMobility 서비스 공급자의 인증서. V2G 루트에서 인증서를 파생하지 않은 서비스 공급자의 계약으로 PnC 충전을 지원합니다.
 |===
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===
-|NOTE |The V2G Charging Station Certificate might be the same as the certificate used for securing the connection between the Charging Station and the CSMS. For this to work, this certificate MUST BE to be derived from a V2G Root.
+|NOTE |V2G 충전기 인증서는 충전기와 CSMS 간 연결을 보호하는 데 사용되는 인증서와 동일할 수 있습니다. 이를 작동시키려면 이 인증서가 V2G 루트에서 파생되어야 합니다.
 |===
 
-A Contract Certificate can be derived from a V2G root, or an eMobility root. This means the Charging Station needs to be in possession of the corresponding root certificate to be able to authenticate the driver by means of the Contract Certificate and the associated certificate chain.
+계약 인증서는 V2G 루트 또는 eMobility 루트에서 파생될 수 있습니다. 즉, 충전기는 계약 인증서와 관련 인증서 체인을 통해 운전자를 인증할 수 있도록 해당 루트 인증서를 소유해야 합니다.
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===
-|NOTE |When a Charging Station is online this does not have to be the case, because it can send an <<authorize_request,AuthorizeRequest>> message with the Contract Certificate to be validated by the CSMS.
+|NOTE |충전기가 온라인인 경우 반드시 그럴 필요는 없습니다. CSMS에서 검증할 계약 인증서와 함께 <<authorize_request,AuthorizeRequest>> 메시지를 보낼 수 있기 때문입니다.
 |===
 
-The V2G Charging Station Certificate needs to be derived from a V2G root. If this root is not known by the EV, no connection via 15118 is possible, so charging controlled by 15118 is NOT possible. In the event a Charging Station needs to support more than one V2G root, multiple V2G Charging Station Certificates are needed.
+V2G 충전기 인증서는 V2G 루트에서 파생되어야 합니다. 이 루트가 EV에서 알려지지 않은 경우 15118을 통한 연결이 불가능하므로 15118에서 제어하는 ​​충전은 불가능합니다. 충전기에서 두 개 이상의 V2G 루트를 지원해야 하는 경우 여러 개의 V2G 충전기 인증서가 필요합니다.
 
 === 15118 communication set-up
 
-At the beginning of a 15118 communication session the EV will initiate a TLS Connection. In this request, the car presents its known V2G root certificates.
+15118 통신 세션이 시작되면 EV는 TLS 연결을 시작합니다. 이 요청에서 자동차는 알려진 V2G 루트 인증서를 제시합니다.
 
-During the TLS handshake, the EVCC can request the OCSP status of the Charging Station and intermediate certificates using OCSP stapling as defined in <<ocpp_security_9,IETF RFC 6961>>. The Charging Station can retrieve this information by sending a <<get_certificate_status_request,GetCertificateStatusRequest>> to the CSMS, see use case <<get_v2g_charging_station_certificate_status,M06 - Get Charging Station Certificate status>>.
+TLS 핸드셰이크 중에 EVCC는 <<ocpp_security_9,IETF RFC 6961>>에 정의된 OCSP 스테이플링을 사용하여 충전기의 OCSP 상태와 중간 인증서를 요청할 수 있습니다. 충전기는 <<get_certificate_status_request,GetCertificateStatusRequest>>를 CSMS로 보내 이 정보를 검색할 수 있습니다. 사용 사례 <<get_v2g_charging_station_certificate_status,M06 - 충전기 인증서 상태 가져오기>>를 참조하세요.
 
-.Communication set-up
-image::part2/images/figure_124.svg[Communication set-up]
+.통신 설정
+image::part2/images/figure_124.svg[통신 설정]
 
 === Certificate - Use Case mapping
 
-The following table contains the use cases that can be used to manage the certificates needed for ISO 15118 charging from OCPP:
+다음 표에는 OCPP에서 ISO 15118 요금 청구에 필요한 인증서를 관리하는 데 사용할 수 있는 사용 사례가 나와 있습니다.
 
-.Certificates relevant for 15118
+.15118에 관련된 인증서
 [cols="<.^3s,<.^4,<.^3,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|Certificate            |Used for             |Use Case         |Remark
+|인증서 |사용 대상 |사용 사례 |비고
 
-|ChargingStationCertificate |Charging Station - CSMS connection |A02 and A03
-  |Used for OCPP security in general. +
-  Certificate chain must also be available and can be retrieved by the Charging Station when installing the certificate.
-|CPS Certificate Chain  |Plug & Charge authentication |M03, M04 and M05 |{nbsp}
-|EVContractCertificate  |Plug & Charge authentication |M01 and M02
-  |Shorter life time certificate (for plug & charge)
-|MORootCertificate      |Plug & Charge authentication |M03, M04 and M05 |{nbsp}
-|MO Certificate Chain   |Plug & Charge authentication |N.a.
-  |It is only necessary to install MO root certificate for Plug & Charge authentication, other intermediate certificates are offered by the EV
-|OEMProvisioningCertificate |Installing Certificates in the EV
-  |M01 and M02 |Long life time installed in EV by OEM
-|V2GChargingStationCertificate |EV - Charging Station TLS connection
-  |A02 and A03 |Certificate chain must also be available and can be retrieved by the Charging Station when installing the certificate.
-|V2GRootCertificate     |EV - Charging Station TLS connection
-  |M03, M04 and M05 |It is only necessary to install a V2G root certificate for Plug & Charge authentication.
-|V2GIntermediateCertificate |Plug & Charge authentication |A02, A03, M03 and M04
-  |Intermediate certificates between the _V2GChargingStationCertificate_ and _V2GRootCertificate_. May be used during TLS setup between EV and Charging Station.
+|ChargingStationCertificate |충전기 - CSMS 연결 |A02 및 A03
+|일반적으로 OCPP 보안에 사용됨. +
+인증서 체인도 사용할 수 있어야 하며 인증서를 설치할 때 충전기에서 검색할 수 있어야 합니다.
+|CPS 인증서 체인 |플러그 앤 충전 인증 |M03, M04 및 M05 |{nbsp}
+|EVContractCertificate |플러그 앤 충전 인증 |M01 및 M02
+|단기 인증서(플러그 앤 충전용)
+|MORootCertificate |플러그 앤 충전 인증 |M03, M04 및 M05 |{nbsp}
+|MO 인증서 체인 |플러그 앤 충전 인증 |N.a.
+|플러그 앤 충전 인증을 위해 MO 루트 인증서만 설치하면 되고, 다른 중간 인증서는 EV에서 제공합니다.
+|OEMProvisioningCertificate |EV에 인증서 설치
+|M01 및 M02 |OEM에서 EV에 설치한 장기 인증서
+|V2GChargingStationCertificate |EV - 충전기 TLS 연결
+|A02 및 A03 |인증서 체인도 사용할 수 있어야 하며 인증서를 설치할 때 충전기에서 검색할 수 있어야 합니다.
+|V2GRootCertificate |EV - 충전기 TLS 연결
+|M03, M04 및 M05 |플러그 앤 차지 인증을 위해 V2G 루트 인증서만 설치하면 됩니다.
+|V2GIntermediateCertificate |플러그 앤 차지 인증 |A02, A03, M03 및 M04
+|_V2GChargingStationCertificate_와 _V2GRootCertificate_ 사이의 중간 인증서입니다. EV와 충전기 사이의 TLS 설정 중에 사용할 수 있습니다.
 |===
 
 <<<
 
 === Use cases from ISO 15118 relevant for OCPP
 
-See <<iso15118_1,ISO15118-1>> page 17 for a list of all elementary use cases. The **bold** indicated use case component are identified as of influence of the OCPP communication following <<iso15118_1,ISO15118-1>>.
+모든 기본 사용 사례 목록은 <<iso15118_1,ISO15118-1>> 17페이지를 참조하세요. **굵은 글씨**로 표시된 사용 사례 구성 요소는 <<iso15118_1,ISO15118-1>>에 따른 OCPP 통신의 영향으로 식별됩니다.
 
-.15118 use cases relevant for OCPP (Source original table: <<iso15118_1,ISO15118-1>>)
+.15118 OCPP 관련 사용 사례(출처 원래 표: <<iso15118_1,ISO15118-1>>)
 [cols="<.^1s,<.^8s",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Use case element name / grouping
-d|A1  d|Begin of charging process with forced High Level Communication
-d|A2  d|Begin of charging process with concurrent <<iec61851_1,IEC61851-1>> and High Level Communication
-|B1  |EV/Charging Station communication setup
-|C1  |Certificate update
-|C2  |Certificate installation
-d|D1  d|Authorization using Contract Certificates performed at the EVSE
-|D2  |Authorization using Contract Certificates performed with help of SA
-d|D3  d|Authorization at EVSE using external credentials performed at the EVSE
-|D4  |Authorization at EVSE using external credentials performed with help of SA
-|E1  |AC charging with load leveling based on High Level Communication
-|E2  |Optimized charging with scheduling to Secondary Actor
-|E3  |Optimized charging with scheduling at EV
-|E4  |DC charging with load leveling based on High Level Communication
-d|E5  d|Resume to Authorized Charge Schedule
-d|F0  d|Charging loop
-d|F1  d|Charging loop with metering information exchange
-|F2  |Charging loop with interrupt from the Charging Station
-|F3  |Charging loop with interrupt from the EV or user
-d|F4  d|Reactive power compensation
-|F5  |Vehicle to grid support
-d|G1  d|Value added services
-d|G2  d|Charging details
-|H1  |End of charging process
+|번호 |사용 사례 요소 이름/그룹화
+d|A1 d|강제 고수준 통신을 통한 충전 프로세스 시작
+d|A2 d|동시 <<iec61851_1,IEC61851-1>> 및 고수준 통신을 통한 충전 프로세스 시작
+|B1 |EV/충전기 통신 설정
+|C1 |인증서 업데이트
+|C2 |인증서 설치
+d|D1 d|EVSE에서 ​​수행된 계약 인증서를 사용한 권한 부여
+|D2 |SA의 도움으로 수행된 계약 인증서를 사용한 권한 부여
+d|D3 d|EVSE에서 ​​수행된 외부 자격 증명을 사용한 EVSE 권한 부여
+|D4 |SA의 도움으로 수행된 외부 자격 증명을 사용한 EVSE 권한 부여
+|E1 |고수준 통신을 기반으로 부하 레벨링을 사용한 AC 충전
+|E2 |2차 액터에 대한 스케줄링을 사용한 최적화된 충전
+|E3 |EV에서 스케줄링을 사용한 최적화된 충전
+|E4 |고수준 통신을 기반으로 부하 레벨링을 사용한 DC 충전
+d|E5 d|허가된 충전 일정으로 재개
+d|F0 d|충전 루프
+d|F1 d|계량 정보 교환이 있는 충전 루프
+|F2 |충전기에서 인터럽트가 있는 충전 루프
+|F3 |EV 또는 사용자에서 인터럽트가 있는 충전 루프
+d|F4 d|무효 전력 보상
+|F5 |차량 대 그리드 지원
+d|G1 d|부가가치 서비스
+d|G2 d|충전 세부 정보
+|H1 |충전 프로세스 종료
 |===
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===
-|NOTE |Not all 15118 related OCPP use cases are described in this functional block. This functional block describes installing and updating certificates in the EV and CA certificate handling (also for non 15118 related purposes). Please refer to <<iso_15118_authorization,ISO 15118 Authorization>> for the authorization related use cases. The Smart Charging related use cases are described in the chapter <<smart_charging,Smart Charging>>.
+|NOTE |이 기능 블록에서 모든 15118 관련 OCPP 사용 사례가 설명되는 것은 아닙니다. 이 기능 블록은 EV 및 CA 인증서 처리에서 인증서 설치 및 업데이트(15118과 관련되지 않은 목적에도 해당)를 설명합니다. 권한 관련 사용 사례는 <<iso_15118_authorization,ISO 15118 Authorization>>을 참조하세요. 스마트 충전 관련 사용 사례는 <<smart_charging,Smart Charging>> 장에서 설명합니다.
 |===
 
 <<<
@@ -217,389 +218,392 @@ d|G2  d|Charging details
 [[m01_certificate_installation_ev]]
 === M01 - Certificate installation EV
 
-.M01 - Certificate installation
+.M01 - 인증서 설치
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Certificate Installation
-|2   |ID              |M01
-|{nbsp} d|_Functional block_ |M. ISO 15118 Certificate Management
-|{nbsp} d|_Reference_ |<<iso15118_1,ISO15118-1>> C2
-|3   |Objectives      |To install a new certificate from the CSMS in the EV.
-|4   |Description     |The EV initiates installing a new certificate. The Charging Station forwards the request for a new certificate to the CSMS. +
-  See also <<iso15118_1,ISO15118-1>>, use case Description C2, page 22.
-|{nbsp} d|_Actors_    |EV, Charging Station, CSMS
-|{nbsp} d|_Scenario description_
-  |**15118** : +
-  See <<iso15118_1,ISO15118-1>>, use case Description C2, Scenario Description, first 3 bullets, page 22. +
-  **OCPP** : +
-  - The Charging Station sends <<get_15118_ev_certificate_request,Get15118EVCertificateRequest>> message **with _action_ = `Install`** to the CSMS. +
-  - The CSMS responds with <<get_15118_ev_certificate_response,Get15118EVCertificateResponse>> to the Charging Station.
-|{nbsp} d|_Alternative scenario(s)_ |n/a
-|5   |Prerequisites
-  |- Communication between EV and EVSE SHALL be established successfully. +
-  - Online connection between Charging Station and CSMS SHALL be possible. +
-  - CSMS should be able to communicate with a third party that can process the CertificateInstallationRequest, for example a contract certificate pool.
-|6   |Postcondition(s) |See <<iso15118_1,ISO15118-1>>, use case End conditions C2, page 23.
+|1 |이름 |인증서 설치
+|2 |ID |M01
+|{nbsp} d|_기능 블록_ |M. ISO 15118 인증서 관리
+|{nbsp} d|_참조_ |<<iso15118_1,ISO15118-1>> C2
+|3 |목표 |EV에서 CSMS의 새 인증서를 설치합니다.
+|4 |설명 |EV가 새 인증서 설치를 시작합니다. 충전기가 새 인증서에 대한 요청을 CSMS로 전달합니다. +
+또한 <<iso15118_1,ISO15118-1>>, 사용 사례 설명 C2, 22페이지를 참조하세요.
+|{nbsp} d|_Actors_ |EV, 충전기, CSMS
+|{nbsp} d|_시나리오 설명_
+|**15118** : +
+<<iso15118_1,ISO15118-1>>, 사용 사례 설명 C2, 시나리오 설명, 처음 3개 항목, 22페이지를 참조하세요. +
+**OCPP** : +
+- 충전기는 <<get_15118_ev_certificate_request,Get15118EVCertificateRequest>> 메시지를 **_action_ = `Install`**과 함께 CSMS로 보냅니다. +
+- CSMS는 <<get_15118_ev_certificate_response,Get15118EVCertificateResponse>>로 충전기에 응답합니다.
+|{nbsp} d|_대체 시나리오_ |n/a
+|5 |필수 조건
+|- EV와 EVSE 간의 통신은 성공적으로 설정되어야 합니다. +
+- 충전기와 CSMS 간의 온라인 연결이 가능해야 합니다. +
+- CSMS는 CertificateInstallationRequest를 처리할 수 있는 제3자(예: 계약 인증서 풀)와 통신할 수 있어야 합니다.
+|6 |사후 조건 |<<iso15118_1,ISO15118-1>> 참조, 사용 사례 종료 조건 C2, 23페이지.
 |===
 
-.Certificate Installation
-image::part2/images/figure_125.svg[Certificate Installation]
+.인증서 설치
+image::part2/images/figure_125.svg[인증서 설치]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error handling |In case the CSMS is not able to respond within the specified time, the Charging Station SHALL indicate failure to the EV.
-|8   |Remark(s)      |The message timeout in <<iso15118_2,ISO15118-2>> for CertificateInstallationReq is 5 seconds. +
-There may be alternative communication paths for doing a certificate installation. However, these are outside the scope of this standard.
+|7 |오류 처리 |CSMS가 지정된 시간 내에 응답할 수 없는 경우 충전기는 EV에 실패를 표시해야 합니다.
+|8 |참고 |<<iso15118_2,ISO15118-2>>에서 CertificateInstallationReq에 대한 메시지 시간 초과는 5초입니다. +
+인증서 설치를 위한 대체 통신 경로가 있을 수 있습니다. 그러나 이는 이 표준의 범위를 벗어납니다.
 |===
 
-Source: <<iso15118_1,ISO15118-1>>
+출처: <<iso15118_1,ISO15118-1>>
 
 ==== M01 - Certificate installation - Requirements
 
-.M01 - Requirements
+.M01 - 요구 사항
 [cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition     |Note
+|ID |전제 조건 |요구 사항 정의 |참고
 
-|M01.FR.01  |Upon receiving a 15118 CertificateInstallationReq
-  |The Charging Station SHALL forward the request to the CSMS using the <<get_15118_ev_certificate_request,Get15118EVCertificateRequest>> message **with _action_ = `Install`**.
-    |The CSMS is responsible for forwarding it to the secondary actor which will process the CertificateUpdateRequest. This could be a contract certificate pool as outlined in application guide VDE-AR- 2802-100-1.
+|M01.FR.01 |15118 CertificateInstallationReq를 수신하면
+|충전기는 <<get_15118_ev_certificate_request,Get15118EVCertificateRequest>> 메시지를 사용하여 요청을 CSMS에 전달해야 합니다. **_action_ = `Install`**.
+|CSMS는 CertificateUpdateRequest를 처리할 보조 액터에게 이를 전달해야 합니다. 이는 애플리케이션 가이드 VDE-AR-2802-100-1에 설명된 대로 계약 인증서 풀일 수 있습니다.
 |===
 
 [[m02_certificate_update_ev]]
 === M02 - Certificate Update EV
 
-.M02 - Certificate Update
+.M02 - 인증서 업데이트
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Certificate Update
-|2   |ID              |M02
-|{nbsp} d|_Functional block_ |M. ISO 15118 Certificate Management
-|{nbsp} d|_Reference_ |<<iso15118_1,ISO15118-1>> C1
-|3   |Objectives      |See <<iso15118_1,ISO15118-1>>, use case Objective C1, page 20.
-|4   |Description     |See <<iso15118_1,ISO15118-1>>, use case Description C1, page 21 up to and including the third "NOTE".
-|{nbsp} d|_Actors_    |EV, Charging Station
-|{nbsp} d|_Scenario description_
-  |**15118**: +
-  See <<iso15118_1,ISO15118-1>>, use case Objective C1, Scenario Description, first 3 bullets, page 21.
+|1 |이름 |인증서 업데이트
+|2 |ID |M02
+|{nbsp} d|_기능 블록_ |M. ISO 15118 인증서 관리
+|{nbsp} d|_참조_ |<<iso15118_1,ISO15118-1>> C1
+|3 |목표 |<<iso15118_1,ISO15118-1>>, 사용 사례 목표 C1, 20페이지를 참조하세요.
+|4 |설명 |<<iso15118_1,ISO15118-1>>, 사용 사례 설명 C1, 21페이지에서 세 번째 "참고"까지 참조하세요.
+|{nbsp} d|_Actors_ |EV, 충전기
+|{nbsp} d|_시나리오 설명_
+|**15118**: +
+<<iso15118_1,ISO15118-1>>, 사용 사례 목표 C1, 시나리오 설명, 처음 3개 항목, 21페이지를 참조하세요.
 
-  **OCPP**: +
-  - The Charging Station sends a <<get_15118_ev_certificate_request,Get15118EVCertificateRequest>> message **with _action_ = `Update`** to the CSMS. +
-  - The CSMS responds with <<get_15118_ev_certificate_response,Get15118EVCertificateResponse>> to the Charging Station.
+**OCPP**: +
+- 충전기는 <<get_15118_ev_certificate_request,Get15118EVCertificateRequest>> 메시지를 **_action_ = `Update`**와 함께 CSMS로 보냅니다. +
+- CSMS는 <<get_15118_ev_certificate_response,Get15118EVCertificateResponse>>로 충전기에 응답합니다.
 
-  **15118**: +
-  See <<iso15118_1,ISO15118-1>>, use case Description C1, Scenario Description, last 2 bullets, page 21.
-|5   |Prerequisites
-  |- Communication between EV and EVSE SHALL be established successfully. +
-  - Online connection between Charging Station and CSMS SHALL be possible. +
-  - CSMS should be able to communicate with a third party that can process the CertificateInstallationRequest, for example a contract certificate pool.
-|6   |Postcondition(s) |See <<iso15118_1,ISO15118-1>>, use case Objective C1 and C2, page 20/22.
+**15118**: +
+<<iso15118_1, ISO15118-1>>, 사용 사례 설명 C1, 시나리오 설명, 마지막 2개 항목, 21페이지를 참조하세요.
+|5 |필수 조건
+|- EV와 EVSE 간의 통신은 성공적으로 설정되어야 합니다. +
+- 충전기와 CSMS 간의 온라인 연결이 가능해야 합니다. +
+- CSMS는 CertificateInstallationRequest를 처리할 수 있는 제3자(예: 계약 인증서 풀)와 통신할 수 있어야 합니다.
+|6 |사후 조건 |<<iso15118_1, ISO15118-1>>, 사용 사례 목표 C1 및 C2, 20/22페이지를 참조하세요.
 |===
 
-.Certificate Update
-image::part2/images/figure_126.svg[Certificate Update]
+.인증서 업데이트
+image::part2/images/figure_126.svg[인증서 업데이트]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error handling |In case the CSMS is not able to respond within the specified time, the Charging Station SHALL indicate failure to the EV.
-|8   |Remark(s) 
-  |See <<iso15118_1,ISO15118-1>>, use case Requirements C1, trigger, page 21.
+|7 |오류 처리 |CSMS가 지정된 시간 내에 응답할 수 없는 경우 충전기는 EV에 실패를 표시해야 합니다.
+|8 |참고 사항
+|<<iso15118_1,ISO15118-1>>, 사용 사례 요구 사항 C1, 트리거, 21페이지를 참조하세요.
 
-  The message timeout in <<iso15118_2,ISO15118-2>> for CertificateUpdateReq is 5 seconds.
+<<iso15118_2,ISO15118-2>>에서 CertificateUpdateReq에 대한 메시지 시간 초과는 5초입니다.
 |===
 
-Source: <<iso15118_1,ISO15118-1>>
+출처: <<iso15118_1,ISO15118-1>>
 
 ==== M02 - Certificate Update - Requirements
 
-.M02 - Requirements
+.M02 - 요구 사항
 [cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition     |Note
+|ID |전제 조건 |요구 사항 정의 |참고
 
-|M02.FR.01  |{nbsp}
-  |Upon receiving a CertificateUpdateReq the Charging Station SHALL forward the request to the CSMS using the <<get_15118_ev_certificate_request,Get15118EVCertificateRequest>> message **with _action_ = `Update`**.
-    |The CSMS is responsible for forwarding it to the secondary actor which will process the CertificateUpdateRequest. This could be a contract certificate pool as outlined in application guide VDE-AR-E 2802-100-1.
+|M02.FR.01 |{nbsp}
+|CertificateUpdateReq를 수신하면 충전기는 <<get_15118_ev_certificate_request,Get15118EVCertificateRequest>> 메시지를 사용하여 요청을 CSMS에 전달해야 합니다. **_action_ = `Update`**.
+|CSMS는 CertificateUpdateRequest를 처리할 보조 행위자에게 이를 전달해야 합니다. 이는 애플리케이션 가이드 VDE-AR-E 2802-100-1에 설명된 대로 계약 인증서 풀일 수 있습니다.
 |===
 
 [[retrieve_list_of_available_certificates_from_a_charging_station]]
 === M03 - Retrieve list of available certificates from a Charging Station
 
-.M03 - Retrieve list of available certificates from a Charging Station
+.M03 - 충전기에서 사용 가능한 인증서 목록 검색
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Retrieve list of available certificates from a Charging Station
-|2   |ID              |M03
-|{nbsp} d|_Functional block_ |M. ISO 15118 Certificate Management
-|3   |Objective(s)    |To enable the CSMS to retrieve a list of available certificates from a Charging Station.
-|4   |Description     |To facilitate the management of the Charging Station’s installed certificates, a method of retrieving the installed certificates is provided. The CSMS requests the Charging Station to send a list of installed certificates
-|{nbsp} d|_Actors_    |Charging Station, CSMS
-|{nbsp} d|_Scenario description_
-  |**1.** The CSMS requests the Charging Station to send a list of installed certificates by sending a <<get_installed_certificate_ids_request,GetInstalledCertificateIdsRequest>> +
-  **2.** The Charging Station responds with a <<get_installed_certificate_ids_response,GetInstalledCertificateIdsResponse>>
-|5   |Prerequisite(s) |n/a
-|6   |Postcondition(s) |The CSMS received a list of installed certificates
+|1 |이름 |충전기에서 사용 가능한 인증서 목록 검색
+|2 |ID |M03
+|{nbsp} d|_기능 블록_ |M. ISO 15118 인증서 관리
+|3 |목표 |CSMS가 충전기에서 사용 가능한 인증서 목록을 검색할 수 있도록 합니다.
+|4 |설명 |충전기에 설치된 인증서 관리를 용이하게 하기 위해 설치된 인증서를 검색하는 방법이 제공됩니다. CSMS가 충전기에 설치된 인증서 목록을 보내도록 요청
+|{nbsp} d|_Actors_ |충전기, CSMS
+|{nbsp} d|_시나리오 설명_
+|**1.** CSMS가 충전기에 <<get_installed_certificate_ids_request,GetInstalledCertificateIdsRequest>> +를 보내 설치된 인증서 목록을 보내도록 요청
+
+**2.** 충전기가 <<get_installed_certificate_ids_response,GetInstalledCertificateIdsResponse>>로 응답
+|5 |필수 조건 |해당 없음
+|6 |사후 조건 |CSMS가 설치된 인증서 목록을 수신
 |===
 
-.Retrieve list of available certificates from a Charging Station
-image::part2/images/figure_127.svg[Retrieve list of available certificates from a Charging Station]
+.충전기에서 사용 가능한 인증서 목록 검색
+image::part2/images/figure_127.svg[충전기에서 사용 가능한 인증서 목록 검색 스테이션]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error handling |n/a
-|8   |Remark(s) 
-  |For installing the (V2G) Charging Station Certificate, see use cases <<update_charging_station_certificate_by_request_of_csms,A02 - Update Charging Station Certificate by request of CSMS>> and <<update_charging_station_certificate_initiated_by_the_charging_station,A03 - Update Charging Station Certificate initiated by the Charging Station>>. The V2G certificate chain SHOULD not include the V2GRootCertificate. This SHOULD be installed using Use case <<install_ca_certificate_in_a_charging_station,M05 - Install CA certificate in a Charging Station>>.
+|7 |오류 처리 |n/a
+|8 |주의사항
+|(V2G) 충전기 인증서를 설치하는 경우 사용 사례 <<update_charging_station_certificate_by_request_of_csms,A02 - CSMS 요청에 따른 충전기 인증서 업데이트>> 및 <<update_charging_station_certificate_initiated_by_the_charging_station,A03 - 충전기에서 시작된 충전기 인증서 업데이트>>를 참조하세요. V2G 인증서 체인에는 V2GRootCertificate가 포함되어서는 안 됩니다. 이는 사용 사례 <<install_ca_certificate_in_a_charging_station,M05 - 충전기에 CA 인증서 설치>>를 사용하여 설치해야 합니다.
 |===
 
 ==== M03 - Retrieve list of available certificates from a Charging Station - Requirements
 
-.M03 - Requirements
+.M03 - 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition
+|ID |전제 조건 |요구 사항 정의
 
-|M03.FR.01  |After receiving a <<get_installed_certificate_ids_request,GetInstalledCertificateIdsRequest>>
-  |The Charging Station SHALL respond with a <<get_installed_certificate_ids_response,GetInstalledCertificateIdsResponse>>.
-|M03.FR.02  |M03.FR.01 AND +
-  No certificate matching _certificateType_ was found
-    |The Charging Station SHALL indicate this by setting _status_ in the <<get_installed_certificate_ids_response,GetInstalledCertificateIdsResponse>> to _NotFound_.
-|M03.FR.03  |M03.FR.01 AND +
-  A certificate matching _certificateType_ was found
-    |The Charging Station SHALL indicate this by setting _status_ in the <<get_installed_certificate_ids_response,GetInstalledCertificateIdsResponse>> to _Accepted_.
-|M03.FR.04  |M03.FR.03
-  |The Charging Station SHALL include the hash data for each matching installed certificate in the <<get_installed_certificate_ids_response,GetInstalledCertificateIdsResponse>>.
-|M03.FR.05  |When the Charging Station receives a <<get_installed_certificate_ids_request,GetInstalledCertificateIdsRequest>> with <<get_certificate_id_use_enum_type,certificateType>> V2GCertificateChain
-  |The Charging Station SHALL include the hash data for each installed certificate belonging to a V2G certificate chain. Sub CA certificates SHALL be placed as a childCertificate under the V2G Charging Station certificate.
+|M03.FR.01 |<<get_installed_certificate_ids_request,GetInstalledCertificateIdsRequest>>를 수신한 후
+|충전기는 <<get_installed_certificate_ids_response,GetInstalledCertificateIdsResponse>>로 응답해야 합니다.
+|M03.FR.02 |M03.FR.01 AND +
+_certificateType_과 일치하는 인증서를 찾을 수 없습니다.
+|충전기는 <<get_installed_certificate_ids_response,GetInstalledCertificateIdsResponse>>의 _status_를 _NotFound_로 설정하여 이를 표시해야 합니다.
+|M03.FR.03 |M03.FR.01 AND +
+_certificateType_과 일치하는 인증서가 발견되었습니다.
+|충전기는 <<get_installed_certificate_ids_response,GetInstalledCertificateIdsResponse>>에서 _status_를 _Accepted_로 설정하여 이를 표시해야 합니다.
+|M03.FR.04 |M03.FR.03
+|충전기는 <<get_installed_certificate_ids_response,GetInstalledCertificateIdsResponse>>에서 일치하는 각 설치된 인증서에 대한 해시 데이터를 포함해야 합니다.
+|M03.FR.05 |충전기가 <<get_installed_certificate_ids_request,GetInstalledCertificateIdsRequest>>와 <<get_certificate_id_use_enum_type,certificateType>> V2GCertificateChain을 수신할 때
+|충전기는 V2G 인증서 체인에 속하는 각 설치된 인증서에 대한 해시 데이터를 포함해야 합니다. 하위 CA 인증서는 V2G 충전기 인증서 아래에 childCertificate로 배치해야 합니다.
 |===
 
 [[delete_a_specific_certificate_from_a_charging_station]]
 === M04 - Delete a specific certificate from a Charging Station
 
-.M04 - Delete a specific certificate from a Charging Station
+.M04 - 충전기에서 특정 인증서 삭제
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Delete a specific certificate from a Charging Station
-|2   |ID              |M04
-|{nbsp} d|_Functional block_ |M. ISO 15118 Certificate Management
-|3   |Objective(s)    |To enable the CSMS to request the Charging Station to delete an installed certificate.
-|4   |Description     |To facilitate the management of the Charging Station’s installed certificates, a method of deleting an installed certificate is provided. The CSMS requests the Charging Station to delete a specific certificate.
-|{nbsp} d|_Actors_    |Charging Station, CSMS
-|{nbsp} d|_Scenario description_
-  |**1.** The CSMS requests the Charging Station to delete an installed certificate by sending a <<delete_certificate_request,DeleteCertificateRequest>>. +
-  **2.** The Charging Station responds with a <<delete_certificate_response,DeleteCertificateResponse>>.
-|5   |Prerequisite(s) |n/a
-|6   |Postcondition(s) |The requested certificate was deleted from the Charging Station.
+|1 |이름 |충전기에서 특정 인증서 삭제
+|2 |ID |M04
+|{nbsp} d|_기능 블록_ |M. ISO 15118 인증서 관리
+|3 |목표 |CSMS가 충전기에 설치된 인증서를 삭제하도록 요청할 수 있도록 합니다.
+|4 |설명 |충전기의 설치된 인증서 관리를 용이하게 하기 위해 설치된 인증서를 삭제하는 방법이 제공됩니다. CSMS는 충전기에 특정 인증서를 삭제하도록 요청합니다.
+|{nbsp} d|_Actors_ |충전기, CSMS
+|{nbsp} d|_시나리오 설명_
+|**1.** CSMS는 <<delete_certificate_request,DeleteCertificateRequest>>를 보내서 충전기에 설치된 인증서를 삭제하도록 요청합니다. +
+**2.** 충전기는 <<delete_certificate_response,DeleteCertificateResponse>>로 응답합니다.
+|5 |필수 조건 |해당 없음
+|6 |사후 조건 |요청한 인증서가 충전기에서 삭제되었습니다.
 |===
 
-.Delete Installed Certificate
-image::part2/images/figure_128.svg[Delete Installed Certificate]
+.설치된 인증서 삭제
+image::part2/images/figure_128.svg[설치된 인증서 삭제]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error handling |n/a
-|8   |Remark(s)      |For installing the (V2G) Charging Station Certificate, see use cases <<update_charging_station_certificate_by_request_of_csms,A02 - Update Charging Station Certificate by request of CSMS>> and <<update_charging_station_certificate_initiated_by_the_charging_station,A03 - Update Charging Station Certificate initiated by the Charging Station>>. The V2G certificate chain SHOULD not include the V2GRootCertificate. This SHOULD be installed using Use case <<install_ca_certificate_in_a_charging_station,M05 - Install CA certificate in a Charging Station>>.
+|7 |오류 처리 |해당 없음
+|8 |주의 |(V2G) 충전기 인증서를 설치하는 경우 사용 사례 <<update_charging_station_certificate_by_request_of_csms,A02 - CSMS 요청에 따라 충전기 인증서 업데이트>> 및 <<update_charging_station_certificate_initiated_by_the_charging_station,A03 - 충전기에서 시작한 충전기 인증서 업데이트>>를 참조하세요. V2G 인증서 체인에는 V2GRootCertificate가 포함되어서는 안 됩니다. 이것은 사용 사례 <<install_ca_certificate_in_a_charging_station,M05 - 충전기에 CA 인증서 설치>>를 사용하여 설치해야 합니다.
 
-  It is possible to delete the last (every) installed CSMSRootCertificates. When all CSMSRootCertificates are deleted, the Charging Station cannot validate CSMS Certificates, so it will not be able to connect to a CSMS. Before a CSMS would ever send a <<delete_certificate_request,DeleteCertificateRequest>> that would delete the last/all CSMSRootCertificates the CSMS is ADVISED to make very sure that this is what is really wanted.
+마지막으로 설치된(모든) CSMSRootCertificates를 삭제할 수 있습니다. 모든 CSMSRootCertificate가 삭제되면 충전기는 CSMS 인증서를 검증할 수 없으므로 CSMS에 연결할 수 없습니다. CSMS가 마지막/모든 CSMSRootCertificates를 삭제하는 <<delete_certificate_request,DeleteCertificateRequest>>를 보내기 전에 CSMS는 이것이 실제로 원하는 것인지 확인하는 것이 좋습니다.
 
-  {nbsp}
+{nbsp}
 
-  It is possible to delete the last (every) installed ManufacturerRootCertificates, when all ManufacturerRootCertificates are deleted, no "Signed Firmware" can be installed in the Charging Station.
+모든 ManufacturerRootCertificate가 삭제되면 마지막으로 설치된(모든) ManufacturerRootCertificates를 삭제할 수 있으며, 충전기에 "서명된 펌웨어"를 설치할 수 없습니다.
 |===
 
 ==== M04 - Delete a specific certificate from a Charging Station - Requirements
 
-.M04 - Requirements
+.M04 - 요구 사항
 [cols="^.^2,<.^6,<.^6,<.^4",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition     |Note
+|ID |전제 조건 |요구 사항 정의 |참고
 
-|M04.FR.01  |After receiving a <<delete_certificate_request,DeleteCertificateRequest>>
-  |The Charging Station SHALL respond with a <<delete_certificate_response,DeleteCertificateResponse>>. |{nbsp}
-|M04.FR.02  |M04.FR.01 AND The requested certificate was found
-  |The Charging Station SHALL attempt to delete it, and indicate success by setting status to `Accepted` in the DeleteCertificateResponse. |{nbsp}
-|M04.FR.03  |M04.FR.01 AND (The deletion fails OR +
-  the Charging Station rejects the request to delete the specified certificate.)
-    |The Charging Station SHALL indicate failure by setting _status_ to `Failed` in the DeleteCertificateResponse.
-      |A Charging Station may reject the request to prevent the deletion of a certificate, if it is the last one from its certificate type.
-|M04.FR.04  |M04.FR.01 AND +
-  The requested certificate was not found
-    |The Charging Station SHALL indicate failure by setting 'status' to 'NotFound' in the <<delete_certificate_response,DeleteCertificateResponse>>. |{nbsp}
-|M04.FR.06  |M04.FR.01 AND +
-  When _certificateHashData_ refers to the _Charging Station Certificate_ (see use case A)
-    |Charging Station SHALL respond with <<delete_certificate_response,DeleteCertificateResponse>> with _status_ = `Failed`.
-      |Deletion of the _Charging Station Certificate_ is not allowed via <<delete_certificate_request,DeleteCertificateRequest>>.
-|M04.FR.07  |When deleting a certificate
-  |The CSMS SHALL use the same _hashAlgorithm_ as the Charging Station uses to report the <<certificate_hash_data_type,certificateHashData>> for the certificate in the <<get_installed_certificate_ids_response,GetInstalledCertificateIdsResponse>>.
-    |This ensures CSMS uses a _hashAlgorithm_ that is supported by the Charging Station.
-|M04.FR.08  |M04.FR.02 AND +
-  Certificate to delete is a sub-CA or root certificate
-    |Charging Station MAY also delete all child certificates.
-      |Else these child certificates remain as unusable orhan certificates that can no longer be deleted.
+|M04.FR.01 |<<delete_certificate_request,DeleteCertificateRequest>>를 수신한 후
+|충전기는 <<delete_certificate_response,DeleteCertificateResponse>>로 응답해야 합니다. |{nbsp}
+|M04.FR.02 |M04.FR.01 AND 요청한 인증서가 발견되었습니다.
+|충전기는 인증서를 삭제하려고 시도하고 DeleteCertificateResponse에서 상태를 `Accepted`로 설정하여 성공을 표시해야 합니다. |{nbsp}
+|M04.FR.03 |M04.FR.01 AND (삭제 실패 또는 +
+충전기가 지정된 인증서 삭제 요청을 거부합니다.)
+|충전기는 DeleteCertificateResponse에서 _status_를 `Failed`로 설정하여 실패를 표시해야 합니다.
+|충전기는 인증서 유형에서 마지막 인증서인 경우 인증서 삭제를 방지하기 위한 요청을 거부할 수 있습니다.
+|M04.FR.04 |M04.FR.01 AND +
+요청한 인증서를 찾을 수 없습니다.
+|충전기는 <<delete_certificate_response,DeleteCertificateResponse>>에서 'status'를 'NotFound'로 설정하여 실패를 표시해야 합니다. |{nbsp}
+|M04.FR.06 |M04.FR.01 AND +
+_certificateHashData_가 _충전기 인증서_를 참조하는 경우(사용 사례 A 참조)
+|충전기는 <<delete_certificate_response,DeleteCertificateResponse>>와 _status_ = `Failed`로 응답해야 합니다.
+| <<delete_certificate_request,DeleteCertificateRequest>>를 통해 _충전기 인증서_를 삭제할 수 없습니다.
+|M04.FR.07 |인증서를 삭제할 때
+|CSMS는 충전기가 <<get_installed_certificate_ids_response,GetInstalledCertificateIdsResponse>>에서 인증서에 대한 <<certificate_hash_data_type,certificateHashData>>를 보고하는 데 사용하는 것과 동일한 _hashAlgorithm_을 사용해야 합니다.
+|이렇게 하면 CSMS가 충전기에서 지원하는 _hashAlgorithm_을 사용합니다.
+|M04.FR.08 |M04.FR.02 AND +
+삭제할 인증서가 하위 CA 또는 루트 인증서입니다.
+|충전기는 모든 자식 인증서도 삭제할 수 있습니다.
+|그렇지 않으면 이러한 자식 인증서는 더 이상 삭제할 수 없는 사용할 수 없는 orhan 인증서로 남습니다.
 |===
 
 [[install_ca_certificate_in_a_charging_station]]
 === M05 - Install CA certificate in a Charging Station
 
-.M05 - Install CA certificate in a Charging Station
+.M05 - 충전기에 CA 인증서 설치
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Install CA certificate in a Charging Station
-|2   |ID              |M05
-|{nbsp} d|_Functional block_ |M. ISO 15118 Certificate Management
-|3   |Objective(s)    |To facilitate the management of the Charging Station’s installed certificates, a method to install a new CA certificate.
-|4   |Description     |The CSMS requests the Charging Station to install a new CSMS root certificate, an eMobility Operator root certificate, Manufacturer root certificate, or a V2G root certificate.
-|{nbsp} d|_Actors_    |Charging Station, CSMS
-|{nbsp} d|_Scenario description_ 
-  |**1.** The CSMS requests the Charging Station to install a new certificate by sending an <<install_certificate_request,InstallCertificateRequest>>. +
-  **2.** The Charging Station responds with an <<install_certificate_response,InstallCertificateResponse>>.
-|5   |Prerequisite(s) |n/a
-|6   |Postcondition(s) |The new certificate was installed in the Charging Station trust store.
+|1 |이름 |충전기에 CA 인증서 설치
+|2 |ID |M05
+|{nbsp} d|_기능 블록_ |M. ISO 15118 인증서 관리
+|3 |목표 |충전기에 설치된 인증서 관리를 용이하게 하기 위해 새 CA 인증서를 설치하는 방법.
+|4 |설명 |CSMS는 충전기에 새 CSMS 루트 인증서, eMobility Operator 루트 인증서, Manufacturer 루트 인증서 또는 V2G 루트 인증서를 설치하도록 요청합니다.
+|{nbsp} d|_Actors_ |충전기, CSMS
+|{nbsp} d|_시나리오 설명_
+|**1.** CSMS는 <<install_certificate_request,InstallCertificateRequest>>를 보내 충전기에 새 인증서를 설치하도록 요청합니다. +
+**2.** 충전기는 <<install_certificate_response,InstallCertificateResponse>>로 응답합니다.
+|5 |필수 조건 |해당 없음
+|6 |사후 조건 |새 인증서가 충전기 신뢰 저장소에 설치되었습니다.
 |===
 
-.Install CA certificate in a Charging Station
-image::part2/images/figure_129.svg[Install CA certificate in a Charging Station]
+.충전기에 CA 인증서 설치
+image::part2/images/figure_129.svg[충전기에 CA 인증서 설치]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error handling  |n/a
-|8   |Remark(s)       |Even though the messages <<certificate_signed_request,CertificateSignedRequest>> (see use cases <<update_charging_station_certificate_by_request_of_csms,A02 - Update Charging Station Certificate by request of CSMS>> and <<update_charging_station_certificate_initiated_by_the_charging_station,A03 - Update Charging Station Certificate initiated by the Charging Station>>) and <<install_certificate_request,InstallCertificateRequest>> (use case <<install_ca_certificate_in_a_charging_station,M05>>) are both used to send certificates, their purposes are different. <<certificate_signed_request,CertificateSignedRequest>> is used to return the the Charging Stations own public certificate and V2G certificate(s) signed by a Certificate Authority.
-<<install_certificate_request,InstallCertificateRequest>> is used to install Root certificates.
+|7 |오류 처리 |해당 없음
+|8 |주의 |메시지 <<certificate_signed_request,CertificateSignedRequest>>(사용 사례 <<update_charging_station_certificate_by_request_of_csms,A02 - CSMS 요청에 의한 충전기 인증서 업데이트>> 및 <<update_charging_station_certificate_initiated_by_the_charging_station,A03 - 충전기에서 시작된 충전기 인증서 업데이트>> 참조) 및 <<install_certificate_request,InstallCertificateRequest>>(사용 사례 <<install_ca_certificate_in_a_charging_station,M05>>)는 둘 다 인증서를 보내는 데 사용되지만 그 용도는 다릅니다. <<certificate_signed_request,CertificateSignedRequest>>는 충전기 자체의 공개 인증서와 인증 기관에서 서명한 V2G 인증서를 반환하는 데 사용됩니다.
+<<install_certificate_request,InstallCertificateRequest>>는 루트 인증서를 설치하는 데 사용됩니다.
 
 {nbsp}
 
-For installing the (V2G) Charging Station Certificate, see use cases <<update_charging_station_certificate_by_request_of_csms,A02 - Update Charging Station Certificate by request of CSMS>> and <<update_charging_station_certificate_initiated_by_the_charging_station,A03 - Update Charging Station Certificate initiated by the Charging Station>>. The V2G certificate chain SHOULD not include the V2GRootCertificate. This SHOULD be installed using this use case.
+(V2G) 충전기 인증서를 설치하는 경우 사용 사례 <<update_charging_station_certificate_by_request_of_csms,A02 - CSMS 요청에 따라 충전기 인증서 업데이트>> 및 <<update_charging_station_certificate_initiated_by_the_charging_station,A03 - 충전기에서 시작한 충전기 인증서 업데이트>>를 참조하세요. V2G 인증서 체인에는 V2GRootCertificate가 포함되어서는 안 됩니다. 이것은 이 사용 사례를 사용하여 설치되어야 합니다.
 
 {nbsp}
 
-It is allowed to have multiple certificates of the same type installed.
+동일한 유형의 여러 인증서를 설치하는 것이 허용됩니다.
 |===
 
 ==== M05 - Install CA certificate in a Charging Station - Requirements
 
-.M05 - Requirements
+.M05 - 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition
+|ID |전제 조건 |요구 사항 정의
 
-|M05.FR.01  |After receiving an <<install_certificate_request,InstallCertificateRequest>>
-  |The Charging Station SHALL attempt to install the certificate and respond with an <<install_certificate_response,InstallCertificateResponse>>.
-|M05.FR.02  |M05.FR.01 AND +
-  The installation was successful
-    |The Charging Station SHALL indicate success by setting 'status' to 'Accepted' in the <<install_certificate_response,InstallCertificateResponse>>.
-|M05.FR.03  |M05.FR.01 AND +
-  The installation failed
-    |The Charging Station SHALL indicate failure by by setting 'status' to 'Failed' in the <<install_certificate_response,InstallCertificateResponse>>.
-|M05.FR.06  |When a new certificate gets installed AND the CertificateEntries.maxLimit is going to be exceeded
-  |The Charging Station SHALL respond with status _Rejected_.
-|M05.FR.07  |M05.FR.01 AND +
-  The certificate is invalid.
-    |The Charging Station SHALL indicate rejection by setting 'status' to 'Rejected' in the <<install_certificate_response,InstallCertificateResponse>>.
-|M05.FR.09  |When <<additional_root_certificate_check,`AdditionalRootCertificateCheck`>> is true
-  |Only one certificate (plus a temporarily fallback certificate) of certificateType <<install_certificate_use_enum_type,CSMSRootCertificate>> is allowed to be installed at a time.
-|M05.FR.10  |When <<additional_root_certificate_check,`AdditionalRootCertificateCheck`>> is true AND +
-  installing a new certificate of certificateType <<install_certificate_use_enum_type,CSMSRootCertificate>>
-    |The new CSMS Root certificate SHALL replace the old CSMS Root certificate AND the new Root Certificate MUST be signed by the old Root Certificate it is replacing
-|M05.FR.11  |M05.FR.10 AND +
-  the new CSMS Root certificate is NOT signed by the old CSMS Root certificate
-    |The Charging Station SHALL NOT install the new CSMS Root Certificate and respond with status _Rejected_.
-|M05.FR.12  |M05.FR.10 AND +
-  the new CSMS Root certificate is signed by the old CSMS Root certificate
-    |The Charging Station SHALL install the new CSMS Root Certificate AND temporarily keep the old CSMS Root certificate as a fallback certificate AND respond with status _Accepted_
-|M05.FR.13  |M05.FR.12 AND +
-  the Charging Station successfully connected to the CSMS using the new CSMS Root certificate
-    |The Charging Station SHALL remove the old CSMS Root (fallback) certificate.
-|M05.FR.14  |M05.FR.12 AND +
-  The Charging Station is attempting to reconnect to the CSMS (NOT migrating to another CSMS with Use Case <<migrate_to_new_csms,B10 - Migrate to new CSMS>>), but determines that the server certificate provided by the CSMS is invalid when using the new CSMS Root certificate to verify it
-    |The Charging Station SHALL try to use the old CSMS Root (fallback) certificate to verify the server certificate.
-|M05.FR.15  |M05.FR.12 AND +
-  When the Charging Station is migrating to another CSMS with Use Case <<migrate_to_new_csms,B10 - Migrate to new CSMS>>, but determines that the server certificate provided by the CSMS is invalid when using the new CSMS Root certificate to verify it
-    |The Charging Station SHALL use the <<network_profile_connection_attempts,`NetworkProfileConnectionAttempts`>> mechanism as described at Use Case <<migrate_to_new_csms,B10 - Migrate to new CSMS>>.
-|M05.FR.16  |M05.FR.15 AND +
-  If after the number of attempts the connection fails AND +
-  If it goes back to the old <<network_connection_profile_type,NetworkConnectionProfile>> (_See <<migrate_to_new_network_connection_profile_requirements,B10.FR.03>>_)
-    |The Charging Station SHALL use the old CSMS Root (fallback) certificate to verify the server certificate.
-|M05.FR.17  |NOT M05.FR.10 AND +
-  After receiving an <<install_certificate_request,InstallCertificateRequest>> for a certificate that is already present in the certificate trust store of the Charging Station
-    |The Charging Station SHALL replace the certificate and respond with <<install_certificate_response,InstallCertificateResponse>> with _status_ = `Accepted`.
+|M05.FR.01 |<<install_certificate_request,InstallCertificateRequest>>를 수신한 후
+|충전기는 인증서를 설치하고 <<install_certificate_response,InstallCertificateResponse>>로 응답해야 합니다.
+|M05.FR.02 |M05.FR.01 AND +
+설치가 성공했습니다.
+|충전기는 <<install_certificate_response,InstallCertificateResponse>>에서 '상태'를 '수락됨'으로 설정하여 성공을 표시해야 합니다.
+
+|M05.FR.03 |M05.FR.01 AND +
+설치가 실패했습니다.
+|충전기는 <<install_certificate_response,InstallCertificateResponse>>에서 '상태'를 '실패'로 설정하여 실패를 표시해야 합니다.
+|M05.FR.06 |새 인증서가 설치되고 CertificateEntries.maxLimit이 초과될 경우
+|충전기는 _거부됨_ 상태로 응답해야 합니다.
+|M05.FR.07 |M05.FR.01 AND +
+인증서가 유효하지 않습니다.
+|충전기는 <<install_certificate_response,InstallCertificateResponse>>에서 '상태'를 '거부됨'으로 설정하여 거부를 표시해야 합니다.
+|M05.FR.09 |<<additional_root_certificate_check,`AdditionalRootCertificateCheck`>>가 참일 때
+|certificateType <<install_certificate_use_enum_type,CSMSRootCertificate>>의 인증서 하나만(임시 대체 인증서 포함) 설치할 수 있습니다.
+|M05.FR.10 |<<additional_root_certificate_check,`AdditionalRootCertificateCheck`>>가 참이고 +
+certificateType이 <<install_certificate_use_enum_type,CSMSRootCertificate>>인 새 인증서를 설치하는 경우
+|새 CSMS 루트 인증서는 이전 CSMS 루트 인증서를 대체해야 하며 새 루트 인증서는 대체하는 이전 루트 인증서로 서명되어야 합니다.
+|M05.FR.11 |M05.FR.10 그리고 +
+새 CSMS 루트 인증서는 이전 CSMS 루트 인증서로 서명되지 않아야 합니다.
+|충전기는 새 CSMS 루트 인증서를 설치해서는 안 되며 _거부됨_ 상태로 응답해야 합니다.
+|M05.FR.12 |M05.FR.10 및 +
+새 CSMS 루트 인증서가 이전 CSMS 루트 인증서에 의해 서명됨
+|충전기는 새 CSMS 루트 인증서를 설치하고 이전 CSMS 루트 인증서를 대체 인증서로 임시 보관하고 _Accepted_ 상태로 응답해야 함
+|M05.FR.13 |M05.FR.12 및 +
+충전기가 새 CSMS 루트 인증서를 사용하여 CSMS에 성공적으로 연결됨
+|충전기는 이전 CSMS 루트(대체) 인증서를 제거해야 함
+|M05.FR.14 |M05.FR.12 AND +
+충전기는 CSMS에 다시 연결하려고 시도하지만(사용 사례 <<migrate_to_new_csms,B10 - Migrate to new CSMS>>를 사용하여 다른 CSMS로 마이그레이션하지 않음), CSMS에서 제공한 서버 인증서가 새 CSMS 루트 인증서를 사용하여 검증할 때 유효하지 않은 것으로 판단합니다.
+|충전기는 이전 CSMS 루트(폴백) 인증서를 사용하여 서버 인증서를 검증해야 합니다.
+|M05.FR.15 |M05.FR.12 AND +
+충전기가 사용 사례 <<migrate_to_new_csms,B10 - 새 CSMS로 마이그레이션>>을 사용하여 다른 CSMS로 마이그레이션 중이지만, 새 CSMS 루트 인증서를 사용하여 확인할 때 CSMS에서 제공한 서버 인증서가 유효하지 않다고 판단하는 경우
+|충전기는 사용 사례 <<migrate_to_new_csms,B10 - 새 CSMS로 마이그레이션>>에서 설명한 대로 <<network_profile_connection_attempts,`NetworkProfileConnectionAttempts`>> 메커니즘을 사용해야 합니다.
+|M05.FR.16 |M05.FR.15 AND +
+시도 횟수 이후에 연결이 실패하면 AND +
+이전 <<network_connection_profile_type,NetworkConnectionProfile>>로 돌아가는 경우(_See <<migrate_to_new_network_connection_profile_requirements,B10.FR.03>>_)
+|충전기는 이전 CSMS 루트(폴백) 인증서를 사용하여 서버 인증서를 확인해야 합니다.
+|M05.FR.17 |NOT M05.FR.10 AND +
+충전기의 인증서 신뢰 저장소에 이미 있는 인증서에 대한 <<install_certificate_request,InstallCertificateRequest>>를 수신한 후
+|충전기는 인증서를 교체하고 _status_ = `Accepted`인 <<install_certificate_response,InstallCertificateResponse>>로 응답해야 합니다.
 |===
 
 [[get_v2g_charging_station_certificate_status]]
 === M06 - Get V2G Charging Station Certificate status
 
-.M06 - Get V2G Charging Station Certificate status
+.M06 - V2G 충전기 인증서 상태 가져오기
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|No. |Type            |Description
+|번호 |유형 |설명
 
-|1   |Name            |Get V2G Charging Station Certificate status
-|2   |ID              |M06
-|{nbsp} d|_Functional block_ |M. ISO 15118 Certificate Management
-|3   |Objective(s)    |To enable a Charging Station to cache the OCSP certificate status needed for the TLS handshake between EV and Charging Station.
-|4   |Description     |When the cable gets plugged in and an ISO 15118 supported EV gets connected to the Charging Station, the EV requests the Charging Station to prove the validity of the (SubCA) certificates by an OCSPResponse. A request needs to be sent per SubCA. Because the timeout constraint in ISO 15118 is too strict to make the call to an external server, OCPP requires to cache the OCSP certificate status of the certificates beforehand. The Charging Station needs to refresh the cached OCSP data once a week..
-|{nbsp} d|_Actors_    |Charging Station, CSMS
-|{nbsp} d|_Scenario description_
-  |**1.** The Charging Station requests the CSMS to provide OCSP certificate status by sending a <<get_certificate_status_request,GetCertificateStatusRequest>>. +
-  **2.** The CSMS responds with a <<get_certificate_status_response,GetCertificateStatusResponse>>.
-|5   |Prerequisite(s) |n/a
-|6   |Postcondition(s)
-  |**Successful postcondition:** +
-  The Charging Station received the OCSP certificate status for the requested certificate +
-  **Failure postcondition:** +
-  The retrieval of the OCSP certificate status by the CSMS failed
+|1 |이름 |V2G 충전기 인증서 상태 가져오기
+|2 |ID |M06
+|{nbsp} d|_기능 블록_ |M. ISO 15118 인증서 관리
+|3 |목표 |충전기가 EV와 충전기 간 TLS 핸드셰이크에 필요한 OCSP 인증서 상태를 캐시할 수 있도록 합니다.
+|4 |설명 |케이블이 연결되고 ISO 15118 지원 EV가 충전기에 연결되면 EV는 충전기에 OCSPResponse를 통해 (SubCA) 인증서의 유효성을 증명하도록 요청합니다. SubCA별로 요청을 보내야 합니다. ISO 15118의 시간 제한 제약 조건이 외부 서버에 호출하기에는 너무 엄격하기 때문에 OCPP는 인증서의 OCSP 인증서 상태를 미리 캐시해야 합니다. 충전기는 일주일에 한 번 캐시된 OCSP 데이터를 새로 고쳐야 합니다..
+|{nbsp} d|_Actors_ |충전기, CSMS
+|{nbsp} d|_시나리오 설명_
+|**1.** 충전기는 <<get_certificate_status_request,GetCertificateStatusRequest>>를 보내 CSMS에 OCSP 인증서 상태를 제공해 달라고 요청합니다. +
+**2.** CSMS는 <<get_certificate_status_response,GetCertificateStatusResponse>>로 응답합니다.
+|5 |필수 조건 |해당 없음
+|6 |사후 조건
+|**성공한 사후 조건:** +
+충전기에서 요청한 인증서에 대한 OCSP 인증서 상태를 수신했습니다. +
+**실패한 사후 조건:** +
+CSMS에서 OCSP 인증서 상태를 검색하는 데 실패했습니다.
 |===
 
-.Get V2G Charging Station Certificate status
-image::part2/images/figure_130.svg[Get V2G Charging Station Certificate status]
+.V2G 충전기 인증서 상태 가져오기
+image::part2/images/figure_130.svg[V2G 충전기 인증서 상태 가져오기]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7   |Error handling |n/a
-|8   |Remark(s)      |The status indicator in the <<get_certificate_status_response,GetCertificateStatusResponse>> indicates whether or not the CSMS was successful in retrieving the certificate status. it does NOT indicate the validity of the certificate.
+|7 |오류 처리 |해당 없음
+|8 |비고 |<<get_certificate_status_response,GetCertificateStatusResponse>>의 상태 표시기는 CSMS가 인증서 상태를 검색하는 데 성공했는지 여부를 나타냅니다. 인증서의 유효성을 나타내지 않습니다.
 
 {nbsp}
 
-For installing the (V2G) Charging Station Certificate, see use cases <<update_charging_station_certificate_by_request_of_csms,A02 - Update Charging Station Certificate by request of CSMS>> and <<update_charging_station_certificate_initiated_by_the_charging_station,A03 - Update Charging Station Certificate initiated by the Charging Station>>. The V2G certificate chain SHOULD not include the V2GRootCertificate. This SHOULD be installed using Use case <<install_ca_certificate_in_a_charging_station,M05 - Install CA certificate in a Charging Station>>.
+(V2G) 충전기 인증서를 설치하려면 사용 사례 <<update_charging_station_certificate_by_request_of_csms,A02 - CSMS 요청에 의한 충전기 인증서 업데이트>> 및 <<update_charging_station_certificate_initiated_by_the_charging_station,A03 - 충전기에서 시작된 충전기 인증서 업데이트>>를 참조하세요. V2G 인증서 체인에는 V2GRootCertificate가 포함되어서는 안 됩니다. 이는 사용 사례 <<install_ca_certificate_in_a_charging_station,M05 - 충전기에 CA 인증서 설치>>를 사용하여 설치해야 합니다.
 
-OCPP allows for only one certificate per <<get_certificate_status_request,GetCertificateStatusRequest>>. Because when multiple answers on a <<get_certificate_status_request,GetCertificateStatusRequest>> are to be expected, it makes handling the request and status more complex. So a <<get_certificate_status_request,GetCertificateStatusRequest>> needs to be sent per SubCA.
+OCPP는 <<get_certificate_status_request,GetCertificateStatusRequest>>당 하나의 인증서만 허용합니다. <<get_certificate_status_request,GetCertificateStatusRequest>>에 대한 여러 답변이 예상되면 요청과 상태를 처리하는 것이 더 복잡해지기 때문입니다. 따라서 <<get_certificate_status_request,GetCertificateStatusRequest>>는 SubCA당 전송되어야 합니다.
 
-_responderURL_ is required in OCPP, while it is optional in ISO 15118. Without a _responderURL_ in a certificate it cannot work, so a responderURL is required for any certificate for which a <<get_certificate_status_request,GetCertificateStatusRequest>> can be expected.
+_responderURL_은 OCPP에서 필수이지만 ISO 15118에서는 선택 사항입니다. 인증서에 _responderURL_이 없으면 작동할 수 없으므로 <<get_certificate_status_request,GetCertificateStatusRequest>>가 예상되는 모든 인증서에는 responderURL이 필요합니다.
 |===
 
 ==== M06 - Get V2G Charging Station Certificate status - Requirements
 
-.M06 - Requirements
+.M06 - 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
-|ID         |Precondition         |Requirement definition
+|ID |전제 조건 |요구 사항 정의
 
-|M06.FR.01  |After receiving a <<get_certificate_status_request,GetCertificateStatusRequest>>
-  |The CSMS SHALL respond with a <<get_certificate_status_response,GetCertificateStatusResponse>>.
-|M06.FR.02  |M06.FR.01 +
-  AND +
-  The CSMS was successful in retrieving the OCSP certificate status
-    |The CSMS SHALL indicate success by setting 'status' to 'Accepted' in the <<get_certificate_status_response,GetCertificateStatusResponse>>.
-|M06.FR.03  |M06.FR.02
-  |The CSMS SHALL include the OCSP response data in the OCSPResult field in the <<get_certificate_status_response,GetCertificateStatusResponse>>.
-|M06.FR.04  |M06.FR.01 +
-  AND +
-  The CSMS was not successful in retrieving the OCSP certificate status
-    |The CSMS SHALL indicate it was not successful by setting _status_ to `Failed` in the <<get_certificate_status_response,GetCertificateStatusResponse>>.
-|M06.FR.06  |{nbsp}
-  |The Charging Station SHALL request and cache the OCSP status for its V2G certificates.
-|M06.FR.07  |{nbsp}
-  |After the Charging Station Certificate has been updated, The Charging Station SHALL refresh the cached OCSP data by sending a <<get_certificate_status_request,GetCertificateStatusRequest>> for the new certificate, and also for the intermediate certificates.
-|M06.FR.08  |{nbsp}
-  |The CSMS SHALL format the response data according to OCSPResponse as defined in <<ocpp_security_24,IETF RFC 6960>>, formatted according to ASN.1 [X.680].
-|M06.FR.09  |{nbsp} |The OCSPResponse data SHALL be DER encoded.
-|M06.FR.10  |{nbsp} |The Charging Station SHALL refresh the cached OCSP data at least once a week.
+|M06.FR.01 |<<get_certificate_status_request,GetCertificateStatusRequest>>를 수신한 후
+|CSMS는 <<get_certificate_status_response,GetCertificateStatusResponse>>로 응답해야 합니다.
+|M06.FR.02 |M06.FR.01 +
+AND +
+CSMS는 OCSP 인증서 상태를 검색하는 데 성공했습니다.
+|CSMS는 <<get_certificate_status_response,GetCertificateStatusResponse>>에서 'status'를 'Accepted'로 설정하여 성공을 표시해야 합니다.
+
+|M06.FR.03 |M06.FR.02
+|CSMS는 <<get_certificate_status_response,GetCertificateStatusResponse>>의 OCSPResult 필드에 OCSP 응답 데이터를 포함해야 합니다.
+|M06.FR.04 |M06.FR.01 +
+AND +
+CSMS는 OCSP 인증서 상태를 검색하는 데 성공하지 못했습니다.
+|CSMS는 <<get_certificate_status_response,GetCertificateStatusResponse>>에서 _status_를 `Failed`로 설정하여 성공하지 못했음을 표시해야 합니다.
+|M06.FR.06 |{nbsp}
+|충전기는 V2G 인증서에 대한 OCSP 상태를 요청하고 캐시해야 합니다.
+|M06.FR.07 |{nbsp}
+|충전기 인증서가 업데이트된 후, 충전기는 새 인증서와 중간 인증서에 대해 <<get_certificate_status_request,GetCertificateStatusRequest>>를 보내 캐시된 OCSP 데이터를 새로 고쳐야 합니다.
+|M06.FR.08 |{nbsp}
+|CSMS는 <<ocpp_security_24,IETF RFC 6960>>에 정의된 OCSPResponse에 따라 응답 데이터를 포맷해야 하며, ASN.1 [X.680]에 따라 포맷해야 합니다.
+|M06.FR.09 |{nbsp} |OCSPResponse 데이터는 DER로 인코딩해야 합니다.
+|M06.FR.10 |{nbsp} |충전기는 주 1회 이상 캐시된 OCSP 데이터를 새로 고쳐야 합니다.
 |===
