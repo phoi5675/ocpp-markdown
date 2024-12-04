@@ -120,7 +120,7 @@ image::part2/images/figure_141.svg[Set DisplayMessage sequence diagram]
   **3.** The Charging Station accepts the request by sending a <<set_display_message_response,SetDisplayMessageResponse>> message to the CSMS. +
   **4.** The Charging Station shows the new message on the display while the transaction is ongoing.
 |{nbsp} d|_Alternative scenario(s)_
-  |<<o01_set_display_message,O01 - Set DisplayMessage>>
+  |<<o01_set_display_message,O01 - Set DisplayMessage>> +
   <<o06_replace_display_message,O06 - Replace DisplayMessage>>
 |5   |Prerequisites   |No messages configured with the same IDs.
 |6   |Postcondition(s) |The new message will be displayed on the Charging Station while the transaction is ongoing (time, duration and position depend on configuration)
