@@ -66,7 +66,7 @@ image::part2/images/figure_65.svg[Sequence Diagram: Remote Start Transaction - C
 
   The <<request_start_transaction_response,RequestStartTransactionResponse>> contains a status which indicates whether the Charging Station has accepted the request and will attempt to start a transaction.
 
-  The CSMS is allowed to send a <<request_start_transaction_request,RequestStartTransactionRequest>> with <<id_token_type,IdTokenType>> of type:
+  The CSMS is allowed to send a <<request_start_transaction_request,RequestStartTransactionRequest>> with <<id_token_type,IdTokenType>> of type: +
 <<id_token_enum_type,NoAuthorization>>. The operator should be aware that if the Charging Station supports local stop transaction, this transaction can be stopped by anyone.
 
   The scenario description and sequence diagram above are based on the Configuration Variable for start transaction being configured as follows: +
@@ -486,7 +486,7 @@ image::part2/images/figure_70.svg[Sequence Diagram: Unlock Connector]
 |7   |Error handling  |n/a
 |8   |Remark(s)       |An external trigger, triggering the Unlock command, can be e.g. a Charging Station Operator or an EV Driver app.
 
-<<unlock_connector_request,UnlockConnectorRequest>> is intended only for unlocking the cable retention lock on the Connector, not for unlocking a Connector access door.
+  <<unlock_connector_request,UnlockConnectorRequest>> is intended only for unlocking the cable retention lock on the Connector, not for unlocking a Connector access door.
 |===
 
 ==== F05 - Remotely Unlock Connector - Requirements
