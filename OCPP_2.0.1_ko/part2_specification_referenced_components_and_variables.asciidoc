@@ -5,63 +5,63 @@
 [[controller_components]]
 == Controller Components
 
-This section gives an overview of the 'Controller' components, which are introduced in OCPP 2.0. A controller component can be recognized by the 'Ctrlr' suffix and is responsible for the configuration of a certain functionality. Most of the <<referenced_components_and_variables,'Referenced' components>> that are described in this document, are 'Controller' components.
+이 섹션에서는 OCPP 2.0에 도입된 '컨트롤러' 구성 요소에 대한 개요를 제공합니다. 컨트롤러 구성 요소는 'Ctrlr' 접미사로 인식할 수 있으며 특정 기능의 구성을 담당합니다. 이 문서에서 설명하는 대부분의 <<referenced_components_and_variables,'Referenced' components>>는 '컨트롤러' 구성 요소입니다.
 
-The table below contains a summary of all Controller components, for more details, please refer to Part 2 - Appendices.
+아래 표에는 모든 컨트롤러 구성 요소의 요약이 포함되어 있습니다. 자세한 내용은 2부 - 부록을 참조하세요.
 
 
 [cols="<.^2,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |Controller     |Component Description
 
-|AlignedDataCtrlr |Responsible for configuration relating to the reporting of clock-aligned meter data.
-|AuthCacheCtrlr |Responsible for configuration relating to the use of a local cache for authorization for Charging Station use.
-|AuthCtrlr |Responsible for configuration relating to the use of authorization for Charging Station use.
-|CHAdeMOCtrlr |Responsible for configuration relating to the CHAdeMO controller
-|ClockCtrlr |Provides a means to configure management of time tracking by Charging Station.
-|CustomizationCtrlr |Responsible for configuration relating to custom vendor-specific implementations, using the DataTransfer message and CustomData extensions.
-|DeviceDataCtrlr |Responsible for configuration relating to the exchange and storage of Charging Station device model data.
-|DisplayMessageCtrlr |Responsible for configuration relating to the display of messages to Charging Station users.
-|ISO15118Ctrlr |Responsible for configuration relating to the ISO 15118 controller
-|LocalAuthListCtrlr |Responsible for configuration relating to the use of local authorization lists for Charging Station use.
-|MonitoringCtrlr |Responsible for configuration relating to the exchange of monitoring event data.
-|OCPPCommCtrlr |Responsible for configuration relating to information exchange between Charging Station and CSMS.
-|ReservationCtrlr |Responsible for configuration relating to reservations.
-|SampledDataCtrlr |Responsible for configuration relating to the reporting of sampled meter data.
-|SecurityCtrlr |Responsible for configuration relating to security of communications between Charging Station and CSMS.
-|SmartChargingCtrlr |Responsible for configuration relating to Smart Charging.
-|TariffCostCtrlr |Responsible for configuration relating to tariff and cost display.
-|TxCtrlr |Responsible for configuration relating to transaction characteristics and behaviour.
+|AlignedDataCtrlr |클럭 정렬 미터 데이터 보고와 관련된 구성을 담당합니다.
+|AuthCacheCtrlr |충전소 사용 권한 부여를 위한 로컬 캐시 사용과 관련된 구성을 담당합니다.
+|AuthCtrlr |충전소 사용 권한 부여 사용과 관련된 구성을 담당합니다.
+|CHAdeMOCtrlr |CHAdeMO 컨트롤러와 관련된 구성을 담당합니다.
+|ClockCtrlr |충전소에서 시간 추적 관리를 구성하는 수단을 제공합니다.
+|CustomizationCtrlr |DataTransfer 메시지와 CustomData 확장을 사용하여 사용자 지정 공급업체별 구현과 관련된 구성을 담당합니다.
+|DeviceDataCtrlr |충전소 장치 모델 데이터의 교환 및 저장과 관련된 구성을 담당합니다.
+|DisplayMessageCtrlr |충전소 사용자에게 메시지를 표시하는 것과 관련된 구성을 담당합니다.
+|ISO15118Ctrlr |ISO 15118 컨트롤러와 관련된 구성을 담당합니다.
+|LocalAuthListCtrlr |충전소 사용을 위한 로컬 권한 부여 목록 사용과 관련된 구성을 담당합니다.
+|MonitoringCtrlr |모니터링 이벤트 데이터 교환과 관련된 구성을 담당합니다.
+|OCPPCommCtrlr |충전소와 CSMS 간의 정보 교환과 관련된 구성을 담당합니다.
+|ReservationCtrlr |예약과 관련된 구성을 담당합니다.
+|SampledDataCtrlr |샘플링된 미터 데이터 보고와 관련된 구성을 담당합니다.
+|SecurityCtrlr |충전소와 CSMS 간의 통신 보안과 관련된 구성을 담당합니다.
+|SmartChargingCtrlr |스마트 충전과 관련된 구성을 담당합니다.
+|TariffCostCtrlr |요금 및 비용 표시와 관련된 구성을 담당합니다.
+|TxCtrlr |거래 특성 및 동작과 관련된 구성을 담당합니다.
 |===
 
-Every Controller component has an 'Enabled' variable. This variable can be used to enable/disable a certain functionality. Any data in the charging station is not part of the controller component, so when disabling a functionality, any relating data stored in the Charging Station will not be changed or removed. +
-For example: if ReservationCtrlr is disabled when there is an active reservation, the EVSE will become available, but the reservation entries will still be there - they are just not used. If afterwards ReservationCtrlr is enabled again, the reservation entries will become active again as long as they have not expired and no transaction is in progress. If a transaction has started in the mean time, that transaction remains active. The reservation is then considered expired.
+모든 컨트롤러 구성 요소에는 '활성화됨' 변수가 있습니다. 이 변수는 특정 기능을 활성화/비활성화하는 데 사용할 수 있습니다. 충전소의 모든 데이터는 컨트롤러 구성 요소의 일부가 아니므로 기능을 비활성화할 때 충전소에 저장된 관련 데이터는 변경되거나 제거되지 않습니다. +
+예를 들어, 활성 예약이 있을 때 ReservationCtrlr이 비활성화되면 EVSE를 사용할 수 있지만 예약 항목은 여전히 ​​그대로 있습니다. 사용되지 않을 뿐입니다. 나중에 ReservationCtrlr이 다시 활성화되면 예약 항목이 만료되지 않고 진행 중인 거래가 없는 한 예약 항목이 다시 활성화됩니다. 그 사이에 거래가 시작된 경우 해당 거래는 활성 상태로 유지됩니다. 그러면 예약이 만료된 것으로 간주됩니다.
 
 <<<
 
 [[referenced_components_and_variables]]
 == Referenced Components and Variables
 
-Below follows a list of all Component Variable combinations with a role standardized in this specification.
+아래는 이 사양에서 표준화된 역할을 가진 모든 구성 변수 조합의 목록입니다.
 
-These Configuration Variables replace the Configuration Keys from OCPP 1.x
+이러한 구성 변수는 OCPP 1.x의 구성 키를 대체합니다.
 
-The list is split by functionality: <<general,General>>, <<security_related,Security>>, <<authorization_related,Authorization>>, <<local_authorization_list_management_related,Local Authorization List Management related>>, <<authorization_cache_related,Authorization Cache>>, <<transaction_related,Transaction>>, <<metering_related,Metering>>, <<reservation_related,Reservation>>, <<smart_charging_related,Smart Charging>>, <<tariff_cost_related,Tariff & Cost>>, <<diagnostics_related,Diagnostics>>, <<display_message_related,Display Message>> and <<charging_infrastructure_related,Charging Infrastructure related>>.
+목록은 기능에 따라 나뉩니다. <<general, General>>, <<security_related, Security>>, <<authorization_related,Authorization>>, <<local_authorization_list_management_related, Local Authorization List Management related>>, <<authorization_cache_related, Authorization Cache>>, <<transaction_related, Transaction>>, <<metering_related, Metering>>, <<reservation_related, Reservation>>, <<smart_charging_related, Smart Charging>>, <<tariff_cost_related, Tariff & Cost>>, <<diagnostics_related, Diagnostics>>, <<display_message_related, Display Message>> 및 <<charging_infrastructure_related, Charging Infrastructure related>>.
 
-A required Configuration Variable mentioned under a particular function block only has to be supported by the Charging Station if it supports that functional block.
+특정 기능 블록에 언급된 필수 구성 변수는 해당 기능 블록을 지원하는 경우에만 충전소에서 지원해야 합니다.
 
-Please see chapter 4 in "Part 1 - Architecture & Topology" about the addressing of Components and Variables in the Device Model.
+"1부 - 아키텍처 및 토폴로지"의 4장에서 장치 모델의 구성 요소 및 변수 주소 지정에 대해 참조하세요.
 
-Requirements for all the Configuration Variables in this document:
+이 문서의 모든 구성 변수에 대한 요구 사항:
 
-- All variables that are writable SHALL have the VariableAttribute field: _persistence_ = true, and SHALL thus be stored in a persistent way.
-- Any fields not defined SHALL be left empty.
-- Any field marked with a * (Asterisk) can be of any possible value.
-- When the AttributeType is NOT given, the CSMS and Charging Station SHALL assume the AttributeType to be Actual.
+- 쓰기 가능한 모든 변수는 VariableAttribute 필드 _persistence_ = true를 가져야 하며 따라서 영구적인 방식으로 저장해야 합니다.
+- 정의되지 않은 모든 필드는 비워두어야 합니다.
+- *(별표)로 표시된 모든 필드는 가능한 모든 값을 가질 수 있습니다.
+- AttributeType이 제공되지 않으면 CSMS 및 충전소는 AttributeType이 Actual이라고 가정해야 합니다.
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===
-|NOTE |See _'OCPP 2.0 Part 4 - JSON over Websockets implementation guide'_ for a number of Configuration Variables that are specific to controlling the JSON/Websocket behavior.
+|참고 |JSON/Websocket 동작을 제어하는 ​​데 특화된 여러 구성 변수에 대해서는 _'OCPP 2.0 4부 - JSON over Websockets 구현 가이드'_를 참조하세요.
 |===
 
 [[general]]
@@ -69,7 +69,7 @@ Requirements for all the Configuration Variables in this document:
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===
-|NOTE |WebSocket-related variables are described in <<ocpp2_0_part4,"OCPP-2.0.1 Part 4 JSON over WebSockets">>.
+|NOTE |WebSocket 관련 변수는 <<ocpp2_0_part4,"OCPP-2.0.1 Part 4 JSON over WebSockets">>에 설명되어 있습니다.
 |===
 
 ==== `ActiveNetworkProfile`
