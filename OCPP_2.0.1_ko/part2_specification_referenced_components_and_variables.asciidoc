@@ -15,27 +15,27 @@
 |Controller     |Component Description
 
 |AlignedDataCtrlr |클럭 정렬 미터 데이터 보고와 관련된 구성을 담당합니다.
-|AuthCacheCtrlr |충전소 사용 권한 부여를 위한 로컬 캐시 사용과 관련된 구성을 담당합니다.
-|AuthCtrlr |충전소 사용 권한 부여 사용과 관련된 구성을 담당합니다.
+|AuthCacheCtrlr |충전기 사용 인증을 위한 로컬 캐시 사용과 관련된 구성을 담당합니다.
+|AuthCtrlr |충전기 사용 인증 사용과 관련된 구성을 담당합니다.
 |CHAdeMOCtrlr |CHAdeMO 컨트롤러와 관련된 구성을 담당합니다.
-|ClockCtrlr |충전소에서 시간 추적 관리를 구성하는 수단을 제공합니다.
+|ClockCtrlr |충전기에서 시간 추적 관리를 구성하는 수단을 제공합니다.
 |CustomizationCtrlr |DataTransfer 메시지와 CustomData 확장을 사용하여 사용자 지정 공급업체별 구현과 관련된 구성을 담당합니다.
-|DeviceDataCtrlr |충전소 장치 모델 데이터의 교환 및 저장과 관련된 구성을 담당합니다.
-|DisplayMessageCtrlr |충전소 사용자에게 메시지를 표시하는 것과 관련된 구성을 담당합니다.
+|DeviceDataCtrlr |충전기 장치 모델 데이터의 교환 및 저장과 관련된 구성을 담당합니다.
+|DisplayMessageCtrlr |충전기 사용자에게 메시지를 표시하는 것과 관련된 구성을 담당합니다.
 |ISO15118Ctrlr |ISO 15118 컨트롤러와 관련된 구성을 담당합니다.
-|LocalAuthListCtrlr |충전소 사용을 위한 로컬 권한 부여 목록 사용과 관련된 구성을 담당합니다.
+|LocalAuthListCtrlr |충전기 사용을 위한 로컬 인증 목록 사용과 관련된 구성을 담당합니다.
 |MonitoringCtrlr |모니터링 이벤트 데이터 교환과 관련된 구성을 담당합니다.
-|OCPPCommCtrlr |충전소와 CSMS 간의 정보 교환과 관련된 구성을 담당합니다.
+|OCPPCommCtrlr |충전기와 CSMS 간의 정보 교환과 관련된 구성을 담당합니다.
 |ReservationCtrlr |예약과 관련된 구성을 담당합니다.
 |SampledDataCtrlr |샘플링된 미터 데이터 보고와 관련된 구성을 담당합니다.
-|SecurityCtrlr |충전소와 CSMS 간의 통신 보안과 관련된 구성을 담당합니다.
+|SecurityCtrlr |충전기와 CSMS 간의 통신 보안과 관련된 구성을 담당합니다.
 |SmartChargingCtrlr |스마트 충전과 관련된 구성을 담당합니다.
 |TariffCostCtrlr |요금 및 비용 표시와 관련된 구성을 담당합니다.
-|TxCtrlr |거래 특성 및 동작과 관련된 구성을 담당합니다.
+|TxCtrlr |트랜잭션 특성 및 동작과 관련된 구성을 담당합니다.
 |===
 
-모든 컨트롤러 구성 요소에는 '활성화됨' 변수가 있습니다. 이 변수는 특정 기능을 활성화/비활성화하는 데 사용할 수 있습니다. 충전소의 모든 데이터는 컨트롤러 구성 요소의 일부가 아니므로 기능을 비활성화할 때 충전소에 저장된 관련 데이터는 변경되거나 제거되지 않습니다. +
-예를 들어, 활성 예약이 있을 때 ReservationCtrlr이 비활성화되면 EVSE를 사용할 수 있지만 예약 항목은 여전히 ​​그대로 있습니다. 사용되지 않을 뿐입니다. 나중에 ReservationCtrlr이 다시 활성화되면 예약 항목이 만료되지 않고 진행 중인 거래가 없는 한 예약 항목이 다시 활성화됩니다. 그 사이에 거래가 시작된 경우 해당 거래는 활성 상태로 유지됩니다. 그러면 예약이 만료된 것으로 간주됩니다.
+모든 컨트롤러 구성 요소에는 '활성화됨' 변수가 있습니다. 이 변수는 특정 기능을 활성화/비활성화하는 데 사용할 수 있습니다. 충전기의 모든 데이터는 컨트롤러 구성 요소의 일부가 아니므로 기능을 비활성화할 때 충전기에 저장된 관련 데이터는 변경되거나 제거되지 않습니다. +
+예를 들어, 활성된 예약이 있을 때 ReservationCtrlr이 비활성화되면 EVSE를 사용할 수 있지만 예약 항목은 여전히 ​​그대로 있습니다. 사용되지 않을 뿐입니다. 나중에 ReservationCtrlr이 다시 활성화되면 예약 항목이 만료되지 않고 진행 중인 거래가 없는 한 예약 항목이 다시 활성화됩니다. 그 사이에 거래가 시작된 경우 해당 거래는 활성 상태로 유지됩니다. 그러면 예약이 만료된 것으로 간주됩니다.
 
 <<<
 
@@ -48,20 +48,20 @@
 
 목록은 기능에 따라 나뉩니다. <<general, General>>, <<security_related, Security>>, <<authorization_related,Authorization>>, <<local_authorization_list_management_related, Local Authorization List Management related>>, <<authorization_cache_related, Authorization Cache>>, <<transaction_related, Transaction>>, <<metering_related, Metering>>, <<reservation_related, Reservation>>, <<smart_charging_related, Smart Charging>>, <<tariff_cost_related, Tariff & Cost>>, <<diagnostics_related, Diagnostics>>, <<display_message_related, Display Message>> 및 <<charging_infrastructure_related, Charging Infrastructure related>>.
 
-특정 기능 블록에 언급된 필수 구성 변수는 해당 기능 블록을 지원하는 경우에만 충전소에서 지원해야 합니다.
+특정 기능 블록에 언급된 필수 구성 변수는 해당 기능 블록을 지원하는 경우에만 충전기에서 지원해야 합니다.
 
-"1부 - 아키텍처 및 토폴로지"의 4장에서 장치 모델의 구성 요소 및 변수 주소 지정에 대해 참조하세요.
+"Part 1 - Architecture & Topology"의 4장에서 장치 모델의 구성 요소 및 변수 주소 지정에 대해 참조하세요.
 
 이 문서의 모든 구성 변수에 대한 요구 사항:
 
 - 쓰기 가능한 모든 변수는 VariableAttribute 필드 _persistence_ = true를 가져야 하며 따라서 영구적인 방식으로 저장해야 합니다.
 - 정의되지 않은 모든 필드는 비워두어야 합니다.
 - *(별표)로 표시된 모든 필드는 가능한 모든 값을 가질 수 있습니다.
-- AttributeType이 제공되지 않으면 CSMS 및 충전소는 AttributeType이 Actual이라고 가정해야 합니다.
+- AttributeType이 제공되지 않으면 CSMS 및 충전기는 AttributeType이 Actual이라고 가정해야 합니다.
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===
-|참고 |JSON/Websocket 동작을 제어하는 ​​데 특화된 여러 구성 변수에 대해서는 _'OCPP 2.0 4부 - JSON over Websockets 구현 가이드'_를 참조하세요.
+|참고 |JSON/Websocket 동작을 제어하는 ​​데 특화된 여러 구성 변수에 대해서는 _'OCPP 2.0 Part 4 - JSON over Websockets implementation guide'_ 를 참조하세요.
 |===
 
 [[general]]
@@ -81,7 +81,7 @@
 .3+|Variable |variableName 2+d|ActiveNetworkProfile
   |variableAttributes |mutability d|ReadOnly
   |variableCharacteristics |dataType d|integer
-|Description 3+d|Indicates the configuration profile the station uses at that moment to connect to the network. This configuration variable only has to be implemented when NetworkConnectionProfile is implemented.
+|Description 3+d|충전기가 네트워크에 연결할때 사용하는 구성 프로필을 나타냅니다. 이 구성 변수는 NetworkConnectionProfile이 구현될 때만 구현하면 됩니다.
 |===
 
 [[allow_new_sessions_pending_firmware_update]]
@@ -94,8 +94,8 @@
 .3+|Variable |variableName 2+d|AllowNewSessionsPendingFirmwareUpdate
   |variableAttributes |mutability d|ReadWrite
   |variableCharacteristics |dataType d|boolean
-|Description 3+d|Indicates whether new sessions can be started on EVSEs, while Charging Station is waiting for all EVSEs to become Available in order to start a pending firmware update. +
-  When a firmware update is waiting to be installed and this variable exists and has the value _true_, then, the Charging Station will not set free EVSEs to Unavailable, pending the update. This means that it may take longer until there is a point in time when all EVSEs of the Charging Station are free and it can perform the firmware update.
+|Description 3+d|충전기가 펌웨어 업데이트를 위해 모든 EVSE가 Available상태를 기다리고 있을 때 EVSE에 새로운 세션이 시작할 수 없는지를 나타냅니다. +
+  펌웨어 업데이트가 설치를 대기하고 있고, 해당 변수가 _true_ 값일때, 충전기는 사용가능한 EVSE들을 Unavailable 상태로 바꿔 업데이트를 보류합니다. 즉 펌웨어 업데이트를 수행하기 위해 충전기의 모든 EVSE가 사용가능할 시점까지 더 많은 시간이 소요될 수 있습니다.
 |===
 
 ==== `DefaultMessageTimeout`
@@ -109,7 +109,7 @@
   |variableAttributes |mutability d|ReadOnly
   .2+|variableCharacteristics |unit d|s
     |dataType d|integer
-|Description 3+d|The purpose of the message timeout is to be able to consider a request message as not sent and continue with other tasks when the message did not arrive due to communication errors or software failure. The message timeout setting in a Charging Station can be configured in the messageTimeout field in the _NetworkConnectionProfile_.
+|Description 3+d|메시지 타임아웃의 목적은 통신 오류나 소프트웨어 오류로 인해 메시지가 도착하지 않았을 때 요청 메시지를 보내지 않은 것으로 간주하고 다른 작업을 계속할 수 있도록 하는 것입니다. 충전기의 메시지 타임아웃 설정은 _NetworkConnectionProfile_ 의 messageTimeout 필드에서 구성할 수 있습니다.
 |===
 
 [[file_transfer_protocols]]
@@ -122,9 +122,9 @@
 .3+|Variable |variableName 2+d|FileTransferProtocols
   |variableAttributes |mutability d|ReadOnly
   |variableCharacteristics |dataType d|MemberList
-|Description 3+d|List of supported file transfer protocols.
+|Description 3+d|지원되는 파일 전송 프로토콜의 목록입니다.
 
-  Possible values: FTP, FTPS, HTTP, HTTPS, SFTP.
+  사용 가능한 값: FTP, FTPS, HTTP, HTTPS, SFTP.
 |===
 
 ==== `HeartbeatInterval`
@@ -138,7 +138,7 @@
   .3+|variableCharacteristics |unit d|s
       |dataType d|integer
       |minLimit d|1
-|Description 3+d|Interval of inactivity (no OCPP exchanges) with CSMS after which the Charging Station should send <<heartbeat_request,HeartbeatRequest>>.
+|Description 3+d|CSMS와의 OCPP 교환 없는 비활성 간격이후 충전기가 보내야하는 <<heartbeat_request,HeartbeatRequest>>.
 |===
 
 [[network_configuration_priority]]
@@ -153,7 +153,7 @@
     |mutability d|ReadWrite
   .2+|variableCharacteristics |dataType d|SequenceList
     |valueList d|List of possible values
-|Description 3+d|A comma separated ordered list of the priority of the possible Network Connection Profiles. The list of possible available profile slots for the network configuration profiles SHALL be reported, via the valueList characteristic of this Variable.
+|Description 3+d|사용 가능한 네트워크 연결 프로필의 우선순위를 쉼표로 구분하여 정렬한 목록입니다. 네트워크 구성 프로필에 사용 가능한 프로필 슬롯 목록은 이 변수의 valueList 특성을 통해 보고되어야 합니다.
 |===
 
 [[network_profile_connection_attempts]]
@@ -166,7 +166,7 @@
 .3+|Variable |variableName 2+d|NetworkProfileConnectionAttempts
   |variableAttributes |mutability d|ReadWrite
   |variableCharacteristics |dataType d|integer
-|Description 3+d|Specifies the number of connection attempts the Charging Station executes before switching to a different profile.
+|Description 3+d|충전기가 다른 프로필로 전환하기 전에 시도하는 연결 횟수를 지정합니다.
 |===
 
 [[offline_threshold]]
@@ -180,7 +180,7 @@
   |variableAttributes |mutability d|ReadWrite
   .2+|variableCharacteristics |unit d|s
     |dataType d|integer
-|Description 3+d|When the offline period of a Charging Station exceeds the OfflineThreshold it is recommended to send a <<status_notification_request,StatusNotificationRequest>> for all its Connectors when the Charging Station is back online.
+|Description 3+d|충전기의 오프라인 기간이 OfflineThreshold를 초과했다면 충전기가 다시 온라인이 되었을때 자신의 커넥터의 <<status_notification_request,StatusNotificationRequest>>를 보내는것을 권장합니다.
 |===
 
 ==== `QueueAllMessages`
@@ -192,9 +192,9 @@
 .3+|Variable |variableName 2+d|QueueAllMessages
   |variableAttributes |mutability d|ReadWrite
   |variableCharacteristics |dataType d|boolean
-|Description 3+d|When this variable is set to _true_, the Charging Station will queue all message until they are delivered to the CSMS. +
-  When set to _false_ the Charging Station will only queue Transaction related messages as required in: E04.FR.01.and other requirements +
-  When this variable is the to _true_, and the Charging Station is running low on memory, the Charging Station SHALL drop TransactionEvent messages last, and when dropping measurements/meter data, the Charging Station SHALL drop intermediate values first (1st value, 3th value, 5th etc), not start dropping values from the beginning or end of the measurements/meter data. Default = false
+|Description 3+d|이 변수가 _true_ 로 설정되면 충전기는 모든 메시지를 CSMS에 전달될 때까지 대기열에 넣습니다. +
+  _false _로 설정되면 충전기는 E04.FR.01 및 기타 요구 사항에서 요구하는 대로 거래 관련 메시지만 대기열에 넣습니다. +
+  이 변수가 _true_ 로 설정되고 충전기의 메모리가 부족하면 충전기는 TransactionEvent 메시지를 마지막으로 삭제해야 하며 측정/미터 데이터를 삭제할 때 충전기는 중간 값을 먼저 삭제해야 하며(첫 번째 값, 세 번째 값, 다섯 번째 등) 측정/미터 데이터의 시작 또는 끝에서 값을 삭제하지 않아야 합니다. 기본값 = false
 |===
 
 [[message_attempts_transaction_event]]
@@ -208,7 +208,7 @@
   |variableInstance 2+d|TransactionEvent
   |variableAttributes |mutability d|ReadWrite
   |variableCharacteristics |dataType d|integer
-|Description 3+d|How often the Charging Station should try to submit a <<transaction_event_request,TransactionEventRequest>> message when the CSMS fails to process it.
+|Description 3+d|CSMS가 <<transaction_event_request,TransactionEventRequest>> 메시지 처리를 실패할때 충전기가 얼마나 자주 이것을 전송하는것을 시도 할지에 대한 값입니다.
 |===
 
 [[message_attempt_interval_transaction_event]]
@@ -224,7 +224,7 @@
     |mutability d|ReadWrite
   .2+|variableCharacteristics |unit d|s
     |dataType d|integer
-|Description 3+d|How long the Charging Station should wait before resubmitting a <<transaction_event_request,TransactionEventRequest>> message that the CSMS failed to process.
+|Description 3+d|CSMS가 <<transaction_event_request,TransactionEventRequest>> 메시지 처리를 실패하였을때 충전기가 메시지를 재전송전 대기하는 기간입니다.
 |===
 
 [[unlock_on_ev_side_disconnect]]
@@ -237,12 +237,12 @@
 .3+|Variable |variableName 2+d|UnlockOnEVSideDisconnect
   |variableAttributes |mutability d|ReadWrite/ReadOnly
   |variableCharacteristics |dataType d|boolean
-|Description 3+d|When set to true, the Charging Station SHALL unlock the cable on the Charging Station side when the cable is unplugged at the EV. For an EVSE with only fixed cables, the mutability SHALL be ReadOnly and the actual value SHALL be false. For a charging station with fixed cables and sockets, the variable is only applicable to the sockets.
+|Description 3+d|true로 설정하면, 충전기는 EV에서 케이블이 분리될 때 충전기 쪽의 케이블을 잠금 해제해야 합니다. 고정 케이블만 있는 EVSE의 경우 가변성은 ReadOnly여야 하고 실제 값은 false여야 합니다. 고정 케이블과 소켓이 있는 충전기의 경우 변수는 소켓에만 적용됩니다.
 |===
 
 ==== `WebSocketPingInterval`
 
-This configuration variable is described in <<ocpp2_0_part4,"OCPP-2.0.1 Part 4 JSON over WebSockets">>.
+이 구성 변수는 <<ocpp2_0_part4,"OCPP-2.0.1 Part 4 JSON over WebSockets">>에 설명되어 있습니다..
 
 ==== `ResetRetries`
 
@@ -253,7 +253,7 @@ This configuration variable is described in <<ocpp2_0_part4,"OCPP-2.0.1 Part 4 J
 .3+|Variable |variableName 2+d|ResetRetries
   |variableAttributes |mutability d|ReadWrite
   |variableCharacteristics |dataType d|integer
-|Description 3+d|Number of times to retry a reset of the Charging Station when a reset was unsuccessful.
+|Description 3+d|충전기 리셋이 실패했을 때 리셋을 재시도하는 횟수입니다.
 |===
 
 ==== `MessageFieldLength`
@@ -266,7 +266,7 @@ This configuration variable is described in <<ocpp2_0_part4,"OCPP-2.0.1 Part 4 J
   |variableInstance 2+d|<message>.<field>
   |variableAttributes |mutability d|ReadOnly
   |variableCharacteristics |dataType d|integer
-|Description 3+d|This variable is used to report the length of <field> in <message> when it is larger than the length that is defined in the standard OCPP message schema.
+|Description 3+d|이 변수는 표준 OCPP 메시지 스키마에 정의된 길이보다 <메시지>의 <필드> 길이가 클 경우 해당 길이를 보고하는 데 사용됩니다.
 |===
 
 [[items_per_message_get_report]]
@@ -280,7 +280,7 @@ This configuration variable is described in <<ocpp2_0_part4,"OCPP-2.0.1 Part 4 J
   |variableInstance 2+d|GetReport
   |variableAttributes |mutability d|ReadOnly
   |variableCharacteristics |dataType d|integer
-|Description 3+d|Maximum number of ComponentVariable entries that can be sent in one <<get_report_request,GetReportRequest>> or <<get_monitoring_report_request,GetMonitoringReportRequest>> message.
+|Description 3+d|하나의 <<get_report_request,GetReportRequest>> 또는 <<get_monitoring_report_request,GetMonitoringReportRequest>> 메시지로 전송할 수 있는 ComponentVariable 항목의 최대 수입니다.
 |===
 
 [[items_per_message_get_variables]]
@@ -294,7 +294,7 @@ This configuration variable is described in <<ocpp2_0_part4,"OCPP-2.0.1 Part 4 J
   |variableInstance 2+d|GetVariables
   |variableAttributes |mutability d|ReadOnly
   |variableCharacteristics |dataType d|integer
-|Description 3+d|Maximum number of GetVariableData objects in <<get_variables_request,GetVariablesRequest>>.
+|Description 3+d|<<get_variables_request,GetVariablesRequest>>의 GetVariableData 객체의 최대 개수입니다.
 |===
 
 [[bytes_per_message_get_report]]
@@ -308,7 +308,7 @@ This configuration variable is described in <<ocpp2_0_part4,"OCPP-2.0.1 Part 4 J
   |variableInstance 2+d|GetReport
   |variableAttributes |mutability d|ReadOnly
   |variableCharacteristics |dataType d|integer
-|Description 3+d|Message Size (in bytes) - puts constraint on <<get_report_request,GetReportRequest>> or <<get_monitoring_report_request,GetMonitoringReportRequest>> message size.
+|Description 3+d|메시지 크기(바이트) - <<get_report_request,GetReportRequest>> 또는 <<get_monitoring_report_request,GetMonitoringReportRequest>> 메시지 크기에 제약을 둡니다.
 |===
 
 [[bytes_per_message_get_variables]]
@@ -322,7 +322,7 @@ This configuration variable is described in <<ocpp2_0_part4,"OCPP-2.0.1 Part 4 J
   |variableInstance 2+d|GetVariables
   |variableAttributes |mutability d|ReadOnly
   |variableCharacteristics |dataType d|integer
-|Description 3+d|Message Size (in bytes) - puts constraint on <<get_variables_request,GetVariablesRequest>> message size.
+|Description 3+d|메시지 크기(바이트) - <<get_variables_request,GetVariablesRequest>> 메시지 크기에 제약을 둡니다.
 |===
 
 [[configuration_value_size]]
@@ -336,7 +336,7 @@ This configuration variable is described in <<ocpp2_0_part4,"OCPP-2.0.1 Part 4 J
   |variableAttributes |mutability d|ReadOnly
   .2+|variableCharacteristics |dataType d|integer
     |maxLimit d|1000
-|Description 3+d|This Configuration Variable can be used to limit the following fields: SetVariableData.attributeValue and VariableCharacteristics.valueList. The max size of these values will always remain equal.
+|Description 3+d|이 구성 변수는 SetVariableData.attributeValue 및 VariableCharacteristics.valueList 필드를 제한하는 데 사용할 수 있습니다. 이러한 값의 최대 크기는 항상 동일하게 유지됩니다.
 |===
 
 [[reporting_value_size]]
@@ -350,7 +350,7 @@ This configuration variable is described in <<ocpp2_0_part4,"OCPP-2.0.1 Part 4 J
   |variableAttributes |mutability d|ReadOnly
   .2+|variableCharacteristics |dataType d|integer
     |maxLimit d|2500
-|Description 3+d|This Configuration Variable can be used to limit the following fields: GetVariableResult.attributeValue, VariableAttribute.value and EventData.actualValue. The max size of these values will always remain equal.
+|Description 3+d|이 구성 변수는 GetVariableResult.attributeValue, VariableAttribute.value 및 EventData.actualValue 필드를 제한하는 데 사용할 수 있습니다. 이러한 값의 최대 크기는 항상 동일하게 유지됩니다.
 |===
 
 [[items_per_message_set_variables]]
@@ -364,7 +364,7 @@ This configuration variable is described in <<ocpp2_0_part4,"OCPP-2.0.1 Part 4 J
   |variableInstance 2+d|SetVariables
   |variableAttributes |mutability d|ReadOnly
   |variableCharacteristics |dataType d|integer
-|Description 3+d|Maximum number of SetVariableData objects in <<set_variables_request,SetVariablesRequest>>.
+|Description 3+d|<<set_variables_request,SetVariablesRequest>>에서 SetVariableData 객체의 최대 개수입니다.
 |===
 
 ==== `BytesPerMessageSetVariables`
@@ -377,7 +377,7 @@ This configuration variable is described in <<ocpp2_0_part4,"OCPP-2.0.1 Part 4 J
   |variableInstance 2+d|SetVariables
   |variableAttributes |mutability d|ReadOnly
   |variableCharacteristics |dataType d|integer
-|Description 3+d|Message Size (in bytes) - puts constraint on <<set_variables_request,SetVariablesRequest>> message size.
+|Description 3+d|메시지 크기(바이트) - <<set_variables_request,SetVariablesRequest>> 메시지 크기에 제약을 둡니다.
 |===
 
 ==== `DateTime`
@@ -389,7 +389,7 @@ This configuration variable is described in <<ocpp2_0_part4,"OCPP-2.0.1 Part 4 J
 .3+|Variable |variableName 2+d|DateTime
   |variableAttributes |mutability d|ReadOnly
   |variableCharacteristics |dataType d|DateTime
-|Description 3+d|Contains the current date and time.
+|Description 3+d|현재 날짜와 시간을 포함합니다. 
 |===
 
 [[ntp_source]]
@@ -403,7 +403,7 @@ This configuration variable is described in <<ocpp2_0_part4,"OCPP-2.0.1 Part 4 J
   |variableAttributes |mutability d|ReadWrite
   .2+|variableCharacteristics |dataType d|OptionList
     |valuesList |DHCP, manual
-|Description 3+d|When an NTP client is implemented, this variable can be used to configure the client: Use the NTP server provided via DHCP, or use the manually configured NTP server.
+|Description 3+d|NTP 클라이언트가 구현되면 이 변수를 사용하여 클라이언트를 구성할 수 있습니다. DHCP를 통해 제공된 NTP 서버를 사용하거나 수동으로 구성된 NTP 서버를 사용합니다.
 |===
 
 [[ntp_server_uri]]
@@ -417,9 +417,9 @@ This configuration variable is described in <<ocpp2_0_part4,"OCPP-2.0.1 Part 4 J
   |variableInstance 2+d|Single digit, multiple servers allowed, primary NtpServer has instance '1', the secondary has instance '2'. etc
   |variableAttributes |mutability d|ReadWrite
   |variableCharacteristics |dataType d|string
-|Description 3+d|When an NTP client is implemented, this variable can be used to configure the client: This contains the address of the NTP server.
+|Description 3+d|NTP 클라이언트가 구현되면 이 변수를 사용하여 클라이언트를 구성할 수 있습니다. 여기에는 NTP 서버의 주소가 포함됩니다.
 
-  Multiple NTP servers can be configured. These can be back-up NTP servers. If the NTP client supports it, it can also connect to multiple NTP servers simultaneous to get a more reliable time source.
+여러 NTP 서버를 구성할 수 있습니다. 이는 백업 NTP 서버가 될 수 있습니다. NTP 클라이언트를 지원하는 경우 동시에 여러 NTP 서버에 연결하여 보다 안정적인 시간 소스를 얻을 수도 있습니다.
 |===
 
 [[timeoffset]]
@@ -432,11 +432,11 @@ This configuration variable is described in <<ocpp2_0_part4,"OCPP-2.0.1 Part 4 J
 .3+|Variable |variableName 2+d|TimeOffset
   |variableAttributes |mutability d|ReadWrite
   |variableCharacteristics |dataType d|string
-|Description 3+d|Configured current local time offset in the format: "+01:00", "-02:00" etc.
+|Description 3+d|구성된 현재 로컬 시간 오프셋은 "+01:00", "-02:00" 등의 형식으로 제공됩니다.
 
-  When a TimeOffset is used, it is advised not to implement: <<timezone,`TimeZone`>>. If a Charging Station has implemented both <<timeoffset,`TimeOffset`>> and <<timezone,`TimeZone`>> it is RECOMMENDED to not use both at the same time.
+TimeOffset을 사용하는 경우 <<timezone,`TimeZone`>>을 구현하지 않는 것이 좋습니다. 충전기에 <<timeoffset,`TimeOffset`>>과 <<timezone,`TimeZone`>>을 모두 구현한 경우 두 가지를 동시에 사용하지 않는 것을 권장합니다.
 
-  The time offset is for display purposes.
+시간 오프셋은 화면표시 목적입니다.
 |===
 
 [[next_time_offset_transition_datetime]]
@@ -449,8 +449,8 @@ This configuration variable is described in <<ocpp2_0_part4,"OCPP-2.0.1 Part 4 J
 .3+|Variable |variableName 2+d|NextTimeOffsetTransitionDateTime
   |variableAttributes |mutability d|ReadWrite
   |variableCharacteristics |dataType d|DateTime
-|Description 3+d|Date time of the next time offset transition. On this date time, the clock displayed to the EV driver will be given the new offset as configured via <<time_offset_next_transition,`TimeOffsetNextTransition`>>. +
-  This can be used to manually configure the next start or end of a daylight saving time period.
+|Description 3+d|다음 시간 오프셋 전환의 날짜 시간. 이 날짜 시간에 EV 운전자에게 표시되는 시계에는 <<time_offset_next_transition,`TimeOffsetNextTransition`>>을 통해 구성된 대로 새 오프셋이 지정됩니다. +
+이를 사용하여 일광 절약 시간 기간의 다음 시작 또는 종료를 수동으로 구성할 수 있습니다.
 |===
 
 [[time_offset_next_transition]]
@@ -464,9 +464,9 @@ This configuration variable is described in <<ocpp2_0_part4,"OCPP-2.0.1 Part 4 J
   |variableInstance 2+d|NextTransition
   |variableAttributes |mutability d|ReadWrite
   |variableCharacteristics |dataType d|string
-|Description 3+d|Next local time offset in the format: "+01:00", "-02:00" etc. +
-  New offset that will be set on the next time offset transition as configured via <<next_time_offset_transition_datetime,`NextTimeOffsetTransitionDateTime`>>. +
-  This can be used to manually configure the offset for the start or end of the daylight saving time period.
+|Description 3+d|다음 로컬 시간 오프셋은 "+01:00", "-02:00" 등의 형식으로 표시됩니다. +
+<<next_time_offset_transition_datetime,`NextTimeOffsetTransitionDateTime`>>을 통해 구성된 대로 다음 시간 오프셋 전환에 설정되는 새 오프셋입니다. +
+이를 사용하여 일광 절약 시간 기간의 시작 또는 종료에 대한 오프셋을 수동으로 구성할 수 있습니다.
 |===
 
 [[timesource]]
@@ -480,14 +480,14 @@ This configuration variable is described in <<ocpp2_0_part4,"OCPP-2.0.1 Part 4 J
   |variableAttributes |mutability d|ReadWrite
   .2+|variableCharacteristics |dataType d|SequenceList
     |valuesList d|List of all implemented time sources. Possible values: Heartbeat, NTP, GPS, RealTimeClock, MobileNetwork, RadioTimeTransmitter
-|Description 3+d|Via this variable, the Charging Station provides the CSMS with the option to configure a clock source, if more than 1 are implemented.
+|Description 3+d|이 변수를 통해 충전기는 1개 이상이 구현된 경우 CSMS에 클록 소스를 구성하는 옵션을 제공합니다.
 
-  By providing a list of possible sources, the CSO can configure fallback sources.
+가능한 소스 목록을 제공함으로써 CSO는 대체 소스를 구성할 수 있습니다.
 
-  Example: +
-  "NTP,Heartbeat" means, use NTP, but when none of the NTP servers responses, use time synchronization via Heartbeat.
+예: +
+"NTP,Heartbeat"는 NTP를 사용하지만 NTP 서버 중 어느 것도 응답하지 않으면 Heartbeat를 통한 시간 동기화를 사용한다는 것을 의미합니다.
 
-  NOTE: RadioTimeTransmitter: At various locations around the globe, low-frequency radio transmitters provide accurate local time information e.g. DCF77 in Germany, MSF in the United Kingdom, JJY in Japan etc. Such aradio time clock can be used as a time source for a Charging Station. The Charging Station shall convert the broadcasted time to UTC. For this <<timezone,`TimeZone`>>, <<timeoffset,`TimeOffset`>>, <<next_time_offset_transition_datetime,`NextTimeOffsetTransitionDateTime`>> and <<time_offset_next_transition,`TimeOffsetNextTransition`>> can be used.
+참고: RadioTimeTransmitter: 전 세계 여러 지역에서 저주파 무선 송신기는 정확한 현지 시간 정보를 제공합니다(예: 독일의 DCF77, 영국의 MSF, 일본의 JJY 등). 이러한 무선 시간 클록은 충전기의 시간 소스로 사용할 수 있습니다. 충전기는 방송된 시간을 UTC로 변환해야 합니다. 이 경우 <<timezone,`TimeZone`>>, <<timeoffset,`TimeOffset`>>, <<next_time_offset_transition_datetime,`NextTimeOffsetTransitionDateTime`>> 및 <<time_offset_next_transition,`TimeOffsetNextTransition`>>을 사용할 수 있습니다.
 |===
 
 [[timezone]]
@@ -500,11 +500,11 @@ This configuration variable is described in <<ocpp2_0_part4,"OCPP-2.0.1 Part 4 J
 .3+|Variable |variableName 2+d|TimeZone
   |variableAttributes |mutability d|ReadWrite
   |variableCharacteristics |dataType d|string
-|Description 3+d|Configured current local time zone in the format: "Europe/Oslo", "Asia/Singapore" etc.
+|Description 3+d|"Europe/Oslo", "Asia/Singapore" 등의 형식으로 구성된 현재 로컬 시간대
 
-  When a time zone is used, it is advised not to implement: <<timeoffset,`TimeOffset`>>. If a Charging Station has implemented both <<timeoffset,`TimeOffset`>> and <<timezone,`TimeZone`>> it is RECOMMENDED to not use both at the same time.
+시간대를 사용하는 경우 <<timeoffset,`TimeOffset`>>을 구현하지 않는 것이 좋습니다. 충전기에 <<timeoffset,`TimeOffset`>>과 <<timezone,`TimeZone`>>을 모두 구현한 경우 두 가지를 동시에 사용하지 않는 것이 좋습니다.
 
-  The time zone is for display purposes.
+시간대는 표시 목적으로 사용됩니다.
 |===
 
 ==== `TimeAdjustmentReportingThreshold`
@@ -517,7 +517,7 @@ This configuration variable is described in <<ocpp2_0_part4,"OCPP-2.0.1 Part 4 J
   |variableAttributes |mutability d|ReadWrite
   .2+|variableCharacteristics |unit d|s
     |dataType d|integer
-|Description 3+d|When the clock time is adjusted forwards or backwards for more then TimeAdjustmentReportingThreshold number of seconds, a SecurityEventNotification( "SettingSystemTime" ) is sent by the charging station. A reasonable value is 20 seconds.
+|Description 3+d|시계 시간이 TimeAdjustmentReportingThreshold 초보다 더 앞이나 뒤로 조정되면 충전기에서 SecurityEventNotification("SettingSystemTime")을 보냅니다. 적절한 값은 20초입니다.
 |===
 
 ==== `CustomImplementationEnabled`
@@ -530,7 +530,7 @@ This configuration variable is described in <<ocpp2_0_part4,"OCPP-2.0.1 Part 4 J
   |variableInstance 2+d|<VendorId>
   |variableAttributes |mutability d|ReadWrite
   |variableCharacteristics |dataType d|boolean
-|Description 3+d|This standard configuration variable can be used to enable/disable custom implementations that the Charging Station supports.
+|Description 3+d|이 표준 구성 변수는 충전기가 지원하는 사용자 정의 구현을 활성화/비활성화하는 데 사용할 수 있습니다.
 
 {nbsp}
 
@@ -543,7 +543,7 @@ It is recommended to first check if the custom behavior is able to be implemente
 [[basic_auth_password]]
 ==== `BasicAuthPassword`
 
-The basic authentication password is used for HTTP Basic Authentication. The configuration value is write-only, so that it cannot be accidentally stored in plaintext by the CSMS when it reads out all configuration values.
+기본 인증 암호는 HTTP 기본 인증에 사용됩니다. 구성 값은 쓰기 전용이므로 CSMS가 모든 구성 값을 읽을 때 실수로 일반 텍스트로 저장할 수 없습니다.
 
 [cols="<.^2s,<.^3s,<.^3s,<.^5",%autowidth.stretch,frame=all,grid=all]
 |===
@@ -553,7 +553,7 @@ The basic authentication password is used for HTTP Basic Authentication. The con
   |variableAttributes |mutability d|WriteOnly
   .2+|variableCharacteristics |dataType d|string
     |maxLimit d|40 (Max length of the BasicAuthPassword)
-|Description 3+d|The basic authentication password is used for HTTP Basic Authentication. The password SHALL be a randomly chosen passwordString with a sufficiently high entropy, consisting of minimum 16 and maximum 40 characters (alpha-numeric characters and the special characters allowed by passwordString). The password SHALL be sent as a UTF-8 encoded string (NOT encoded into octet string or base64). This configuration variable is write-only, so that it cannot be accidentally stored in plaintext by the CSMS when it reads out all configuration variables. This configuration variable is required unless only "security profile 3 - TLS with client side certificates" is implemented.
+|Description 3+d|기본 인증 암호는 HTTP 기본 인증에 사용됩니다. 암호는 최소 16자에서 최대 40자(영숫자 문자 및 passwordString에서 허용하는 특수 문자)로 구성된 충분히 높은 엔트로피를 가진 임의로 선택된 passwordString이어야 합니다. 암호는 UTF-8로 인코딩된 문자열로 전송되어야 합니다(옥텟 문자열이나 base64로 인코딩되면 안됨). 이 구성 변수는 CSMS가 모든 구성 변수를 읽을 때 실수로 일반 텍스트로 저장할 수 없습도록 쓰기 전용으로 되어있습니다. 이 구성 변수는 "Security profile 3 -TLS with client side certificates"이 구현되지 않는 한 필수입니다.
 |===
 
 ==== `Identity`
@@ -566,8 +566,8 @@ The basic authentication password is used for HTTP Basic Authentication. The con
   |variableAttributes |mutability d|ReadOnly or ReadWrite
   .2+|variableCharacteristics |dataType d|string
     |maxLimit d|48 (Charging Station Identity)
-|Description 3+d|The Charging Station identity. identity is an <<primitive_datatypes,identifierString>>, however because this value is also used as the basic authentication username, the colon character ':' SHALL not be used. +
-Maximum length was chosen to ensure compatibility with EVSE ID from <<emi3_b0,[EMI3-BO]>> "Part 2: business objects".
+|Description 3+d|충전기 ID. ID는 <<primitive_datatypes,identifierString>>이지만 이 값은 기본 인증 사용자 이름으로도 사용되므로 콜론 문자 ':'는 사용하면 안 됩니다. +
+최대 길이는 <<emi3_b0,[EMI3-BO]>> "Part 2: business objects"의 EVSE ID와의 호환성을 보장하기 위해 선택되었습니다.
 |===
 
 ==== `OrganizationName`
@@ -579,7 +579,7 @@ Maximum length was chosen to ensure compatibility with EVSE ID from <<emi3_b0,[E
 .3+|Variable |variableName 2+d|OrganizationName
   |variableAttributes |mutability d|ReadWrite
   |variableCharacteristics |dataType d|string
-|Description 3+d|This configuration variable is used to set the organization name of the CSO or an organization trusted by the CSO. It is used to set the O (_organizationName_) RDN in the subject field of the client certificate. See also A00.FR.509.
+|Description 3+d|이 구성 변수는 CSO의 조직 이름 또는 CSO가 신뢰하는 조직을 설정하는 데 사용됩니다. 클라이언트 인증서의 주체 필드에 O(_organizationName_) RDN을 설정하는 데 사용됩니다. 또한 A00.FR.509를 참조하세요.
 |===
 
 ==== `CertificateEntries`
@@ -592,7 +592,7 @@ Maximum length was chosen to ensure compatibility with EVSE ID from <<emi3_b0,[E
   |variableAttributes |mutability d|ReadOnly
   .2+|variableCharacteristics |dataType d|integer
     |maxLimit d|Maximum number of Certificates installed at any time.
-|Description 3+d|Amount of Certificates currently installed on the Charging Station.
+|Description 3+d|현재 충전기에 설치된 인증서 수입니다.
 |===
 
 [[security_profile]]
@@ -605,7 +605,7 @@ Maximum length was chosen to ensure compatibility with EVSE ID from <<emi3_b0,[E
 .3+|Variable |variableName 2+d|SecurityProfile
   |variableAttributes |mutability d|ReadOnly
   |variableCharacteristics |dataType d|integer
-|Description 3+d|This configuration variable is used to report the security profile used by the Charging Station.
+|Description 3+d|이 구성 변수는 충전기에서 사용되는 보안 프로필을 보고하는 데 사용됩니다.
 |===
 
 [[additional_root_certificate_check]]
@@ -618,12 +618,12 @@ Maximum length was chosen to ensure compatibility with EVSE ID from <<emi3_b0,[E
 .3+|Variable |variableName 2+d|AdditionalRootCertificateCheck
   |variableAttributes |mutability d|ReadOnly
   |variableCharacteristics |dataType d|boolean
-|Description 3+d|When set to true, only one certificate (plus a temporarily fallback certificate) of certificateType <<install_certificate_use_enum_type,CSMSRootCertificate>> is allowed to be installed at a time. When installing a new CSMS Root certificate, the new certificate SHALL replace the old one AND the new CSMS Root Certificate MUST be signed by the old CSMS Root Certificate it is replacing. +
-This configuration variable is required unless only "security profile 1 - Unsecured Transport with Basic Authentication" is implemented. Please note that security profile 1 SHOULD only be used in trusted networks.
+|Description 3+d|true로 설정하면 certificateType <<install_certificate_use_enum_type,CSMSRootCertificate>>의 인증서 하나만(임시 대체 인증서까지) 한 번에 설치할 수 있습니다. 새 CSMS 루트 인증서를 설치할 때 새 인증서는 이전 인증서를 대체해야 하며 새 CSMS 루트 인증서는 대체하는 이전 CSMS 루트 인증서로 서명해야 합니다. +
+이 구성 변수는 "security profile 1 - Unsecured Transport with Basic Authentication"이 구현되지 않는 한 필수입니다. 보안 프로필 1은 신뢰할 수 있는 네트워크에서만 사용해야 합니다.
 
-  _Note: When using this additional security mechanism please be aware that the Charging Station needs to perform a full certificate chain verification when the new CSMS Root certificate is being installed. However, once the old CSMS Root certificate is set as the fallback certificate, the Charging Station needs to perform a partial certificate chain verification when verifying the server certificate during the TLS handshake. Otherwise the verification will fail once the old CSMS Root (fallback) certificate is either expired or removed._
+  _참고: 이 추가 보안 메커니즘을 사용할 때는 충전기에서 새 CSMS 루트 인증서를 설치할 때 전체 인증서 체인 검증을 수행해야 한다는 점에 유의하세요. 그러나 이전 CSMS 루트 인증서가 대체 인증서로 설정되면 충전기에서 TLS handshake 중에 서버 인증서를 검증할 때 부분 인증서 체인 검증을 수행해야 합니다. 그렇지 않으면 이전 CSMS 루트(대체) 인증서가 만료되거나 제거될때 검증이 실패합니다._
 
-  _Note 2: The statement that the variable is required, means that the configuration variable must be present, but does NOT indicate that the feature must be implemented. This is an optional feature. By setting the value to false, the Charging Station indicates that it does not support this feature, whereas true means that it does support the feature._
+_참고 2: 변수가 필수라는 문구는 구성 변수가 있어야 하지만 기능을 구현해야 한다는 것을 나타내지는 않습니다. 이것은 선택 사항입니다. 값을 false로 설정하면 충전기에서 이 기능을 지원하지 않는다는 것을 나타내는 반면, true는 기능을 지원한다는 것을 의미합니다._
 |===
 
 [[max_certificate_chainsize]]
@@ -637,7 +637,7 @@ This configuration variable is required unless only "security profile 1 - Unsecu
   |variableAttributes |mutability d|ReadOnly
   .2+|variableCharacteristics |dataType d|integer
     |maxLimit d|10000
-|Description 3+d|This configuration variable can be used to limit the size of the 'certificateChain' field from the <<certificate_signed_request,CertificateSignedRequest>> PDU. This value SHOULD NOT be set too small. The smaller this value, the less security architectures the Charging Station will support. It is RECOMMENDED to set at least a size of 5600. This will allow the Charging Station to support most security architectures.
+|Description 3+d|이 구성 변수는 <<certificate_signed_request,CertificateSignedRequest>> PDU에서 'certificateChain' 필드의 크기를 제한하는 데 사용할 수 있습니다. 이 값은 너무 작게 설정해서는 안 됩니다. 이 값이 작을수록 충전기가 지원하는 보안 아키텍처가 줄어듭니다. 최소 5600의 크기를 설정하는 것이 좋습니다. 이렇게 하면 충전기가 대부분의 보안 아키텍처를 지원할 수 있습니다.
 |===
 
 [[cert_signing_wait_minimum]]
@@ -651,7 +651,7 @@ This configuration variable is required unless only "security profile 1 - Unsecu
   |variableAttributes |mutability d|ReadWrite
   .2+|variableCharacteristics |unit d|s
     |dataType d|integer
-|Description 3+d|This configuration variable defines how long the Charging Station has to wait before generating another CSR, in the case the CSMS accepts the SignCertificateRequest, but never returns the signed certificate back. This value will be doubled after every attempt. The amount of attempts is configured at <<cert_signing_repeat_times,CertSigningRepeatTimes>> If the certificate signing process is slow, this setting allows the CSMS to tell the Charging Station to allow more time.
+|Description 3+d|이 구성 변수는 CSMS가 SignCertificateRequest를 수락하지만 서명된 인증서를 반환하지 않는 경우 충전기가 다른 CSR을 생성하기 전에 기다려야 하는 시간을 정의합니다. 이 값은 시도할 때마다 두 배가 됩니다. 시도 횟수는 <<cert_signing_repeat_times,CertSigningRepeatTimes>>에서 구성됩니다. 인증서 서명 프로세스가 느린 경우 이 설정을 통해 CSMS가 충전기에 더 많은 시간을 허용하라고 알릴 수 있습니다.
 |===
 
 [[cert_signing_repeat_times]]
@@ -664,7 +664,7 @@ This configuration variable is required unless only "security profile 1 - Unsecu
 .3+|Variable |variableName 2+d|CertSigningRepeatTimes
   |variableAttributes |mutability d|ReadWrite
   |variableCharacteristics |dataType d|integer
-|Description 3+d|This variable can be used to configure the amount of times the Charging Station SHALL double the previous back-off time, starting with the number of seconds configured at <<cert_signing_wait_minimum,CertSigningWaitMinimum>>, every time the back-off time expires without having received the CertificateSignedRequest containing the from the CSR generated signed certificate. When the maximum number of increments is reached, the Charging Station SHALL stop resending the SignCertificateRequest, until it is requested by the CSMS using a TriggerMessageRequest.
+|Description 3+d|이 변수는 충전기가 이전 백오프 시간을 두 배로 늘려야 하는 횟수를 구성하는 데 사용할 수 있으며, <<cert_signing_wait_minimum,CertSigningWaitMinimum>>에서 구성된 초 수부터 시작하여 백오프 시간이 CSR에서 생성된 서명된 인증서가 포함된 CertificateSignedRequest를 수신하지 않고 만료될 때마다 시작합니다. 최대 증가 횟수에 도달하면 충전기는 CSMS가 TriggerMessageRequest를 사용하여 요청할 때까지 SignCertificateRequest를 다시 보내는 것을 중지해야 합니다.
 |===
 
 [[authorization_related]]
@@ -680,7 +680,7 @@ This configuration variable is required unless only "security profile 1 - Unsecu
 .3+|Variable |variableName 2+d|Enabled
   |variableAttributes |mutability d|ReadWrite
   |variableCharacteristics |dataType d|boolean
-|Description 3+d|If set to _false_, then no authorization is done before starting a transaction or when reading an idToken. If an idToken was provided, then it will be put in the _idToken_ field of the TransactionEventRequest. If no idToken was provided, then _idToken_ in TransactionEventRequest will be left empty and type is set to `NoAuthorization`.
+|Description 3+d|_false_ 로 설정하면 트랜잭션을 시작하기 전이나 idToken을 읽을 때 인증하지 않습니다. idToken이 제공된 경우 TransactionEventRequest의 _idToken_ 필드에 저장됩니다. idToken이 제공되지 않은 경우 TransactionEventRequest의 _idToken_ 은 비어 있고 type은 `NoAuthorization` 으로 설정됩니다.
 |===
 
 [[additional_info_items_permessage]]
@@ -693,7 +693,7 @@ This configuration variable is required unless only "security profile 1 - Unsecu
 .3+|Variable |variableName 2+d|AdditionalInfoItemsPerMessage
   |variableAttributes |mutability d|ReadOnly
   |variableCharacteristics |dataType d|integer
-|Description 3+d|Maximum number of AdditionalInfo items that can be sent in one message. This configuration variable only has to be implemented when AdditionalInfo is implemented.
+|Description 3+d|한 메시지에서 보낼 수 있는 AdditionalInfo 항목의 최대 수입니다. 이 구성 변수는 AdditionalInfo가 구현될 때만 구현하면 됩니다.
 |===
 
 [[offline_tx_for_unknown_id_enabled]]
@@ -706,7 +706,7 @@ This configuration variable is required unless only "security profile 1 - Unsecu
 .3+|Variable |variableName 2+d|OfflineTxForUnknownIdEnabled
   |variableAttributes |mutability d|ReadWrite
   |variableCharacteristics |dataType d|boolean
-|Description 3+d|If this key exists, the Charging Station supports <<unknown_offline_authorization,Unknown Offline Authorization>>. If this key reports a value of _true_, <<unknown_offline_authorization,Unknown Offline Authorization>> is enabled.
+|Description 3+d|이 키가 있으면 충전기는 <<unknown_offline_authorization,Unknown Offline Authorization>>을 지원합니다. 이 키가 _true_ 값일 경우 <<unknown_offline_authorization,Unknown Offline Authorization>>이 활성화됩니다.
 |===
 
 [[authorize_remote_start]]
@@ -719,7 +719,7 @@ This configuration variable is required unless only "security profile 1 - Unsecu
 .3+|Variable |variableName 2+d|AuthorizeRemoteStart
   |variableAttributes |mutability d|ReadOnly or ReadWrite. Choice is up to Charging Station implementation.
   |variableCharacteristics |dataType d|boolean
-|Description 3+d|Whether a remote request to start a transaction in the form of <<request_start_transaction_request,RequestStartTransactionRequest>> message should be authorized beforehand like a local action to start a transaction.
+|Description 3+d|<<request_start_transaction_request,RequestStartTransactionRequest>> 메시지 형태로 트랜잭션을 시작하기 위한 원격 요청시 로컬 트랜잭션 시작 작업처럼 사전에 인증되어야 하는지 여부.
 |===
 
 [[local_authorize_offline]]
@@ -732,7 +732,7 @@ This configuration variable is required unless only "security profile 1 - Unsecu
 .3+|Variable |variableName 2+d|LocalAuthorizeOffline
   |variableAttributes |mutability d|ReadWrite
   |variableCharacteristics |dataType d|boolean
-|Description 3+d|Whether the Charging Station, when _Offline_, will start a transaction for locally-authorized identifiers.
+|Description 3+d|충전기가 _offline_ 일 때 현지에서 인증된 식별자에 대한 트랜잭션을 시작할지 여부입니다.
 |===
 
 [[local_pre_authorize]]
@@ -745,7 +745,7 @@ This configuration variable is required unless only "security profile 1 - Unsecu
 .3+|Variable |variableName 2+d|LocalPreAuthorize
   |variableAttributes |mutability d|ReadWrite
   |variableCharacteristics |dataType d|boolean
-|Description 3+d|Whether the Charging Station, when online, will start a transaction for locally-authorized identifiers without waiting for or requesting an <<authorize_response,AuthorizeResponse>> from the CSMS.
+|Description 3+d|온라인일 경우 현지 인증된 식별자에 대해 충전기가 대기하거나 <<authorize_response,AuthorizeResponse>> 를 CSMS에 요청하기 전에 트랜잭션을 시작할지 여부입니다.
 |===
 
 [[master_pass_group_id]]
@@ -759,7 +759,7 @@ This configuration variable is required unless only "security profile 1 - Unsecu
   |variableAttributes |mutability d|ReadWrite
   .2+|variableCharacteristics |dataType d|string
     |maxLimit |36 (The maximum string length of MasterPassGroupId)
-|Description 3+d|IdTokens that have this id as groupId belong to the Master Pass Group. Meaning they can stop any ongoing transaction, but cannot start transactions. This can, for example, be used by law enforcement personal to stop any ongoing transaction when an EV has to be towed away.
+|Description 3+d|이 ID를 그룹 ID로 갖는 ID 토큰은 마스터 패스 그룹에 속합니다. 즉, 진행 중인 모든 트랜잭션을 중단할 수 있지만 트랜잭션을 시작할 수는 없습니다. 예를 들어, 법 집행 기관이 EV를 견인해야 할 때 진행 중인 모든 트랜잭션을 중단하는 데 사용할 수 있습니다.
 |===
 
 ==== `DisableRemoteAuthorization`
@@ -771,9 +771,9 @@ This configuration variable is required unless only "security profile 1 - Unsecu
 .3+|Variable |variableName 2+d|DisableRemoteAuthorization
   |variableAttributes |mutability d|ReadWrite
   |variableCharacteristics |dataType d|boolean
-|Description 3+d|When set to true this instructs the Charging Station to not issue any AuthorizationRequests, but only use Authorization Cache and Local Authorization List to determine validity of idTokens.
+|Description 3+d|true로 설정하면 충전기가 AuthorizationRequests를 발행하지 않고 Authorization Cache와 Local Authorization List만 사용하여 idTokens의 유효성을 확인하도록 지시합니다.
 
-Note: The difference between *AuthCtrlr.DisableRemoteAuthorization* and *AuthCacheCtrlr.DisablePostAuthorization* is that the latter only disables re-authorization of tokens that are as not-Accepted in the Authorization Cache or Local Authorization List, whereas *AuthCtrlr.DisableRemoteAuthorization* disables all authorization with CSMS.
+참고: *AuthCtrlr.DisableRemoteAuthorization* 과 *AuthCacheCtrlr.DisablePostAuthorization* 의 차이점은 후자는 Authorization Cache 또는 Local Authorization List에서 not-Accepted로 표시된 토큰의 재인증만 비활성화하는 반면, *AuthCtrlr.DisableRemoteAuthorization* 은 CSMS를 사용한 모든 인증을 비활성화한다는 것입니다.
 |===
 
 [[authorization_cache_related]]
@@ -784,7 +784,7 @@ Note: The difference between *AuthCtrlr.DisableRemoteAuthorization* and *AuthCac
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===
-|NOTE |When the value of this variable is changed, the content of the authorization cache should not be altered.
+|NOTE |이 변수의 값이 변경되어도 인증 캐시의 내용은 변경되어서는 안 됩니다.
 |===
 
 [cols="<.^2s,<.^3s,<.^3s,<.^5",%autowidth.stretch,frame=all,grid=all]
@@ -794,7 +794,7 @@ Note: The difference between *AuthCtrlr.DisableRemoteAuthorization* and *AuthCac
 .3+|Variable |variableName 2+d|Enabled
   |variableAttributes |mutability d|ReadWrite
   |variableCharacteristics |dataType d|boolean
-|Description 3+d|If this variable exists and reports a value of _true_, Authorization Cache is enabled.
+|Description 3+d|이 변수가 존재하고 _true_ 값일 경우 인증 캐시가 활성화됩니다.
 |===
 
 ==== `AuthCacheAvailable`
