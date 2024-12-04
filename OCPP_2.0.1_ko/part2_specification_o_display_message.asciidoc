@@ -4,7 +4,7 @@
 :sectnums:
 == Introduction
 
-DisplayMessage 기능을 사용하면 OCPP를 통해 CSO가 충전기 펌웨어에 포함되지 않은 충전기에 메시지나 메시지 주기를 표시할 수 있습니다. CSO는 이러한 메시지를 제어합니다. CSO는 메시지를 설정, 검색(가져오기), 바꾸기 및 지울 수 있습니다.
+DisplayMessage 기능을 사용하면 OCPP를 통해 CSO가 충전기 펌웨어에 포함되지 않은 메시지나 메시지 주기를  충전기에 표시할 수 있습니다. CSO는 이러한 메시지를 설정, 검색(가져오기), 바꾸기 및 지울 수 있습니다.
 
 모든 메시지는 다양한 언어와 다양한 메시지 형식으로 구성할 수 있습니다. <<display_message_supported_formats,DisplayMessageSupportedFormats>>를 참조하세요. 따라서 충전기는 사용자에게 메시지를 표시해야 할 때 올바른 형식/언어를 선택할 수 있습니다. CSO가 충전기에 보내는 모든 메시지에는 메시지를 표시할 시기와 방법을 제어하는 ​​몇 가지 매개변수가 있습니다. 우선순위, 상태, 시작/종료 시간 등입니다. <<display_message_supported_priorities,DisplayMessageSupportedPriorities>>를 참조하세요.
 
@@ -15,11 +15,11 @@ DisplayMessage 기능을 사용하면 OCPP를 통해 CSO가 충전기 펌웨어�
 
 <<<
 
-== 사용 사례 및 요구 사항
+== Use cases & Requirements
 
 :sectnums!:
 [[o01_set_display_message]]
-=== O01 - 디스플레이 메시지 설정
+=== O01 - Set DisplayMessage
 
 .O01 - 디스플레이 메시지 설정
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
@@ -39,8 +39,8 @@ DisplayMessage 기능을 사용하면 OCPP를 통해 CSO가 충전기 펌웨어�
   **3.** 충전기는 <<set_display_message_response,SetDisplayMessageResponse>> 메시지를 CSMS로 보내 요청을 수락합니다. +
   **4.** 충전기는 구성된 순간에 디스플레이에 새 메시지를 표시합니다.
 |{nbsp} d|_대체 시나리오(들)_
-  |<<o02_set_display_message_for_transaction,O02 - 거래에 대한 DisplayMessage 설정>> +
-  <<o06_replace_display_message,O06 - DisplayMessage 바꾸기>>
+  |<<o02_set_display_message_for_transaction,O02 - Set DisplayMessage for Transaction>> +
+  <<o06_replace_display_message,O06 - Replace DisplayMessage>>
 |5 |필수 조건 |동일한 ID로 구성된 메시지가 없습니다.
 |6 |사후 조건(들) ​​|새 메시지가 충전기에 표시됩니다(시간, 기간 및 위치는 구성에 따라 다름)
 |===
@@ -51,10 +51,10 @@ image::part2/images/figure_141.svg[Set DisplayMessage sequence diagram]
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7 |오류 처리 |해당 없음
-|8 |설명 |충전기에 저장할 수 있는 최대 메시지 수는 CSMS에서 구성 변수 <<number_of_display_messages,`NumberOfDisplayMessages`>>.maxLimit에서 읽을 수 있습니다.
+|8 |참고 |충전기에 저장할 수 있는 최대 메시지 수는 CSMS에서 구성 변수 <<number_of_display_messages,`NumberOfDisplayMessages`>>.maxLimit에서 읽을 수 있습니다.
 |===
 
-==== O01 - DisplayMessage 설정 - 요구 사항
+==== O01 - Set DisplayMessage - Requirements
 
 .O01 - DisplayMessage 설정 - 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
@@ -62,13 +62,13 @@ image::part2/images/figure_141.svg[Set DisplayMessage sequence diagram]
 |ID |전제 조건 |요구 사항 정의
 
 |O01.FR.01 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 통해 <<message_info_type,MessageInfo>> 객체를 수신하고 메시지의 우선순위가 충전기에서 지원되지 않는 경우
-  |충전기는 <<set_display_message_response,SetDisplayMessageResponse>>를 <<display_message_status_enum_type,**NotSupportedPriority**>> 상태로 전송해야 합니다.
+  |충전기는 <<set_display_message_response,SetDisplayMessageResponse>>에 <<display_message_status_enum_type,**NotSupportedPriority**>> status로 전송해야 합니다.
 |O01.FR.02 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 통해 <<message_info_type,MessageInfo>> 객체를 수신하고 메시지의 <<message_state_enum_type,state>>가 충전기에서 지원되지 않는 경우
-  |충전기는 <<display_message_status_enum_type,**NotSupportedState**>> 상태와 함께 <<set_display_message_response,SetDisplayMessageResponse>>를 보내야 합니다.
+  |충전기는 <<set_display_message_response,SetDisplayMessageResponse>>에 <<display_message_status_enum_type,**NotSupportedState**>> status로 전송해야 합니다.
 |O01.FR.03 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 통해 <<message_info_type,MessageInfo>> 객체를 수신하고 메시지의 <<message_format_enum_type,format>>이 충전기에서 지원되지 않는 경우
-  |충전기는 <<display_message_status_enum_type,**NotSupportedMessageFormat**>> 상태와 함께 <<set_display_message_response,SetDisplayMessageResponse>>를 보내야 합니다.
+  |충전기는 <<set_display_message_response,SetDisplayMessageResponse>>에 <<display_message_status_enum_type,**NotSupportedMessageFormat**>> status로 전송해야 합니다.
 |O01.FR.04 |{nbsp}
-  |CSMS가 거래에 속하지 않는 충전기로 메시지를 보내는 경우 <<message_info_type,Message>> 필드의 *transactionId* 필드는 생략해야 합니다.
+  |CSMS가 트랜잭션에 속하지 않는 충전기로 메시지를 보내는 경우 <<message_info_type,Message>> 필드의 *transactionId* 필드는 생략해야 합니다.
 |O01.FR.05 |{nbsp}
   |CSMS는 메시지를 설정할 때 <<message_info_type,startTime>> 및 <<message_info_type,endTime>>을 포함할 수 있습니다.
 |O01.FR.06 |O01.FR.05
@@ -78,15 +78,15 @@ image::part2/images/figure_141.svg[Set DisplayMessage sequence diagram]
 |O01.FR.08 |충전기가 EV 운전자의 언어 기본 설정을 알고 있는 경우
   |충전기는 사용 가능한 경우 기본 언어로 DisplayMessage 메시지를 표시해야 합니다.
 |O01.FR.09 |O01.FR.08
-  |일치하는 언어를 사용할 수 없는 경우, 가능한 경우 대체 수단으로 영어로 DisplayMessage 메시지를 표시하는 것이 좋습니다.
+  |일치하는 언어를 사용할 수 없는 경우, 가능한 경우 대체 수단으로 영어로 DisplayMessage 메시지를 표시하는 것을 권장합니다.
 |O01.FR.10 |{nbsp}
-  |충전기는 메시지를 영구 저장소에 저장해야 하므로 충전기의 전원 주기/재부팅을 견뎌낼 수 있습니다.
+  |충전기는 전원 주기/재부팅을 견뎌낼 수 있도록 메시지를 영구 저장소에 저장해야 합니다.
 |O01.FR.11 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 수신하고 이 요청을 처리한 후의 총 메시지 수가 <<number_of_display_messages,`NumberOfDisplayMessages`>>.maxLimit을 초과하는 경우.
   |충전기는 <<display_message_status_enum_type,Rejected>> 상태로 응답해야 합니다.
 |O01.FR.12 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 수신하고 메시지의 <<message_priority_enum_type,priority>>가 _NormalCycle_ 인 경우
-  |충전기는 메시지의 정상적인 주기에서 구성된 순간에 이 메시지를 표시해야 합니다.
+  |충전기는 NormalCycle 메시지중의 구성된 순간에 이 메시지를 표시해야 합니다.
 |O01.FR.13 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 수신하고 메시지의 <<message_priority_enum_type,priority>>가 _InFront_ 인 경우
-  |충전기는 메시지의 정상적인 주기와 관계없이 구성된 순간에 이 메시지를 표시해야 합니다.
+  |충전기는 NormalCycle 메시지와 관계없이 구성된 순간에 이 메시지를 표시해야 합니다.
 |O01.FR.14 |<<message_priority_enum_type,priority>> _InFront_ 인 여러 메시지가 동시에 표시되도록 구성된 경우
   |충전기는 이러한 메시지를 순환해야 합니다.
 |O01.FR.15 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 수신하고 메시지의 <<message_priority_enum_type,priority>>가 _AlwaysFront_ 인 경우
@@ -107,32 +107,32 @@ image::part2/images/figure_141.svg[Set DisplayMessage sequence diagram]
 |===
 |번호 |유형 |설명
 
-|1 |이름 |거래에 대한 DisplayMessage 설정
+|1 |이름 |트랜잭션에 대한 DisplayMessage 설정
 |2 |ID |O02
 |{nbsp} d|_기능 블록_ |O. DisplayMessage
 |{nbsp} d|_부모 사용 사례_ |<<o01_set_display_message,O01 - Set DisplayMessage>>
-|3 |목표 |CSO가 펌웨어에 내장되지 않은 충전기에서 진행 중인 거래 중에 메시지를 표시할 수 있도록 합니다.
-|4 |설명 |이 사용 사례는 CSO가 특정 거래에 대해 충전기에 표시할 메시지를 설정하는 방법을 설명합니다. 제공된 매개변수에 따라 메시지는 충전기에 특정 방식으로 표시됩니다.
+|3 |목표 |CSO가 충전기에서 진행 중인 트랜잭션 중에 펌웨어에 내장되지 않은 메시지를 표시할 수 있도록 합니다.
+|4 |설명 |이 사용 사례는 CSO가 특정 트랜잭션에 대해 충전기에 표시할 메시지를 설정하는 방법을 설명합니다. 제공된 매개변수에 따라 메시지는 충전기에 특정 방식으로 표시됩니다.
 |{nbsp} d|_행위자_ |CSO, CSMS, 충전기
 |{nbsp} d|_시나리오 설명_
-  |**1.** CSO는 CSMS를 구성하여 주어진 거래 중에 새 메시지를 표시하라는 요청을 보냅니다. +
+  |**1.** CSO는 CSMS를 구성하여 주어진 트랜잭션 중에 새 메시지를 표시하라는 요청을 보냅니다. +
   **2.** CSMS는 <<set_display_message_request,SetDisplayMessageRequest>> 메시지를 충전기로 전송합니다. +
   **3.** 충전기는 <<set_display_message_response,SetDisplayMessageResponse>> 메시지를 CSMS로 전송하여 요청을 수락합니다. +
-  **4.** 충전기는 거래가 진행되는 동안 디스플레이에 새 메시지를 표시합니다.
+  **4.** 충전기는 트랜잭션이 진행되는 동안 디스플레이에 새 메시지를 표시합니다.
 |{nbsp} d|_대체 시나리오_
-|<<o01_set_display_message,O01 - 디스플레이 메시지 설정>>
-<<o06_replace_display_message,O06 - 디스플레이 메시지 바꾸기>>
+|<<o01_set_display_message,O01 - Set DisplayMessage>>
+<<o06_replace_display_message,O06 - Replace DisplayMessage>>
 |5 |필수 조건 |동일한 ID로 구성된 메시지가 없습니다.
-|6 |사후 조건 |거래가 진행되는 동안 충전기에 새 메시지가 표시됩니다(시간, 기간 및 위치는 구성에 따라 다름)
+|6 |사후 조건 |트랜잭션이 진행되는 동안 충전기에 새 메시지가 표시됩니다(시간, 기간 및 위치는 구성에 따라 다름)
 |===
 
-.거래 순서도에 대한 DisplayMessage 설정
-image::part2/images/figure_142.svg[거래 순서도에 대한 DisplayMessage 설정]
+.트랜잭션 순서도에 대한 DisplayMessage 설정
+image::part2/images/figure_142.svg[트랜잭션 순서도에 대한 DisplayMessage 설정]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7 |오류 처리 |해당 없음
-|8 |설명 |충전기에 저장할 수 있는 최대 메시지 수는 CSMS에서 구성 변수 <<number_of_display_messages,`NumberOfDisplayMessages`>>.maxLimit에서 읽을 수 있습니다.
+|8 |참고 |충전기에 저장할 수 있는 최대 메시지 수는 구성 변수 <<number_of_display_messages,`NumberOfDisplayMessages`>>.maxLimit에서 CSMS가 읽을 수 있습니다.
 |===
 
 ==== O02 - Set DisplayMessage for Transaction - Requirements
@@ -142,16 +142,16 @@ image::part2/images/figure_142.svg[거래 순서도에 대한 DisplayMessage 설
 |===
 |ID |전제 조건 |요구 사항 정의
 
-|O02.FR.01 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 통해 <<message_info_type,Message>> 객체를 수신하고 충전기에서 메시지의 *transactionId*를 알 수 없는 경우
-  |충전기는 <<display_message_status_enum_type,**UnknownTransaction**>> 상태와 함께 <<set_display_message_response,SetDisplayMessageResponse>>를 보내야 합니다.
-|O02.FR.02 |지정된 *transactionId*가 있는 거래가 종료되는 경우
+|O02.FR.01 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 통해 <<message_info_type,Message>> 객체를 수신하고 충전기에서 메시지의 *transactionId* 를 알 수 없는 경우
+  |충전기는 <<display_message_status_enum_type,**UnknownTransaction**>> status와 함께 <<set_display_message_response,SetDisplayMessageResponse>>를 보내야 합니다.
+|O02.FR.02 |지정된 *transactionId* 가 있는 트랜잭션이 종료되는 경우
   |충전기는 메시지 목록에서 메시지를 제거해야 합니다.
 |O02.FR.03 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 통해 <<message_info_type,MessageInfo>> 객체를 수신하고 메시지의 <<message_priority_enum_type,priority>>가 충전기에서 지원되지 않는 경우
-  |충전기는 <<display_message_status_enum_type,**NotSupportedPriority**>> 상태와 함께 <<set_display_message_response,SetDisplayMessageResponse>>를 보내야 합니다.
+  |충전기는 <<display_message_status_enum_type,**NotSupportedPriority**>> status와 함께 <<set_display_message_response,SetDisplayMessageResponse>>를 보내야 합니다.
 |O02.FR.04 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 통해 <<message_info_type,MessageInfo>> 객체를 수신하고 메시지의 <<message_state_enum_type,state>>가 충전기에서 지원되지 않는 경우
-  |충전기는 <<display_message_status_enum_type,**NotSupportedState**>> 상태와 함께 <<set_display_message_response,SetDisplayMessageResponse>>를 보내야 합니다.
+  |충전기는 <<display_message_status_enum_type,**NotSupportedState**>> status와 함께 <<set_display_message_response,SetDisplayMessageResponse>>를 보내야 합니다.
 |O02.FR.05 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 통해 <<message_info_type,MessageInfo>> 객체를 수신하고 메시지의 <<message_format_enum_type,format>>이 충전기에서 지원되지 않는 경우
-  |충전기는 <<display_message_status_enum_type,**NotSupportedMessageFormat**>> 상태와 함께 <<set_display_message_response,SetDisplayMessageResponse>>를 보내야 합니다.
+  |충전기는 <<display_message_status_enum_type,**NotSupportedMessageFormat**>> status와 함께 <<set_display_message_response,SetDisplayMessageResponse>>를 보내야 합니다.
 |O02.FR.06 |{nbsp}
   |충전기는 <<message_info_type,startTime>> 전에 DisplayMessage 메시지를 표시해서는 안 됩니다.
 |O02.FR.07 |{nbsp} |충전기는 <<message_info_type,endTime>> 후에 DisplayMessage 메시지를 제거해야 합니다.
@@ -166,9 +166,9 @@ image::part2/images/figure_142.svg[거래 순서도에 대한 DisplayMessage 설
 |O02.FR.12 |{nbsp}
   |언어는 RFC-5646 태그로 지정해야 합니다. 참조: <<rfc5646,[RFC5646]>>, 예: 미국 영어는 "en-US"입니다.
 |O02.FR.14 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 수신하고 메시지의 <<message_priority_enum_type,priority>>가 _NormalCycle_ 인 경우
-  |충전기는 이 메시지를 정상적인 메시지 주기로 표시해야 합니다.
+  |충전기는 NormalCycle 메시지중의 구성된 순간에 이 메시지를 표시해야 합니다.
 |O02.FR.15 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 수신하고 메시지의 <<message_priority_enum_type,priority>>가 _InFront_ 인 경우
-  |충전기는 메시지의 정상적인 주기와 관계없이 구성된 순간에 이 메시지를 표시해야 합니다.
+  |충전기는 NormalCycle 메시지와 관계없이 구성된 순간에 이 메시지를 표시해야 합니다.
 |O02.FR.16 |<<message_priority_enum_type,priority>>가 _InFront_ 인 여러 메시지가 동시에 표시되도록 구성된 경우
   |충전기는 이러한 메시지를 순환해야 합니다.
 |O02.FR.17 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 수신하고 메시지의 <<message_priority_enum_type,priority>>가 _AlwaysFront_ 인 경우
@@ -190,7 +190,7 @@ image::part2/images/figure_142.svg[거래 순서도에 대한 DisplayMessage 설
 |{nbsp} d|_기능 블록_ |O. DisplayMessage
 |3 |목표 |CSO가 충전기에 현재 구성된 모든 메시지를 검색할 수 있도록 합니다.
 |4 |설명 |이 사용 사례는 CSO가 충전기에서 OCPP를 통해 구성된 모든 설치된 DisplayMessage를 요청하는 방법을 설명합니다. +
-충전기는 메시지가 오래되었거나 거래가 종료되면 메시지를 제거할 수 있습니다. +
+충전기는 메시지가 오래되었거나 트랜잭션이 종료되면 메시지를 제거할 수 있습니다. +
 CSO가 현재 메시지 목록을 볼 수 있으면 매우 유용할 수 있으므로 CSO는 어떤 메시지가 (여전히) 구성되어 있는지 알 수 있습니다.
 |{nbsp} d|_Actors_ |CSO, CSMS, 충전기
 |{nbsp} d|_시나리오 설명_
@@ -199,20 +199,20 @@ CSO가 현재 메시지 목록을 볼 수 있으면 매우 유용할 수 있으�
   **3.** 충전기가 <<get_display_messages_response,GetDisplayMessagesResponse>> _Accepted_ 로 응답하여 메시지를 구성했으며 이를 보낼 것임을 나타냅니다. +
   **4.** 충전기가 CSMS에 하나 이상의 <<notify_display_messages_request,NotifyDisplayMessagesRequest>> 메시지를 보냅니다(보낼 메시지 양에 따라 다름). +
   **5.** CSMS가 모든 알림에 <<notify_display_messages_response,NotifyDisplayMessagesResponse>> 메시지로 응답합니다.
-|5 |필수 조건 |충전 스테이션에 구성된 메시지가 하나 이상 있음
+|5 |필수 조건 |충전기에 구성된 메시지가 하나 이상 있음
 |6 |사후 조건 |해당 없음
 |===
-
+//
 .Get All DisplayMessages 시퀀스 다이어그램
 image::part2/images/figure_143.svg[Get All DisplayMessages 시퀀스 다이어그램]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7 |오류 처리 |해당 없음
-|8 |주의 |OCPP를 통해 구성된 메시지만 <<get_display_messages_request,GetDisplayMessagesRequest>>를 통해 검색할 수 있습니다.
+|8 |참고 |OCPP를 통해 구성된 메시지만 <<get_display_messages_request,GetDisplayMessagesRequest>>를 통해 검색할 수 있습니다.
 |===
 
-==== O03 - 모든 DisplayMessage 가져오기 - 요구 사항
+==== O03 - Get All DisplayMessage - Requirements
 
 .O03 - 모든 DisplayMessage ID 가져오기 - 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
@@ -238,7 +238,7 @@ image::part2/images/figure_143.svg[Get All DisplayMessages 시퀀스 다이어�
 
 <<<
 
-=== O04 - 특정 DisplayMessage 가져오기
+=== O04 - Get Specific DisplayMessages
 
 .O04 - 특정 DisplayMessage 가져오기
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
@@ -249,7 +249,7 @@ image::part2/images/figure_143.svg[Get All DisplayMessages 시퀀스 다이어�
 |2 |ID |O04
 |{nbsp} d|_기능 블록_ |O. DisplayMessage
 |3 |목표 |CSO가 현재 충전기에 구성된 하나 이상의 특정 DisplayMessage를 검색할 수 있도록 합니다.
-|4 |설명 |이 사용 사례는 CSO가 충전기에서 OCPP를 통해 구성된 (특정) DisplayMessage를 요청/쿼리하는 방법을 설명합니다. 충전기는 메시지가 오래되었거나 거래가 종료된 경우 메시지를 제거할 수 있습니다. CSO가 설치된 DisplayMessages에 대해 충전기를 쿼리할 수 있으면 매우 유용할 수 있으므로 CSO는 (아직) 구성된 메시지를 알 수 있습니다.
+|4 |설명 |이 사용 사례는 CSO가 충전기에서 OCPP를 통해 구성된 (특정) DisplayMessage를 요청/쿼리하는 방법을 설명합니다. 충전기는 메시지가 오래되었거나 트랜잭션이 종료된 경우 메시지를 제거할 수 있습니다. CSO는 (아직) 구성된 메시지를 알 수 있도록 설치된 DisplayMessages에 대해 충전기를 쿼리할 수 있으면  CSO에게 매우 유용할 수 있습니다.
 |{nbsp} d|_Actors_ |CSO, CSMS, 충전기
 |{nbsp} d|_시나리오 설명_
   |**1.** CSO가 CSMS에 DisplayMessages를 쿼리하도록 요청합니다. +
@@ -267,10 +267,10 @@ image::part2/images/figure_144.svg[Get a specific DisplayMessages sequence diagr
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7 |오류 처리 |해당 없음
-|8 |설명 |OCPP를 통해 구성된 메시지만 <<get_display_messages_request,GetDisplayMessagesRequest>>를 통해 검색할 수 있습니다.
+|8 |참고 |OCPP를 통해 구성된 메시지만 <<get_display_messages_request,GetDisplayMessagesRequest>>를 통해 검색할 수 있습니다.
 |===
 
-==== O04 - 특정 DisplayMessage 가져오기 - 요구 사항
+==== O04 - Get Specific DisplayMessages - Requirements
 
 .O04 - 특정 DisplayMessage 가져오기 - 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
@@ -300,7 +300,7 @@ image::part2/images/figure_144.svg[Get a specific DisplayMessages sequence diagr
 <<<
 
 [[o05_clear_a_display_message]]
-=== O05 - DisplayMessage 지우기
+=== O05 - Clear DisplayMessage
 
 .O05 - DisplayMessage 지우기
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
@@ -329,10 +329,10 @@ image::part2/images/figure_145.svg[Clear a DisplayMessage sequence diagram]
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7 |오류 처리 |해당 없음
-|8 |주의 |OCPP를 통해 구성된 메시지만 <<clear_display_message_request,ClearDisplayMessageRequest>>를 통해 지우거나 제거할 수 있습니다.
+|8 |참고 |OCPP를 통해 구성된 메시지만 <<clear_display_message_request,ClearDisplayMessageRequest>>를 통해 지우거나 제거할 수 있습니다.
 |===
 
-==== O05 - DisplayMessage 지우기 - 요구 사항
+==== O05 - Clear DisplayMessage - Requirements
 
 .O05 - DisplayMessage 지우기 - 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
@@ -348,7 +348,7 @@ image::part2/images/figure_145.svg[Clear a DisplayMessage sequence diagram]
 <<<
 
 [[o06_replace_display_message]]
-=== O06 - DisplayMessage 교체
+=== O06 - Replace DisplayMessage
 
 .O06 - DisplayMessage 교체
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,options="header",frame=all,grid=all]
@@ -366,9 +366,9 @@ image::part2/images/figure_145.svg[Clear a DisplayMessage sequence diagram]
   **2.** CSMS가 충전기에 이미 구성된 것과 동일한 ID를 가진 DisplayMessage와 함께 <<set_display_message_request,SetDisplayMessageRequest>> 메시지를 충전기로 보냅니다. +
   **3.** 충전기가 CSMS에 <<set_display_message_response,SetDisplayMessageResponse>> 메시지를 보내 요청을 수락합니다. +
   **4.** 충전기는 구성된 순간에 디스플레이에 업데이트/대체된 메시지를 표시합니다.
-|{nbsp} d|_대체 시나리오_ |<<o01_set_display_message,O01 - 디스플레이 메시지 설정>> 및 +
-<<o02_set_display_message_for_transaction,O02 - 거래에 대한 디스플레이 메시지 설정>>
-|5 |필수 조건 |충전기에 구성된 동일한 ID가 있는 메시지가 있습니다.
+|{nbsp} d|_대체 시나리오_ |<<o01_set_display_message,O01 - Set DisplayMessage>> 및 +
+<<o02_set_display_message_for_transaction,O02 - Set DisplayMessage for Transaction>>
+|5 |필수 조건 |충전기에 동일한 ID의 메시지가 있습니다.
 |6 |사후 조건 |디스플레이 메시지는 동일한 ID가 제공된 메시지로 대체됩니다.
 |===
 
@@ -378,16 +378,16 @@ image::part2/images/figure_146.svg[DisplayMessage 시퀀스 다이어그램 대�
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7 |오류 처리 |n/a
-|8 |설명 |n/a
+|8 |참고 |n/a
 |===
 
-==== O06 - DisplayMessage 대체 - 요구 사항
+==== O06 - Replace DisplayMessage - Requirements
 
 .O06 - DisplayMessage 대체 - 요구 사항
 [cols="^.^2,<.^5,<.^6",%autowidth.stretch,options="header",frame=all,grid=all]
 |===
 |ID |전제 조건 |요구 사항 정의
 
-|O06.FR.01 |충전기에서 <<set_display_message_request,SetDisplayMessageRequest>>를 수신하고 해당 동일한 ID를 가진 충전기
+|O06.FR.01 |충전기에서 <<set_display_message_request,SetDisplayMessageRequest>>를 수신하고 충전기에 동일한 ID를 가진 메시지가 있습니다.
   |충전기는 기존 메시지를 새 메시지(모든 새 매개변수 포함)로 대체하고 <<set_display_message_response,SetDisplayMessageResponse>> 메시지로 응답해야 하며, 이 메시지에 대해 상태: _Accepted_ 를 지정해야 합니다.
 |===
