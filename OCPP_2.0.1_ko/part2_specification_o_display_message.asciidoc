@@ -4,13 +4,13 @@
 :sectnums:
 == Introduction
 
-DisplayMessage 기능을 사용하면 OCPP를 통해 CSO가 충전기 펌웨어에 포함되지 않은 메시지나 메시지 주기를  충전기에 표시할 수 있습니다. CSO는 이러한 메시지를 설정, 검색(가져오기), 바꾸기 및 지울 수 있습니다.
+DisplayMessage 기능을 사용하면 OCPP를 통해 CSO가 충전기 펌웨어에 포함되지 않은 메시지나 메시지 주기를  충전기에 표시할 수 있습니다. CSO는 이러한 메시지를 설정, 검색(가져오기), 변경하거나 지울 수 있습니다.
 
 모든 메시지는 다양한 언어와 다양한 메시지 형식으로 구성할 수 있습니다. <<display_message_supported_formats,DisplayMessageSupportedFormats>>를 참조하세요. 따라서 충전기는 사용자에게 메시지를 표시해야 할 때 올바른 형식/언어를 선택할 수 있습니다. CSO가 충전기에 보내는 모든 메시지에는 메시지를 표시할 시기와 방법을 제어하는 ​​몇 가지 매개변수가 있습니다. 우선순위, 상태, 시작/종료 시간 등입니다. <<display_message_supported_priorities,DisplayMessageSupportedPriorities>>를 참조하세요.
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===
-|참고 |SetDisplayMessageRequest를 통해 구성되지 않은 메시지는 검색/수정할 수 없습니다. (즉, 충전기 펌웨어에 코딩된 메시지는 수정할 수 없습니다.)
+|NOTE |SetDisplayMessageRequest를 통해 구성되지 않은 메시지는 검색/수정할 수 없습니다. (즉, 충전기 펌웨어에 코딩된 메시지는 수정할 수 없습니다.)
 |===
 
 <<<
@@ -31,7 +31,7 @@ DisplayMessage 기능을 사용하면 OCPP를 통해 CSO가 충전기 펌웨어�
 |{nbsp} d|_기능 블록_ |O. 디스플레이 메시지
 |3 |목표 |CSO가 펌웨어에 포함되지 않은 추가 메시지를 충전기에 표시할 수 있도록 합니다.
 |4 |설명 |이 사용 사례는 CSO가 충전기에 표시할 메시지를 설정하는 방법을 설명합니다. +
-주어진 매개변수에 따라 메시지는 특정 방식과 특정 순간에 충전기에 표시됩니다.
+  주어진 매개변수에 따라 메시지는 특정 방식과 특정 순간에 충전기에 표시됩니다.
 |{nbsp} d|_Actors_ |CSO, CSMS, 충전기
 |{nbsp} d|_시나리오 설명_
   |**1.** CSO는 CSMS를 구성하여 새 메시지를 설정하라는 요청을 보냅니다. +
@@ -42,7 +42,7 @@ DisplayMessage 기능을 사용하면 OCPP를 통해 CSO가 충전기 펌웨어�
   |<<o02_set_display_message_for_transaction,O02 - Set DisplayMessage for Transaction>> +
   <<o06_replace_display_message,O06 - Replace DisplayMessage>>
 |5 |필수 조건 |동일한 ID로 구성된 메시지가 없습니다.
-|6 |사후 조건(들) ​​|새 메시지가 충전기에 표시됩니다(시간, 기간 및 위치는 구성에 따라 다름)
+|6 |사후 조건(들) |새 메시지가 충전기에 표시됩니다(시간, 기간 및 위치는 구성에 따라 다름)
 |===
 
 .Set DisplayMessage sequence diagram
@@ -50,7 +50,7 @@ image::part2/images/figure_141.svg[Set DisplayMessage sequence diagram]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7 |오류 처리 |해당 없음
+|7 |오류 처리 |n/a
 |8 |참고 |충전기에 저장할 수 있는 최대 메시지 수는 CSMS에서 구성 변수 <<number_of_display_messages,`NumberOfDisplayMessages`>>.maxLimit에서 읽을 수 있습니다.
 |===
 
@@ -92,8 +92,8 @@ image::part2/images/figure_141.svg[Set DisplayMessage sequence diagram]
 |O01.FR.15 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 수신하고 메시지의 <<message_priority_enum_type,priority>>가 _AlwaysFront_ 인 경우
   |충전기는 다른 설치된 메시지와 관계없이 구성된 순간에 이 메시지를 표시해야 합니다. 따라서 다른 메시지와 순환하지 않으며 충전기 자체의 메시지는 이 메시지를 재정의하지 않습니다.
 |O01.FR.16 |O01.FR.15 AND +
-<<message_priority_enum_type,priority>> _AlwaysFront_ 가 있는 다른 메시지가 이미 설정되어 있음
-  |충전기는 이전 메시지를 새로 설정된 메시지로 대체해야 합니다.
+  <<message_priority_enum_type,priority>> _AlwaysFront_ 가 있는 다른 메시지가 이미 설정되어 있음
+    |충전기는 이전 메시지를 새로 설정된 메시지로 대체해야 합니다.
 |O01.FR.17 |{nbsp} |언어는 RFC-5646 태그로 지정해야 합니다. 참조: <<rfc5646,[RFC5646]>>, 예: 미국 영어는 "en-US"입니다.
 |===
 
@@ -113,15 +113,15 @@ image::part2/images/figure_141.svg[Set DisplayMessage sequence diagram]
 |{nbsp} d|_부모 사용 사례_ |<<o01_set_display_message,O01 - Set DisplayMessage>>
 |3 |목표 |CSO가 충전기에서 진행 중인 트랜잭션 중에 펌웨어에 내장되지 않은 메시지를 표시할 수 있도록 합니다.
 |4 |설명 |이 사용 사례는 CSO가 특정 트랜잭션에 대해 충전기에 표시할 메시지를 설정하는 방법을 설명합니다. 제공된 매개변수에 따라 메시지는 충전기에 특정 방식으로 표시됩니다.
-|{nbsp} d|_행위자_ |CSO, CSMS, 충전기
+|{nbsp} d|_Actors_ |CSO, CSMS, 충전기
 |{nbsp} d|_시나리오 설명_
   |**1.** CSO는 CSMS를 구성하여 주어진 트랜잭션 중에 새 메시지를 표시하라는 요청을 보냅니다. +
   **2.** CSMS는 <<set_display_message_request,SetDisplayMessageRequest>> 메시지를 충전기로 전송합니다. +
   **3.** 충전기는 <<set_display_message_response,SetDisplayMessageResponse>> 메시지를 CSMS로 전송하여 요청을 수락합니다. +
   **4.** 충전기는 트랜잭션이 진행되는 동안 디스플레이에 새 메시지를 표시합니다.
 |{nbsp} d|_대체 시나리오_
-|<<o01_set_display_message,O01 - Set DisplayMessage>>
-<<o06_replace_display_message,O06 - Replace DisplayMessage>>
+  |<<o01_set_display_message,O01 - Set DisplayMessage>> +
+  <<o06_replace_display_message,O06 - Replace DisplayMessage>>
 |5 |필수 조건 |동일한 ID로 구성된 메시지가 없습니다.
 |6 |사후 조건 |트랜잭션이 진행되는 동안 충전기에 새 메시지가 표시됩니다(시간, 기간 및 위치는 구성에 따라 다름)
 |===
@@ -131,7 +131,7 @@ image::part2/images/figure_142.svg[트랜잭션 순서도에 대한 DisplayMessa
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7 |오류 처리 |해당 없음
+|7 |오류 처리 |n/a
 |8 |참고 |충전기에 저장할 수 있는 최대 메시지 수는 구성 변수 <<number_of_display_messages,`NumberOfDisplayMessages`>>.maxLimit에서 CSMS가 읽을 수 있습니다.
 |===
 
@@ -160,7 +160,7 @@ image::part2/images/figure_142.svg[트랜잭션 순서도에 대한 DisplayMessa
 |O02.FR.09 |O02.FR.08
   |일치하는 언어를 사용할 수 없는 경우, 가능한 경우 대체 수단으로 영어로 DisplayMessage 메시지를 표시하는 것이 좋습니다.
 |O02.FR.10 |{nbsp}
-  |충전기는 메시지를 영구 저장소에 저장하여 충전기의 전원 주기/재부팅을 견뎌내야 합니다.
+  |충전기는 메시지를 영구 저장소에 저장하여 충전기의 전원 주기/재부팅 이후에도 유지되어야 합니다.
 |O02.FR.11 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 수신하고 이 요청을 처리한 후의 총 메시지 수가 <<number_of_display_messages,`NumberOfDisplayMessages`>>.maxLimit을 초과하는 경우
   |충전기는 <<display_message_status_enum_type,Rejected>> 상태로 응답해야 합니다.
 |O02.FR.12 |{nbsp}
@@ -174,8 +174,8 @@ image::part2/images/figure_142.svg[트랜잭션 순서도에 대한 DisplayMessa
 |O02.FR.17 |충전기가 <<set_display_message_request,SetDisplayMessageRequest>>를 수신하고 메시지의 <<message_priority_enum_type,priority>>가 _AlwaysFront_ 인 경우
   |충전기는 다른 설치된 메시지와 관계없이 구성된 순간에 이 메시지를 표시해야 합니다. 따라서 다른 메시지와 함께 순환되지 않으며 충전기 자체의 메시지는 이 메시지를 재정의하지 않습니다.
 |O02.FR.18 |O02.FR.17 AND +
-<<message_priority_enum_type,priority>> _AlwaysFront_ 가 있는 다른 메시지가 이미 설정되어 있습니다.
-  |충전기는 이전 메시지를 새로 설정된 메시지로 대체해야 합니다.
+  <<message_priority_enum_type,priority>> _AlwaysFront_ 가 있는 다른 메시지가 이미 설정되어 있습니다.
+    |충전기는 이전 메시지를 새로 설정된 메시지로 대체해야 합니다.
 |===
 
 === O03 - Get All DisplayMessages
@@ -190,8 +190,8 @@ image::part2/images/figure_142.svg[트랜잭션 순서도에 대한 DisplayMessa
 |{nbsp} d|_기능 블록_ |O. DisplayMessage
 |3 |목표 |CSO가 충전기에 현재 구성된 모든 메시지를 검색할 수 있도록 합니다.
 |4 |설명 |이 사용 사례는 CSO가 충전기에서 OCPP를 통해 구성된 모든 설치된 DisplayMessage를 요청하는 방법을 설명합니다. +
-충전기는 메시지가 오래되었거나 트랜잭션이 종료되면 메시지를 제거할 수 있습니다. +
-CSO가 현재 메시지 목록을 볼 수 있으면 매우 유용할 수 있으므로 CSO는 어떤 메시지가 (여전히) 구성되어 있는지 알 수 있습니다.
+  충전기는 메시지가 오래되었거나 트랜잭션이 종료되면 메시지를 제거할 수 있습니다. +
+  CSO가 현재 메시지 목록을 볼 수 있으면 매우 유용할 수 있으므로 CSO는 어떤 메시지가 (여전히) 구성되어 있는지 알 수 있습니다.
 |{nbsp} d|_Actors_ |CSO, CSMS, 충전기
 |{nbsp} d|_시나리오 설명_
   |**1.** CSO가 CSMS에 모든 메시지를 검색하도록 요청합니다. +
@@ -200,15 +200,15 @@ CSO가 현재 메시지 목록을 볼 수 있으면 매우 유용할 수 있으�
   **4.** 충전기가 CSMS에 하나 이상의 <<notify_display_messages_request,NotifyDisplayMessagesRequest>> 메시지를 보냅니다(보낼 메시지 양에 따라 다름). +
   **5.** CSMS가 모든 알림에 <<notify_display_messages_response,NotifyDisplayMessagesResponse>> 메시지로 응답합니다.
 |5 |필수 조건 |충전기에 구성된 메시지가 하나 이상 있음
-|6 |사후 조건 |해당 없음
+|6 |사후 조건 |n/a
 |===
-//
+
 .Get All DisplayMessages 시퀀스 다이어그램
 image::part2/images/figure_143.svg[Get All DisplayMessages 시퀀스 다이어그램]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7 |오류 처리 |해당 없음
+|7 |오류 처리 |n/a
 |8 |참고 |OCPP를 통해 구성된 메시지만 <<get_display_messages_request,GetDisplayMessagesRequest>>를 통해 검색할 수 있습니다.
 |===
 
@@ -220,14 +220,14 @@ image::part2/images/figure_143.svg[Get All DisplayMessages 시퀀스 다이어�
 |ID |전제 조건 |요구 사항 정의
 
 |O03.FR.01 | <<get_display_messages_request,GetDisplayMessagesRequest>>에서 _requestId_ 를 제외한 모든 필드가 생략되고 +
-적어도 하나의 디스플레이 메시지가 구성된 경우.
-  |충전기는 _Accepted_ 로 응답해야 합니다.
+  적어도 하나의 디스플레이 메시지가 구성된 경우.
+    |충전기는 _Accepted_ 로 응답해야 합니다.
 |O03.FR.02 |O03.FR.01
   |충전기는 <<notify_display_messages_request,NotifyDisplayMessagesRequest>>를 통해 구성된 모든 디스플레이 메시지를 전송해야 합니다.
 |O03.FR.03 |O03.FR.02 +
-그리고 +
-충전기가 1개의 <<notify_display_messages_request,NotifyDisplayMessagesRequest>>로 전송할 수 있는 것보다 많은 디스플레이 메시지가 있는 경우
-  |충전기는 디스플레이 메시지를 여러 개의 <<notify_display_messages_request,NotifyDisplayMessagesRequest>> 메시지로 분할해야 합니다.
+  AND +
+  충전기가 1개의 <<notify_display_messages_request,NotifyDisplayMessagesRequest>>로 전송할 수 있는 것보다 많은 디스플레이 메시지가 있는 경우
+    |충전기는 디스플레이 메시지를 여러 개의 <<notify_display_messages_request,NotifyDisplayMessagesRequest>> 메시지로 분할해야 합니다.
 |O03.FR.04 |O03.FR.03
   |충전기는 모든 <<notify_display_messages_request,NotifyDisplayMessagesRequest>> 메시지에서 _tbc_ 필드를 _true_ 로 설정해야 합니다(마지막 메시지 제외).
 |O03.FR.05 |O03.FR.04
@@ -258,7 +258,7 @@ image::part2/images/figure_143.svg[Get All DisplayMessages 시퀀스 다이어�
   **4.** 충전기가 하나 이상의 <<notify_display_messages_request,NotifyDisplayMessagesRequest>> 메시지를 CSMS로 보냅니다(보낼 메시지 양에 따라 다름). +
   **5.** CSMS 응답은 <<notify_display_messages_response,NotifyDisplayMessagesResponse>> 메시지로 모든 알림을 보냅니다.
 |5 |필수 조건 |충전기에 구성된 주어진 ID가 있는 메시지가 있습니다.
-|6 |사후 조건(들) ​​|해당 없음
+|6 |사후 조건(들) |n/a
 |===
 
 .Get a specific DisplayMessages sequence diagram
@@ -266,7 +266,7 @@ image::part2/images/figure_144.svg[Get a specific DisplayMessages sequence diagr
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7 |오류 처리 |해당 없음
+|7 |오류 처리 |n/a
 |8 |참고 |OCPP를 통해 구성된 메시지만 <<get_display_messages_request,GetDisplayMessagesRequest>>를 통해 검색할 수 있습니다.
 |===
 
@@ -278,17 +278,17 @@ image::part2/images/figure_144.svg[Get a specific DisplayMessages sequence diagr
 |ID |전제 조건 |요구 사항 정의
 
 |O04.FR.01 |<<get_display_messages_request,GetDisplayMessagesRequest>>의 필드 중 하나 이상이 사용되고 +
-충전기에 요청의 매개변수와 일치하는 DisplayMessage가 구성되어 있어야 함
-  |충전기는 _Accepted_ 로 응답해야 함.
+  충전기에 요청의 매개변수와 일치하는 DisplayMessage가 구성되어 있어야 함
+    |충전기는 _Accepted_ 로 응답해야 함.
 |O04.FR.02 | <<get_display_messages_request,GetDisplayMessagesRequest>>의 필드 중 하나 이상이 사용되고 +
-충전기에 요청의 매개변수와 일치하는 구성된 DisplayMessage가 없는 경우
-  |충전기는 _Unknown_ 으로 응답해야 합니다.
+  충전기에 요청의 매개변수와 일치하는 구성된 DisplayMessage가 없는 경우
+    |충전기는 _Unknown_ 으로 응답해야 합니다.
 |O04.FR.03 |O04.FR.01
   |충전기는 구성된 모든 DisplayMessage를 <<notify_display_messages_request,NotifyDisplayMessagesRequest>>를 통해 보내야 합니다.
 |O04.FR.04 |O04.FR.03 +
-그리고 +
-충전기가 1개의 <<notify_display_messages_request,NotifyDisplayMessagesRequest>>에서 보낼 수 있는 것보다 많은 DisplayMessage가 있는 경우
-  |충전기는 DisplayMessage를 여러 개의 <<notify_display_messages_request,NotifyDisplayMessagesRequest>> 메시지로 분할해야 합니다.
+  AND +
+  충전기가 1개의 <<notify_display_messages_request,NotifyDisplayMessagesRequest>>에서 보낼 수 있는 것보다 많은 DisplayMessage가 있는 경우
+    |충전기는 DisplayMessage를 여러 개의 <<notify_display_messages_request,NotifyDisplayMessagesRequest>> 메시지로 분할해야 합니다.
 |O04.FR.05 |O04.FR.04
   |충전기는 마지막 메시지를 제외한 모든 <<notify_display_messages_request,NotifyDisplayMessagesRequest>> 메시지에서 _tbc_ 필드를 _true_ 로 설정해야 합니다.
 |O04.FR.06 |O04.FR.05
@@ -312,7 +312,6 @@ image::part2/images/figure_144.svg[Get a specific DisplayMessages sequence diagr
 |{nbsp} d|_기능 블록_ |O. DisplayMessage
 |3 |목표 |CSO가 현재 충전기에 구성된 특정 메시지를 제거할 수 있도록 합니다.
 |4 |설명 |이 사용 사례는 CSO가 충전기에서 OCPP를 통해 구성된 특정 메시지를 제거하는 방법을 설명합니다.
-
 |{nbsp} d|_Actors_ |CSO, CSMS, 충전기
 |{nbsp} d|_시나리오 설명_
   |**1.** CSO가 CSMS에 특정 메시지를 제거하도록 요청합니다. +
@@ -320,7 +319,7 @@ image::part2/images/figure_144.svg[Get a specific DisplayMessages sequence diagr
   **3.** 충전기가 메시지를 제거합니다. +
   **4.** 충전기가 <<clear_display_message_response,ClearDisplayMessageResponse>> 메시지를 CSMS로 보내 응답합니다.
 |5 |필수 조건 |충전기에 구성된 지정된 ID의 메시지가 있습니다.
-|6 |사후 조건(들) ​​|지정된 ID의 메시지가 충전기에서 제거됩니다.
+|6 |사후 조건(들) |지정된 ID의 메시지가 충전기에서 제거됩니다.
 |===
 
 .Clear a DisplayMessage sequence diagram
@@ -328,7 +327,7 @@ image::part2/images/figure_145.svg[Clear a DisplayMessage sequence diagram]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7 |오류 처리 |해당 없음
+|7 |오류 처리 |n/a
 |8 |참고 |OCPP를 통해 구성된 메시지만 <<clear_display_message_request,ClearDisplayMessageRequest>>를 통해 지우거나 제거할 수 있습니다.
 |===
 
@@ -367,7 +366,7 @@ image::part2/images/figure_145.svg[Clear a DisplayMessage sequence diagram]
   **3.** 충전기가 CSMS에 <<set_display_message_response,SetDisplayMessageResponse>> 메시지를 보내 요청을 수락합니다. +
   **4.** 충전기는 구성된 순간에 디스플레이에 업데이트/대체된 메시지를 표시합니다.
 |{nbsp} d|_대체 시나리오_ |<<o01_set_display_message,O01 - Set DisplayMessage>> 및 +
-<<o02_set_display_message_for_transaction,O02 - Set DisplayMessage for Transaction>>
+  <<o02_set_display_message_for_transaction,O02 - Set DisplayMessage for Transaction>>
 |5 |필수 조건 |충전기에 동일한 ID의 메시지가 있습니다.
 |6 |사후 조건 |디스플레이 메시지는 동일한 ID가 제공된 메시지로 대체됩니다.
 |===
