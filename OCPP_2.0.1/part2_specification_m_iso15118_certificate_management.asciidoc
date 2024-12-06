@@ -431,7 +431,7 @@ image::part2/images/figure_128.svg[Delete Installed Certificate]
       |A Charging Station may reject the request to prevent the deletion of a certificate, if it is the last one from its certificate type.
 |M04.FR.04  |M04.FR.01 AND +
   The requested certificate was not found
-    |The Charging Station SHALL indicate failure by setting 'status' to 'NotFound' in the <<delete_certificate_response,DeleteCertificateResponse>>. |{nbsp}
+    |The Charging Station SHALL indicate failure by setting _status_ to `NotFound` in the <<delete_certificate_response,DeleteCertificateResponse>>. |{nbsp}
 |M04.FR.06  |M04.FR.01 AND +
   When _certificateHashData_ refers to the _Charging Station Certificate_ (see use case A)
     |Charging Station SHALL respond with <<delete_certificate_response,DeleteCertificateResponse>> with _status_ = `Failed`.
@@ -442,7 +442,7 @@ image::part2/images/figure_128.svg[Delete Installed Certificate]
 |M04.FR.08  |M04.FR.02 AND +
   Certificate to delete is a sub-CA or root certificate
     |Charging Station MAY also delete all child certificates.
-      |Else these child certificates remain as unusable orhan certificates that can no longer be deleted.
+      |Else these child certificates remain as unusable orphan certificates that can no longer be deleted.
 |===
 
 [[install_ca_certificate_in_a_charging_station]]
@@ -472,8 +472,8 @@ image::part2/images/figure_129.svg[Install CA certificate in a Charging Station]
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7   |Error handling  |n/a
-|8   |Remark(s)       |Even though the messages <<certificate_signed_request,CertificateSignedRequest>> (see use cases <<update_charging_station_certificate_by_request_of_csms,A02 - Update Charging Station Certificate by request of CSMS>> and <<update_charging_station_certificate_initiated_by_the_charging_station,A03 - Update Charging Station Certificate initiated by the Charging Station>>) and <<install_certificate_request,InstallCertificateRequest>> (use case <<install_ca_certificate_in_a_charging_station,M05>>) are both used to send certificates, their purposes are different. <<certificate_signed_request,CertificateSignedRequest>> is used to return the the Charging Stations own public certificate and V2G certificate(s) signed by a Certificate Authority.
-<<install_certificate_request,InstallCertificateRequest>> is used to install Root certificates.
+|8   |Remark(s)       |Even though the messages <<certificate_signed_request,CertificateSignedRequest>> (see use cases <<update_charging_station_certificate_by_request_of_csms,A02 - Update Charging Station Certificate by request of CSMS>> and <<update_charging_station_certificate_initiated_by_the_charging_station,A03 - Update Charging Station Certificate initiated by the Charging Station>>) and <<install_certificate_request,InstallCertificateRequest>> (use case <<install_ca_certificate_in_a_charging_station,M05>>) are both used to send certificates, their purposes are different. <<certificate_signed_request,CertificateSignedRequest>> is used to return the the Charging Stations own public certificate and V2G certificate(s) signed by a Certificate Authority. +
+  <<install_certificate_request,InstallCertificateRequest>> is used to install Root certificates.
 
 {nbsp}
 
@@ -526,7 +526,7 @@ It is allowed to have multiple certificates of the same type installed.
     |The Charging Station SHALL use the <<network_profile_connection_attempts,`NetworkProfileConnectionAttempts`>> mechanism as described at Use Case <<migrate_to_new_csms,B10 - Migrate to new CSMS>>.
 |M05.FR.16  |M05.FR.15 AND +
   If after the number of attempts the connection fails AND +
-  If it goes back to the old <<network_connection_profile_type,NetworkConnectionProfile>> (_See <<migrate_to_new_network_connection_profile_requirements,B10.FR.03>>_)
+  If it goes back to the old <<network_connection_profile_type,NetworkConnectionProfile>> (_See_ <<migrate_to_new_network_connection_profile_requirements,_B10.FR.03_>>)
     |The Charging Station SHALL use the old CSMS Root (fallback) certificate to verify the server certificate.
 |M05.FR.17  |NOT M05.FR.10 AND +
   After receiving an <<install_certificate_request,InstallCertificateRequest>> for a certificate that is already present in the certificate trust store of the Charging Station
@@ -545,7 +545,7 @@ It is allowed to have multiple certificates of the same type installed.
 |2   |ID              |M06
 |{nbsp} d|_Functional block_ |M. ISO 15118 Certificate Management
 |3   |Objective(s)    |To enable a Charging Station to cache the OCSP certificate status needed for the TLS handshake between EV and Charging Station.
-|4   |Description     |When the cable gets plugged in and an ISO 15118 supported EV gets connected to the Charging Station, the EV requests the Charging Station to prove the validity of the (SubCA) certificates by an OCSPResponse. A request needs to be sent per SubCA. Because the timeout constraint in ISO 15118 is too strict to make the call to an external server, OCPP requires to cache the OCSP certificate status of the certificates beforehand. The Charging Station needs to refresh the cached OCSP data once a week..
+|4   |Description     |When the cable gets plugged in and an ISO 15118 supported EV gets connected to the Charging Station, the EV requests the Charging Station to prove the validity of the (SubCA) certificates by an OCSPResponse. A request needs to be sent per SubCA. Because the timeout constraint in ISO 15118 is too strict to make the call to an external server, OCPP requires to cache the OCSP certificate status of the certificates beforehand. The Charging Station needs to refresh the cached OCSP data once a week.
 |{nbsp} d|_Actors_    |Charging Station, CSMS
 |{nbsp} d|_Scenario description_
   |**1.** The Charging Station requests the CSMS to provide OCSP certificate status by sending a <<get_certificate_status_request,GetCertificateStatusRequest>>. +
@@ -566,13 +566,13 @@ image::part2/images/figure_130.svg[Get V2G Charging Station Certificate status]
 |7   |Error handling |n/a
 |8   |Remark(s)      |The status indicator in the <<get_certificate_status_response,GetCertificateStatusResponse>> indicates whether or not the CSMS was successful in retrieving the certificate status. it does NOT indicate the validity of the certificate.
 
-{nbsp}
+  {nbsp}
 
-For installing the (V2G) Charging Station Certificate, see use cases <<update_charging_station_certificate_by_request_of_csms,A02 - Update Charging Station Certificate by request of CSMS>> and <<update_charging_station_certificate_initiated_by_the_charging_station,A03 - Update Charging Station Certificate initiated by the Charging Station>>. The V2G certificate chain SHOULD not include the V2GRootCertificate. This SHOULD be installed using Use case <<install_ca_certificate_in_a_charging_station,M05 - Install CA certificate in a Charging Station>>.
+  For installing the (V2G) Charging Station Certificate, see use cases <<update_charging_station_certificate_by_request_of_csms,A02 - Update Charging Station Certificate by request of CSMS>> and <<update_charging_station_certificate_initiated_by_the_charging_station,A03 - Update Charging Station Certificate initiated by the Charging Station>>. The V2G certificate chain SHOULD not include the V2GRootCertificate. This SHOULD be installed using Use case <<install_ca_certificate_in_a_charging_station,M05 - Install CA certificate in a Charging Station>>.
 
-OCPP allows for only one certificate per <<get_certificate_status_request,GetCertificateStatusRequest>>. Because when multiple answers on a <<get_certificate_status_request,GetCertificateStatusRequest>> are to be expected, it makes handling the request and status more complex. So a <<get_certificate_status_request,GetCertificateStatusRequest>> needs to be sent per SubCA.
+  OCPP allows for only one certificate per <<get_certificate_status_request,GetCertificateStatusRequest>>. Because when multiple answers on a <<get_certificate_status_request,GetCertificateStatusRequest>> are to be expected, it makes handling the request and status more complex. So a <<get_certificate_status_request,GetCertificateStatusRequest>> needs to be sent per SubCA.
 
-_responderURL_ is required in OCPP, while it is optional in ISO 15118. Without a _responderURL_ in a certificate it cannot work, so a responderURL is required for any certificate for which a <<get_certificate_status_request,GetCertificateStatusRequest>> can be expected.
+  _responderURL_ is required in OCPP, while it is optional in ISO 15118. Without a _responderURL_ in a certificate it cannot work, so a responderURL is required for any certificate for which a <<get_certificate_status_request,GetCertificateStatusRequest>> can be expected.
 |===
 
 ==== M06 - Get V2G Charging Station Certificate status - Requirements
