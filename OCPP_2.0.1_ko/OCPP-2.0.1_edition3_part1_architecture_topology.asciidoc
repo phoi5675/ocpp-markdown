@@ -36,6 +36,7 @@ Edition 3 FINAL, 2024-05-06
   이 아키텍처 및 토폴로지 문서의 첫 번째 릴리스
 |===
 
+:sectnums:
 == Introduction
 
 === Goal of this document
@@ -44,7 +45,7 @@ Edition 3 FINAL, 2024-05-06
 
 OCPP는 원래 백오피스, OCPP의 _충전기 관리 시스템_(이 문서에서는 CSMS)과 충전기 간의 양방향 통신을 위해 고안되었습니다. 이 프로토콜은 더욱 발전했으며, 모든 새로운 개정판에서 새로운 기능과 옵션이 추가되었습니다. 다양한 유형의 충전기에 대해 다양한 아키텍처에서 사용할 수 있는 프로토콜로 발전했습니다.
 
-이 문서에서는 원래의 "간단한" 설정 CSMS <> 충전기 외에도 OCPP 사용에 대한 추가 설명으로 여러 토폴로지를 설명합니다. 또한 모든 유형의 충전기를 구성하고 모니터링하는 장치 관리 개념, OCPP 정보 모델 및 3계층 모델이 설명됩니다.
+이 문서에서는 원래의 "간단한" CSMS <> 충전기 간 설정 외에도 OCPP 사용에 대한 추가 설명으로 여러 토폴로지를 설명합니다. 또한 모든 유형의 충전기를 구성하고 모니터링하는 장치 관리 개념, OCPP 정보 모델 및 3계층 모델이 설명됩니다.
 
 이 문서는 부분적으로 **정보 제공** 이고 부분적으로 **규범적** 이며 OCPP 사용을 제한하려는 것이 아닙니다. 다만 OCPP의 제작자가 이 사양 버전을 만들 때 OCPP를 어떤 용도로 사용할 것인지에 대한 설명을 추가하기 위함입니다. 따라서 이 문서는 OCPP의 Part 2에 있는 프로토콜 사양을 읽는 사람이 어떻게 사용할 수 있는지 이해하도록 지원하기 위한 것입니다.
 
@@ -58,7 +59,7 @@ OCPP는 원래 백오피스, OCPP의 _충전기 관리 시스템_(이 문서에�
 |===
 |용어 |의미
 ^s|충전기 |충전기는 EV를 충전할 수 있는 물리적 시스템입니다. 충전기에는 하나 이상의 EVSE가 있습니다.
-^s|커넥터 |이 명세서에서 사용되는 커넥터라는 용어는 충전기에서 독립적으로 작동하고 관리되는 전기 콘센트를 말합니다. 즉, 이는 단일 물리적 커넥터에 해당합니다. 어떤 경우에는 EVSE에 여러 물리적 소켓 유형 및/또는 고정 케이블/커넥터 배열(예: 커넥터)이 있어 다양한 차량 유형(예: 4륜 EV 및 전기 스쿠터)을 용이하게 할 수 있습니다.
+^s|커넥터 |이 사양에서 사용된 "커넥터(Connector)"라는 용어는 충전기에서 독립적으로 작동되고 관리되는 전기 콘센트를 의미합니다. 즉, 이는 단일 물리적 커넥터를 지칭합니다. 일부 경우에 EVSE(Electric Vehicle Supply Equipment)는 다양한 차량 유형(예: 4륜 전기차 및 전기 스쿠터)을 지원하기 위해 여러 물리적 소켓 유형 및/또는 테더드 케이블/커넥터 배열(즉, 커넥터)을 가질 수 있습니다.
 ^s|EVSE |EVSE는 한 번에 하나의 EV에 에너지를 공급할 수 있는 충전기의 독립적으로 작동하고 관리되는 부분으로 간주됩니다.
 ^s|로컬 포트 ​​스마트 미터 |스마트 미터의 로컬 포트는 미터 판독값 및 사용에 대한 정보에 대한 액세스를 제공하는 디지털 전기 미터의 포트(예: 직렬)입니다.
 |===
@@ -74,7 +75,7 @@ OCPP는 원래 백오피스, OCPP의 _충전기 관리 시스템_(이 문서에�
 ^|CSMS |충전기 관리 시스템(Charging Station Management System)
 ^|EMS |에너지 관리 시스템(Energy Management System). 이 문서에서 이는 지역 및/또는 계약적 제약 및/또는 계약적 인센티브에 따라 지역 부하(소비 및 생산)를 관리하는 장치로 정의됩니다. 여기에는 예를 들어 PV, 배터리 저장 장치의 센서 및 제어와 같은 추가 입력이 있습니다.
 ^|EVSE |전기 자동차 공급 장비(Electric Vehicle Supply Equipment)
-^|LC |로컬 컨트롤러(Local Controller). 이 문서에서 이는 CSMS와 독립적으로 충전기에 메시지를 보낼 수 있는 장치로 정의됩니다. 이에 대한 일반적인 사용 사례는 OCPP의 2부 스마트 충전 장에 설명된 로컬 스마트 충전 케이스로, 로컬 컨트롤러가 충전기에 충전 한도를 부과할 수 있습니다.
+^|LC |로컬 컨트롤러(Local Controller). 이 문서에서 이는 CSMS와 독립적으로 충전기에 메시지를 보낼 수 있는 장치로 정의됩니다. 이에 대한 일반적인 사용 사례는 OCPP의 Part 2 - Smart Charging에 설명된 로컬 스마트 충전 케이스로, 로컬 컨트롤러가 충전기에 충전 한도를 부과할 수 있습니다.
 ^|LP |로컬 프록시(Local Proxy). 메시지 라우터 역할을 합니다.
 |===
 
@@ -89,7 +90,7 @@ image::part1/images/figure_1.png[OCPP에서 사용되는 3계층 모델]
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===
-|NOTE |이 섹션에서는 통신 목적으로 논리적 수준에서 충전 인프라를 설명합니다. 물리적 하드웨어에 매핑을 적용하고자 하지 않습니다. 이는 제조업체의 선택입니다. 예를 들어, EVSE는 충전기에 통합되어 해당 장치의 일부로 보일 수 있지만, 자체 케이스가 있고 물리적 엔티티 충전기 외부에 있을 수도 있습니다. 예를 들어 20개의 EVSE와 커넥터가 있는 충전 플라자가 1개의 충전기로 1개의 모뎀을 통해 CSMS와 통신하는 경우 OCPP에서 1개의 충전기로 간주됩니다.
+|NOTE |이 섹션에서는 통신 목적으로 논리적 수준에서 충전 인프라를 설명합니다. 물리적 하드웨어에 매핑을 적용하고자 하지 않습니다. 이는 제조업체의 선택입니다. 예를 들어, EVSE는 충전기에 통합되어 해당 장치의 일부로 보일 수 있지만, 자체 케이스가 있고 충전기 물리적 엔티티 외부에 있을 수도 있습니다. 예를 들어 20개의 EVSE와 커넥터가 있는 충전 플라자가 1개의 충전기로 1개의 모뎀을 통해 CSMS와 통신하는 경우 OCPP에서 1개의 충전기로 간주됩니다.
 |===
 <<<
 
@@ -101,7 +102,7 @@ OCPP 메시지의 복잡성이 커짐에 따라 OCPP 2.0.1은 OCPP의 메시지�
 
 정보 모델은 도메인 모델 또는 핵심 모델이라고도 하는 모델로, OCPP 메시지와 데이터 유형이 생성되는 기반입니다. 이러한 데이터 유형은 OCPP 1.6 사양에서 추출되었으며 핵심 데이터 유형과 정규화된 데이터 유형이라고 합니다. 아래 그림은 정보 모델의 데이터 유형이 어떻게 구성되는지 보여줍니다.
 
-Par 2 - Specification에서 데이터 유형 장에서 일부 데이터 유형에는 Common: 접두사가 있습니다. 이는 정보 모델에서 유래되었습니다. 이는 DataType이 다른 DataType 및 Messages 간에 공유될 수 있음을 의미합니다. 이는 장치의 OCPP 구현에 영향을 미치지 않습니다.
+Part 2 - Specification의 Datatypes 장에서 일부 데이터 유형에는 Common: 접두사가 있습니다. 이는 정보 모델에서 유래되었습니다. 이는 DataType이 다른 DataType 및 Messages 간에 공유될 수 있음을 의미합니다. 이는 장치의 OCPP 구현에 영향을 미치지 않습니다.
 
 .예시 데이터 유형
 image::part1/images/figure_2.svg[예시 데이터 유형]
@@ -141,11 +142,11 @@ _Components_ 는 자체적으로 데이터를 보유하지 않습니다. 각 구
 .Component 및 변수
 image::part1/images/figure_3.svg[Component 및 변수]
 
-아래 표는 몇 가지 일반적인 구성 요소(표준화된 구성 요소 이름)와 기본 홈 충전기와 일반적인 공공 충전기에서 일반적으로 발생하는 계층적 위치 수준의 예를 보여줍니다.
+아래 표는 몇 가지 일반적인 구성 요소(표준화된 구성 요소 이름)와 기본 가정용 충전기와 일반적인 공공 충전기에서 일반적으로 발생하는 계층적 위치 수준의 예를 보여줍니다.
 
 [%autowidth.stretch,cols="1,1,1",options="header",frame=all,grid=all]
 |===
-3.+<|기본 홈 충전기 구성 예
+3.+<|기본 가정용 충전기 구성 예
 
 s|ChargingStation 계층 s|EVSE 계층 s|Connector 계층
 |ChargingStation(기기 자체) |EVSE(기기 자체) |Connector(기기 자체)
@@ -160,22 +161,22 @@ s|ChargingStation 계층 s|EVSE 계층 s|Connector 계층
 3.+<|공공 충전기 예 구성
 
 s|충전기 계층 s|EVSE 계층 s|커넥터 계층
-|충전기(기기 자체) |EVSE(기기 자체) |커넥터(기기 자체)
-|전기 피드 |전기 피드 |액세스 보호
-|토큰 판독기 |토큰 판독기 |플러그 유지 잠금
-|디스플레이 |디스플레이 |{nbsp}
-|재정 계량 |재정 계량 |{nbsp}
-|시계 |제어 계량 |{nbsp}
-|컨트롤러 |과전류 차단기 |{nbsp}
-|{nbsp} |RCD |{nbsp}
-|{nbsp} |충전 상태 표시기 |{nbsp}
+|ChargingStation(기기 자체) |EVSE(기기 자체) |커넥터(기기 자체)
+|ElectricalFeed |ElectricalFeed |AccessProtection
+|TokenReader |TokenReader |PlugRetentionLock
+|Display     |Display     |{nbsp}
+|FiscalMetering |FiscalMetering  |{nbsp}
+|Clock          |ControlMetering |{nbsp}
+|Controller     |OverCurrentBreaker |{nbsp}
+|{nbsp}         |RCD                |{nbsp}
+|{nbsp}         |ChargingStatusIndicator  |{nbsp}
 |===
 
 === Variables
 
-모든 _component_ 에는 여러 개의 _변수_ 가 있으며, 이는 해당 _component_ 에 적용 가능한 모든(외부에서 볼 수 있는) 데이터(구성 매개변수, 측정된 값(예: 전류 또는 온도) 및/또는 변수 값에 대한 모니터링된 변경 사항 포함)를 보관, 설정, 읽거나 보고하는 데 사용할 수 있습니다.
+모든 _component_ 에는 여러 개의 _variables_ 가 있으며, 이는 해당 _component_ 에 적용 가능한 모든(외부에서 볼 수 있는) 데이터(구성 매개변수, 측정된 값(예: 전류 또는 온도) 및/또는 변수 값에 대한 모니터링된 변경 사항 포함)를 보관, 설정, 읽거나 보고하는 데 사용할 수 있습니다.
 
-많은 _component_ 에는 본질적으로 구성 요소 유형(예: _Connector_ 구성 요소의 _ConnectorType_)에 고유한 연관된 _변수_ 가 있을 수 있지만, 글로벌 및/또는 선택적 기준으로 표준화된 고수준 이벤트 알림 및 상태/상태 보고(예: _Problem_, _Active_)를 제공하고 인벤토리/검색 프로세스 중에 구성 요소 존재, 가용성 등을 보고하는 데 사용되는 최소한의 표준화된 _변수_ 가 있습니다(예: _Available_, _Enabled_). 충전기는 읽기 전용이고 _true_로 설정된 경우 기본 변수 _Present_, _Available_ 및 _Enabled_ 를 보고할 필요가 없습니다. 충전기가 _Present_, _Available_ 및/또는 _Enabled_ 를 보고하지 않는 경우 중앙 시스템은 이를 읽기 전용이고 _true _로 설정되었다고 가정해야 합니다. 변수는 다양한 일반적인 범용 데이터 유형(부울, 정수, 소수, 날짜-시간, 문자열) 중 하나일 수 있지만 허용 가능한 값을 특정 범위, 열거형 목록, 집합 또는 정렬된 목록으로 제한할 수도 있습니다.
+많은 _component_ 에는 본질적으로 구성 요소 유형(예: _Connector_ 구성 요소의 _ConnectorType_)에 고유한 연관된 _variables_ 가 있을 수 있지만, 글로벌 및/또는 선택적 기준으로 표준화된 고수준 이벤트 알림 및 상태/상태 보고(예: _Problem_, _Active_)를 제공하고 인벤토리/검색 프로세스 중에 구성 요소 존재, 가용성 등을 보고하는 데 사용되는 최소한의 표준화된 _variables_ 가 있습니다(예: _Available_, _Enabled_). 충전기는 읽기 전용이고 _true_ 로 설정된 경우 기본 변수 _Present_, _Available_ 및 _Enabled_ 를 보고할 필요가 없습니다. 충전기가 _Present_, _Available_ 및/또는 _Enabled_ 를 보고하지 않는 경우 중앙 시스템은 이를 읽기 전용이고 _true_ 로 설정되었다고 가정해야 합니다. 변수는 다양한 일반적인 범용 데이터 유형(부울, 정수, 소수, 날짜-시간, 문자열) 중 하나일 수 있지만 허용 가능한 값을 특정 범위, 열거형 목록, 집합 또는 정렬된 목록으로 제한할 수도 있습니다.
 
 복잡한 구성 요소를 지원하기 위해 모든 구성 요소와 연관된 주어진 변수 이름의 인스턴스가 두 개 이상 있을 수 있습니다(예: 여러 지점에서 온도, 전류 또는 전압을 보고하는 전력 변환기 모듈).
 
@@ -183,9 +184,9 @@ s|충전기 계층 s|EVSE 계층 s|커넥터 계층
 
 === Characteristics and Attributes
 
-각 _변수_ 는 기본(_"실제"_) 값 외에도 동일한 기본 _변수_ 이름과 _변수 인스턴스_ 에 연결된 연관된 보조 데이터 집합을 가질 수 있습니다.
+각 _variables_ 는 기본(_"Actual"_) 값 외에도 동일한 기본 _variables_ 이름과 _variableInstance_ 에 연결된 연관된 보조 데이터 집합을 가질 수 있습니다.
 
-이렇게 하면 일관성과 검색 가능성이 부족한 보조 변수 이름(예: FanSpeed, FanSpeedUnits, MinimumFanSpeed, BaseFanSpeed)의 혼란스러운 클러스터로 _변수_ 네임스페이스가 어지럽게 되는 것을 크게 방지할 수 있습니다.
+이렇게 하면 일관성과 검색 가능성이 부족한 보조 변수 이름(예: FanSpeed, FanSpeedUnits, MinimumFanSpeed, BaseFanSpeed)의 혼란스러운 클러스터로 _variables_ 네임스페이스가 어지럽게 되는 것을 크게 방지할 수 있습니다.
 
 보조 변수 데이터에는 다음이 포함됩니다.
 
@@ -218,18 +219,18 @@ DeviceModel을 사용하여 (물리적) 장치와 (가상) 컨트롤러 구성 �
 |===
 |구성 요소 |name 2.+d|팬
 .13+|변수 |name 2.+d|팬 속도
-.3+|변수 속성 1 |type d|실제
-|value d|<팬의 현재 팬 속도 값.>
-|변경 가능 d|읽기 전용
-.3+|변수 속성 2 |type d|대상
-|value d|<CSMS는 이 값을 사용하여 팬 속도를 조정할 수 있습니다. 충전기는 실제 값을 대상 값으로 유지하려고 해야 합니다.>
-|변경 가능 d|읽기 쓰기
-.2+|변수 속성 3 |type d|최대 설정
-|value d|<예제의 값 '500'. 대상은 이 값보다 높게 설정할 수 없습니다.>
-.2+|variableAttribute 4 |type d|MinSet
-|value d|<예시의 값 '200'입니다. 대상은 이 값보다 낮게 설정할 수 없습니다.>
-.2+|variableCharacteristics |maxLimit d|<예시의 값 '1000'입니다. 이는 팬의 물리적 최대 한계일 수 있습니다.>
-|minLimit d|<예시의 값 '0'입니다. 이는 팬의 물리적 최소 한계일 수 있습니다. 팬이 다른 방향으로도 회전할 수 있는 경우 -1000일 수도 있습니다.>
+  .3+|variableAttribute 1 |type d|실제
+    |value d|<팬의 현재 팬 속도 값.>
+    |변경 가능 d|읽기 전용
+  .3+|variableAttribute 2 |type d|대상
+    |value d|<CSMS는 이 값을 사용하여 팬 속도를 조정할 수 있습니다. 충전기는 실제 값을 대상 값으로 유지하려고 해야 합니다.>
+    |변경 가능 d|읽기 쓰기
+  .2+|variableAttribute 3 |type d|최대 설정
+    |value d|<예제의 값 '500'. 대상은 이 값보다 높게 설정할 수 없습니다.>
+  .2+|variableAttribute 4 |type d|MinSet
+    |value d|<예시의 값 '200'입니다. 대상은 이 값보다 낮게 설정할 수 없습니다.>
+  .2+|variableCharacteristics |maxLimit d|<예시의 값 '1000'입니다. 이는 팬의 물리적 최대 한계일 수 있습니다.>
+    |minLimit d|<예시의 값 '0'입니다. 이는 팬의 물리적 최소 한계일 수 있습니다. 팬이 다른 방향으로도 회전할 수 있는 경우 -1000일 수도 있습니다.>
 |Description 3+d|이는 DeviceModel을 사용하여 팬을 정의하는 방법의 예입니다.
 |===
 
@@ -237,7 +238,7 @@ DeviceModel을 사용하여 (물리적) 장치와 (가상) 컨트롤러 구성 �
 
 === Monitoring
 
-선택적 모니터링 설정은 변수와 연관될 수 있으며, 이를 통해 _variables_ ( _실제_ ) 값의 변경 사항을 이벤트 알림으로 CSMS에 보고할 수 있습니다.
+선택적 모니터링 설정은 변수와 연관될 수 있으며, 이를 통해 _variables_ (_Actual_) 값의 변경 사항을 이벤트 알림으로 CSMS에 보고할 수 있습니다.
 
 여기에는 다음이 포함됩니다.
 
@@ -258,7 +259,7 @@ DeviceModel을 사용하여 (물리적) 장치와 (가상) 컨트롤러 구성 �
 (PeriodicClockAligned) |X |X |X |X |{nbsp} |X |X |X 
 |===
 
-* _UpperThreshold_ 및 _LowerThreshold_ 의 경우 값은 변수의 실제 값이 초과해야 할 값을 나타냅니다.
+* _상한 임계값(UpperThreshold)_ 및 _하한 임계값(LowerThreshold)_ 의 경우 값은 변수의 실제 값이 초과해야 할 값을 나타냅니다.
 * _Delta_ 의 경우 이 값은 모니터가 설정된 순간부터 실제 값과 비교한 값의 변화를 나타냅니다.
 ** 변수의 dataType이 정수 또는 소수인 경우 이 값은 모니터를 트리거하기 위해 도달해야 할 차이를 나타냅니다.
 ** 변수의 dataType이 dateTime인 경우 측정 단위는 초입니다.
@@ -286,12 +287,12 @@ image::part1/images/figure_5.svg[변수와 모니터링]
 
 [%autowidth.stretch,cols="<.^2,<.^3",frame=all,grid=all,options="header"]
 |===
-2.+s|최소한의 장치 모델 구현의 일부인 사용 사례/메시지
+2.+s|최소한의 장치 모델 구현에 포함되는 사용 사례/메시지
 
 s|사용 사례 s|메시지
-|_B05 Set Variables_ |SetVariables 메시지는 반드시 구현되어야 함
-|_B06 Get Variables_ |GetVariables 메시지는 반드시 구현되어야 함.
-|_B07 Get Base Report_ |GetBaseReport 메시지는 반드시 구현되어야 하며 ConfigurationInventory와 FullInventory를 지원해야 함. 이러한 보고서의 내용은 충전기 구현에 따라 달라집니다. 구현에 어떤 구성 요소와 변수가 있는지는 구현자가 결정해야 합니다.
+|_B05 Set Variables_ |SetVariables 메시지는 반드시 구현되어야 합니다.
+|_B06 Get Variables_ |GetVariables 메시지는 반드시 구현되어야 합니다.
+|_B07 Get Base Report_ |GetBaseReport 메시지는 반드시 구현되어야 하며 ConfigurationInventory와 FullInventory를 지원해야 합니다. 이러한 보고서의 내용은 충전기 구현에 따라 달라집니다. 구현에 어떤 구성 요소와 변수가 있는지는 구현자가 결정해야 합니다.
 
 2.+s|최소한의 장치 모델 구현에 포함되지 않은 추가 사용 사례/메시지
 s|사용 사례 s|메시지
@@ -303,7 +304,7 @@ s|사용 사례 s|메시지
 |_N05 Set Monitoring Level_ |SetMonitoringLevelRequest 메시지는 선택 사항입니다.
 |_N06 Clear/Remove Monitoring_ |ClearVariableMonitoringRequest 메시지는 선택 사항입니다.
 |_N07 Alert Event_ |모니터링이 구현되지 않은 경우에도 충전기에서 NotifyEventRequest를 구현하여 내장된 모니터링 이벤트를 보고하는 데 사용할 수 있도록 하는 것이 좋습니다.
-|_N08 Periodic Event_ |N07 참조.
+|_N08 Periodic Event_ |N07을 참조하세요.
 |===
 
 <<<
@@ -348,7 +349,7 @@ CSMS가 충전기의 모든 커넥터를 처리할 수 있도록 하려면 커�
 * 커넥터는 모든 EVSE에서 connectorId 1부터 시작하여(증가) 번호가 매겨집니다.
 * EVSE당 모든 커넥터는 고유한 번호가 있습니다.
 * EVSE의 첫 번째 커넥터의 ID는 1이어야 합니다.
-* 동일한 EVSE의 추가 커넥터는 순차적으로 번호가 매겨져야 합니다(번호를 건너뛸 수 없음)
+* 동일한 EVSE의 추가 커넥터는 순차적으로 번호가 매겨져야 합니다(번호를 건너뛸 수 없음).
 * connectorId는 해당 EVSE의 총 커넥터 수보다 높아서는 안 됩니다.
 
 예: 각각 2개의 커넥터가 있는 3개의 EVSE가 있는 충전기는 다음과 같이 번호가 매겨집니다.
@@ -359,11 +360,11 @@ CSMS가 충전기의 모든 커넥터를 처리할 수 있도록 하려면 커�
 
 === Transaction IDs
 
-이제 TransactionId는 충전기에서 생성되며, 시작된 모든 거래에 대해 이 충전기에서 고유해야 합니다.
+이제 TransactionId는 충전기에서 생성되며, 시작된 모든 트랜잭션에 대해 이 충전기에서 고유해야 합니다.
 
 OCPP 1.x에서는 CSMS에서 이를 수행했습니다.
 
-거래 ID의 형식은 구현에 맡깁니다. 예를 들어 증분 숫자(incremental number) 또는 UUID일 수 있습니다.
+트랜잭션 ID의 형식은 구현에 맡깁니다. 예를 들어 증분 숫자(incremental number) 또는 UUID일 수 있습니다.
 
 <<<
 
@@ -397,7 +398,7 @@ image::part1/images/figure_8.svg[로컬 프록시를 통해 CSMS에 연결된 �
 
 **설명**
 
-<<multiple_charging_stations_connected_to_csms_via_local_proxy,로컬 프록시>>는 OCPP 메시지를 라우팅하는 것 이상의 역할을 하지 않지만, 로컬 컨트롤러는 CSMS와 독립적으로 충전기에 메시지를 보낼 수 있습니다. 이에 대한 일반적인 사용 사례는 OCPP Part 2 - Smart Charging 장에 설명된 로컬 스마트 충전 사례로, 로컬 컨트롤러가 충전기에 충전 한도를 부과할 수 있습니다. 로컬 컨트롤러가 CSMS에서 처리되도록 하려면 자체 충전기 ID가 있어야 합니다. OCPP의 관점에서 볼 때 로컬 컨트롤러는 충전기(EVSE/커넥터 없음)일 뿐입니다. CSMS는 로컬 스마트 충전 등을 지원하기 위해 로컬 컨트롤러를 처리하는 논리를 보유합니다. 그룹 토폴로지를 수동으로 구성하거나 BootNotifications의 IP 주소 및 정보를 기반으로 네트워크에서 추론하는 것은 CSMS 구현에 달려 있습니다. 아래 다이어그램은 이 구성을 보여줍니다.
+<<multiple_charging_stations_connected_to_csms_via_local_proxy,Local proxy>>는 OCPP 메시지를 라우팅하는 것 이상의 역할을 하지 않지만, 로컬 컨트롤러는 CSMS와 독립적으로 충전기에 메시지를 보낼 수 있습니다. 이에 대한 일반적인 사용 사례는 OCPP Part 2 - Smart Charging 장에 설명된 로컬 스마트 충전 사례로, 로컬 컨트롤러가 충전기에 충전 한도를 부과할 수 있습니다. 로컬 컨트롤러가 CSMS에서 처리되도록 하려면 자체 충전기 ID가 있어야 합니다. OCPP의 관점에서 볼 때 로컬 컨트롤러는 충전기(EVSE/커넥터 없음)일 뿐입니다. CSMS는 로컬 스마트 충전 등을 지원하기 위해 로컬 컨트롤러를 처리하는 논리를 보유합니다. 그룹 토폴로지를 수동으로 구성하거나 BootNotifications의 IP 주소 및 정보를 기반으로 네트워크에서 추론하는 것은 CSMS 구현에 달려 있습니다. 아래 다이어그램은 이 구성을 보여줍니다.
 
 .로컬 컨트롤러를 통해 CSMS에 연결된 여러 충전기
 image::part1/images/figure_9.svg[로컬 컨트롤러를 통해 CSMS에 연결된 여러 충전기]
@@ -431,7 +432,7 @@ image::part1/images/figure_11.svg[스마트 충전 - CSMS로 전송되는 DSO �
 
 **설명**
 
-충전기가 CSMS뿐만 아니라 에너지 관리 시스템에도 연결된 (반)개인(private) 상황에서는 특정 형태의 병렬 제어가 지원되어야 합니다. OCPP는 최소한 충전기 유지 관리에 사용해야 하지만 OCPP 2.0.1은 외부 스마트 충전 제어 한도 보고도 지원합니다. 따라서 에너지 관리 시스템이 나중에 충전하는 것이 "더 낫다"고 판단하면 에너지 관리 시스템은 충전기에 외부 한도(예: 0)를 부과할 수 있으며, 충전기는 이를 OCPP를 통해 CSMS에 보고할 수 있습니다. 에너지 관리 시스템은 예를 들어 스마트 미터의 로컬 포트에서 입력을 받아 과부하 연결을 방지할 수 있지만 충전하지 않는 다른 이유(예: 기상 조건)가 있을 수도 있습니다.
+충전기가 CSMS뿐만 아니라 에너지 관리 시스템에도 연결된 (반)개인((semi-)private) 상황에서는 특정 형태의 병렬 제어가 지원되어야 합니다. OCPP는 최소한 충전기 유지 관리에 사용해야 하지만 OCPP 2.0.1은 외부 스마트 충전 제어 한도 보고도 지원합니다. 따라서 에너지 관리 시스템이 나중에 충전하는 것이 "더 낫다"고 판단하면 에너지 관리 시스템은 충전기에 외부 한도(예: 0)를 부과할 수 있으며, 충전기는 이를 OCPP를 통해 CSMS에 보고할 수 있습니다. 에너지 관리 시스템은 예를 들어 스마트 미터의 로컬 포트에서 입력을 받아 과부하 연결을 방지할 수 있지만 충전하지 않는 다른 이유(예: 기상 조건)가 있을 수도 있습니다.
 
 .CSMS 및 EMS의 병렬 제어
 image::part1/images/figure_12.svg[CSMS 및 EMS의 병렬 제어]
@@ -448,12 +449,12 @@ image::part1/images/figure_12.svg[CSMS 및 EMS의 병렬 제어]
 
 OCPP의 메시지는 다음 문단에 표현된 모델에서 3단계 프로세스를 거쳐 파생됩니다.
 
-.정보 모델에서 메시지/체계로 프로세스
-image::part1/images/figure_13.svg[정보 모델에서 메시지/체계로 프로세스]
+.정보 모델에서 Message / scheme으로의 프로세스
+image::part1/images/figure_13.svg[정보 모델에서 Message / scheme으로의 프로세스]
 
 정보 모델을 만든 후 메시지는 정보 모델을 기반으로 만들어집니다. 그러나 이 전환(첫 번째 화살표)에서 일부 규칙은 메시지 모델링에 (수동으로) 적용됩니다. 적용되는 가장 중요한 규칙은 <field>가 하나만 있는 <class>에 대한 참조가 포함된 메시지가 <class><field>라는 이름의 필드로 대체된다는 것입니다. 예를 들어, 메시지에 ID만 있는 Transaction이 포함된 경우, 이는 transactionId로 대체됩니다.
 
-다음 단계에서 사양의 Part 2 - Messages and Datatypes 섹션을 생성할 때 가독성을 위해 _CounterType_ 과 같은 모든 Core DataType은 이 예에서 열거형을 제외하고 참조하는 Primitive DataType으로 대체됩니다(_integer_).
+다음 단계에서 사양의 Part 2 - Messages and Datatypes 섹션을 생성할 때 가독성을 위해 _CounterType_ 과 같은 모든 Core DataType은 이 예에서 열거형을 제외하고 참조하는 Primitive DataType(_integer_)으로 대체됩니다.
 
 === Visual Representation of OCPP Information Model
 

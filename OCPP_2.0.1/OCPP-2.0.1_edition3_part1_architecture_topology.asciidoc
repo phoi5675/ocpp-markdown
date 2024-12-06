@@ -36,6 +36,7 @@ This document is made available under the _*Creative Commons Attribution-NoDeriv
                     First release of this Architecture & Topology document
 |===
 
+:sectnums:
 == Introduction
 
 === Goal of this document
@@ -127,11 +128,11 @@ The Device Model refers to a generalized mechanism within OCPP to enable any mod
 
 === Components
 
-In OCPP 2.0.1, a Charging Station is modelled as a set of _"Components"_ , typically representing physical devices (including any external equipment to which it is connected for data gathering and/or control), logical functionality, or logical data entities. _Components_ of different types are primarily identified by a ComponentName, that is either the name of a _standardized_ component (see OCPP part 2c), or a custom/non-standardized component name, for new, pre-standardized equipment, vendor specific extensions, etc.
+In OCPP 2.0.1, a Charging Station is modelled as a set of _"Components"_, typically representing physical devices (including any external equipment to which it is connected for data gathering and/or control), logical functionality, or logical data entities. _Components_ of different types are primarily identified by a ComponentName, that is either the name of a _standardized_ component (see OCPP part 2c), or a custom/non-standardized component name, for new, pre-standardized equipment, vendor specific extensions, etc.
 
-_ChargingStation_ (TopLevel), _EVSE_ , and _Connector_ represent the three major "tiers" of a Charging Station, and constitute an implicit "location-based" addressing scheme that is widely used in many OCPP data structures. Each "tier" has a component of the same name, which represents the tier. For example, EVSE 1 on a Charging Station is represented by the component named "EVSE" (no instance name) with " _evseId_ = 1". In the same manner, Connector 1 on EVSE 1 is represented by the component named "Connector" (no instance name) with " _evseId_ = 1, _connectorId_ = 1".
+_ChargingStation_ (TopLevel), _EVSE_, and _Connector_ represent the three major "tiers" of a Charging Station, and constitute an implicit "location-based" addressing scheme that is widely used in many OCPP data structures. Each "tier" has a component of the same name, which represents the tier. For example, EVSE 1 on a Charging Station is represented by the component named "EVSE" (no instance name) with " _evseId_ = 1". In the same manner, Connector 1 on EVSE 1 is represented by the component named "Connector" (no instance name) with " _evseId_ = 1, _connectorId_ = 1".
 
-By default, all _components_ are located at the _ChargingStation_ tier, but individual instances of any component can be associated with a specific _EVSE_ , or a specific _Connector_ (on a specific EVSE) by including EVSE or EVSE and Connector identification numbers as part of a component addressing reference.
+By default, all _components_ are located at the _ChargingStation_ tier, but individual instances of any component can be associated with a specific _EVSE_, or a specific _Connector_ (on a specific EVSE) by including EVSE or EVSE and Connector identification numbers as part of a component addressing reference.
 
 Additionally, there can be more than one instance of a component (in the functional dimension), representing multi-occurrence physical or logical components (e.g. power converter modules, fan banks, resident firmware images, etc.).
 
@@ -176,7 +177,7 @@ s|ChargingStation tier s|EVSE tier s|Connector tier
 
 Every _component_ has a number of _variables_, that can, as appropriate, be used to hold, set, read, and/or report on all (externally visible) data applicable to that _component_, including configuration parameters, measured values (e.g. a current or a temperature) and/or monitored changes to variable values.
 
-Although many _components_ can have associated _variables_ that are, by their nature, specific to the component type (e.g. _ConnectorType_ for a _Connector_ component), there are a minimal set of standardized _variables_ that are used to provide standardized high level event notification and state/status reporting (e.g. _Problem_ , _Active_ ) on a global and/or selective basis, and also to report component presence, availability, etc. during the inventorying/discovery process (e.g. _Available_ , _Enabled_ ). A Charging Station is not required to report the base variables: _Present_ , _Available_ and _Enabled_ when they are readonly and set to _true_. When a Charging Station does not report: _Present_ , _Available_ and/or _Enabled_ the Central System SHALL assume them to be readonly and set to _true_ Variables can be any of a range of common general-purpose data types (boolean, integer, decimal, date-time, string), but also can have their allowable values constrained to particular ranges, enumeration lists, sets, or ordered lists.
+Although many _components_ can have associated _variables_ that are, by their nature, specific to the component type (e.g. _ConnectorType_ for a _Connector_ component), there are a minimal set of standardized _variables_ that are used to provide standardized high level event notification and state/status reporting (e.g. _Problem_, _Active_ ) on a global and/or selective basis, and also to report component presence, availability, etc. during the inventorying/discovery process (e.g. _Available_, _Enabled_ ). A Charging Station is not required to report the base variables: _Present_, _Available_ and _Enabled_ when they are readonly and set to _true_. When a Charging Station does not report: _Present_, _Available_ and/or _Enabled_ the Central System SHALL assume them to be readonly and set to _true_ Variables can be any of a range of common general-purpose data types (boolean, integer, decimal, date-time, string), but also can have their allowable values constrained to particular ranges, enumeration lists, sets, or ordered lists.
 
 To support complex components, there can be more than one instance of any given variable name associated with any components (e.g. power converter modules reporting temperature, current, or voltage at multiple points).
 
@@ -184,7 +185,7 @@ Each distinct _variable_ instance is uniquely identified by an (optional) _varia
 
 === Characteristics and Attributes
 
-Each _variable_ , in addition to its primary ( _"Actual"_ ) value, can have a set of associated secondary data that is linked to the same primary _variable_ name and _variableInstance_.
+Each _variable_, in addition to its primary ( _"Actual"_ ) value, can have a set of associated secondary data that is linked to the same primary _variable_ name and _variableInstance_.
 
 This greatly avoids cluttering the _variables_ namespace with confusing clusters of ancillary variable names (e.g. FanSpeed, FanSpeedUnits, MinimumFanSpeed, BaseFanSpeed) that lack consistence and discoverability.
 
@@ -274,7 +275,7 @@ image::part1/images/figure_5.svg[Variables and monitoring]
 
 === Standardized lists of Components and Variables
 
-To provide some level of interoperability between different Charging Stations and CSMSs, besides the above defined model of _Components_ and _Variables_ , part 2 - appendices of the OCPP specification provides a list of standardized names for Components and Variables. The idea of this lists is to make sure that _if_ a Charging Station and CSMS want to exchange information about a component, they both use the same name and description _if_ it is listed in the OCPP specification. For names of a _Components_ or _Variables_ that are not listed in the specification, bilateral appointments between Charging Station manufacturer and CSMS are to be made. In these cases it is advised to provide feedback to the Open Charge Alliance to be able to include new/additional _Components_ and _Variables_ in new versions of OCPP.
+To provide some level of interoperability between different Charging Stations and CSMSs, besides the above defined model of _Components_ and _Variables_, part 2 - appendices of the OCPP specification provides a list of standardized names for Components and Variables. The idea of this lists is to make sure that _if_ a Charging Station and CSMS want to exchange information about a component, they both use the same name and description _if_ it is listed in the OCPP specification. For names of a _Components_ or _Variables_ that are not listed in the specification, bilateral appointments between Charging Station manufacturer and CSMS are to be made. In these cases it is advised to provide feedback to the Open Charge Alliance to be able to include new/additional _Components_ and _Variables_ in new versions of OCPP.
 
 === Minimum Device Model
 
@@ -289,7 +290,7 @@ The following table describes which messages are required or optional to impleme
 2.+s|Use cases / messages that are part of a minimium Device Model implementation
 
 s|Use case              s|Messages
-|_B05 Set Variables_    |SetVariables message MUST be implemented
+|_B05 Set Variables_    |SetVariables message MUST be implemented.
 |_B06 Get Variables_    |GetVariables message MUST be implemented.
 |_B07 Get Base Report_  |GetBaseReport message MUST be implemented and MUST support ConfigurationInventory and FullInventory. The content of these reports depends on the implementation of the Charging Station. It is up to the implementer to decide which components and variables exist in the implementation.
 
@@ -348,8 +349,8 @@ Connector numbering (connectorIds) MUST be as follows:
 * The connectors are numbered (increasing) starting at connectorId 1 on every EVSE
 * Every connector per EVSE has a unique number
 * ID of the first Connector of an EVSE MUST be 1
-* Additional Connectors of the same EVSE MUST be sequentially numbered (no numbers may be skipped)
-* connectorIds MUST never be higher than the total number of connectors on that EVSE
+* Additional Connectors of the same EVSE MUST be sequentially numbered (no numbers may be skipped).
+* connectorIds MUST never be higher than the total number of connectors on that EVSE.
 
 Example: A Charging Station with 3 EVSEs that each have 2 connectors, is numbered as follows:
 
@@ -442,7 +443,7 @@ image::part1/images/figure_12.svg[Parallel control by CSMS and EMS]
 
 === Explanation of UML representation and message generation
 
-In the next paragraph, the UML schemes of the OCPP Information Model are shown. The model is based on the Common Information Model (CIM) and to some extent to the CEFACT naming standards (only part of the standard). The objects in the model are named _BusinessComponents_ and inherit properties from the CIM _IdentifiedObject_ , such as MRID and Name. In the UML diagrams the attributes that are inherited from _IdentifiedObject_ are shown under the _IdentifiedObject_ stereotype (between < < > >).
+In the next paragraph, the UML schemes of the OCPP Information Model are shown. The model is based on the Common Information Model (CIM) and to some extent to the CEFACT naming standards (only part of the standard). The objects in the model are named _BusinessComponents_ and inherit properties from the CIM _IdentifiedObject_, such as MRID and Name. In the UML diagrams the attributes that are inherited from _IdentifiedObject_ are shown under the _IdentifiedObject_ stereotype (between < < > >).
 
 Other attributes are listed under the stereotype < < Content > >.
 
@@ -453,7 +454,7 @@ image::part1/images/figure_13.svg[Process from information Model to Messages / s
 
 After creating the Information Model, the messages are created based on the Information Model. However, in this transition (first arrow), some rules are (manually) applied for modelling messages. The most important rule that is applied, is that messages containing a reference to a <class> with only one <field>, are replaced by a field with the name <class><field>. For example, if a message contains a Transaction, with only an Id, this is replaced by a transactionId.
 
-In the next step, when generating the messages and datatypes section of Part 2 of the specification, for readability, all Core DataTypes such as _CounterType_ , are replaced by the Primitive DataType they refer to (except for enumerations) in this example _integer_.
+In the next step, when generating the messages and datatypes section of Part 2 of the specification, for readability, all Core DataTypes such as _CounterType_, are replaced by the Primitive DataType they refer to (except for enumerations) in this example _integer_.
 
 === Visual Representation of OCPP Information Model
 
