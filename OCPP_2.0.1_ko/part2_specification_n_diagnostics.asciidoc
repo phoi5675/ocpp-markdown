@@ -4,7 +4,7 @@
 :sectnums:
 == Introduction
 
-이 기능 블록은 OCPP의 진단 기능을 설명합니다. 이 기능은 충전소의 문제에 대한 원격 진단을 가능하게 합니다. 충전소는 진단 정보가 포함된 파일을 업로드하도록 요청할 수 있습니다(선택적으로 지정된 간격으로 제한됨).
+이 기능 블록은 OCPP의 진단 기능을 설명합니다. 이 기능은 충전기의 문제에 대한 원격 진단을 가능하게 합니다. 충전기는 진단 정보가 포함된 파일을 업로드하도록 요청할 수 있습니다(지정된 간격으로 제한할 수 있음).
 
 <<<
 
@@ -23,26 +23,26 @@
 |1 |이름 |로그 검색
 |2 |ID |N01
 |{nbsp} d|_기능 블록_ |N. 진단
-|3 |목표 |충전소에서 로그 정보를 검색하는 CSMS를 활성화합니다.
-|4 |설명 |이 사용 사례는 충전소에서 로그 정보를 가져오는 기능을 다룹니다. CSMS는 충전소에 로그 정보가 포함된 파일을 지정된 위치(URL)에 업로드하도록 요청할 수 있습니다. 이 로그 파일의 형식은 규정되지 않았습니다. 충전소는 로그 파일을 업로드하고 CSMS에 상태 알림을 보내 업로드 상태에 대한 정보를 제공합니다.
-|{nbsp} d|_Actors_ |충전소, CSMS
+|3 |목표 |CSMS가 충전기에서 로그 정보를 검색할 수 있도록 합니다.
+|4 |설명 |이 사용 사례는 충전기에서 로그 정보를 가져오는 기능을 다룹니다. CSMS는 충전기에 로그 정보가 포함된 파일을 지정된 위치(URL)에 업로드하도록 요청할 수 있습니다. 이 로그 파일의 형식은 규정되지 않았습니다. 충전기는 로그 파일을 업로드하고 CSMS에 상태 알림을 보내 업로드 상태에 대한 정보를 제공합니다.
+|{nbsp} d|_Actors_ |충전기, CSMS
 |{nbsp} d|_시나리오 설명_
-|**1.** CSMS가 충전소에 <<get_log_request,GetLogRequest>>를 보냅니다. +
-**2.** 충전소가 <<get_log_response,GetLogResponse>>로 응답합니다. +
-**3.** 충전소가 <<log_status_notification_request,LogStatusNotificationRequest>>를 업로드 상태로 보냅니다. +
-**4.** CSMS가 <<log_status_notification_response,LogStatusNotificationResponse>>로 응답하여 상태 업데이트 요청을 확인합니다. +
-**5.** 진단 파일 업로드. +
-**6.** 충전소가 <<log_status_notification_request,LogStatusNotificationRequest>>를 업로드 상태로 보냅니다. +
-**7.** CSMS는 <<log_status_notification_response,LogStatusNotificationResponse>>로 응답하여 상태 업데이트 요청을 확인합니다.
+  |**1.** CSMS가 충전기에 <<get_log_request,GetLogRequest>>를 보냅니다. +
+  **2.** 충전기가 <<get_log_response,GetLogResponse>>로 응답합니다. +
+  **3.** 충전기가 <<log_status_notification_request,LogStatusNotificationRequest>>를 status `Uploading` 으로 보냅니다. +
+  **4.** CSMS가 <<log_status_notification_response,LogStatusNotificationResponse>>로 응답하여 상태 업데이트 요청을 확인합니다. +
+  **5.** 진단 파일 업로드가 진행됩니다. +
+  **6.** 충전기가 <<log_status_notification_request,LogStatusNotificationRequest>>를 status `Uploaded` 로 보냅니다. +
+  **7.** CSMS는 <<log_status_notification_response,LogStatusNotificationResponse>>로 응답하여 상태 업데이트 요청을 확인합니다.
 |5 |필수 조건(들)
-|- 진단 정보를 업로드할 수 있습니다. +
-- 파일을 업로드할 URL에 도달할 수 있고 존재합니다.
+  |- 진단 정보를 업로드할 수 있습니다. +
+  - 파일을 업로드할 URL에 도달할 수 있고 존재합니다.
 |6 |사후 조건(들)
-|**성공한 사후 조건:** +
-로그 파일이 성공적으로 업로드되었습니다.
+  |**성공 사후 조건:** +
+  로그 파일이 성공적으로 업로드되었습니다.
 
-**실패한 사후 조건:** +
-로그 파일이 성공적으로 업로드되지 않아 실패했습니다.
+  **실패 사후 조건:** +
+  로그 파일이 성공적으로 업로드되지 않아 실패했습니다.
 |===
 
 .시퀀스 다이어그램: 진단 받기
@@ -50,18 +50,18 @@ image::part2/images/figure_131.svg[시퀀스 다이어그램: 진단 받기]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7 |오류 처리 |업로드가 실패하고 전송 프로토콜이 "재개"를 지원하는 경우 충전소는 업로드를 중단하기 전에 재개를 시도하는 것이 좋습니다.
+|7 |오류 처리 |업로드가 실패하고 전송 프로토콜이 "재개"를 지원하는 경우 충전기는 업로드를 중단하기 전에 재개를 시도하는 것이 좋습니다.
 |8 |참고 |이 사용 사례의 예로 requestId = 123이지만 이는 어떤 값이든 될 수 있습니다.
 
-충전소에 로그 파일을 업로드하라는 요청을 받으면 CSMS는 충전소가 파일을 업로드해야 하는 URL을 요청에 제공합니다. URL에는 파일을 업로드하는 데 사용해야 하는 프로토콜도 포함됩니다.
+  충전기가 로그 파일을 업로드하라는 요청을 받으면 CSMS는 충전기가 파일을 업로드해야 하는 URL을 요청에 제공합니다. URL에는 파일을 업로드하는 데 사용해야 하는 프로토콜도 포함됩니다.
 
-FTP 또는 FTPS를 통해 로그 파일을 업로드하는 것이 좋습니다. FTP(S)는 HTTP보다 대용량 바이너리 데이터에 더 잘 최적화되어 있습니다. 또한 FTP(S)는 업로드를 재개할 수 있는 기능이 있습니다. 업로드가 중단된 경우 충전소는 이미 업로드한 부분 다음에 업로드를 재개할 수 있습니다. FTP URL은 _ftp://User:password@host:port/path_ 형식이며, 여기서 _User:password@_, _:password_ 또는 _:port_ 부분은 제외할 수 있습니다.
+  FTP 또는 FTPS를 통해 로그 파일을 업로드하는 것이 좋습니다. FTP(S)는 HTTP보다 대용량 바이너리 데이터에 더 잘 최적화되어 있습니다. 또한 FTP(S)는 업로드를 재개할 수 있는 기능이 있습니다. 업로드가 중단된 경우 충전기는 이미 업로드한 부분 다음에 업로드를 재개할 수 있습니다. FTP URL은 _ftp://User:password@host:port/path_ 형식이며, 여기서 _User:password@_, _:password_ 또는 _:port_ 부분은 제외할 수 있습니다.
 
-충전소에는 지원하는 파일 전송 프로토콜을 보고하는 필수 구성 변수가 있습니다: <<file_transfer_protocols,`FileTransferProtocols`>>
+  충전기에는 지원하는 파일 전송 프로토콜을 보고하는 필수 구성 변수가 있습니다: <<file_transfer_protocols,`FileTransferProtocols`>>
 
-로그 파일의 형식은 규정되지 않았습니다.
+  로그 파일의 형식은 규정되지 않았습니다.
 
-FTP는 가능한 한 많은 다른 유형을 횡단할 수 있도록 수동 FTP를 사용할 수 있어야 합니다.
+  FTP는 가능한 한 많은 다른 유형을 횡단할 수 있도록 수동 FTP를 사용할 수 있어야 합니다.
 |===
 
 ==== N01 - Retrieve Log Information - Requirements
@@ -72,59 +72,62 @@ FTP는 가능한 한 많은 다른 유형을 횡단할 수 있도록 수동 FTP�
 |ID |전제 조건 |요구 사항 정의 |참고
 
 |N01.FR.01 |<<get_log_request,GetLogRequest>>를 수신하고 +
-요청된 로그 정보를 사용할 수 있는 경우
-|충전소는 파일 이름과 상태 _Accepted_를 명시하는 <<get_log_response,GetLogResponse>>로 응답해야 합니다. |{nbsp}
+  요청된 로그 정보를 사용할 수 있는 경우
+    |충전기는 파일 이름과 상태 _Accepted_ 를 명시하는 <<get_log_response,GetLogResponse>>로 응답해야 합니다. |{nbsp}
 |N01.FR.02 |N01.FR.01
-|충전소는 지정된 위치에 단일 로그 파일을 업로드하기 시작해야 합니다. |{nbsp}
+  |충전기는 지정된 위치에 단일 로그 파일을 업로드하기 시작해야 합니다. |{nbsp}
 |N01.FR.03 |N01.FR.02 +
-및 +
-<<get_log_request,GetLogRequest>>에는 logType _SecurityLog_가 포함되어 있습니다. |충전소는 보안 로그를 업로드해야 합니다. |{nbsp}
+  AND +
+  <<get_log_request,GetLogRequest>>에는 logType _SecurityLog_ 가 포함되어 있습니다.
+    |충전기는 보안 로그를 업로드해야 합니다. |{nbsp}
 |N01.FR.04 |N01.FR.02 +
-및 +
-<<get_log_request,GetLogRequest>>에는 logType _DiagnosticsLog_가 포함되어 있습니다. |충전소는 진단을 업로드해야 합니다. |{nbsp}
+  AND +
+  <<get_log_request,GetLogRequest>>에는 logType _DiagnosticsLog_ 가 포함되어 있습니다.
+    |충전기는 진단을 업로드해야 합니다. |{nbsp}
 |N01.FR.05 |<<get_log_request,GetLogRequest>>를 수신하고 +
-요청된 로그 정보를 사용할 수 없는 경우
-|충전소는 <<get_log_response,GetLogResponse>>를 _Rejected_ 상태로 응답해야 합니다. |{nbsp}
+  요청된 로그 정보를 사용할 수 없는 경우
+    |충전기는 <<get_log_response,GetLogResponse>>를 _Rejected_ 상태로 응답해야 합니다. |{nbsp}
 |N01.FR.07 |{nbsp}
-|로그 업로드를 위해 전송된 모든 <<log_status_notification_request,LogStatusNotificationRequest>>는 이 로그 업로드를 시작한 <<get_log_request,GetLogRequest>>와 동일한 requestId를 포함해야 합니다. |{nbsp}
+  |로그 업로드를 위해 전송된 모든 <<log_status_notification_request,LogStatusNotificationRequest>>는 이 로그 업로드를 시작한 <<get_log_request,GetLogRequest>>와 동일한 requestId를 포함해야 합니다. |{nbsp}
 |N01.FR.08 |로그 문서 업로드가 시작되면
-|충전소는 <<log_status_notification_request,LogStatusNotificationRequest>>를 _Uploading_ 상태로 전송해야 합니다. |{nbsp}
+  |충전기는 <<log_status_notification_request,LogStatusNotificationRequest>>를 _Uploading_ 상태로 전송해야 합니다. |{nbsp}
 |N01.FR.09 |로그 문서가 성공적으로 업로드된 경우
-|충전소는 <<log_status_notification_request,LogStatusNotificationRequest>>를 상태 _Uploaded_로 전송해야 합니다. |{nbsp}
+  |충전기는 <<log_status_notification_request,LogStatusNotificationRequest>>를 상태 _Uploaded_ 로 전송해야 합니다. |{nbsp}
 |N01.FR.10 |로그 문서 업로드가 실패한 경우
-|충전소는 <<log_status_notification_request,LogStatusNotificationRequest>>를 상태 `UploadFailure`, `BadMessage`, `PermissionDenied` 또는 +
-`NotSupportedOperation`로 전송해야 합니다.
-|모든 재시도가 실패한 후에만 상태를 전송하는 것이 좋습니다. 충전소는 각 재시도마다 새로운 `Uploading` 상태를 전송할 수 있습니다.
-|N01.FR.12 |충전소가 로그 파일을 조립하거나 업로드하고 +
-충전소가 새로운 <<get_log_request,GetLogRequest>>를 수신하는 경우
-|충전소는 진행 중인 로그 파일 업로드를 취소하고 _AcceptedCanceled_ 상태로 응답해야 합니다. |{nbsp}
+  |충전기는 <<log_status_notification_request,LogStatusNotificationRequest>>를 상태 `UploadFailure`, `BadMessage`, `PermissionDenied` 또는 +
+  `NotSupportedOperation` 로 전송해야 합니다.
+    |모든 재시도가 실패한 후에만 상태를 전송하는 것이 좋습니다. 충전기는 각 재시도마다 새로운 `Uploading` 상태를 전송할 수 있습니다.
+|N01.FR.12 |충전기가 로그 파일을 조립하거나 업로드하고 +
+  충전기가 새로운 <<get_log_request,GetLogRequest>>를 수신하는 경우
+    |충전기는 진행 중인 로그 파일 업로드를 취소하고 _AcceptedCanceled_ 상태로 응답해야 합니다. |{nbsp}
 |N01.FR.13 |{nbsp}
-|<<log_status_notification_request,LogStatusNotificationRequest>>의 필드 requestId는 필수입니다. 단, 메시지가 <<trigger_message_request,TriggerMessageRequest>>에 의해 트리거되었고 진행 중인 로그 업로드가 없는 경우는 예외입니다. |{nbsp}
+  |<<log_status_notification_request,LogStatusNotificationRequest>>의 필드 requestId는 필수입니다. 단, 메시지가 <<trigger_message_request,TriggerMessageRequest>>에 의해 트리거되었고 진행 중인 로그 업로드가 없는 경우는 예외입니다. |{nbsp}
 |N01.FR.14 |{nbsp}
-|충전소와 CSMS는 로그 파일 업로드를 위한 전송 메커니즘으로 최소한 HTTP(s)를 지원하는 것이 좋습니다. |HTTP 전송은 OCPP 메시징에도 사용되므로 지원될 가능성이 가장 높습니다.
+  |충전기와 CSMS는 로그 파일 업로드를 위한 전송 메커니즘으로 최소한 HTTP(s)를 지원하는 것이 좋습니다.
+    |HTTP 전송은 OCPP 메시징에도 사용되므로 지원될 가능성이 가장 높습니다.
 |N01.FR.15 |{nbsp}
-|충전소는 보안 전송을 위해 최소한 CSMS 신뢰 체인을 지원해야 합니다 |{nbsp}
+  |충전기는 보안 전송을 위해 최소한 CSMS 신뢰 체인을 지원해야 합니다 |{nbsp}
 |N01.FR.16 |{nbsp}
-|충전소는 운영 체제에서 제공하는 일반적인 CA를 지원하는 것이 좋습니다
-|CSMS의 로그 파일 저장소는 CSMS 자체와 별도로 운영되는 클라우드 서비스일 수 있으며 CSMS 신뢰 체인의 일부가 아닐 수 있습니다.
+  |충전기는 운영 체제에서 제공하는 일반적인 CA를 지원하는 것이 좋습니다
+    |CSMS의 로그 파일 저장소는 CSMS 자체와 별도로 운영되는 클라우드 서비스일 수 있으며 CSMS 신뢰 체인의 일부가 아닐 수 있습니다.
 |N01.FR.17 |CSMS가 업로드에 대한 기본 인증을 요구하는 경우
-|CSMS는 OCPP 연결에 사용된 것과 다른 기본 인증 비밀번호를 업로드에 요구하는 것이 좋습니다.
-|이는 로그 파일 저장소가 다른 시스템인 경우 OCPP 비밀번호가 제3자에게 유출되는 것을 방지하기 위한 것입니다. +
-기본 권한은 다음과 같이 URL에 추가할 수 있습니다. +
-_http://username:password_@csms.org/logs
+  |CSMS는 OCPP 연결에 사용된 것과 다른 기본 인증 비밀번호를 업로드에 요구하는 것이 좋습니다.
+    |이는 로그 파일 저장소가 다른 시스템인 경우 OCPP 비밀번호가 제3자에게 유출되는 것을 방지하기 위한 것입니다. +
+    기본 권한은 다음과 같이 URL에 추가할 수 있습니다. +
+    _http://username:password_@csms.org/logs
 |N01.FR.18 |{nbsp}
-|CSMS가 충전소에서 업로드하는 PUT 및 POST 요청을 모두 수락하는 것이 좋습니다. |{nbsp}
-|N01.FR.19 |충전소에서 HTTP(s) POST 요청을 사용하여 로그 파일을 업로드하는 경우
-|충전소는 최소한 다음 속성을 제공해야 합니다. `Content-Type:`(예: application/octet-stream) 및 파일 이름을 명시한 `Content-Disposition:`
-|예: +
-Content-Type: application/octet-stream +
-Content-Disposition: form-data; +
-name="uploadedfile"; +
-filename="logfile_20210420.zip"
+  |CSMS가 충전기에서 업로드하는 PUT 및 POST 요청을 모두 수락하는 것이 좋습니다. |{nbsp}
+|N01.FR.19 |충전기에서 HTTP(s) POST 요청을 사용하여 로그 파일을 업로드하는 경우
+  |충전기는 최소한 다음 속성을 제공해야 합니다. `Content-Type:`(예: application/octet-stream) 및 파일 이름을 명시한 `Content-Disposition:`
+    |예: +
+    Content-Type: application/octet-stream +
+    Content-Disposition: form-data; +
+    name="uploadedfile"; +
+    filename="logfile_20210420.zip"
 |N01.FR.20 |N01.FR.12 AND +
-충전소에서 로그 파일 업로드 취소
-|충전소에서 <<log_status_notification_request,LogStatusNotificationRequest>>를 _status_ = `AcceptedCanceled`로 보내야 합니다.
-|N01.FR.12는 "SHOULD" 요구 사항입니다. 요구 사항이 실행될 때만 상태 알림을 보내야 합니다.
+  충전기에서 로그 파일 업로드 취소하였습니다.
+    |충전기에서 <<log_status_notification_request,LogStatusNotificationRequest>>를 _status_ = `AcceptedCanceled` 로 보내야 합니다.
+      |N01.FR.12는 "SHOULD" 요구 사항입니다. 요구 사항이 실행될 때만 상태 알림을 보내야 합니다.
 |===
 
 :sectnums:
@@ -132,7 +135,7 @@ filename="logfile_20210420.zip"
 
 [cols="^.^1s,10",%autowidth.stretch]
 |===
-|NOTE |충전소 모니터링을 관리하려면 장치 모델 개념에 대한 기본적인 이해가 필수적입니다. 이러한 개념은 "OCPP 2.0.1: 1부 - 아키텍처 및 토폴로지", 4장에서 설명합니다.
+|NOTE |충전기 모니터링을 관리하려면 장치 모델 개념에 대한 기본적인 이해가 필수적입니다. 이러한 개념은 "OCPP 2.0.1: Part 1 - Architecture & Topology", 4장에서 설명합니다.
 |===
 
 :sectnums!:
@@ -147,16 +150,16 @@ filename="logfile_20210420.zip"
 |2 |ID |N02
 |{nbsp} d|_기능 블록_ |N. 진단
 |3 |목표 |CSMS가 구성 요소 및 변수별로 구성된 모니터링 설정에 대한 보고서를 검색할 수 있도록 합니다.
-|4 |설명 |이 사용 사례는 CSMS가 충전소에 구성 요소 및 변수별로 구성된 모니터링 설정에 대한 보고서를 보내도록 요청하는 방법을 설명합니다. 선택적으로 이 목록은 monitoringCriteria 및 componentVariables에서 필터링할 수 있습니다.
-|{nbsp} d|_Actors_ |충전소, CSMS, CSO
+|4 |설명 |이 사용 사례는 CSMS가 충전기에 구성 요소 및 변수별로 구성된 모니터링 설정에 대한 보고서를 보내도록 요청하는 방법을 설명합니다. 선택적으로 이 목록은 monitoringCriteria 및 componentVariables에서 필터링할 수 있습니다.
+|{nbsp} d|_Actors_ |충전기, CSMS, CSO
 |{nbsp} d|_시나리오 설명_
-|**1.** CSO가 CSMS를 트리거하여 충전소에 모니터링 보고서를 요청합니다. +
-**2.** CSMS가 충전소에 <<get_monitoring_report_request,GetMonitoringReportRequest>>를 보냅니다. +
-**3.** 충전소가 <<get_monitoring_report_response,GetMonitoringReportResponse>>로 응답합니다. +
-**4.** 충전소가 <<notify_monitoring_report_request,NotifyMonitoringReportRequest>>를 CSMS로 보냅니다. +
-**5.** CSMS가 <<notify_monitoring_report_response,NotifyMonitoringReportResponse>>로 응답합니다. +
-**6.** 모니터링 보고서의 모든 데이터가 전송될 때까지 4단계와 5단계를 반복합니다.
-|5 |필수 조건 |충전소가 모니터링을 지원합니다.
+  |**1.** CSO가 CSMS를 트리거하여 충전기에 모니터링 보고서를 요청합니다. +
+  **2.** CSMS가 충전기에 <<get_monitoring_report_request,GetMonitoringReportRequest>>를 보냅니다. +
+  **3.** 충전기가 <<get_monitoring_report_response,GetMonitoringReportResponse>>로 응답합니다. +
+  **4.** 충전기가 <<notify_monitoring_report_request,NotifyMonitoringReportRequest>>를 CSMS로 보냅니다. +
+  **5.** CSMS가 <<notify_monitoring_report_response,NotifyMonitoringReportResponse>>로 응답합니다. +
+  **6.** 모니터링 보고서의 모든 데이터가 전송될 때까지 4단계와 5단계를 반복합니다.
+|5 |필수 조건 |충전기가 모니터링을 지원합니다.
 |6 |사후 조건 |CSMS가 구성된 모니터링 설정에 대한 보고서를 받았습니다.
 |===
 
@@ -165,8 +168,8 @@ image::part2/images/figure_132.svg[시퀀스 다이어그램: 모니터링 보�
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7 |오류 처리 |해당 없음
-|8 |설명 |해당 없음
+|7 |오류 처리 |n/a
+|8 |설명 |n/a
 |===
 
 ==== N02 - Get Monitoring Report - Requirements
@@ -177,57 +180,58 @@ image::part2/images/figure_132.svg[시퀀스 다이어그램: 모니터링 보�
 |ID |전제 조건 |요구 사항 정의
 
 |N02.FR.01 |NOT N02.FR.10 AND +
-충전소가 지원되는 _monitoringCriteria_ 또는 _monitoringCriteria_ 없이 <<get_monitoring_report_request,GetMonitoringReportRequest>>를 수신하는 경우
-|충전소는 <<generic_status_enum_type,Accepted>>와 함께 <<get_monitoring_report_response,GetMonitoringReportResponse>>를 보내야 합니다.
-|N02.FR.02 |충전소가 지원되지 않는 _monitoringCriteria_에 대한 <<get_monitoring_report_request,GetMonitoringReportRequest>>를 수신하는 경우
-|충전소는 <<generic_status_enum_type,NotSupported>>와 함께 <<get_monitoring_report_response,GetMonitoringReportResponse>>를 보내야 합니다.
+  충전기가 지원되는 _monitoringCriteria_ 또는 _monitoringCriteria_ 없이 <<get_monitoring_report_request,GetMonitoringReportRequest>>를 수신하는 경우
+    |충전기는 <<generic_status_enum_type,Accepted>>와 함께 <<get_monitoring_report_response,GetMonitoringReportResponse>>를 보내야 합니다.
+|N02.FR.02 |충전기가 지원되지 않는 _monitoringCriteria_ 에 대한 <<get_monitoring_report_request,GetMonitoringReportRequest>>를 수신하는 경우
+  |충전기는 <<generic_status_enum_type,NotSupported>>와 함께 <<get_monitoring_report_response,GetMonitoringReportResponse>>를 보내야 합니다.
 |N02.FR.03 |N02.FR.01
-|충전소는 하나 이상의 <<notify_monitoring_report_request,NotifyMonitoringReportRequest>> 메시지를 통해 요청된 정보를 CSMS로 보내야 합니다.
-
+  |충전기는 하나 이상의 <<notify_monitoring_report_request,NotifyMonitoringReportRequest>> 메시지를 통해 요청된 정보를 CSMS로 보내야 합니다.
 |N02.FR.04 |N02.FR.01 및 +
-<<get_monitoring_report_request,GetMonitoringReportRequest>>에는 _requestId_가 포함되어 있습니다.
-|이 <<get_monitoring_report_request,GetMonitoringReportRequest>>에 대해 전송된 모든 <<notify_monitoring_report_request,NotifyMonitoringReportRequest>>에는 동일한 _requestId_가 포함되어야 합니다.
+  <<get_monitoring_report_request,GetMonitoringReportRequest>>에는 _requestId_ 가 포함되어 있습니다.
+    |이 <<get_monitoring_report_request,GetMonitoringReportRequest>>에 대해 전송된 모든 <<notify_monitoring_report_request,NotifyMonitoringReportRequest>>에는 동일한 _requestId_ 가 포함되어야 합니다.
 |N02.FR.05 |N02.FR.01 및 +
-_monitoringCriteria_ 및 _componentVariables_가 모두 비어 있지 않습니다.
-|하나 이상의 <<notify_monitoring_report_request,NotifyMonitoringReportRequest>> 메시지에서 보고된 모니터 세트는 _monitoringCriteria_ 및 _componentVariables_로 정의된 세트로 제한됩니다.
+  _monitoringCriteria_ 및 _componentVariables_ 가 모두 비어 있지 않습니다.
+    |하나 이상의 <<notify_monitoring_report_request,NotifyMonitoringReportRequest>> 메시지에서 보고된 모니터 세트는 _monitoringCriteria_ 및 _componentVariables_ 로 정의된 세트로 제한됩니다.
 |N02.FR.06 |N02.FR.01 AND +
-_monitoringCriteria_가 비어 있지 않음 AND +
-_componentVariables_가 비어 있음.
-|하나 이상의 <<notify_monitoring_report_request,NotifyMonitoringReportRequest>> 메시지에서 보고된 모니터 세트는 _monitoringCriteria_에서 정의한 세트로 제한됩니다.
+  _monitoringCriteria_ 가 비어 있지 않음 AND +
+  _componentVariables_ 가 비어 있음.
+    |하나 이상의 <<notify_monitoring_report_request,NotifyMonitoringReportRequest>> 메시지에서 보고된 모니터 세트는 _monitoringCriteria_ 에서 정의한 세트로 제한됩니다.
 |N02.FR.07 |{nbsp}
-|하나의 <<get_monitoring_report_request,GetMonitoringReportRequest>> 메시지에서 componentVariables의 최대 수는 <<items_per_message_get_report,`ItemsPerMessageGetReport`>> 구성 변수에서 제공됩니다.
+  |하나의 <<get_monitoring_report_request,GetMonitoringReportRequest>> 메시지에서 componentVariables의 최대 수는 <<items_per_message_get_report,`ItemsPerMessageGetReport`>> 구성 변수에서 제공됩니다.
 |N02.FR.08 |N02.FR.01 AND +
-_monitoringCriteria_가 없음 AND +
-_componentVariables_가 비어 있지 않음.
-|하나 이상의 <<notify_monitoring_report_request,NotifyMonitoringReportRequest>> 메시지에서 보고된 모니터 세트는 _componentVariables_에서 정의한 세트로 제한됩니다.
+  _monitoringCriteria_ 가 없음 AND +
+  _componentVariables_ 가 비어 있지 않음.
+    |하나 이상의 <<notify_monitoring_report_request,NotifyMonitoringReportRequest>> 메시지에서 보고된 모니터 세트는 _componentVariables_ 에서 정의한 세트로 제한됩니다.
 |N02.FR.09 |{nbsp}
-|<<notify_monitoring_report_request,NotifyMonitoringReportRequest>>의 seqNo 필드에 포함된 시퀀스 번호는 보고서당 증가합니다. 따라서 첫 번째 보고서 부분을 포함하는 <<notify_monitoring_report_request,NotifyMonitoringReportRequest>> 메시지는 값이 _0_인 seqNo를 가져야 합니다.
-|N02.FR.10 |충전소가 기준 조합으로 <<get_monitoring_report_request,GetMonitoringReportRequest>>를 수신하여 빈 결과 세트가 생성되는 경우
-|충전소는 <<get_monitoring_report_response,GetMonitoringReportResponse>>(_status_=`EmptyResultSet`)로 응답해야 합니다.
+  |<<notify_monitoring_report_request,NotifyMonitoringReportRequest>>의 seqNo 필드에 포함된 시퀀스 번호는 보고서당 증가합니다. 따라서 첫 번째 보고서 부분을 포함하는 <<notify_monitoring_report_request,NotifyMonitoringReportRequest>> 메시지는 값이 _0_ 인 seqNo를 가져야 합니다.
+|N02.FR.10 |충전기가 기준 조합을 포함하는 <<get_monitoring_report_request,GetMonitoringReportRequest>>를 수신하여 빈 결과 집합이 생성되는 경우
+  |충전기는 <<get_monitoring_report_response,GetMonitoringReportResponse>>(_status_=`EmptyResultSet`)로 응답해야 합니다.
 |N02.FR.11 |N02.FR.01 AND +
-_monitoringCriteria_가 비어 있고 +
-_comComponentVariables_가 비어 있습니다.
-|모든 탱크 모니터 세트는 하나 이상 <<notify_monitoring_report_request,NotifyMonitoringReportRequest>>메시지로 보고됩니다.
-|N02.FR.12 |_monitoringCriteria_에 'ThresholdMonitoring'이 포함된 경우
- |_type_ = `UpperThreshold` 또는 _type_ = `LowerThreshold`인 모든 모니터가 보고됩니다.
-|N02.FR.13 |_monitoringCriteria_에 `DeltaMonitoring`이 포함된 경우
- |_type_ = `Delta`인 모든 모니터가 보고됩니다.
-|N02.FR.14 |_monitoringCriteria_에 `PeriodicMonitoring`이 포함된 경우
-|_type_ = `Periodic` 또는 _type_ = `PeriodicClockAligned`인 모든 모니터가 보고됩니다.
-|N02.FR.16 |충전소에서 <<get_monitoring_report_request,GetMonitoringReportRequest>>를 수신하는 경우 _componentVariable_ 요소 중 _variable_이 누락된 경우
-|충전소는 _componentVariable_의 _component_의 모든 _variable_에 대해 보고해야 합니다.
-|N02.FR.17 |충전소가 _componentVariable_ 요소가 있는 <<get_monitoring_report_request,GetMonitoringReportRequest>>를 수신하고 _variable_이 있지만 _instance_가 없는 경우
-|충전소는 _componentVariable_의 _component_ _variable_의 모든 인스턴스에 대해 보고해야 합니다.|N02.FR.18 |N02.FR.11 AND +
-충전소가 _component.evse.id_가 있는 _componentVariable_ 요소에 _component_가 있는 <<get_monitoring_report_request,GetMonitoringReportRequest>>를 수신하지만 _component.evse.connector_가 없는 경우 |충전소는 N02.FR.20을 고려하면서 모든 _component.evse.connector_에 대해 이 _component.name_, _component.instance_ 및 _component.evse.id_를 가진 구성 요소를 보고해야 합니다.
+  _monitoringCriteria_ 가 비어 있고 +
+  _comComponentVariables_ 가 비어 있습니다.
+    |모든 기존 모니터 세트는 하나 이상 <<notify_monitoring_report_request,NotifyMonitoringReportRequest>>메시지로 보고됩니다.
+|N02.FR.12 |_monitoringCriteria_ 에 `ThresholdMonitoring` 이 포함된 경우
+  |_type_ = `UpperThreshold` 또는 _type_ = `LowerThreshold` 인 모든 모니터가 보고됩니다.
+|N02.FR.13 |_monitoringCriteria_ 에 `DeltaMonitoring` 이 포함된 경우
+  |_type_ = `Delta` 인 모든 모니터가 보고됩니다.
+|N02.FR.14 |_monitoringCriteria_ 에 `PeriodicMonitoring` 이 포함된 경우
+  |_type_ = `Periodic` 또는 _type_ = `PeriodicClockAligned` 인 모든 모니터가 보고됩니다.
+|N02.FR.16 |충전기에서 <<get_monitoring_report_request,GetMonitoringReportRequest>>를 수신하는 경우 _componentVariable_ 요소 중 _variable_ 이 누락된 경우
+  |충전기는 _componentVariable_ 의 _component_ 의 모든 _variable_ 에 대해 보고해야 합니다.
+|N02.FR.17 |충전기가 _componentVariable_ 요소가 있는 <<get_monitoring_report_request,GetMonitoringReportRequest>>를 수신하고 _variable_ 이 있지만 _instance_ 가 없는 경우
+  |충전기는 _componentVariable_ 내 _component_ 의 _variable_ 의 모든 인스턴스에 대해 보고해야 합니다.
+|N02.FR.18 |N02.FR.11 AND +
+  충전기가 _component.evse.id_ 가 있는 _componentVariable_ 요소에 _component_ 가 있는 <<get_monitoring_report_request,GetMonitoringReportRequest>>를 수신하지만 _component.evse.connector_ 가 없는 경우
+    |충전기는 N02.FR.20을 고려하면서 모든 _component.evse.connector_ 에 대해 이 _component.name_, _component.instance_ 및 _component.evse.id_ 를 가진 구성 요소를 보고해야 합니다.
 |N02.FR.19 |N02.FR.11 AND +
-충전소가 _component.evse.id_가 없는 _componentVariable_ 요소에 _component_가 포함된 <<get_monitoring_report_request,GetMonitoringReportRequest>>를 수신하는 경우
-|충전소는 구성 요소를 보고해야 합니다( s) 이 _component.name_, _component.instance_를 사용하여 모든 _component.evse_ 필드(_component.evse_가 없는 최상위 구성 요소 포함)에 대해 N02.FR.20을 고려합니다.
+  충전기가 _component.evse.id_ 가 없는 _componentVariable_ 요소에 _component_ 가 포함된 <<get_monitoring_report_request,GetMonitoringReportRequest>>를 수신하는 경우
+    |충전기는 N02.FR.20을 고려하여 모든 _component.evse_ 필드(_component.evse_ 가 없는 최상위 구성 요소 포함)에 대해 이 _component.name_, _component.instance_ 를 갖는 구성 요소를 보고해야 합니다.
 |N02.FR.20 |N02.FR.11 AND +
-충전소가 _component.instance_에 대한 값을 갖는 _componentVariable_ 요소에 _component_가 포함된 <<get_monitoring_report_request,GetMonitoringReportRequest>>를 수신하는 경우
-|충전소는 구성 요소를 보고해야 합니다( s) 모든 _component.instance_ 필드에 대해 이 _component.name_을 사용하면서 N02.FR.18, N02.FR.19를 고려합니다.
+  충전기가 _component.instance_ 에 대한 값을 갖는 _componentVariable_ 요소에 _component_ 가 포함된 <<get_monitoring_report_request,GetMonitoringReportRequest>>를 수신하는 경우
+    |충전기는 N02.FR.18, N02.FR.19를 고려하여 모든 _component.instance_ 필드에 대해 이 _component.name_ 을 가진 구성 요소를 보고해야 합니다.
 |N02.FR.21 |N02.FR.11 AND +
-충전소가 _component.instance_ 필드가 없는 _componentVariable_ 요소에 _component_가 포함된 <<get_monitoring_report_request,GetMonitoringReportRequest>>를 수신하는 경우
-|충전소는 구성 요소를 보고해야 합니다. ) 이 _component.name_을 모든 _component.instance_ 필드 또는 _component.instance_ 필드가 없는 구성 요소에 적용하되, N02.FR.18, N02.FR.19를 고려합니다.
+  충전기가 _component.instance_ 필드가 없는 _componentVariable_ 요소에 _component_ 가 포함된 <<get_monitoring_report_request,GetMonitoringReportRequest>>를 수신하는 경우
+    |충전기는 N02.FR.18, N02.FR.19를 고려하여 모든 _component.instance_ 필드에 대해 이 _component.name_ 을 가진 구성 요소 또는 _component.instance_ 필드가 없는 구성 요소를 보고해야 합니다.
 |===
 
 === N03 - Set Monitoring Base
@@ -240,15 +244,15 @@ _comComponentVariables_가 비어 있습니다.
 |1 |이름 |모니터링 기반 설정
 |2 |ID |N03
 |{nbsp} d|_기능 블록_ |N. 진단
-|3 |목표 |CSMS가 충전소에 미리 구성된 모니터링 설정 세트를 활성화하도록 요청할 수 있는 기능을 제공하며, 이는 *MonitoringBase* 값으로 표시됩니다.
-|4 |설명 |이 사용 사례는 CSMS가 충전소에 미리 구성된 모니터링 설정 세트를 활성화하도록 요청하는 방법을 설명하며, 이는 *MonitoringBase* 값으로 표시됩니다. 충전소 제조업체가 All, FactoryDefault 및 HardWiredOnly로 활성화되는 모니터링 설정을 정의합니다.
-|{nbsp} d|_Actors_ |충전소, CSMS, CSO
+|3 |목표 |CSMS가 충전기에 미리 구성된 모니터링 설정 세트를 활성화하도록 요청할 수 있는 기능을 제공하며, 이는 *MonitoringBase* 값으로 표시됩니다.
+|4 |설명 |이 사용 사례는 CSMS가 충전기에 미리 구성된 모니터링 설정 세트를 활성화하도록 요청하는 방법을 설명하며, 이는 *MonitoringBase* 값으로 표시됩니다. 충전기 제조업체가 All, FactoryDefault 및 HardWiredOnly로 활성화되는 모니터링 설정을 정의합니다.
+|{nbsp} d|_Actors_ |충전기, CSMS, CSO
 |{nbsp} d|_시나리오 설명_
-|**1.** CSO가 CSMS를 트리거하여 충전소에 모니터링 기반을 설정하도록 요청합니다. +
-**2.** CSMS가 충전소에 <<set_monitoring_base_request,SetMonitoringBaseRequest>>를 보냅니다. +
-**3.** 충전소가 <<set_monitoring_base_response,SetMonitoringBaseResponse>>로 응답합니다.
-|5 |필수 조건 |충전소가 모니터링을 지원합니다.
-|6 |사후 조건 |충전소가 **MonitoringBase** 값으로 표시된 대로 모니터링 설정 세트를 활성화했습니다.
+  |**1.** CSO가 CSMS를 트리거하여 충전기에 모니터링 기반을 설정하도록 요청합니다. +
+  **2.** CSMS가 충전기에 <<set_monitoring_base_request,SetMonitoringBaseRequest>>를 보냅니다. +
+  **3.** 충전기가 <<set_monitoring_base_response,SetMonitoringBaseResponse>>로 응답합니다.
+|5 |필수 조건 |충전기가 모니터링을 지원합니다.
+|6 |사후 조건 |충전기가 **MonitoringBase** 값으로 표시된 대로 모니터링 설정 세트를 활성화했습니다.
 |===
 
 .시퀀스 다이어그램: 모니터링 기반 설정
@@ -256,12 +260,12 @@ image::part2/images/figure_133.svg[시퀀스 다이어그램: 모니터링 기�
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7 |오류 처리 |해당 없음
-|8 |참고 |`HardWiredOnly` 또는 `FactoryDefault`에 대한 SetMonitoringBaseRequest를 수신하면 충전소는 이전에 구성된 사용자 지정 모니터를 모두 삭제하고 지정된 MonitoringBase와 관련된 모니터링 설정을 활성화합니다.
+|7 |오류 처리 |n/a
+|8 |참고 |`HardWiredOnly` 또는 `FactoryDefault` 에 대한 SetMonitoringBaseRequest를 수신하면 충전기는 이전에 구성된 사용자 지정 모니터를 모두 삭제하고 지정된 MonitoringBase와 관련된 모니터링 설정을 활성화합니다.
 
-MonitoringBase = `All`인 경우 충전소는 미리 구성된 모든 모니터를 활성화하고 이전에 구성된 사용자 지정 모니터는 그대로 둡니다. 여기에는 기존 미리 구성된 모니터를 변경할 때 생성된 사용자 지정 모니터가 포함됩니다.
+  MonitoringBase = `All` 인 경우 충전기는 미리 구성된 모든 모니터를 활성화하고 이전에 구성된 사용자 지정 모니터는 그대로 둡니다. 여기에는 기존 미리 구성된 모니터를 변경할 때 생성된 사용자 지정 모니터가 포함됩니다.
 
-`All`과 `FactoryDefault`에 대한 사전 구성된 모니터 세트가 동일할 때, 두 가지의 차이점은 `FactoryDefault`의 경우 모든 사용자 정의 모니터가 공장 기본 사전 구성된 모니터가 복원되기 전에 삭제된다는 것입니다.
+  `All` 과 `FactoryDefault` 에 대한 사전 구성된 모니터 세트가 동일할 때, 두 가지의 차이점은 `FactoryDefault` 의 경우 모든 사용자 정의 모니터가 공장 기본 사전 구성된 모니터가 복원되기 전에 삭제된다는 것입니다.
 |===
 
 ==== N03 - Set Monitoring Base - Requirements
@@ -271,19 +275,19 @@ MonitoringBase = `All`인 경우 충전소는 미리 구성된 모든 모니터�
 |===
 |ID |전제 조건 |요구 사항 정의
 
-|N03.FR.01 |충전소가 <<set_monitoring_base_request,SetMonitoringBaseRequest>>를 수락하면
-|그러면 충전소는 <<generic_status_enum_type,Accepted>>와 함께 <<set_monitoring_base_response,SetMonitoringBaseResponse>>를 보내야 합니다.
-|N03.FR.02 |충전소가 지원되지 않는 _monitoringBase_에 대한 <<set_monitoring_base_request,SetMonitoringBaseRequest>>를 수신하는 경우
-|충전소는 <<generic_status_enum_type,NotSupported>>와 함께 <<set_monitoring_base_response,SetMonitoringBaseResponse>>를 보내야 합니다.
+|N03.FR.01 |충전기가 <<set_monitoring_base_request,SetMonitoringBaseRequest>>를 수락하면
+  |그러면 충전기는 <<generic_status_enum_type,Accepted>>와 함께 <<set_monitoring_base_response,SetMonitoringBaseResponse>>를 보내야 합니다.
+|N03.FR.02 |충전기가 지원되지 않는 _monitoringBase_ 에 대한 <<set_monitoring_base_request,SetMonitoringBaseRequest>>를 수신하는 경우
+  |충전기는 <<generic_status_enum_type,NotSupported>>와 함께 <<set_monitoring_base_response,SetMonitoringBaseResponse>>를 보내야 합니다.
 |N03.FR.03 |N03.FR.01 AND +
-충전소가 <<set_monitoring_base_request,SetMonitoringBaseRequest>>와 함께 _monitoringBase_ <<monitoring_base_enum_type,All>>를 수신하는 경우
-|충전소는 설치된 모든 사용자 지정 모니터(변경된 사전 구성된 모니터 포함)를 그대로 두고 모든 사전 구성된 모니터링을 활성화해야 합니다.
-|N03.FR.04 |N03.FR.01 및 +
-충전소가 <<set_monitoring_base_request,SetMonitoringBaseRequest>>와 _monitoringBase_ <<monitoring_base_enum_type,FactoryDefault>>를 수신한 경우
-|충전소는 모든 사용자 지정 모니터(무시된 사전 구성된 모니터 포함)를 삭제하고 제조업체에서 권장하는 대로 기본 모니터링 설정을 활성화해야 합니다.
-|N03.FR.05 |N03.FR.01 및 +
-충전소가 <<set_monitoring_base_request,SetMonitoringBaseRequest>>와 _monitoringBase_ <<monitoring_base_enum_type,HardWiredOnly>>를 수신한 경우
-|충전소는 모든 사용자 지정을 지우고 모든 사전 구성된 모니터를 비활성화해야 합니다. 하드와이어 모니터만 활성 상태로 유지됩니다.
+  충전기가 <<set_monitoring_base_request,SetMonitoringBaseRequest>>와 함께 _monitoringBase_ <<monitoring_base_enum_type,All>>를 수신하는 경우
+    |충전기는 설치된 모든 사용자 지정 모니터(변경된 사전 구성된 모니터 포함)를 그대로 두고 모든 사전 구성된 모니터링을 활성화해야 합니다.
+|N03.FR.04 |N03.FR.01 AND +
+  충전기가 <<set_monitoring_base_request,SetMonitoringBaseRequest>>와 _monitoringBase_ <<monitoring_base_enum_type,FactoryDefault>>를 수신한 경우
+    |충전기는 모든 사용자 지정 모니터(무시된 사전 구성된 모니터 포함)를 삭제하고 제조업체에서 권장하는 대로 기본 모니터링 설정을 활성화해야 합니다.
+|N03.FR.05 |N03.FR.01 AND +
+  충전기가 <<set_monitoring_base_request,SetMonitoringBaseRequest>>와 _monitoringBase_ <<monitoring_base_enum_type,HardWiredOnly>>를 수신한 경우
+    |충전기는 모든 사용자 지정을 지우고 모든 사전 구성된 모니터를 비활성화해야 합니다. 하드와이어 모니터만 활성 상태로 유지됩니다.
 |===
 
 === N04 - Set Variable Monitoring
@@ -296,17 +300,17 @@ MonitoringBase = `All`인 경우 충전소는 미리 구성된 모든 모니터�
 |1 |이름 |변수 모니터링 설정
 |2 |ID |N04
 |{nbsp} d|_기능 블록_ |N. 진단
-|3 |목표 |CSMS가 충전소에 변수에 대한 모니터링 트리거를 설정하도록 요청할 수 있는 기능을 제공합니다.
-|4 |설명 |이 사용 사례는 CSMS가 충전소에 변수에 대한 모니터링 트리거를 설정하도록 요청하는 방법을 설명합니다. 상위 또는 하위 임계값, 델타 변경 또는 주기적 보고에 대해 여러 트리거를 설정할 수 있습니다.
-|{nbsp} d|_Actors_ |충전소, CSMS, CSO
+|3 |목표 |CSMS가 충전기에 변수에 대한 모니터링 트리거를 설정하도록 요청할 수 있는 기능을 제공합니다.
+|4 |설명 |이 사용 사례는 CSMS가 충전기에 변수에 대한 모니터링 트리거를 설정하도록 요청하는 방법을 설명합니다. 상위 또는 하위 임계값, 델타 변경 또는 주기적 보고에 대해 여러 트리거를 설정할 수 있습니다.
+|{nbsp} d|_Actors_ |충전기, CSMS, CSO
 |{nbsp} d|_시나리오 설명_
-|**1.** CSO가 CSMS를 트리거하여 충전소에 변수 모니터링 설정을 요청합니다. +
-**2.** CSMS가 충전소에 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>를 보냅니다. +
-**3.** 충전소가 <<set_variable_monitoring_response,SetVariableMonitoringResponse>>로 응답합니다.
+  |**1.** CSO가 CSMS를 트리거하여 충전기에 변수 모니터링 설정을 요청합니다. +
+  **2.** CSMS가 충전기에 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>를 보냅니다. +
+  **3.** 충전기가 <<set_variable_monitoring_response,SetVariableMonitoringResponse>>로 응답합니다.
 |5 |필수 조건
-|충전소가 모니터링을 지원합니다. +
-특정 변수가 모니터링을 지원합니다.
-|6 |사후 조건 |충전소가 변수에서 모니터링 트리거 세트를 활성화했습니다.
+  |충전기가 모니터링을 지원합니다. +
+  특정 변수가 모니터링을 지원합니다.
+|6 |사후 조건 |충전기가 변수에서 모니터링 트리거 세트를 활성화했습니다.
 |===
 
 .시퀀스 다이어그램: 변수 모니터링 설정
@@ -315,8 +319,8 @@ image::part2/images/figure_134.svg[시퀀스 다이어그램: 변수 모니터�
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7 |오류 처리 |n/a
-|8 |주의 |모든 variableMonitoring 설정은 재부팅 후에도 지속됩니다. +
-variableMonitoring 설정은 모니터링되는 변수가 여전히 존재하고 여전히 모니터링 가능한 경우 펌웨어 업데이트 후에도 지속됩니다. 그렇지 않으면 variableMonitoring 설정이 제거됩니다.
+|8 |참고 |모든 variableMonitoring 설정은 재부팅 후에도 지속됩니다. +
+  variableMonitoring 설정은 모니터링되는 변수가 여전히 존재하고 여전히 모니터링 가능한 경우 펌웨어 업데이트 후에도 지속됩니다. 그렇지 않으면 variableMonitoring 설정이 제거됩니다.
 |===
 
 ==== N04 - Set Variable Monitoring - Requirements
@@ -326,63 +330,62 @@ variableMonitoring 설정은 모니터링되는 변수가 여전히 존재하고
 |===
 |ID |전제 조건 |요구 사항 정의 |참고
 
-|N04.FR.01 |충전소가 X개의 <<set_monitoring_data_type,SetMonitoringData>>
-요소가 포함된 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>를 수신하면
-|충전소는 <<set_monitoring_response,SetVariableMonitoringResponse>>로 응답해야 하며, X개의 <<set_monitoring_result_type,SetMonitoringResult>> 요소가 동일해야 합니다. 이는 <<set_monitoring_data_type,SetMonitoringData>> 요소에 대한 모든 <<set_monitoring_data_type,SetMonitoringData>> 요소당 하나씩입니다. <<set_variable_monitoring_request,SetVariableMonitoringRequest>>. |{nbsp}
+|N04.FR.01 |충전기가 X개의 <<set_monitoring_data_type,SetMonitoringData>> 요소가 포함된 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>를 수신하면
+  |충전 스테이션은 <<set_variable_monitoring_response,SetVariableMonitoringResponse>>로 응답해야 합니다. 이때 <<set_monitoring_result_type,SetMonitoringResult>> 요소는 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>의 모든 <<set_monitoring_data_type,SetMonitoringData>> 요소마다 하나씩 동일한 수(X)로 지정되어야 합니다. |{nbsp}
 |N04.FR.02 |N04.FR.01
-|<<set_variable_monitoring_response,SetVariableMonitoringResponse>>의 모든 <<set_monitoring_result_type,SetMonitoringResult>> 요소에는 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>의 <<set_variable_monitoring_request,SetVariableMonitoringRequest>> 요소 중 하나와 동일한 _component_ 및 _variable_ 조합이 포함되어야 합니다. |{nbsp}
-|N04.FR.03 |충전소가 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>를 수신하고 <<set_monitoring_data_type,SetMonitoringData>>에 알 수 없는 <<component_type,Component>>가 있는 경우
-|충전소는 해당 <<set_monitoring_result_type,SetMonitoringResult>>의 _attributeStatus_ 필드를 <<set_monitoring_status_enum_type,UnknownComponent>>로 설정해야 합니다. |{nbsp}
-|N04.FR.04 |충전소가 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>를 수신하고 <<component_type,Component>>에 대해 알려지지 않은 <<set_monitoring_data_type,SetMonitoringData>>를 수신하는 경우
-|충전소는 해당 <<set_monitoring_result_type,SetMonitoringResult>>의 _attributeStatus_ 필드를 <<set_monitoring_status_enum_type,UnknownVariable>>로 설정해야 합니다. |{nbsp}
-|N04.FR.05 |충전소가 특정 변수에서 지원하지 않는 <<monitor_enum_type,MonitorType>>을 포함하는 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>를 수신하는 경우
-|충전소는 해당 <<set_monitoring_result_type,SetMonitoringResult>>의 attributeStatus 필드를 <<set_monitoring_status_enum_type,UnsupportedMonitorType>>으로 설정해야 합니다. |{nbsp}
-|N04.FR.06 |충전소가 모니터 유형이 <<monitor_enum_type,UpperThreshold>> 또는 <<monitor_enum_type,LowerThreshold>>인 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>를 수신하고 +
-_monitorValue_가 주어진 <<variable_type,Variable>>의 범위보다 낮거나 높을 때
-|충전소는 해당 <<set_monitoring_result_type,SetMonitoringResult>>의 _attributeStatus_ 필드를 <<set_monitoring_status_enum_type,Rejected>>로 설정해야 합니다.
-|선택 사항인 _statusInfo_ 요소에서 자세한 정보를 제공할 수 있습니다.
-|N04.FR.07 |충전소가 안전 요구 사항과 충돌하는 모니터에 대한 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>를 수신하는 경우.
-|충전소는 해당 <<set_monitoring_result_type,SetMonitoringResult>>의 _attributeStatus_ 필드를 <<set_monitoring_status_enum_type,Rejected>>로 설정할 수 있습니다.
-|예를 들어, 요청된 모니터링이 공장 설정 보안 모니터링을 재정의하는 경우.
-|N04.FR.08 |충전소가 <<set_monitoring_data_type,SetMonitoringData>>에서 제공된 _monitorValue_를 설정할 수 있는 경우
-|충전소는 해당 <<set_monitoring_result_type,SetMonitoringResult>>의 _attributeStatus_ 필드를 <<set_monitoring_status_enum_type,Accepted>>로 설정해야 합니다.
-다양한 <<monitor_enum_type,monitor types>>를 처리하는 방법에 대해서는 사용 사례 <<n07_alert_event,N07 - 경고 이벤트>>를 참조하세요.
+  |<<set_variable_monitoring_response,SetVariableMonitoringResponse>>의 모든 <<set_monitoring_result_type,SetMonitoringResult>> 요소에는 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>의 <<set_variable_monitoring_request,SetVariableMonitoringRequest>> 요소 중 하나와 동일한 _component_ 및 _variable_ 조합이 포함되어야 합니다. |{nbsp}
+|N04.FR.03 |충전기가 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>를 수신하고 <<set_monitoring_data_type,SetMonitoringData>>에 알 수 없는 <<component_type,Component>>가 있는 경우
+  |충전기는 해당 <<set_monitoring_result_type,SetMonitoringResult>>의 _attributeStatus_ 필드를 <<set_monitoring_status_enum_type,UnknownComponent>>로 설정해야 합니다. |{nbsp}
+|N04.FR.04 |충전기가 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>를 수신하고 <<component_type,Component>>에 대해 알려지지 않은 <<set_monitoring_data_type,SetMonitoringData>>를 수신하는 경우
+  |충전기는 해당 <<set_monitoring_result_type,SetMonitoringResult>>의 _attributeStatus_ 필드를 <<set_monitoring_status_enum_type,UnknownVariable>>로 설정해야 합니다. |{nbsp}
+|N04.FR.05 |충전기가 특정 변수에서 지원하지 않는 <<monitor_enum_type,MonitorType>>을 포함하는 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>를 수신하는 경우
+  |충전기는 해당 <<set_monitoring_result_type,SetMonitoringResult>>의 attributeStatus 필드를 <<set_monitoring_status_enum_type,UnsupportedMonitorType>>으로 설정해야 합니다. |{nbsp}
+|N04.FR.06 |충전기가 모니터 유형이 <<monitor_enum_type,UpperThreshold>> 또는 <<monitor_enum_type,LowerThreshold>>인 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>를 수신 AND +
+  _monitorValue_ 가 주어진 <<variable_type,Variable>>의 범위보다 낮거나 높을 때
+    |충전기는 해당 <<set_monitoring_result_type,SetMonitoringResult>>의 _attributeStatus_ 필드를 <<set_monitoring_status_enum_type,Rejected>>로 설정해야 합니다.
+      |선택 사항인 _statusInfo_ 요소에서 자세한 정보를 제공할 수 있습니다.
+|N04.FR.07 |충전기가 안전 요구 사항과 충돌하는 모니터에 대한 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>를 수신하는 경우.
+  |충전기는 해당 <<set_monitoring_result_type,SetMonitoringResult>>의 _attributeStatus_ 필드를 <<set_monitoring_status_enum_type,Rejected>>로 설정할 수 있습니다.
+    |예를 들어, 요청된 모니터링이 공장 설정 보안 모니터링을 재정의하는 경우.
+|N04.FR.08 |충전기가 <<set_monitoring_data_type,SetMonitoringData>>에서 제공된 _monitorValue_ 를 설정할 수 있는 경우
+  |충전기는 해당 <<set_monitoring_result_type,SetMonitoringResult>>의 _attributeStatus_ 필드를 <<set_monitoring_status_enum_type,Accepted>>로 설정해야 합니다.
+    |다양한 <<monitor_enum_type,monitor types>>를 처리하는 방법에 대해서는 사용 사례 <<n07_alert_event,N07 - Alert Event>>를 참조하세요.
 |N04.FR.09 |{nbsp}
-|한 <<set_variable_monitoring_request,SetVariableMonitoringRequest>> 메시지에서 _monitoringData_의 최대 크기와 항목 수는 <<items_per_message_set_variable_monitoring,`ItemsPerMessageSetVariableMonitoring`>> 및 <<bytes_per_message_set_variable_monitoring,`BytesPerMessageSetVariableMonitoring`>> 구성 변수에 의해 결정됩니다. |{nbsp}
-|N04.FR.10 |충전소가 동일한 _type_ 및 _severity_를 가진 모니터가 다른 _id_로 이미 존재하는 _component/variable_ 조합에 대한 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>를 수신하는 경우.
-|충전소는 해당 <<set_monitoring_result_type,SetMonitoringResult>>의 _attributeStatus_ 필드를 <<set_monitoring_status_enum_type,Duplicate>>로 설정해야 합니다.
-|동일한 변수에 동일한 심각도를 가진 동일한 유형의 모니터가 두 개 있을 수 없습니다. 예를 들어, 구성 요소/변수에 UpperThreshold 값이 "67"이고 심각도가 "4-Error"인 모니터가 있는 경우 동일한 심각도 "4-Error"가 정의된 다른 UpperThreshold 값이 "78"일 수 없습니다.
-|N04.FR.11 |충전소가 ID 없이 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>를 수신하고 +
-N04.FR.08
-|충전소는 ID를 생성하여 <<set_variable_monitoring_response,SetVariableMonitoringResponse>>에 반환합니다. |{nbsp}
-|N04.FR.12 |충전소가 ID와 함께 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>를 수신하고 +
-제공된 ID와 일치하는 모니터가 존재하고 +
-제공된 구성 요소/변수 조합이 기존 VariableMonitor와 일치합니다.
-|충전소는 모니터를 대체해야 합니다. |{nbsp}
-|N04.FR.13 |충전소가 ID와 함께 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>를 수신하고 +
-제공된 ID와 일치하는 모니터가 없습니다.
-|충전소는 해당 <<set_monitoring_result_type,SetMonitoringResult>>의 _attributeStatus_ 필드를 <<set_monitoring_status_enum_type,Rejected>>로 설정해야 합니다. |{nbsp}
-|N04.FR.14 |충전소가 <<monitor_enum_type,Delta>> 유형의 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>를 수신하고 값에 음수 값이 포함된 경우.
-|충전소는 해당 <<set_monitoring_result_type,SetMonitoringResult>>의 _attributeStatus_ 필드를 <<set_monitoring_status_enum_type,Rejected>>로 설정해야 합니다.
-|선택 사항인 _statusInfo_ 요소에서 자세한 정보를 제공할 수 있습니다.
+  |한 <<set_variable_monitoring_request,SetVariableMonitoringRequest>> 메시지에서 _monitoringData_ 의 최대 크기와 항목 수는 <<items_per_message_set_variable_monitoring,`ItemsPerMessageSetVariableMonitoring`>> 및 <<bytes_per_message_set_variable_monitoring,`BytesPerMessageSetVariableMonitoring`>> 구성 변수에 의해 결정됩니다. |{nbsp}
+|N04.FR.10 |충전기가 동일한 _type_ 및 _severity_ 를 가진 모니터가 다른 _id_ 로 이미 존재하는 _component/variable_ 조합에 대한 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>를 수신하는 경우.
+  |충전기는 해당 <<set_monitoring_result_type,SetMonitoringResult>>의 _attributeStatus_ 필드를 <<set_monitoring_status_enum_type,Duplicate>>로 설정해야 합니다.
+    |동일한 변수에 동일한 심각도를 가진 동일한 유형의 모니터가 두 개 있을 수 없습니다. 예를 들어, 구성 요소/변수에 UpperThreshold 값이 "67"이고 심각도가 "4-Error"인 모니터가 있는 경우 동일한 심각도 "4-Error"가 정의된 다른 UpperThreshold 값이 "78"일 수 없습니다.
+|N04.FR.11 |충전기가 ID 없이 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>를 수신 AND +
+  N04.FR.08
+    |충전기는 ID를 생성하여 <<set_variable_monitoring_response,SetVariableMonitoringResponse>>에 반환합니다. |{nbsp}
+|N04.FR.12 |충전기가 ID와 함께 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>를 수신 AND +
+  제공된 ID와 일치하는 모니터가 존재 AND +
+  제공된 구성 요소/변수 조합이 기존 VariableMonitor와 일치합니다.
+    |충전기는 모니터를 대체해야 합니다. |{nbsp}
+|N04.FR.13 |충전기가 ID와 함께 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>를 수신 AND +
+  제공된 ID와 일치하는 모니터가 없습니다.
+    |충전기는 해당 <<set_monitoring_result_type,SetMonitoringResult>>의 _attributeStatus_ 필드를 <<set_monitoring_status_enum_type,Rejected>>로 설정해야 합니다. |{nbsp}
+|N04.FR.14 |충전기가 <<monitor_enum_type,Delta>> 유형의 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>를 수신하고 값에 음수 값이 포함된 경우.
+  |충전기는 해당 <<set_monitoring_result_type,SetMonitoringResult>>의 _attributeStatus_ 필드를 <<set_monitoring_status_enum_type,Rejected>>로 설정해야 합니다.
+    |선택 사항인 _statusInfo_ 요소에서 자세한 정보를 제공할 수 있습니다.
 |N04.FR.15 |N04.FR.12 AND +
-교체된 VariableMonitor는 'PreconfiguredMonitors'에 속했습니다.
-|새로운 VariableMonitor는 <<set_monitoring_base_request,SetMonitoringBaseRequest>>로 재설정될 때까지 'CustomMonitor'로 분류됩니다. |{nbsp}
-|N04.FR.16 |충전소가 ID가 있는 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>를 수신하고 +
-제공된 ID와 일치하는 모니터가 존재하고 +
-제공된 구성 요소/변수 조합이 기존 VariableMonitor와 일치하지 않는 경우.
-|충전소는 _Rejected_로 응답해야 하며 VariableMonitor를 대체해서는 안 됩니다.
-|모니터의 변수나 구성 요소를 변경할 수 없습니다.
+  교체된 VariableMonitor는 'PreconfiguredMonitors'에 속했습니다.
+    |새로운 VariableMonitor는 <<set_monitoring_base_request,SetMonitoringBaseRequest>>로 재설정될 때까지 'CustomMonitor'로 분류됩니다. |{nbsp}
+|N04.FR.16 |충전기가 ID가 있는 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>를 수신 AND +
+  제공된 ID와 일치하는 모니터가 존재 AND +
+  제공된 구성 요소/변수 조합이 기존 VariableMonitor와 일치하지 않는 경우.
+    |충전기는 _Rejected_ 로 응답해야 하며 VariableMonitor를 대체해서는 안 됩니다.
+      |모니터의 변수나 구성 요소를 변경할 수 없습니다.
 |N04.FR.17 |CSMS가 숫자형이 아닌 변수에 대해 <<monitor_enum_type,Delta>> 유형의 <<set_variable_monitoring_request,SetVariableMonitoringRequest>>를 보낼 때
-|1의 _monitorValue_를 사용하는 것이 좋습니다.
-|_monitorValue_는 숫자형이 아닌 유형(예: 10진수 또는 정수를 제외한 모든 유형)에는 무관합니다. 모니터는 변수가 변경될 때마다 트리거되기 때문입니다.
+  |1의 _monitorValue_ 를 사용하는 것이 좋습니다.
+    |_monitorValue_ 는 숫자형이 아닌 유형(예: 10진수 또는 정수를 제외한 모든 유형)에는 무관합니다. 모니터는 변수가 변경될 때마다 트리거되기 때문입니다.
 |N04.FR.18 |N04.FR.12 AND +
-<<set_variable_monitoring_request,SetVariableMonitoringRequest>>의 _id_는 `HardWiredMonitor`를 참조합니다.
-|충전소는 _Rejected_로 응답해야 하며 VariableMonitor를 대체해서는 안 됩니다.
-|하드와이어 모니터는 변경할 수 없습니다.
-|N04.FR.19 |충전소가 재부팅되었습니다.
-|CSMS는 <<get_monitoring_report_request,GetMonitoringReportRequest>> 메시지를 보내 새 모니터 목록을 가져오는 것이 좋습니다.
-|사용자 지정 모니터는 재부팅 또는 펌웨어 업데이트 후에도 지속되지만 ID가 변경되었을 수 있습니다.
+  <<set_variable_monitoring_request,SetVariableMonitoringRequest>>의 _id_ 는 `HardWiredMonitor` 를 참조합니다.
+  |충전기는 _Rejected_ 로 응답해야 하며 VariableMonitor를 대체해서는 안 됩니다.
+    |하드와이어 모니터(hardwired monitor)는 변경할 수 없습니다.
+|N04.FR.19 |충전기가 재부팅되었습니다.
+  |CSMS는 <<get_monitoring_report_request,GetMonitoringReportRequest>> 메시지를 보내 새 모니터 목록을 가져오는 것이 좋습니다.
+    |사용자 지정 모니터는 재부팅 또는 펌웨어 업데이트 후에도 지속되지만 ID가 변경되었을 수 있습니다.
 |===
 
 [[n05_set_monitoring_level]]
@@ -396,15 +399,15 @@ N04.FR.08
 |1 |이름 |모니터링 수준 설정
 |2 |ID |N05
 |{nbsp} d|_기능 블록_ |N. 진단
-|3 |목표 |CSMS가 <<notify_event_request,NotifyEventRequest>>를 통해 모니터링 이벤트 보고를 특정 심각도 이하인 모니터로만 제한하도록 충전소에 요청할 수 있는 기능을 제공합니다.
-|4 |설명 |모니터링 이벤트 보고를 심각도 이하인 모니터로만 제한하는 것이 바람직할 수 있습니다. 예를 들어, 충전소와 CSMS 간의 데이터 트래픽을 어떤 이유로 제한해야 하는 경우입니다. CSMS는 <<set_monitoring_level_request,SetMonitoringLevelRequest>> 메시지를 통해 충전소에서 어떤 이벤트를 알릴지 제어할 수 있습니다.
-|{nbsp} d|_Actors_ |충전소, CSMS, CSO
+|3 |목표 |CSMS가 <<notify_event_request,NotifyEventRequest>>를 통해 모니터링 이벤트 보고를 특정 심각도 이하인 모니터로만 제한하도록 충전기에 요청할 수 있는 기능을 제공합니다.
+|4 |설명 |모니터링 이벤트 보고를 심각도 이하인 모니터로만 제한하는 것이 바람직할 수 있습니다. 예를 들어, 충전기와 CSMS 간의 데이터 트래픽을 어떤 이유로 제한해야 하는 경우입니다. CSMS는 <<set_monitoring_level_request,SetMonitoringLevelRequest>> 메시지를 통해 충전기에서 어떤 이벤트를 알릴지 제어할 수 있습니다.
+|{nbsp} d|_Actors_ |충전기, CSMS, CSO
 |{nbsp} d|_시나리오 설명_
-|**1.** CSO는 심각도 수준 제한을 설정하여 충전소에 모니터링 이벤트 보고를 제한하도록 요청하도록 CSMS를 트리거합니다. +
-**2.** CSMS는 충전소에 <<set_monitoring_level_request,SetMonitoringLevelRequest>>를 보냅니다. +
-**3.** 충전소는 <<set_monitoring_level_response,SetMonitoringLevelResponse>>로 응답합니다.
-|5 |필수 조건 |충전소에서 모니터링 지원
-|6 |사후 조건 |충전소에서 <<notify_event_request,NotifyEventRequest>>에 의한 모니터링 이벤트 보고를 사용자가 원하는 것으로만 제한했습니다.
+  |**1.** CSO는 심각도 수준 제한을 설정하여 충전기에 모니터링 이벤트 보고를 제한하도록 요청하도록 CSMS를 트리거합니다. +
+  **2.** CSMS는 충전기에 <<set_monitoring_level_request,SetMonitoringLevelRequest>>를 보냅니다. +
+  **3.** 충전기는 <<set_monitoring_level_response,SetMonitoringLevelResponse>>로 응답합니다.
+|5 |필수 조건 |충전기에서 모니터링 지원
+|6 |사후 조건 |충전기에서 <<notify_event_request,NotifyEventRequest>>에 의한 모니터링 이벤트 보고를 사용자가 원하는 것으로만 제한했습니다.
 |===
 
 .시퀀스 다이어그램: 모니터링 수준 설정
@@ -412,8 +415,8 @@ image::part2/images/figure_135.svg[시퀀스 다이어그램: 모니터링 수�
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7 |오류 처리 |해당 없음
-|8 |주의 |해당 없음
+|7 |오류 처리 |n/a
+|8 |참고 |n/a
 |===
 
 ==== N05 - Set Monitoring Level - Requirements
@@ -423,12 +426,12 @@ image::part2/images/figure_135.svg[시퀀스 다이어그램: 모니터링 수�
 |===
 |ID |전제 조건 |요구 사항 정의
 
-|N05.FR.01 |충전소가 <<set_monitoring_level_request,SetMonitoringLevelRequest>>를 수락할 때
-|충전소는 <<generic_status_enum_type,Accepted>>와 함께 <<set_monitoring_level_response,SetMonitoringLevelResponse>>를 보내야 합니다.
-|N05.FR.02 |충전소가 범위를 벗어난 _심각도_에 대한 <<set_monitoring_level_request,SetMonitoringLevelRequest>>를 수신하는 경우
-|충전소는 <<generic_status_enum_type,Rejected>>와 함께 <<set_monitoring_level_response,SetMonitoringLevelResponse>>를 보내야 합니다.
+|N05.FR.01 |충전기가 <<set_monitoring_level_request,SetMonitoringLevelRequest>>를 수락할 때
+  |충전기는 <<generic_status_enum_type,Accepted>>와 함께 <<set_monitoring_level_response,SetMonitoringLevelResponse>>를 보내야 합니다.
+|N05.FR.02 |충전기가 범위를 벗어난 _severity_ 에 대한 <<set_monitoring_level_request,SetMonitoringLevelRequest>>를 수신하는 경우
+  |충전기는 <<generic_status_enum_type,Rejected>>와 함께 <<set_monitoring_level_response,SetMonitoringLevelResponse>>를 보내야 합니다.
 |N05.FR.03 |N05.FR.01
-|충전소는 <<notify_event_request,NotifyEventRequest>>에 의한 모니터링 이벤트 보고를 지정된 심각도보다 낮거나 같은 심각도 번호를 가진 모니터로만 제한해야 합니다.
+  |충전기는 <<notify_event_request,NotifyEventRequest>>에 의한 모니터링 이벤트 보고를 지정된 심각도보다 낮거나 같은 심각도 번호를 가진 모니터로만 제한해야 합니다.
 |===
 
 === N06 - Clear / Remove Monitoring
@@ -443,13 +446,13 @@ image::part2/images/figure_135.svg[시퀀스 다이어그램: 모니터링 수�
 |{nbsp} d|_기능 블록_ |N. 진단
 |3 |목표 |CSMS에 모니터링 설정을 지우거나 제거할 수 있는 기능을 제공합니다.
 |4 |설명 |모니터링 설정은 모니터링 설정의 ID와 함께 <<clear_variable_monitoring_request,ClearVariableMonitoringRequest>>를 보내서 지울 수 있습니다(제거할 수 있습니다).
-|{nbsp} d|_Actors_ |충전소, CSMS, CSO
+|{nbsp} d|_Actors_ |충전기, CSMS, CSO
 |{nbsp} d|_시나리오 설명_
-|**1.** CSO가 CSMS를 트리거하여 충전소에서 하나 이상의 변수를 지우거나 제거하도록 요청합니다. +
-**2.** CSMS가 <<clear_variable_monitoring_request,ClearVariableMonitoringRequest>>를 충전소로 보냅니다. +
-**3.** 충전소가 <<clear_variable_monitoring_response,ClearVariableMonitoringResponse>>로 응답합니다.
-|5 |필수 조건 |충전소가 모니터링을 지원합니다.
-|6 |사후 조건 |충전소가 요청된 모니터링 설정을 지우거나 제거했습니다.
+  |**1.** CSO가 CSMS를 트리거하여 충전기에서 하나 이상의 변수를 지우거나 제거하도록 요청합니다. +
+  **2.** CSMS가 <<clear_variable_monitoring_request,ClearVariableMonitoringRequest>>를 충전기로 보냅니다. +
+  **3.** 충전기가 <<clear_variable_monitoring_response,ClearVariableMonitoringResponse>>로 응답합니다.
+|5 |필수 조건 |충전기가 모니터링을 지원합니다.
+|6 |사후 조건 |충전기가 요청된 모니터링 설정을 지우거나 제거했습니다.
 |===
 
 .시퀀스 다이어그램: 모니터링 지우기/제거
@@ -458,7 +461,7 @@ image::part2/images/figure_136.svg[시퀀스 다이어그램: 모니터링 지�
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7 |오류 처리 |n/a
-|8 |주의 |n/a
+|8 |참고 |n/a
 |===
 
 ==== N06 - Clear / Remove Monitoring - Requirements
@@ -468,20 +471,20 @@ image::part2/images/figure_136.svg[시퀀스 다이어그램: 모니터링 지�
 |===
 |ID |전제 조건 |요구 사항 정의
 
-|N06.FR.01 |충전소가 <<clear_variable_monitoring_request,ClearVariableMonitoringRequest>>를 수락할 때
-|충전소는 <<clear_monitoring_status_enum_type,Accepted>>와 함께 <<clear_variable_monitoring_response,ClearVariableMonitoringResponse>>를 보내야 합니다.
-|N06.FR.02 |충전소가 존재하지 않는 _id_를 가진 <<clear_variable_monitoring_request,ClearVariableMonitoringRequest>>를 수신하는 경우
-|충전소는 <<clear_variable_monitoring_response,ClearVariableMonitoringResponse>>를 <<clear_monitoring_status_enum_type,NotFound>>와 함께 전송해야 합니다.
-|N06.FR.03 |충전소가 지울 수 없는 모니터를 참조하는 _id_를 가진 <<clear_variable_monitoring_request,ClearVariableMonitoringRequest>>를 수신하는 경우(예: 하드코딩된 경우).
-|충전소는 <<clear_variable_monitoring_response,ClearVariableMonitoringResponse>>를 <<clear_monitoring_status_enum_type,Rejected>>와 함께 전송해야 합니다.
+|N06.FR.01 |충전기가 <<clear_variable_monitoring_request,ClearVariableMonitoringRequest>>를 수락할 때
+  |충전기는 <<clear_monitoring_status_enum_type,Accepted>>와 함께 <<clear_variable_monitoring_response,ClearVariableMonitoringResponse>>를 보내야 합니다.
+|N06.FR.02 |충전기가 존재하지 않는 _id_ 를 가진 <<clear_variable_monitoring_request,ClearVariableMonitoringRequest>>를 수신하는 경우
+  |충전기는 <<clear_variable_monitoring_response,ClearVariableMonitoringResponse>>를 <<clear_monitoring_status_enum_type,NotFound>>와 함께 전송해야 합니다.
+|N06.FR.03 |충전기가 지울 수 없는 모니터를 참조하는 _id_ 를 가진 <<clear_variable_monitoring_request,ClearVariableMonitoringRequest>>를 수신하는 경우(예: 하드코딩된 경우).
+  |충전기는 <<clear_variable_monitoring_response,ClearVariableMonitoringResponse>>를 <<clear_monitoring_status_enum_type,Rejected>>와 함께 전송해야 합니다.
 |N06.FR.04 |{nbsp}
-|CSMS는 충전소에서 <<items_per_message_clear_variable_monitoring,`ItemsPerMessageClearVariableMonitoring`>> 및 <<bytes_per_message_clear_variable_monitoring,`BytesPerMessageClearVariableMonitoring`>>을 통해 보고한 것보다 더 많은 _id_ 요소를 <<clear_variable_monitoring_request,ClearVariableMonitoringRequest>>에 넣지 않아야 합니다.
+  |CSMS는 충전기에서 <<items_per_message_clear_variable_monitoring,`ItemsPerMessageClearVariableMonitoring`>> 및 <<bytes_per_message_clear_variable_monitoring,`BytesPerMessageClearVariableMonitoring`>>을 통해 보고한 것보다 더 많은 _id_ 요소를 <<clear_variable_monitoring_request,ClearVariableMonitoringRequest>>에 넣지 않아야 합니다.
 |N06.FR.05 |{nbsp}
-|<<clear_variable_monitoring_request,ClearVariableMonitoringRequest>>의 _모든 id_에 대해 충전소는 CSMS로 전송된 <<clear_variable_monitoring_response,ClearVariableMonitoringResponse>>에 _clearMonitoringResult_ 요소를 추가해야 합니다.
-|N06.FR.06 |충전소가 <<items_per_message_clear_variable_monitoring,`ItemsPerMessageClearVariableMonitoring`>>에서 허용하는 것보다 더 많은 _id_ 요소가 포함된 <<clear_variable_monitoring_request,ClearVariableMonitoringRequest>>를 수신합니다.
-|충전소가 CALLERROR(OccurenceConstraintViolation)로 응답할 수 있습니다.
-|N06.FR.07 |충전소가 <<bytes_per_message_clear_variable_monitoring,`BytesPerMessageClearVariableMonitoring`>>에서 허용하는 것보다 더 많은 바이트 길이의 <<clear_variable_monitoring_request,ClearVariableMonitoringRequest>>를 수신합니다.
-|충전소가 CALLERROR(FormatViolation)로 응답할 수 있습니다.
+  |<<clear_variable_monitoring_request,ClearVariableMonitoringRequest>>의 _모든 id_ 에 대해 충전기는 CSMS로 전송된 <<clear_variable_monitoring_response,ClearVariableMonitoringResponse>>에 _clearMonitoringResult_ 요소를 추가해야 합니다.
+|N06.FR.06 |충전기가 <<items_per_message_clear_variable_monitoring,`ItemsPerMessageClearVariableMonitoring`>>에서 허용하는 것보다 더 많은 _id_ 요소가 포함된 <<clear_variable_monitoring_request,ClearVariableMonitoringRequest>>를 수신합니다.
+  |충전기가 CALLERROR(OccurenceConstraintViolation)로 응답할 수 있습니다.
+|N06.FR.07 |충전기가 <<bytes_per_message_clear_variable_monitoring,`BytesPerMessageClearVariableMonitoring`>>에서 허용하는 것보다 더 많은 바이트 길이의 <<clear_variable_monitoring_request,ClearVariableMonitoringRequest>>를 수신합니다.
+  |충전기가 CALLERROR(FormatViolation)로 응답할 수 있습니다.
 |===
 
 :sectnums:
@@ -499,15 +502,15 @@ image::part2/images/figure_136.svg[시퀀스 다이어그램: 모니터링 지�
 |1 |이름 |경고 이벤트
 |2 |ID |N07
 |{nbsp} d|_기능 블록_ |N. 진단
-|3 |목표 |충전소에 모니터링 이벤트에 대해 CSMS에 알릴 수 있는 기능을 제공합니다.
+|3 |목표 |충전기에 모니터링 이벤트에 대해 CSMS에 알릴 수 있는 기능을 제공합니다.
 |4 |설명 |NotifyEventRequest는 VariableMonitoring 설정이 트리거된 모든 구성 요소/변수를 보고합니다. 이벤트를 트리거하는 데 책임이 있는 VariableMonitoring 설정만 포함됩니다.
-|{nbsp} d|_Actors_ |충전소, CSMS
+|{nbsp} d|_Actors_ |충전기, CSMS
 |{nbsp} d|_시나리오 설명_
-|**1.** 임계값 또는 델타 값이 초과되면 충전소는 <<notify_event_request,NotifyEventRequest>>를 CSMS로 보냅니다. +
-**2.** CSMS는 <<notify_event_response,NotifyEventResponse>>로 응답합니다.
-|5 |필수 조건 |충전소에 활성 모니터링 설정이 있습니다. +
-모니터링 설정은 SetVariableMonitoring 메시지를 통해 명시적으로 구성되었거나 충전소 펌웨어에 "하드 와이어링"되어 있을 수 있습니다.
-|6 |사후 조건 |충전소가 CSMS에 모니터링 이벤트에 대해 알렸습니다.
+  |**1.** 임계값 또는 델타 값이 초과되면 충전기는 <<notify_event_request,NotifyEventRequest>>를 CSMS로 보냅니다. +
+  **2.** CSMS는 <<notify_event_response,NotifyEventResponse>>로 응답합니다.
+|5 |필수 조건 |충전기에 활성 모니터링 설정이 있습니다. +
+  모니터링 설정은 SetVariableMonitoring 메시지를 통해 명시적으로 구성되었거나 충전기 펌웨어에 "하드 와이어링(hard-wired)"되어 있을 수 있습니다.
+|6 |사후 조건 |충전기가 CSMS에 모니터링 이벤트에 대해 알렸습니다.
 |===
 
 .시퀀스 다이어그램: 경고 이벤트
@@ -515,12 +518,12 @@ image::part2/images/figure_137.svg[시퀀스 다이어그램: 경고 이벤트]
 
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
-|7 |오류 처리 |해당 없음
-|8 |주의 |요구 사항 N07.FR.04는 OfflineMonitoringEventQueuingSeverity보다 심각도가 낮거나 같은 이벤트는 충전소가 오프라인인 동안 대기열에 넣고 온라인이 되면 전달해야 한다고 명시합니다. 즉, OfflineMonitoringEventQueuingSeverity보다 심각도가 높은 이벤트는 CSMS로 전송되지 않습니다. 그 결과, 충전소가 다시 온라인이 되면 논리적 이벤트 체인이 끊어질 수 있습니다.
+|7 |오류 처리 |n/a
+|8 |참고 |요구 사항 N07.FR.04는 OfflineMonitoringEventQueuingSeverity보다 심각도가 낮거나 같은 이벤트는 충전기가 오프라인인 동안 대기열에 넣고 온라인이 되면 전달해야 한다고 명시합니다. 즉, OfflineMonitoringEventQueuingSeverity보다 심각도가 높은 이벤트는 CSMS로 전송되지 않습니다. 그 결과, 충전기가 다시 온라인이 되면 논리적 이벤트 체인이 끊어질 수 있습니다.
 
-예를 들어, 임계값을 초과하는 변수에 대한 모니터링 이벤트가 오프라인 중에 발생하여 전송되지 않았습니다. 온라인 상태로 돌아오면 어느 시점에서 모니터링 이벤트가 보고되고 변수 _cleared_가 true로 설정되지만 CSMS는 임계값을 초과했다는 사실조차 알지 못합니다. CSMS는 이를 처리할 수 있어야 합니다.
+  예를 들어, 임계값을 초과하는 변수에 대한 모니터링 이벤트가 오프라인 중에 발생하여 전송되지 않았습니다. 온라인 상태로 돌아오면 어느 시점에서 모니터링 이벤트가 보고되고 변수 _cleared_ 가 true로 설정되지만 CSMS는 임계값을 초과했다는 사실조차 알지 못합니다. CSMS는 이를 처리할 수 있어야 합니다.
 
-이러한 모니터링 이벤트를 단순히 삭제하는 것이 아니라 OfflineMonitoringEventQueuingSeverity를 ​​초과하는 모니터의 평가를 충전소가 다시 온라인 상태가 될 때까지 지연함으로써 사양을 준수하는 동시에 이 문제를 방지할 수 있습니다. 그 결과 충전소가 다시 온라인 상태가 되면 CSMS는 현재 상황에 적용되는 모니터링 이벤트를 가져오고 모니터에 대한 최신 정보를 모두 얻습니다. 오프라인 기간 동안 트리거되고 지워진 모니터링 이벤트만 CSMS에 표시되지 않습니다.
+  이러한 모니터링 이벤트를 단순히 삭제하는 것이 아니라 OfflineMonitoringEventQueuingSeverity를 ​​초과하는 모니터의 평가를 충전기가 다시 온라인 상태가 될 때까지 지연함으로써 사양을 준수하는 동시에 이 문제를 방지할 수 있습니다. 그 결과 충전기가 다시 온라인 상태가 되면 CSMS는 현재 상황에 적용되는 모니터링 이벤트를 가져오고 모니터에 대한 최신 정보를 모두 얻습니다. 오프라인 기간 동안 트리거되고 지워진 모니터링 이벤트만 CSMS에 표시되지 않습니다.
 |===
 
 ==== N07 - Alert Event - Requirements
@@ -531,51 +534,51 @@ image::part2/images/figure_137.svg[시퀀스 다이어그램: 경고 이벤트]
 |ID |전제 조건 |요구 사항 정의 |참고
 
 |N07.FR.02 |모니터링된 값이 설정된 _UpperThreshold_ 또는 _LowerThreshold_ 내로 돌아올 때
-|충전소는 _cleared_ 속성이 참인 eventData와 함께 <<notify_event_request,NotifyEventRequest>>를 보내야 합니다. |{nbsp}
+  |충전기는 _cleared_ 속성이 참인 eventData와 함께 <<notify_event_request,NotifyEventRequest>>를 보내야 합니다. |{nbsp}
 |N07.FR.03 |CSMS가 <<notify_event_request,NotifyEventRequest>>를 수신할 때
-|CSMS는 빈 <<notify_event_response,NotifyEventResponse>>로 응답해야 합니다. |{nbsp}
+  |CSMS는 빈 <<notify_event_response,NotifyEventResponse>>로 응답해야 합니다. |{nbsp}
 |N07.FR.04 |모니터가 트리거되고 AND +
-모니터의 심각도 번호가 구성 변수 <<offline_monitoring_event_queuing_severity,`OfflineMonitoringEventQueuingSeverity`>>에 설정된 심각도 번호와 같거나 낮음 AND +
-충전소가 _오프라인_ 상태임
-|충전소는 이 <<notify_event_request,NotifyEventRequest>>를 큐에 넣고 다시 온라인 상태가 되면 전달해야 합니다. |{nbsp}
+  모니터의 심각도 번호가 구성 변수 <<offline_monitoring_event_queuing_severity,`OfflineMonitoringEventQueuingSeverity`>>에 설정된 심각도 번호와 같거나 낮음 AND +
+  충전기가 _오프라인_ 상태임
+    |충전기는 이 <<notify_event_request,NotifyEventRequest>>를 큐에 넣고 다시 온라인 상태가 되면 전달해야 합니다. |{nbsp}
 |N07.FR.05 |모니터가 트리거되고 AND 다른 이벤트가 이 이벤트를 발생시킨 경우
-|충전소는 <<notify_event_request,NotifyEventRequest>> 메시지의 <<event_data_type,eventData>> 요소의 _cause_ 필드에 다른 이벤트의 _eventId_를 포함할 수 있습니다. |{nbsp}
+  |충전기는 <<notify_event_request,NotifyEventRequest>> 메시지의 <<event_data_type,eventData>> 요소의 _cause_ 필드에 다른 이벤트의 _eventId_ 를 포함할 수 있습니다. |{nbsp}
 |N07.FR.06 |모니터가 트리거될 때
-|<<notify_event_request,NotifyEventRequest>>의 <<event_data_type,eventData>> 요소에는 이벤트를 발생시킨 <<component_type,Component>>, <<variable_type,Variable>> 및 _variableMonitoringId_가 포함되어야 합니다. |{nbsp}
+  |<<notify_event_request,NotifyEventRequest>>의 <<event_data_type,eventData>> 요소에는 이벤트를 발생시킨 <<component_type,Component>>, <<variable_type,Variable>> 및 _variableMonitoringId_ 가 포함되어야 합니다. |{nbsp}
 |N07.FR.07 |모니터가 트리거될 때
-|충전소는 이 이벤트에 대해 전송된 첫 번째 <<notify_event_request,NotifyEventRequest>>의 _seqNo_를 0으로 설정해야 합니다. |{nbsp}
+  |충전기는 이 이벤트에 대해 전송된 첫 번째 <<notify_event_request,NotifyEventRequest>>의 _seqNo_ 를 0으로 설정해야 합니다. |{nbsp}
 |N07.FR.10 |모니터가 트리거될 때 AND +
-쓰기 전용 변수에 variableMonitoring 설정이 설정되었습니다.
-|<<notify_event_request,NotifyEventRequest>>의 actualField는 비어 있어야 합니다. |{nbsp}
+  쓰기 전용 변수에 variableMonitoring 설정이 설정되었습니다.
+    |<<notify_event_request,NotifyEventRequest>>의 actualField는 비어 있어야 합니다. |{nbsp}
 |N07.FR.11 |설정된 _UpperThreshold_ 또는 _LowerThreshold_ VariableMonitor를 수정할 때.
-|충전소는 새 임계값이 이전 임계값을 지우는지 또는 새 임계값이 모니터링된 값에 의해 초과되는지 확인해야 합니다. |{nbsp}
+  |충전기는 새 임계값이 이전 임계값을 지우는지 또는 새 임계값이 모니터링된 값에 의해 초과되는지 확인해야 합니다. |{nbsp}
 |N07.FR.12 |설정된 _UpperThreshold_ 또는 _LowerThreshold_ VariableMonitor를 제거하고 +
-임계값이 초과된 경우.
-|충전소는 <<event_data_type,eventData>>와 함께 <<notify_event_request,NotifyEventRequest>>를 보내서는 안 됩니다. 속성 _cleared_가 참입니다. |{nbsp}
+  임계값이 초과된 경우.
+    |충전기는 <<event_data_type,eventData>>와 함께 <<notify_event_request,NotifyEventRequest>>를 보내서는 안 됩니다. 속성 _cleared_ 가 true입니다. |{nbsp}
 |N07.FR.13 |{nbsp}
-|VariableMonitoring은 재부팅 시에도 지속적으로 저장되어야 합니다. |{nbsp}
+  |VariableMonitoring은 재부팅 시에도 지속적으로 저장되어야 합니다. |{nbsp}
 |N07.FR.14 |_UpperThreshold_ 또는 _LowerThreshold_ 유형의 variableMonitoring 설정이 트리거되고 +
-|재부팅이 발생한 후 모니터링된 값이 구성된 임계값 내에서 반환되었습니다.
-|충전소는 <<notify_event_request,NotifyEventRequest>>를 <<event_data_type,eventData>>와 함께 보내야 하며, 속성 _cleared_가 true입니다.
+  |재부팅이 발생한 후 모니터링된 값이 구성된 임계값 내에서 반환되었습니다.
+    |충전기는 <<notify_event_request,NotifyEventRequest>>를 <<event_data_type,eventData>>와 함께 보내야 하며, 속성 _cleared_ 가 true입니다.
 |N07.FR.15 |모니터가 트리거되고 +
-모니터의 _심각도_가 CSMS에서 <<set_monitoring_level_request,SetMonitoringLevelRequest>>에 설정된 모니터링 심각도 수준보다 높은 경우(사용 사례 <<n05_set_monitoring_level,N05 - 모니터링 수준 설정>> 참조)
-|충전소는 트리거된 모니터에 대해 <<notify_event_request,NotifyEventRequest>>를 보내서는 안 됩니다. |{nbsp}
-|N07.FR.16 |구성 요소/변수 조합에 <<monitor_enum_type,UpperThreshold>> 유형의 모니터가 있고 +
-변수의 실제 값(attributeType Actual)이 _monitorValue_를 초과하는 경우
-|충전소는 트리거된 모니터에 대해 _trigger_ <<event_trigger_enum_type,Alerting>>과 함께 <<notify_event_request,NotifyEventRequest>>를 보내야 합니다.
-|알림은 임계값을 초과할 때 전송되며 임계값에서 전송되지 않습니다.
-|N07.FR.17 |구성 요소/변수 조합에 <<monitor_enum_type,LowerThreshold>> 유형의 모니터가 있고 +
-변수의 실제 값(attributeType Actual)이 _monitorValue_ 아래로 떨어지면
-|충전소는 트리거된 모니터에 대해 _trigger_ <<event_trigger_enum_type,Alerting>>과 함께 <<notify_event_request,NotifyEventRequest>>를 보내야 합니다.
-|알림은 임계값 아래로 떨어지면 전송되고 임계값에서 전송되지는 않습니다.
-|N07.FR.18 |구성 요소/변수 조합에 <<monitor_enum_type,Delta>> 유형의 모니터가 있고 +
-변수가 숫자 유형이고 +
-변수의 실제 값(attributeType Actual)이 이 모니터가 설정된 시간 또는 이 이벤트 알림이 마지막으로 전송된 시간(마지막 시간) 이후로 플러스 또는 마이너스 _monitorValue_보다 많이 변경된 경우
-|충전소는 트리거된 모니터에 대해 트리거 <<monitor_enum_type,Delta>>와 함께 <<notify_event_request,NotifyEventRequest>>를 전송해야 합니다. |{nbsp}
-|N07.FR.19 |구성 요소/변수 조합에 <<monitor_enum_type,Delta>> 유형의 모니터가 있고 +
-변수가 숫자 유형이 아니고 +
-변수의 실제 값(attributeType Actual)이 이 모니터가 설정된 시간 이후 또는 이 이벤트 알림이 마지막으로 전송된 시간 이후로 변경된 경우(참고: 부울, 문자열 또는 열거형과 같이 숫자가 아닌 변수의 경우 <<monitor_enum_type,Delta>> 유형의 모니터는 _monitorValue_ 값에 관계없이 변수가 변경될 때마다 이벤트 알림을 트리거합니다.)
-|충전소는 트리거된 모니터에 대해 <<monitor_enum_type,Delta>> 트리거와 함께 <<notify_event_request,NotifyEventRequest>>를 전송해야 합니다. |{nbsp}
+  모니터의 _severity_ 가 CSMS에서 <<set_monitoring_level_request,SetMonitoringLevelRequest>>에 설정된 모니터링 심각도 수준보다 높은 경우(사용 사례 <<n05_set_monitoring_level,N05 - Set Monitoring Level>> 참조)
+    |충전기는 트리거된 모니터에 대해 <<notify_event_request,NotifyEventRequest>>를 보내서는 안 됩니다. |{nbsp}
+|N07.FR.16 |구성 요소/변수 조합에 <<monitor_enum_type,UpperThreshold>> 유형의 모니터가 있음 AND +
+  변수의 실제 값(attributeType Actual)이 _monitorValue_ 를 초과하는 경우
+    |충전기는 트리거된 모니터에 대해 _trigger_ <<event_trigger_enum_type,Alerting>>과 함께 <<notify_event_request,NotifyEventRequest>>를 보내야 합니다.
+      |알림은 임계값을 초과할 때 전송되며 임계값에서 전송되지 않습니다.
+|N07.FR.17 |구성 요소/변수 조합에 <<monitor_enum_type,LowerThreshold>> 유형의 모니터가 있음 AND +
+  변수의 실제 값(attributeType Actual)이 _monitorValue_ 아래로 떨어지면
+    |충전기는 트리거된 모니터에 대해 _trigger_ <<event_trigger_enum_type,Alerting>>과 함께 <<notify_event_request,NotifyEventRequest>>를 보내야 합니다.
+      |알림은 임계값 아래로 떨어지면 전송되고 임계값에서 전송되지는 않습니다.
+|N07.FR.18 |구성 요소/변수 조합에 <<monitor_enum_type,Delta>> 유형의 모니터가 있음 AND +
+  변수가 숫자 유형 AND +
+  변수의 실제 값(attributeType Actual)이 이 모니터가 설정된 시간 또는 이 이벤트 알림이 마지막으로 전송된 시간(마지막 시간) 이후로 플러스 또는 마이너스 _monitorValue_ 보다 많이 변경된 경우
+    |충전기는 트리거된 모니터에 대해 트리거 <<monitor_enum_type,Delta>>와 함께 <<notify_event_request,NotifyEventRequest>>를 전송해야 합니다. |{nbsp}
+|N07.FR.19 |구성 요소/변수 조합에 <<monitor_enum_type,Delta>> 유형의 모니터가 있음 AND +
+  변수가 숫자 유형이 아님 AND +
+  변수의 실제 값(attributeType Actual)이 이 모니터가 설정된 시간 이후 또는 이 이벤트 알림이 마지막으로 전송된 시간 이후로 변경된 경우(참고: 부울, 문자열 또는 열거형과 같이 숫자가 아닌 변수의 경우 <<monitor_enum_type,Delta>> 유형의 모니터는 _monitorValue_ 값에 관계없이 변수가 변경될 때마다 이벤트 알림을 트리거합니다.)
+    |충전기는 트리거된 모니터에 대해 <<monitor_enum_type,Delta>> 트리거와 함께 <<notify_event_request,NotifyEventRequest>>를 전송해야 합니다. |{nbsp}
 |===
 
 === N08 - Periodic Event
@@ -588,15 +591,15 @@ image::part2/images/figure_137.svg[시퀀스 다이어그램: 경고 이벤트]
 |1 |이름 |주기적 이벤트
 |2 |ID |N08
 |{nbsp} d|_기능 블록_ |N. 진단
-|3 |목표 |충전소가 모니터링 이벤트에 대해 CSMS에 주기적으로 알릴 수 있는 기능을 제공합니다.
+|3 |목표 |충전기가 모니터링 이벤트에 대해 CSMS에 주기적으로 알릴 수 있는 기능을 제공합니다.
 |4 |설명 |NotifyEventRequest는 VariableMonitoring 설정이 트리거된 모든 구성 요소/변수를 보고합니다. 이벤트를 트리거하는 데 책임이 있는 VariableMonitoring 설정만 포함됩니다.
-|{nbsp} d|_Actors_ |충전소, CSMS
+|{nbsp} d|_Actors_ |충전기, CSMS
 |{nbsp} d|_시나리오 설명_
-|**1.** 주기적 값이 초과되면 충전소는 <<notify_event_request,NotifyEventRequest>>를 트리거 _periodic_과 함께 CSMS로 보냅니다. +
-**2.** CSMS는 <<notify_event_response,NotifyEventResponse>>로 응답합니다.
-|5 |필수 조건 |충전소에 활성 모니터링 설정이 있습니다. +
-모니터링 설정은 <<set_varaible_monitoring,SetVariableMonitoring>> 메시지를 통해 명시적으로 구성되었거나 충전소 펌웨어에 "하드 와이어링"되어 있을 수 있습니다.
-|6 |사후 조건 |충전소가 CSMS에 모니터링 이벤트에 대해 알렸습니다.
+  |**1.** 주기적 값이 초과되면 충전기는 <<notify_event_request,NotifyEventRequest>>를 트리거 _periodic_ 과 함께 CSMS로 보냅니다. +
+  **2.** CSMS는 <<notify_event_response,NotifyEventResponse>>로 응답합니다.
+|5 |필수 조건 |충전기에 활성 모니터링 설정이 있습니다. +
+  모니터링 설정은 <<set_varaible_monitoring,SetVariableMonitoring>> 메시지를 통해 명시적으로 구성되었거나 충전기 펌웨어에 "하드 와이어링(hard-wired)"되어 있을 수 있습니다.
+|6 |사후 조건 |충전기가 CSMS에 모니터링 이벤트에 대해 알렸습니다.
 |===
 
 .시퀀스 다이어그램: 주기적 이벤트
@@ -605,7 +608,7 @@ image::part2/images/figure_138.svg[시퀀스 다이어그램: 주기적 이벤�
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7 |오류 처리 |n/a
-|8 |주의 |n/a
+|8 |참고 |n/a
 |===
 
 ==== N08 - Periodic Event - Requirements
@@ -616,25 +619,25 @@ image::part2/images/figure_138.svg[시퀀스 다이어그램: 주기적 이벤�
 |ID |전제 조건 |요구 사항 정의
 
 |N08.FR.02 |CSMS가 <<notify_event_request,NotifyEventRequest>>를 수신하면
-|CSMS는 빈 <<notify_event_response,NotifyEventResponse>>로 응답해야 합니다.
-|N08.FR.03 |N08.FR.06 또는 N08.FR.07 +
-및 +
-모니터의 심각도 번호는 구성 변수 <<offline_monitoring_event_queuing_severity,`OfflineMonitoringEventQueuingSeverity`>>에 설정된 심각도 번호와 같거나 낮습니다. +
-및 +
-충전소가 _오프라인_ 상태입니다.
-|충전소는 이 <<notify_event_request,NotifyEventRequest>>를 대기열에 넣고 다시 온라인 상태가 되면 전달해야 합니다.
-|N08.FR.04 |N08.FR.06 또는 N08.FR.07 및 +
-이 <<notify_event_request,NotifyEventRequest>>는 첫 번째 또는 유일한 보고 부분입니다.
-|충전소는 _seqNo_를 0으로 설정해야 합니다.
-|N08.FR.05 |N08.FR.06 또는 N08.FR.07 및 +
-이벤트를 트리거한 variableMonitoring 설정이 <<monitor_enum_type,Periodic>> 또는 <<monitor_enum_type,PeriodicClockAligned>> 유형인 경우
-|충전소는 _trigger_를 <<monitor_enum_type,Periodic>>로 설정해야 합니다.
-|N08.FR.06 |구성 요소/변수 조합에 <<monitor_enum_type,Periodic>> 유형의 모니터가 있고 +
-_monitorValue_에 지정된 초 수가 지난 경우(이 모니터가 설정되거나 트리거된 시간부터 시작)
-|충전소는 트리거된 모니터에 대해 _trigger_ <<monitor_enum_type,Periodic>>와 함께 <<notify_event_request,NotifyEventRequest>>를 보내야 합니다.
-|N08.FR.07 |구성 요소/변수 조합에 <<monitor_enum_type,PeriodicClockAligned>> 유형의 모니터가 있고 +
-이 모니터가 설정된 후 가장 가까운 클록 정렬 간격에서 시작하여 _monitorValue_로 지정된 초 수가 지난 경우(예를 들어, _monitorValue_가 900이면 매 시간 정각 0, 15, 30 및 45분에 이벤트 알림이 트리거됨)
-|충전소는 트리거된 모니터에 대해 _trigger_ <<monitor_enum_type,Periodic>>와 함께 <<notify_event_request,NotifyEventRequest>>를 보내야 합니다.
+  |CSMS는 빈 <<notify_event_response,NotifyEventResponse>>로 응답해야 합니다.
+|N08.FR.03 |N08.FR.06 OR N08.FR.07 +
+  AND +
+  모니터의 심각도 번호는 구성 변수 <<offline_monitoring_event_queuing_severity,`OfflineMonitoringEventQueuingSeverity`>>에 설정된 심각도 번호와 같거나 낮음 +
+  AND +
+  충전기가 _오프라인_ 상태입니다.
+    |충전기는 이 <<notify_event_request,NotifyEventRequest>>를 대기열에 넣고 다시 온라인 상태가 되면 전달해야 합니다.
+|N08.FR.04 |N08.FR.06 또는 N08.FR.07 AND +
+  이 <<notify_event_request,NotifyEventRequest>>는 첫 번째 또는 유일한 보고 부분입니다.
+    |충전기는 _seqNo_ 를 0으로 설정해야 합니다.
+|N08.FR.05 |N08.FR.06 OR N08.FR.07 AND +
+  이벤트를 트리거한 variableMonitoring 설정이 <<monitor_enum_type,Periodic>> 또는 <<monitor_enum_type,PeriodicClockAligned>> 유형인 경우
+    |충전기는 _trigger_ 를 <<monitor_enum_type,Periodic>>로 설정해야 합니다.
+|N08.FR.06 |구성 요소/변수 조합에 <<monitor_enum_type,Periodic>> 유형의 모니터가 있음 AND +
+  _monitorValue_ 에 지정된 초 수가 지난 경우(이 모니터가 설정되거나 트리거된 시간부터 시작)
+    |충전기는 트리거된 모니터에 대해 _trigger_ <<monitor_enum_type,Periodic>>와 함께 <<notify_event_request,NotifyEventRequest>>를 보내야 합니다.
+|N08.FR.07 |구성 요소/변수 조합에 <<monitor_enum_type,PeriodicClockAligned>> 유형의 모니터가 있음 AND +
+  이 모니터가 설정된 후 가장 가까운 클록 정렬 간격(clock-aligned interval)에서 시작하여 _monitorValue_ 로 지정된 초 수가 지난 경우(예를 들어, _monitorValue_ 가 900이면 매 시간 정각 0, 15, 30 및 45분에 이벤트 알림이 트리거됨)
+    |충전기는 트리거된 모니터에 대해 _trigger_ <<monitor_enum_type,Periodic>>와 함께 <<notify_event_request,NotifyEventRequest>>를 보내야 합니다.
 |===
 
 <<<
@@ -653,17 +656,16 @@ _monitorValue_에 지정된 초 수가 지난 경우(이 모니터가 설정되�
 |1 |이름 |고객 정보 가져오기
 |2 |ID |N09
 |{nbsp} d|_기능 블록_ |N. 진단
-|3 |목표 |CSMS가 충전소에서 원시 고객 정보를 검색할 수 있도록 합니다.
-|4 |설명 |CSMS는 충전소에 메시지를 보내 원시 고객 정보를 검색합니다. 예를 들어, 지역 개인 정보 보호법을 준수하기 위해서입니다. 충전소는 하나 이상의 보고서를 보내 CSMS에 알립니다.
-|{nbsp} d|_Actors_ |충전소, CSMS
+|3 |목표 |CSMS가 충전기에서 고객 정보 원본(raw customer data)를 검색할 수 있도록 합니다.
+|4 |설명 |CSMS는 충전기에 메시지를 보내 고객 정보 원본을 검색합니다. 예를 들어, 지역 개인 정보 보호법을 준수하기 위해서입니다. 충전기는 하나 이상의 보고서를 보내 CSMS에 알립니다.
+|{nbsp} d|_Actors_ |충전기, CSMS
 |{nbsp} d|_시나리오 설명_
-|**1.** CSMS는 고객 참조(<<id_token_type,idToken>>, <<certificate_hash_data_type,customerCertificate>> 또는 customerIdentifier)와 함께 <<customer_information_request,CustomerInformationRequest>>를 충전소로 보냅니다. +
-**2.** 충전소는 <<customer_information_response,CustomerInformationResponse>>로 응답하여 보낼지 여부를 나타냅니다. +
-**3.** 충전소는 하나 이상의 <<notify_customer_information_request,NotifyCustomerInformationRequest>> 메시지를 CSMS로 보냅니다.
-
-**4.** CSMS는 하나 이상의 <<notify_customer_information_response,NotifyCustomerInformationResponse>> 메시지로 충전소에 응답합니다.
-|5 |필수 조건 |해당 없음
-|6 |사후 조건 |CSMS는 상태가 _Accepted_인 <<customer_information_response,CustomerInformationResponse>> 메시지를 _성공적으로_ 수신했으며 요청된 데이터를 _성공적으로_ 수신했습니다.
+  |**1.** CSMS는 고객 참조(<<id_token_type,idToken>>, <<certificate_hash_data_type,customerCertificate>> 또는 customerIdentifier)와 함께 <<customer_information_request,CustomerInformationRequest>>를 충전기로 보냅니다. +
+  **2.** 충전기는 <<customer_information_response,CustomerInformationResponse>>로 응답하여 보낼지 여부를 나타냅니다. +
+  **3.** 충전기는 하나 이상의 <<notify_customer_information_request,NotifyCustomerInformationRequest>> 메시지를 CSMS로 보냅니다.
+  **4.** CSMS는 하나 이상의 <<notify_customer_information_response,NotifyCustomerInformationResponse>> 메시지로 충전기에 응답합니다.
+|5 |필수 조건 |n/a
+|6 |사후 조건 |CSMS는 상태가 _Accepted_ 인 <<customer_information_response,CustomerInformationResponse>> 메시지를 _성공적으로_ 수신했으며 요청된 데이터를 _성공적으로_ 수신했습니다.
 |===
 
 .시퀀스 다이어그램: 고객 정보 가져오기
@@ -672,7 +674,7 @@ image::part2/images/figure_139.svg[시퀀스 다이어그램: 고객 정보 가�
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7 |오류 처리 |n/a
-|8 |주의 |n/a
+|8 |참고 |n/a
 |===
 
 ==== N09 - Get Customer Information - Requirements
@@ -682,30 +684,30 @@ image::part2/images/figure_139.svg[시퀀스 다이어그램: 고객 정보 가�
 |===
 |ID |전제 조건 |요구 사항 정의 |참고
 
-|N09.FR.01 |CSMS가 충전소에서 CustomerInformation을 검색하려는 경우.
-|<<customer_information_request,CustomerInformationRequest>>의 보고 플래그는 _true_로 설정해야 합니다. |{nbsp}
-|N09.FR.02 |충전소가 <<customer_information_request,CustomerInformationRequest>>를 수신하고 +
-이 요청을 처리할 수 있는 상태인 경우.
-|충전소는 <<customer_information_response,CustomerInformationResponse>> 메시지로 _Accepted_ 상태로 응답해야 합니다. |{nbsp}
-|N09.FR.03 |충전소가 이 요청을 처리할 수 없는 상태일 때.
-|<<customer_information_request,CustomerInformationRequest>>를 수신하면 충전소는 <<customer_information_response,CustomerInformationResponse>>를 _Rejected_ 상태로 응답해야 합니다. |{nbsp}
+|N09.FR.01 |CSMS가 충전기에서 CustomerInformation을 검색하려는 경우
+  |<<customer_information_request,CustomerInformationRequest>>의 report 플래그는 _true_ 로 설정해야 합니다. |{nbsp}
+|N09.FR.02 |충전기가 <<customer_information_request,CustomerInformationRequest>>를 수신 AND +
+  이 요청을 처리할 수 있는 상태인 경우
+    |충전기는 <<customer_information_response,CustomerInformationResponse>> 메시지로 _Accepted_ 상태로 응답해야 합니다. |{nbsp}
+|N09.FR.03 |충전기가 이 요청을 처리할 수 없는 상태일 때
+  |<<customer_information_request,CustomerInformationRequest>>를 수신하면 충전기는 <<customer_information_response,CustomerInformationResponse>>를 _Rejected_ 상태로 응답해야 합니다. |{nbsp}
 |N09.FR.04 |{nbsp}
-|CSMS는 <<customer_information_request,CustomerInformationRequest>>에 <<id_token_type,idToken>>, <<certificate_hash_data_type,customerCertificate>> 또는 customerIdentifier를 포함하여 고객에 대한 참조를 포함해야 합니다. |{nbsp}
+  |CSMS는 <<customer_information_request,CustomerInformationRequest>>에 <<id_token_type,idToken>>, <<certificate_hash_data_type,customerCertificate>> 또는 customerIdentifier를 포함하여 고객에 대한 참조를 포함해야 합니다. |{nbsp}
 |N09.FR.05 |N09.FR.02 AND +
-충전소에는 고객 식별자가 참조하는 고객에 대한 정보가 저장되어 있습니다.
-|충전소는 요청된 정보를 하나 이상의 <<notify_customer_information_request,NotifyCustomerInformationRequest>> 메시지를 통해 CSMS로 전송해야 합니다. |{nbsp}
+  충전기에는 고객 식별자가 참조하는 고객에 대한 정보가 저장되어 있습니다.
+    |충전기는 요청된 정보를 하나 이상의 <<notify_customer_information_request,NotifyCustomerInformationRequest>> 메시지를 통해 CSMS로 전송해야 합니다. |{nbsp}
 |N09.FR.06 |N09.FR.02 AND +
-충전소에는 고객 식별자가 참조하는 고객에 대한 정보가 저장되어 있지 않습니다.
-|충전소는 데이터를 찾을 수 없음을 나타내는 <<notify_customer_information_request,NotifyCustomerInformationRequest>> 메시지를 CSMS로 전송해야 합니다. |{nbsp}
-|N09.FR.07 |<<customer_information_request,CustomerInformationRequest>>를 수신할 때 보고 플래그와 지우기 플래그가 모두 _false_로 설정되어 있는 경우
-|<<customer_information_response,CustomerInformationResponse>> 메시지를 상태 _Rejected_로 응답하는 것이 좋습니다. |{nbsp}
-|N09.FR.08 |_customerCertificate_에 따라 사용자 정보를 요청할 때
-|CSMS는 인증서를 설치하는 데 사용된 _hashAlgorithm_을 사용해야 합니다.
-|새 펌웨어를 설치할 때 CSMS는 사용된 _hashAlgorithm_을 확인하기 위해 먼저 <<get_installed_certificate_ids_request,GetInstalledCertificateIdsRequest>>를 사용하여 인증서를 요청하는 것이 좋습니다.
-|N09.FR.09 |<<customer_information_request,CustomerInformationRequest>>에 _idToken_, _customerCertificate_ 또는 _customerIdentifier_가 하나도 없거나 <<customer_information_request,CustomerInformationRequest>>에 _idToken_, _customerCertificate_ 또는 _customerIdentifier_가 두 개 이상 포함된 경우
-|충전소는 _status_ = `Invalid`로 응답해야 합니다.
-|_idToken_, _customerCertificate_ 또는 _customerIdentifier_에 대한 값은 하나만 제공될 수 있습니다. +
-N09.FR.04의 충전소 대응 요구 사항.
+  충전기에는 고객 식별자가 참조하는 고객에 대한 정보가 저장되어 있지 않습니다.
+    |충전기는 데이터를 찾을 수 없음을 나타내는 <<notify_customer_information_request,NotifyCustomerInformationRequest>> 메시지를 CSMS로 전송해야 합니다. |{nbsp}
+|N09.FR.07 |<<customer_information_request,CustomerInformationRequest>>를 수신할 때 report 플래그와 clear 플래그가 모두 _false_ 로 설정되어 있는 경우
+  |<<customer_information_response,CustomerInformationResponse>> 메시지를 상태 _Rejected_ 로 응답하는 것이 좋습니다. |{nbsp}
+|N09.FR.08 |_customerCertificate_ 에 따라 사용자 정보를 요청할 때
+  |CSMS는 인증서를 설치하는 데 사용된 _hashAlgorithm_ 을 사용해야 합니다.
+    |새 펌웨어를 설치할 때 CSMS는 사용된 _hashAlgorithm_ 을 확인하기 위해 먼저 <<get_installed_certificate_ids_request,GetInstalledCertificateIdsRequest>>를 사용하여 인증서를 요청하는 것이 좋습니다.
+|N09.FR.09 |<<customer_information_request,CustomerInformationRequest>>에 _idToken_, _customerCertificate_ 또는 _customerIdentifier_ 가 하나도 없거나 <<customer_information_request,CustomerInformationRequest>>에 _idToken_, _customerCertificate_ 또는 _customerIdentifier_ 가 두 개 이상 포함된 경우
+  |충전기는 _status_ = `Invalid` 로 응답해야 합니다.
+    |_idToken_, _customerCertificate_ 또는 _customerIdentifier_ 에 대한 값은 하나만 제공될 수 있습니다. +
+    충전기의 N09.FR.04에 해당하는 요구사항입니다.
 |===
 
 === N10 - Clear Customer Information
@@ -718,16 +720,16 @@ N09.FR.04의 충전소 대응 요구 사항.
 |1 |이름 |고객 정보 지우기
 |2 |ID |N10
 |{nbsp} d|_기능 블록_ |N. 진단
-|3 |목표 |CSMS가 충전소에서 원시 고객 정보를 지우고(검색)할 수 있도록 합니다.
-|4 |설명 |CSMS는 충전소에 메시지를 보내 원시 고객 정보를 지우고(검색)합니다. 예를 들어, 지역 개인 정보 보호법을 준수하기 위해서입니다. 충전소는 하나 이상의 보고서를 보내 CSMS에 알립니다.
-|{nbsp} d|_Actors_ |충전소, CSMS
+|3 |목표 |CSMS가 충전기에서 고객 정보 원본을 지우고(검색)할 수 있도록 합니다.
+|4 |설명 |CSMS는 충전기에 메시지를 보내 고객 정보 원본을 지우고(검색)합니다. 예를 들어, 지역 개인 정보 보호법을 준수하기 위해서입니다. 충전기는 하나 이상의 보고서를 보내 CSMS에 알립니다.
+|{nbsp} d|_Actors_ |충전기, CSMS
 |{nbsp} d|_시나리오 설명_
-|**1.** CSMS는 <<customer_information_request,CustomerInformationRequest>>를 clear 플래그가 true로 설정된 상태로 충전소로 전송하고 고객(<<id_token_type,idToken>>, <<certificate_hash_data_type,customerCertificate>> 또는 customerIdentifier)에 대한 참조를 포함합니다. +
-**2.** 충전소는 <<customer_information_response,CustomerInformationResponse>>로 응답하여 전송할지 여부를 표시합니다. +
-**3.** 보고 플래그가 _true_로 설정된 경우 충전소는 하나 이상의 <<notify_customer_information_request,NotifyCustomerInformationRequest>> 메시지를 CSMS로 전송합니다. +
-**4.** CSMS는 하나 이상의 <<notify_customer_information_response,NotifyCustomerInformationResponse>> 메시지로 충전소에 응답합니다.
-|5 |필수 조건 |해당 없음
-|6 |사후 조건 |CSMS는 상태가 _Accepted_인 <<customer_information_response,CustomerInformationResponse>> 메시지를 _성공적으로_ 수신했으며, 충전소는 요청한 대로 고객 정보를 제거했고(보고 플래그가 _true_로 설정된 경우) CSMS는 제거된 데이터를 _성공적으로_ 수신했습니다.
+  |**1.** CSMS는 <<customer_information_request,CustomerInformationRequest>>를 clear 플래그가 true로 설정된 상태로 충전기로 전송하고 고객(<<id_token_type,idToken>>, <<certificate_hash_data_type,customerCertificate>> 또는 customerIdentifier)에 대한 참조를 포함합니다. +
+  **2.** 충전기는 <<customer_information_response,CustomerInformationResponse>>로 응답하여 전송할지 여부를 표시합니다. +
+  **3.** report 플래그가 _true_ 로 설정된 경우 충전기는 하나 이상의 <<notify_customer_information_request,NotifyCustomerInformationRequest>> 메시지를 CSMS로 전송합니다. +
+  **4.** CSMS는 하나 이상의 <<notify_customer_information_response,NotifyCustomerInformationResponse>> 메시지로 충전기에 응답합니다.
+|5 |필수 조건 |n/a
+|6 |사후 조건 |CSMS는 상태가 _Accepted_ 인 <<customer_information_response,CustomerInformationResponse>> 메시지를 _성공적으로_ 수신했으며, 충전기는 요청한 대로 고객 정보를 제거했고(report 플래그가 _true_ 로 설정된 경우) CSMS는 제거된 데이터를 _성공적으로_ 수신했습니다.
 |===
 
 .시퀀스 다이어그램: 고객 정보 지우기
@@ -736,7 +738,7 @@ image::part2/images/figure_140.svg[시퀀스 다이어그램: 고객 정보 지�
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7 |오류 처리 |n/a
-|8 |주의 |n/a
+|8 |참고 |n/a
 |===
 
 ==== N10 - Clear Customer Information - Requirements
@@ -746,32 +748,32 @@ image::part2/images/figure_140.svg[시퀀스 다이어그램: 고객 정보 지�
 |===
 |ID |전제 조건 |요구 사항 정의 |참고
 
-|N10.FR.01 |충전소가 <<customer_information_request,CustomerInformationRequest>>를 수신하고 +
-이 요청을 처리할 수 있는 상태에 있는 경우.
-|충전소는 <<customer_information_response,CustomerInformationResponse>> 메시지로 _Accepted_ 상태로 응답해야 합니다. |{nbsp}
-|N10.FR.02 |고객 식별자가 참조하는 고객이 충전소의 <<local_authorization_list,Local Authorization List>>에 있는 경우
-|CSMS는 <<send_local_list_request,SendLocalListRequest>>를 사용하여 <<local_authorization_list,Local Authorization List>>를 업데이트해야 합니다(<<send_local_authorization_list,D01 - Send Local Authorization List>> 참조).
-|<<local_authorization_list,Local Authorization List>> 버전과 관련된 문제를 방지하기 위해.
-|N10.FR.03 |N10.FR.01 및 +
-지우기 플래그가 _true_로 설정되고 보고 플래그가 _true_로 설정된 <<customer_information_request,CustomerInformationRequest>>를 수신하고 +
-충전소에 고객 식별자가 참조하는 고객에 대한 정보가 저장되어 있습니다.
-|충전소는 고객 식별자가 참조하는 고객에 대한 모든 고객 관련 데이터를 충전소에서 제거해야 하며, LocalList는 제외해야 하며 충전소는 삭제된 정보를 하나 이상의 <<notify_customer_information_request,NotifyCustomerInformationRequest>> 메시지를 통해 CSMS로 전송해야 합니다.
-|LocalList 버전에서 발생하는 문제를 방지하기 위해 CSMS만 LocalList의 내용을 변경할 수 있습니다.
-|N10.FR.04 |N10.FR.01 및 +
-삭제 플래그가 _true_로 설정되고 보고 플래그가 _true_로 설정된 <<customer_information_request,CustomerInformationRequest>>를 수신하고 +
-충전소에는 고객 식별자가 참조하는 고객에 대한 정보가 저장되어 있지 않습니다.
-|충전소는 CSMS에 하나의 <<notify_customer_information_request,NotifyCustomerInformationRequest>> 메시지를 전송하여 데이터가 발견되지 않았음을 표시해야 합니다. |{nbsp}
-|N10.FR.05 |충전소가 <<customer_information_request,CustomerInformationRequest>>를 수신하고 이 요청을 처리할 수 없는 상태인 경우.
-|충전소는 <<customer_information_response,CustomerInformationResponse>>로 응답해야 하며 상태는 _Rejected_입니다. |{nbsp}
-|N10.FR.06 |N10.FR.01 그리고 +
-지우기 플래그가 _true_로, 보고 플래그가 _false_로 설정된 <<customer_information_request,CustomerInformationRequest>>를 수신해야 합니다.
-|충전소는 고객 식별자가 참조하는 고객에 대한 모든 고객 관련 데이터를 충전소에서 제거해야 하며, LocalList는 제외해야 하며 충전소는 데이터가 지워졌음을 나타내는 <<notify_customer_information_request,NotifyCustomerInformationRequest>> 메시지를 CSMS에 보내야 합니다.
-|LocalList 버전에서 발생하는 문제를 방지하기 위해 CSMS만 LocalList의 내용을 변경할 수 있습니다.
-|N10.FR.07 |<<customer_information_request,CustomerInformationRequest>>를 수신할 때 보고 플래그와 지우기 플래그가 모두 _false_로 설정되어 있는 경우
-|<<customer_information_response,CustomerInformationResponse>> 메시지를 _Rejected_ 상태로 응답하는 것이 좋습니다. |{nbsp}
+|N10.FR.01 |충전기가 <<customer_information_request,CustomerInformationRequest>>를 수신 AND +
+  이 요청을 처리할 수 있는 상태에 있는 경우
+    |충전기는 <<customer_information_response,CustomerInformationResponse>> 메시지로 _Accepted_ 상태로 응답해야 합니다. |{nbsp}
+|N10.FR.02 |고객 식별자가 참조하는 고객이 충전기의 <<local_authorization_list,Local Authorization List>>에 있는 경우
+  |CSMS는 <<send_local_list_request,SendLocalListRequest>>를 사용하여 <<local_authorization_list,Local Authorization List>>를 업데이트해야 합니다(<<send_local_authorization_list,D01 - Send Local Authorization List>> 참조).
+    |<<local_authorization_list,Local Authorization List>> 버전과 관련된 문제를 방지하기 위함입니다
+|N10.FR.03 |N10.FR.01 AND +
+  clear 플래그가 _true_ 로 설정되고 report 플래그가 _true_ 로 설정된 <<customer_information_request,CustomerInformationRequest>>를 수신 AND +
+  충전기에 고객 식별자가 참조하는 고객에 대한 정보가 저장되어 있는 경우
+    |충전기는 고객 식별자가 참조하는 고객에 대한 모든 고객 관련 데이터를 충전기에서 제거해야 하며, LocalList는 제외해야 하며 충전기는 삭제된 정보를 하나 이상의 <<notify_customer_information_request,NotifyCustomerInformationRequest>> 메시지를 통해 CSMS로 전송해야 합니다.
+      |LocalList 버전에서 발생하는 문제를 방지하기 위해 CSMS만 LocalList의 내용을 변경할 수 있습니다.
+|N10.FR.04 |N10.FR.01 AND +
+  clear 플래그가 _true_ 로 설정되고 report 플래그가 _true_ 로 설정된 <<customer_information_request,CustomerInformationRequest>>를 수신 AND +
+  충전기에는 고객 식별자가 참조하는 고객에 대한 정보가 저장되어 있지 않는 경우
+    |충전기는 CSMS에 하나의 <<notify_customer_information_request,NotifyCustomerInformationRequest>> 메시지를 전송하여 데이터가 발견되지 않았음을 표시해야 합니다. |{nbsp}
+|N10.FR.05 |충전기가 <<customer_information_request,CustomerInformationRequest>>를 수신하고 이 요청을 처리할 수 없는 상태인 경우
+  |충전기는 <<customer_information_response,CustomerInformationResponse>>로 응답해야 하며 상태는 _Rejected_ 입니다. |{nbsp}
+|N10.FR.06 |N10.FR.01 AND +
+  clear 플래그가 _true_ 로, report 플래그가 _false_ 로 설정된 <<customer_information_request,CustomerInformationRequest>>를 수신해야 합니다.
+    |충전기는 고객 식별자가 참조하는 고객에 대한 모든 고객 관련 데이터를 충전기에서 제거해야 하며, LocalList는 제외해야 하며 충전기는 데이터가 지워졌음을 나타내는 <<notify_customer_information_request,NotifyCustomerInformationRequest>> 메시지를 CSMS에 보내야 합니다.
+      |LocalList 버전에서 발생하는 문제를 방지하기 위해 CSMS만 LocalList의 내용을 변경할 수 있습니다.
+|N10.FR.07 |<<customer_information_request,CustomerInformationRequest>>를 수신할 때 report 플래그와 clear 플래그가 모두 _false_ 로 설정되어 있는 경우
+  |<<customer_information_response,CustomerInformationResponse>> 메시지를 _Rejected_ 상태로 응답하는 것이 좋습니다. |{nbsp}
 |N10.FR.08 |{nbsp}
-|CSMS는 <<id_token_type,idToken>>, <<certificate_hash_data_type,customerCertificate>> 또는 customerIdentifier를 <<customer_information_request,CustomerInformationRequest>>에 포함하여 고객에 대한 참조를 포함해야 합니다. |{nbsp}
-|N10.FR.09 |_customerCertificate_에 따라 사용자 정보를 지울 때
-|CSMS는 인증서를 설치하는 데 사용된 _hashAlgorithm_을 사용해야 합니다.
-|새 펌웨어가 설치되면 CSMS가 사용된 _hashAlgorithm_을 확인하기 위해 <<get_installed_certificate_ids_request,GetInstalledCertificateIdsRequest>>를 사용하여 먼저 인증서를 요청하는 것이 좋습니다.
+  |CSMS는 <<id_token_type,idToken>>, <<certificate_hash_data_type,customerCertificate>> 또는 customerIdentifier를 <<customer_information_request,CustomerInformationRequest>>에 포함하여 고객에 대한 참조를 포함해야 합니다. |{nbsp}
+|N10.FR.09 |_customerCertificate_ 에 따라 사용자 정보를 지울 때
+  |CSMS는 인증서를 설치하는 데 사용된 _hashAlgorithm_ 을 사용해야 합니다.
+    |새 펌웨어가 설치되면 CSMS가 사용된 _hashAlgorithm_ 을 확인하기 위해 <<get_installed_certificate_ids_request,GetInstalledCertificateIdsRequest>>를 사용하여 먼저 인증서를 요청하는 것이 좋습니다.
 |===

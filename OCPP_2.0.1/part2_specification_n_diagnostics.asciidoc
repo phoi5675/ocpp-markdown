@@ -29,11 +29,10 @@ This Functional Block describes the diagnostics functionality of OCPP. This func
 |{nbsp} d|_Scenario description_ 
   |**1.** The CSMS sends a <<get_log_request,GetLogRequest>> to the Charging Station. +
   **2.** The Charging Station responds with a <<get_log_response,GetLogResponse>>. +
-  **3.** The Charging Station sends a <<log_status_notification_request,LogStatusNotificationRequest>> with the status Uploading +
-  **4.** The CSMS responds with a <<log_status_notification_response,LogStatusNotificationResponse>> acknowledging the status update +
-  request. +
+  **3.** The Charging Station sends a <<log_status_notification_request,LogStatusNotificationRequest>> with the status `Uploading` +
+  **4.** The CSMS responds with a <<log_status_notification_response,LogStatusNotificationResponse>> acknowledging the status update request. +
   **5.** Uploading of the diagnostics files. +
-  **6.** The Charging Station sends <<log_status_notification_request,LogStatusNotificationRequest>> with the status Uploaded. +
+  **6.** The Charging Station sends <<log_status_notification_request,LogStatusNotificationRequest>> with the status `Uploaded`. +
   **7.** The CSMS responds with <<log_status_notification_response,LogStatusNotificationResponse>>, acknowledging the status update request.
 |5   |Prerequisite(s)
   |- Diagnostics information is available for upload. +
@@ -264,9 +263,9 @@ image::part2/images/figure_133.svg[Sequence Diagram: Set Monitoring Base]
 |7   |Error handling  |n/a
 |8   |Remark(s)       |Upon receipt of a SetMonitoringBaseRequest for `HardWiredOnly` or `FactoryDefault` the Charging Station will discard of any previously configured custom monitors and will activate the monitoring settings that are related to given MonitoringBase.
 
-For a MonitoringBase = `All` the Charging Station will activate all pre-configured monitors and leave previously configured custom monitors intact. This includes the custom monitors that were created when changing an existing pre-configured monitor.
+  For a MonitoringBase = `All` the Charging Station will activate all pre-configured monitors and leave previously configured custom monitors intact. This includes the custom monitors that were created when changing an existing pre-configured monitor.
 
-When the set of pre-configured monitors for `All` and `FactoryDefault` is the same, then the difference between the two is, that with `FactoryDefault` all custom monitors are deleted before the factory default pre-configured monitors are restored.
+  When the set of pre-configured monitors for `All` and `FactoryDefault` is the same, then the difference between the two is, that with `FactoryDefault` all custom monitors are deleted before the factory default pre-configured monitors are restored.
 |===
 
 ==== N03 - Set Monitoring Base - Requirements
@@ -331,8 +330,7 @@ image::part2/images/figure_134.svg[Sequence Diagram: Set Variable Monitoring]
 |===
 |ID         |Precondition         |Requirement definition     |Note
 
-|N04.FR.01  |When the Charging Station receives a <<set_variable_monitoring_request,SetVariableMonitoringRequest>> with an X number of <<set_monitoring_data_type,SetMonitoringData>>
-elements
+|N04.FR.01  |When the Charging Station receives a <<set_variable_monitoring_request,SetVariableMonitoringRequest>> with an X number of <<set_monitoring_data_type,SetMonitoringData>> elements
   |The Charging Station SHALL respond with an <<set_variable_monitoring_response,SetVariableMonitoringResponse>> with an equal (X) number of <<set_monitoring_result_type,SetMonitoringResult>> elements, one for every <<set_monitoring_data_type,SetMonitoringData>> element in the <<set_variable_monitoring_request,SetVariableMonitoringRequest>>. |{nbsp}
 |N04.FR.02  |N04.FR.01
   |Every <<set_monitoring_result_type,SetMonitoringResult>> element in the <<set_variable_monitoring_response,SetVariableMonitoringResponse>> SHALL contain the same _component_ and _variable_ combination as one of the <<set_variable_monitoring_request,SetVariableMonitoringRequest>> elements in the <<set_variable_monitoring_request,SetVariableMonitoringRequest>>. |{nbsp}
@@ -638,7 +636,7 @@ image::part2/images/figure_138.svg[Sequence Diagram: Periodic Event]
   the number of seconds specified in _monitorValue_ have passed (starting from the time that this monitor was set or triggered)
     |The Charging Station SHALL send a <<notify_event_request,NotifyEventRequest>> with _trigger_ <<monitor_enum_type,Periodic>> for the triggered monitor.
 |N08.FR.07  |When there is a monitor with type <<monitor_enum_type,PeriodicClockAligned>> on a Component/Variable combination AND +
-  the number of seconds specified by _monitorValue_, starting from the nearest clock- aligned interval after this monitor was set, have passed (For example, a _monitorValue_ of 900 will trigger event notices at 0, 15, 30 and 45 minutes after the hour, every hour)
+  the number of seconds specified by _monitorValue_, starting from the nearest clock-aligned interval after this monitor was set, have passed (For example, a _monitorValue_ of 900 will trigger event notices at 0, 15, 30 and 45 minutes after the hour, every hour)
     |The Charging Station SHALL send a <<notify_event_request,NotifyEventRequest>> with _trigger_ <<monitor_enum_type,Periodic>> for the triggered monitor.
 |===
 
