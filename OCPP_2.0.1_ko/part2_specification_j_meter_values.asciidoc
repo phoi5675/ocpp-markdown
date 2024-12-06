@@ -154,7 +154,7 @@ OCPP 2.0.1은 서명된 미터 값을 지원합니다. 충전기가 서명된 �
   **2.** <<metervalues_request, MeterValuesRequest>> 메시지를 수신하면 CSMS는 <<meter_values_response, MeterValuesResponse>> 메시지로 응답합니다.
 |5 |필수 조건 |충전기는 XX초마다 미터 값을 보내도록 구성되어 있습니다. +
 실행 중인 트랜잭션이 없습니다.
-|6 |사후 조건(들)
+|6 |사후 조건
   |**성공 사후 조건:** +
   n/a +
   **실패 사후 조건:** +
@@ -167,7 +167,7 @@ image::part2/images/figure_91.svg[시퀀스 다이어그램: 미터 값 전송]
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7 |오류 처리 |n/a
-|8 |참고 사항(들)
+|8 |참고 사항
   |위상 필드는 모든 <<measurand_enum_type,Measurands>>에 적용되지 않습니다.
 
   그리드 연결에 대한 커넥터의 위상 회전은 그리드 연결에서 커넥터까지 체인의 모든 구성 요소의 <<phase_rotation,`PhaseRotation`>> 구성 변수를 쿼리하여 파생할 수 있습니다.
@@ -263,7 +263,7 @@ image::part2/images/figure_91.svg[시퀀스 다이어그램: 미터 값 전송]
   **2.** <<transaction_event_request,TransactionEventRequest>> 메시지를 수신하면 CSMS는 <<transaction_event_response,TransactionEventResponse>> 메시지로 응답합니다.
 |5 |필수 조건 |충전기는 XX초마다 미터 값을 보내도록 구성되어 있습니다. +
   트랜잭션이 실행 중입니다.
-|6 |사후 조건(들)
+|6 |사후 조건
   |**성공 사후 조건:** +
   n/a +
   **실패 사후 조건:** +
@@ -277,7 +277,7 @@ image::part2/images/figure_92.svg[시퀀스 다이어그램: 트랜잭션 관련
 |===
 |7 |오류 처리
 |_Offline_ 일 때, 충전기는 충전기가 온라인 상태였다면 CSMS에 전송했을 트랜잭션 관련 메시지(트랜잭션에 속하는 미터 값)를 큐에 넣어야 합니다.
-|8 |주의 사항(들)
+|8 |주의 사항
   |위상 필드는 모든 <<measurand_enum_type,Measurands>>에 적용되지 않습니다.
 
   그리드 연결에 대한 Connector의 위상 회전은 그리드 연결에서 Connector까지 체인의 모든 구성 요소의 <<phase_rotation,`PhaseRotation`>> 구성 변수를 쿼리하여 얻을 수 있습니다.

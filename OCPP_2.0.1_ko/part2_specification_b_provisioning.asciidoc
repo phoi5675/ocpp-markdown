@@ -147,10 +147,10 @@ image::part2/images/figure_10.svg[시퀀스 다이어그램: 충전기 콜드 �
   **3.** CSMS가 <<boot_notification_response,BootNotificationResponse>>를 _Pending_ 상태로 응답합니다. +
   **4.** 그런 다음 CSMS가 충전기에 메시지를 보내 충전기의 구성을 변경할 수 있습니다. +
   **5.** 충전기는 간격 필드에 표시된 초 수 후에 <<boot_notification_request,BootNotificationRequest>>를 다시 전송합니다. (<<boot_notification_response,BootNotificationResponse>>부터의 간격)
-|5 |필수 조건(들)
+|5 |필수 조건
   |**1.** CSMS는 충전기를 _Pending_ 상태로 설정해야 합니다. +
   **2.** 충전기가 시작됩니다(즉, 전원이 꺼진 후 전원이 켜짐).
-|6 |사후 조건(들)
+|6 |사후 조건
   |**성공 사후 조건:** +
   충전기가 _Pending_ 상태입니다.
 
@@ -225,10 +225,10 @@ image::part2/images/figure_11.svg[시퀀스 다이어그램: 충전기 콜드 �
   **2.** 충전기가 <<boot_notification_request,BootNotificationRequest>>를 CSMS로 보냅니다. +
   **3** CSMS가 <<boot_notification_response,BootNotificationResponse>>를 충전기에 _Rejected_ 상태로 응답합니다. +
   **4.** 충전기는 간격 필드에 표시된 초 후에 <<boot_notification_request,BootNotificationRequest>>를 다시 보냅니다. (<<boot_notification_response,BootNotificationResponse>>부터의 간격).
-|5 |필수 조건(들)
+|5 |필수 조건
   |**1.** CSMS는 충전기를 _Rejected_ 상태로 설정해야 합니다. +
   **2.** 충전기의 전원이 꺼졌습니다.
-|6 |사후 조건(들) |충전기는 _Rejected_ 상태를 유지합니다.
+|6 |사후 조건 |충전기는 _Rejected_ 상태를 유지합니다.
 |===
 
 .시퀀스 다이어그램: 충전기 콜드 부트 - 거부됨

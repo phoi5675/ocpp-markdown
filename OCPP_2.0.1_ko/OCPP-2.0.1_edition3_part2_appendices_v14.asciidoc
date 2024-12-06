@@ -1075,7 +1075,7 @@ s|일반적으로 사용되는 변수 s|설명
 |Model[CT] |CT 모델 번호
 |ECVariant |계량기 엔지니어링 변경 변형
 |SerialNumber[Meter] |계량기 일련 번호
-|SerialNumber[CT] |CT 일련 번호(들)
+|SerialNumber[CT] |CT 일련 번호
 |Certificate |{nbsp}
 |OptionsSet [MeterValueAlignedData] |충전하는 동안 시계 정렬된 시간 간격으로 읽고 보고할 측정량 세트
 |OptionsSet +

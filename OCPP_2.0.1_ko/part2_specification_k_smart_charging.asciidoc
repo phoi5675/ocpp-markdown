@@ -525,7 +525,7 @@ image::part2/images/figure_101.svg[시퀀스 다이어그램: SetChargingProfile
   |<<k03_local_smart_charging,K03 - Local Smart Charging>> +
   <<k04_internal_load_balancing,K04 - Internal Load Balancing>>
 |5 |필수 조건 |기능 블록 _Smart Charging_ 이 설치되어 있습니다.
-|6 |사후 조건(들)
+|6 |사후 조건
   |**성공한 사후 조건:** +
   충전기는 CSMS에서 보낸 <<set_charging_profile_request,SetChargingProfileRequest>>에 따라 특정 EV의 충전 전력 또는 전류에 _성공적으로_ 영향을 미칩니다.
 
@@ -808,7 +808,7 @@ image::part2/images/figure_104.svg[시퀀스 다이어그램: 충전 프로파�
   **5.** 충전이 진행되는 동안 EVSE는 이미 설치된 <<charging_profile_type,ChargingProfiles>>에 따라 최대 전류 또는 전력을 지속적으로 조정합니다.
 |5 |필수 조건 |트랜잭션이 진행 중입니다. +
   기능 블록 _Smart Charging_ 이 설치되었습니다.
-|6 |사후 조건(들)
+|6 |사후 조건
   |**성공적인 사후 조건:** +
   충전 스테이션은 사용 가능한 충전 프로파일을 계속 사용합니다.
 
@@ -913,7 +913,7 @@ image::part2/images/figure_106.svg[시퀀스 다이어그램: 오프라인 동�
   **2.** 충전기는 일정을 계산합니다. +
   **3.** 충전기는 <<get_compositie_schedule_response,GetCompositeScheduleResponse>>로 상태와 <<charging_schedule_type,ChargingSchedule>>을 응답합니다.
 |5 |필수 조건 |기능 블록 _Smart Charging_ 이 설치되었습니다.
-|6 |사후 조건(들)
+|6 |사후 조건
   |**성공한 사후 조건:** +
   CSMS가 충전기에서 복합 일정을 _성공적으로_ 수신했습니다.
 
@@ -1180,7 +1180,7 @@ image::part2/images/figure_110.svg[Sequence diagram of the use case "Setting / U
   **5.** CSMS가 충전기에 <<notify_charging_limit_response,NotifyChargingLimitResponse>>로 응답합니다.
 |5 |필수 조건 |충전기가 오류 상태가 아닙니다. +
   OCPP가 아닌 다른 연결을 통해 충전기에서 충전 한도/일정을 설정/지울 수 있는 외부 시스템.
-|6 |사후 조건(들) |새로운 트랜잭션은 외부 시스템에서 수신한 충전 한도에 따라 제한됩니다. +
+|6 |사후 조건 |새로운 트랜잭션은 외부 시스템에서 수신한 충전 한도에 따라 제한됩니다. +
   CSMS는 외부 시스템에서 부과한 새로운 한도/일정을 통보받습니다.
 |===
 
@@ -1295,7 +1295,7 @@ image::part2/images/figure_112.svg["외부 충전 한도 리셋 / 릴리즈" 유
   **8.** 로컬 컨트롤러가 영향을 받는 모든 충전기에 <<clear_charging_profile_request,ClearChargingProfileRequest>> 메시지를 전송합니다.
 |5 |필수 조건 |진행 중인 트랜잭션. +
   OCPP가 아닌 다른 연결을 통해 로컬 컨트롤러에서 충전 한도/일정을 설정/지울 수 있는 외부 시스템.
-|6 |사후 조건(들)
+|6 |사후 조건
   |**성공한 사후 조건:** +
   진행 중인 트랜잭션은 외부 시스템에서 수신한 충전 한도에 의해 제한됩니다. +
   CSMS는 외부 시스템에서 부과한 새로운 한도/일정에 대해 알림을 받습니다.
@@ -1370,7 +1370,7 @@ image::part2/images/figure_113.svg[시퀀스 다이어그램: 로컬 컨트롤�
   **11.** 선택적으로 충전기는 <<notify_ev_charging_schedule_request,NotifyEVChargingScheduleRequest>> 메시지를 CSMS로 전송합니다.
 |6 |필수 조건 |충전기와 EV는 모두 ISO 15118을 지원합니다. +
   구성된 TxStartPoint에는 ParkingBayOccupied, EVConnected, Authorized 또는 PowerPathClosed 중 하나 이상이 포함되어야 하므로 EV에서 ChargeParameterDiscoverReq를 보내기 전에 OCPP 트랜잭션이 시작되어 CSMS가 TxProfile 충전 프로파일을 보낼 수 있습니다.
-|7 |사후 조건(들) |<<iso15118_1,ISO15118-1>> 참조, 사용 사례 종료 조건 E1, 29페이지.
+|7 |사후 조건 |<<iso15118_1,ISO15118-1>> 참조, 사용 사례 종료 조건 E1, 29페이지.
 |===
 
 .시퀀스 다이어그램: 고수즌 통신을 기반으로 한 부하 평준화 충전
@@ -1565,7 +1565,7 @@ image::part2/images/figure_115.svg[CSMS에서 재협상 시작]
   **8** 충전기는 PowerDeliveryRes로 응답하고, 재협상 시작 시 충전이 중단된 경우 전력 공급을 재개합니다. +
   **9** EV가 이전 단계에서 충전 프로파일을 제공한 경우 충전기는 <<notify_ev_charging_schedule_request,NotifyEVChargingScheduleRequest>>를 CSMS로 보냅니다.
 |5 |필수 조건 |사용 사례 K15에 따라 충전 세션이 시작되었습니다.
-|6 |사후 조건(들) |충전 세션이 새 충전 프로파일을 사용합니다.
+|6 |사후 조건 |충전 세션이 새 충전 프로파일을 사용합니다.
 |===
 
 .EV가 시작한 재협상

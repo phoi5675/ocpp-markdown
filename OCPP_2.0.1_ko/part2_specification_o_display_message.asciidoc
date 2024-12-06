@@ -38,11 +38,11 @@ DisplayMessage 기능을 사용하면 OCPP를 통해 CSO가 충전기 펌웨어�
   **2.** CSMS는 <<set_display_message_request,SetDisplayMessageRequest>> 메시지를 충전기로 보냅니다. +
   **3.** 충전기는 <<set_display_message_response,SetDisplayMessageResponse>> 메시지를 CSMS로 보내 요청을 수락합니다. +
   **4.** 충전기는 구성된 순간에 디스플레이에 새 메시지를 표시합니다.
-|{nbsp} d|_대체 시나리오(들)_
+|{nbsp} d|_대체 시나리오_
   |<<o02_set_display_message_for_transaction,O02 - Set DisplayMessage for Transaction>> +
   <<o06_replace_display_message,O06 - Replace DisplayMessage>>
 |5 |필수 조건 |동일한 ID로 구성된 메시지가 없습니다.
-|6 |사후 조건(들) |새 메시지가 충전기에 표시됩니다(시간, 기간 및 위치는 구성에 따라 다름)
+|6 |사후 조건 |새 메시지가 충전기에 표시됩니다(시간, 기간 및 위치는 구성에 따라 다름)
 |===
 
 .Set DisplayMessage sequence diagram
@@ -258,7 +258,7 @@ image::part2/images/figure_143.svg[Get All DisplayMessages 시퀀스 다이어�
   **4.** 충전기가 하나 이상의 <<notify_display_messages_request,NotifyDisplayMessagesRequest>> 메시지를 CSMS로 보냅니다(보낼 메시지 양에 따라 다름). +
   **5.** CSMS 응답은 <<notify_display_messages_response,NotifyDisplayMessagesResponse>> 메시지로 모든 알림을 보냅니다.
 |5 |필수 조건 |충전기에 구성된 주어진 ID가 있는 메시지가 있습니다.
-|6 |사후 조건(들) |n/a
+|6 |사후 조건 |n/a
 |===
 
 .Get a specific DisplayMessages sequence diagram
@@ -319,7 +319,7 @@ image::part2/images/figure_144.svg[Get a specific DisplayMessages sequence diagr
   **3.** 충전기가 메시지를 제거합니다. +
   **4.** 충전기가 <<clear_display_message_response,ClearDisplayMessageResponse>> 메시지를 CSMS로 보내 응답합니다.
 |5 |필수 조건 |충전기에 구성된 지정된 ID의 메시지가 있습니다.
-|6 |사후 조건(들) |지정된 ID의 메시지가 충전기에서 제거됩니다.
+|6 |사후 조건 |지정된 ID의 메시지가 충전기에서 제거됩니다.
 |===
 
 .Clear a DisplayMessage sequence diagram
