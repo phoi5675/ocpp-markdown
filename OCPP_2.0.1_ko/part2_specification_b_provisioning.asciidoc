@@ -551,11 +551,11 @@ image::part2/images/figure_16.svg[시퀀스 다이어그램: 기본 보고서 �
 |B07.FR.05 |B07.FR.02 |충전기는 CSMS에 <<notify_report_request,NotifyReportRequest>>를 보내서는 안 됩니다. |{nbsp}
 |B07.FR.07 |B07.FR.01 및 +
   _reportBase_ 가 <<report_base_enum_type,ConfigurationInventory>>인 경우
-    |그러면 충전기는 <<notify_report_request,NotifyReportRequest>>로 응답하여 운영자가 설정할 수 있는 모든 구성 요소 변수(_VariableCharacteristics_ 포함)를 보고해야 합니다. | {nbsp}
+    |그러면 충전기는 <<notify_report_request,NotifyReportRequest>>로 응답하여 운영자가 설정할 수 있는 모든 구성 요소 변수(_VariableCharacteristics_ 포함)를 보고해야 합니다. |{nbsp}
 |B07.FR.08 |B07.FR.01 및 +
   _reportBase_ 가 <<report_base_enum_type,FullInventory>>인 경우
     |그러면 충전기는 <<notify_report_request,NotifyReportRequest>>로 응답하여 모든 구성 요소 변수(_VariableCharacteristics_ 포함)를 보고해야 합니다.
-    최소한 <<charging_infrastructure_related,Charging Infrastructure related>>에 언급된 필수 변수는 보고되어야 하며, 구현된 각 기능 블록과 관련된 <<controller_components,Section 1 Controller Components>>에 있는 필수 변수도 보고되어야 합니다.
+      |최소한 <<charging_infrastructure_related,Charging Infrastructure related>>에 언급된 필수 변수는 보고되어야 하며, 구현된 각 기능 블록과 관련된 <<controller_components,Section 1 Controller Components>>에 있는 필수 변수도 보고되어야 합니다.
 |B07.FR.09 |B07.FR.01 AND +
   _reportBase_ 가 <<report_base_enum_type,SummaryInventory>>인 경우
     |그러면 충전기는 <<notify_report_request,NotifyReportRequest>>로 응답하여 충전기의 가용성 및 상태와 관련된 구성 요소 및 변수, 특히 충전기, EVSE 및 커넥터의 운영 상태와 오류 상태를 보고해야 합니다.
