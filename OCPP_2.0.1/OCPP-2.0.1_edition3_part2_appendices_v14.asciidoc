@@ -3,9 +3,10 @@
 :toc: 
 :toclevels: 2
 :toc-title: Table of Contents
+:chapter-signifier: Appendix
 :icons: font
 :icon-set: far
-:stem: 
+:stem: latexmath
 
 [discrete]
 == Part 2 - Appendices
@@ -42,7 +43,6 @@ Appendix 5: Added reason MissingDeviceModelInfo
 
 <<<
 
-:chapter-signifier: Appendix
 :sectnums:
 == Security Events
 
@@ -96,14 +96,14 @@ The standardized values for Unit of Measure. Default value of "unit" is always "
 |B          |Bytes
 |Celsius    |Degrees (temperature)
 |dB         |Decibel (for example Signal Strength)
-|dBm        |Power relative to 1mW (stem:[^{10}] log(P/1mW))
+|dBm        |Power relative to 1mW (latexmath:[^{10}\text{log(P/1mW)}])
 |Deg        |Degrees (angle/rotation)
 |Fahrenheit |Degrees (temperature)
 |Hz         |Hertz (frequency)
 |K          |Degrees Kelvin (temperature)
 |lx         |Lux (Light Intensity)
 |m          |Meter (length)
-|ms2        |m/sstem:[^{2}] (Acceleration)
+|ms2        |latexmath:[\text{m/s}^{2}] (Acceleration)
 |N          |Newtons (Force)
 |Ohm        |Ohm (Impedance)
 |kPa        |kiloPascal (Pressure)

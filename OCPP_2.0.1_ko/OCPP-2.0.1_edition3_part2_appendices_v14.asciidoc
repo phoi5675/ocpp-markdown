@@ -3,9 +3,10 @@
 :toc: 
 :toclevels: 2
 :toc-title: Table of Contents
+:chapter-signifier: Appendix
 :icons: font
 :icon-set: far
-:stem: 
+:stem: latexmath
 
 [discrete]
 == Part 2 - Appendices
@@ -42,7 +43,6 @@ Edition 3 v1.4 FINAL, 2024-05-06
 
 <<<
 
-:chapter-signifier: Appendix
 :sectnums:
 == Security Events
 
@@ -88,14 +88,14 @@ _(v1.3에서 업데이트됨)_
 |B |바이트
 |Celsius |도(온도)
 |dB |데시벨(예: 신호 강도)
-|dBm |1mW에 대한 전력(stem:[^{10}]log(P/1mW))
+|dBm |1mW에 대한 전력(latexmath:[^{10}\text{log(P/1mW)}])
 |Deg |도(각도/회전)
 |Fahrenheit |도(온도)
 |Hz |헤르츠(주파수)
 |K |켈빈도(온도)
 |lx |룩스(조도)
 |m |미터(길이)
-|ms2 |m/sstem:[^{2}](가속도)
+|ms2 |latexmath:[\text{m/s}^{2}](가속도)
 |N |뉴턴 (힘)
 |Ohm |옴 (임피던스)
 |kPa |킬로파스칼 (압력)
