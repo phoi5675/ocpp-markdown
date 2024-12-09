@@ -1171,7 +1171,7 @@
   |variableAttributes |mutability d|ReadWrite
   .2+|variableCharacteristics |dataType d|MemberList
     |maxLimit d|The maximum length of the CSV formatted string, to be defined by the implementer.
-|Description 3+d|트랜잭션 시작부터 트랜잭션 종료 시 마지막 측정량까지 <<sampled_data_tx_ended_interval,`SampledDataTxEndedInterval`>>초마다 <<transaction_event_request,TransactionEventRequest>>의 _meterValues_ 요소에 포함될 샘플링된 측정량(<<transaction_event_enum_type,eventType = Ended>>)입니다. +
+|Description 3+d|트랜잭션 시작부터 트랜잭션 종료 시 마지막 측정량까지 <<sampled_data_tx_ended_interval,`SampledDataTxEndedInterval`>>초마다 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>)의 _meterValues_ 요소에 포함될 샘플링된 측정량입니다. +
   충전기는 이 변수의 <<variable_characteristics_type,VariableCharacteristicsType.valuesList>>에 지원되는 <<measurand_enum_type,Measurands>> 목록을 보고합니다. 이렇게 하면 CSMS가 `TxEndedSampledData` 에 넣을 수 있는 <<measurand_enum_type,Measurands>>를 알 수 있습니다.
 
   비어 있는 경우, 샘플링된 측정값은 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>)에 넣지 않아야 합니다.
