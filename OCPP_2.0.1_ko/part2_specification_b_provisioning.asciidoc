@@ -147,10 +147,10 @@ image::part2/images/figure_10.svg[시퀀스 다이어그램: 충전기 콜드 �
   **3.** CSMS가 <<boot_notification_response,BootNotificationResponse>>를 _Pending_ 상태로 응답합니다. +
   **4.** 그런 다음 CSMS가 충전기에 메시지를 보내 충전기의 구성을 변경할 수 있습니다. +
   **5.** 충전기는 간격 필드에 표시된 초 수 후에 <<boot_notification_request,BootNotificationRequest>>를 다시 전송합니다. (<<boot_notification_response,BootNotificationResponse>>부터의 간격)
-|5 |필수 조건(들)
+|5 |필수 조건
   |**1.** CSMS는 충전기를 _Pending_ 상태로 설정해야 합니다. +
   **2.** 충전기가 시작됩니다(즉, 전원이 꺼진 후 전원이 켜짐).
-|6 |사후 조건(들)
+|6 |사후 조건
   |**성공 사후 조건:** +
   충전기가 _Pending_ 상태입니다.
 
@@ -225,10 +225,10 @@ image::part2/images/figure_11.svg[시퀀스 다이어그램: 충전기 콜드 �
   **2.** 충전기가 <<boot_notification_request,BootNotificationRequest>>를 CSMS로 보냅니다. +
   **3** CSMS가 <<boot_notification_response,BootNotificationResponse>>를 충전기에 _Rejected_ 상태로 응답합니다. +
   **4.** 충전기는 간격 필드에 표시된 초 후에 <<boot_notification_request,BootNotificationRequest>>를 다시 보냅니다. (<<boot_notification_response,BootNotificationResponse>>부터의 간격).
-|5 |필수 조건(들)
+|5 |필수 조건
   |**1.** CSMS는 충전기를 _Rejected_ 상태로 설정해야 합니다. +
   **2.** 충전기의 전원이 꺼졌습니다.
-|6 |사후 조건(들) |충전기는 _Rejected_ 상태를 유지합니다.
+|6 |사후 조건 |충전기는 _Rejected_ 상태를 유지합니다.
 |===
 
 .시퀀스 다이어그램: 충전기 콜드 부트 - 거부됨
@@ -551,11 +551,11 @@ image::part2/images/figure_16.svg[시퀀스 다이어그램: 기본 보고서 �
 |B07.FR.05 |B07.FR.02 |충전기는 CSMS에 <<notify_report_request,NotifyReportRequest>>를 보내서는 안 됩니다. |{nbsp}
 |B07.FR.07 |B07.FR.01 및 +
   _reportBase_ 가 <<report_base_enum_type,ConfigurationInventory>>인 경우
-    |그러면 충전기는 <<notify_report_request,NotifyReportRequest>>로 응답하여 운영자가 설정할 수 있는 모든 구성 요소 변수(_VariableCharacteristics_ 포함)를 보고해야 합니다. | {nbsp}
+    |그러면 충전기는 <<notify_report_request,NotifyReportRequest>>로 응답하여 운영자가 설정할 수 있는 모든 구성 요소 변수(_VariableCharacteristics_ 포함)를 보고해야 합니다. |{nbsp}
 |B07.FR.08 |B07.FR.01 및 +
   _reportBase_ 가 <<report_base_enum_type,FullInventory>>인 경우
     |그러면 충전기는 <<notify_report_request,NotifyReportRequest>>로 응답하여 모든 구성 요소 변수(_VariableCharacteristics_ 포함)를 보고해야 합니다.
-    최소한 <<charging_infrastructure_related,Charging Infrastructure related>>에 언급된 필수 변수는 보고되어야 하며, 구현된 각 기능 블록과 관련된 <<controller_components,Section 1 Controller Components>>에 있는 필수 변수도 보고되어야 합니다.
+      |최소한 <<charging_infrastructure_related,Charging Infrastructure related>>에 언급된 필수 변수는 보고되어야 하며, 구현된 각 기능 블록과 관련된 <<controller_components,Section 1 Controller Components>>에 있는 필수 변수도 보고되어야 합니다.
 |B07.FR.09 |B07.FR.01 AND +
   _reportBase_ 가 <<report_base_enum_type,SummaryInventory>>인 경우
     |그러면 충전기는 <<notify_report_request,NotifyReportRequest>>로 응답하여 충전기의 가용성 및 상태와 관련된 구성 요소 및 변수, 특히 충전기, EVSE 및 커넥터의 운영 상태와 오류 상태를 보고해야 합니다.

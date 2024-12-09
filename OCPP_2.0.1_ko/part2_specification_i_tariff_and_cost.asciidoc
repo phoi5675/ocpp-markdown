@@ -154,7 +154,7 @@ image::part2/images/figure_86.svg[시퀀스 다이어그램: 충전 중 EV 운�
 |{nbsp} |_대체 시나리오_ |<<i05_show_fallback_total_cost_message,I05 - Show Fallback Total Cost Message>>
 |5 |필수 조건 |충전기는 단가 정보를 지원합니다. +
   진행 중인 트랜잭션
-|6 |사후 조건(들)
+|6 |사후 조건
   |**성공한 사후 조건:** +
   EV 운전자는 트랜잭션의 총 비용을 알고 있습니다.
 
@@ -219,7 +219,7 @@ image::part2/images/figure_87.svg[시퀀스 다이어그램: 충전 후 EV 운�
 |{nbsp} d|_대체 시나리오_ |<<i01_show_ev_driver_specific_tariff_information,I01 - Show EV Driver-specific Tariff Information>>
 |5 |필수 조건 |충전기는 요금 정보를 지원합니다. +
   구성 변수: <<tariff_fallback_message,TariffFallbackMessage>>가 구성됩니다.
-|6 |사후 조건(들)
+|6 |사후 조건
   |**성공한 사후 조건:** +
   EV 운전자에게 대체 요금 정보 메시지가 표시되었습니다.
 
@@ -271,7 +271,7 @@ image::part2/images/figure_88.svg[시퀀스 다이어그램: 대체 단가 정�
 |5 |필수 조건 |충전기가 요금 정보를 지원합니다. +
   충전기가 _offline_ 입니다. +
   구성 변수: <<total_cost_fallback_message,`TotalCostFallbackMessage`>>가 구성되었습니다.
-|6 |사후 조건(들)
+|6 |사후 조건
   |**성공한 사후 조건:** +
   EV 드라이버가 사전 구성된 폴백 메시지를 수신했습니다. +
   **실패 사후 조건:** +
@@ -324,7 +324,7 @@ image::part2/images/figure_89.svg[시퀀스 다이어그램: 폴백 총 비용 �
   **3.** CSMS는 <<transaction_event_response,TransactionEventResponse>> 메시지로 확인합니다. 여기에는 업데이트된 요금 정보가 포함되어 있습니다(있는 경우).
 |5 |필수 조건 |충전기는 요금 정보를 지원합니다. +
   진행 중인 트랜잭션이 있습니다.
-|6 |사후 조건(들)
+|6 |사후 조건
   |**성공적인 사후 조건:** +
   업데이트된 요금 정보가 EV 운전자에게 표시됩니다.
 

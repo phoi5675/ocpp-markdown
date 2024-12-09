@@ -3,6 +3,7 @@
 :toc: 
 :toclevels: 2
 :toc-title: Table of Contents
+:chapter-signifier: Appendix
 :icons: font
 :icon-set: far
 :stem: latexmath
@@ -42,7 +43,7 @@ Appendix 5: Added reason MissingDeviceModelInfo
 
 <<<
 
-:chapter-signifier: Appendix
+:sectnums:
 == Security Events
 
 The table below provides a list of security events. Security events that are implemented SHALL be stored at the security log and security events that are implemented and marked as critical SHALL also be pushed to the CSMS. +
@@ -50,7 +51,7 @@ This is a non-exhaustive list of security events, when a security event matches 
 
 _(Updated in v1.3)_
 
-[%autowidth.stretch,options="header,autowidth"]
+[%autowidth.stretch,cols="<.^3,<.^7,<.^1",options="header,autowidth"]
 |===
 |Security Event      |Description                              |Critical
 |FirmwareUpdated     |The Charging Station firmware is updated |Yes
@@ -95,14 +96,14 @@ The standardized values for Unit of Measure. Default value of "unit" is always "
 |B          |Bytes
 |Celsius    |Degrees (temperature)
 |dB         |Decibel (for example Signal Strength)
-|dBm        |Power relative to 1mW (stem:[^{10}] log(P/1mW))
+|dBm        |Power relative to 1mW (latexmath:[^{10}\text{log(P/1mW)}])
 |Deg        |Degrees (angle/rotation)
 |Fahrenheit |Degrees (temperature)
 |Hz         |Hertz (frequency)
 |K          |Degrees Kelvin (temperature)
 |lx         |Lux (Light Intensity)
 |m          |Meter (length)
-|ms2        |m/sstem:[^{2}] (Acceleration)
+|ms2        |latexmath:[\text{m/s}^{2}] (Acceleration)
 |N          |Newtons (Force)
 |Ohm        |Ohm (Impedance)
 |kPa        |kiloPascal (Pressure)
@@ -286,12 +287,12 @@ s|Variables     s|Type    s|Description
 |Complete |boolean |ISO15118 communication session ended
 |Problem |boolean |ISO15118 controller fault
 |SeccId |string |The name of the SECC in the string format as required by ISO 15118.
-|SelftestActive(|Set)| boolean Start self-test by setting to true
+|SelftestActive(Set) |boolean |Start self-test by setting to true
 |SelftestActive |boolean |Self-test running when reported as true
 |ContractValidationOffline |boolean |Supports validation of a contract certificate when offline
 |CentralContractValidationAllowed |boolean |Contract certificates can be validated by the CSMS
-|PnCEnabled |boolean |If this variable is true , then ISO 15118 plug and charge as described by use case C07 - Authorization using Contract Certificates is enabled. +
-If this variable is false , then ISO 15118 plug and charge as described by use case C07 - Authorization using Contract Certificates is disabled.
+|PnCEnabled |boolean |If this variable is _true_, then ISO 15118 plug and charge as described by use case C07 - Authorization using Contract Certificates is enabled. +
+If this variable is _false_, then ISO 15118 plug and charge as described by use case C07 - Authorization using Contract Certificates is disabled.
 |V2GCertificateInstallationEnabled |boolean |If this variable is _true_, then ISO 15118 V2G Charging Station certificate installation as described by use case A02 - Update Charging Station Certificate by request of CSMS and A03 - Update Charging Station Certificate initiated by the Charging Station is enabled. +
 If this variable is _false_, then ISO 15118 V2G Charging Station certificate installation as described by use case A02 - Update Charging Station Certificate by request of CSMS and A03 - Update Charging Station Certificate initiated by the Charging Station is disabled.
 |ContractCertificateInstallationEnabled |boolean |If this variable is _true_, then ISO 15118 contract certificate installation/update as described by use case M01 - Certificate installation EV and M02 - Certificate Update EV is enabled. +
@@ -405,8 +406,8 @@ s|Variables     s|Type    s|Description
 |TxStartedMeasurands |MemberList |Sampled measurand(s) to be taken at the start of any transaction to be included in the meterValues field of the first TransactionEventRequest message send at the start of a transaction (eventType = Started).
 |TxUpdatedMeasurands |MemberList |Sampled measurands to be included in the meterValues element of every TransactionEventRequest (eventType = Updated), every SampledDataTxUpdatedInterval seconds from the start of the transaction.
 |TxUpdatedInterval |integer |Interval in seconds between sampling of metering (or other) data, intended to be transmitted via TransactionEventRequest (eventType = Updated) messages.
-|RegisterValuesWithoutPhases |boolean |If this variable reports a value of true , then meter values of measurand Energy.Active.Import.Register will only report the total energy over all phases without reporting the individual phase values. +
-If this variable is absent or false , then the value for each phase is reported,
+|RegisterValuesWithoutPhases |boolean |If this variable reports a value of _true_, then meter values of measurand Energy.Active.Import.Register will only report the total energy over all phases without reporting the individual phase values. +
+If this variable is absent or _false_, then the value for each phase is reported,
 possibly also with a total value (depending on the meter).
 |===
 
@@ -1214,9 +1215,7 @@ s|Typically used variables s|Description
 This can be used to describes the electrical connections in the site controlled by the
   Local Controller.
 
-  An example. The incoming fuses are all 120A. Each floor has a set of 80A fuses. On +
-  the first floor, there’s also a group of Charging Stations that are behind a set of 32A +
-  fuses.
+  An example. The incoming fuses are all 120A. Each floor has a set of 80A fuses. On the first floor, there’s also a group of Charging Stations that are behind a set of 32A fuses.
 
   DistributionPanel.Fuse[1] = 120 +
   DistributionPanel.Fuse[2] = 120 +

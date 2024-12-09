@@ -1766,7 +1766,7 @@ Required for Charging Stations supporting Tariff Information.
 .3+|Variable |variableName 2+d|OfflineQueuingSeverity
   |variableAttributes |mutability d|ReadWrite
   |variableCharacteristics |dataType d|integer
-|Description 3+d|When set and the Charging Station is offline , the Charging Station shall queue any <<notify_event_request,NotifyEventRequest>> messages triggered by a monitor with a severity number equal to or lower than the severity configured here. Value ranging from 0 (Emergency) to 9 (Debug).
+|Description 3+d|When set and the Charging Station is _offline_, the Charging Station shall queue any <<notify_event_request,NotifyEventRequest>> messages triggered by a monitor with a severity number equal to or lower than the severity configured here. Value ranging from 0 (Emergency) to 9 (Debug).
 |===
 
 ==== `ActiveMonitoringBase`

@@ -995,7 +995,7 @@ image::part2/images/figure_108.svg[Sequence diagram of the use case "Get Chargin
   |The CSMS SHALL specify in _chargingProfile_ criteria in <<get_charging_profile_request,GetChargingProfilesRequest>> either: +
   - a (list of) _chargingProfileId(s)_ OR +
   - one or more of the fields _stackLevel_, +
-  _chargingLimitSource_ , _chargingProfilePurpose_.
+  _chargingLimitSource_, _chargingProfilePurpose_.
     |These fields are filter values of equal importance, but because a _chargingProfileId_ uniquely identifies a charging profile, the other fields are not needed if _chargingProfileIds_ are used.
 |K09.FR.04  |If _evseId_ is set to a value greater than 0 in the <<get_charging_profile_request,GetChargingProfilesRequest>>
   |The Charging Station SHALL report the installed charging profiles for the specified EVSE that match all fields in _chargingProfile_. |{nbsp}

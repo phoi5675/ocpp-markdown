@@ -32,7 +32,7 @@
   |**1.** CSMS는 <<send_local_list_request,SendLocalListRequest>>를 보내 <<local_authorization_list,Local Authorization List>>를 설치하거나 업데이트합니다. +
   **2.** <<send_local_list_request,SendLocalListRequest>>를 수신하면 충전기는 <<send_local_list_response,SendLocalListResponse>>와 함께 상태를 응답합니다. +
 |5 |필수 조건 |로컬 인증 목록은 구성 변수 <<local_auth_list_enabled,`LocalAuthListEnabled`>>로 활성화됩니다.
-|6 |사후 조건(들)
+|6 |사후 조건
   |**성공한 사후 조건:** +
   - 충전기에 새로운 <<local_authorization_list,Local Authorization List>>가 설치되었습니다. +
   **실패 사후 조건:** +

@@ -156,7 +156,7 @@ General tool rules/validations:
 - The first TransactionEventRequest sent after presenting the idToken MUST contain idToken with value _<Configured valid_
     _idToken fields>_
 - If the energy transfer was stopped with Reusable State _StopAuthorized local, then the _stoppedReason_ of the last
-    TransactionEventRequest of that transaction with eventType _Ended_ , must have value _Local_ OR be omitted.
+    TransactionEventRequest of that transaction with eventType _Ended_, must have value _Local_ OR be omitted.
 - When validating/comparing time / dateTime values, the OCTT will in most cases accept a configurable deviation. The
     certification labs will configure a deviation of 4 seconds.
 - Every FirmwareStatusNotificationRequest sent for a firmware update SHALL contain the same requestId as the
@@ -2787,7 +2787,7 @@ Message: NotifyReportRequest
 ```
 - requestId = _<Generated requestId>_
 - generatedAt = _<timestamp at charging station>_
-- seqNo = _0_ - if variableCharacteristics.dataType = _OptionList_ , _SequenceList_ or _MemberList_ then valuesList
+- seqNo = _0_ - if variableCharacteristics.dataType = _OptionList_, _SequenceList_ or _MemberList_ then valuesList
 must be provided.
 
 while tbc = _true_ (^) Expect NotifyReportRequest
@@ -2861,7 +2861,7 @@ Message: NotifyReportRequest
 ```
 - requestId = _<Generated requestId>_
 - generatedAt = _<timestamp at charging station>_
-- seqNo = _0_ - if variableCharacteristics.dataType = _OptionList_ , _SequenceList_ or _MemberList_ then valuesList
+- seqNo = _0_ - if variableCharacteristics.dataType = _OptionList_, _SequenceList_ or _MemberList_ then valuesList
 must be provided.
 
 while tbc = _true_ (^) Expect NotifyReportRequest
@@ -2946,7 +2946,7 @@ Post scenario validations:
 Check for all received variables:
 ```
 - variableCharacteristics are present
-- if variableCharacteristics.dataType = _OptionList_ , _SequenceList_ or _MemberList_ then valuesList must be
+- if variableCharacteristics.dataType = _OptionList_, _SequenceList_ or _MemberList_ then valuesList must be
 provided.
 
 ```
@@ -3180,7 +3180,7 @@ Message: NotifyReportRequest with:
 - reportData.variableAttribute.mutability = _ReadOnly_
 - reportData.variableAttribute.type = _Actual
 Note: for AvailabilityState there will only be an _Actual_ value.
-It does not make any sense to have a _MinSet_ , _MaxSet_ or _Target_ value for it._
+It does not make any sense to have a _MinSet_, _MaxSet_ or _Target_ value for it._
 
 ```
 Post scenario validations:
@@ -3281,7 +3281,7 @@ Message: NotifyReportRequest with:
 - reportData.variableAttribute.mutability = _ReadOnly_
 - reportData.variableAttribute.type = _Actual
 Note: for AvailabilityState there will only be an _Actual_ value.
-It does not make any sense to have a _MinSet_ , _MaxSet_ or _Target_ value for it._
+It does not make any sense to have a _MinSet_, _MaxSet_ or _Target_ value for it._
 
 ```
 * Step 6:
@@ -5101,7 +5101,7 @@ Message: NotifyReportRequest with:
 - reportData[1].variable.name = _"ItemsPerMessage"_
 - reportData[1].variable.instance = _"GetVariable"
 Note: for AvailabilityState there will only be an _Actual_ value.
-It does not make any sense to have a _MinSet_ , _MaxSet_ or _Target_ value for it._
+It does not make any sense to have a _MinSet_, _MaxSet_ or _Target_ value for it._
 
 ```
 Post scenario validations:
@@ -5170,7 +5170,7 @@ Message: NotifyReportRequest with:
 - reportData[0].variable.name = _"ItemsPerMessage"_
 - reportData[0].variable.instance = _"GetReport"
 Note: for AvailabilityState there will only be an _Actual_ value.
-It does not make any sense to have a _MinSet_ , _MaxSet_ or _Target_ value for it._
+It does not make any sense to have a _MinSet_, _MaxSet_ or _Target_ value for it._
 
 ```
 Post scenario validations:
@@ -5237,7 +5237,7 @@ Message: NotifyReportRequest with:
 - reportData[i].variable.name = _"AvailabilityState"_
 - number of EVSEs = _<Configured EVSE count>
 Note: for AvailabilityState there will only be an _Actual_ value.
-It does not make any sense to have a _MinSet_ , _MaxSet_ or _Target_ value for it._
+It does not make any sense to have a _MinSet_, _MaxSet_ or _Target_ value for it._
 
 ```
 Post scenario validations:
@@ -6050,7 +6050,7 @@ Message TransactionEventRequest
 - triggerReason _StopAuthorized_
 - idToken.idToken _<Configured masterPass idToken>_
 - idToken.type _<Configured masterPass idTokenType>_
-If eventType _Ended_ , then:
+If eventType _Ended_, then:
 - transactionInfo.stoppedReason _MasterPass_
 
 ```
@@ -9973,7 +9973,7 @@ Prerequisite(s) - The Charging Station does NOT have the following configuration
 ReadOnly AND (the value PowerPathClosed is NOT set OR ( ParkingBayOccupancy OR EVConnected OR
 Authorized OR DataSigned ), is set).
 ```
-- If the mutability of TxStartPoint is _ReadWrite_ , then the value _PowerPathClosed_ must be supported.
+- If the mutability of TxStartPoint is _ReadWrite_, then the value _PowerPathClosed_ must be supported.
 
 ```
 Before
@@ -10022,7 +10022,7 @@ Prerequisite(s) - The Charging Station does NOT have the following configuration
 ReadOnly AND (the value EnergyTransfer is NOT set OR ( ParkingBayOccupancy OR EVConnected OR
 Authorized OR DataSigned OR PowerPathClosed ), is set).
 ```
-- If the mutability of TxStartPoint is _ReadWrite_ , then the value _EnergyTransfer_ must be supported.
+- If the mutability of TxStartPoint is _ReadWrite_, then the value _EnergyTransfer_ must be supported.
 
 ```
 Before
@@ -10097,7 +10097,7 @@ configured to do so.
 Prerequisite(s) - The Charging Station does NOT have the following configuration; The mutability of TxStartPoint is
 ReadOnly AND (the value EVConnected is NOT set OR ParkingBayOccupancy is set).
 ```
-- If the mutability of TxStartPoint is _ReadWrite_ , then the value _EVConnected_ must be supported.
+- If the mutability of TxStartPoint is _ReadWrite_, then the value _EVConnected_ must be supported.
 
 ```
 Before
@@ -10170,7 +10170,7 @@ C01, C02, C04, C06.
 ```
 - The Charging Station does NOT have the following configuration; The mutability of TxStartPoint is
 _ReadOnly_ AND the value _Authorized_ is NOT set.
-- If the mutability of TxStartPoint is _ReadWrite_ , then the value _Authorized_ must be supported.
+- If the mutability of TxStartPoint is _ReadWrite_, then the value _Authorized_ must be supported.
 
 ```
 Before
@@ -10246,7 +10246,7 @@ configured to do so.
 Prerequisite(s) - The Charging Station does NOT have the following configuration; The mutability of TxStartPoint is
 ReadOnly AND the value Authorized is NOT set.
 ```
-- If the mutability of TxStartPoint is _ReadWrite_ , then the value _Authorized_ must be supported.
+- If the mutability of TxStartPoint is _ReadWrite_, then the value _Authorized_ must be supported.
 
 ```
 Before
@@ -10334,7 +10334,7 @@ Prerequisite(s) - The Charging Station does NOT have the following configuration
 ReadOnly AND (the value DataSigned is NOT set OR ( ParkingBayOccupancy OR EVConnected OR
 Authorized ), is set).
 ```
-- If the mutability of TxStartPoint is _ReadWrite_ , then the value _DataSigned_ must be supported.
+- If the mutability of TxStartPoint is _ReadWrite_, then the value _DataSigned_ must be supported.
 
 ```
 Before
@@ -10431,7 +10431,7 @@ configured to do so.
 Prerequisite(s) - The Charging Station does NOT have the following configuration; The mutability of TxStartPoint is
 ReadOnly AND the value ParkingBayOccupancy is NOT set.
 ```
-- If the mutability of TxStartPoint is _ReadWrite_ , then the value _ParkingBayOccupancy_ must be supported.
+- If the mutability of TxStartPoint is _ReadWrite_, then the value _ParkingBayOccupancy_ must be supported.
 
 ```
 Before
@@ -10488,7 +10488,7 @@ Prerequisite(s) - The Charging Station does NOT have the following configuration
 ReadOnly AND the value Authorized OR PowerPathClosed is NOT set OR ( EnergyTransfer OR DataSigned is
 set).
 ```
-- If the mutability of TxStopPoint is _ReadWrite_ , then the value _Authorized_ OR _PowerPathClosed_ must be
+- If the mutability of TxStopPoint is _ReadWrite_, then the value _Authorized_ OR _PowerPathClosed_ must be
 supported.
 - The Charging Station supports local start/stop transaction.
 - The Charging Station supports authorization methods other than NoAuthorization
@@ -10584,7 +10584,7 @@ Prerequisite(s) - The Charging Station does NOT have the following configuration
 ReadOnly AND the value Authorized OR PowerPathClosed is NOT set OR ( EnergyTransfer OR DataSigned OR
 EVConnected is set).
 ```
-_- If the mutability of_ **_TxStopPoint_** _is _ReadWrite_ , then the value _Authorized_ OR _PowerPathClosed_ must be
+_- If the mutability of_ **_TxStopPoint_** _is _ReadWrite_, then the value _Authorized_ OR _PowerPathClosed_ must be
 supported.
 
 ```
@@ -10680,7 +10680,7 @@ cable was not plugged in within the Configured durationout and it has been confi
 Prerequisite(s) - The Charging Station does NOT have the following configuration; The mutability of TxStopPoint is
 ReadOnly AND the value Authorized is NOT set.
 ```
-- If the mutability of TxStopPoint is _ReadWrite_ , then the value _Authorized_ must be supported.
+- If the mutability of TxStopPoint is _ReadWrite_, then the value _Authorized_ must be supported.
 
 ```
 Before
@@ -10757,13 +10757,13 @@ Tool validations * Step 1:
 Message: TransactionEventRequest
 ```
 - triggerReason must be _EVConnectTimeout_
-- eventType must be _Updated_ if TxStartPoint is _ParkingBayOccupancy_ , else _Ended_
+- eventType must be _Updated_ if TxStartPoint is _ParkingBayOccupancy_, else _Ended_
 - transactionInfo.stoppedReason must be _Timeout_
 * Step 3:
 Message: TransactionEventRequest
 - triggerReason can only be _CablePluggedIn_
 - transactionInfo.chagringState should not be _Charging_
-- eventType must be _Updated_ if TxStartPoint is _ParkingBayOccupancy_ , else _Ended_
+- eventType must be _Updated_ if TxStartPoint is _ParkingBayOccupancy_, else _Ended_
 
 ```
 Post scenario validations:
@@ -11112,7 +11112,7 @@ TxStopPoint contains PowerPathClosed.
 Prerequisite(s) - The Charging Station does NOT have the following configuration; The mutability of TxStopPoint is
 ReadOnly AND (the value PowerPathClosed is NOT set OR Authorized is set).
 ```
-- If the mutability of TxStopPoint is _ReadWrite_ , then the value _PowerPathClosed_ must be supported.
+- If the mutability of TxStopPoint is _ReadWrite_, then the value _PowerPathClosed_ must be supported.
 
 ```
 Before
@@ -11161,7 +11161,7 @@ contains PowerPathClosed.
 Prerequisite(s) - The Charging Station does NOT have the following configuration; The mutability of TxStopPoint is
 ReadOnly AND (the value PowerPathClosed is NOT set OR Authorized is set).
 ```
-- If the mutability of TxStopPoint is _ReadWrite_ , then the value _PowerPathClosed_ must be supported.
+- If the mutability of TxStopPoint is _ReadWrite_, then the value _PowerPathClosed_ must be supported.
 
 ```
 Before
@@ -11227,7 +11227,7 @@ Prerequisite(s) - The Charging Station does NOT have the following configuration
 ReadOnly AND (the value PowerPathClosed is NOT set OR ( EnergyTransfer OR EVConnected OR DataSigned
 is set)).
 ```
-- If the mutability of TxStopPoint is _ReadWrite_ , then the value _PowerPathClosed_ must be supported.
+- If the mutability of TxStopPoint is _ReadWrite_, then the value _PowerPathClosed_ must be supported.
 
 ```
 Before
@@ -11286,7 +11286,7 @@ been configured to do so.
 Prerequisite(s) - The Charging Station does NOT have the following configuration; The mutability of TxStopPoint is
 ReadOnly AND (the value EnergyTransfer is NOT set OR ( Authorized OR PowerPathClosed ) is set).
 ```
-- If the mutability of TxStopPoint is _ReadWrite_ , then the value _EnergyTransfer_ must be supported.
+- If the mutability of TxStopPoint is _ReadWrite_, then the value _EnergyTransfer_ must be supported.
 
 ```
 Before
@@ -11337,7 +11337,7 @@ Charging Station has been configured to do so.
 Prerequisite(s) - The Charging Station does NOT have the following configuration; The mutability of TxStopPoint is
 ReadOnly AND the value EnergyTransfer is NOT set.
 ```
-- If the mutability of TxStopPoint is _ReadWrite_ , then the value _EnergyTransfer_ must be supported.
+- If the mutability of TxStopPoint is _ReadWrite_, then the value _EnergyTransfer_ must be supported.
 
 ```
 Before
@@ -11398,7 +11398,7 @@ Prerequisite(s) - The Charging Station does NOT have the following configuration
 ReadOnly AND (the value EVConnected is NOT set OR ( EnergyTransfer OR PowerPathClosed OR DataSigned
 OR Authorized is set)).
 ```
-- If the mutability of TxStopPoint is _ReadWrite_ , then the value _EVConnected_ must be supported.
+- If the mutability of TxStopPoint is _ReadWrite_, then the value _EVConnected_ must be supported.
 
 ```
 Before
@@ -11447,7 +11447,7 @@ Message: TransactionEventRequest
 - transactionInfo.chargingState must be _Idle_
 - If the OCTT is configured to stop transactions using a RequestStopTransactionRequest message then
 transactionInfo.stoppedReason must be _Remote_
-Else transactionInfo.stoppedReason must be _Local_ , _EVDisconnected_ or be omitted.
+Else transactionInfo.stoppedReason must be _Local_, _EVDisconnected_ or be omitted.
 - eventType must be _Ended_
 
 ```
@@ -11470,7 +11470,7 @@ and it has been configured to do so.
 Prerequisite(s) - The Charging Station does NOT have the following configuration; The mutability of TxStopPoint is
 ReadOnly AND (the value EVConnected is NOT set OR ( EnergyTransfer OR PowerPathClosed is set)).
 ```
-- If the mutability of TxStopPoint is _ReadWrite_ , then the value _EVConnected_ must be supported.
+- If the mutability of TxStopPoint is _ReadWrite_, then the value _EVConnected_ must be supported.
 - The Charging Station does NOT have following configuration combination; StopTxOnEVSideDisconnect
 mutability ReadOnly with value _true_ AND TxStopPoint mutability is _ReadOnly_ and contains _Authorized_.
 - The Charging Station is able to charge with a EV that uses IEC 61851-1.
@@ -11532,7 +11532,7 @@ and it has been configured to do so.
 Prerequisite(s) - The Charging Station does NOT have the following configuration; The mutability of TxStopPoint is
 ReadOnly AND (the value EVConnected is NOT set OR ( EnergyTransfer OR PowerPathClosed is set)).
 ```
-- If the mutability of TxStopPoint is _ReadWrite_ , then the value _EVConnected_ must be supported.
+- If the mutability of TxStopPoint is _ReadWrite_, then the value _EVConnected_ must be supported.
 - The Charging Station does NOT have following configuration combination; StopTxOnEVSideDisconnect
 mutability ReadOnly with value _true_ AND TxStopPoint mutability is _ReadOnly_ and contains _Authorized_.
 - The Charging Station supports high level communication.
@@ -11596,7 +11596,7 @@ C01, C02, C04.
 ```
 - The Charging Station does NOT have the following configuration; The mutability of TxStopPoint is
 _ReadOnly_ AND the value _Authorized_ is NOT set OR _PowerPathClosed_ is set.
-- If the mutability of TxStopPoint is _ReadWrite_ , then the value _Authorized_ must be supported.
+- If the mutability of TxStopPoint is _ReadWrite_, then the value _Authorized_ must be supported.
 
 ```
 Before
@@ -11654,7 +11654,7 @@ and it has been configured to do so.
 Prerequisite(s) - The Charging Station does NOT have the following configuration; The mutability of TxStopPoint is
 ReadOnly AND the value Authorized is NOT set OR PowerPathClosed is set.
 ```
-- If the mutability of TxStopPoint is _ReadWrite_ , then the value _Authorized_ must be supported.
+- If the mutability of TxStopPoint is _ReadWrite_, then the value _Authorized_ must be supported.
 
 ```
 Before
@@ -11720,7 +11720,7 @@ Prerequisite(s) - The Charging Station does NOT have the following configuration
 ReadOnly AND (the value ParkingBayOccupied is NOT set OR ( EnergyTransfer OR PowerPathClosed OR
 DataSigned OR Authorized OR EVConnected is set)).
 ```
-- If the mutability of TxStopPoint is _ReadWrite_ , then the value _ParkingBayOccupied_ must be supported.
+- If the mutability of TxStopPoint is _ReadWrite_, then the value _ParkingBayOccupied_ must be supported.
 
 ```
 Before
@@ -11927,7 +11927,7 @@ Prerequisite(s) - The Charging Station does NOT have the following configuration
 ReadOnly AND (the value Authorized OR ParkingBayOccupancy is NOT set OR ( EnergyTransfer OR
 PowerPathClosed OR DataSigned OR EVConnected is set)).
 ```
-- If the mutability of TxStopPoint is _ReadWrite_ , then the value _Authorized_ OR _ParkingBayOccupancy_ must be
+- If the mutability of TxStopPoint is _ReadWrite_, then the value _Authorized_ OR _ParkingBayOccupancy_ must be
 supported.
 
 ```
@@ -12042,7 +12042,7 @@ Prerequisite(s) - The Charging Station does NOT have the following configuration
 ReadOnly AND (the value Authorized OR ParkingBayOccupancy is NOT set OR ( EnergyTransfer OR
 PowerPathClosed OR DataSigned OR EVConnected is set)).
 ```
-_- If the mutability of_ **_TxStopPoint_** _is _ReadWrite_ , then the value _Authorized_ OR _ParkingBayOccupancy_ must be
+_- If the mutability of_ **_TxStopPoint_** _is _ReadWrite_, then the value _Authorized_ OR _ParkingBayOccupancy_ must be
 supported.
 - The Charging Station has a permanently attached cable at the Charging Station side.
 - StopTxOnEVSideDisconnect can be set to _false_.
@@ -18531,7 +18531,7 @@ Description The Charging Station samples the electrical meter or other sensor/tr
 information about its Meter Values. Depending on configuration settings, the Charging Station will send
 Meter Values.
 Purpose To verify if the Charging Station is able to send sampled Meter Values when a transaction ends at the
-TransactionEventRequest with eventType is _Ended_ , when it is configured to do so.
+TransactionEventRequest with eventType is _Ended_, when it is configured to do so.
 Prerequisite(s) The Charging Station has an energy meter.
 Before
 (Preparations)
@@ -19957,7 +19957,7 @@ schedule.chargingRateUnit <Configured chargingRateUnit>
 schedule.duration 400
 schedule.chargingSchedulePeriod[0].startPeriod 0 , schedule.chargingSchedulePeriod[1].startPeriod (300
 ```
-_- x)_ ,
+_- x)_,
 schedule.chargingSchedulePeriod[1].limit _6.0
 Note: If <Configured chargingRateUnit> is W, then the_ **_limit_** _field will be multiplied by 1000.
 Note: The period of time between sending the second SetChargingProfileRequest and the_ **_scheduleStart_** _from
@@ -22002,7 +22002,7 @@ SetChargingProfileResponse
     _Note: If <Configured chargingRateUnit> is W, then the_
     **_limit_** _field will be multiplied by 1000._
     chargingProfile.chargingSchedule[0].chargingSched
-    ulePeriod[0].startPeriod _0_ ,
+    ulePeriod[0].startPeriod _0_,
     chargingProfile.chargingSchedule[0].chargingSched
     ulePeriod[0].limit _15_
 5. The Charging Station sends a
@@ -26194,7 +26194,7 @@ _Step 3 and 4 are repeated as often as needed to report all configuration variab
 GetMonitoringReportResponse
     5. OCTT sends GetMonitoringReportRequest with:
     - requestId = _<Generated requestId>_
-    - monitoringCriteria = { _ThresholdMonitoring_ ,
+    - monitoringCriteria = { _ThresholdMonitoring_,
     _DeltaMonitoring_ }
 7. Charging Station responds with:
 NotifyMonitoringReportRequest 8. OCTT sends NotifyMonitoringReportResponse
@@ -26203,7 +26203,7 @@ _Step 7 and 8 are repeated as often as needed to report all configuration variab
 GetMonitoringReportResponse
     9. OCTT sends GetMonitoringReportRequest with:
     - requestId = _<Generated requestId>_
-    - monitoringCriteria = { _DeltaMonitoring_ ,
+    - monitoringCriteria = { _DeltaMonitoring_,
     _PeriodicMonitoring_ }
 11. Charging Station responds with:
 NotifyMonitoringReportRequest 12. OCTT sends NotifyMonitoringReportResponse
@@ -26238,11 +26238,11 @@ Message: NotifyMonitoringReportRequest
 - requestId = _<Generated requestId>_
 - generatedAt = _<timestamp at charging station>_
 - seqNo = _0_
-- monitor.variableMonitoring.type = _UpperThreshold_ , _LowerThreshold_ or _Delta_
+- monitor.variableMonitoring.type = _UpperThreshold_, _LowerThreshold_ or _Delta_
 While tbc = _true_
 Message: NotifyMonitoringReportRequest
 - seqNo is incremented by 1
-- monitor.variableMonitoring.type = _UpperThreshold_ , _LowerThreshold_ or _Delta_
+- monitor.variableMonitoring.type = _UpperThreshold_, _LowerThreshold_ or _Delta_
 * Step 10:
 Message: GetMonitoringReportResponse
 - status = _Accepted_
@@ -26252,11 +26252,11 @@ Message: NotifyMonitoringReportRequest
 - requestId = _<Generated requestId>_
 - generatedAt = _<timestamp at charging station>_
 - seqNo = _0_
-- monitor.variableMonitoring.type = _Delta_ , _Periodic_ or _PeriodicClockAligned_
+- monitor.variableMonitoring.type = _Delta_, _Periodic_ or _PeriodicClockAligned_
 While tbc = _true_
 Message: NotifyMonitoringReportRequest
 - seqNo is incremented by 1
-- monitor.variableMonitoring.type = _Delta_ , _Periodic_ or _PeriodicClockAligned_
+- monitor.variableMonitoring.type = _Delta_, _Periodic_ or _PeriodicClockAligned_
 
 ```
 Post scenario validations:
@@ -26286,7 +26286,7 @@ The following monitors must be present as 'hard-wired' or 'preconfigured' or mus
 CSMS:
 
 - Component "ChargingStation", variable "AvailabilityState", monitor type _Delta_ "
-- Component "EVSE", _<Configured evseId>_ , variable "AvailabilityState", monitor type _Delta_
+- Component "EVSE", _<Configured evseId>_, variable "AvailabilityState", monitor type _Delta_
 
 ```
 Reusable State(s):
@@ -26374,7 +26374,7 @@ The following monitors must be present as 'hard-wired' or 'preconfigured' or mus
 CSMS:
 
 - Component "ChargingStation", variable "Power", monitor type _Periodic_
-- Component "EVSE", evse _<Configured evseId>_ , variable "AvailabilityState", monitor type _Delta
+- Component "EVSE", evse _<Configured evseId>_, variable "AvailabilityState", monitor type _Delta
 Note: these are required variables for which a monitor can be expected to exist or it can be configured._
 
 ```
@@ -27497,7 +27497,7 @@ N/a
 Memory State:
 This test case activates a monitor on the following variable:
 ```
-- Component "EVSE", variable "AvailabilityState", monitor type _Delta_ , severity 8
+- Component "EVSE", variable "AvailabilityState", monitor type _Delta_, severity 8
 It assumes that no monitor is active on this variable at start of the test.
 
 ```
@@ -29908,7 +29908,7 @@ Tool validations * Step 3:
 Message: NotifyMonitoringReportRequest
 ```
 - requestId = _<Generated requestId>_
-While tbc = _true_ , Message: NotifyMonitoringReportRequest
+While tbc = _true_, Message: NotifyMonitoringReportRequest
 - monitor.variable = _"AvailabilityState"_
 - monitor.variableMonitoring.type = _Delta_
 - monitor.component_.name = _ChargingStation_ or _EVSE_
@@ -36346,7 +36346,7 @@ Tool validations * Step 1:
 Message: GetVariablesRequest with (in arbitrary order)
 getVariableData[0]:
 ```
-- attributeType is at least absent or attributeType = _Actual_ , but _Target_ , _MinSet_ , and _MaxSet_ are also allowed
+- attributeType is at least absent or attributeType = _Actual_, but _Target_, _MinSet_, and _MaxSet_ are also allowed
 - variable.name = _"OfflineThreshold"_
 - component.name = _"OCPPCommCtrlr"_
 
@@ -36391,11 +36391,11 @@ Tool validations * Step 1:
 Message: GetVariablesRequest with (in arbitrary order)
 getVariableData[0]:
 ```
-- attributeType is at least absent or attributeType = _Actual_ , but _Target_ , _MinSet_ , and _MaxSet_ are also allowed
+- attributeType is at least absent or attributeType = _Actual_, but _Target_, _MinSet_, and _MaxSet_ are also allowed
 - variable.name = _"OfflineThreshold"_
 - component.name = _"OCPPCommCtrlr"_
 getVariableData[1]:
-- attributeType is at least absent or attributeType = _Actual_ , but _Target_ , _MinSet_ , and _MaxSet_ are also allowed
+- attributeType is at least absent or attributeType = _Actual_, but _Target_, _MinSet_, and _MaxSet_ are also allowed
 - variable.name = _"AuthorizeRemoteStart"_
 - component.name = _"AuthCtrlr"_
 
@@ -40067,7 +40067,7 @@ Charging Station CSMS
 ```
 1. _The OCTT closes the WebSocket connection._
 2. _The OCTT waits a number of seconds equal to
-_<Configured Transaction Duration>_ , then it will
+_<Configured Transaction Duration>_, then it will
 reconnect to the CSMS._
 4. The OCTT responds with a
 GetTransactionStatusResponse With
@@ -40187,7 +40187,7 @@ Charging Station CSMS
 ```
 1. _The OCTT closes the WebSocket connection._
 2. _The OCTT waits a number of seconds equal to
-_<Configured Transaction duration>_ , then it will
+_<Configured Transaction duration>_, then it will
 reconnect to the CSMS._
 3. The OCTT sends a StatusNotificationRequest
 With evseId is _<Configured evseId>_
@@ -40292,7 +40292,7 @@ Charging Station CSMS
 ```
 1. _The OCTT closes the WebSocket connection._
 2. _The OCTT waits a number of seconds equal to
-_<Configured Transaction Duration>_ , then it will
+_<Configured Transaction Duration>_, then it will
 reconnect to the CSMS._
 4. The OCTT responds with a
 GetTransactionStatusResponse With
@@ -48418,7 +48418,7 @@ Before
 Configuration State:
 This test case activates monitoring on the following variable:
 ```
-- Component "EVSE", evse _<Configured evseId>_ , variable "AvailabilityState", monitor type _Delta_
+- Component "EVSE", evse _<Configured evseId>_, variable "AvailabilityState", monitor type _Delta_
 It assumes, that no monitor is active on this variable prior to the test.
 _Note 1: this is a required variable for which a monitor can be expected to exist or it can be configured.
 Note 2: Any other component/variable combination that supports monitoring could also be used for this test
@@ -48443,16 +48443,16 @@ Charging Station CSMS
 Message: SetVariableMonitoringResponse with
 setMonitoringResult[0].status = _Accepted_
     1. _Request CSMS to install monitors on:_
-    - EVSE # _<Configured evseId>_ , AvailabilityState, _Delta_ ,
+    - EVSE # _<Configured evseId>_, AvailabilityState, _Delta_,
     severity 8
 
 ```
 Tool validations * Step 1:
 ```
 1. CSMS sends SetVariableMonitoringRequest with:
-- setMonitoringData[0].value = _1_ , ← recommended value for _Delta_ monitor
-- setMonitoringData[0].type = _Delta_ ,
-- setMonitoringData[0].severity = _8_ ,
+- setMonitoringData[0].value = _1_, ← recommended value for _Delta_ monitor
+- setMonitoringData[0].type = _Delta_,
+- setMonitoringData[0].severity = _8_,
 - setMonitoringData[0].component.name = _"EVSE"_
 - setMonitoringData[0].component.evse.id = _<Configured evseId>_
 - setMonitoringData[0].variable.name = _"AvailabilityState"_
@@ -48482,7 +48482,7 @@ Before
 Configuration State:
 This test case activates monitors on the following variables:
 ```
-- Component "EVSE", evse _<Configured evseId>_ , variable "AvailabilityState", monitor type _Delta_
+- Component "EVSE", evse _<Configured evseId>_, variable "AvailabilityState", monitor type _Delta_
 - Component "ChargingStation", variable "AvailabilityState", monitor type _Delta_
 It assumes, that no monitor is active on these variables prior to the test.
 _Note 1: these are required variables for which a monitor can be expected to exist or it can be configured.
@@ -48508,23 +48508,23 @@ Charging Station CSMS
 Message: SetVariableMonitoringResponse with
 setMonitoringResult[0].status = _Accepted_
     1. _Request CSMS to install monitors on:_
-    - EVSE # _<Configured evseId>_ , AvailabilityState, _Delta_ ,
+    - EVSE # _<Configured evseId>_, AvailabilityState, _Delta_,
     severity 8
-    - ChargingStation, AvailabilityState, _Delta_ , severity 8
+    - ChargingStation, AvailabilityState, _Delta_, severity 8
 
 ```
 Tool validations * Step 1:
 ```
 1. CSMS sends SetVariableMonitoringRequest with:
-- setMonitoringData[0].value = _1_ , ← recommended value for _Delta_ monitor
-- setMonitoringData[0].type = _Delta_ ,
-- setMonitoringData[0].severity = _8_ ,
+- setMonitoringData[0].value = _1_, ← recommended value for _Delta_ monitor
+- setMonitoringData[0].type = _Delta_,
+- setMonitoringData[0].severity = _8_,
 - setMonitoringData[0].component.name = _"EVSE"_
 - setMonitoringData[0].component.evse.id = _<Configured evseId>_
 - setMonitoringData[0].variable.name = _"AvailabilityState"_
-- setMonitoringDate[1].value = _1_ ,
-- setMonitoringDate[1].type = _Delta_ ,
-- setMonitoringDate[1].severity = _8_ ,
+- setMonitoringDate[1].value = _1_,
+- setMonitoringDate[1].type = _Delta_,
+- setMonitoringDate[1].severity = _8_,
 - setMonitoringDate[1].component.name = _"ChargingStation"_
 - setMonitoringDate[1].variable.name = _"AvailabilityState"_
 

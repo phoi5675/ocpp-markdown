@@ -61,7 +61,7 @@ image::part2/images/figure_65.svg[Sequence Diagram: Remote Start Transaction - C
 [cols="^.^1s,<.^2s,<.^7",%autowidth.stretch,frame=all,grid=all]
 |===
 |7 |오류 처리 |n/a
-|8 충전기
+|8 |참고
   |외부 트리거는 예를 들어 충전기 운영자 또는 EV 운전자 앱일 수 있습니다.
 
   <<request_start_transaction_response,RequestStartTransactionResponse>>에는 충전기가 요청을 수락했는지 여부를 나타내는 상태가 포함되어 있으며 트랜잭션을 시작하려고 시도합니다.

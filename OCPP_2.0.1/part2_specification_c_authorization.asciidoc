@@ -57,7 +57,7 @@ A Charging Station MAY implement an Authorization Cache that **autonomously** ma
 Please refer to the use cases <<store_authorization_data_in_the_authorization_cache,C10 - Store Authorization Data in the Authorization Cache>> and <<start_transaction_cached_id,C12 - Start Transaction - Cached Id>> for more information on how to implement / use the Authorization Cache functionality.
 
 When a Charging Station supports both the Authorization Cache and Tariff information (see: <<tariff_cost_related,Tariff & Cost>>), it should not store the tariff information in the Authorization Cache, since this information could become outdated. +
-A Charging Station MAY support the authorization of _any_ presented identifier when _offline_ , to avoid refusal of charging to bona fide users that cannot be explicitly authorized by <<authorization_cache,Authorization Cache>> entries. This functionality is explained in more detail in <<unknown_offline_authorization,Unknown Offline Authorization>>. +
+A Charging Station MAY support the authorization of _any_ presented identifier when _offline_, to avoid refusal of charging to bona fide users that cannot be explicitly authorized by <<authorization_cache,Authorization Cache>> entries. This functionality is explained in more detail in <<unknown_offline_authorization,Unknown Offline Authorization>>. +
 It is RECOMMENDED to store personal information in the Authorization Cache securely, e.g. by only storing hashed idTokens in the cache.
 
 [[local_authorization_list]]
@@ -90,7 +90,7 @@ The following Configuration Variables are used by the Charging Station to give i
 [[unknown_offline_authorization]]
 === Unknown Offline Authorization
 
-When _offline_, a Charging Station MAY allow automatic authorization of any "unknown" identifiers that are not found in the <<local_authorization_list,Local Authorization List>> and/or <<authorization_cache,Authorization Cache>>. Operation of the Unknown Offline Authorization capability, when supported, is reported (and controlled, where possible) by the <<offline_tx_for_unknown_id_enabled,`OfflineTxForUnknownIdEnabled`>> Configuration Variable. When connection to the CSMS is restored, the Charging Station has to send the queued <<transaction_event_request,TransactionEventRequest>> messages. These may contain transactions that were authorized _offline_ , as explained in <<delivering_transaction_related_messages,transaction-related message handling>>. Please refer to <<offline_authorization_of_unknown_id,C15 - Unknown Offline Authorization>> for the options that the Charging Station has to continue / stop the transaction in this situation.
+When _offline_, a Charging Station MAY allow automatic authorization of any "unknown" identifiers that are not found in the <<local_authorization_list,Local Authorization List>> and/or <<authorization_cache,Authorization Cache>>. Operation of the Unknown Offline Authorization capability, when supported, is reported (and controlled, where possible) by the <<offline_tx_for_unknown_id_enabled,`OfflineTxForUnknownIdEnabled`>> Configuration Variable. When connection to the CSMS is restored, the Charging Station has to send the queued <<transaction_event_request,TransactionEventRequest>> messages. These may contain transactions that were authorized _offline_, as explained in <<delivering_transaction_related_messages,transaction-related message handling>>. Please refer to <<offline_authorization_of_unknown_id,C15 - Unknown Offline Authorization>> for the options that the Charging Station has to continue / stop the transaction in this situation.
 
 <<<
 
@@ -132,7 +132,7 @@ When _offline_, a Charging Station MAY allow automatic authorization of any "unk
   The EV Driver is authorized and can start _or_ stop charging.
 
   **Failure postcondition:** +
-  If the authorize message is _Invalid_ , _Blocked_ , _Expired_ or _Unknown_ , the EV Driver can _not_ start or stop charging, except in the case where the EV Driver presents the same token used to start the transaction.
+  If the authorize message is _Invalid_, _Blocked_, _Expired_ or _Unknown_, the EV Driver can _not_ start or stop charging, except in the case where the EV Driver presents the same token used to start the transaction.
 |===
 
 .Sequence Diagram: EV Driver Authorization

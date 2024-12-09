@@ -808,7 +808,7 @@ image::part2/images/figure_48.svg[Sequence Diagram: Start Transaction - Id not A
   The transaction is still ongoing AND +
   <<stop_tx_on_invalid_id,`StopTxOnInvalidId`>> is _true_ AND +
   <<tx_stop_point,`TxStopPoint`>> does NOT contain: (<<tx_start_stop_point_values,Authorized>> OR <<tx_start_stop_point_values,PowerPathClosed>> OR <<tx_start_stop_point_values,EnergyTransfer>>)
-    |The Charging Station SHALL stop the energy transfer and send <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) with _triggerReason_ set to _Deauthorized_ and in the same or next <<transaction_event_request,TransactionEventRequest>> report _chargingState_ set preferably to _EVConnected_ , or alternatively to _SuspendedEVSE_.
+    |The Charging Station SHALL stop the energy transfer and send <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>) with _triggerReason_ set to _Deauthorized_ and in the same or next <<transaction_event_request,TransactionEventRequest>> report _chargingState_ set preferably to _EVConnected_, or alternatively to _SuspendedEVSE_.
       |If the physical change of charging state in the Charging Station occurs a few seconds or milliseconds later than the trigger _Deauthorized_, then the _chargingState_ change may be reported separately as a _triggerReason_ = _ChargingStateChanged_. Use of charging state _SuspendedEVSE_ that is not followed by _EVConnected_ in this situation will become deprecated in the next OCPP release.
 |E05.FR.10  |E05.FR.01 AND +
   The authorization status in <<transaction_event_response,TransactionEventResponse>> is not _Accepted_ AND +

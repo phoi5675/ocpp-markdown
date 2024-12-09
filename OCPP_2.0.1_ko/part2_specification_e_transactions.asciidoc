@@ -210,7 +210,7 @@ image::part2/images/figure_39.svg[시퀀스 다이어그램: 시작 트랜잭션
 |{nbsp} |필수 조건
   |EVSE에서 ​​진행 중인 트랜잭션이 없습니다. +
   구성 변수: <<tx_start_point,`TxStartPoint`>> 포함: <<tx_start_stop_point_values,EVConnected>> (Not: <<tx_start_stop_point_values,ParkingBayOccupancy>>)
-|{nbsp} |사후 조건(들)
+|{nbsp} |사후 조건
   |**성공적인 사후 조건:** +
   트랜잭션이 진행 중이며 CSMS에 _성공적으로_ 통보되었습니다.
 
@@ -234,7 +234,7 @@ image::part2/images/figure_40.svg[시퀀스 다이어그램: 트랜잭션 시작
 |{nbsp} |필수 조건
   |EVSE에서 ​​진행 중인 트랜잭션이 없습니다. +
   구성 변수: <<tx_start_point,`TxStartPoint`>>에는 다음이 포함됩니다. <<tx_start_stop_point_values,Authorized>>(Not: <<tx_start_stop_point_values,ParkingBayOccupancy>>).
-|{nbsp} |사후 조건(들)
+|{nbsp} |사후 조건
   |**성공적인 사후 조건:** +
   트랜잭션이 진행 중이고 CSMS에 _성공적으로_ 통보되었습니다.
 
@@ -261,7 +261,7 @@ image::part2/images/figure_41.svg[시퀀스 다이어그램: 트랜잭션 시작
   구성 변수: <<tx_start_point,`TxStartPoint`>>에는 다음이 포함됩니다. <<tx_start_stop_point_values,DataSigned>> (Not: <<tx_start_stop_point_values,ParkingBayOccupancy, EVConnected 또는 Authorized>>). +
   충전기에는 측정된 값에 서명할 수 있는 미터가 있습니다. +
   구성 변수: <<sampled_data_sign_readings,`SampledDataSignReadings`>>가 _true_ 로 설정됨.
-|{nbsp} |사후 조건(들)
+|{nbsp} |사후 조건
   |**성공적인 사후 조건:** +
   트랜잭션이 진행 중이고 CSMS에 _성공적으로_ 통보되었습니다.
 
@@ -286,7 +286,7 @@ image::part2/images/figure_42.svg[시퀀스 다이어그램: 트랜잭션 시작
   |EVSE에서 ​​진행 중인 트랜잭션이 없습니다. +
   구성 변수: <<tx_start_point,`TxStartPoint`>>에는 다음이 포함됩니다. <<tx_start_stop_point_values,PowerPathClosed>> (Not: <<tx_start_stop_point_values,ParkingBayOccupancy, EVConnected, Authorized 또는 DataSigned>>). +
   충전 케이블이 연결되었습니다.
-|{nbsp} |사후 조건(들)
+|{nbsp} |사후 조건
   |**성공 사후 조건:** +
   트랜잭션이 진행 중이고 CSMS에 _성공적으로_ 통보되었습니다.
 
@@ -309,7 +309,7 @@ image::part2/images/figure_43.svg[시퀀스 다이어그램: 시작 트랜잭션
   **4.** 충전기는 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Started>>)를 보내 CSMS에 시작된 트랜잭션에 대해 알립니다. +
   **5.** CSMS는 <<transaction_event_response,TransactionEventResponse>>로 응답하여 <<transaction_event_request,TransactionEventRequest>>가 수신되었음을 확인합니다.
 |{nbsp} |필수 조건 |구성 변수: <<tx_start_point,`TxStartPoint`>>에는 <<tx_start_stop_point_values,EnergyTransfer>>가 포함됩니다(Not: <<tx_start_stop_point_values,ParkingBayOccupancy, EVConnected, Authorized, DataSigned 또는 PowerPathClosed>>).
-|{nbsp} |사후 조건(들)
+|{nbsp} |사후 조건
   |**성공적인 사후 조건:** +
   트랜잭션이 진행 중이고 CSMS에 _성공적으로_ 통보되었습니다.
 
@@ -553,7 +553,7 @@ image::part2/images/figure_45.svg[Sequence Diagram: Start Transaction - Cable Pl
   **5.** 충전기는 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>, <<charging_state_enum_type,chargingState = Charging>>)를 전송하여 CSMS에 EV가 충전을 시작했다고 알립니다. +
   **6.** CSMS는 <<transaction_event_response,TransactionEventResponse>>로 응답하여 트랜잭션을 수락합니다.
 |5 |필수 조건 |케이블 연결보다 먼저 IdToken이 제공됩니다.
-|6 |사후 조건(들)
+|6 |사후 조건
   |**성공한 사후 조건:** +
   트랜잭션이 시작되고 <<charging_state_enum_type,ChargingState>>가 _Charging_ +
   **실패 사후 조건:** +
@@ -650,7 +650,7 @@ image::part2/images/figure_46.svg[시퀀스 다이어그램: 트랜잭션 시작
 |5 |필수 조건
   |충전기가 _offline_ 입니다. +
   EV 운전자가 충전기에서 오프라인/로컬로 인증되었습니다.
-|6 |사후 조건(들)
+|6 |사후 조건
   |**성공한 사후 조건:** +
   <<transaction_event_request,TransactionEventRequest>>가 CSMS에 의해 응답되었고 충전기 대기열에서 제거되었습니다. +
   **실패 사후 조건:** +
@@ -733,10 +733,10 @@ image::part2/images/figure_47.svg[시퀀스 다이어그램: 충전기가 오프
   **2.** CSMS는 충전을 허용하지 않는 AuthorizationStatus와 함께 <<transaction_event_response,TransactionEventResponse>>로 응답합니다. +
   **3.** 충전기는 에너지 제공을 중단합니다. (고려: <<max_energy_on_invalid_id,`MaxEnergyOnInvalidId`>>, 지원되는 경우) +
   **4.** 충전기는 trigger = _Deauthorized_ 와 충전 상태 _SuspendedEVSE_ 와 함께 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Updated>>)를 보내고 CSMS에서 <<transaction_event_response,TransactionEventResponse>>를 수신합니다.
-|5 |필수 조건(들)
+|5 |필수 조건
   |EV 운전자가 충전기에서 오프라인/로컬로 인증되었습니다. +
   CSMS에서 IdToken을 충전할 수 없습니다.
-|6 |사후 조건(들)
+|6 |사후 조건
   |**성공한 사후 조건:** +
   트랜잭션은 계속 진행되고 케이블은 잠긴 상태로 유지되지만 에너지는 전달되지 않습니다.
 
@@ -833,10 +833,10 @@ d|S1 d|_시나리오 목표_ |주차장 점유 감지기가 더 이상 EV를 감
   |**1.** 충전기 주차장 점유 감지기가 EV 감지를 멈춥니다. +
   **2.** 충전기는 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>)를 보내 CSMS에 종료된 트랜잭션에 대해 알립니다. +
   **3.** CSMS는 <<transaction_event_response,TransactionEventResponse>>로 응답하여 <<transaction_event_request,TransactionEventRequest>>가 수신되었음을 확인합니다.
-|{nbsp} |필수 조건(들)
+|{nbsp} |필수 조건
   |트랜잭션이 진행 중입니다. +
   구성 변수: <<tx_stop_point,`TxStopPoint`>>에는 다음이 포함됩니다. <<tx_start_stop_point_values,ParkingBayOccupancy>>
-|{nbsp} |사후 조건(들)
+|{nbsp} |사후 조건
   |**성공한 사후 조건:** +
   트랜잭션이 종료되고 CSMS에 _성공적으로_ 알립니다.
 
@@ -857,10 +857,10 @@ image::part2/images/figure_49.svg[Sequence Diagram: Stop Transaction options - P
   **2.** 충전기 측에서 충전 케이블이 뽑힌 경우: <<status_notification_request,StatusNotificationRequest>>를 CSMS로 보내 <<connector_status_enum_type,_Available_>>이 된 커넥터에 대해 알립니다. +
   **3.** 충전기는 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>)를 보내 CSMS에 종료된 트랜잭션을 알립니다. +
   **4.** CSMS는 <<transaction_event_response,TransactionEventResponse>>로 응답하여 <<transaction_event_request,TransactionEventRequest>>가 수신되었음을 확인합니다.
-|{nbsp} |필수 조건(들)
+|{nbsp} |필수 조건
   |트랜잭션이 진행 중입니다. +
   구성 변수: <<tx_stop_point,`TxStopPoint`>>에는 다음이 포함됩니다. <<tx_start_stop_point_values,EVConnected>>
-|{nbsp} |사후 조건(들)
+|{nbsp} |사후 조건
   |**성공한 사후 조건:** +
   트랜잭션이 종료되고 CSMS에 _성공적으로_ 알립니다.
 
@@ -881,10 +881,10 @@ image::part2/images/figure_50.svg[시퀀스 다이어그램: 트랜잭션 중지
   **2.** <<transaction_event_response,TransactionEventResponse>>에서 잘못된 IdToken이 수신되었습니다. +
   **3.** 충전기는 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>)를 보내 CSMS에 종료된 트랜잭션에 대해 알립니다. +
   **4.** CSMS는 <<transaction_event_response,TransactionEventResponse>>로 응답하여 <<transaction_event_request,TransactionEventRequest>>가 수신되었음을 확인합니다.
-|{nbsp} |필수 조건(들)
+|{nbsp} |필수 조건
   |트랜잭션이 진행 중입니다. +
   구성 변수: <<tx_stop_point,`TxStopPoint`>>에는 다음이 포함됩니다. <<tx_start_stop_point_values,Authorized>>
-|{nbsp} |사후 조건(들)
+|{nbsp} |사후 조건
   |**성공한 사후 조건:** +
   트랜잭션이 종료되고 CSMS에 _성공적으로_ 알립니다.
 
@@ -907,7 +907,7 @@ image::part2/images/figure_51.svg[Sequence Diagram: Stop Transaction options - D
 |{nbsp} |필수 조건
   |트랜잭션이 진행 중입니다. +
   구성 변수: <<tx_stop_point,`TxStopPoint`>>에는 다음이 포함됩니다. <<tx_start_stop_point_values,PowerPathClosed>>
-|{nbsp} |사후 조건(들)
+|{nbsp} |사후 조건
   |**성공한 사후 조건:** +
   트랜잭션이 종료되고 CSMS에 _성공적으로_ 알립니다.
 
@@ -927,10 +927,10 @@ image::part2/images/figure_52.svg[시퀀스 다이어그램: 트랜잭션 중지
   |**1.** EV와 충전기 간의 에너지 전송이 중지됩니다(예: EV 충전이 중지됨). +
   **2.** 충전기는 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>)를 보내 CSMS에 종료된 트랜잭션에 대해 알립니다. +
   **3.** CSMS는 <<transaction_event_response,TransactionEventResponse>>로 응답하여 <<transaction_event_request,TransactionEventRequest>>가 수신되었음을 확인합니다.
-|{nbsp} |필수 조건(들)
+|{nbsp} |필수 조건
   |트랜잭션이 진행 중입니다. +
   구성 변수: <<tx_stop_point,`TxStopPoint`>>에는 다음이 포함됩니다. <<tx_start_stop_point_values,EnergyTransfer>>
-|{nbsp} |사후 조건(들)
+|{nbsp} |사후 조건
   |**성공한 사후 조건:** +
   트랜잭션이 종료되고 CSMS에 _성공적으로_ 알립니다.
 
@@ -950,10 +950,10 @@ image::part2/images/figure_53.svg[시퀀스 다이어그램: 트랜잭션 중지
   |**1.** EV 운전자가 충전을 종료하기 위해 IdToken을 제시합니다. +
   **2.** 충전기는 <<transaction_event_request,TransactionEventRequest>> (<<transaction_event_enum_type,eventType = Ended>>)를 보내 CSMS에 종료된 트랜잭션에 대해 알립니다. +
   **3.** CSMS는 <<transaction_event_response,TransactionEventResponse>>로 응답하여 <<transaction_event_request,TransactionEventRequest>>가 수신되었음을 확인합니다.
-|{nbsp} |필수 조건(들)
+|{nbsp} |필수 조건
   |트랜잭션이 진행 중입니다. +
   구성 변수: <<tx_stop_point,`TxStopPoint`>>에는 <<tx_start_stop_point_values,Authorized>> (또는 <<tx_start_stop_point_values,PowerPathClosed>>)가 포함됩니다.
-|{nbsp} |사후 조건(들)
+|{nbsp} |사후 조건
   |**성공적인 사후 조건:** +
   트랜잭션이 종료되고 CSMS에 _성공적으로_ 통보됩니다.
 
@@ -1055,7 +1055,7 @@ image::part2/images/figure_54.svg[Sequence Diagram: Stop Transaction options - A
     **2.** 충전기가 에너지 전송을 중지하고 케이블이 영구적으로 연결되지 않은 경우 충전기가 케이블의 잠금을 해제합니다. +
     **3.** 충전기가 _triggerReason_ = `StopAuthorized` 및 _stoppedReason_ = `Local` 인 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>)를 보냅니다. +
     **4.** CSMS가 <<transaction_event_response,TransactionEventResponse>>로 응답합니다.
-|{nbsp} d|대체 시나리오(들) +
+|{nbsp} d|대체 시나리오 +
   TxStopPoint = `Authorized` (또는 `PowerPathClosed`)
     |_충전을 중지할 때 트랜잭션이 triggerReason=ChargingStateChanged로 종료됨:_
 
@@ -1242,11 +1242,11 @@ image::part2/images/figure_57.svg[시퀀스 다이어그램: 충전기가 오프
   **5.** EV 운전자가 인증을 하고 케이블을 분리합니다. +
   **6.** 충전기에서 <<status_notification_request,StatusNotificationRequest>>를 CSMS로 _Available_ 상태로 전송합니다. +
   **7.** CSMS는 <<status_notification_response,StatusNotificationResponse>>로 응답합니다.
-|{nbsp} d|_대체 시나리오(들)_ |<<e10_when_cable_disconnected_on_ev_side_suspended_transaction,E10 - When cable disconnected on EV-side: Suspend Transaction>>
-|5 |필수 조건(들)
+|{nbsp} d|_대체 시나리오_ |<<e10_when_cable_disconnected_on_ev_side_suspended_transaction,E10 - When cable disconnected on EV-side: Suspend Transaction>>
+|5 |필수 조건
   |구성 변수: <<stop_tx_on_ev_side_disconnect,`StopTxOnEVSideDisconnect`>> = true +
   트랜잭션이 진행 중입니다.
-|6 |사후 조건(들)
+|6 |사후 조건
   |**성공한 사후 조건:** +
   충전기가 _idle_ 상태입니다. +
   **실패 사후 조건:** +
@@ -1342,11 +1342,11 @@ image::part2/images/figure_58.svg[시퀀스 다이어그램: EV 측에서 케이
   **C2.** 충전기는 <<transaction_event_request,TransactionEventRequest>>(<<transaction_event_enum_type,eventType = Ended>>, <<trigger_reason_enum_type,trigger = EVCommunicationLost>>, <<reason_enum_type,stoppedReason = EVDisconnected>>)를 전송합니다. +
   **C3.** 충전기는 <<status_notification_request,StatusNotificationRequest>>를 CSMS에 상태 <<connector_status_enum_type,_Available_>>로 전송합니다. +
   **C4.** CSMS는 <<status_notification_response,StatusNotificationResponse>>로 응답합니다.
-|{nbsp} d|_대체 시나리오(들)_ |<<e09_when_cable_disconnected_on_ev_side_stop_transaction,E09 - When cable disconnected on EV-side: Stop Transaction>>
-|5 |필수 조건(들)
+|{nbsp} d|_대체 시나리오_ |<<e09_when_cable_disconnected_on_ev_side_stop_transaction,E09 - When cable disconnected on EV-side: Stop Transaction>>
+|5 |필수 조건
   |구성 변수: <<stop_tx_on_ev_side_disconnect,`StopTxOnEVSideDisconnect`>> = false +
   트랜잭션이 진행 중입니다.
-|6 |사후 조건(들)
+|6 |사후 조건
   |**성공적인 사후 조건:** +
   충전기가 _idle_ 상태입니다. +
   일반 트랜잭션이 재개됩니다. +
@@ -1623,7 +1623,7 @@ image::part2/images/figure_62.svg[시퀀스 다이어그램: CSMS에서 수락�
   |**1.** CSMS는 <<get_transaction_status_request,GetTransactionStatusRequest>>를 충전기로 보냅니다. 이때 transactionId가 있거나 없어도 됩니다. +
   **2.** 충전기는 <<get_transaction_status_response,GetTransactionStatusResponse>>로 응답합니다.
 |5 |필수 조건 |CSMS는 상태를 알고자 하는 트랜잭션의 transactionId를 알고 있습니다.
-|6 |사후 조건(들)
+|6 |사후 조건
   |**성공 사후 조건:** +
   CSMS는 요청된 트랜잭션의 상태를 알고 있습니다. +
   **실패 사후 조건:** +
@@ -1695,7 +1695,7 @@ image::part2/images/figure_63.svg[시퀀스 다이어그램: 트랜잭션 상태
   **1.** EV 드라이버가 EV에서 케이블을 분리합니다 +
   **2.** 충전기는 <<transaction_event_request,TransactionEventRequest>>를 eventType <<transaction_event_enum_type,eventType = Ended>>로 CSMS로 보냅니다.
 |7 |필수 조건 |<<iso15118_1,ISO15118-1>>, 사용 사례 필수 조건 H1, 44페이지를 참조하세요.
-|8 |사후 조건(들)
+|8 |사후 조건
   |CSMS가 트랜잭션에 대한 모든 관련 정보를 수신했습니다.
 
   <<iso15118_1,ISO15118-1>>, 사용 사례 종료 조건 H1, 44페이지를 참조하세요.

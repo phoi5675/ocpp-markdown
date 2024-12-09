@@ -8,8 +8,15 @@ OCPP 1.6 및 2.0.1 문서에 대해 asciidoc으로 변환하고, 한글로 변�
 
 To convert asciidoc file to pdf file, run command below in asciidoc file is located.
 
+- [asciidoctor-pdf](https://docs.asciidoctor.org/pdf-converter/latest/install/) and [asciidoctor-mathmatical](https://docs.asciidoctor.org/pdf-converter/latest/stem/#activate-asciidoctor-mathematical) is required.
+
 ```bash
-asciidoctor-pdf --theme ../styles/themes/theme.yml -a pdf-fontsdir="../styles/fonts;GEM_FONTS_DIR" ${asciidoc_file}
+asciidoctor-pdf --theme ../styles/themes/${theme_file} -a pdf-fontsdir="../styles/fonts;GEM_FONTS_DIR" ${asciidoc_file}
+```
+
+```bash
+# If adoc has LaTeX expressions
+asciidoctor-pdf --theme ../styles/themes/${theme_file} -r asciidoctor-mathmatical -a pdf-fontsdir="../styles/fonts;GEM_FONTS_DIR" ${asciidoc_file}
 ```
 
 ## Credits
