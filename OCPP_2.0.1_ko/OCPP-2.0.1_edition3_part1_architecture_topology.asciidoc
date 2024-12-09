@@ -423,7 +423,7 @@ image::part1/images/figure_10.svg[로컬 컨트롤러를 통해 CSMS에 연결�
 
 **설명**
 
-이 설정은 CSMS가 충전기로 신호를 보내는 유일한 애플리케이션이지만 CSMS는 (대부분의 경우) 그리드 제약에 따라 DSO로부터 스마트 충전 신호를 수신합니다. 즉, OpenADR 또는 OSCP와 같은 비 OCPP 신호가 수신되고 이 신호에 따라 CSMS가 충전기에서 충전을 제한합니다. 충전기를 완벽하게 제어하려는 CSO는 이 아키텍처를 사용하여 충전기에서 사용되는 에너지 양을 제어할 수 있습니다. 충전 프로파일/충전 일정을 충전기로 보내면 됩니다.
+이 설정은 CSMS가 충전기로 신호를 보내는 유일한 애플리케이션이지만 CSMS는 (대부분의 경우) 그리드 제약에 따라 DSO로부터 스마트 충전 신호를 수신합니다. 즉, OpenADR 또는 OSCP와 같은 비 OCPP 신호가 수신되고 이 신호에 따라 CSMS가 충전기에서 충전을 제한합니다. 충전기를 완벽하게 제어하려는 CSO는 이 아키텍처를 사용하여 충전기에서 사용되는 에너지 양을 제어할 수 있습니다. 충전 프로필/충전 일정을 충전기로 보내면 됩니다.
 
 .스마트 충전 - CSMS로 전송되는 DSO 제어 신호
 image::part1/images/figure_11.svg[스마트 충전 - CSMS로 전송되는 DSO 제어 신호]
@@ -470,8 +470,8 @@ image::part1/images/figure_16.svg[OCPP 정보 모델: 계량]
 .OCPP 정보 모델: 장치 모델
 image::part1/images/figure_17.svg[OCPP 정보 모델: 장치 모델]
 
-.OCPP 정보 모델: 보안 프로파일
-image::part1/images/figure_18.svg[OCPP 정보 모델: 보안 프로파일]
+.OCPP 정보 모델: 보안 프로필
+image::part1/images/figure_18.svg[OCPP 정보 모델: 보안 프로필]
 
 .OCPP 정보 모델: 보안 권한 부여
 image::part1/images/figure_19.svg[OCPP 정보 모델: 보안 권한 부여]

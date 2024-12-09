@@ -210,7 +210,7 @@ image::part2/images/figure_87.svg[Sequence Diagram: Show EV Driver Final Total C
 |2   |ID              |I04
 |{nbsp} d|_Functional block_ |I. Tariff and Cost
 |3   |Objective(s)    |To show an EV Driver some information, generic tariff, a message etc., when the Charging Station cannot retrieve tariff information for this EV Driver.
-|4   |Description     |When an EV Driver wants to charge an EV, he wants an indication of how much charging will cost him at the Charging Station he is at, but the Charging Station cannot get a specific tariff for this EV Driver (for example: the Charging Station is Offline , or no EV Driver-specific tariff is available). For such scenarios, a fallback tariff information message can be configured in the Charging Station.
+|4   |Description     |When an EV Driver wants to charge an EV, he wants an indication of how much charging will cost him at the Charging Station he is at, but the Charging Station cannot get a specific tariff for this EV Driver (for example: the Charging Station is _Offline_, or no EV Driver-specific tariff is available). For such scenarios, a fallback tariff information message can be configured in the Charging Station.
 |{nbsp} d|_Actors_    |Charging Station, EV Driver
 |{nbsp} d|_Scenario description_ 
   |**1.** The EV Driver wants to charge an EV, he presents his <<id_token_type,IdTokenType>>. +

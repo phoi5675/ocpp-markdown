@@ -719,7 +719,7 @@ The following Configuration Variables are added to control JSON/WebSockets behav
 
 == CustomData Extension
 
-In the JSON schema files all classes have the attribute _additionalProperties_ set to _false_ , such that a JSON parser will not accept any other properties in the message. In order to allow for some flexibility to create non-standard extensions for experimentation purposes, every JSON class has been extended with a "customData" property. This property is of type "CustomDataType", which has only one required property: "vendorId", which is used to identify the kind of customization. However, since it does not have _additionalProperties_ set to _false_ it can be freely extended with new properties.
+In the JSON schema files all classes have the attribute _additionalProperties_ set to _false_, such that a JSON parser will not accept any other properties in the message. In order to allow for some flexibility to create non-standard extensions for experimentation purposes, every JSON class has been extended with a "customData" property. This property is of type "CustomDataType", which has only one required property: "vendorId", which is used to identify the kind of customization. However, since it does not have _additionalProperties_ set to _false_ it can be freely extended with new properties.
 
 In the same way as is defined for the DataTransfer message, the "vendorId" should be a value from the reversed DNS namespace, where the top tiers of the name, when reversed, should correspond to the publicly registered primary DNS name of the Vendor organization.
 

@@ -222,7 +222,7 @@ image::part2/images/figure_132.svg[Sequence Diagram: Get Monitoring Report]
   |The Charging Station SHALL report for every instance of the _variable_ of the _component_ in _componentVariable_.
 |N02.FR.18  |N02.FR.11 AND +
   When Charging Station receives a <<get_monitoring_report_request,GetMonitoringReportRequest>> with a _component_ in a _componentVariable_ element that has a _component.evse.id_, but _component.evse.connector_ is missing
-    |The Charging Station SHALL report the component(s) with this _component.name_, _component.instance_ and _component.evse.id_ for every _component.evse.connector_ , whilst taking into account N02.FR.20.
+    |The Charging Station SHALL report the component(s) with this _component.name_, _component.instance_ and _component.evse.id_ for every _component.evse.connector_, whilst taking into account N02.FR.20.
 |N02.FR.19  |N02.FR.11 AND +
   When Charging Station receives a <<get_monitoring_report_request,GetMonitoringReportRequest>> with a _component_ in a _componentVariable_ element that has no _component.evse.id_
     |The Charging Station SHALL report the component(s) with this _component.name_, _component.instance_ for every _component.evse_ field (including top level component without _component.evse_), whilst taking into account N02.FR.20.

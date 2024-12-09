@@ -109,8 +109,8 @@ edition 2 FINAL, 2017-09-28
 |[[central_system]]Central System |충전기 관리 시스템(Charge Point Management System, CSMS): 충전기를 관리, 사용자에게 충전기 사용을 허가하는 정보를 제공하는 CSMS입니다.
 |[[cistring]]CiString |대소문자 구분 없는 문자열입니다. 인쇄 가능한 ASCII만 허용됩니다.
 |[[charge_point]]Charge Point |충전기는 전기차를 충전할 수 있는 물리적 시스템입니다. 충전기에는 하나 이상의 커넥터가 있습니다.
-|[[charging_profile]]Charging Profile |다양한 유형의 프로파일에 사용되는 일반 충전 프로파일입니다. 프로파일에 대한 정보를 포함하고 충전 스케쥴을 보관합니다. 향후 버전의 OCPP에서는 2개 이상의 충전 스케쥴을 보관할 수 있습니다.
-|[[charging_schedule]]Charging Schedule |충전 프로파일의 일부입니다. 충전 전력 또는 전류 제한 블록을 정의합니다. 시작 시간과 길이를 포함할 수 있습니다.
+|[[charging_profile]]Charging Profile |다양한 유형의 프로필에 사용되는 일반 충전 프로필입니다. 프로필에 대한 정보를 포함하고 충전 스케쥴을 보관합니다. 향후 버전의 OCPP에서는 2개 이상의 충전 스케쥴을 보관할 수 있습니다.
+|[[charging_schedule]]Charging Schedule |충전 프로필의 일부입니다. 충전 전력 또는 전류 제한 블록을 정의합니다. 시작 시간과 길이를 포함할 수 있습니다.
 |[[charging_session]]Charging Session |충전 세션은 사용자 또는 EV와의 첫 번째 상호 작용이 발생할 때 시작됩니다. 이는 카드 스와이프, 원격 충전 시작, 케이블 및/또는 EV 연결, 주차 공간 점유 감지기 등일 수 있습니다.
 |[[composite_charging_schedule]]Composite Charging Schedule |충전기에서 계산한 충전 스케쥴입니다. 이는 충전기에 있는 모든 활성 스케쥴과 가능한 지역 제한을 계산한 결과입니다. 지역 제한(Local Limits)이 고려될 수 있습니다.
 |[[connector]]Connector |이 사양에서 사용되는 용어 "커넥터"는 충전기에서 독립적으로 작동하고 관리되는 전기 콘센트를 말합니다. 이는 일반적으로 단일 물리적 커넥터에 해당하지만, 어떤 경우에는 단일 콘센트에 여러 물리적 소켓 유형 및/또는 고정 케이블/커넥터 배열이 있어 다양한 차량 유형(예: 4륜 EV 및 전기 스쿠터)에 이용할 수 있도록 합니다.
@@ -198,11 +198,11 @@ CSMS와 충전기 간의 상호 운용성을 개선하기 위해 <<ocpp_1.6ct,OC
 
 이 섹션은 규범적입니다.
 
-OCPP 1.6에서 기능과 관련 메시지는 _프로파일_ 로 그룹화됩니다. 필요한 기능에 따라 구현자는 다음 프로파일 중 하나 이상을 구현하도록 선택할 수 있습니다.
+OCPP 1.6에서 기능과 관련 메시지는 _프로필_ 로 그룹화됩니다. 필요한 기능에 따라 구현자는 다음 프로필 중 하나 이상을 구현하도록 선택할 수 있습니다.
 
 [%autowidth.stretch,cols="s,d",options="autowidth"]
 |===
-|프로파일 이름 |설명
+|프로필 이름 |설명
 
 |코어 |펌웨어 업데이트, 로컬 권한 목록 관리 및 예약 지원 기능이 제거된 OCPP 1.5 <<ocpp1.5,[OCPP1.5]>>와 비슷한 기본 충전기 기능.
 |펌웨어 관리 |펌웨어 업데이트 관리 및 진단 로그 파일 다운로드 지원.
@@ -212,13 +212,13 @@ OCPP 1.6에서 기능과 관련 메시지는 _프로파일_ 로 그룹화됩니�
 |원격 트리거 |충전기가 CSMS로 메시지를 전송하는 이벤트 발생을 위한 원격 트리거 지원
 |===
 
-이러한 프로파일은 고객이 OCPP 1.6 제품에 비즈니스 사례에 필요한 기능이 있는지 확인하는 데 사용할 수 있습니다. 규정 준수 테스트는 프로파일별로 제품이 OCPP 1.6 사양을 준수하는지 테스트합니다.
+이러한 프로필은 고객이 OCPP 1.6 제품에 비즈니스 사례에 필요한 기능이 있는지 확인하는 데 사용할 수 있습니다. 규정 준수 테스트는 프로필별로 제품이 OCPP 1.6 사양을 준수하는지 테스트합니다.
 
-핵심 프로파일 구현은 필수입니다. 다른 프로파일은 선택 사항입니다.
+핵심 프로필 구현은 필수입니다. 다른 프로필은 선택 사항입니다.
 
-**Core**, **Firmware Management**, **Local Auth List Management** 및 **Reservation** 프로파일이 구현되면 OCPP 1.5 <<ocpp1.5,[OCPP1.5]>>에서 지원하는 모든 기능이 포함됩니다.
+**Core**, **Firmware Management**, **Local Auth List Management** 및 **Reservation** 프로필이 구현되면 OCPP 1.5 <<ocpp1.5,[OCPP1.5]>>에서 지원하는 모든 기능이 포함됩니다.
 
-프로파일의 모든 메시지 그룹화는 아래 표에서 찾을 수 있습니다.
+프로필의 모든 메시지 그룹화는 아래 표에서 찾을 수 있습니다.
 
 [%autowidth.stretch,cols=".^,6*^.^",options="header,autowidth"]
 |===
@@ -259,7 +259,7 @@ OCPP 1.6에서 기능과 관련 메시지는 _프로파일_ 로 그룹화됩니�
 |<<trigger_message_req,TriggerMessage>>                                | | | | | | X
 |===
 
-특정 기능 프로파일에 대한 지원은 <<supported_feature_profiles,`SupportedFeatureProfiles`>>의 구성 키(configuration key)의 응답에서 확인할 수 있습니다.
+특정 기능 프로필에 대한 지원은 <<supported_feature_profiles,`SupportedFeatureProfiles`>>의 구성 키(configuration key)의 응답에서 확인할 수 있습니다.
 
 === General views of operation
 
@@ -503,19 +503,19 @@ a|image::asset/warning-icon.svg[warning-icon,32,32] |
 
 이 섹션은 규범적입니다.
 
-스마트 충전을 사용하면 CSMS가 특정 EV의 충전 전력 또는 전류, 전체 충전기 / 충전기 그룹의 총 허용 에너지 소비량에 영향을 미칠 수 있습니다. 예를 들어, 그리드 연결, 그리드의 에너지 가용성 또는 건물 배선을 기반으로 합니다. 충전 전력 또는 전류에 영향을 미치는 것은 특정 시점의 에너지 전송 한도에 따라 달라집니다. 이러한 한도는 충전 프로파일에 결합됩니다.
+스마트 충전을 사용하면 CSMS가 특정 EV의 충전 전력 또는 전류, 전체 충전기 / 충전기 그룹의 총 허용 에너지 소비량에 영향을 미칠 수 있습니다. 예를 들어, 그리드 연결, 그리드의 에너지 가용성 또는 건물 배선을 기반으로 합니다. 충전 전력 또는 전류에 영향을 미치는 것은 특정 시점의 에너지 전송 한도에 따라 달라집니다. 이러한 한도는 충전 프로필에 결합됩니다.
 
 [[charging_profile_purposes]]
 ==== Charging profile purposes
 
-충전 프로파일은 충전 스케쥴로 구성되며, 이는 기본적으로 최대 충전 전력 또는 전류가 있는 시간 간격 목록과 일정의 기간 및 반복을 지정하는 몇 가지 값입니다.
+충전 프로필은 충전 스케쥴로 구성되며, 이는 기본적으로 최대 충전 전력 또는 전류가 있는 시간 간격 목록과 일정의 기간 및 반복을 지정하는 몇 가지 값입니다.
 
-목적에 따라 세 가지 유형의 충전 프로파일이 있습니다.
+목적에 따라 세 가지 유형의 충전 프로필이 있습니다.
 
 [[charge_point_max_profile]]
 * _ChargePointMaxProfile_
 
-부하 분산(load balancing) 시나리오에서 충전기에는 충전기의 모든 커넥터가 공유할 전력 또는 전류를 제한하는 하나 이상의 로컬 충전 프로파일이 있습니다. CSMS는 ChargingProfilePurpose를 _"ChargePointMaxProfile"_ 로 설정하여 이러한 프로파일을 구성해야 합니다. _ChargePointMaxProfile_ 은 충전기의 ConnectorId 0에서만 설정할 수 있습니다.
+부하 분산(load balancing) 시나리오에서 충전기에는 충전기의 모든 커넥터가 공유할 전력 또는 전류를 제한하는 하나 이상의 로컬 충전 프로필이 있습니다. CSMS는 ChargingProfilePurpose를 _"ChargePointMaxProfile"_ 로 설정하여 이러한 프로필을 구성해야 합니다. _ChargePointMaxProfile_ 은 충전기의 ConnectorId 0에서만 설정할 수 있습니다.
 
 [[tx_default_profile]]
 * _TxDefaultProfile_
@@ -526,43 +526,43 @@ _TxDefaultProfile이 ConnectorId 0으로 설정된 경우 TxDefaultProfile은 �
 
 _ConnectorId가 >0으로 설정된 경우, 해당 특정 Connector에만 적용됩니다._
 
-_Connector 0에 대한 TxDefaultProfile이 설정되고 CSMS가 ConnectorId >0인 새 프로파일을 보내는 경우, TxDefaultProfile은 해당 특정 Connector에 대해서만 교체해야 합니다._
+_Connector 0에 대한 TxDefaultProfile이 설정되고 CSMS가 ConnectorId >0인 새 프로필을 보내는 경우, TxDefaultProfile은 해당 특정 Connector에 대해서만 교체해야 합니다._
 
 * [[tx_profile]]_TxProfile_
 
-목적이 _TxProfile_ 인 트랜잭션별 프로파일이 있는 경우, 현재 트랜잭션 기간 동안만 목적이 <<tx_default_profile,TxDefaultProfile>>인 기본 충전 프로파일을 무시해야 합니다. 트랜잭션이 중지된 후에는 프로파일을 삭제해야 합니다. _TxProfile_ 유형의 충전 프로파일에 지정된 커넥터에서 활성화된 트랜잭션이 없는 경우 충전기는 이를 삭제하고 <<set_charging_profile_conf,SetChargingProfile.conf>>에서 오류 상태를 반환해야 합니다.
+목적이 _TxProfile_ 인 트랜잭션별 프로필이 있는 경우, 현재 트랜잭션 기간 동안만 목적이 <<tx_default_profile,TxDefaultProfile>>인 기본 충전 프로필을 무시해야 합니다. 트랜잭션이 중지된 후에는 프로필을 삭제해야 합니다. _TxProfile_ 유형의 충전 프로필에 지정된 커넥터에서 활성화된 트랜잭션이 없는 경우 충전기는 이를 삭제하고 <<set_charging_profile_conf,SetChargingProfile.conf>>에서 오류 상태를 반환해야 합니다.
 
-트랜잭션에 적용되는 최종 스케쥴 제약 조건은 목적이 _ChargePointMaxProfile_ 인 프로파일을 프로파일 _TxProfile_ 또는 목적이 _TxProfile_ 인 프로파일이 제공되지 않은 경우 <<tx_default_profile,TxDefaultProfile>>과 병합하여 결정됩니다. _TxProfile은 충전기 ConnectorId >0에서만 설정해야 합니다_.
+트랜잭션에 적용되는 최종 스케쥴 제약 조건은 목적이 _ChargePointMaxProfile_ 인 프로필을 프로필 _TxProfile_ 또는 목적이 _TxProfile_ 인 프로필이 제공되지 않은 경우 <<tx_default_profile,TxDefaultProfile>>과 병합하여 결정됩니다. _TxProfile은 충전기 ConnectorId >0에서만 설정해야 합니다_.
 
 ==== Stacking charging profiles
 
-복잡한 일정을 설명하기 위해 동일한 충전 프로파일 목적의 충전 프로파일을 스태킹할 수 있습니다. 예를 들어, 주중 23:00h에서 06:00h까지, 주말 00:00h에서 24:00h까지 최대 전력 또는 전류량을 허용하고 다른 시간에는 전력 또는 전류량을 줄이는 목적 <<tx_default_profile,TxDefaultProfile>>의 충전 프로파일을 정의할 수 있습니다. 그 위에 휴일과 같이 이 규칙에 대한 예외를 정의하는 다른 <<tx_default_profile,TxDefaultProfiles>>를 정의할 수 있습니다.
+복잡한 일정을 설명하기 위해 동일한 충전 프로필 목적의 충전 프로필을 스태킹할 수 있습니다. 예를 들어, 주중 23:00h에서 06:00h까지, 주말 00:00h에서 24:00h까지 최대 전력 또는 전류량을 허용하고 다른 시간에는 전력 또는 전류량을 줄이는 목적 <<tx_default_profile,TxDefaultProfile>>의 충전 프로필을 정의할 수 있습니다. 그 위에 휴일과 같이 이 규칙에 대한 예외를 정의하는 다른 <<tx_default_profile,TxDefaultProfiles>>를 정의할 수 있습니다.
 
-충전 프로파일의 우선 순위는 StackLevel 매개변수 값에 따라 결정됩니다. 언제든지 유효한 충전 프로파일은 validFrom 및 validTo 매개변수에 따라 해당 시점에 유효한 프로파일 중에서 stackLevel이 가장 높은 충전 프로파일이어야 합니다.
+충전 프로필의 우선 순위는 StackLevel 매개변수 값에 따라 결정됩니다. 언제든지 유효한 충전 프로필은 validFrom 및 validTo 매개변수에 따라 해당 시점에 유효한 프로필 중에서 stackLevel이 가장 높은 충전 프로필이어야 합니다.
 
-충돌을 피하기 위해 충전기에 동일한 <<stack_level,stackLevel>> 및 용도가 있는 여러 충전 프로파일이 존재하는 것은 허용되지 않습니다. 충전기가 충전기에 이미 존재하는 stackLevel 및 용도가 있는 충전 프로파일을 수신할 때마다 충전기는 기존 프로파일을 대체해야 합니다.
+충돌을 피하기 위해 충전기에 동일한 <<stack_level,stackLevel>> 및 용도가 있는 여러 충전 프로필이 존재하는 것은 허용되지 않습니다. 충전기가 충전기에 이미 존재하는 stackLevel 및 용도가 있는 충전 프로필을 수신할 때마다 충전기는 기존 프로필을 대체해야 합니다.
 
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/info-icon.svg[info-icon,32,32] |
-동일한 stackLevel 및 용도가 있는 업데이트된 충전 프로파일이 미래의 validFrom dateTime과 함께 전송되는 경우, 충전기는 설치된 프로파일을 대체하고 validFrom에 도달할 때까지 기본 동작으로 돌아가야 합니다. 프로파일 적용 공백(gaps)을 방지하기 위해, 시작 시각을 과거로 설정하여 충전 프로파일을 충전기로 전송하는 것을 권장합니다.
+동일한 stackLevel 및 용도가 있는 업데이트된 충전 프로필이 미래의 validFrom dateTime과 함께 전송되는 경우, 충전기는 설치된 프로필을 대체하고 validFrom에 도달할 때까지 기본 동작으로 돌아가야 합니다. 프로필 적용 공백(gaps)을 방지하기 위해, 시작 시각을 과거로 설정하여 충전 프로필을 충전기로 전송하는 것을 권장합니다.
 
 |===
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/info-icon.svg[info-icon,32,32] |
-지속 시간 없이 가장 높은 스택 레벨에서 스태킹을 사용하는 경우 충전기는 더 낮은 스택 레벨 프로파일로 절대 떨어지지 않습니다.
+지속 시간 없이 가장 높은 스택 레벨에서 스태킹을 사용하는 경우 충전기는 더 낮은 스택 레벨 프로필로 절대 떨어지지 않습니다.
 |===
 
 [[combining_charging_profile_purposes]]
 ==== Combining charging profile purposes
 
-충전 레벨을 안내하는 복합 일정은 다양한 <<charging_profile_purposes,chargingProfilePurposes>>의 기존 충전 프로파일을 조합한 것입니다.
+충전 레벨을 안내하는 복합 일정은 다양한 <<charging_profile_purposes,chargingProfilePurposes>>의 기존 충전 프로필을 조합한 것입니다.
 
-이 복합 일정은 각 시간 간격의 최소값을 취하여 계산합니다. 시간 간격은 고정된 길이일 필요가 없으며 모든 충전 프로파일 목적에 대해 동일할 필요도 없습니다. +
+이 복합 일정은 각 시간 간격의 최소값을 취하여 계산합니다. 시간 간격은 고정된 길이일 필요가 없으며 모든 충전 프로필 목적에 대해 동일할 필요도 없습니다. +
 즉, 결과 복합 일정에는 길이가 다른 간격이 포함될 수 있습니다.
 
-어느 시점에서든 충전 프로파일 <<charge_point_max_profile,ChargePointMaxProfile>> 및 <<tx_default_profile,TxDefaultProfile>>(또는 <<tx_profile,TxProfile>>)의 일정을 병합한 결과인 복합 일정의 사용 가능한 전력 또는 전류는 병합된 일정에서 사용 가능한 전력 또는 전류의 가장 낮은 값보다 작거나 같아야 합니다.
+어느 시점에서든 충전 프로필 <<charge_point_max_profile,ChargePointMaxProfile>> 및 <<tx_default_profile,TxDefaultProfile>>(또는 <<tx_profile,TxProfile>>)의 일정을 병합한 결과인 복합 일정의 사용 가능한 전력 또는 전류는 병합된 일정에서 사용 가능한 전력 또는 전류의 가장 낮은 값보다 작거나 같아야 합니다.
 
 충전 포인트에 두 개 이상의 커넥터가 장착된 경우 ChargePointMaxProfile의 한계 값은 모든 커넥터를 합친 한계입니다. 모든 커넥터의 합친 에너지 흐름은 ChargePointMaxProfile에서 설정한 한계보다 커서는 안 됩니다.
 
@@ -615,8 +615,8 @@ image::images/figure_8.svg[시퀀스 다이어그램: 중앙 스마트 충전]
 
 위 그림에 대한 설명:
 
-* 사용자 인증 후 커넥터는 제어 파일럿 신호를 통해 사용할 최대 전류를 설정합니다. 이 제한은 커넥터가 CSMS에서 이전에 수신한 (기본) 충전 프로파일을 기반으로 합니다. EV가 충전을 시작하고 <<start_transaction_req,StartTransaction.req>>가 CSMS로 전송됩니다.
-* 충전이 진행되는 동안 커넥터는 충전 프로파일에 따라 최대 전류 또는 전력을 지속적으로 조정합니다. 선택적으로, CSMS는 언제든지 EV에 대한 제한 일정으로 사용될 커넥터에 대한 새로운 충전 프로파일을 보낼 수 있습니다.
+* 사용자 인증 후 커넥터는 제어 파일럿 신호를 통해 사용할 최대 전류를 설정합니다. 이 제한은 커넥터가 CSMS에서 이전에 수신한 (기본) 충전 프로필을 기반으로 합니다. EV가 충전을 시작하고 <<start_transaction_req,StartTransaction.req>>가 CSMS로 전송됩니다.
+* 충전이 진행되는 동안 커넥터는 충전 프로필에 따라 최대 전류 또는 전력을 지속적으로 조정합니다. 선택적으로, CSMS는 언제든지 EV에 대한 제한 일정으로 사용될 커넥터에 대한 새로운 충전 프로필을 보낼 수 있습니다.
 
 [[local_smart_charging]]
 [discrete]
@@ -645,10 +645,10 @@ image::images/figure_11.svg[시퀀스 다이어그램: 로컬 스마트 충전]
 
 위 그림에 대한 설명:
 
-* 인증 후 커넥터는 Control Pilot 신호를 통해 사용할 최대 전류를 설정합니다. 이 제한은 커넥터가 로컬 컨트롤러에서 이전에 수신한 (기본) 충전 프로파일을 기반으로 합니다. EV는 충전을 시작하고 <<start_transaction_req,StartTransaction.req>>를 보냅니다.
+* 인증 후 커넥터는 Control Pilot 신호를 통해 사용할 최대 전류를 설정합니다. 이 제한은 커넥터가 로컬 컨트롤러에서 이전에 수신한 (기본) 충전 프로필을 기반으로 합니다. EV는 충전을 시작하고 <<start_transaction_req,StartTransaction.req>>를 보냅니다.
 * <<start_transaction_req,StartTransaction.req>>는 로컬 컨트롤러를 통해 CSMS로 전송되므로 로컬 컨트롤러도 트랜잭션이 시작되었음을 알 수 있습니다. 로컬 컨트롤러는 충전기와 CSMS 간에 메시지를 전달하기만 하므로 CSMS는 모든 로컬 스마트 충전 그룹 구성원을 개별적으로 처리할 수 있습니다.
-* 충전이 진행되는 동안 커넥터는 충전 프로파일에 따라 최대 전류를 지속적으로 조정합니다. +
-선택적으로, 언제든지 로컬 컨트롤러는 EV에 대한 제한 일정으로 사용될 새로운 충전 프로파일을 커넥터에 보낼 수 있습니다.
+* 충전이 진행되는 동안 커넥터는 충전 프로필에 따라 최대 전류를 지속적으로 조정합니다. +
+선택적으로, 언제든지 로컬 컨트롤러는 EV에 대한 제한 일정으로 사용될 새로운 충전 프로필을 커넥터에 보낼 수 있습니다.
 
 ==== Discovery of Charge Point Capabilities
 
@@ -673,23 +673,23 @@ image::images/figure_11.svg[시퀀스 다이어그램: 로컬 스마트 충전]
 
 이 섹션은 규범적입니다.
 
-충전기가 목적이 <<tx_profile,TxProfile>>인 트랜잭션별 충전 프로파일을 수신한 후, _오프라인_ 이 되면 트랜잭션 기간 동안 이 프로파일을 계속 사용해야 합니다.
+충전기가 목적이 <<tx_profile,TxProfile>>인 트랜잭션별 충전 프로필을 수신한 후, _오프라인_ 이 되면 트랜잭션 기간 동안 이 프로필을 계속 사용해야 합니다.
 
-트랜잭션이 시작되기 전이나 목적이 TxProfile인 트랜잭션별 충전 프로파일을 수신하기 전에 충전기가 _오프라인_ 이 되면 사용 가능한 충전 프로파일을 사용해야 합니다. 다음 충전 프로파일 목적 중 0개 이상이 이전에 CSMS에서 수신되었을 수 있습니다.
+트랜잭션이 시작되기 전이나 목적이 TxProfile인 트랜잭션별 충전 프로필을 수신하기 전에 충전기가 _오프라인_ 이 되면 사용 가능한 충전 프로필을 사용해야 합니다. 다음 충전 프로필 목적 중 0개 이상이 이전에 CSMS에서 수신되었을 수 있습니다.
 
 * _ChargePointMaxProfile_
 * _TxDefaultProfile_
 
-다른 목적의 충전 프로파일을 결합하는 방법에 대한 설명은 섹션 <<combining_charging_profile_purposes,Combining Charging Profile Purposes>>를 참조하세요.
+다른 목적의 충전 프로필을 결합하는 방법에 대한 설명은 섹션 <<combining_charging_profile_purposes,Combining Charging Profile Purposes>>를 참조하세요.
 
-충전기가 충전 프로파일 없이 _오프라인_ 이 되면 제약 조건이 적용되지 않는 것처럼 트랜잭션을 실행해야 합니다.
+충전기가 충전 프로필 없이 _오프라인_ 이 되면 제약 조건이 적용되지 않는 것처럼 트랜잭션을 실행해야 합니다.
 
 [[example_data_structure_for_smart_charging]]
 ==== Example data structure for smart charging
 
 이 섹션은 정보 제공을 목적으로 합니다.
 
-다음 데이터 구조는 08:00h와 20:00h 사이에 전력을 6kW로 제한하는 일일 기본 프로파일을 설명합니다.
+다음 데이터 구조는 08:00h와 20:00h 사이에 전력을 6kW로 제한하는 일일 기본 프로필을 설명합니다.
 
 [options="header,autowidth"]
 |===
@@ -737,7 +737,7 @@ a|image::asset/warning-icon.svg[warning-icon,32,32] |
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/bulb-icon.svg[bulb-icon,32,32]|
-DST(일광 절약 시간대, 섬머타임)가 적용되거나 적용되지 않는 날에는 특수 프로파일이 필요할 수 있습니다(예: 상대 프로파일의 경우)
+DST(일광 절약 시간대, 섬머타임)가 적용되거나 적용되지 않는 날에는 특수 프로필이 필요할 수 있습니다(예: 상대 프로필의 경우)
 |===
 
 === Time zones
@@ -1313,10 +1313,10 @@ CSMS는 충전기에 <<authorization_cache,Authorization Cache>>를 지우도록
 [[clear_charging_profile_by_central_system]]
 === Clear Charging Profile
 
-.시퀀스 다이어그램: 충전 프로파일 지우기
-image::images/figure_26.svg[시퀀스 다이어그램: 충전 프로파일 지우기]
+.시퀀스 다이어그램: 충전 프로필 지우기
+image::images/figure_26.svg[시퀀스 다이어그램: 충전 프로필 지우기]
 
-CSMS가 이전에 충전기에 전송된 일부 또는 모든 충전 프로파일을 지우려면 <<clear_charging_profile_req,ClearChargingProfile.req>> PDU를 사용해야 합니다.
+CSMS가 이전에 충전기에 전송된 일부 또는 모든 충전 프로필을 지우려면 <<clear_charging_profile_req,ClearChargingProfile.req>> PDU를 사용해야 합니다.
 
 충전기는 요청을 처리할 수 있었는지 여부를 지정하는 <<clear_charging_profile_conf,ClearChargingProfile.conf>> PDU로 응답해야 합니다.
 
@@ -1410,7 +1410,7 @@ CSMS는 RemoteStartTransaction 요청에 <<charging_profile_type,ChargingProfile
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/info-icon.svg[info-icon,32,32] |
-스마트 충전을 지원하지 않는 충전기가 충전 프로파일이 있는 <<remote_start_transaction_req,RemoteStartTransaction.req>>를 수신하는 경우 이 매개변수는 무시해야 합니다.
+스마트 충전을 지원하지 않는 충전기가 충전 프로필이 있는 <<remote_start_transaction_req,RemoteStartTransaction.req>>를 수신하는 경우 이 매개변수는 무시해야 합니다.
 |===
 
 [[remote_stop_transaction_by_central_system]]
@@ -1497,49 +1497,49 @@ CSMS는 충전기로 목록을 전송하기 위해 <<send_local_list_req,SendLoc
 [[set_charging_profile_by_central_system]]
 === Set Charging Profile
 
-.시퀀스 다이어그램: 충전 프로파일 설정
-image::images/figure_37.svg[시퀀스 다이어그램: 충전 프로파일 설정]
+.시퀀스 다이어그램: 충전 프로필 설정
+image::images/figure_37.svg[시퀀스 다이어그램: 충전 프로필 설정]
 
-CSMS는 다음과 같은 상황에서 충전 프로파일을 설정하기 위해 충전기에 <<set_charging_profile_req,SetChargingProfile.req>>를 보낼 수 있습니다.
+CSMS는 다음과 같은 상황에서 충전 프로필을 설정하기 위해 충전기에 <<set_charging_profile_req,SetChargingProfile.req>>를 보낼 수 있습니다.
 
-* 트랜잭션 시작 시 트랜잭션에 대한 충전 프로파일을 설정합니다.
+* 트랜잭션 시작 시 트랜잭션에 대한 충전 프로필을 설정합니다.
 * 충전기에 <<remote_start_transaction_req,RemoteStartTransaction.req>>를 보냅니다.
-* 트랜잭션 중에 트랜잭션에 대한 활성 프로파일을 변경합니다.
-* 트랜잭션 컨텍스트 외부에서 별도의 메시지로 로컬 컨트롤러, 충전기 또는 커넥터에 대한 기본 충전 프로파일을 설정합니다.
+* 트랜잭션 중에 트랜잭션에 대한 활성 프로필을 변경합니다.
+* 트랜잭션 컨텍스트 외부에서 별도의 메시지로 로컬 컨트롤러, 충전기 또는 커넥터에 대한 기본 충전 프로필을 설정합니다.
 
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/warning-icon.svg[warning-icon,32,32] |
-트랜잭션과 TxProfile 간의 불일치를 방지하기 위해 CSMS는 프로파일이 특정 트랜잭션에 적용되는 경우 <<set_charging_profile_req,SetChargingProfile.req>>에 transactionId를 포함해야 합니다.
+트랜잭션과 TxProfile 간의 불일치를 방지하기 위해 CSMS는 프로필이 특정 트랜잭션에 적용되는 경우 <<set_charging_profile_req,SetChargingProfile.req>>에 transactionId를 포함해야 합니다.
 |===
 
 이러한 상황은 아래에 설명되어 있습니다.
 
 ==== Setting a charging profile at start of transaction
 
-CSMS가 <<start_transaction_req,StartTransaction.req>>를 수신하면 CSMS는 <<start_transaction_conf,StartTransaction.conf>>로 응답해야 합니다. 충전 프로파일이 필요한 경우 CSMS는 <<set_charging_profile_req,SetChargingProfile.req>>를 충전기로 보내는 것을 선택할 수 있습니다.
+CSMS가 <<start_transaction_req,StartTransaction.req>>를 수신하면 CSMS는 <<start_transaction_conf,StartTransaction.conf>>로 응답해야 합니다. 충전 프로필이 필요한 경우 CSMS는 <<set_charging_profile_req,SetChargingProfile.req>>를 충전기로 보내는 것을 선택할 수 있습니다.
 
-충전 프로파일을 보내기 전에 <<start_transaction_req,StartTransaction.req>> PDU의 타임스탬프를 확인하여 트랜잭션이 계속 진행 중일 가능성이 있는지 확인하는 것이 좋습니다. <<start_transaction_req,StartTransaction.req>>는 오프라인 기간 동안 캐시되었을 수 있습니다.
+충전 프로필을 보내기 전에 <<start_transaction_req,StartTransaction.req>> PDU의 타임스탬프를 확인하여 트랜잭션이 계속 진행 중일 가능성이 있는지 확인하는 것이 좋습니다. <<start_transaction_req,StartTransaction.req>>는 오프라인 기간 동안 캐시되었을 수 있습니다.
 
 ==== Setting a charge profile in a RemoteStartTransaction request
 
-CSMS는 <<remote_start_transaction_req,RemoteStartTransaction>> 요청에 충전 프로파일을 포함할 수 있습니다.
+CSMS는 <<remote_start_transaction_req,RemoteStartTransaction>> 요청에 충전 프로필을 포함할 수 있습니다.
 
 CSMS가 <<charging_profile_type,ChargingProfile>>를 포함한 경우 ChargingProfilePurpose는 TxProfile로 설정해야 하며 transactionId는 설정해서는 안 됩니다.
 
 [cols="1,10",frame="none",grid="cols"]
 |===
 a|image::asset/info-icon.svg[info-icon,32,32] |
-충전기는 새로 시작된 트랜잭션에 지정된 프로파일을 적용해야 합니다. 이 트랜잭션은 CSMS에서 <<start_transaction_conf,StartTransaction.conf>>를 통해 할당한 transactionId를 받게 됩니다. 충전기가 <<set_charging_profile_req,SetChargingProfile.req>>를 수신하면, 이 트랜잭션에 대한 _transactionId_ 와 <<remote_start_transaction_req,RemoteStartTransaction.req>>에 제공된 프로파일과 동일한 StackLevel을 갖는 충전기는 기존 충전 프로파일을 대체해야 하며, 그렇지 않은 경우 기존 프로파일 옆에 프로파일을 설치/스택해야 합니다.
+충전기는 새로 시작된 트랜잭션에 지정된 프로필을 적용해야 합니다. 이 트랜잭션은 CSMS에서 <<start_transaction_conf,StartTransaction.conf>>를 통해 할당한 transactionId를 받게 됩니다. 충전기가 <<set_charging_profile_req,SetChargingProfile.req>>를 수신하면, 이 트랜잭션에 대한 _transactionId_ 와 <<remote_start_transaction_req,RemoteStartTransaction.req>>에 제공된 프로필과 동일한 StackLevel을 갖는 충전기는 기존 충전 프로필을 대체해야 하며, 그렇지 않은 경우 기존 프로필 옆에 프로필을 설치/스택해야 합니다.
 |===
 
 ==== Setting a charging profile during a transaction
 
-CSMS는 충전기에 충전 프로파일을 보내 해당 트랜잭션에 대한 충전 프로파일을 업데이트할 수 있습니다. CSMS는 이 목적으로 <<set_charging_profile_req,SetChargingProfile.req>> PDU를 사용해야 합니다. 동일한 <<charging_profile_id,chargingProfileId>> 또는 동일한 <<stack_level,stackLevel>> / <<charging_profile_purpose,ChargingProfilePurpose>> 조합을 가진 충전 프로파일이 충전기에 있는 경우, 새로운 충전 프로파일은 기존 충전 프로파일을 대체해야 하며, 그렇지 않은 경우 추가해야 합니다. 그런 다음 충전기는 충전 프로파일 컬렉션을 다시 평가하여 어떤 충전 프로파일을 활성화할지 결정해야 합니다. 업데이트된 충전 프로파일이 현재 트랜잭션에만 적용되도록 하려면 <<charging_profile_type,ChargingProfile>>의 <<charging_profile_purpose,chargingProfilePurpose>>를 TxProfile로 설정해야 합니다. (<<charging_profile_purpose,Charging Profile Purposes>> 섹션 참조)
+CSMS는 충전기에 충전 프로필을 보내 해당 트랜잭션에 대한 충전 프로필을 업데이트할 수 있습니다. CSMS는 이 목적으로 <<set_charging_profile_req,SetChargingProfile.req>> PDU를 사용해야 합니다. 동일한 <<charging_profile_id,chargingProfileId>> 또는 동일한 <<stack_level,stackLevel>> / <<charging_profile_purpose,ChargingProfilePurpose>> 조합을 가진 충전 프로필이 충전기에 있는 경우, 새로운 충전 프로필은 기존 충전 프로필을 대체해야 하며, 그렇지 않은 경우 추가해야 합니다. 그런 다음 충전기는 충전 프로필 컬렉션을 다시 평가하여 어떤 충전 프로필을 활성화할지 결정해야 합니다. 업데이트된 충전 프로필이 현재 트랜잭션에만 적용되도록 하려면 <<charging_profile_type,ChargingProfile>>의 <<charging_profile_purpose,chargingProfilePurpose>>를 TxProfile로 설정해야 합니다. (<<charging_profile_purpose,Charging Profile Purposes>> 섹션 참조)
 
 ==== Setting a charging profile outside of a transaction
 
-CSMS는 기본 충전 프로파일로 사용할 충전 프로파일을 충전기로 보낼 수 있습니다. CSMS는 해당 목적으로 <<set_charging_profile_req,SetChargingProfile.req>> PDU를 사용해야 합니다. 이러한 충전 프로파일은 언제든지 보낼 수 있습니다. 동일한 <<charging_profile_id,chargingProfileId>> 또는 동일한 <<stack_level,stackLevel>> / <<charging_profile_purpose,ChargingProfilePurpose>> 조합을 가진 충전 프로파일이 충전기에 있는 경우 새 충전 프로파일이 기존 충전 프로파일을 대체해야 하며, 그렇지 않은 경우 추가해야 합니다. 그런 다음 충전기는 충전 프로파일 모음을 다시 평가하여 어떤 충전 프로파일이 활성화될지 결정해야 합니다.
+CSMS는 기본 충전 프로필로 사용할 충전 프로필을 충전기로 보낼 수 있습니다. CSMS는 해당 목적으로 <<set_charging_profile_req,SetChargingProfile.req>> PDU를 사용해야 합니다. 이러한 충전 프로필은 언제든지 보낼 수 있습니다. 동일한 <<charging_profile_id,chargingProfileId>> 또는 동일한 <<stack_level,stackLevel>> / <<charging_profile_purpose,ChargingProfilePurpose>> 조합을 가진 충전 프로필이 충전기에 있는 경우 새 충전 프로필이 기존 충전 프로필을 대체해야 하며, 그렇지 않은 경우 추가해야 합니다. 그런 다음 충전기는 충전 프로필 모음을 다시 평가하여 어떤 충전 프로필이 활성화될지 결정해야 합니다.
 
 [cols="1,10",frame="none",grid="cols"]
 |===
@@ -1809,16 +1809,16 @@ connectorId >= 0 |1..1
 
 CSMS에서 충전기로 보낸 ClearChargingProfile.req PDU의 필드 정의가 포함되어 있습니다.
 
-CSMS는 이 메시지를 사용하여 특정 충전 프로파일(id로 표시) 또는 선택적 connectorId, stackLevel 및 <<charging_profile_purposes,chargingProfilePurpose>> 필드의 값과 일치하는 충전 프로파일을 지울(제거) 수 있습니다. <<clear_charging_profile_by_central_system,Clear Charging Profile>>도 참조하세요.
+CSMS는 이 메시지를 사용하여 특정 충전 프로필(id로 표시) 또는 선택적 connectorId, stackLevel 및 <<charging_profile_purposes,chargingProfilePurpose>> 필드의 값과 일치하는 충전 프로필을 지울(제거) 수 있습니다. <<clear_charging_profile_by_central_system,Clear Charging Profile>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
 |필드 이름 |필드 유형 |카디널리티 |설명
 
-|**id** |integer |0..1 |선택 사항. 지울 충전 프로파일의 ID입니다.
-|**connectorId** |integer |0..1 |선택 사항. 충전 프로파일을 지울 커넥터의 ID를 지정합니다. 0(0)의 connectorId는 전체 충전기에 대한 충전 프로파일을 지정합니다. 이 매개변수가 없으면 요청의 다른 기준과 일치하는 모든 충전 프로파일에 지우기가 적용됩니다.
-|**chargingProfilePurpose** |<<charging_profile_purpose_type,ChargingProfilePurposeType>> |0..1 |선택 사항. 요청의 다른 기준을 충족하는 경우 지워질 충전 프로파일의 목적을 지정합니다.
-|**stackLevel** |integer |0..1 |선택 사항. 요청의 다른 기준을 충족하는 경우 충전 프로파일이 지워지는 stackLevel을 지정합니다.
+|**id** |integer |0..1 |선택 사항. 지울 충전 프로필의 ID입니다.
+|**connectorId** |integer |0..1 |선택 사항. 충전 프로필을 지울 커넥터의 ID를 지정합니다. 0(0)의 connectorId는 전체 충전기에 대한 충전 프로필을 지정합니다. 이 매개변수가 없으면 요청의 다른 기준과 일치하는 모든 충전 프로필에 지우기가 적용됩니다.
+|**chargingProfilePurpose** |<<charging_profile_purpose_type,ChargingProfilePurposeType>> |0..1 |선택 사항. 요청의 다른 기준을 충족하는 경우 지워질 충전 프로필의 목적을 지정합니다.
+|**stackLevel** |integer |0..1 |선택 사항. 요청의 다른 기준을 충족하는 경우 충전 프로필이 지워지는 stackLevel을 지정합니다.
 |===
 
 [[clear_charging_profile_conf]]
@@ -1911,7 +1911,7 @@ CSMS는 이 메시지를 사용하여 특정 충전 프로파일(id로 표시) �
 
 |**connectorId** |integer |1..1 |필수. 일정이 요청된 커넥터의 ID입니다. ConnectorId=0인 경우 충전기는 그리드 연결에 대한 예상 소비량을 계산합니다.
 |**duration** |integer |1..1 |필수. 초 단위 시간. 요청된 일정의 길이
-|**chargingRateUnit** |<<charging_rate_unit_type,ChargingRateUnitType>> |0..1 |선택 사항. 전력 또는 전류 프로파일을 강제로 적용하는 데 사용할 수 있습니다.
+|**chargingRateUnit** |<<charging_rate_unit_type,ChargingRateUnitType>> |0..1 |선택 사항. 전력 또는 전류 프로필을 강제로 적용하는 데 사용할 수 있습니다.
 |===
 
 [[get_composite_schedule_conf]]
@@ -1925,7 +1925,7 @@ CSMS는 이 메시지를 사용하여 특정 충전 프로파일(id로 표시) �
 
 |**status** |<<get_composite_schedule_status,GetCompositeScheduleStatus>> |1..1 |필수. 요청의 상태. 충전기는 요청을 처리할 수 있었는지 여부를 나타냅니다.
 |**connectorId** |integer |0..1 |선택 사항. 이 알림에 포함된 충전 일정은 커넥터에 적용됩니다.
-|**scheduleStart** |dateTime |0..1 |선택 사항. 시간. 충전 프로파일에 포함된 기간은 이 시점을 기준으로 합니다. +
+|**scheduleStart** |dateTime |0..1 |선택 사항. 시간. 충전 프로필에 포함된 기간은 이 시점을 기준으로 합니다. +
 상태가 "Rejected"인 경우 이 필드가 없을 수 있습니다.
 |**chargingSchedule** |<<charging_schedule_type,ChargingSchedule>> |0..1 |선택 사항. 계획된 복합 충전 일정, 시간 경과에 따른 에너지 소비량. 항상 ScheduleStart를 기준으로 합니다. 상태가 "Rejected"인 경우 이 필드가 없을 수 있습니다.
 |===
@@ -2053,7 +2053,7 @@ CSMS는 이 메시지를 사용하여 특정 충전 프로파일(id로 표시) �
 
 |**connectorId** |integer |0..1 |선택 사항. 트랜잭션을 시작할 커넥터 번호입니다. connectorId는 0보다 커야 합니다.
 |**idTag** |<<idtoken,IdToken>> |1..1 |필수. 충전기에서 트랜잭션을 시작하는 데 사용해야 하는 식별자입니다.
-|**chargingProfile** |<<charging_profile_type,ChargingProfile>> |0..1 |선택 사항. 충전기에서 요청한 트랜잭션에 사용할 충전 프로파일입니다. <<charging_profile_purpose_type,ChargingProfilePurpose>>는 <<tx_profile,TxProfile>>로 설정해야 합니다.
+|**chargingProfile** |<<charging_profile_type,ChargingProfile>> |0..1 |선택 사항. 충전기에서 요청한 트랜잭션에 사용할 충전 프로필입니다. <<charging_profile_purpose_type,ChargingProfilePurpose>>는 <<tx_profile,TxProfile>>로 설정해야 합니다.
 |===
 
 [[remote_start_transaction_conf]]
@@ -2183,14 +2183,14 @@ connectorId >= 0 |1..1 |필수. 여기에는 예약할 커넥터의 ID가 포함
 
 여기에는 CSMS에서 충전기로 보낸 SetChargingProfile.req PDU의 필드 정의가 포함됩니다.
 
-CSMS는 이 메시지를 사용하여 충전기로 충전 프로파일을 보냅니다. <<set_charging_profile_by_central_system,Set Charging Profile>>도 참조하세요.
+CSMS는 이 메시지를 사용하여 충전기로 충전 프로필을 보냅니다. <<set_charging_profile_by_central_system,Set Charging Profile>>도 참조하세요.
 
 [cols="1,1,1,5",options="header"]
 |===
 |필드 이름 |필드 유형 |카디널리티 |설명
 
-|**connectorId** |integer |1..1 |필수. 충전 프로파일이 적용되는 커넥터입니다. connectorId = 0인 경우 메시지에는 충전기에 대한 전체 제한이 포함됩니다.
-|**csChargingProfiles** |<<charging_profile_type,ChargingProfile>> |1..1 |필수. 충전기에서 설정할 충전 프로파일입니다.
+|**connectorId** |integer |1..1 |필수. 충전 프로필이 적용되는 커넥터입니다. connectorId = 0인 경우 메시지에는 충전기에 대한 전체 제한이 포함됩니다.
+|**csChargingProfiles** |<<charging_profile_type,ChargingProfile>> |1..1 |필수. 충전기에서 설정할 충전 프로필입니다.
 |===
 
 [[set_charging_profile_conf]]
@@ -2504,23 +2504,23 @@ _Enumeration_
 
 _Class_
 
-충전 프로파일은 <<charging_schedule_type,ChargingSchedule>>으로 구성되며, 시간 간격당 공급할 수 있는 전력 또는 전류량을 설명합니다.
+충전 프로필은 <<charging_schedule_type,ChargingSchedule>>으로 구성되며, 시간 간격당 공급할 수 있는 전력 또는 전류량을 설명합니다.
 
-.클래스 다이어그램: 충전 프로파일
-image::images/figure_42.svg[클래스 다이어그램: 충전 프로파일]
+.클래스 다이어그램: 충전 프로필
+image::images/figure_42.svg[클래스 다이어그램: 충전 프로필]
 
 [cols="1,1,1,5",options="header"]
 |===
 |필드 이름 |필드 유형 |카디널리티 |설명
 
-|[[charging_profile_id]]**chargingProfileId** |integer |1..1 |필수. 이 프로파일의 고유 식별자입니다.
-|**transactionId** |integer |0..1 |선택 사항입니다. 충전 프로파일 용도가 <<tx_profile,TxProfile>>로 설정된 경우에만 유효하며, 트랜잭션 ID를 사용하여 프로파일을 특정 트랜잭션와 일치시킬 수 있습니다.
-|[[stack_level]]stackLevel |integer >=0 |1..1 |필수. 프로파일의 계층 스택에서 레벨을 결정하는 값입니다. 높은 값은 낮은 값보다 우선합니다. 가장 낮은 레벨은 0입니다.
+|[[charging_profile_id]]**chargingProfileId** |integer |1..1 |필수. 이 프로필의 고유 식별자입니다.
+|**transactionId** |integer |0..1 |선택 사항입니다. 충전 프로필 용도가 <<tx_profile,TxProfile>>로 설정된 경우에만 유효하며, 트랜잭션 ID를 사용하여 프로필을 특정 트랜잭션와 일치시킬 수 있습니다.
+|[[stack_level]]stackLevel |integer >=0 |1..1 |필수. 프로필의 계층 스택에서 레벨을 결정하는 값입니다. 높은 값은 낮은 값보다 우선합니다. 가장 낮은 레벨은 0입니다.
 |**chargingProfilePurpose** |<<charging_profile_purpose_type,ChargingProfilePurposeType>> |1..1 |필수. 이 메시지에서 전송된 일정의 목적을 정의합니다.
 |**chargingProfileKind** |<<charging_profile_kind_type,ChargingProfileKindType>> |1..1 |필수. 일정의 종류를 나타냅니다.
 |**recurrencyKind** |<<recurrency_kind_type,RecurrencyKindType>> |0..1 |선택 사항. 반복의 시작점을 나타냅니다.
-|**validFrom** |dateTime |0..1 |선택 사항. 프로파일이 유효해지기 시작하는 시점입니다. 없는 경우, 프로파일은 충전기에서 수신되는 즉시 유효합니다.
-|**validTo** |dateTime |0..1 |선택 사항. 프로파일이 더 이상 유효하지 않게 되는 시점. 없는 경우, 프로파일은 다른 프로파일로 대체될 때까지 유효합니다.
+|**validFrom** |dateTime |0..1 |선택 사항. 프로필이 유효해지기 시작하는 시점입니다. 없는 경우, 프로필은 충전기에서 수신되는 즉시 유효합니다.
+|**validTo** |dateTime |0..1 |선택 사항. 프로필이 더 이상 유효하지 않게 되는 시점. 없는 경우, 프로필은 다른 프로필로 대체될 때까지 유효합니다.
 |**chargingSchedule** |<<charging_schedule_type,ChargingSchedule>> |1..1 |필수. 시간 경과에 따른 사용 가능한 전력 또는 전류에 대한 제한을 포함합니다.
 |===
 
@@ -2529,7 +2529,7 @@ image::images/figure_42.svg[클래스 다이어그램: 충전 프로파일]
 
 _Enumeration_
 
-<<charging_profile_type,ChargingProfile>>에서 사용되는 충전 프로파일의 종류입니다.
+<<charging_profile_type,ChargingProfile>>에서 사용되는 충전 프로필의 종류입니다.
 
 [cols="2,8",options="header"]
 |===
@@ -2545,15 +2545,15 @@ _Enumeration_
 
 _Enumeration_
 
-<<charging_profile_type,ChargingProfile>>에서 사용되는 충전 프로파일의 목적 타입입니다.
+<<charging_profile_type,ChargingProfile>>에서 사용되는 충전 프로필의 목적 타입입니다.
 
 [cols="2,8",options="header"]
 |===
 |값             |설명
 
 |**<<charge_point_max_profile,ChargePointMaxProfile>>** |전체 충전기에 사용 가능한 최대 전력 또는 전류에 대한 구성입니다.
-|**<<tx_default_profile,TxDefaultProfile>>** |충전기에서 구성할 수 있는 기본 프로파일입니다. 새 트랜잭션이 시작되면 이 프로파일을 사용해야 합니다. 단, 충전기에서 수락한 ChargeProfile이 있는 <<remote_start_transaction_req,RemoteStartTransaction.req>>에서 시작된 트랜잭션은 예외입니다.
-|**<<tx_profile,TxProfile>>** |충전기에서 현재 트랜잭션에 부과할 제약 조건이 있는 프로파일이거나, ChargeProfile이 있는 <<remote_start_transaction_req,RemoteStartTransaction.req>>를 통해 시작될 때 새 트랜잭션에 부과할 제약 조건이 있는 프로파일입니다. 이 목적을 가진 프로파일은 트랜잭션이 종료되면 더 이상 유효하지 않습니다.
+|**<<tx_default_profile,TxDefaultProfile>>** |충전기에서 구성할 수 있는 기본 프로필입니다. 새 트랜잭션이 시작되면 이 프로필을 사용해야 합니다. 단, 충전기에서 수락한 ChargeProfile이 있는 <<remote_start_transaction_req,RemoteStartTransaction.req>>에서 시작된 트랜잭션은 예외입니다.
+|**<<tx_profile,TxProfile>>** |충전기에서 현재 트랜잭션에 부과할 제약 조건이 있는 프로필이거나, ChargeProfile이 있는 <<remote_start_transaction_req,RemoteStartTransaction.req>>를 통해 시작될 때 새 트랜잭션에 부과할 제약 조건이 있는 프로필입니다. 이 목적을 가진 프로필은 트랜잭션이 종료되면 더 이상 유효하지 않습니다.
 |===
 
 [[charging_profile_status]]
@@ -2727,7 +2727,7 @@ _Enumeration_
 |값            |설명
 
 |**Accepted** |요청이 수락되었으며 실행됩니다.
-|**Unknown** |요청과 일치하는 충전 프로파일이 없습니다.
+|**Unknown** |요청과 일치하는 충전 프로필이 없습니다.
 |===
 
 [[configuration_status]]
@@ -3038,7 +3038,7 @@ _Enumeration_
 
 _Enumeration_
 
-<<charging_profile_type,ChargingProfile>>에서 사용되는 충전 프로파일의 반복 유형입니다.
+<<charging_profile_type,ChargingProfile>>에서 사용되는 충전 프로필의 반복 유형입니다.
 
 [cols="2,8",options="header"]
 |===
@@ -3282,7 +3282,7 @@ _Enumeration_
 [[standard_configuration_key_names_and_values]]
 == Standard Configuration Key Names & Values
 
-다음은 이 사양에서 표준화된 역할이 있는 모든 구성 키 목록입니다. 목록은 <<feature_profiles,Feature Profiles>>로 구분됩니다. 특정 프로파일에 언급된 필수 구성 키는 해당 프로파일을 지원하는 경우에만 충전기에서 지원해야 합니다.
+다음은 이 사양에서 표준화된 역할이 있는 모든 구성 키 목록입니다. 목록은 <<feature_profiles,Feature Profiles>>로 구분됩니다. 특정 프로필에 언급된 필수 구성 키는 해당 프로필을 지원하는 경우에만 충전기에서 지원해야 합니다.
 
 부울 유형이 있는 선택적 구성 키의 경우 키 목록이 없는 <<get_configuration_req,GetConfiguration.req>>에 대한 응답에서 구성 키에 다음 규칙이 적용됩니다.
 
@@ -3641,7 +3641,7 @@ _Enumeration_
 |**Required/optional** |required
 |**Accessibility** |R
 |**Type** |CSL
-|**Description** |지원되는 <<feature_profiles,Feature Profiles>> 목록입니다. 가능한 프로파일 식별자는 다음과 같습니다: Core, FirmwareManagement, LocalAuthListManagement, Reservation, SmartCharging 및 RemoteTrigger.
+|**Description** |지원되는 <<feature_profiles,Feature Profiles>> 목록입니다. 가능한 프로필 식별자는 다음과 같습니다: Core, FirmwareManagement, LocalAuthListManagement, Reservation, SmartCharging 및 RemoteTrigger.
 |===
 
 ==== `SupportedFeatureProfilesMaxLength`
@@ -3761,7 +3761,7 @@ _Enumeration_
 |**Required/optional** |required
 |**Accessibility** |R
 |**Type** |integer
-|**Description** |충전 프로파일의 최대 StackLevel입니다. 정의된 숫자는 <<charging_profile_purposes,Charging Profile Purposes>>당 설치된 충전 일정의 최대 허용 개수도 나타냅니다.
+|**Description** |충전 프로필의 최대 StackLevel입니다. 정의된 숫자는 <<charging_profile_purposes,Charging Profile Purposes>>당 설치된 충전 일정의 최대 허용 개수도 나타냅니다.
 |===
 
 [[charging_schedule_allowed_charging_rate_unit]]
@@ -3805,7 +3805,7 @@ _Enumeration_
 |**Required/optional** |required
 |**Accessibility** |R
 |**Type** |integer
-|**Description** |한 번에 설치할 수 있는 최대 충전 프로파일 수입니다.
+|**Description** |한 번에 설치할 수 있는 최대 충전 프로필 수입니다.
 |===
 
 <<<
@@ -3825,7 +3825,7 @@ OCPP 1.5와 비교하여 OCPP 1.6에서 다음과 같은 변경 사항이 적용
 * <<trigger_message_req,TriggerMessage>> 메시지가 추가되어 CSMS가 충전기에 정보를 요청할 수 있습니다.
 * <<boot_notification_conf,BootNotification.conf>>에서 사용되는 <<registration_status,RegistrationStatus>> 열거형에 새로운 _Pending_ 멤버가 추가되었습니다.
 * 더 많고 명확한 구성 키가 추가되어 CPO가 충전기에서 다양한 비즈니스 사례를 구성하는 방법을 더 명확하게 알 수 있습니다.
-* 메시지와 구성 키가 프로파일로 분할되어 OCPP를 점진적으로 또는 일부만 구현하기가 더 쉬워졌습니다.
+* 메시지와 구성 키가 프로필로 분할되어 OCPP를 점진적으로 또는 일부만 구현하기가 더 쉬워졌습니다.
 * 알려진 모호성이 제거되었습니다(예: <<unlock_connector_req,UnlockConnector.req>>를 사용하는 시기, 응답하는 방법 <<remote_start_transaction_req,RemoteStart>>/<<remote_stop_transaction_req,Stop>>, 커넥터 번호)
 
 === A.1. Updated/New Messages
