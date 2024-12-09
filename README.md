@@ -11,12 +11,12 @@ To convert asciidoc file to pdf file, run command below in asciidoc file is loca
 - [asciidoctor-pdf](https://docs.asciidoctor.org/pdf-converter/latest/install/) and [asciidoctor-mathmatical](https://docs.asciidoctor.org/pdf-converter/latest/stem/#activate-asciidoctor-mathematical) is required.
 
 ```bash
-asciidoctor-pdf --theme ../styles/themes/theme.yml -a pdf-fontsdir="../styles/fonts;GEM_FONTS_DIR" ${asciidoc_file}
+asciidoctor-pdf --theme ../styles/themes/${theme_file} -a pdf-fontsdir="../styles/fonts;GEM_FONTS_DIR" ${asciidoc_file}
 ```
 
 ```bash
 # If adoc has LaTeX expressions
-asciidoctor-pdf --theme ../styles/themes/theme.yml -r asciidoctor-mathmatical -a pdf-fontsdir="../styles/fonts;GEM_FONTS_DIR" ${asciidoc_file}
+asciidoctor-pdf --theme ../styles/themes/${theme_file} -r asciidoctor-mathmatical -a pdf-fontsdir="../styles/fonts;GEM_FONTS_DIR" ${asciidoc_file}
 ```
 
 ## Credits
