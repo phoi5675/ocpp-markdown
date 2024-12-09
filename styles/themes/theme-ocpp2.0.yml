@@ -34,6 +34,21 @@ footer:
   font-color: #7D5393
   font-style: bold
   font-size: 10
+  recto: 
+    center:
+      content: '{page-number}/{page-count}'
+    left: 
+      content: ''
+    right: 
+      content: ''
+  verso:
+    center:
+      content: '{page-number}/{page-count}'
+    left: 
+      content: ''
+    right: 
+      content: '' 
+
 heading:
   font-color: #7D5393
   font-weight: bold
