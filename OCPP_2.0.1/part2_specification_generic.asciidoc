@@ -113,7 +113,7 @@ This section contains the terminology that is used throughout this document.
 |===
 |Terminology          |Description
 
-|Application          |layer OSI-Layer 5-7.
+|Application layer    |OSI-Layer 5-7.
 |Authentication       |Authentication is the process of confirming an identity or attribute. When speaking about authentication one should distinguish between user authentication (e.g. sender/receiver) and message authentication.
 |Block cipher         |Cryptographic primitive to encrypt/decrypt messages of fixed block length. Example: AES encrypts blocks of 128 bits (16 bytes) at a time.
 |Cable Plugged in     |In this document this can mean the following: +
